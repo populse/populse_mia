@@ -1,0 +1,12 @@
+auto_save: 'no'
+background_color: ''
+default_tags:
+- FileName
+- PatientName
+- AcquisitionDate
+name: MIA2
+paths:
+  data: C:\Users\omonti\Documents\DataIRM\NifTI\testNifti\
+  modules: modules
+  projects: ..\data
+text_color: ''
