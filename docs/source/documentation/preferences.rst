@@ -43,8 +43,8 @@ Global preferences
   * Auto save
       * When auto save is enabled, the project is saved after each actions done in the Data Browser.
 
-  * Clinical mode
-      * When clinical mode is enabled, more default tags are stored in the database and the process library is disabled (no pipeline creation).
+  * User mode
+      * When user mode is enabled, more default tags are stored in the database and the process library is disabled (no pipeline creation).
 
 
 Projects preferences
