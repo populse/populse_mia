@@ -27,8 +27,8 @@ The following lines (15-17) must be uncommented from docs/source/conf.py:
  - sys.path.insert(0, os.path.abspath('../../python'))
  
 The following line (8) must be modified from docs/Makefile:
- - BUILDDIR      = BUILD  =>  BUILDDIR      = .  
-"""
+ - `BUILDDIR      = BUILD`  become  `BUILDDIR      = .`  
+
 
 ## To update the api documentation (in docs/ folder)
           sphinx-apidoc -f -M -o source/ ../python/populse_mia/
