@@ -11,7 +11,7 @@
 
 ## To begin
           sphinx-quickstart
-"""  
+          
 Then answer each question with default values, except the following ones:
  - Separate source and build directories (y/n) [n]: y
  - Project name: populse_mia
@@ -20,12 +20,12 @@ Then answer each question with default values, except the following ones:
  - Project release: 1.0.0
  - autodoc: automatically insert docstrings from modules (y/n) [n]: y
  - Create Windows command file? (y/n) [y]: n  
-"""  
-"""  
+ 
 The following lines (15-17) must be uncommented from docs/source/conf.py:
  - import os
  - import sys
  - sys.path.insert(0, os.path.abspath('../../python'))
+ 
 The following line (8) must be modified from docs/Makefile:
  - BUILDDIR      = BUILD  =>  BUILDDIR      = .  
 """
