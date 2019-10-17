@@ -76,16 +76,16 @@
 <span class="c1"># soma-base imports</span>
 <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.Qt</span> <span class="k">import</span> <span class="n">QMessageBox</span>
 
-<span class="c1"># Adding populse_mia path to the sys.path if in developer mode</span>
+<span class="c1"># Adding populse_mia path to the sys.path if in admin mode</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>           <span class="c1"># &quot;developer&quot; mode</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Populse_MIA in &quot;developer&quot; mode&#39;</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))))</span>
-    <span class="n">DEV_MODE</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ADMIN_MODE</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="k">else</span><span class="p">:</span>                                                       <span class="c1"># &quot;user&quot; mode</span>
-    <span class="n">DEV_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">ADMIN_MODE</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1"># populse_mia imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.main_window</span> <span class="k">import</span> <span class="n">MainWindow</span>
@@ -304,7 +304,7 @@
     <span class="sd">&quot;&quot;&quot;Make basic configuration check then actual launch of mia.</span>
 
 <span class="sd">    Checks if MIA is called from the site/dist packages (user mode) or from a</span>
-<span class="sd">    cloned git repository (developer mode). Tries to update the dev_mode</span>
+<span class="sd">    cloned git repository (admin mode). Tries to update the dev_mode</span>
 <span class="sd">    parameter accordingly and the mia_path if necessary, in the</span>
 <span class="sd">    ~/.populse_mia/configuration.yml file (this file must be available from</span>
 <span class="sd">    the ~/.populse_mia directory). Launches the verify_processes()</span>
@@ -312,11 +312,11 @@
 <span class="sd">    mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the</span>
 <span class="sd">    dev_mode parameter to False.</span>
 
-<span class="sd">    - If launched from a cloned git repository (&#39;developer mode&#39;):</span>
+<span class="sd">    - If launched from a cloned git repository (&#39;admin mode&#39;):</span>
 <span class="sd">        - if the ~/.populse_mia/configuration.yml exists, updates</span>
 <span class="sd">          the dev_mode parameter to True</span>
 <span class="sd">        - if the ~/.populse_mia/configuration.yml is not existing</span>
-<span class="sd">          nothing is done (in developer mode, the mia_path is the</span>
+<span class="sd">          nothing is done (in admin mode, the mia_path is the</span>
 <span class="sd">          cloned git repository.</span>
 <span class="sd">    - If launched from the site/dist packages (&#39;user mode&#39;):</span>
 <span class="sd">        - if the ~/.populse_mia/configuration.yml exists, updates</span>
@@ -346,7 +346,7 @@
 <span class="sd">                mia_user_path/properties/config.yml file. Secondly, it allows</span>
 <span class="sd">                to correct the value of the mia_user_path parameter in the</span>
 <span class="sd">                ~/.populse_mia/configuration.yml file, (in the case of a user</span>
-<span class="sd">                mode launch, because the developer mode launch does not need</span>
+<span class="sd">                mode launch, because the admin mode launch does not need</span>
 <span class="sd">                this parameter).</span>
 
 <span class="sd">                In the case of a launch in user mode, this method goes with the</span>
@@ -377,7 +377,7 @@
 
         <span class="n">save_flag</span> <span class="o">=</span> <span class="kc">False</span>
         
-        <span class="k">if</span> <span class="n">DEV_MODE</span><span class="p">:</span>                     <span class="c1"># &quot;developer&quot; mode</span>
+        <span class="k">if</span> <span class="n">ADMIN_MODE</span><span class="p">:</span>                     <span class="c1"># &quot;developer&quot; mode</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
@@ -443,7 +443,7 @@
     <span class="n">dot_mia_config</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">,</span>
                                   <span class="s2">&quot;configuration.yml&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">DEV_MODE</span><span class="p">:</span>                         <span class="c1"># &quot;developer&quot; mode</span>
+    <span class="k">if</span> <span class="n">ADMIN_MODE</span><span class="p">:</span>                         <span class="c1"># &quot;developer&quot; mode</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{0}</span><span class="s1"> has been detected.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>

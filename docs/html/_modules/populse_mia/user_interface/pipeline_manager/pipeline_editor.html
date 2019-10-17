@@ -771,7 +771,7 @@
                 <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.py&#39;</span>
 
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">get_clinical_mode</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;This file already exists, you do not have the &#39;</span>
@@ -851,7 +851,7 @@
     <span class="c1">#         msg.exec()</span>
     <span class="c1">#         filename = os.path.splitext(filename)[0] + &#39;.json&#39;</span>
     <span class="c1">#</span>
-    <span class="c1">#     if os.path.exists(filename) and config.get_clinical_mode():</span>
+    <span class="c1">#     if os.path.exists(filename) and config.get_user_mode():</span>
     <span class="c1">#         msg = QtWidgets.QMessageBox()</span>
     <span class="c1">#         msg.setIcon(QtWidgets.QMessageBox.Warning)</span>
     <span class="c1">#         msg.setText(&#39;This file already exists, you do not have the &#39;</span>

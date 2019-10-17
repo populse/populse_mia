@@ -99,7 +99,7 @@
 
         <span class="c1"># All the tests are run in regular mode</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1108,7 +1108,7 @@
 
         <span class="c1"># All the tests are run in regular mode</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2273,10 +2273,10 @@
                                 <span class="s2">&quot;properties/config.yml&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mia_path</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_clinical_mode</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_clinical_mode</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mri_conv_path</span><span class="p">(),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 

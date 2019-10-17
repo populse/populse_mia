@@ -140,7 +140,7 @@
 <span class="sd">        - undo: undo the last action made on the current pipeline editor</span>
 <span class="sd">        - updateProcessLibrary: update the library of processes when a</span>
 <span class="sd">          pipeline is saved</span>
-<span class="sd">        - update_clinical_mode: update the visibility of widgets/actions</span>
+<span class="sd">        - update_user_mode: update the visibility of widgets/actions</span>
 <span class="sd">          depending of the chosen mode</span>
 <span class="sd">        - update_project: update the project attribute of several objects</span>
 <span class="sd">        - update_scans_list: update the user-selected list of scans</span>
@@ -242,7 +242,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Run pipeline&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runPipeline</span><span class="p">)</span>
 
-        <span class="c1"># if config.get_clinical_mode() == True:</span>
+        <span class="c1"># if config.get_user_mode() == True:</span>
         <span class="c1">#     self.save_pipeline_action.setDisabled(True)</span>
         <span class="c1">#     self.save_pipeline_as_action.setDisabled(True)</span>
         <span class="c1">#     self.processLibrary.setHidden(True)</span>
@@ -1295,7 +1295,7 @@
         <span class="c1"># Toolbar</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tags_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_pipeline_action</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tags_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_pipeline_action</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_clinical_mode</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">(</span>
             <span class="p">)</span><span class="o">.</span><span class="n">disable_overwrite</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1702,16 +1702,16 @@
             <span class="n">c_e</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">update_nodes_and_plugs_activation</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">update_parameters</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PipelineManagerTab.update_clinical_mode"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_clinical_mode">[docs]</a>    <span class="k">def</span> <span class="nf">update_clinical_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PipelineManagerTab.update_user_mode"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode">[docs]</a>    <span class="k">def</span> <span class="nf">update_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the visibility of widgets/actions depending of the chosen mode</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
-        <span class="c1"># If the clinical mode is chosen, the process library is not available</span>
+        <span class="c1"># If the user mode is chosen, the process library is not available</span>
         <span class="c1"># and the user cannot save a pipeline</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_clinical_mode</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">(</span>
             <span class="p">)</span><span class="o">.</span><span class="n">disable_overwrite</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1720,9 +1720,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">(</span>
             <span class="p">)</span><span class="o">.</span><span class="n">disable_overwrite</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-        <span class="c1"># If the clinical mode is chosen, the process library is not available</span>
+        <span class="c1"># If the user mode is chosen, the process library is not available</span>
         <span class="c1"># and the user cannot save a pipeline</span>
-        <span class="c1"># if config.get_clinical_mode() == True:</span>
+        <span class="c1"># if config.get_user_mode() == True:</span>
         <span class="c1">#     self.processLibrary.setHidden(True)</span>
         <span class="c1">#     self.previewBlock.setHidden(True)</span>
         <span class="c1">#     self.save_pipeline_action.setDisabled(True)</span>

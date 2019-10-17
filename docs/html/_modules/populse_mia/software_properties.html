@@ -125,7 +125,7 @@
 <span class="sd">    Object that handles the configuration of the software</span>
 
 <span class="sd">    .. Methods:</span>
-<span class="sd">        - get_clinical_mode: returns the value of &quot;clinical mode&quot; checkbox</span>
+<span class="sd">        - get_user_mode: returns the value of &quot;user mode&quot; checkbox</span>
 <span class="sd">          in the preferences</span>
 <span class="sd">        - get_matlab_command: returns Matlab command</span>
 <span class="sd">        - get_matlab_path: returns the path of Matlab&#39;s executable</span>
@@ -166,7 +166,7 @@
 <span class="sd">        - saveConfig: saves the config to the config.yml file</span>
 <span class="sd">        - setAutoSave: sets the auto-save mode</span>
 <span class="sd">        - setBackgroundColor: sets the background color</span>
-<span class="sd">        - set_clinical_mode: sets the value of &quot;clinical mode&quot; checkbox in</span>
+<span class="sd">        - set_user_mode: sets the value of &quot;user mode&quot; checkbox in</span>
 <span class="sd">          the preferences</span>
 <span class="sd">        - set_matlab_path: sets the path of Matlab&#39;s executable</span>
 <span class="sd">        - set_matlab_standalone_path: sets the path of Matlab Compiler Runtime</span>
@@ -203,14 +203,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Config.get_clinical_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_clinical_mode">[docs]</a>    <span class="k">def</span> <span class="nf">get_clinical_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get if clinical mode is disabled or enabled in the preferences.</span>
+<div class="viewcode-block" id="Config.get_user_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_user_mode">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get if user mode is disabled or enabled in the preferences.</span>
 
 <span class="sd">        :return: boolean</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;clinical_mode&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;user_mode&quot;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -271,7 +271,7 @@
 
 <span class="sd">        During the mia installation, the mia_path is defined and stored in the</span>
 <span class="sd">        configuration.yml file, located in the .populse_mia folder (himself</span>
-<span class="sd">        located in the user&#39;s home). If mia is launched in developer mode,</span>
+<span class="sd">        located in the user&#39;s home). If mia is launched in admin mode,</span>
 <span class="sd">        mia path is the cloned git repository. If mia is launched in user</span>
 <span class="sd">        mode, mia path must compulsorily be returned from the mia_path</span>
 <span class="sd">        parameter of the configuration.yml</span>
@@ -295,7 +295,7 @@
 
                     <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;dev_mode&quot;</span> <span class="ow">in</span> <span class="n">mia_home_config</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span>
                             <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;dev_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
-                        <span class="c1"># Only for developer mode</span>
+                        <span class="c1"># Only for admin mode</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">dev_mode</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span>
                             <span class="vm">__file__</span><span class="p">))</span>
@@ -327,7 +327,7 @@
                           <span class="s1">&#39;the properties and resources folders) has not &#39;</span>
                           <span class="s1">&#39;been found ...&#39;</span><span class="p">)</span>
 
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Only for developer mode</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Only for admin mode</span>
             
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span>
@@ -543,13 +543,13 @@
             <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">configfile</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                       <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Config.set_clinical_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_clinical_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_clinical_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clinical_mode</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Enable of disable clinical mode.</span>
+<div class="viewcode-block" id="Config.set_user_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_user_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_mode</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enable of disable user mode.</span>
 
-<span class="sd">        :param: clinical_mode: boolean</span>
+<span class="sd">        :param: user_mode: boolean</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;clinical_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clinical_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;user_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_mode</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 

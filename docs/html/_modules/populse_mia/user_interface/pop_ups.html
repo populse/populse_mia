@@ -1688,7 +1688,7 @@
 <span class="sd">        - browse_spm: called when spm browse button is clicked</span>
 <span class="sd">        - browse_spm_standalone: called when spm standalone browse button</span>
 <span class="sd">          is clicked</span>
-<span class="sd">        - clinical_mode_switch: called when the clinical mode checkbox</span>
+<span class="sd">        - user_mode_switch: called when the user mode checkbox</span>
 <span class="sd">          is clicked</span>
 <span class="sd">        - ok_clicked: saves the modifications to the config file and apply them</span>
 <span class="sd">        - use_matlab_changed: called when the use_matlab checkbox is changed</span>
@@ -1701,7 +1701,7 @@
     <span class="c1"># Signal that will be emitted at the end to tell that the project</span>
     <span class="c1"># has been created</span>
     <span class="n">signal_preferences_change</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
-    <span class="n">use_clinical_mode_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">use_user_mode_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PopUpPreferences.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
@@ -1744,26 +1744,26 @@
         <span class="n">h_box_auto_save</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_label</span><span class="p">)</span>
         <span class="n">h_box_auto_save</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_switch</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Clinical mode&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_switch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;User mode&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_clinical_mode</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">h_box_clinical_mode</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">h_box_clinical_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="p">)</span>
-        <span class="c1"># h_box_clinical_mode.addWidget(self.clinical_mode_trap)</span>
-        <span class="n">h_box_clinical_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_label</span><span class="p">)</span>
-        <span class="n">h_box_clinical_mode</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">h_box_user_mode</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="p">)</span>
+        <span class="c1"># h_box_user_mode.addWidget(self.user_mode_trap)</span>
+        <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span><span class="p">)</span>
+        <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">v_box_global</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_auto_save</span><span class="p">)</span>
-        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_clinical_mode</span><span class="p">)</span>
+        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_user_mode</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_global</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_global</span><span class="p">)</span>
 
@@ -2125,18 +2125,18 @@
         <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PopUpPreferences.clinical_mode_switch"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.clinical_mode_switch">[docs]</a>    <span class="k">def</span> <span class="nf">clinical_mode_switch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Called when the clinical mode checkbox is clicked.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PopUpPreferences.user_mode_switch"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.user_mode_switch">[docs]</a>    <span class="k">def</span> <span class="nf">user_mode_switch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when the user mode checkbox is clicked.&quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">clicked</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clicked</span> <span class="o">%</span> <span class="mi">6</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Developer mode&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Admin mode&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Clinical mode&quot;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;User mode&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PopUpPreferences.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Saves the modifications to the config file and apply them.</span>
@@ -2223,14 +2223,14 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># Clinical mode</span>
+        <span class="c1"># User mode</span>
         <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">=</span> <span class="s2">&quot;MIA - Multiparametric Image Analysis&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">use_clinical_mode_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_user_mode_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+=</span> <span class="s2">&quot; (Developer mode)&quot;</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+=</span> <span class="s2">&quot; (Admin mode)&quot;</span>
 
         <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+=</span> <span class="s2">&quot; - &quot;</span>
         <span class="n">main_window</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+</span>

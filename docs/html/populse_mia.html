@@ -344,7 +344,7 @@ on the disk.</p>
 <code class="descclassname">populse_mia.main.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make basic configuration check then actual launch of mia.</p>
 <p>Checks if MIA is called from the site/dist packages (user mode) or from a
-cloned git repository (developer mode). Tries to update the dev_mode
+cloned git repository (admin mode). Tries to update the dev_mode
 parameter accordingly and the mia_path if necessary, in the
 ~/.populse_mia/configuration.yml file (this file must be available from
 the ~/.populse_mia directory). Launches the verify_processes()
@@ -353,12 +353,12 @@ mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the
 dev_mode parameter to False.</p>
 <ul class="simple">
 <li><dl class="first docutils">
-<dt>If launched from a cloned git repository (‘developer mode’):</dt>
+<dt>If launched from a cloned git repository (‘admin mode’):</dt>
 <dd><ul class="first last">
 <li>if the ~/.populse_mia/configuration.yml exists, updates
 the dev_mode parameter to True</li>
 <li>if the ~/.populse_mia/configuration.yml is not existing
-nothing is done (in developer mode, the mia_path is the
+nothing is done (in admin mode, the mia_path is the
 cloned git repository.</li>
 </ul>
 </dd>
@@ -415,7 +415,7 @@ update the obsolete values for some parameters of the
 mia_user_path/properties/config.yml file. Secondly, it allows
 to correct the value of the mia_user_path parameter in the
 ~/.populse_mia/configuration.yml file, (in the case of a user
-mode launch, because the developer mode launch does not need
+mode launch, because the admin mode launch does not need
 this parameter).</p>
 <p>In the case of a launch in user mode, this method goes with the
 _browse_mia_path() function, the latter having allowed the
@@ -671,9 +671,9 @@ or not in the miniviewer.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="populse_mia.software_properties.Config.get_clinical_mode">
-<code class="descname">get_clinical_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_clinical_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_clinical_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get if clinical mode is disabled or enabled in the preferences.</p>
+<dt id="populse_mia.software_properties.Config.get_user_mode">
+<code class="descname">get_user_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_user_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_user_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get if user mode is disabled or enabled in the preferences.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -749,7 +749,7 @@ projects” menu.</p>
 and resources folders of mia (mia_path).</p>
 <p>During the mia installation, the mia_path is defined and stored in the
 configuration.yml file, located in the .populse_mia folder (himself
-located in the user’s home). If mia is launched in developer mode,
+located in the user’s home). If mia is launched in admin mode,
 mia path is the cloned git repository. If mia is launched in user
 mode, mia path must compulsorily be returned from the mia_path
 parameter of the configuration.yml</p>
@@ -1031,14 +1031,14 @@ preferences.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="populse_mia.software_properties.Config.set_clinical_mode">
-<code class="descname">set_clinical_mode</code><span class="sig-paren">(</span><em>clinical_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_clinical_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_clinical_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable of disable clinical mode.</p>
+<dt id="populse_mia.software_properties.Config.set_user_mode">
+<code class="descname">set_user_mode</code><span class="sig-paren">(</span><em>user_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_user_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_user_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable of disable user mode.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">clinical_mode: boolean</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">user_mode: boolean</td>
 </tr>
 </tbody>
 </table>
