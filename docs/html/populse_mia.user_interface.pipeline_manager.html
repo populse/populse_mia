@@ -1699,12 +1699,6 @@ pipeline editor</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode">
-<code class="descname">update_user_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_user_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the visibility of widgets/actions depending of the chosen mode</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project">
 <code class="descname">update_project</code><span class="sig-paren">(</span><em>project</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the project attribute of several objects</p>
@@ -1730,6 +1724,12 @@ pipeline editor</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode">
+<code class="descname">update_user_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_user_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the visibility of widgets/actions depending of the chosen mode</p>
 </dd></dl>
 
 </dd></dl>
@@ -2455,7 +2455,7 @@ execution</li>
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.delete_package">
 <code class="descname">delete_package</code><span class="sig-paren">(</span><em>index=1</em>, <em>to_delete=None</em>, <em>remove=True</em>, <em>loop=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.delete_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.delete_package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete a package, only available to developers.</p>
+<dd><p>Delete a package, only available to administrators.</p>
 <p>Remove the package from the package library tree, update the
 __init__ file and delete the package directory and files if there
 are empty.</p>
@@ -2536,7 +2536,7 @@ are empty.</p>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.remove_package_with_text">
-<code class="descname">remove_package_with_text</code><span class="sig-paren">(</span><em>_2rem=None</em>, <em>update_view=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.remove_package_with_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.remove_package_with_text" title="Permalink to this definition">¶</a></dt>
+<code class="descname">remove_package_with_text</code><span class="sig-paren">(</span><em>_2rem=None</em>, <em>update_view=True</em>, <em>tree_remove=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.remove_package_with_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.remove_package_with_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the package in the line edit from the package tree.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2545,6 +2545,7 @@ are empty.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>_2rem</strong> – name of package</li>
 <li><strong>update_view</strong> – boolean to update the QListWidget</li>
+<li><strong>tree_remove</strong> – boolean, remove from the tree</li>
 </ul>
 </td>
 </tr>

@@ -75,6 +75,7 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">zipfile</span> <span class="k">import</span> <span class="n">ZipFile</span><span class="p">,</span> <span class="n">is_zipfile</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="c1"># PyQt5 import</span>
@@ -1375,7 +1376,7 @@
 <span class="sd">        - add_package_with_text: add a package from the line edit&#39;s text</span>
 <span class="sd">        - add_package: add a package and its modules to the package tree</span>
 <span class="sd">        - browse_package: open a browser to select a package</span>
-<span class="sd">        - delete_package: delete a package, only available to developers</span>
+<span class="sd">        - delete_package: delete a package, only available to administrators</span>
 <span class="sd">        - import_file: import a python module from a path</span>
 <span class="sd">        - load_config: update the config and loads the corresponding packages</span>
 <span class="sd">        - load_packages: update the tree of the process library</span>
@@ -1407,6 +1408,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_packages</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pkg_config</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">packages</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">package_library</span> <span class="o">=</span> <span class="n">PackageLibrary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">packages</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">)</span>
 
@@ -1868,7 +1871,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">old_status</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PackageLibraryDialog.delete_package"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.delete_package">[docs]</a>    <span class="k">def</span> <span class="nf">delete_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">to_delete</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Delete a package, only available to developers.</span>
+        <span class="sd">&quot;&quot;&quot;Delete a package, only available to administrators.</span>
 
 <span class="sd">        Remove the package from the package library tree, update the</span>
 <span class="sd">        __init__ file and delete the package directory and files if there</span>
@@ -2061,11 +2064,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
     <span class="c1">#def remove_package_with_text(self, _2rem=None, update_view=True, check_flag=True):</span>
-<div class="viewcode-block" id="PackageLibraryDialog.remove_package_with_text"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.remove_package_with_text">[docs]</a>    <span class="k">def</span> <span class="nf">remove_package_with_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_2rem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update_view</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="PackageLibraryDialog.remove_package_with_text"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.remove_package_with_text">[docs]</a>    <span class="k">def</span> <span class="nf">remove_package_with_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_2rem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update_view</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                 <span class="n">tree_remove</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remove the package in the line edit from the package tree.</span>
 
 <span class="sd">        :param _2rem: name of package</span>
 <span class="sd">        :param update_view: boolean to update the QListWidget</span>
+<span class="sd">        :param tree_remove: boolean, remove from the tree</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -2078,7 +2083,7 @@
             <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
 
         <span class="c1">#package_removed = self.remove_package(_2rem, check_flag)</span>
-        <span class="k">if</span> <span class="n">_2rem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_dic</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_2rem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_dic</span> <span class="ow">and</span> <span class="n">tree_remove</span><span class="p">:</span>
             <span class="n">package_removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_package</span><span class="p">(</span><span class="n">_2rem</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">package_removed</span> <span class="o">=</span> <span class="kc">True</span>
@@ -2185,7 +2190,18 @@
         
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itemlist</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">add</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">remove_package_with_text</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="n">update_view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">in_config</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pkg_config</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pkg_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pkg_config</span><span class="p">[</span><span class="n">pkg</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">in_config</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">in_config</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">remove_package_with_text</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+                                                  <span class="n">update_view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                  <span class="n">tree_remove</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">remove_package_with_text</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="n">update_view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_package_with_text</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="n">update_view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
