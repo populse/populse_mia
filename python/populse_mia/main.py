@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*- #
 """The first module used at the runtime of mia.
 
 Basically, this module is dedicated to the initialisation of the basic
@@ -499,6 +498,8 @@ def main():
                                 "directories): ")
             msg.file_line_edit = QLineEdit()
             msg.file_line_edit.setFixedWidth(400)
+            default_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            msg.file_line_edit.setText(default_directory)
             file_button = QPushButton("Browse")
             file_button.clicked.connect(partial(_browse_mia_path, msg))
             vbox_layout.addWidget(file_label)
