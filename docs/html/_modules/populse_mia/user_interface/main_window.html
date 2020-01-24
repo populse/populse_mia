@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>populse_mia.user_interface.main_window &#8212; populse_mia 1.3.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -13,7 +11,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -28,7 +26,7 @@
         </p>
 
       </div>
-      <div class="content">
+      <div class="content" role="main">
         
         
   <h1>Source code for populse_mia.user_interface.main_window</h1><div class="highlight"><pre>
@@ -59,6 +57,8 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">packaging</span> <span class="k">import</span> <span class="n">version</span>
+
 
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QIcon</span>
@@ -69,7 +69,7 @@
 
 <span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project_properties</span> <span class="k">import</span> <span class="n">SavedProjects</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">verCmp</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="k">import</span> <span class="n">DataBrowser</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">PipelineManagerTab</span><span class="p">)</span>
@@ -77,7 +77,8 @@
     <span class="n">InstallProcesses</span><span class="p">,</span> <span class="n">PackageLibraryDialog</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">populse_mia.data_manager.data_loader</span> <span class="k">as</span> <span class="nn">data_loader</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">COLLECTION_CURRENT</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span><span class="n">PopUpDeletedProject</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span><span class="n">PopUpDeleteProject</span><span class="p">,</span>
+                                                <span class="n">PopUpDeletedProject</span><span class="p">,</span>
                                                 <span class="n">PopUpNewProject</span><span class="p">,</span>
                                                 <span class="n">PopUpOpenProject</span><span class="p">,</span>
                                                 <span class="n">PopUpPreferences</span><span class="p">,</span>
@@ -231,7 +232,8 @@
         <span class="n">added_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">add_clinical_tags</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">added_tags</span><span class="p">:</span>
             <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">get_index_insertion</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">unsavedModifications</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="MainWindow.check_unsaved_modifications"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.check_unsaved_modifications">[docs]</a>    <span class="k">def</span> <span class="nf">check_unsaved_modifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if there are differences between the current project and the</span>
@@ -276,8 +278,10 @@
             <span class="c1"># Clean up</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
             <span class="n">opened_projects</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()</span>
-            <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span> <span class="ow">in</span> <span class="n">opened_projects</span><span class="p">:</span>
+                <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_raw_files_useless</span><span class="p">()</span>
 
             <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
@@ -306,6 +310,11 @@
         <span class="c1">#     self.action_package_library.setDisabled(True)</span>
         <span class="c1"># else:</span>
         <span class="c1">#     self.action_package_library.setEnabled(True)</span>
+
+        <span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_delete_project</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_delete_project</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">action_exit</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="s1">&#39;Ctrl+W&#39;</span><span class="p">)</span>
 
@@ -434,6 +443,7 @@
                 <span class="n">opened_projects</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()</span>
                 <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">relative_path</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
@@ -468,36 +478,9 @@
 
 <div class="viewcode-block" id="MainWindow.delete_project"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.delete_project">[docs]</a>    <span class="k">def</span> <span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open a pop-up to open a project and updates the recent projects.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span> <span class="o">=</span> <span class="n">PopUpOpenProject</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
-            <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-            <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">relative_path</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span> <span class="o">!=</span> <span class="n">file_name</span><span class="p">:</span>
-                <span class="n">msgtext</span> <span class="o">=</span> <span class="s2">&quot;Do you really want to delete the &quot;</span> <span class="o">+</span> <span class="n">file_name</span> \
-                           <span class="o">+</span> <span class="s2">&quot;project ?&quot;</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;populse_mia - Warning: Delete project&quot;</span>
-                <span class="n">reply</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">msgtext</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">,</span>
-                                     <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">removeSavedProject</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">update_recent_projects_actions</span><span class="p">()</span>
-                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia - Warning: &quot;</span>
-                                   <span class="s2">&quot;Can&#39;t delete active project&quot;</span><span class="p">)</span>
-                <span class="n">msgtext</span> <span class="o">=</span> <span class="s2">&quot;You can&#39;t delete the active project.</span><span class="se">\n</span><span class="s2"> Please &quot;</span> \
-                           <span class="s2">&quot;open another project if you want to delete this &quot;</span> \
-                           <span class="s2">&quot;one&quot;</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">msgtext</span><span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span> <span class="o">=</span> <span class="n">PopUpDeleteProject</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="MainWindow.documentation"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.documentation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">documentation</span><span class="p">():</span>
@@ -555,6 +538,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">reset_search_bar</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">frame_advanced_search</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">unsavedModifications</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">elif</span> <span class="n">code_exit</span> <span class="o">==</span> <span class="mi">100</span><span class="p">:</span> <span class="c1"># User only close mri_conv and do nothing</span>
             <span class="k">pass</span>
@@ -728,6 +712,7 @@
                             <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;downloaded_data&quot;</span><span class="p">,</span> <span class="n">scan</span><span class="p">))</span>
                         <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;logExport&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scan</span><span class="p">):</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">unsavedModifications</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MainWindow.save"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -764,6 +749,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span> <span class="o">=</span> <span class="n">PopUpSaveProjectAs</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">return_value</span><span class="p">()</span>
 
             <span class="n">old_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span>
             <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">relative_path</span>
@@ -861,8 +848,10 @@
             <span class="c1"># currently opened projects</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
             <span class="n">opened_projects</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()</span>
-            <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span> <span class="ow">in</span> <span class="n">opened_projects</span><span class="p">:</span>
+                <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
 
             <span class="c1"># project updated everywhere</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">relative_path</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -889,8 +878,10 @@
 <div class="viewcode-block" id="MainWindow.saveChoice"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.saveChoice">[docs]</a>    <span class="k">def</span> <span class="nf">saveChoice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if the project needs to be &#39;saved as&#39; or just &#39;saved&#39;.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">isTempProject</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;save as&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_project_as</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;save&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MainWindow.see_all_projects"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.see_all_projects">[docs]</a>    <span class="k">def</span> <span class="nf">see_all_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -956,7 +947,8 @@
                     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span>
                                            <span class="s2">&quot;properties.yml&quot;</span><span class="p">),</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
 
-                        <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s1">&#39;5.1&#39;</span><span class="p">,</span> <span class="s1">&#39;sup&#39;</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                                <span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;5.1&quot;</span><span class="p">):</span>
                             <span class="n">properties</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span>
                                                    <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
 
@@ -1011,9 +1003,10 @@
                     <span class="c1"># project removed from the opened projects list</span>
                     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
                     <span class="n">opened_projects</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()</span>
-                    <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span> <span class="ow">in</span> <span class="n">opened_projects</span><span class="p">:</span>
+                        <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
-
+                    <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">temp_database</span>  <span class="c1"># New Database</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">update_project</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -1172,22 +1165,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">projectName</span><span class="p">)</span>
 
         <span class="c1"># List of project updated</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">isTempProject</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">addSavedProject</span><span class="p">(</span>
                 <span class="n">file_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_recent_projects_actions</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MainWindow.update_recent_projects_actions"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.update_recent_projects_actions">[docs]</a>    <span class="k">def</span> <span class="nf">update_recent_projects_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the list of recent projects.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_max_projects</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">),</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_max_projects</span><span class="p">())):</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div></div>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_max_projects</span><span class="p">())):</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div></div>
+
 
 </pre></div>
 
@@ -1202,7 +1199,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>
