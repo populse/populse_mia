@@ -1,6 +1,5 @@
 <p align="center" >
 	<img src="https://github.com/populse/populse_mia/blob/master/python/populse_mia/sources_images/Logo_populse_mia.jpg" alt="populse_mia logo" height="220" width="300">
-	<sub><sub> ©Johan Pietras </sub></sub>
 </p>
 
 [![](https://travis-ci.org/populse/populse_mia.svg?branch=master)](https://travis-ci.org/populse/populse_mia)
