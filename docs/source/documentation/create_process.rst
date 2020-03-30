@@ -130,7 +130,7 @@ MIA processes are Capsul processes made specific for Populse_MIA. They need at l
                     else:
                         input_image = nib.load(self.in_file)  # Loading the nibabel image
                         input_image_header = input_image.header
-                        input_array = input_image.get_data()  # Getting the 3D volume as a numpy array
+                        input_array = input_image.get_fdata()  # Getting the 3D volume as a numpy array
     
                         # Getting the image resolution in x, y and z
                         x_resolution = abs(input_image_header['pixdim'][1])

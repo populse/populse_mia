@@ -544,6 +544,39 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_group_inputs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_group_outputs</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span> \
+            <span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span> \
+            <span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="p">[</span><span class="n">node_name</span><span class="p">][</span><span class="s2">&quot;inputs&quot;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_input</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span> \
+            <span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="p">[</span><span class="n">node_name</span><span class="p">][</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_output</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;outputs&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span>\
+                <span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span> \
+                <span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>\
+        <span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters_tmp</span> <span class="o">==</span>  \
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>\
+        <span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters</span> <span class="ow">and</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">test_init</span> <span class="ow">and</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>\
+                        <span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span> \
+                <span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span>\
+                <span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span>\
+                <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span>\
+                <span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NodeController.get_index_from_plug_name"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.get_index_from_plug_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_index_from_plug_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">):</span>
@@ -642,6 +675,8 @@
 <span class="sd">        :param process: process of the node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">process</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_process</span>
@@ -669,6 +704,9 @@
             <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_edit_output</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
                 <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+        <span class="c1"># self.main_window.pipeline_manager.pipelineEditorTabs\</span>
+        <span class="c1">#     .update_current_node()</span>
 
 <div class="viewcode-block" id="NodeController.update_plug_value"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_plug_value">[docs]</a>    <span class="k">def</span> <span class="nf">update_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span>
                           <span class="n">new_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -996,6 +1034,8 @@
             <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
                 <span class="n">row</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
                 <span class="n">tag_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_button_tag_filter</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">tag_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">):</span>
+                    <span class="n">tag_name</span> <span class="o">=</span> <span class="n">tag_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
                 <span class="c1"># We get the FileName of the scan from the first row</span>
                 <span class="n">scan_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>

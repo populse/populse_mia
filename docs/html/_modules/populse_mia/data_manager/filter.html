@@ -50,7 +50,8 @@
 
 <span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface</span> <span class="k">import</span> <span class="n">data_browser</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="k">import</span> <span class="n">project</span>
+<span class="c1"># don&#39;t import project here to avoid cyclic import</span>
+<span class="c1"># from populse_mia.data_manager import project</span>
 
 
 <div class="viewcode-block" id="Filter"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.filter.Filter">[docs]</a><span class="k">class</span> <span class="nc">Filter</span><span class="p">:</span>
@@ -109,6 +110,8 @@
 <span class="sd">        :param tags: List of tags to search in</span>
 <span class="sd">        :returns: The list of scans matching the filter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="k">import</span> <span class="n">project</span>
+
         <span class="n">rapid_filter</span> <span class="o">=</span> <span class="n">data_browser</span><span class="o">.</span><span class="n">rapid_search</span><span class="o">.</span><span class="n">RapidSearch</span><span class="o">.</span><span class="n">prepare_filter</span><span class="p">(</span>
                                                                 <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="p">,</span>
                                                                 <span class="n">tags</span><span class="p">,</span> <span class="n">scans</span><span class="p">)</span>

@@ -3062,10 +3062,20 @@
             <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">_translate</span><span class="p">(</span><span class="s2">&quot;Dialog&quot;</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">))</span></div></div>
 
 
-<div class="viewcode-block" id="PopUpSaveProjectAs"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs">[docs]</a><span class="k">class</span> <span class="nc">PopUpSaveProjectAs</span><span class="p">(</span><span class="n">QFileDialog</span><span class="p">):</span>
+<div class="viewcode-block" id="QLabel_clickable"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.QLabel_clickable">[docs]</a><span class="k">class</span> <span class="nc">QLabel_clickable</span><span class="p">(</span><span class="n">QLabel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom class to click on a QLabel&quot;&quot;&quot;</span>
+    <span class="n">clicked</span><span class="o">=</span><span class="n">pyqtSignal</span><span class="p">()</span>
+<div class="viewcode-block" id="QLabel_clickable.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.QLabel_clickable.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QLabel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="QLabel_clickable.mousePressEvent"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.QLabel_clickable.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="PopUpSaveProjectAs"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs">[docs]</a><span class="k">class</span> <span class="nc">PopUpSaveProjectAs</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Is called when the user wants to save a project under another name.</span>
 
 <span class="sd">    .. Method:</span>
+<span class="sd">        - fill_value: fills the input field when a project is clicked on</span>
 <span class="sd">        - return_value: sets the widget&#39;s attributes depending on the</span>
 <span class="sd">          selected file name</span>
 
@@ -3077,20 +3087,71 @@
 
 <div class="viewcode-block" id="PopUpSaveProjectAs.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Save project as&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_project_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;New project name&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_projects_save_path</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLabelText</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">Accept</span><span class="p">,</span> <span class="s2">&quot;Save as&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLabelText</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">FileName</span><span class="p">,</span> <span class="s2">&quot;Project name&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">ShowDirsOnly</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setAcceptMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">AcceptSave</span><span class="p">)</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">DontUseNativeDialog</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">ReadOnly</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">project_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_path</span><span class="p">)</span>
 
-        <span class="c1"># Setting the projects directory as default</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_box</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+
+        <span class="c1"># Label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Projects list:&quot;</span><span class="p">)</span>
+        <span class="n">h_box</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+
+        <span class="n">project_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">project_list</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span> <span class="n">project_list</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel_clickable</span><span class="p">(</span><span class="n">project_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">label</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fill_input</span><span class="p">,</span> <span class="n">project_list</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">v_box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="c1"># The text input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_text</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_text</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_project_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_text</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># The &#39;OK&#39; push button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Save as&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;pushButton_ok&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">return_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="p">)</span>
+
+        <span class="c1"># The &#39;Cancel&#39; push button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;pushButton_cancel&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scroll</span> <span class="o">=</span> <span class="n">QScrollArea</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scroll</span><span class="o">.</span><span class="n">setVerticalScrollBarPolicy</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ScrollBarAlwaysOn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scroll</span><span class="o">.</span><span class="n">setMaximumHeight</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scroll</span><span class="o">.</span><span class="n">setWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scroll</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_text</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span></div>
 
         <span class="c1"># self.finished.connect(self.return_value)</span>
+
+<div class="viewcode-block" id="PopUpSaveProjectAs.fill_input"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.fill_input">[docs]</a>    <span class="k">def</span> <span class="nf">fill_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fills the input field with the name of a project.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PopUpSaveProjectAs.return_value"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.return_value">[docs]</a>    <span class="k">def</span> <span class="nf">return_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sets the widget&#39;s attributes depending on the selected file name.</span>
@@ -3098,31 +3159,55 @@
 <span class="sd">        :return: new project&#39;s file name</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">file_name_tuple</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()</span>
+        <span class="n">file_name_tuple</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_name_tuple</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">projects_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">),</span> <span class="s1">&#39;projects&#39;</span><span class="p">)</span>
-            <span class="n">projects_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">projects_folder</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">file_name</span> <span class="ow">and</span> <span class="n">file_name</span> <span class="o">!=</span> <span class="n">projects_folder</span><span class="p">:</span>
-                <span class="n">entire_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name_tuple</span>
+            
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            projects_folder = os.path.join(os.path.join(</span>
+<span class="sd">                os.path.relpath(os.curdir), &#39;..&#39;, &#39;..&#39;), &#39;projects&#39;)</span>
+<span class="sd">            projects_folder = os.path.abspath(projects_folder)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">projects_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_path</span>
+
+            <span class="k">if</span> <span class="n">file_name</span><span class="p">:</span>
+                <span class="n">entire_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">projects_folder</span><span class="p">,</span>
+                                                           <span class="n">file_name</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">entire_path</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">total_path</span> <span class="o">=</span> <span class="n">entire_path</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">entire_path</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">relative_subpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span>
                         <span class="ow">not</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">signal_saved_project</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                     <span class="c1"># A signal is emitted to tell that the project</span>
                     <span class="c1"># has been created</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">signal_saved_project</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
                 <span class="k">elif</span> <span class="n">file_name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                    <span class="k">pass</span>
+                    <span class="k">return</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">utils</span><span class="o">.</span><span class="n">message_already_exists</span><span class="p">()</span>
-
-            <span class="k">return</span> <span class="n">file_name</span></div></div>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
+                        <span class="n">utils</span><span class="o">.</span><span class="n">message_already_exists</span><span class="p">()</span>
+                        <span class="k">return</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">msgtext</span> <span class="o">=</span> <span class="s2">&quot;Do you really want to overwrite the &quot;</span> <span class="o">+</span> \
+                                  <span class="n">file_name</span> <span class="o">+</span> <span class="s2">&quot; project ?&quot;</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+                        <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+                        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;populse_mia - Warning: Overwriting project&quot;</span>
+                        <span class="n">reply</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">msgtext</span><span class="p">,</span>
+                                             <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span>
+                                             <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">return</span>
+                        
+            <span class="k">return</span> <span class="n">entire_path</span></div></div>
 
 
 <div class="viewcode-block" id="PopUpSeeAllProjects"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSeeAllProjects">[docs]</a><span class="k">class</span> <span class="nc">PopUpSeeAllProjects</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>

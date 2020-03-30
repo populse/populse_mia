@@ -93,6 +93,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="k">import</span> <span class="n">QtWidgets</span>
 <span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
@@ -162,6 +163,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_clicked</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scan_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
                 <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
@@ -300,7 +302,7 @@
             <span class="c1"># Deleting the project&#39;s folder in the file name so it can</span>
             <span class="c1"># fit to the database&#39;s syntax</span>
             <span class="n">old_value</span> <span class="o">=</span> <span class="n">p_value</span>
-            <span class="n">p_value</span> <span class="o">=</span> <span class="n">p_value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="c1">#p_value = p_value.replace(self.project.folder, &quot;&quot;)</span>
             <span class="n">p_value</span> <span class="o">=</span> <span class="n">p_value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">p_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">]:</span>
                 <span class="n">p_value</span> <span class="o">=</span> <span class="n">p_value</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -507,6 +509,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span>
                 <span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="p">)</span></div>
 
+        <span class="c1"># Cause a segmentation fault</span>
+        <span class="c1"># from capsul.qt_gui.widgets.pipeline_developper_view import NodeGWidget</span>
+        <span class="c1"># for item in self.pipelineEditorTabs.get_current_editor().scene.items():</span>
+        <span class="c1">#     if isinstance(item, NodeGWidget):</span>
+        <span class="c1">#         self.pipelineEditorTabs.get_current_editor(</span>
+        <span class="c1">#</span>
+        <span class="c1">#         ).scene.process_clicked.emit(item.name, item.process)</span>
+
+
 <div class="viewcode-block" id="PipelineManagerTab.displayNodeParameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.displayNodeParameters">[docs]</a>    <span class="k">def</span> <span class="nf">displayNodeParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the node controller when a node is clicked</span>
@@ -572,6 +583,7 @@
         <span class="c1">#</span>
         <span class="c1"># else:</span>
         <span class="n">initial</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">check_init</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_filename</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
@@ -639,14 +651,12 @@
         <span class="c1">#pipeline.on_trait_change(</span>
         <span class="c1">#    self.pipelineEditorTabs.get_current_editor()._reset_pipeline,</span>
         <span class="c1">#    &#39;user_traits_changed&#39;, remove=True)</span>
-
-        <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">activated</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">enabled</span><span class="p">):</span>
-                <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+ 
+        <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>            
             <span class="c1"># Updating the project attribute of the processes</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;process&#39;</span><span class="p">):</span>
                 <span class="n">process</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span>
-                
+
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;use_project&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">use_project</span><span class="p">:</span>
                     <span class="n">process</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span>
 
@@ -673,26 +683,24 @@
 
             <span class="n">nodes_to_check</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
             <span class="n">nodes_inputs_ratio</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nb_plugs_from_in</span><span class="p">,</span> <span class="n">nb_plugs</span><span class="p">]</span>
-            <span class="n">nodes_inputs_ratio_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+            <span class="n">nodes_inputs_ratio_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>        
 
         <span class="c1"># Sorting the nodes_to_check list as the order (the nodes having</span>
-        <span class="c1"># the highest ratio</span>
-        <span class="c1"># being at the end of the list)</span>
-        <span class="n">nodes_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes_inputs_ratio_list</span><span class="p">,</span>
-                                                   <span class="n">nodes_to_check</span><span class="p">))]</span>
+        <span class="c1"># the highest ratio being at the end of the list)</span>
+        <span class="n">nodes_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes_inputs_ratio_list</span><span class="p">,</span>
+                                                     <span class="n">nodes_to_check</span><span class="p">))]</span>
 
         <span class="k">while</span> <span class="n">nodes_to_check</span><span class="p">:</span>
-            <span class="c1"># Finding one node that has a ratio of 1,</span>
-            <span class="c1"># which means that all of its mandatory</span>
-            <span class="c1"># inputs are &quot;connected&quot;</span>
-            <span class="n">key_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">nodes_inputs_ratio</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span>
-                                                           <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="c1"># Finding one node that has a ratio of 1, which means that all of</span>
+            <span class="c1"># its mandatory inputs plugs are &quot;connected&quot; to the Input node</span>
+            <span class="n">key_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">nodes_inputs_ratio</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">]</span>
 
             <span class="k">if</span> <span class="n">key_name</span><span class="p">:</span>
                 <span class="c1"># This node can be initialized so it is placed at the</span>
                 <span class="c1"># end of the nodes_to_check list</span>
                 <span class="n">nodes_to_check</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key_name</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
+                
                 <span class="c1"># It can also be removed from the dictionary</span>
                 <span class="k">del</span> <span class="n">nodes_inputs_ratio</span><span class="p">[</span><span class="n">key_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
@@ -702,9 +710,9 @@
             <span class="c1"># key_name[0] appears twice, it will stay at the first place</span>
             <span class="n">nodes_to_check</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
                                               <span class="n">nodes_to_check</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
             <span class="c1"># print(nodes_to_check)</span>
             <span class="n">node_name</span> <span class="o">=</span> <span class="n">nodes_to_check</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
             <span class="n">nodes_to_check</span> <span class="o">=</span> <span class="n">nodes_to_check</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
             <span class="c1"># Inputs/Outputs nodes will be automatically updated with</span>
@@ -815,30 +823,34 @@
                                             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
                 <span class="n">initResult_dict</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">(</span><span class="n">is_plugged</span><span class="o">=</span><span class="n">is_plugged</span><span class="p">)</span>
 
+                <span class="c1"># For debugging. To be commented if not in debugging.</span>
+                <span class="c1">#print(&#39;initResult_dict after mia brick initialisaton: &#39;,  initResult_dict) </span>
+
                 <span class="k">try</span><span class="p">:</span>
- 
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initialisation failed to determine the &quot;</span>
                                <span class="s2">&quot;outputs for the process </span><span class="si">{0}</span><span class="s2">, did you correctly &quot;</span>
                                <span class="s2">&quot;define the inputs ...?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span>
-                        <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                          
                 <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Due to &quot;</span><span class="si">{0}</span><span class="s1">&quot; error,</span><span class="se">\n</span><span class="s1">the initialisation failed to &#39;</span>
                           <span class="s1">&#39;determine the outputs for the node &#39;</span>
                           <span class="s1">&#39;</span><span class="si">{1}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">node_name</span><span class="p">))</span>
-                    <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The outputs determination for the node &quot;</span><span class="si">{0}</span><span class="s1">&quot; &#39;</span>
                           <span class="s1">&#39;failed during the initialisation step, due to:</span><span class="se">\n</span><span class="s1">&#39;</span>
                           <span class="s1">&#39;&quot;</span><span class="si">{1}</span><span class="s1">&quot;...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-                    <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
                     
             <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Trait error for node &quot;</span><span class="si">{0}</span><span class="s1">&quot;:</span><span class="se">\n</span><span class="s1">&#39;</span>
                       <span class="s1">&#39;&quot;</span><span class="si">{1}</span><span class="s1">&quot; ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-                <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="c1"># If the process has no &quot;list_outputs&quot; method,</span>
             <span class="c1"># which is the case for Nipype&#39;s</span>
@@ -856,17 +868,20 @@
                         
                     <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_dict</span>
 
+                    <span class="c1"># For debugging. To be commented if not in debugging.</span>
+                    <span class="c1">#print(&#39;initResult_dict after nipype brick initialisaton: &#39;,  initResult_dict) </span>
+
                 <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Initialisation failed to determine the outputs &#39;</span>
                           <span class="s1">&#39;for the process &quot;</span><span class="si">{0}</span><span class="s1">&quot;:</span><span class="se">\n</span><span class="s1">Did you correctly defined &#39;</span>
                           <span class="s1">&#39;the inputs ...?&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span>
-                    <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
       
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initialisation failed to determine the outputs &#39;</span>
                           <span class="s1">&#39;for the process &quot;</span><span class="si">{0}</span><span class="s1">&quot;, due to:</span><span class="se">\n</span><span class="s1">&#39;</span>
                           <span class="s1">&#39;&quot;</span><span class="si">{1}</span><span class="s1">&quot;...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-                    <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
                     
             <span class="c1"># Management of the requirement object in initResult_dict</span>
             <span class="k">if</span> <span class="s1">&#39;_nipype_interface&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>
@@ -1005,12 +1020,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">brick_id</span><span class="p">,</span>
                                            <span class="n">BRICK_OUTPUTS</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
 
-            <span class="c1"># Update the database with output values obtained</span>
-            <span class="c1"># from initialisation</span>
+            <span class="c1"># Updating the database with output values obtained from</span>
+            <span class="c1"># initialisation. If a plug name is in</span>
+            <span class="c1"># initResult_dict[&#39;outputs&#39;][&#39;notInDb&#39;], then the corresponding</span>
+            <span class="c1"># output value is not added to the database.</span>
             <span class="k">if</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
-                
+
                 <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span> <span class="ow">in</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
- 
+                    <span class="n">add_plug_value_flag</span> <span class="o">=</span> <span class="kc">False</span>
+                    
                     <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                         <span class="k">continue</span>
                     
@@ -1021,11 +1039,22 @@
                             
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">full_name</span> <span class="o">=</span> <span class="n">node_name</span>
-                             
-                        <span class="bp">self</span><span class="o">.</span><span class="n">add_plug_value_to_database</span><span class="p">(</span><span class="n">plug_value</span><span class="p">,</span>
-                                                        <span class="bp">self</span><span class="o">.</span><span class="n">brick_id</span><span class="p">,</span>
-                                                        <span class="n">node_name</span><span class="p">,</span>
-                                                        <span class="n">plug_name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="s1">&#39;notInDb&#39;</span> <span class="ow">in</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
+
+                            <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="s1">&#39;notInDb&#39;</span><span class="p">]:</span>
+                                <span class="n">add_plug_value_flag</span> <span class="o">=</span> <span class="kc">True</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">add_plug_value_flag</span> <span class="o">=</span> <span class="kc">True</span>        
+
+                        <span class="k">if</span> <span class="n">add_plug_value_flag</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">add_plug_value_to_database</span><span class="p">(</span><span class="n">plug_value</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">brick_id</span><span class="p">,</span>
+                                                            <span class="n">node_name</span><span class="p">,</span>
+                                                            <span class="n">plug_name</span><span class="p">,</span>
+                                                            <span class="n">full_name</span><span class="p">)</span>
+
 
                     <span class="n">list_info_link</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="p">[</span><span class="n">plug_name</span><span class="p">]</span><span class="o">.</span><span class="n">links_to</span><span class="p">)</span>
 
@@ -1116,7 +1145,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span>
                 <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_controller_node_name</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="p">,</span>
                 <span class="n">pipeline</span><span class="p">)</span>
-            
+
         <span class="n">nodes_requir_miss</span> <span class="o">=</span> <span class="p">[</span><span class="n">nodeName</span> <span class="k">for</span> <span class="n">nodeName</span> <span class="ow">in</span> <span class="n">nodes_requir_issue</span>
                              <span class="k">if</span> <span class="n">nodes_requir_issue</span><span class="p">[</span><span class="n">nodeName</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MISSING&#39;</span><span class="p">]</span>
         <span class="n">nodes_requir_fail</span> <span class="o">=</span> <span class="p">[</span><span class="n">nodeName</span> <span class="k">for</span> <span class="n">nodeName</span> <span class="ow">in</span> <span class="n">nodes_requir_issue</span>
@@ -1125,8 +1154,8 @@
         <span class="k">if</span> <span class="p">((</span><span class="n">nodes_requir_miss</span> <span class="ow">or</span> <span class="n">nodes_requir_fail</span><span class="p">)</span> <span class="ow">and</span>
             <span class="ow">not</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">()</span> <span class="ow">and</span>
                 <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">()</span> <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()))):</span>
-
             <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
+
             <span class="k">if</span> <span class="p">((</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">())</span> <span class="ow">and</span>
                 <span class="p">(</span><span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())):</span>
 
@@ -1234,13 +1263,19 @@
                     <span class="s1">&#39;requirements of some bricks must be verified.&#39;</span>
                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
-        <span class="k">elif</span> <span class="n">initial</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">sum</span><span class="p">(</span><span class="n">check_init</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">check_init</span><span class="p">)</span> <span class="ow">or</span> <span class="n">initial</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
                 <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; was not initialised successfully.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">name</span><span class="p">))</span>
-
+            <span class="n">initial</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">initial</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">main_pipeline</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span>
+                        <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
                 <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; has been initialised.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
@@ -1257,11 +1292,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ignore_node</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ignore</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">test_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_pipeline</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_pipeline</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error during initialisation: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="c1"># If the initialization fail, the run pipeline action is disabled</span>
         <span class="c1"># The run pipeline action is enabled only when an initialization is</span>
         <span class="c1"># successful or the iterate pipeline checkbox is checked</span>
-        <span class="k">if</span> <span class="n">test_init</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1313,7 +1353,12 @@
         <span class="c1">#         or a  if pipeline.nodes[&quot;smooth1&quot;].plugs[&quot;fwhm&quot;].links_from:</span>
         <span class="c1">#         etc ...</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_clicked</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_clicked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">update_current_node</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">node_parameters</span> \
+            <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">(</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">update_current_node</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.layout_view"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.layout_view">[docs]</a>    <span class="k">def</span> <span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize layout for the pipeline manager tab&quot;&quot;&quot;</span>

@@ -63,7 +63,7 @@
 <span class="kn">import</span> <span class="nn">unittest</span>
 
 <span class="kn">from</span> <span class="nn">PyQt5.QtTest</span> <span class="k">import</span> <span class="n">QTest</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QTableWidgetItem</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">,</span> <span class="n">QLineEdit</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> \
     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">COLLECTION_BRICK</span><span class="p">,</span> \
     <span class="n">TAG_ORIGIN_USER</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span> <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_TYPE</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">TAG_EXP_TYPE</span>
@@ -1150,43 +1150,43 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_save_project"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_save_project">[docs]</a>    <span class="k">def</span> <span class="nf">test_save_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Test opening &amp; saving of a project&quot;&quot;&quot;</span>
-        <span class="n">PopUpSaveProjectAs</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span>
+
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">mia_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">()</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_path</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">,</span> <span class="s1">&#39;mia&#39;</span><span class="p">,</span>
-                                      <span class="s1">&#39;something&#39;</span><span class="p">)</span>
-        <span class="c1"># PopUpSaveProjectAs.relative_path = path</span>
-        <span class="c1"># self.main_window.saveChoice()</span>
-        <span class="c1"># self.assertEqual(self.main_window.project.getName(), &quot;something&quot;)</span>
-        <span class="c1"># self.assertEqual(os.path.exists(path), True)</span>
-        <span class="n">project_8_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_path</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">,</span> <span class="s1">&#39;mia&#39;</span><span class="p">,</span>
-                                      <span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
-        <span class="c1"># self.main_window.switch_project(project_8_path, &quot;project_8&quot;)</span>
-        <span class="c1"># self.assertEqual(self.main_window.project.getName(), &quot;project_8&quot;)</span>
-        <span class="c1"># self.main_window.saveChoice()</span>
-        <span class="c1"># shutil.rmtree(path)</span>
+        <span class="n">something_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_path</span><span class="p">,</span> <span class="s1">&#39;projects&#39;</span><span class="p">,</span> <span class="s1">&#39;something&#39;</span><span class="p">)</span>
+        <span class="n">project_8_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_path</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">,</span> <span class="s1">&#39;mia&#39;</span><span class="p">,</span> <span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saveChoice</span><span class="p">()</span> <span class="c1"># Saves the project &#39;something&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span> <span class="s2">&quot;something&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">something_path</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saveChoice</span><span class="p">()</span><span class="c1"># Updates the project &#39;project_8&#39;</span>
+
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">something_path</span><span class="p">)</span>
 
         <span class="n">PopUpNewProject</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span>
         <span class="n">PopUpNewProject</span><span class="o">.</span><span class="n">selectedFiles</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span>
         <span class="n">PopUpNewProject</span><span class="o">.</span><span class="n">get_filename</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kc">True</span>
-        <span class="n">PopUpNewProject</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="n">PopUpNewProject</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">something_path</span>
+        
         <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span>
         <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">selectedFiles</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span>
         <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">get_filename</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kc">True</span>
-        <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">path</span>
-        <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">something_path</span>
+        <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">PopUpOpenProject</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">something_path</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">create_project_pop_up</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">create_project_pop_up</span><span class="p">()</span> <span class="c1"># Saves the project &#39;something&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span> <span class="s2">&quot;something&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">something_path</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+        
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">open_project_pop_up</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span> <span class="s2">&quot;something&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
-
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">something_path</span><span class="p">)</span></div>
         <span class="c1"># QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)</span>
 
         <span class="c1"># print(self.main_window.saved_projects_actions)</span>

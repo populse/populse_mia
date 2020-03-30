@@ -159,7 +159,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Issue #147: Allow to interact with database while the popup is open</span>
+        <span class="c1"># self.setModal(True)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Count table&quot;</span><span class="p">)</span>
 
         <span class="c1"># Font</span>
