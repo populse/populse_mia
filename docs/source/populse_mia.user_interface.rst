@@ -13,6 +13,7 @@ Subpackages
 
    populse_mia.user_interface.data_browser
    populse_mia.user_interface.pipeline_manager
+   populse_mia.user_interface.data_viewer
 
 Submodules
 ----------
