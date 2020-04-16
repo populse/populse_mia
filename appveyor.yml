@@ -18,6 +18,7 @@ install:
   - "pip install pypng"
   - "pip install --upgrade pywavelets"
   - "pip install pypiwin32"
+  - "pip install kiwisolver==1.1.0"
   - "python setup.py install"
   - "git lfs install"
   - "git lfs pull"
