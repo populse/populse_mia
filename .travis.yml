@@ -48,11 +48,12 @@ before_install:
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran libfreetype6-dev libpng-dev; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install subversion; fi
+  # Temporary fix for the issue with MarkupSafe 2.0.0a1 which is automatically installed as a required library when installing populse_mia (python3 setup.py install, below) and that crashs - 16/04/2020
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$TRAVIS_PYTHON_VERSION" == "3.5" ]]; then pip3 install MarkupSafe==1.1.1; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install svn; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade numpy; fi
   - pip3 install --upgrade cython
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$TRAVIS_PYTHON_VERSION" == "3.5" ]]; then pip3 install MarkupSafe==1.1.1; fi
   - python3 setup.py install
   - pip3 install codecov
   #- pip3 install --upgrade --force-reinstall pyqt5
