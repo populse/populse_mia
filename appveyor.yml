@@ -19,6 +19,7 @@ install:
   - "pip install --upgrade pywavelets"
   - "pip install pypiwin32"
   - "pip install kiwisolver==1.1.0"
+  - "pip install MarkupSafe==1.1.1"
   - "python setup.py install"
   - "git lfs install"
   - "git lfs pull"
