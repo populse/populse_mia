@@ -943,14 +943,14 @@
     <span class="k">if</span> <span class="n">pack2install</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;nipype&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">** The nipype processes library in mia use &#39;</span>
-                  <span class="s1">&#39;already the current installed version (</span><span class="si">{0}</span><span class="s1">) &#39;</span>
-                  <span class="s1">&#39;for this station&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">** The nipype processes library in mia is &#39;</span>
+                  <span class="s1">&#39;already using the current installed version (</span><span class="si">{0}</span><span class="s1">) &#39;</span>
+                  <span class="s1">&#39;for this station</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">))</span>
 
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">** The mia_processes library in mia use &#39;</span>
-                  <span class="s1">&#39;already the current installed version (</span><span class="si">{0}</span><span class="s1">) &#39;</span>
-                  <span class="s1">&#39;for this station&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">miaProcVer</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">** The mia_processes library in mia is &#39;</span>
+                  <span class="s1">&#39;already using the current installed version (</span><span class="si">{0}</span><span class="s1">) &#39;</span>
+                  <span class="s1">&#39;for this station</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">miaProcVer</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">proc_content</span><span class="p">,</span> <span class="nb">dict</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;Paths&#39;</span> <span class="ow">in</span> <span class="n">proc_content</span><span class="p">):</span>
 
@@ -978,9 +978,9 @@
                       <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">** mia use already the current installed version of nipype and &#39;</span>
-              <span class="s1">&#39;mia_processes for this station (</span><span class="si">{0}</span><span class="s1"> and </span><span class="si">{1}</span><span class="s1">, respectively)&#39;</span>
-              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">))</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">** mia is already using the current installed version of &#39;</span>
+              <span class="s1">&#39;nipype and mia_processes for this station (</span><span class="si">{0}</span><span class="s1"> and </span><span class="si">{1}</span><span class="s1">, &#39;</span>
+              <span class="s1">&#39;respectively)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">))</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

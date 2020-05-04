@@ -1628,39 +1628,82 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline_parameters</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PipelineManagerTab.savePipeline"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline">[docs]</a>    <span class="k">def</span> <span class="nf">savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PipelineManagerTab.savePipeline"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline">[docs]</a>    <span class="k">def</span> <span class="nf">savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uncheck</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline of the pipeline editor</span>
+
+<span class="sd">        :param uncheck: a flag to warn (False) or not (True) if a pipeline is</span>
+<span class="sd">                        going to be overwritten during saving operation</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s1">&#39;The pipeline is getting saved. Please wait.&#39;</span><span class="p">)</span>
         <span class="c1"># QApplication.processEvents()</span>
-
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_filename</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="c1"># save</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">uncheck</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia - &quot;</span>
+                                   <span class="s2">&quot;Save pipeline Warning!&quot;</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;The following module will be overwritten:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;Do you agree?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Abort</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">retval</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline</span><span class="p">(</span><span class="n">new_file_name</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                    <span class="s2">&quot;The &#39;</span><span class="si">{}</span><span class="s2">&#39; pipeline has been &quot;</span>
+                    <span class="s2">&quot;saved.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                    <span class="s2">&quot;The &#39;</span><span class="si">{}</span><span class="s2">&#39; pipeline was not &quot;</span>
+                    <span class="s2">&quot;saved.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">filename</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline</span><span class="p">(</span><span class="n">new_file_name</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                    <span class="s2">&quot;The &#39;</span><span class="si">{}</span><span class="s2">&#39; pipeline has been &quot;</span>
+                    <span class="s2">&quot;saved.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
 
+        <span class="c1"># save as</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline</span><span class="p">()</span>
+            <span class="n">saveResult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-            <span class="s1">&#39;The pipeline has been saved.&#39;</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">saveResult</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                              <span class="s2">&quot;The &#39;</span><span class="si">{}</span><span class="s2">&#39; pipeline has been saved.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">saveResult</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                             <span class="s1">&#39;The pipeline was not saved.&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.savePipelineAs"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipelineAs">[docs]</a>    <span class="k">def</span> <span class="nf">savePipelineAs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline of the pipeline editor under another name</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s1">&#39;The pipeline is getting saved. Please wait.&#39;</span><span class="p">)</span>
+        <span class="n">saveResult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">saveResult</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                <span class="s2">&quot;The &#39;</span><span class="si">{}</span><span class="s2">&#39; pipeline has been saved.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">saveResult</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-            <span class="s1">&#39;The pipeline has been saved.&#39;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                <span class="s1">&#39;The pipeline was not saved.&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.undo"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.undo">[docs]</a>    <span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

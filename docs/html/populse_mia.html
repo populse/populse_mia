@@ -98,6 +98,16 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#module-populse_mia.user_interface.pipeline_manager.process_mia">populse_mia.user_interface.pipeline_manager.process_mia module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html">populse_mia.user_interface.data_viewer package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#module-populse_mia.user_interface.data_viewer.data_viewer">populse_mia.user_interface.data_viewer.data_viewer module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#coding-a-data-viewer">Coding a data viewer</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#module-populse_mia.user_interface.data_viewer.data_viewer_tab">populse_mia.user_interface.data_viewer.data_viewer_tab module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#populse-mia-user-interface-data-viewer-anatomist-mia-anatomist-module">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.html#submodules">Submodules</a></li>
@@ -465,13 +475,20 @@ pop-up in the config.yml file.</p>
 </dl>
 <dl class="class">
 <dt id="populse_mia.software_properties.Config">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.software_properties.</code><code class="sig-name descname">Config</code><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.software_properties.</code><code class="sig-name descname">Config</code><span class="sig-paren">(</span><em class="sig-param">config_path=None</em>, <em class="sig-param">load=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Object that handles the configuration of the software</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">config_path=None</em>, <em class="sig-param">load=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialization of the Config class</p>
+<dl class="simple">
+<dt>config_path: str (optional)</dt><dd><p>if provided, the configuration file will be loaded/saved from
+the given directory. Otherwise the regular eutristics will be used
+to determine the config path. This option allows to use an
+alternative config directory (for tests for instance).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -568,6 +585,24 @@ or not in the miniviewer.</p>
 <dd class="field-odd"><p>string</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.get_config_path">
+<code class="sig-name descname">get_config_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_config_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_config_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the MIA config path (including “properties” directory)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.get_mainwindow_maximized">
+<code class="sig-name descname">get_mainwindow_maximized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mainwindow_maximized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mainwindow_maximized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the maximized (fullscreen) flag</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.get_mainwindow_size">
+<code class="sig-name descname">get_mainwindow_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mainwindow_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mainwindow_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the main window size</p>
 </dd></dl>
 
 <dl class="method">
@@ -870,6 +905,18 @@ preferences.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.software_properties.Config.set_mainwindow_maximized">
+<code class="sig-name descname">set_mainwindow_maximized</code><span class="sig-paren">(</span><em class="sig-param">enabled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_maximized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_maximized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximized (fullscreen) flag</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.set_mainwindow_size">
+<code class="sig-name descname">set_mainwindow_size</code><span class="sig-paren">(</span><em class="sig-param">size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set main window size</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.software_properties.Config.set_matlab_path">
 <code class="sig-name descname">set_matlab_path</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_matlab_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_matlab_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the path of Matlab’s executable.</p>
@@ -1084,9 +1131,21 @@ the second argument, return True (False if not).</p></li>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.test.TestMIADataBrowser.setUpClass">
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.test.TestMIADataBrowser.tearDown">
 <code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.tearDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called after each test</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.test.TestMIADataBrowser.tearDownClass">
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1270,15 +1329,34 @@ the second argument, return True (False if not).</p></li>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <p>Tests for the pipeline manager tab.</p>
 <dl class="method">
+<dt id="populse_mia.test.TestMIAPipelineManager.execute_click">
+<code class="sig-name descname">execute_click</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.execute_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.execute_click" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is supposed to allow to press the Yes button if a pipeline is 
+overwritten in the test_zz_check_modifications method</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.setUp">
 <code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called before each test</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.test.TestMIAPipelineManager.setUpClass">
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.tearDown">
 <code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.tearDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called after each test</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.test.TestMIAPipelineManager.tearDownClass">
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1320,7 +1398,8 @@ the second argument, return True (False if not).</p></li>
 <dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.test_process_library">
 <code class="sig-name descname">test_process_library</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.test_process_library"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.test_process_library" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Install the brick_test and mia_processes libraries and then remove them</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.test_save_pipeline">

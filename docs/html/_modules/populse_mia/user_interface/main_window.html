@@ -86,6 +86,8 @@
                                                 <span class="n">PopUpSaveProjectAs</span><span class="p">,</span>
                                                 <span class="n">PopUpQuit</span><span class="p">,</span>
                                                 <span class="n">PopUpSeeAllProjects</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.data_viewer_tab</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DataViewerTab</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MainWindow"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow">[docs]</a><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
@@ -185,7 +187,7 @@
         <span class="c1"># Initialize tabs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span> <span class="o">=</span> <span class="n">QTabWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span> <span class="o">=</span> <span class="n">DataBrowser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_viewer</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Coming soon...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span> <span class="o">=</span> <span class="n">DataViewerTab</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span> <span class="o">=</span> <span class="n">PipelineManagerTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="p">[],</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">centralWindow</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
 
@@ -224,7 +226,12 @@
         <span class="c1"># Create Tabs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_tabs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setCentralWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centralWindow</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_mainwindow_maximized</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_mainwindow_size</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">size</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="MainWindow.add_clinical_tags"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.add_clinical_tags">[docs]</a>    <span class="k">def</span> <span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add the clinical tags to the database and the data browser&quot;&quot;&quot;</span>
@@ -461,8 +468,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="p">,</span> <span class="s2">&quot;Data Browser&quot;</span><span class="p">)</span>
 
         <span class="c1"># To uncomment when the Data Viewer will be created</span>
-        <span class="c1"># self.image_viewer = ImageViewer()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_viewer</span><span class="p">,</span> <span class="s2">&quot;Data Viewer&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="p">,</span> <span class="s2">&quot;Data Viewer&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="p">,</span> <span class="s2">&quot;Pipeline Manager&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_changed</span><span class="p">)</span>
@@ -630,7 +636,7 @@
 <div class="viewcode-block" id="MainWindow.package_library_pop_up"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.package_library_pop_up">[docs]</a>    <span class="k">def</span> <span class="nf">package_library_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open the package library pop-up&quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_package_library</span> <span class="o">=</span> <span class="n">PackageLibraryDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_package_library</span> <span class="o">=</span> <span class="n">PackageLibraryDialog</span><span class="p">(</span><span class="n">mia_main_window</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_package_library</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_package_library</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_package_library</span><span class="o">.</span><span class="n">signal_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -1089,6 +1095,14 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">show_search</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">apply_filter</span><span class="p">(</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">currentFilter</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">tabText</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Data Viewer&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">activate_viewer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">current_viewer</span><span class="p">())</span>
+            <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
+                <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">tabText</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span>

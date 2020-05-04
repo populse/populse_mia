@@ -1999,7 +1999,7 @@
 
         <span class="c1"># The &#39;Pipeline&#39; tab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;tab_appearance&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;tab_pipeline&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_widget</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span><span class="p">,</span>
                                <span class="n">_translate</span><span class="p">(</span><span class="s2">&quot;Dialog&quot;</span><span class="p">,</span> <span class="s2">&quot;Pipeline&quot;</span><span class="p">))</span>
 
@@ -2169,10 +2169,35 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">background_color_combo</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">background_color</span><span class="p">)</span>
         <span class="n">text_color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getTextColor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text_color_combo</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">text_color</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fullscreen_cbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;Use full screen&#39;</span><span class="p">)</span>
+        <span class="n">mainwindow_size_lay</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">mainwindow_size_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Main window size&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_x_spinbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSpinBox</span><span class="p">()</span>
+        <span class="n">mainwindow_size_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_x_spinbox</span><span class="p">)</span>
+        <span class="n">mainwindow_size_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39; x &#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_y_spinbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSpinBox</span><span class="p">()</span>
+        <span class="n">mainwindow_size_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_y_spinbox</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fullscreen_cbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mainwindow_maximized</span><span class="p">())</span>
+        <span class="n">wsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_mainwindow_size</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_x_spinbox</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span>
+            <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">width</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_y_spinbox</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span>
+            <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">height</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wsize</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wsize</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_x_spinbox</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">wsize</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_y_spinbox</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">wsize</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;use current size&#39;</span><span class="p">)</span>
+        <span class="n">mainwindow_size_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_button</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_current_mainwindow_size</span><span class="p">,</span> <span class="n">main_window</span><span class="p">))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_background_color</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background_color_combo</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_text_color</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text_color_combo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fullscreen_cbox</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">mainwindow_size_lay</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_appearance</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appearance_layout</span><span class="p">)</span>
 
@@ -2581,6 +2606,18 @@
             <span class="s2">&quot;background-color:&quot;</span> <span class="o">+</span> <span class="n">background_color</span> <span class="o">+</span> <span class="s2">&quot;;color:&quot;</span> <span class="o">+</span>
             <span class="n">text_color</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
 
+        <span class="c1"># main window setup</span>
+        <span class="n">fullscreen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fullscreen_cbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_mainwindow_maximized</span><span class="p">(</span><span class="n">fullscreen</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_x_spinbox</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_y_spinbox</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_mainwindow_size</span><span class="p">([</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">fullscreen</span><span class="p">:</span>
+            <span class="n">main_window</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">main_window</span><span class="o">.</span><span class="n">showNormal</span><span class="p">()</span>
+            <span class="c1">#main_window.resize(w, h)  # don&#39;t apply now</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">signal_preferences_change</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
@@ -2692,7 +2729,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PopUpPreferences.use_current_mainwindow_size"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_current_mainwindow_size">[docs]</a>    <span class="k">def</span> <span class="nf">use_current_mainwindow_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_x_spinbox</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">main_window</span><span class="o">.</span><span class="n">width</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_y_spinbox</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">main_window</span><span class="o">.</span><span class="n">height</span><span class="p">())</span></div></div>
 
 
 <div class="viewcode-block" id="PopUpProperties"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpProperties">[docs]</a><span class="k">class</span> <span class="nc">PopUpProperties</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>

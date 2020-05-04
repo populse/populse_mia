@@ -1414,8 +1414,14 @@ pipeline editor</p>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline">
-<code class="sig-name descname">savePipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.savePipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">savePipeline</code><span class="sig-paren">(</span><em class="sig-param">uncheck=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.savePipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current pipeline of the pipeline editor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uncheck</strong> – a flag to warn (False) or not (True) if a pipeline is
+going to be overwritten during saving operation</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1545,8 +1551,8 @@ the project.</p>
 <li><p>Node</p></li>
 <li><p>PackageLibrary</p></li>
 <li><p>PackageLibraryDialog</p></li>
-<li><p>ProcessLibrary</p></li>
 <li><p>ProcessHelp</p></li>
+<li><p>ProcessLibrary</p></li>
 <li><p>ProcessLibraryWidget</p></li>
 </ul>
 </dd>
@@ -1745,6 +1751,14 @@ the processes that it is containing.</p>
 <dt id="populse_mia.user_interface.pipeline_manager.process_library.InstallProcesses.install">
 <code class="sig-name descname">install</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#InstallProcesses.install"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.InstallProcesses.install" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install a package from a zip file or a folder.</p>
+<dl class="simple">
+<dt><strong>Contains: Private function:</strong></dt><dd><ul class="simple">
+<li><p>add_package: Add a package and its modules to the package tree</p></li>
+<li><p>change_pattern_in_folder: Changing all ‘old_pattern’ pattern to
+‘new_pattern’ in the ‘path’ folder</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -2053,12 +2067,12 @@ library.</p>
 
 <dl class="class">
 <dt id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_library.</code><code class="sig-name descname">PackageLibraryDialog</code><span class="sig-paren">(</span><em class="sig-param">parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_library.</code><code class="sig-name descname">PackageLibraryDialog</code><span class="sig-paren">(</span><em class="sig-param">mia_main_window=None</em>, <em class="sig-param">parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QDialog</span></code></p>
 <p>Dialog that controls which processes to show in the process library.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">mia_main_window=None</em>, <em class="sig-param">parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialization of the PackageLibraryDialog widget</p>
 </dd></dl>
 
@@ -2092,6 +2106,19 @@ execution</p></li>
 <dt id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.browse_package">
 <code class="sig-name descname">browse_package</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.browse_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.browse_package" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a browser to select a package.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.del_list">
+<code class="sig-name descname">del_list</code><em class="property"> = None</em><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.del_list" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>self.add_list.setSelectionMode(</dt><dd><p>QtGui.QAbstractItemView.ExtendedSelection)</p>
+</dd>
+<dt>self.remove_list.setSelectionMode(</dt><dd><p>QtGui.QAbstractItemView.ExtendedSelection)</p>
+</dd>
+<dt>self.del_list.setSelectionMode(</dt><dd><p>QtGui.QAbstractItemView.ExtendedSelection)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">

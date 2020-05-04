@@ -11,7 +11,6 @@ Subpackages
 
 .. toctree::
 
-   populse_mia.#image_viewer
    populse_mia.data_manager
    populse_mia.sources_images
    populse_mia.user_interface
