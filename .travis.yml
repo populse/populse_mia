@@ -54,6 +54,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade numpy; fi
   - pip3 install --upgrade cython
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
+  - python3 setup.py install
   - pip3 install codecov
   #- pip3 install --upgrade --force-reinstall pyqt5
   - pip3 install --force-reinstall pyqt5==5.11.3
@@ -66,25 +67,24 @@ install:
   #- pip3 install --force-reinstall lark-parser==0.6.7
   - cd ..
   - git clone --depth=50 --branch=master https://github.com/populse/soma-base.git
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-base; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-base; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-base; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-base; fi
   - cd soma-base
   - python setup.py install
   - cd ..
   - git clone --depth=50 --branch=master https://github.com/populse/soma-workflow.git
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-workflow; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-workflow; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-workflow; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-workflow; fi
   - cd soma-workflow
   - python setup.py install
   - cd ..
   - git clone --depth=50 --branch=master https://github.com/populse/capsul.git
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes capsul; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes capsul; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes capsul; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes capsul; fi
   - cd capsul
   - python setup.py install
   - cd ..
   - cd populse_mia
-  - python3 setup.py install
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PYTHONPATH="$PYTHONPATH:/home/travis/build/populse/populse_mia/python"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PYTHONPATH="$PYTHONPATH:/Users/travis/build/populse/populse_mia/python"; fi
   #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PYTHONPATH="$PYTHONPATH:/home/travis/build/populse/soma-base/python"; fi
