@@ -65,9 +65,18 @@ install:
   - pip3 install -e .[postgres]
   #- pip3 install --force-reinstall lark-parser==0.6.7
   - cd ..
-  #- git clone --depth=50 --branch=master https://github.com/populse/soma-base.git
+  - git clone --depth=50 --branch=master https://github.com/populse/soma-base.git
   #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-base; fi
   #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-base; fi
+  - cd soma-base
+  - python setup.py install
+  - cd ..
+  - git clone --depth=50 --branch=master https://github.com/populse/soma-workflow.git
+  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-workflow; fi
+  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-workflow; fi
+  - cd soma-workflow
+  - python setup.py install
+  - cd ..
   - git clone --depth=50 --branch=master https://github.com/populse/capsul.git
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes capsul; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes capsul; fi
