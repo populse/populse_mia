@@ -61,7 +61,7 @@ install:
   - pip3 install --force-reinstall PyQt5-sip==4.19.13
   - pip3 install -U 'six>=1.13'
   - cd ..
-  - git clone --depth=50 --branch=master https://github.com/populse/populse_db.git
+  - git clone --depth=50 --branch=2.0 https://github.com/populse/populse_db.git
   - cd populse_db
   - pip3 install -e .[postgres]
   #- pip3 install --force-reinstall lark-parser==0.6.7
