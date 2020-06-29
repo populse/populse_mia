@@ -37,12 +37,8 @@ install:
   - "cd populse-mia"
   - "SET PYTHONPATH=C:\\projects\\populse-mia\\python;%PYTHONPATH%"
   - "SET PYTHONPATH=C:\\projects\\soma-base\\python;%PYTHONPATH%"
-  - "SET PYTHONPATH=C:\\projects\\capsul\\python;%PYTHONPATH%"
+  - "SET PYTHONPATH=C:\\projects\\capsul;%PYTHONPATH%"
   - "SET PYTHONPATH=C:\\projects\\populse_db\\python;%PYTHONPATH%"
-  - "echo %PYTHONPATH%"
-  - "DIR C:\\projects\\capsul"
-  - "DIR C:\\projects\\capsul\\python"
-  - "python -c \"import capsul; print(capsul.__file__)\""
 
 test_script:
   - "python --version"
