@@ -55,6 +55,8 @@ install:
   - pip3 install --upgrade cython
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
   - pip3 install 'scipy<1.5'
+  - pip3 install 'matplotlib'
+  - python3 -c "import matplotlib; print(matplotlib.__version__)"
   - python3 setup.py install
   - pip3 install codecov
   #- pip3 install --upgrade --force-reinstall pyqt5
