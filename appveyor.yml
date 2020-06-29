@@ -40,7 +40,7 @@ install:
   - "SET PYTHONPATH=C:\\projects\\capsul\\python\\;%PYTHONPATH%"
   - "SET PYTHONPATH=C:\\projects\\populse_db\\python\\;%PYTHONPATH%"
   - "echo %PYTHONPATH%"
-  - "python -c 'import capsul; print(capsul.__file__)'"
+  - "python -c \"import capsul; print(capsul.__file__)\""
 
 test_script:
   - "python --version"
