@@ -133,7 +133,7 @@ Populse member
         3. Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed: ::
 
             python3 -V
-            pip3 -v
+            pip3 --version
 
     * Make sure you have Git installed. You can verify it by typing in PowerShell : ::
 
@@ -174,7 +174,7 @@ Populse member
         :width: 400
         :align: center
 
-      * Get sources code for MRI_conv from GitHub using the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) : ::
+      * Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) : ::
 
           git lfs clone https://github.com/populse/mri_conv.git [mri_install_directory] # using HTTPS
           git lfs clone git@github.com:populse/mri_conv.git [mri_install_directory] # using SSH
