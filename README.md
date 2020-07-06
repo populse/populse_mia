@@ -49,7 +49,29 @@
         rm -r [mia_install_dir]  
 
  * From source, for Windows 10 distribution
- 	 * A compatible version of Python must be installed
+ 	 * First assure that you have activated the developer mode for Windows in the parameters :
+	 	* Click on start and parameters ;
+		* Go in Update and Security ;
+		* Click on Developer environment in the left column and activate the Developer mode ;
+		* You will need to restart you computer.
+	 * Open a PowerShell window on your computer :
+	 	* Click on start menu and type "PowerShell" ;
+		* Run the PowerShell application.
+ 	 * A compatible version of Python must be installed, to verify it, type in PowerShell :
+	 	
+			python3 -V
+		
+	 *Note : depending on your versions, you might need to use "python -V" instead of "python3 -V" to check you version of Python
+	 
+	 * If you don't have python, you need to install it by using the Microsoft Store :
+	 
+	 	1. Open the Start menu and type "Microsoft Store" and launch the application ;
+		2. In the store, select research on the top right menu and type "Python". Python 3.8 should appear in the result and click on it ;
+		3. Install it on you computer ;
+		4. Check in PowerShell that Python and pip are installed :
+			python3 -V
+			pip3 --version
+	 
 	 * Install a Version Control System, for example [git](https://git-scm.com/download/win). Depending of your distribution, [package management system](https://en.wikipedia.org/wiki/Package_manager) can be different
 
 	 		Download the executable for your specific distribution (64 or 32 bits)
@@ -65,15 +87,18 @@
 
 	        unzip populse_mia-master.zip -d [mia_install_dir]  # In this case [mia_install_dir] becomes [mia_install_dir]/populse_mia-master
 
-	   * Install the Python module distribution
+	  * Install the Python module distribution
 
 	         cd [mia_install_dir]  
 	         python3 setup.py install --user # Ensure that you use python >= 3.5 | Be sure to don't forget "--user" at the end of the command, otherwise you might get	access issues from administrators rights.
 
-		* After the installation, some required packages might still be missing and need to be install separately (capsul, mia-processes, populse-db, PyQt5 == 5.14.0, SIP == 5.0.1, traits == 5.2.0):
+	  * After the installation, some required packages might still be missing and need to be install separately (capsul, mia-processes, populse-db, PyQt5 == 5.14.0, SIP == 5.0.1, traits == 5.2.0):
 
-			  pip install SomePackage --user # Still don't forget to add the "--user" at the end of the command line to assure the installation on the right path
-
+		 	pip install SomePackage --user # Still don't forget to add the "--user" at the end of the command line to assure the installation on the right path
+		 				# Replace "SomePackage" by the name of the package missing on your computer
+	
+	  
+	  
 # Usage
 
   * For all platforms: after a source installation, launching from the source code directory via command line
@@ -82,6 +107,25 @@
 
           cd [mia_install_dir]/python/populse_mia  
           python3 main.py  
+    
+    * Now, to configure your populse_mia, click on file and MIA preferences 
+  	* In the Tools tab, enter the path to your project folder under Project preferences ;
+	* Get sources code for MRI_conv from GitHub using HTTPS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) :
+	
+			git lfs clone https://github.com/populse/mri_conv.git [mri_install_dir] # using HTTPS
+			git lfs clone git@github.com:populse/mri_conv.git [mri_install_dir] # using SSH
+		
+	* In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences
+		
+			[mri_install_dir]/mri_conv/MRIFileManager/MRIManager.jar
+		
+	* Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :
+	
+			../../Matlab/YourVersionOfMatlab/bin/matlab.exe
+		
+	* In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder :
+	
+			../../Matlab/spm12
 
   * For all platforms, after a [Populse_MIA’s user installation](https://populse.github.io/populse_mia/html/installation/user_installation.html)
 
