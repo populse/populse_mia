@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 1.3.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -51,12 +52,12 @@
 <span class="c1">##########################################################################</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="k">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span><span class="n">PopUpSelectIteration</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PopUpSelectIteration</span><span class="p">,</span>
                                                 <span class="n">PopUpInheritanceDict</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span> <span class="kn">import</span> <span class="p">(</span>
                                                                  <span class="n">IterationTable</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                               <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
                                               <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">,</span>
                                               <span class="n">BRICK_OUTPUTS</span><span class="p">,</span> <span class="n">BRICK_INPUTS</span><span class="p">,</span>
@@ -65,23 +66,23 @@
                                               <span class="n">TAG_EXP_TYPE</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span>
                                               <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TYPE_NII</span><span class="p">,</span> <span class="n">TYPE_MAT</span><span class="p">,</span>
                                               <span class="n">TYPE_TXT</span><span class="p">,</span> <span class="n">TYPE_UNKNOWN</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="kn">import</span> <span class="p">(</span>
                                                                  <span class="n">NodeController</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="kn">import</span> <span class="p">(</span>
                                                              <span class="n">PipelineEditorTabs</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>
                                                            <span class="n">ProcessLibraryWidget</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="p">(</span><span class="n">get_process_instance</span><span class="p">,</span> <span class="n">NipypeProcess</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_process_instance</span><span class="p">,</span> <span class="n">NipypeProcess</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">,</span>
                         <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">StudyConfig</span><span class="p">,</span> <span class="n">Switch</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="kn">import</span> <span class="p">(</span>
                                                          <span class="n">PipelineDevelopperView</span><span class="p">)</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">Signal</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QMenu</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QSplitter</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Signal</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QMenu</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QSplitter</span><span class="p">,</span>
                              <span class="n">QApplication</span><span class="p">,</span> <span class="n">QToolBar</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span>
                              <span class="n">QScrollArea</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QProgressDialog</span><span class="p">,</span>
                              <span class="n">QPushButton</span><span class="p">)</span>
@@ -94,10 +95,10 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="k">import</span> <span class="n">QtWidgets</span>
-<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
 
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
@@ -147,7 +148,7 @@
 
     <span class="n">item_library_clicked</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PipelineManagerTab.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<div class="viewcode-block" id="PipelineManagerTab.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialization of the Pipeline Manager tab</span>
 
@@ -268,6 +269,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">controller_value_changed</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_show_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_item</span><span class="p">):</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">previewBlock</span><span class="o">.</span><span class="n">centerOn</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">find_process</span><span class="p">(</span><span class="n">name_item</span><span class="p">)</span>
 
@@ -282,6 +284,7 @@
 <span class="sd">        :param full_name: full name of the node, including parent brick(s).</span>
 <span class="sd">                          If there is no parent brick, full_name = node_name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">p_value</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">p_value</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_plug_value_to_database</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">brick</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> 
@@ -439,6 +442,7 @@
 <span class="sd">        :param node_name: name of the corresponding node</span>
 <span class="sd">           (using when undo/redo) (str)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># pipeline = self.previewBlock.scene.pipeline</span>
         <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">node_name</span><span class="p">:</span>
@@ -477,6 +481,7 @@
 
 <span class="sd">        :param signal_list: list of the needed parameters to update history</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">case</span> <span class="o">=</span> <span class="n">signal_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># For history</span>
@@ -526,6 +531,7 @@
 <span class="sd">        :param process: process instance of the corresponding node</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Switch</span><span class="p">):</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
@@ -540,6 +546,7 @@
 
 <span class="sd">        :param path: class&#39;s path (e.g. &quot;nipype.interfaces.spm.Smooth&quot;) (str)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">package_name</span><span class="p">,</span> <span class="n">process_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">process_name</span> <span class="o">=</span> <span class="n">process_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="nb">__import__</span><span class="p">(</span><span class="n">package_name</span><span class="p">)</span>
@@ -573,6 +580,7 @@
 <span class="sd">        :param pipeline: not None if this method call a sub-pipeline</span>
 <span class="sd">        :param pipeline_name: name of the parent pipeline</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># Should we add a progress bar for the initialization?</span>
         <span class="c1"># self.enable_progress_bar = True</span>
         <span class="c1"># if self.enable_progress_bar:</span>
@@ -1362,6 +1370,7 @@
 
 <div class="viewcode-block" id="PipelineManagerTab.layout_view"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.layout_view">[docs]</a>    <span class="k">def</span> <span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize layout for the pipeline manager tab&quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Diagram editor&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scrollArea</span><span class="o">.</span><span class="n">setWidgetResizable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1425,6 +1434,7 @@
 <span class="sd">        Load a pipeline to the pipeline editor</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">load_pipeline</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.loadParameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadParameters">[docs]</a>    <span class="k">def</span> <span class="nf">loadParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1432,6 +1442,7 @@
 <span class="sd">        Load pipeline parameters to the current pipeline of the pipeline editor</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">load_pipeline_parameters</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">update_parameters</span><span class="p">()</span></div>
@@ -1452,6 +1463,7 @@
 <span class="sd">            - delete_link</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">c_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span>
 
         <span class="c1"># We can redo if we have an action to make again</span>
@@ -1626,6 +1638,7 @@
 <span class="sd">        pipeline editor</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline_parameters</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.savePipeline"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline">[docs]</a>    <span class="k">def</span> <span class="nf">savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uncheck</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1636,6 +1649,7 @@
 <span class="sd">                        going to be overwritten during saving operation</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s1">&#39;The pipeline is getting saved. Please wait.&#39;</span><span class="p">)</span>
         <span class="c1"># QApplication.processEvents()</span>
@@ -1692,6 +1706,7 @@
 <span class="sd">        Save the current pipeline of the pipeline editor under another name</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s1">&#39;The pipeline is getting saved. Please wait.&#39;</span><span class="p">)</span>
         <span class="n">saveResult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">save_pipeline</span><span class="p">()</span>
@@ -1721,6 +1736,7 @@
 <span class="sd">            - delete_link</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">c_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span>
 
         <span class="c1"># We can undo if we have an action to revert</span>
@@ -1826,6 +1842,7 @@
 <span class="sd">        Update the visibility of widgets/actions depending of the chosen mode</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="c1"># If the user mode is chosen, the process library is not available</span>
@@ -1860,6 +1877,7 @@
 
 <span class="sd">        :param project: current project in the software</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -1876,6 +1894,7 @@
 
 <span class="sd">        :param iteration_list: current list of scans in the iteration table</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_scans_list</span> <span class="o">=</span> <span class="n">iteration_list</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="n">iteration_list</span>
@@ -1893,6 +1912,7 @@
 
 <span class="sd">        :param filename: file name of the pipeline that has been saved</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">filename_folder</span><span class="p">,</span> <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">module_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">class_name</span> <span class="o">=</span> <span class="n">module_name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
@@ -1968,7 +1988,7 @@
 <span class="sd">    :param settings: dictionary of settings when the pipeline is iterated</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RunProgress.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RunProgress.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">RunProgress</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Please wait while the pipeline is &quot;</span>
                                           <span class="s2">&quot;running...&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -2000,7 +2020,7 @@
 <div class="viewcode-block" id="RunWorker"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker">[docs]</a><span class="k">class</span> <span class="nc">RunWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run the pipeline&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RunWorker.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">):</span>
+<div class="viewcode-block" id="RunWorker.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diagramView</span> <span class="o">=</span> <span class="n">diagram_view</span></div>
 
@@ -2029,32 +2049,39 @@
         <span class="n">use_spm_standalone</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()</span>
         <span class="n">use_matlab</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">()</span>
 
+        <span class="n">study_config</span> <span class="o">=</span> <span class="n">StudyConfig</span><span class="p">(</span>
+            <span class="n">modules</span><span class="o">=</span><span class="n">StudyConfig</span><span class="o">.</span><span class="n">default_modules</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;FreeSurferConfig&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;NipypeConfig&#39;</span><span class="p">])</span>
+        <span class="n">sconf</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">use_spm_standalone</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
                 <span class="n">spm_standalone_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
             <span class="n">matlab_standalone_path</span><span class="p">):</span>
 
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">matlab_path</span><span class="p">):</span>
-                <span class="n">study_config</span> <span class="o">=</span> <span class="n">StudyConfig</span><span class="p">(</span>
-                    <span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span>
+                <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span>
                     <span class="n">spm_exec</span><span class="o">=</span><span class="n">matlab_standalone_path</span><span class="p">,</span>
                     <span class="n">matlab_exec</span><span class="o">=</span><span class="n">matlab_path</span><span class="p">,</span>
-                    <span class="n">output_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">output_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">study_config</span> <span class="o">=</span> <span class="n">StudyConfig</span><span class="p">(</span>
+                <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
                     <span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span>
                     <span class="n">spm_exec</span><span class="o">=</span><span class="n">matlab_standalone_path</span><span class="p">,</span>
-                    <span class="n">output_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">output_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
         <span class="c1"># Using without SPM standalone</span>
         <span class="k">elif</span> <span class="n">use_spm</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">use_matlab</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">study_config</span> <span class="o">=</span> <span class="n">StudyConfig</span><span class="p">(</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
                 <span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">matlab_exec</span><span class="o">=</span><span class="n">matlab_path</span><span class="p">,</span>
                 <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_path</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">use_matlab</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_directory</span><span class="o">=</span><span class="n">spm_path</span><span class="p">)</span>
+                <span class="n">use_matlab</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_directory</span><span class="o">=</span><span class="n">spm_path</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">study_config</span> <span class="o">=</span> <span class="n">StudyConfig</span><span class="p">(</span><span class="n">use_spm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_spm</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
+        <span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">sconf</span><span class="p">)</span>
         <span class="n">study_config</span><span class="o">.</span><span class="n">reset_process_counter</span><span class="p">()</span>
+        <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">study_config</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -2132,7 +2159,9 @@
            
         <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{0}</span><span class="s1"> has not been launched:</span><span class="se">\n</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                               <span class="n">e</span><span class="p">))</span></div></div>
+                                                               <span class="n">e</span><span class="p">))</span>
+            <span class="kn">import</span> <span class="nn">traceback</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
         <span class="c1"># haven&#39;t yet found how to raise the exception in the try block in</span>
         <span class="c1"># PipelineManagerTab.runPipeline() above. So the</span>
         <span class="c1"># self.main_window.statusBar().showMessage() gives the</span>
@@ -2155,6 +2184,9 @@
             <span class="c1">#except ValueError as e:</span>
             <span class="c1">#    print(&quot;\n{0} has not been launched:\n{1}\n&quot;.format(pipeline.name,</span>
             <span class="c1">#                                                       e))</span>
+
+        <span class="c1"># restore current working directory in cas it has been changed</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div></div>
 </pre></div>
 
       </div>
@@ -2168,7 +2200,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
     </div>
   </body>
 </html>

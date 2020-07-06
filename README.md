@@ -23,7 +23,7 @@
 * From source, for Linux distributions
   * A compatible version of Python must be installed
   * Install a Version Control System, for example [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). Depending of your distribution, [package management system](https://en.wikipedia.org/wiki/Package_manager) can be different
-  
+
         sudo apt-get install git # Debian like
         sudo dnf install git # Fedora 22 and later
         # etc.
@@ -37,7 +37,7 @@
     * Or download the zip file (populse_mia-master.zip) of the project ([green button "Clone or download"](https://github.com/populse/populse_mia)), then extract the data in the directory of your choice [mia_install_dir]
 
            unzip populse_mia-master.zip -d [mia_install_dir]  # In this case [mia_install_dir] becomes [mia_install_dir]/populse_mia-master
-	
+
   * Install the Python module distribution
 
         cd [mia_install_dir]  
@@ -48,9 +48,35 @@
         cd ..  
         rm -r [mia_install_dir]  
 
+ * From source, for Windows 10 distribution
+ 	 * A compatible version of Python must be installed
+	 * Install a Version Control System, for example [git](https://git-scm.com/download/win). Depending of your distribution, [package management system](https://en.wikipedia.org/wiki/Package_manager) can be different
+
+	 		Download the executable for your specific distribution (64 or 32 bits)
+			Execute it
+			# ect.
+			* Clone the source codes
+
+	  * Get source codes from Github. Replace [mia_install_dir] with a directory of your choice
+
+	         git lfs clone https://github.com/populse/populse_mia.git [mia_install_dir]
+
+	  * Or download the zip file (populse_mia-master.zip) of the project ([green button "Clone or download"](https://github.com/populse/populse_mia)), then extract the data in the directory of your choice [mia_install_dir]
+
+	        unzip populse_mia-master.zip -d [mia_install_dir]  # In this case [mia_install_dir] becomes [mia_install_dir]/populse_mia-master
+
+	   * Install the Python module distribution
+
+	         cd [mia_install_dir]  
+	         python3 setup.py install --user # Ensure that you use python >= 3.5 | Be sure to don't forget "--user" at the end of the command, otherwise you might get	access issues from administrators rights.
+
+		* After the installation, some required packages might still be missing and need to be install separately (capsul, mia-processes, populse-db, PyQt5 == 5.14.0, SIP == 5.0.1, traits == 5.2.0):
+
+			  pip install SomePackage --user # Still don't forget to add the "--user" at the end of the command line to assure the installation on the right path
+
 # Usage
 
-  * For Linux: launching from the source code directory via command line
+  * For all platforms: after a source installation, launching from the source code directory via command line
 
     * Interprets the main.py file
 
@@ -58,13 +84,13 @@
           python3 main.py  
 
   * For all platforms, after a [Populse_MIA’s user installation](https://populse.github.io/populse_mia/html/installation/user_installation.html)
- 
+
         python3 -m populse_mia
-	
+
   * Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:
-  
-        python3 -m pip install --force-reinstall pyqt5==5.11.3
-        python3 -m pip install --force-reinstall PyQt5-sip==4.19.13
+
+        python3 -m pip install --force-reinstall pyqt5==5.14.0
+        python3 -m pip install --force-reinstall PyQt5-sip==5.0.1
 
 # Tests
 
@@ -117,4 +143,3 @@
 If you have a problem or would like to ask a question about how to do something in populse_mia, please [open an issue](https://github.com/populse/populse_mia/issues).
 
 You can even contact the developer team by using populse-support@univ-grenoble-alpes.fr.
-
