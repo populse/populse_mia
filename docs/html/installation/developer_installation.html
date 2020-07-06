@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Populse_MIA’s developer installation &#8212; populse_mia 1.3.0 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
@@ -114,7 +115,7 @@
 </li>
 <li><p>Then, install the Python module distribution:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span>
-<span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="c1"># Ensure that you use python &gt;= 3.5 (use python3.x to be sure)</span>
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="c1"># Ensure that you use python &gt;= 3.5 (use python3.x to be sure)</span>
 </pre></div>
 </div>
 </li>
@@ -125,6 +126,134 @@
 </div>
 </li>
 <li><p>Make sure to work on your own branch</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch locally</span>
+<span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch remotely</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Install Populse_MIA from sources (for Windows 10 distributions)</p>
+<blockquote>
+<div><ul>
+<li><p>First, assure that you activated the developer mode in the parameters :</p>
+<ul class="simple">
+<li><p>Click on Start –&gt; Parameters</p></li>
+<li><p>Go in Update and Security</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/update_and_security.png"><img alt="../_images/update_and_security.png" class="align-center" src="../_images/update_and_security.png" style="width: 400px;" /></a>
+<ul class="simple">
+<li><p>Click on Developer environment in the left column and activate the Developer mode</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/developer_mode.png"><img alt="../_images/developer_mode.png" class="align-center" src="../_images/developer_mode.png" style="width: 400px;" /></a>
+<ul class="simple">
+<li><p>You will need to restart your computer</p></li>
+</ul>
+</li>
+<li><p>When you restarted your computer, open a PowerShell window on your computer :</p>
+<ul class="simple">
+<li><p>Click on the Start menu and type “PowerShell”</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/open_powershell.jpg"><img alt="../_images/open_powershell.jpg" class="align-center" src="../_images/open_powershell.jpg" style="width: 300px;" /></a>
+<ul class="simple">
+<li><p>Run the PowerShell application.</p></li>
+</ul>
+</li>
+<li><p>Make sure you have Python installed. You can verify it by typing in PowerShell :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
+</pre></div>
+</div>
+<p><a href="#id3"><span class="problematic" id="id4">*</span></a>Note : depending on your versions, you might need to use ‘python -V’ instead on ‘python3 -V’ to check your version of Python.</p>
+<ul>
+<li><p>If Python is not installed, you need to install it by using the Microsoft Store :</p>
+<ol class="arabic simple">
+<li><p>Open the Start menu and type Microsoft Store and click on the link :</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/search_microsoft_store.png"><img alt="../_images/search_microsoft_store.png" class="align-center" src="../_images/search_microsoft_store.png" style="width: 400px;" /></a>
+<ol class="arabic simple" start="2">
+<li><p>In the store, select research in the top right menu, then type “Python” and open “Python 3.8” in the application results :</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/search_python.png"><img alt="../_images/search_python.png" class="align-center" src="../_images/search_python.png" style="width: 700px;" /></a>
+<ol class="arabic" start="3">
+<li><p>Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
+<span class="n">pip3</span> <span class="o">-</span><span class="n">v</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Make sure you have Git installed. You can verify it by typing in PowerShell :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If Git is not installed, you need to install it (<a class="reference external" href="https://git-scm.com/download/win">Here</a>)</p></li>
+</ul>
+</li>
+<li><p>During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (<a class="reference external" href="https://www.microsoft.com/fr-fr/download/details.aspx?id=58317">Here</a>).</p></li>
+<li><p>Get sources code from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mia_install_dir] with the directory of your choice) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using SSH</span>
+</pre></div>
+</div>
+</li>
+<li><p>Then, install the Python module distribution :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span>
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
+<p><a href="#id6"><span class="problematic" id="id7">*</span></a>Note : make sure to don’t forget ‘–user’ at the end of the command. If not you might get access errors linked with administrators rights.</p>
+</li>
+<li><p>Then, run Populse_mia :</p>
+<ul>
+<li><p>By interpreting the main.py file :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">populse_mia</span>
+<span class="n">python3</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+<li><p>By launching the package with python :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">populse_mia</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Now, configure you populse_mia, click on file and MIA preferences :</p>
+<ul class="simple">
+<li><p>In the Tools tab, enter the path to your project folder in the Projects preferences.</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/tool_tab.png"><img alt="../_images/tool_tab.png" class="align-center" src="../_images/tool_tab.png" style="width: 400px;" /></a>
+<ul>
+<li><p>Get sources code for MRI_conv from GitHub using the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mri_install_directory</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mri_install_directory</span><span class="p">]</span> <span class="c1"># using SSH</span>
+</pre></div>
+</div>
+</li>
+<li><p>In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">mri_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">/</span><span class="n">MRIFileManager</span><span class="o">/</span><span class="n">MRIManager</span><span class="o">.</span><span class="n">jar</span>
+</pre></div>
+</div>
+</li>
+<li><p>Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">Matlab</span><span class="o">/</span><span class="n">YourVersionOfMatlab</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">matlab</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/pipeline_tab.png"><img alt="../_images/pipeline_tab.png" class="align-center" src="../_images/pipeline_tab.png" style="width: 400px;" /></a>
+</li>
+<li><p>In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">Matlab</span><span class="o">/</span><span class="n">spm12</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>For developing process, make sure to work on your own branch</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch locally</span>
 <span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch remotely</span>
 </pre></div>
@@ -149,7 +278,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
     </div>
   </body>
 </html>
