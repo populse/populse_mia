@@ -2017,6 +2017,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div></div>
         
+        <span class="c1">#engine \</span>
+        <span class="c1">#    = self.diagramView.get_current_pipeline().get_study_config().engine</span>
+        <span class="c1">#with engine.study_config.run_lock:</span>
+        <span class="c1">#    engine.study_config.run_interruption_request = True</span>
 <div class="viewcode-block" id="RunWorker"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker">[docs]</a><span class="k">class</span> <span class="nc">RunWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run the pipeline&quot;&quot;&quot;</span>
 
@@ -2084,7 +2088,8 @@
         <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">study_config</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">study_config</span><span class="o">.</span><span class="n">use_soma_workflow</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">study_config</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
             <span class="c1">#** pathway from the study_config.run(pipeline, verbose=1) command:</span>
             <span class="c1">#   (ex. for the User_processes Smooth brick):</span>
@@ -2162,6 +2167,11 @@
                                                                <span class="n">e</span><span class="p">))</span>
             <span class="kn">import</span> <span class="nn">traceback</span>
             <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** INTERRUPT ***&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="c1"># haven&#39;t yet found how to raise the exception in the try block in</span>
         <span class="c1"># PipelineManagerTab.runPipeline() above. So the</span>
         <span class="c1"># self.main_window.statusBar().showMessage() gives the</span>
