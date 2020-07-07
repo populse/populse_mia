@@ -49,11 +49,11 @@
         rm -r [mia_install_dir]  
 
  * From source, for Windows 10 distribution
- 	 * First assure that you have activated the developer mode for Windows in the parameters :
+ 	 * First assure that you have activated the developer mode for Windows in the parameters : (```You will need administrator right for this```)
 	 	* Click on start and parameters ;
-		* Go in Update and Security ;
-		* Click on Developer environment in the left column and activate the Developer mode ;
-		* You will need to restart you computer.
+		* Go in Update & Security ;
+		* Click on For developer in the left column and activate the Sideload app ;
+		* You might need to restart you computer.
 	 * Open a PowerShell window on your computer :
 	 	* Click on start menu and type "PowerShell" ;
 		* Run the PowerShell application.
@@ -63,25 +63,69 @@
 		
 	 *Note : depending on your versions, you might need to use "python -V" instead of "python3 -V" to check you version of Python
 	 
-	 * If you don't have python, you need to install it by using the Microsoft Store :
+	 * If you don't have python, you need to install it :
 	 
-	 	1. Open the Start menu and type "Microsoft Store" and launch the application ;
-		2. In the store, select research on the top right menu and type "Python". Python 3.8 should appear in the result and click on it ;
-		3. Install it on you computer ;
-		4. Check in PowerShell that Python and pip are installed :
-			python3 -V
-			pip3 --version
+	 	1. In PowerShell type :
+	 	
+                python3
+
+		2. The Microsoft Store will open with the Python 3.8 app. Click on install ;
+		3. Install it on your computer ;
+		4. Reopen PowerShell and check that Python and pip are installed :
+	
+			    python3 -V
+			    pip3 --version
 	 
 	 * Install a Version Control System, for example [git](https://git-scm.com/download/win). Depending of your distribution, [package management system](https://en.wikipedia.org/wiki/Package_manager) can be different
 
-	 		Download the executable for your specific distribution (64 or 32 bits)
-			Execute it
-			# ect.
-			* Clone the source codes
+	 	   Download the executable for your specific distribution (64 or 32 bits)
+		   Execute it
+		   You will be asked many questions depending on your preferences, but the default parameters are enough
+		   
+	  * At the end of the git installation you will need to restart PowerShell to refresh the environment
+	  
+      * Populse_mia requires java 64-bits for running, you can install it [here](https://java.com/fr/download/manual.jsp) :
+      
+            Download and run the file
+            Follows the installation
+        
+      * Now you need to configure your java in order to be use by your system : (```You will need administrator right for this```)
+      
+        1. In PowerShell, open a system properties windows by typing :
+        
+                sysdm.cpl
+        
+        2. Click on the Advanced System Parameter ;
+        3. Click on Environment Variable ;
+        4. Select Path in system variable, and click on modify ;
+        5. Click New ;
+        6. Paste the path to the folder containing your java executable, it should look like this : 
+                
+                C:\Program Files\Java\jre1.8.0_251\bin
+                
+      * Enable the NTFS long path (```You will need administrator right for this```) :
+      
+        1. In PowerShell type : 
+        
+                gpedit.msc
+                
+        2. A Local Group Policy Editor window will open, then navigate to :
+            --> Local Compute Policy
+            --> Computer Configuration
+            --> Administrator Template
+            --> System
+            --> FileSystem
+            --> NTFS
+        3. Double click Enable NTFS long path and enable it.
+        
+      * Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation :
+      
+            pip3 install numpy --user # Be sure to don't forget "--user" at the end of the command, otherwise you might get issues from administrator rights
+            pip3 install PyQt5 --user
 
-	  * Get source codes from Github. Replace [mia_install_dir] with a directory of your choice
+      * Get source codes from Github. Replace [mia_install_dir] with a directory of your choice
 
-	         git lfs clone https://github.com/populse/populse_mia.git [mia_install_dir]
+	        git lfs clone https://github.com/populse/populse_mia.git [mia_install_dir]
 
 	  * Or download the zip file (populse_mia-master.zip) of the project ([green button "Clone or download"](https://github.com/populse/populse_mia)), then extract the data in the directory of your choice [mia_install_dir]
 
@@ -92,13 +136,6 @@
 	         cd [mia_install_dir]  
 	         python3 setup.py install --user # Ensure that you use python >= 3.5 | Be sure to don't forget "--user" at the end of the command, otherwise you might get	access issues from administrators rights.
 
-	  * After the installation, some required packages might still be missing and need to be install separately (capsul, mia-processes, populse-db, PyQt5 == 5.14.0, SIP == 5.0.1, traits == 5.2.0):
-
-		 	pip install SomePackage --user # Still don't forget to add the "--user" at the end of the command line to assure the installation on the right path
-		 				# Replace "SomePackage" by the name of the package missing on your computer
-	
-	  
-	  
 # Usage
 
   * For all platforms: after a source installation, launching from the source code directory via command line
@@ -119,11 +156,13 @@
 		
 			[mri_install_dir]/mri_conv/MRIFileManager/MRIManager.jar
 		
-	* Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :
+	
+
+        * Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :
 	
 			../../Matlab/YourVersionOfMatlab/bin/matlab.exe
 		
-	* In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder :
+	    * In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder :
 	
 			../../Matlab/spm12
 
