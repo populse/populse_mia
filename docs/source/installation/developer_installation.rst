@@ -157,7 +157,7 @@ Populse member
         cd [mia_install_dir]
         python3 setup.py install --user
 
-      *Note : make sure to don't forget '--user' at the end of the command. If not you might get access errors linked with administrators rights.
+      *Note : make sure to don't forget '\--user' at the end of the command. If not you might get access errors linked with administrators rights.
 
     * Then, run Populse_mia :
 
