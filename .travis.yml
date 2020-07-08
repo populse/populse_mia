@@ -53,6 +53,9 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install svn; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 install --upgrade numpy; fi 
   - python3 -c "import numpy;print(numpy.__version__);print(numpy.__file__)" ### With osx numpy is already up to date
+  - which pip3 #debug
+  - which pip #debug
+  - echo $PATH #debug
   - pip3 install --upgrade cython
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
   - python3 setup.py install
