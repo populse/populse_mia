@@ -51,12 +51,7 @@ install:
   # Temporary fix for the issue with MarkupSafe 2.0.0a1 which is automatically installed as a required library when installing populse_mia (python3 setup.py install, below) and that crashs - 16/04/2020
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$TRAVIS_PYTHON_VERSION" == "3.5" ]]; then pip3 install MarkupSafe==1.1.1; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install svn; fi
-  - python3 -c "import numpy;print(numpy.__version__);print(numpy.__file__)" ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade numpy; fi
-  - pip3 install --upgrade numpy ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
-  #- if [[ "$TRAVIS_OS_NAME" == "Linux" ]]; then pip3 install --upgrade numpy; fi ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
-  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 install -U numpy; fi ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
-  - python3 -c "import numpy;print(numpy.__version__);print(numpy.__file__)" ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
+  - pip3 install --upgrade numpy
   - pip3 install --upgrade cython
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
   - python3 setup.py install
