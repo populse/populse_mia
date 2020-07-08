@@ -83,6 +83,7 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
@@ -144,7 +145,7 @@
 <span class="sd">        :param parent: the DefaultValueQLineEdit parent object</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -233,7 +234,7 @@
         <span class="sd">&quot;&quot;&quot;One more element added to the list.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
@@ -253,7 +254,7 @@
         <span class="sd">&quot;&quot;&quot;Removes the last element of the list.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">resize_table</span><span class="p">()</span>
@@ -263,7 +264,7 @@
         <span class="sd">&quot;&quot;&quot;To resize the pop up depending on the table.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">resizeColumnsToContents</span><span class="p">()</span>
         <span class="n">total_width</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">total_height</span> <span class="o">=</span> <span class="mi">0</span>
@@ -387,7 +388,7 @@
 <span class="sd">        :param type: type of the tag to add</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span> <span class="o">=</span> <span class="n">databrowser</span>
@@ -653,7 +654,7 @@
 <span class="sd">        :param databrowser: data browser instance of the software</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span> <span class="o">=</span> <span class="n">databrowser</span>
@@ -697,8 +698,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">fname</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Choose a document to import&#39;</span><span class="p">,</span>
-                                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">))</span>        
-        
+                                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">))</span>
+
         <span class="k">if</span> <span class="n">fname</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">fname</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
@@ -725,7 +726,7 @@
                    <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
                        <span class="n">COLLECTION_CURRENT</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">unsavedModifications</span> <span class="o">=</span> <span class="kc">True</span>
-        
+
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">in</span> <span class="n">docInDb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
@@ -824,7 +825,7 @@
 <span class="sd">        :param databrowser: data browser instance of the software</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Clone a tag&quot;</span><span class="p">)</span>
 
@@ -907,7 +908,7 @@
 <span class="sd">        :param project: current project</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">name_already_exists</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">field_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_new_tag_name</span><span class="o">.</span><span class="n">text</span><span class="p">():</span>
@@ -955,7 +956,7 @@
 <span class="sd">        :param str_search: string pattern to search</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">_translate</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span>
         <span class="n">return_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">tags_lists</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
@@ -1004,7 +1005,7 @@
 <span class="sd">        :param pipeline_name: name of the pipeline (basename)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">pipeline_name</span>
@@ -1049,19 +1050,19 @@
 
 <div class="viewcode-block" id="PopUpClosePipeline.cancel_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpClosePipeline.cancel_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Makes the actions to cancel the action.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">bool_exit</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpClosePipeline.do_not_save_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpClosePipeline.do_not_save_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">do_not_save_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Makes the actions not to save the pipeline.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">bool_exit</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpClosePipeline.save_as_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpClosePipeline.save_as_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">save_as_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Makes the actions to save the pipeline.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">save_as_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bool_save_as</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bool_exit</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1179,7 +1180,7 @@
 
 <div class="viewcode-block" id="PopUpDeletedProject"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDeletedProject">[docs]</a><span class="k">class</span> <span class="nc">PopUpDeletedProject</span><span class="p">(</span><span class="n">QMessageBox</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Indicate the names of deleted project when the software starts.&quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="PopUpDeletedProject.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDeletedProject.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -1275,7 +1276,7 @@
 <span class="sd">        :param project: current project in the software</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1332,12 +1333,12 @@
 
 <div class="viewcode-block" id="PopUpFilterSelection.cancel_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpFilterSelection.cancel_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Closes the pop-up.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpFilterSelection.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpFilterSelection.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Actions when the &quot;OK&quot; button is clicked.&quot;&quot;&quot;</span>
-        
+
         <span class="c1"># Has to be override in the PopUpSelectFilter* classes</span>
         <span class="k">pass</span></div>
 
@@ -1347,7 +1348,7 @@
 <span class="sd">        :param str_search: string pattern to search</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">return_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">str_search</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="nb">filter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">filters</span><span class="p">:</span>
@@ -1379,7 +1380,7 @@
 <span class="sd">        :param project: current project in the software</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="n">name_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Name: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name_value</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">getName</span><span class="p">())</span>
@@ -1542,7 +1543,7 @@
 <span class="sd">          browser</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="PopUpMultipleSort.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpMultipleSort.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">table_data_browser</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
@@ -1550,7 +1551,7 @@
 <span class="sd">        :param table_data_browser: data browser&#39;s table of the software</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table_data_browser</span> <span class="o">=</span> <span class="n">table_data_browser</span>
@@ -1612,7 +1613,7 @@
 
 <div class="viewcode-block" id="PopUpMultipleSort.add_tag"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpMultipleSort.add_tag">[docs]</a>    <span class="k">def</span> <span class="nf">add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds a push button.&quot;&quot;&quot;</span>
-        
+
         <span class="n">push_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">()</span>
         <span class="n">push_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Tag n°&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">push_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_tag</span><span class="p">(</span>
@@ -1626,7 +1627,7 @@
 <span class="sd">        :param idx: index of the pressed push button</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">tag_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">idx</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">values_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">[])</span>
@@ -1643,7 +1644,7 @@
 <span class="sd">           removed).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">h_box_top</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">h_box_top</span><span class="o">.</span><span class="n">setSpacing</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">h_box_top</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_tags</span><span class="p">)</span>
@@ -1664,7 +1665,7 @@
 <span class="sd">           values.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">push_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">push_button</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
         <span class="n">push_button</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1678,7 +1679,7 @@
 <span class="sd">        :param idx: index of the pressed push button</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">pop_up</span> <span class="o">=</span> <span class="n">PopUpSelectTagCountTable</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">(),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
@@ -1688,7 +1689,7 @@
 
 <div class="viewcode-block" id="PopUpMultipleSort.sort_scans"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpMultipleSort.sort_scans">[docs]</a>    <span class="k">def</span> <span class="nf">sort_scans</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Collects the information and send them to the data browser.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">itemText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">push_button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">list_tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">push_button</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
@@ -1711,7 +1712,7 @@
 
 <div class="viewcode-block" id="PopUpNewProject.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpNewProject.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.&quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setLabelText</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">Accept</span><span class="p">,</span> <span class="s2">&quot;Create&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setAcceptMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">AcceptSave</span><span class="p">)</span>
@@ -1726,7 +1727,7 @@
 <span class="sd">        :return: real file name</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">file_name</span><span class="p">:</span>
             <span class="n">entire_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
@@ -1823,7 +1824,7 @@
 <span class="sd">        :param main_window: main window object of the software</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -2116,12 +2117,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_spm</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="p">)</span>
-        
+
         <span class="c1">#print(config.get_use_spm_standalone())</span>
         <span class="c1">#print(config.get_use_spm())</span>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2236,7 +2241,7 @@
 
 <div class="viewcode-block" id="PopUpPreferences.browse_mri_conv_path"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_mri_conv_path">[docs]</a>    <span class="k">def</span> <span class="nf">browse_mri_conv_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called when &quot;MRIFileManager.jar&quot; browse button is clicked.&quot;&quot;&quot;</span>
-        
+
         <span class="n">fname</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                             <span class="s1">&#39;Select the location of the &#39;</span>
                                             <span class="s1">&#39;MRIManager.jar file&#39;</span><span class="p">,</span>
@@ -2540,27 +2545,52 @@
 
         <span class="n">spm_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">matlab_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span>
             <span class="n">spm_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span> <span class="ow">and</span> \
+                                            <span class="ow">not</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab standalone&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
             <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">()</span> <span class="ow">and</span> \
                     <span class="n">spm_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">():</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_input</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
-                <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s1">&#39;run_spm*.sh&#39;</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_input</span><span class="p">):</span>
+                <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s1">&#39;spm12_win*.exe&#39;</span><span class="p">))</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="n">nb_bit_sys</span> <span class="o">=</span> <span class="n">archi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mcr</span><span class="p">)):</span>
+                        <span class="n">spm_path</span><span class="p">,</span> <span class="n">spm_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">mcr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">nb_bit_sys</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="n">spm_file_name</span><span class="p">:</span>
+                            <span class="n">pos</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="k">if</span> <span class="n">pos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
+                        <span class="k">return</span>
+                <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span> <span class="c1"># to check if no issues with Linux</span>
+                    <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s1">&#39;run_spm*.sh&#39;</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">mcr</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">mcr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                              <span class="n">matlab_input</span><span class="p">,</span>
-                                              <span class="s1">&#39;--version&#39;</span><span class="p">],</span>
-                                             <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
-                                             <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
-                                             <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">mcr</span><span class="p">[</span><span class="n">pos</span><span class="p">],</span>
+                                                <span class="s1">&#39;--version&#39;</span><span class="p">],</span>
+                                                <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">mcr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                  <span class="n">matlab_input</span><span class="p">,</span>
+                                                  <span class="s1">&#39;--version&#39;</span><span class="p">],</span>
+                                                 <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                                 <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                                 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
                         <span class="n">output</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
                         <span class="k">if</span> <span class="p">((</span><span class="n">err</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">output</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                                 <span class="ow">or</span> <span class="n">output</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;SPM8 &#39;</span><span class="p">)):</span>
@@ -2593,7 +2623,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
         <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING : Matlab Standalone Path enter, this&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;is unnecessary to use SPM12.&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2649,13 +2685,15 @@
         <span class="sd">&quot;&quot;&quot;Called when the use_matlab_standalone checkbox is changed.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -2690,7 +2728,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -2857,7 +2897,7 @@
 <span class="sd">        :param database: current database in the project</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
@@ -2901,19 +2941,19 @@
 
 <div class="viewcode-block" id="PopUpQuit.cancel_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpQuit.cancel_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Makes the actions to cancel the action.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">bool_exit</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpQuit.do_not_save_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpQuit.do_not_save_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">do_not_save_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Makes the actions not to save the project.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">bool_exit</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpQuit.save_as_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpQuit.save_as_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">save_as_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Makes the actions to save the project.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">save_as_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bool_exit</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
@@ -2927,7 +2967,7 @@
 <span class="sd">    :param size: The number of scan the user wants to remove</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="PopUpRemoveScan.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpRemoveScan.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -3209,7 +3249,7 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_name_tuple</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name_tuple</span>
-            
+
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            projects_folder = os.path.join(os.path.join(</span>
 <span class="sd">                os.path.relpath(os.curdir), &#39;..&#39;, &#39;..&#39;), &#39;projects&#39;)</span>
@@ -3225,8 +3265,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">entire_path</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">relative_subpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span>
-                        <span class="ow">not</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span><span class="p">)</span> <span class="ow">and</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">signal_saved_project</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -3252,7 +3292,7 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="k">return</span>
-                        
+
             <span class="k">return</span> <span class="n">entire_path</span></div></div>
 
 
@@ -3339,7 +3379,7 @@
 <span class="sd">          the existence of the project</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
             <span class="n">icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sources_images_dir</span><span class="p">,</span> <span class="s1">&#39;green_v.png&#39;</span><span class="p">))</span>
@@ -3371,7 +3411,7 @@
 
 <div class="viewcode-block" id="PopUpSeeAllProjects.open_project"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSeeAllProjects.open_project">[docs]</a>    <span class="k">def</span> <span class="nf">open_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Switches to the selected project.&quot;&quot;&quot;</span>
-        
+
         <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_to_path</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">file_name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">entire_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
@@ -3401,7 +3441,7 @@
 <span class="sd">        :param databrowser: data browser instance of the software</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">(</span><span class="n">PopUpSelectFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span> <span class="o">=</span> <span class="n">databrowser</span>
@@ -3446,7 +3486,7 @@
 <span class="sd">        :param tag_values: values that can take the iterated tag</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span> <span class="o">=</span> <span class="n">iterated_tag</span>
@@ -3499,7 +3539,7 @@
 
 <div class="viewcode-block" id="PopUpSelectIteration.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectIteration.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sends the selected values to the pipeline manager.&quot;&quot;&quot;</span>
-        
+
         <span class="n">final_values</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">check_box</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_boxes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">check_box</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
@@ -3587,7 +3627,7 @@
 
 <div class="viewcode-block" id="PopUpTagSelection.cancel_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpTagSelection.cancel_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Closes the pop-up.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpTagSelection.item_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpTagSelection.item_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">item_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
@@ -3606,7 +3646,7 @@
 
 <div class="viewcode-block" id="PopUpTagSelection.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpTagSelection.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Actions when the &quot;OK&quot; button is clicked.&quot;&quot;&quot;</span>
-        
+
         <span class="c1"># Has to be override in the PopUpSelectTag* classes</span>
         <span class="k">pass</span></div>
 
@@ -3720,7 +3760,7 @@
 
 <div class="viewcode-block" id="PopUpSelectTagCountTable.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates the selected tag and closes the pop-up.&quot;&quot;&quot;</span>
-        
+
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
             <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">checkState</span><span class="p">()</span> <span class="o">==</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">:</span>
@@ -3914,13 +3954,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">value_scan</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
         <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span>
                      <span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)):</span>
-            
+
             <span class="k">if</span> <span class="n">scan</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="n">value_scan</span> <span class="o">=</span> <span class="n">scan</span>
-                
+
         <span class="k">return</span> <span class="n">value_scan</span></div>
 
 <div class="viewcode-block" id="PopUpShowBrick.file_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowBrick.file_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">file_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -4081,7 +4121,7 @@
         <span class="n">rows</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span>
                        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">selectedIndexes</span><span class="p">()],</span>
                       <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="c1"># assuming the other listWidget is called listWidget_2</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">left_tags</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
@@ -4096,7 +4136,7 @@
         <span class="n">rows</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span>
                        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_selected_tags</span><span class="o">.</span><span class="n">selectedIndexes</span><span class="p">()],</span>
                       <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_tags</span><span class="o">.</span>
                         <span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_widget_selected_tags</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()))</span>

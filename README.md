@@ -48,7 +48,7 @@
         cd ..  
         rm -r [mia_install_dir]  
 
- * From source, for Windows 10 distribution
+ * From source, for Windows 10 distribution, please see [Populse_MIA’s developer installation](https://populse.github.io/populse_mia/html/installation/developer_installation.html)
  	 * First assure that you have activated the developer mode for Windows in the parameters : (```You will need administrator right for this```)
 	 	* Click on start and parameters ;
 		* Go in Update & Security ;
@@ -58,57 +58,57 @@
 	 	* Click on start menu and type "PowerShell" ;
 		* Run the PowerShell application.
  	 * A compatible version of Python must be installed, to verify it, type in PowerShell :
-	 	
+
 			python3 -V
-		
+
 	 *Note : depending on your versions, you might need to use "python -V" instead of "python3 -V" to check you version of Python
-	 
+
 	 * If you don't have python, you need to install it :
-	 
+
 	 	1. In PowerShell type :
-	 	
+
                 python3
 
 		2. The Microsoft Store will open with the Python 3.8 app. Click on install ;
 		3. Install it on your computer ;
 		4. Reopen PowerShell and check that Python and pip are installed :
-	
+
 			    python3 -V
 			    pip3 --version
-	 
+
 	 * Install a Version Control System, for example [git](https://git-scm.com/download/win). Depending of your distribution, [package management system](https://en.wikipedia.org/wiki/Package_manager) can be different
 
 	 	   Download the executable for your specific distribution (64 or 32 bits)
 		   Execute it
 		   You will be asked many questions depending on your preferences, but the default parameters are enough
-		   
+
 	  * At the end of the git installation you will need to restart PowerShell to refresh the environment
-	  
+
       * Populse_mia requires java 64-bits for running, you can install it [here](https://java.com/fr/download/manual.jsp) :
-      
+
             Download and run the file
             Follows the installation
-        
+
       * Now you need to configure your java in order to be use by your system : (```You will need administrator right for this```)
-      
+
         1. In PowerShell, open a system properties windows by typing :
-        
+
                 sysdm.cpl
-        
+
         2. Click on the Advanced System Parameter ;
         3. Click on Environment Variable ;
         4. Select Path in system variable, and click on modify ;
         5. Click New ;
-        6. Paste the path to the folder containing your java executable, it should look like this : 
-                
+        6. Paste the path to the folder containing your java executable, it should look like this :
+
                 C:\Program Files\Java\jre1.8.0_251\bin
-                
+
       * Enable the NTFS long path (```You will need administrator right for this```) :
-      
-        1. In PowerShell type : 
-        
+
+        1. In PowerShell type :
+
                 gpedit.msc
-                
+
         2. A Local Group Policy Editor window will open, then navigate to :
             --> Local Compute Policy
             --> Computer Configuration
@@ -117,9 +117,9 @@
             --> FileSystem
             --> NTFS
         3. Double click Enable NTFS long path and enable it.
-        
+
       * Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation :
-      
+
             pip3 install numpy --user # Be sure to don't forget "--user" at the end of the command, otherwise you might get issues from administrator rights
             pip3 install PyQt5 --user
 
@@ -144,26 +144,26 @@
 
           cd [mia_install_dir]/python/populse_mia  
           python3 main.py  
-    
-    * Now, to configure your populse_mia, click on file and MIA preferences 
+
+    * Now, to configure your populse_mia, click on file and MIA preferences
   	* In the Tools tab, enter the path to your project folder under Project preferences ;
 	* Get sources code for MRI_conv from GitHub using HTTPS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) :
-	
+
 			git lfs clone https://github.com/populse/mri_conv.git [mri_install_dir] # using HTTPS
 			git lfs clone git@github.com:populse/mri_conv.git [mri_install_dir] # using SSH
-		
+
 	* In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences
-		
+
 			[mri_install_dir]/mri_conv/MRIFileManager/MRIManager.jar
-		
-	
+
+
 
         * Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :
-	
+
 			../../Matlab/YourVersionOfMatlab/bin/matlab.exe
-		
+
 	    * In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder :
-	
+
 			../../Matlab/spm12
 
   * For all platforms, after a [Populse_MIA’s user installation](https://populse.github.io/populse_mia/html/installation/user_installation.html)
