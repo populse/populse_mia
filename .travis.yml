@@ -54,7 +54,7 @@ install:
   - python3 -c "import numpy;print(numpy.__version__);print(numpy.__file__)" ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade numpy; fi
   #- if [[ "$TRAVIS_OS_NAME" == "Linux" ]]; then pip3 install --upgrade numpy; fi ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
-  - if [[ "$TRAVIS_OS_NAME" == "Linux" ]]; then pip3 install -U numpy; fi ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 install -U numpy; fi ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
   - python3 -c "import numpy;print(numpy.__version__);print(numpy.__file__)" ### test to fix current "ImportError: numpy.core.multiarray failed to import" exception with python3.7 / linux
   - pip3 install --upgrade cython
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
