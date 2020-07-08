@@ -82,8 +82,11 @@ Populse member
 
 * Install Populse_MIA from sources (for Windows 10 distributions)
 
-    * First, assure that you activated the developer mode in the parameters :
+    * First, assure that you activated the developer mode in the parameters:
 
+    .. warning::
+
+      This operation needs administrator rights
 
       * Click on Start --> Parameters
       * Go in Update and Security
@@ -92,15 +95,15 @@ Populse member
         :width: 400
         :align: center
 
-      * Click on Developer environment in the left column and activate the Developer mode
+      * Click on Developer environment in the left column and activate the Sideload app;
 
       .. image:: ../images/developer_mode.png
         :width: 400
         :align: center
 
-      * You will need to restart your computer
+      * You might need to restart your computer
 
-    * When you restarted your computer, open a PowerShell window on your computer :
+    * When you restarted your computer, open a PowerShell window on your computer:
 
       * Click on the Start menu and type "PowerShell"
 
@@ -116,36 +119,111 @@ Populse member
 
       *Note : depending on your versions, you might need to use 'python -V' instead on 'python3 -V' to check your version of Python.
 
-      * If Python is not installed, you need to install it by using the Microsoft Store :
+      * If Python is not installed:
 
-        1. Open the Start menu and type Microsoft Store and click on the link :
+        1. In PowerShell, type: ::
 
-        .. image:: ../images/search_microsoft_store.png
-          :width: 400
-          :align: center
+            python3
 
-        2. In the store, select research in the top right menu, then type "Python" and open "Python 3.8" in the application results :
+        2. The Microsoft Store will open on the Python 3.8 app, click on Install:
 
-        .. image:: ../images/search_python.png
-          :width: 700
+        .. image:: ../images/Python3.8.png
+          :width: 500
           :align: center
 
         3. Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed: ::
 
             python3 -V
-<<<<<<< HEAD
             pip3 --version
-=======
-            pip3 -v
->>>>>>> a8f9234a62f4d8268231bb93342bb079b42f064d
 
     * Make sure you have Git installed. You can verify it by typing in PowerShell : ::
 
         git --version
 
-      * If Git is not installed, you need to install it (`Here <https://git-scm.com/download/win>`_)
+      * If Git is not installed, you need to install it (`Here <https://git-scm.com/download/win>`_): ::
 
-    * During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (`Here <https://www.microsoft.com/fr-fr/download/details.aspx?id=58317>`_).
+          Download the executable for your specific distribution (64 or 32 bits).
+          Run it.
+          You will be asked many questions depending on you preferences, but the default parameters are enough.
+
+      * At the end of the git installation, you will need to restart PowerShell to restart the environment and be able to use Git.
+
+    * During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (`Here <https://www.microsoft.com/fr-fr/download/details.aspx?id=58317>`_): ::
+
+      1. Download the executable file and run it.
+
+      2.The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:
+
+      .. image// ../images/vs_Build.png
+          :width: 500
+          :align: center
+
+      3. Select the C++ Build Tools and install it.
+
+    * Install java 64-bits for Windows (`Here <https://java.com/fr/download/manual.jsp>`_): ::
+
+        Download the offline (64 bits) file and run it
+        Follow the installation
+
+    * Now you need to configure your java in order to be used by your system and PowerShell :
+
+    .. warning::
+
+      This operation needs administrator rights
+
+        1. In PowerShell, open a system properties window by typing: ::
+
+            sysdm.cpl
+
+        2. Click on the Advanced System Parameter;
+
+        .. image// ../images/ASP_system_tab.png
+          :width: 500
+          :align: center
+
+        3. Click on Environment Variable ;
+
+        4. Select Path in the system variables, and click on modify;
+
+        .. image// ../images/env_var.png
+          :width: 500
+          :align: center
+
+        5. Click on New;
+
+        6. Paste the path to the folder containing YOUR java executable, it should LOOK like this: ::
+
+            C:\Program Files\Java\jre1.8.0_251\bin
+
+    * Enable the NTFS long path:
+
+     .. warning::
+
+        This operation needs administrator rights
+
+        1. In PowerShell type: ::
+
+            gpedit.msc
+
+        2. A Local Group Policy Editor window will open, then Navigate to:
+
+          --> Local Compute Policy
+          --> Computer Configuration
+          --> Administrator Templates
+          --> System
+          --> FileSystem
+          --> NTFS
+
+        3. Double click on Enable NTFS long path and enable it.
+
+        .. image// ../images/NTFS.png
+          :width: 500
+          :align: center
+
+    * Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation: ::
+
+        pip3 install numpy --user # be sure to doin't forget the "\--user" at the end of the command, otherwise you might get issues from administrator rights
+        pip3 install PyQt5
 
     * Get sources code from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mia_install_dir] with the directory of your choice) : ::
 
@@ -178,11 +256,7 @@ Populse member
         :width: 400
         :align: center
 
-<<<<<<< HEAD
       * Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) : ::
-=======
-      * Get sources code for MRI_conv from GitHub using the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) : ::
->>>>>>> a8f9234a62f4d8268231bb93342bb079b42f064d
 
           git lfs clone https://github.com/populse/mri_conv.git [mri_install_directory] # using HTTPS
           git lfs clone git@github.com:populse/mri_conv.git [mri_install_directory] # using SSH
@@ -199,9 +273,15 @@ Populse member
           :width: 400
           :align: center
 
-      * In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder : ::
+      * In the Pipeline tab of MIA preferences, if you have licensed SPM version check Use SPM and enter the path to your spm folder : ::
 
         ../../Matlab/spm12
+
+      * In the Pipeline tab of MIA preferences, if you have standalone SPM version check Use SPM Standalone and enter the path to your spm12 folder : ::
+
+        ../../spm12_r****/spm12
+
+          *Note : in this scenario you only need to check Use SPM Standalone in the Pipeline tab MIA preferences.
 
     * For developing process, make sure to work on your own branch ::
 
