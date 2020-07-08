@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 1.3.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -56,31 +57,33 @@
 <span class="c1">##########################################################################</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">TraitError</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">get_process_instance</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">Switch</span>
-<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="k">import</span> \
-    <span class="n">PipelineDevelopperView</span><span class="p">,</span> <span class="n">NodeGWidget</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.xml</span> <span class="k">import</span> <span class="n">save_xml_pipeline</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.python_export</span> <span class="k">import</span> <span class="n">save_py_pipeline</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">get_process_instance</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">Switch</span>
+<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="kn">import</span> <span class="p">(</span>
+                                            <span class="n">NodeGWidget</span><span class="p">,</span> <span class="n">PipelineDevelopperView</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.xml</span> <span class="kn">import</span> <span class="n">save_xml_pipeline</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.python_export</span> <span class="kn">import</span> <span class="n">save_py_pipeline</span>
 
 <span class="c1"># soma-base imports</span>
-<span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="k">import</span> <span class="n">weak_proxy</span>
+<span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="kn">import</span> <span class="n">weak_proxy</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="k">import</span> <span class="n">FilterWidget</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="n">PopUpClosePipeline</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">verCmp</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="kn">import</span> <span class="p">(</span>
+                                                                   <span class="n">FilterWidget</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">PopUpClosePipeline</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">verCmp</span>
 
 <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
 
@@ -116,7 +119,7 @@
     <span class="n">pipeline_modified</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="n">PipelineDevelopperView</span><span class="p">)</span>
     <span class="sd">&quot;&quot;&quot;The signal that will be emitted when the pipeline is modified.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PipelineEditor.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<div class="viewcode-block" id="PipelineEditor.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the PipelineEditor.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -191,6 +194,7 @@
 <span class="sd">        :param temp_plug_name: tuple containing (the name of the node, the</span>
 <span class="sd">           name of the plug) to export</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># Bug: the first parameter (here pipeline_parameter) cannot be None</span>
         <span class="c1"># even if we write pipeline_parameter=None in the line above,</span>
         <span class="c1"># it will be False...</span>
@@ -275,6 +279,7 @@
 <span class="sd">        :param from_export_plugs: True if this method is called from a</span>
 <span class="sd">           &quot;from_export_plugs&quot; undo or redo action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_temp_plug_name</span><span class="p">:</span>
             <span class="n">_temp_plug_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_plug_name</span>
 
@@ -363,12 +368,39 @@
 <span class="sd">          using a redo</span>
 <span class="sd">        :param links: list of links (using when undo/redo)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
+        
         <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">node_name</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">class_process</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">proc_name_gui</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ProcessModuleInput</span><span class="p">()</span>
+            <span class="n">proc_name_gui</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="n">proc_name_gui</span><span class="o">.</span><span class="n">sizeHint</span><span class="p">()</span><span class="o">.</span><span class="n">height</span><span class="p">())</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">proc_name_gui</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+                <span class="n">class_process</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">proc_name_gui</span><span class="o">.</span><span class="n">proc_line</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+                <span class="n">class_process</span> <span class="o">=</span> <span class="n">class_process</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">node_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">proc_name_gui</span><span class="o">.</span><span class="n">name_line</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="n">node_name</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+                    <span class="n">node_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                <span class="n">node_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">node_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">class_process</span><span class="p">:</span>
+                    <span class="n">node_name</span> <span class="o">=</span> <span class="n">class_process</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+                <span class="n">i</span><span class="o">=</span><span class="mi">1</span>
+                <span class="n">node_name_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">node_name</span><span class="p">,</span> <span class="n">node_name</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+
+                <span class="k">while</span> <span class="n">node_name_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">node_name_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_name_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+                <span class="n">node_name</span> <span class="o">=</span> <span class="n">node_name_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node_name</span> <span class="ow">and</span> <span class="n">class_process</span><span class="p">:</span>
             <span class="n">class_name</span> <span class="o">=</span> <span class="n">class_process</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
-
             <span class="n">node_name</span> <span class="o">=</span> <span class="n">class_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
             <span class="k">while</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
@@ -383,6 +415,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">process</span> <span class="o">=</span> <span class="n">get_process_instance</span><span class="p">(</span>
                 <span class="n">process_to_use</span><span class="p">)</span>
+            
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">return</span>
@@ -418,18 +451,20 @@
         <span class="k">if</span> <span class="n">from_undo</span><span class="p">:</span>
             <span class="c1"># Adding the arguments to make the redo correctly</span>
             <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Adding the arguments to make the undo correctly</span>
             <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
             <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">class_process</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span> \
-                <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span>
+                <span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">)():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                <span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-            <span class="s2">&quot;Node </span><span class="si">{0}</span><span class="s2"> has been added.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span></div>
+                                                                           <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;Node </span><span class="si">{0}</span><span class="s2"> has been &quot;</span>
+                                                 <span class="s2">&quot;added.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="PipelineEditor.check_modifications"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.check_modifications">[docs]</a>    <span class="k">def</span> <span class="nf">check_modifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if the nodes of the pipeline have been modified.&quot;&quot;&quot;</span>
@@ -768,6 +803,7 @@
 
 <span class="sd">        :param path: class&#39;s path (e.g. &quot;nipype.interfaces.spm.Smooth&quot;) (str)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">package_name</span><span class="p">,</span> <span class="n">process_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">process_name</span> <span class="o">=</span> <span class="n">process_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="nb">__import__</span><span class="p">(</span><span class="n">package_name</span><span class="p">)</span>
@@ -790,6 +826,7 @@
 
 <span class="sd">        :return: the current pipeline file name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_pipeline_filename&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline_filename</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline_filename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -800,8 +837,9 @@
 
 <span class="sd">        :return: the name of the file where the pipeline was saved</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">check_modifications</span><span class="p">()</span>
-        
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The pipeline hasn&#39;t been saved because it is empty ...&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -1144,7 +1182,7 @@
     <span class="n">node_clicked</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span>
     <span class="n">switch_clicked</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Switch</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PipelineEditorTabs.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<div class="viewcode-block" id="PipelineEditorTabs.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the Pipeline Editor tabs.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -1201,6 +1239,7 @@
 
 <span class="sd">        :param current_index: index to check</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># If the user click on the last tab (with the &#39;+&#39;),</span>
         <span class="c1"># it will throw an AttributeError</span>
         
@@ -1280,6 +1319,7 @@
 <span class="sd">        :param node_name: node name</span>
 <span class="sd">        :param process: process of the corresponding node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">node_clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.emit_pipeline_saved"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.emit_pipeline_saved">[docs]</a>    <span class="k">def</span> <span class="nf">emit_pipeline_saved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -1324,6 +1364,7 @@
 
 <span class="sd">        :return: the current editor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.get_current_filename"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_current_filename">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1402,6 +1443,7 @@
 <span class="sd">        :param editor: searched pipeline editor</span>
 <span class="sd">        :return: the index corresponding to the editor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="n">editor</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">idx</span></div>
@@ -1457,6 +1499,7 @@
 
 <span class="sd">        :return: True or False depending on if there are nodes in the editors</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
             <span class="n">p_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">p_e</span><span class="p">,</span> <span class="s1">&#39;scene&#39;</span><span class="p">):</span>
@@ -1557,6 +1600,7 @@
 
 <span class="sd">        :param node_name: name of the corresponding node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filter_widget</span> <span class="o">=</span> <span class="n">FilterWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filter_widget</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
@@ -1566,6 +1610,7 @@
 
 <span class="sd">        :param sub_pipeline: the pipeline to open</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># Reading the process configuration file</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         
@@ -1789,6 +1834,7 @@
 <span class="sd">    :param pckg: package root</span>
 <span class="sd">    :return: the package path of the sub-pipeline if it is found, else None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="n">prev_paths</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">prev_paths</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1832,6 +1878,7 @@
 <span class="sd">    :param pipeline: the pipeline to save</span>
 <span class="sd">    :param filename: name of the file where to save the pipeline</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;.py&#39;</span><span class="p">:</span> <span class="n">save_py_pipeline</span><span class="p">,</span>
                <span class="s1">&#39;.xml&#39;</span><span class="p">:</span> <span class="n">save_xml_pipeline</span><span class="p">}</span>
     <span class="n">saved</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1853,6 +1900,7 @@
 
 <span class="sd">    :returns: list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
 
@@ -1871,7 +1919,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
     </div>
   </body>
 </html>
