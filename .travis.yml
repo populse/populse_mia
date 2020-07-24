@@ -51,7 +51,7 @@ install:
   # Temporary fix for the issue with MarkupSafe 2.0.0a1 which is automatically installed as a required library when installing populse_mia (python3 setup.py install, below) and that crashs - 16/04/2020
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$TRAVIS_PYTHON_VERSION" == "3.5" ]]; then pip3 install MarkupSafe==1.1.1; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install svn; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade numpy; fi
+  - pip3 install --upgrade numpy
   - pip3 install --upgrade cython
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
   - pip3 install 'scipy<1.5'
@@ -60,8 +60,8 @@ install:
   - python3 setup.py install
   - pip3 install codecov
   #- pip3 install --upgrade --force-reinstall pyqt5
-  - pip3 install --force-reinstall pyqt5==5.11.3
-  - pip3 install --force-reinstall PyQt5-sip==4.19.13
+  - python3 -m pip install --force-reinstall pyqt5==5.11.3
+  #- python3 -m pip install --force-reinstall PyQt5-sip==4.19.13
   - pip3 install -U 'six>=1.13'
   - cd ..
   - git clone --depth=50 --branch=2.0 https://github.com/populse/populse_db.git

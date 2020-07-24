@@ -1,5 +1,5 @@
 <p align="center" >
-	<img src="https://github.com/populse/populse_mia/blob/master/python/populse_mia/sources_images/Logo_populse_mia.jpg" alt="populse_mia logo" height="220" width="300">
+	<img src="https://github.com/populse/populse_mia/blob/master/python/populse_mia/sources_images/Logo_populse_mia_HR.jpeg" alt="populse_mia logo" height="220" width="300">
 </p>
 
 [![](https://travis-ci.org/populse/populse_mia.svg?branch=master)](https://travis-ci.org/populse/populse_mia)
@@ -16,55 +16,25 @@
 
 # Installation
 
-* From PyPI
+* From PyPI, [for users](https://populse.github.io/populse_mia/html/installation/user_installation.html)
 
-  * Please, see the [Populse_MIA’s user installation](https://populse.github.io/populse_mia/html/installation/user_installation.html)
-
-* From source, for Linux distributions
-  * A compatible version of Python must be installed
-  * Install a Version Control System, for example [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). Depending of your distribution, [package management system](https://en.wikipedia.org/wiki/Package_manager) can be different
-  
-        sudo apt-get install git # Debian like
-        sudo dnf install git # Fedora 22 and later
-        # etc.
-  * We use Git extension for versioning large files ([Git LFS](https://git-lfs.github.com/)) of the populse_mia project. We therefore recommend to [install git-lfs](https://github.com/git-lfs/git-lfs/wiki/Installation).
-  * Clone the source codes
-
-    * Get source codes from Github. Replace [mia_install_dir] with a directory of your choice
-
-          git lfs clone https://github.com/populse/populse_mia.git [mia_install_dir]
-
-    * Or download the zip file (populse_mia-master.zip) of the project ([green button "Clone or download"](https://github.com/populse/populse_mia)), then extract the data in the directory of your choice [mia_install_dir]
-
-           unzip populse_mia-master.zip -d [mia_install_dir]  # In this case [mia_install_dir] becomes [mia_install_dir]/populse_mia-master
-	
-  * Install the Python module distribution
-
-        cd [mia_install_dir]  
-        python3 setup.py install --user # Ensure that you use python >= 3.5 (use python3.x to be sure)  
-
-  * To run populse_mia from the source code, don't remove it. Otherwise:
-
-        cd ..  
-        rm -r [mia_install_dir]  
+* From source, [for developers](https://populse.github.io/populse_mia/html/installation/developer_installation.html) (or to use the latest version of populse_mia)
 
 # Usage
 
-  * For Linux: launching from the source code directory via command line
+  * After an [installation in user mode](https://populse.github.io/populse_mia/html/installation/user_installation.html):
 
-    * Interprets the main.py file
-
-          cd [mia_install_dir]/python/populse_mia  
-          python3 main.py  
-
-  * For all platforms, after a [Populse_MIA’s user installation](https://populse.github.io/populse_mia/html/installation/user_installation.html)
- 
         python3 -m populse_mia
-	
-  * Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:
+
+  * After an [installation in developer mode](https://populse.github.io/populse_mia/html/installation/developer_installation.html), interprets the main.py file from the source code directory:
   
-        python3 -m pip install --force-reinstall pyqt5==5.11.3
-        python3 -m pip install --force-reinstall PyQt5-sip==4.19.13
+        cd [mia_install_dir]/python/populse_mia  
+        python3 main.py  
+
+  * Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:
+
+        python3 -m pip install --force-reinstall pyqt5==5.14.0
+        python3 -m pip install --force-reinstall PyQt5-sip==5.0.1
 
 # Tests
 
@@ -117,4 +87,3 @@
 If you have a problem or would like to ask a question about how to do something in populse_mia, please [open an issue](https://github.com/populse/populse_mia/issues).
 
 You can even contact the developer team by using populse-support@univ-grenoble-alpes.fr.
-

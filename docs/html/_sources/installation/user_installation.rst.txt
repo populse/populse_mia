@@ -11,7 +11,7 @@
 Populse_MIA's user installation
 ===============================
 
-This page explains how to install Populse_MIA.
+This page explains how to install Populse_MIA in user mode.
 
 
 Pre-requirements
