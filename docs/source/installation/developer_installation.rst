@@ -10,7 +10,8 @@
 Populse_MIA's developer installation
 ====================================
 
-This page explains how to install Populse_MIA to use it as a developer. Note: A compatible version of Python must be installed (Python > 3.5)
+This page explains how to install Populse_MIA in developer mode.
+Note: A compatible version of Python must be installed (Python > 3.5)
 
 
 Non-Populse member
