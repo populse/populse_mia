@@ -7,8 +7,7 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Populse_MIA's developer installation
-====================================
+Populse_MIA's developer installation for windows 10
+===================================================
 
-* `Installation for linux or macOS <./linux_installation.html>`_
-* `Installation for windows 10 <./windows10_installation.html>`_
+toto
