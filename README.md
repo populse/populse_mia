@@ -18,7 +18,9 @@
 
 * From PyPI, [for users](https://populse.github.io/populse_mia/html/installation/user_installation.html)
 
-* From source, [for developers](https://populse.github.io/populse_mia/html/installation/developer_installation.html) (or to use the latest version of populse_mia)
+* By cloning the package, [for developers](https://populse.github.io/populse_mia/html/installation/developer_installation.html)
+
+* From source, [to use the latest version of populse_mia](https://populse.github.io/populse_mia/html/installation/from_source_installation.html)
 
 # Usage
 
