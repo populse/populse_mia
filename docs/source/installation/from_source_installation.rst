@@ -7,9 +7,7 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Populse_MIA's installation
-==========================
+Populse_MIA's from source installation
+======================================
 
-* `User installation <./user_installation.html>`_
-* `Developer installation <./developer_installation.html>`_
-* `Installation from source (to use the latest version of populse_mia) <./from_source_installation.html>`_
+blabla
