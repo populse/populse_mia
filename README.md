@@ -28,7 +28,7 @@
 
   * After an [installation in developer mode](https://populse.github.io/populse_mia/html/installation/developer_installation.html), interprets the main.py file from the source code directory:
   
-        cd [mia_install_dir]/python/populse_mia  
+        cd [populse_install_dir]/populse_mia/python/populse_mia  
         python3 main.py  
 
   * Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:
