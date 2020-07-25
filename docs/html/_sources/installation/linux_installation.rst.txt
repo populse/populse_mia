@@ -44,3 +44,4 @@ Populse_MIA's developer installation for linux or macOS
             unzip capsul-master.zip -d [populse_install_dir]
 	    mv [populse_install_dir]/capsul-master [populse_install_dir]/capsul
           
+* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia>`_ to launch populse_mia

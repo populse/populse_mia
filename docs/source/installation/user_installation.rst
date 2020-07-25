@@ -29,9 +29,9 @@ Populse_MIA is ensured to work under Python's 3.5, 3.6 and 3.7 versions.
 
         java -version
 
-* Make sure to have pip3 installed. You can verify it by typing the following in a command line: ::
+* Make sure to have pip installed. You can verify it by typing the following in a command line: ::
 
-        pip3 --version
+        pip3 --version # "python3 -m pip --version" can also be used
 
 * Make sure to have git installed. You can verify it by typing the following in a command line: ::
 
@@ -114,12 +114,12 @@ Installation
 .. image:: ../images/mia_install_4.png
    :align: center
    :name: Populse_MIA install widget summary
-
+ 
 |
 
-* Populse_MIA is now installed. To launch it, type the following command: ::
+* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia>`_ to launch populse_mia.
 
-        python3 -m populse_mia
+
 
 
 
