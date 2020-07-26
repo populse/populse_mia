@@ -10,8 +10,8 @@
 Populse_MIA's developer installation for linux or macOS
 ========================================================
 
-* A compatible version of Python must be installed (Python > 3.5)  
-  
+* A compatible version of Python must be installed (Python > 3.5)
+
 * Install a Version Control System, for example `git <https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control>`_. Depending of your distribution, the `package management system <https://en.wikipedia.org/wiki/Package_manager>`_ can be different ::
 
         sudo apt-get install git # Debian like
@@ -19,7 +19,7 @@ Populse_MIA's developer installation for linux or macOS
         # etc.
 
 * We use `Git extension for versioning large files (Git LFS) <https://git-lfs.github.com/>`_ of the populse_mia project. We therefore recommend to `install git-lfs <https://github.com/git-lfs/git-lfs/wiki/Installation>`_
-   
+
 * Clone the source codes
 
     * Get source codes from Github. Replace [populse_install_dir] with a directory of your choice ::
@@ -44,4 +44,21 @@ Populse_MIA's developer installation for linux or macOS
             unzip capsul-master.zip -d [populse_install_dir]
 	    mv [populse_install_dir]/capsul-master [populse_install_dir]/capsul
           
-* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia>`_ to launch populse_mia
+* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia#usage>`_ to launch populse_mia
+
+* In development mode the libraries needed for populse_mia are not installed as with pip. So depending on the libraries already installed on your station it may be necessary to complete this installation. Please refer to the `Requirements chapter on the Github page <https://github.com/populse/populse_mia#requirements>`_ to install the necessary third party libraries.
+
+    * e.g. for nibabel ::
+
+        pip3 install nibabel --user
+
+* For some libraries a special version is required. In case of problems when launching populse_mia, please check that all versions of third party libraries are respected by consulting the REQUIRES object in the `info.py <https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py>`_ module.
+
+    * e.g. for traits ::
+
+        pip3 install traits==5.2.0 --user # The traits librairy is not yet installed
+	Pip3 install --force-reinstall traits==5.2.0 # The traits librairy is already installed
+
+* If, in spite of that, you observe an ImportError exception at launch ... Well ... you will have to install the concerned library (see the two steps above). In this case, please send us a message (populse-support@univ-grenoble-alpes.fr) so that we can update the list of third party libraries needed to run populse_mia properly.
+
+* At the first launch in developer mode, the populse_mia's `configuration.yml file is not yet parameterised and a window will open ... documentation to be continued about this point

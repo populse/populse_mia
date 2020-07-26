@@ -98,7 +98,32 @@
 </ul>
 </div></blockquote>
 </li>
-<li><p>See the <a class="reference external" href="https://github.com/populse/populse_mia">Usage chapter on the GitHub page</a> to launch populse_mia</p></li>
+<li><p>See the <a class="reference external" href="https://github.com/populse/populse_mia#usage">Usage chapter on the GitHub page</a> to launch populse_mia</p></li>
+<li><p>In development mode the libraries needed for populse_mia are not installed as with pip. So depending on the libraries already installed on your station it may be necessary to complete this installation. Please refer to the <a class="reference external" href="https://github.com/populse/populse_mia#requirements">Requirements chapter on the Github page</a> to install the necessary third party libraries.</p>
+<blockquote>
+<div><ul>
+<li><p>e.g. for nibabel</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">nibabel</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>For some libraries a special version is required. In case of problems when launching populse_mia, please check that all versions of third party libraries are respected by consulting the REQUIRES object in the <a class="reference external" href="https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py">info.py</a> module.</p>
+<blockquote>
+<div><ul>
+<li><p>e.g. for traits</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">traits</span><span class="o">==</span><span class="mf">5.2</span><span class="o">.</span><span class="mi">0</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># The traits librairy is not yet installed</span>
+<span class="n">Pip3</span> <span class="n">install</span> <span class="o">--</span><span class="n">force</span><span class="o">-</span><span class="n">reinstall</span> <span class="n">traits</span><span class="o">==</span><span class="mf">5.2</span><span class="o">.</span><span class="mi">0</span> <span class="c1"># The traits librairy is already installed</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If, in spite of that, you observe an ImportError exception at launch … Well … you will have to install the concerned library (see the two steps above). In this case, please send us a message (<a class="reference external" href="mailto:populse-support&#37;&#52;&#48;univ-grenoble-alpes&#46;fr">populse-support<span>&#64;</span>univ-grenoble-alpes<span>&#46;</span>fr</a>) so that we can update the list of third party libraries needed to run populse_mia properly.</p></li>
+<li><p>At the first launch in developer mode, the populse_mia’s <a href="#id2"><span class="problematic" id="id3">`</span></a>configuration.yml file is not yet parameterised and a window will open … documentation to be continued about this point</p></li>
 </ul>
 </div>
 
