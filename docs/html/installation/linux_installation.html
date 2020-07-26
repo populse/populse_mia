@@ -151,9 +151,17 @@
 <div class="section" id="populse-member">
 <h2>Populse member<a class="headerlink" href="#populse-member" title="Permalink to this headline">¶</a></h2>
 <ul>
+<li><p><a class="reference external" href="https://populse.github.io/populse_mia/html/installation/linux_installation.html#populse-mia-s-developer-installation-for-linux-or-macos">Make a populse_Mia’s developer installation for linux or macOS</a></p></li>
 <li><p>Make sure to work on your own branch</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch locally</span>
 <span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch remotely</span>
+</pre></div>
+</div>
+</li>
+<li><p>When you’ve completed your changes, merge your branch with the master branch (Beware! The master branch must always remain as clean as possible. Make sure your changes bring an improvement without regression)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">master</span>
+<span class="n">git</span> <span class="n">merge</span> <span class="n">your_branch_name</span>
+<span class="n">git</span> <span class="n">push</span>
 </pre></div>
 </div>
 </li>
