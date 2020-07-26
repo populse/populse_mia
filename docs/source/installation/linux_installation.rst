@@ -57,7 +57,7 @@ Populse_MIA's developer installation for linux or macOS
     * e.g. for traits ::
 
         pip3 install traits==5.2.0 --user # The traits librairy is not yet installed
-	Pip3 install --force-reinstall traits==5.2.0 # The traits librairy is already installed
+	Pip3 install --force-reinstall traits==5.2.0 --user  # The traits librairy is already installed
 
 * If, in spite of that, you observe an ImportError exception at launch ... Well ... you will have to install the concerned library (see the two steps above). In this case, please send us a message (populse-support@univ-grenoble-alpes.fr) so that we can update the list of third party libraries needed to run populse_mia properly.
 
