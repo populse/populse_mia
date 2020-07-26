@@ -48,7 +48,431 @@
 </table>
 <div class="section" id="populse-mia-s-developer-installation-for-windows-10">
 <h1>Populse_MIA’s developer installation for windows 10<a class="headerlink" href="#populse-mia-s-developer-installation-for-windows-10" title="Permalink to this headline">¶</a></h1>
-<p>toto</p>
+<ul class="simple">
+<li><p>First, assure that you activated the developer mode in the parameters:</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation needs administrator rights</p>
+<ul class="simple">
+<li><p>Click on Start –&gt; Parameters</p></li>
+<li><p>Go in Update and Security</p></li>
+</ul>
+<a class="reference internal image-reference" href="installation/../images/update_and_security.png"><img alt="installation/../images/update_and_security.png" class="align-center" src="installation/../images/update_and_security.png" style="width: 400px;" /></a>
+<ul class="simple">
+<li><p>Click on Developer environment in the left column and activate the Sideload app;</p></li>
+</ul>
+<a class="reference internal image-reference" href="installation/../images/developer_mode.png"><img alt="installation/../images/developer_mode.png" class="align-center" src="installation/../images/developer_mode.png" style="width: 400px;" /></a>
+<ul class="simple">
+<li><p>You might need to restart your computer</p></li>
+</ul>
+</div>
+<ul>
+<li><p>When you restarted your computer, open a PowerShell window on your computer:</p>
+<ul class="simple">
+<li><p>Click on the Start menu and type “PowerShell”</p></li>
+</ul>
+<a class="reference internal image-reference" href="installation/../images/open_powershell.jpg"><img alt="installation/../images/open_powershell.jpg" class="align-center" src="installation/../images/open_powershell.jpg" style="width: 300px;" /></a>
+<ul class="simple">
+<li><p>Run the PowerShell application.</p></li>
+</ul>
+</li>
+<li><p>Make sure you have Python installed. You can verify it by typing in PowerShell :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
+</pre></div>
+</div>
+<p><a href="#id1"><span class="problematic" id="id2">*</span></a>Note : depending on your versions, you might need to use ‘python -V’ instead on ‘python3 -V’ to check your version of Python.</p>
+<ul>
+<li><p>If Python is not installed:</p>
+<ol class="arabic">
+<li><p>In PowerShell, type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span>
+</pre></div>
+</div>
+</li>
+<li><p>The Microsoft Store will open on the Python 3.8 app, click on Install:</p></li>
+</ol>
+<a class="reference internal image-reference" href="installation/../images/Python3.8.png"><img alt="installation/../images/Python3.8.png" class="align-center" src="installation/../images/Python3.8.png" style="width: 500px;" /></a>
+<ol class="arabic" start="3">
+<li><p>Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed:</p>
+<p>python3 -V
+pip3 –version</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Make sure you have Git installed. You can verify it by typing in PowerShell :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<ul>
+<li><p>If Git is not installed, you need to install it (<a class="reference external" href="https://git-scm.com/download/win">Here</a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Download</span> <span class="n">the</span> <span class="n">executable</span> <span class="k">for</span> <span class="n">your</span> <span class="n">specific</span> <span class="n">distribution</span> <span class="p">(</span><span class="mi">64</span> <span class="ow">or</span> <span class="mi">32</span> <span class="n">bits</span><span class="p">)</span><span class="o">.</span>
+<span class="n">Run</span> <span class="n">it</span><span class="o">.</span>
+<span class="n">You</span> <span class="n">will</span> <span class="n">be</span> <span class="n">asked</span> <span class="n">many</span> <span class="n">questions</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">you</span> <span class="n">preferences</span><span class="p">,</span> <span class="n">but</span> <span class="n">the</span> <span class="n">default</span> <span class="n">parameters</span> <span class="n">are</span> <span class="n">enough</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+<li><p>At the end of the git installation, you will need to restart PowerShell to restart the environment and be able to use Git.</p></li>
+</ul>
+</li>
+<li><p>During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (<a class="reference external" href="https://www.microsoft.com/fr-fr/download/details.aspx?id=58317">Here</a>):</p>
+<ol class="arabic simple">
+<li><p>Download the executable file and run it.</p></li>
+</ol>
+<p>2.The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:</p>
+<ol class="arabic simple" start="3">
+<li><p>Select the C++ Build Tools and install it.</p></li>
+</ol>
+</li>
+<li><p>Install java 64-bits for Windows (<a class="reference external" href="https://java.com/fr/download/manual.jsp">Here</a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Download</span> <span class="n">the</span> <span class="n">offline</span> <span class="p">(</span><span class="mi">64</span> <span class="n">bits</span><span class="p">)</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">run</span> <span class="n">it</span>
+<span class="n">Follow</span> <span class="n">the</span> <span class="n">installation</span>
+</pre></div>
+</div>
+</li>
+<li><p>Now you need to configure your java in order to be used by your system and PowerShell :</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation needs administrator rights</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>In PowerShell, open a system properties window by typing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysdm</span><span class="o">.</span><span class="n">cpl</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click on the Advanced System Parameter;</p></li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>Click on Environment Variable ;</p></li>
+<li><p>Select Path in the system variables, and click on modify;</p></li>
+</ol>
+<ol class="arabic" start="5">
+<li><p>Click on New;</p></li>
+<li><p>Paste the path to the folder containing YOUR java executable, it should LOOK like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Program</span> <span class="n">Files</span>\<span class="n">Java</span>\<span class="n">jre1</span><span class="o">.</span><span class="mf">8.0_251</span>\<span class="nb">bin</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div></blockquote>
+</div>
+<ul class="simple">
+<li><p>Enable the NTFS long path:</p></li>
+</ul>
+<blockquote>
+<div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation needs administrator rights</p>
+<ol class="arabic">
+<li><p>In PowerShell type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpedit</span><span class="o">.</span><span class="n">msc</span>
+</pre></div>
+</div>
+</li>
+<li><p>A Local Group Policy Editor window will open, then Navigate to:</p></li>
+</ol>
+<blockquote>
+<div><p>–&gt; Local Compute Policy
+–&gt; Computer Configuration
+–&gt; Administrator Templates
+–&gt; System
+–&gt; FileSystem
+–&gt; NTFS</p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>Double click on Enable NTFS long path and enable it.</p></li>
+</ol>
+</div>
+</div></blockquote>
+<ul>
+<li><p>Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># be sure to doin&#39;t forget the &quot;\--user&quot; at the end of the command, otherwise you might get issues from administrator rights</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="n">PyQt5</span>
+</pre></div>
+</div>
+</li>
+<li><p>Get sources code from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mia_install_dir] with the directory of your choice) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
+<span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using SSH</span>
+</pre></div>
+</div>
+</li>
+<li><p>Then, install the Python module distribution :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span>
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
+<p><a href="#id5"><span class="problematic" id="id6">*</span></a>Note : make sure to don’t forget ‘–user’ at the end of the command. If not you might get access errors linked with administrators rights.</p>
+</li>
+<li><p>Then, run Populse_mia :</p>
+<ul>
+<li><p>By interpreting the main.py file :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">populse_mia</span>
+<span class="n">python3</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+<li><p>By launching the package with python :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">populse_mia</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Now, configure you populse_mia, click on file and MIA preferences :</p>
+<ul class="simple">
+<li><p>In the Tools tab, enter the path to your project folder in the Projects preferences.</p></li>
+</ul>
+<a class="reference internal image-reference" href="installation/../images/tool_tab.png"><img alt="installation/../images/tool_tab.png" class="align-center" src="installation/../images/tool_tab.png" style="width: 400px;" /></a>
+<ul>
+<li><p>Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mri_install_directory</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
+<span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mri_install_directory</span><span class="p">]</span> <span class="c1"># using SSH</span>
+</pre></div>
+</div>
+</li>
+<li><p>In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">mri_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">/</span><span class="n">MRIFileManager</span><span class="o">/</span><span class="n">MRIManager</span><span class="o">.</span><span class="n">jar</span>
+</pre></div>
+</div>
+</li>
+<li><p>Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">Matlab</span><span class="o">/</span><span class="n">YourVersionOfMatlab</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">matlab</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="installation/../images/pipeline_tab.png"><img alt="installation/../images/pipeline_tab.png" class="align-center" src="installation/../images/pipeline_tab.png" style="width: 400px;" /></a>
+</li>
+<li><p>In the Pipeline tab of MIA preferences, if you have licensed SPM version check Use SPM and enter the path to your spm folder :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">Matlab</span><span class="o">/</span><span class="n">spm12</span>
+</pre></div>
+</div>
+</li>
+<li><p>In the Pipeline tab of MIA preferences, if you have standalone SPM version check Use SPM Standalone and enter the path to your spm12 folder :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">spm12_r</span><span class="o">****/</span><span class="n">spm12</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><a href="#id7"><span class="problematic" id="id8">*</span></a>Note : in this scenario you only need to check Use SPM Standalone in the Pipeline tab MIA preferences.</p>
+</div></blockquote>
+</li>
+</ul>
+</li>
+<li><p>For developing process, make sure to work on your own branch</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch locally</span>
+<span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch remotely</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">Coming</span> <span class="pre">from</span> <span class="pre">old</span> <span class="pre">README:</span></code></dt><dd><ul>
+<li><dl>
+<dt>From source, for Windows 10 distribution, please see [Populse_MIA’s developer installation](<a class="reference external" href="https://populse.github.io/populse_mia/html/installation/developer_installation.html">https://populse.github.io/populse_mia/html/installation/developer_installation.html</a>)</dt><dd><blockquote>
+<div><ul>
+<li><dl>
+<dt>First assure that you have activated the developer mode for Windows in the parameters<span class="classifier">(<code class="docutils literal notranslate"><span class="pre">`You</span> <span class="pre">will</span> <span class="pre">need</span> <span class="pre">administrator</span> <span class="pre">right</span> <span class="pre">for</span> <span class="pre">this`</span></code>)</span></dt><dd><ul class="simple">
+<li><p>Click on start and parameters ;</p></li>
+<li><p>Go in Update &amp; Security ;</p></li>
+<li><p>Click on For developer in the left column and activate the Sideload app ;</p></li>
+<li><p>You might need to restart you computer.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Open a PowerShell window on your computer :</dt><dd><ul class="simple">
+<li><p>Click on start menu and type “PowerShell” ;</p></li>
+<li><p>Run the PowerShell application.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>A compatible version of Python must be installed, to verify it, type in PowerShell :</p>
+<blockquote>
+<div><p>python3 -V</p>
+</div></blockquote>
+</li>
+</ul>
+<p><a href="#id9"><span class="problematic" id="id10">*</span></a>Note : depending on your versions, you might need to use “python -V” instead of “python3 -V” to check you version of Python</p>
+<ul>
+<li><p>If you don’t have python, you need to install it :</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>In PowerShell type :</p></li>
+</ol>
+<p>python3</p>
+<ol class="arabic" start="2">
+<li><p>The Microsoft Store will open with the Python 3.8 app. Click on install ;</p></li>
+<li><p>Install it on your computer ;</p></li>
+<li><p>Reopen PowerShell and check that Python and pip are installed :</p>
+<blockquote>
+<div><p>python3 -V
+pip3 –version</p>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>Install a Version Control System, for example [git](<a class="reference external" href="https://git-scm.com/download/win">https://git-scm.com/download/win</a>). Depending of your distribution, [package management system](<a class="reference external" href="https://en.wikipedia.org/wiki/Package_manager">https://en.wikipedia.org/wiki/Package_manager</a>) can be different</p>
+<blockquote>
+<div><p>Download the executable for your specific distribution (64 or 32 bits)
+Execute it
+You will be asked many questions depending on your preferences, but the default parameters are enough</p>
+</div></blockquote>
+</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>At the end of the git installation you will need to restart PowerShell to refresh the environment</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<ul>
+<li><p>Populse_mia requires java 64-bits for running, you can install it [here](<a class="reference external" href="https://java.com/fr/download/manual.jsp">https://java.com/fr/download/manual.jsp</a>) :</p>
+<blockquote>
+<div><p>Download and run the file
+Follows the installation</p>
+</div></blockquote>
+</li>
+<li><p>Now you need to configure your java in order to be use by your system : (<code class="docutils literal notranslate"><span class="pre">`You</span> <span class="pre">will</span> <span class="pre">need</span> <span class="pre">administrator</span> <span class="pre">right</span> <span class="pre">for</span> <span class="pre">this`</span></code>)</p>
+<ol class="arabic">
+<li><p>In PowerShell, open a system properties windows by typing :</p>
+<blockquote>
+<div><p>sysdm.cpl</p>
+</div></blockquote>
+</li>
+<li><p>Click on the Advanced System Parameter ;</p></li>
+<li><p>Click on Environment Variable ;</p></li>
+<li><p>Select Path in system variable, and click on modify ;</p></li>
+<li><p>Click New ;</p></li>
+<li><p>Paste the path to the folder containing your java executable, it should look like this :</p>
+<blockquote>
+<div><p>C:Program FilesJavajre1.8.0_251bin</p>
+</div></blockquote>
+</li>
+</ol>
+</li>
+<li><p>Enable the NTFS long path (<code class="docutils literal notranslate"><span class="pre">`You</span> <span class="pre">will</span> <span class="pre">need</span> <span class="pre">administrator</span> <span class="pre">right</span> <span class="pre">for</span> <span class="pre">this`</span></code>) :</p>
+<ol class="arabic">
+<li><p>In PowerShell type :</p>
+<blockquote>
+<div><p>gpedit.msc</p>
+</div></blockquote>
+</li>
+<li><dl class="simple">
+<dt>A Local Group Policy Editor window will open, then navigate to :</dt><dd><p>–&gt; Local Compute Policy
+–&gt; Computer Configuration
+–&gt; Administrator Template
+–&gt; System
+–&gt; FileSystem
+–&gt; NTFS</p>
+</dd>
+</dl>
+</li>
+<li><p>Double click Enable NTFS long path and enable it.</p></li>
+</ol>
+</li>
+<li><p>Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation :</p>
+<blockquote>
+<div><p>pip3 install numpy –user # Be sure to don’t forget “–user” at the end of the command, otherwise you might get issues from administrator rights
+pip3 install PyQt5 –user</p>
+</div></blockquote>
+</li>
+<li><p>Get source codes from Github. Replace [mia_install_dir] with a directory of your choice</p>
+<blockquote>
+<div><blockquote>
+<div><p>git lfs clone <a class="reference external" href="https://github.com/populse/populse_mia.git">https://github.com/populse/populse_mia.git</a> [mia_install_dir]</p>
+</div></blockquote>
+<ul>
+<li><p>Or download the zip file (populse_mia-master.zip) of the project ([green button “Clone or download”](<a class="reference external" href="https://github.com/populse/populse_mia">https://github.com/populse/populse_mia</a>)), then extract the data in the directory of your choice [mia_install_dir]</p>
+<blockquote>
+<div><p>unzip populse_mia-master.zip -d [mia_install_dir]  # In this case [mia_install_dir] becomes [mia_install_dir]/populse_mia-master</p>
+</div></blockquote>
+</li>
+<li><p>Install the Python module distribution</p>
+<blockquote>
+<div><p>cd [mia_install_dir]
+python3 setup.py install –user # Ensure that you use python &gt;= 3.5 | Be sure to don’t forget “–user” at the end of the command, otherwise you might get      access issues from administrators rights.</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p># Usage</p>
+<blockquote>
+<div><ul>
+<li><p>For all platforms: after a source installation, launching from the source code directory via command line</p>
+<ul>
+<li><p>Interprets the main.py file</p>
+<blockquote>
+<div><p>cd [mia_install_dir]/python/populse_mia
+python3 main.py</p>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>Now, to configure your populse_mia, click on file and MIA preferences</dt><dd><ul>
+<li><p>In the Tools tab, enter the path to your project folder under Project preferences ;</p></li>
+<li><p>Get sources code for MRI_conv from GitHub using HTTPS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) :</p>
+<blockquote>
+<div><p>git lfs clone <a class="reference external" href="https://github.com/populse/mri_conv.git">https://github.com/populse/mri_conv.git</a> [mri_install_dir] # using HTTPS
+git lfs clone <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:populse/mri_conv.git [mri_install_dir] # using SSH</p>
+</div></blockquote>
+</li>
+<li><p>In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences</p>
+<blockquote>
+<div><p>[mri_install_dir]/mri_conv/MRIFileManager/MRIManager.jar</p>
+</div></blockquote>
+</li>
+<li><p>Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :</p>
+<blockquote>
+<div><blockquote>
+<div><p>../../Matlab/YourVersionOfMatlab/bin/matlab.exe</p>
+</div></blockquote>
+<ul>
+<li><p>In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder :</p>
+<blockquote>
+<div><p>../../Matlab/spm12</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><p>For all platforms, after a [Populse_MIA’s user installation](<a class="reference external" href="https://populse.github.io/populse_mia/html/installation/user_installation.html">https://populse.github.io/populse_mia/html/installation/user_installation.html</a>)</p>
+<blockquote>
+<div><p>python3 -m populse_mia</p>
+</div></blockquote>
+</li>
+<li><p>Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:</p>
+<blockquote>
+<div><p>python3 -m pip install –force-reinstall pyqt5==5.14.0
+python3 -m pip install –force-reinstall PyQt5-sip==5.0.1</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
 </div>
 
 

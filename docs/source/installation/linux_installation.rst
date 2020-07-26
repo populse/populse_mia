@@ -1,4 +1,4 @@
-.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/developer_installation.rst: WARNING: document isn't included in any toctree
+.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/linux_installation.rst: WARNING: document isn't included in any toctree
 :orphan:
 .. toctree::
 
@@ -59,9 +59,10 @@ Populse_MIA's developer installation for linux or macOS
         pip3 install traits==5.2.0 --user # The traits librairy is not yet installed
 	Pip3 install --force-reinstall traits==5.2.0 --user  # The traits librairy is already installed
 
-* If, in spite of that, you observe an ImportError exception at launch ... Well ... you will have to install the concerned library (see the two steps above). In this case, please send us a message (populse-support@univ-grenoble-alpes.fr) so that we can update the list of third party libraries needed to run populse_mia properly.
+* If, in spite of that, you observe an ImportError exception at launch ... Well ... you will have to install the involved library (see the two steps above). In this case, please send us a message (populse-support@univ-grenoble-alpes.fr) so that we can update the list of third party libraries needed to run populse_mia properly.
 
-* At the first launch in developer mode, the populse_mia's `configuration.yml file is not yet parameterised and a window will open ... documentation to be continued about this point
+* At the first launch in developer mode, the populse_mia's `configuration.yml` file is not yet parameterised and a window will open ... ``documentation to be continued about this point``
+
 
 How to contribute to the populse_mia package?
 =============================================
@@ -92,7 +93,7 @@ Populse member
     git checkout -b your_branch_name # creates your own branch locally
     git push -u origin your_branch_name # creates your own branch remotely
 
-* When you've completed your changes, merge your branch with the master branch (Beware! The master branch must always remain as clean as possible. Make sure your changes bring an improvement without regression) ::
+* When you've completed your changes, merge your branch with the master branch then push to GitHub (Beware! The master branch must always remain as clean as possible. Make sure your changes bring an improvement without regression) ::
 
     git checkout master
     git merge your_branch_name
