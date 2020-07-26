@@ -85,7 +85,16 @@ Non-Populse member
 Populse member
 --------------
 
+* `Make a populse_Mia's developer installation for linux or macOS <https://populse.github.io/populse_mia/html/installation/linux_installation.html#populse-mia-s-developer-installation-for-linux-or-macos>`_
+  
 * Make sure to work on your own branch ::
 
-        git checkout -b your_branch_name # creates your own branch locally
-        git push -u origin your_branch_name # creates your own branch remotely
+    git checkout -b your_branch_name # creates your own branch locally
+    git push -u origin your_branch_name # creates your own branch remotely
+
+* When you've completed your changes, merge your branch with the master branch (Beware! The master branch must always remain as clean as possible. Make sure your changes bring an improvement without regression) ::
+
+    git checkout master
+    git merge your_branch_name
+    git push
+    
