@@ -1,4 +1,4 @@
-.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/installation.rst: WARNING: document isn't included in any toctree
+.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/from_source_installation.rst: WARNING: document isn't included in any toctree
 :orphan:  
 .. toctree::
 
