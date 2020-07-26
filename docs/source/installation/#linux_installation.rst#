@@ -85,6 +85,8 @@ Non-Populse member
 Populse member
 --------------
 
+* `Make a populse_Mia's developer installation for linux or macOS <https://populse.github.io/populse_mia/html/installation/linux_installation.html#populse-mia-s-developer-installation-for-linux-or-macos>`_
+  
 * Make sure to work on your own branch ::
 
         git checkout -b your_branch_name # creates your own branch locally

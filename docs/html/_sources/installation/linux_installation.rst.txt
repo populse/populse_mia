@@ -62,3 +62,30 @@ Populse_MIA's developer installation for linux or macOS
 * If, in spite of that, you observe an ImportError exception at launch ... Well ... you will have to install the concerned library (see the two steps above). In this case, please send us a message (populse-support@univ-grenoble-alpes.fr) so that we can update the list of third party libraries needed to run populse_mia properly.
 
 * At the first launch in developer mode, the populse_mia's `configuration.yml file is not yet parameterised and a window will open ... documentation to be continued about this point
+
+How to contribute to the populse_mia package?
+=============================================
+
+Non-Populse member
+------------------
+
+* `Fork <https://help.github.com/articles/fork-a-repo/>`_ Populse_mia on GitHub and clone your Populse_MIA repository
+  
+* Get source code from Github using HTTPS or SSH. Replace [populse_install_dir] with a directory of your choice ::
+
+        git lfs clone https://github.com/your_user_name/populse_mia.git [mia_install_dir]/populse_mia # using HTTPS
+        git lfs clone git@github.com:your_user_name/populse_mia.git [mia_install_dir]/populse_mia # using SSH
+
+* If you have made some changes to improve the code and want to share them, feel free to open pull requests:
+
+        * Commit and push your changes to your personal repository (`git add ..., git commit -m "a shor message", git push <https://stackoverflow.com/questions/6143285/git-add-vs-push-vs-commit)>`_)
+
+        * Open a `pull request <https://help.github.com/articles/creating-a-pull-request/>`_ on GitHub
+
+Populse member
+--------------
+
+* Make sure to work on your own branch ::
+
+        git checkout -b your_branch_name # creates your own branch locally
+        git push -u origin your_branch_name # creates your own branch remotely
