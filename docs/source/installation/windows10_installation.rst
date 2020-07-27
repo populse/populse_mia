@@ -7,12 +7,12 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Populse_MIA's developer installation for windows 10
+Populse_mia's developer installation for windows 10
 ===================================================
 
 * First, assure that you activated the developer mode in the parameters:
 
-.. warning::
+.. warningcd::
 
   This operation needs administrator rights
 
@@ -41,11 +41,11 @@ Populse_MIA's developer installation for windows 10
 
   * Run the PowerShell application.
 
-* Make sure you have Python installed. You can verify it by typing in PowerShell : ::
+* Make sure you have Python installed. You can verify it by typing in PowerShell: ::
 
     python3 -V
 
-  *Note : depending on your versions, you might need to use 'python -V' instead on 'python3 -V' to check your version of Python.
+  *Note : depending on your versions, you might need to use `python -V` instead on `python3 -V` to check your version of Python.*
 
   * If Python is not installed:
 
@@ -64,7 +64,7 @@ Populse_MIA's developer installation for windows 10
        python3 -V
        pip3 --version
 
-* Make sure you have Git installed. You can verify it by typing in PowerShell : ::
+* Make sure you have Git installed. You can verify it by typing in PowerShell: ::
 
     git --version
 
@@ -93,7 +93,7 @@ Populse_MIA's developer installation for windows 10
     Download the offline (64 bits) file and run it
     Follow the installation
 
-* Now you need to configure your java in order to be used by your system and PowerShell :
+* Now you need to configure your java in order to be used by your system and PowerShell:
 
 .. warning::
 
@@ -153,12 +153,12 @@ Populse_MIA's developer installation for windows 10
     pip3 install numpy --user # be sure to doin't forget the "\--user" at the end of the command, otherwise you might get issues from administrator rights
     pip3 install PyQt5
 
-* Get sources code from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mia_install_dir] with the directory of your choice) : ::
+* Get sources code from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mia_install_dir] with the directory of your choice): ::
 
     git lfs clone https://github.com/populse/populse_mia.git [mia_install_dir] # using HTTPS
     git lfs clone git@github.com:populse/populse_mia.git [mia_install_dir] # using SSH
 
-* Then, install the Python module distribution : ::
+* Then, install the Python module distribution: ::
 
     cd [mia_install_dir]
     python3 setup.py install --user
@@ -167,16 +167,16 @@ Populse_MIA's developer installation for windows 10
 
 * Then, run Populse_mia :
 
-  * By interpreting the main.py file : ::
+  * By interpreting the main.py file: ::
 
       cd [mia_install_dir]/python/populse_mia
       python3 main.py
 
-  * By launching the package with python : ::
+  * By launching the package with python: ::
 
       python3 -m populse_mia
 
-* Now, configure you populse_mia, click on file and MIA preferences :
+* Now, configure you populse_mia, click on file and MIA preferences:
 
   * In the Tools tab, enter the path to your project folder in the Projects preferences.
 
@@ -184,16 +184,16 @@ Populse_MIA's developer installation for windows 10
     :width: 400
     :align: center
 
-  * Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) : ::
+  * Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice): ::
 
       git lfs clone https://github.com/populse/mri_conv.git [mri_install_directory] # using HTTPS
       git lfs clone git@github.com:populse/mri_conv.git [mri_install_directory] # using SSH
 
-  * In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences : ::
+  * In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences: ::
 
     [mri_install_dir]/mri_conv/MRIFileManager/MRIManager.jar
 
-  * Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer : ::
+  * Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer: ::
 
     ../../Matlab/YourVersionOfMatlab/bin/matlab.exe
 
@@ -201,11 +201,11 @@ Populse_MIA's developer installation for windows 10
       :width: 400
       :align: center
 
-  * In the Pipeline tab of MIA preferences, if you have licensed SPM version check Use SPM and enter the path to your spm folder : ::
+  * In the Pipeline tab of MIA preferences, if you have licensed SPM version check Use SPM and enter the path to your spm folder: ::
 
     ../../Matlab/spm12
 
-  * In the Pipeline tab of MIA preferences, if you have standalone SPM version check Use SPM Standalone and enter the path to your spm12 folder : ::
+  * In the Pipeline tab of MIA preferences, if you have standalone SPM version check Use SPM Standalone and enter the path to your spm12 folde: ::
 
     ../../spm12_r****/spm12
 
