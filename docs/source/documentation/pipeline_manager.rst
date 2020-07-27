@@ -10,7 +10,7 @@
 Populse_MIA's Pipeline Manager
 ==============================
 
-This page is a user guide for Populse_MIA's Pipeline Manager, a tool to build and run processing pipelines in a graphical way.
+This page is a user guide for Populse_mia's Pipeline Manager, a tool to build and run processing pipelines in a graphical way.
 
 Tab presentation
 ----------------
@@ -185,8 +185,8 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
 * The second push button at the bottom left of the window specifies which tag values to set on the selected plug.
 
 .. image:: ../images/plug_filter.png
-   :align: center
-   :name: Plug filter
+  :align: center
+  :name: Plug filter
 
 |
 

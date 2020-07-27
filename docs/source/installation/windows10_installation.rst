@@ -19,14 +19,14 @@ Populse_mia's developer installation for windows 10
   * Go in Update and Security
 
   .. image:: /images/update_and_security.png
-    :width: 400
-    :align: center
+     :width: 400
+     :align: center
 
   * Click on Developer environment in the left column and activate the Sideload app;
 
   .. image:: ../images/developer_mode.png
-    :width: 400
-    :align: center
+     :width: 400
+     :align: center
 
   * You might need to restart your computer
 
@@ -35,8 +35,8 @@ Populse_mia's developer installation for windows 10
   * Click on the Start menu and type "PowerShell"
 
   .. image:: ../images/open_powershell.jpg
-    :width: 300
-    :align: center
+     :width: 300
+     :align: center
 
   * Run the PowerShell application.
 
@@ -55,8 +55,8 @@ Populse_mia's developer installation for windows 10
     2. The Microsoft Store will open on the Python 3.8 app, click on Install:
 
     .. image:: ../images/Python3.8.png
-      :width: 500
-      :align: center
+       :width: 500
+       :align: center
 
     3. Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed: ::
 
@@ -82,8 +82,8 @@ Populse_mia's developer installation for windows 10
   2.The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:
 
   .. image:: ../images/vs_Build.png
-      :width: 500
-      :align: center
+     :width: 500
+     :align: center
 
   3. Select the C++ Build Tools and install it.
 
@@ -105,16 +105,16 @@ Populse_mia's developer installation for windows 10
     2. Click on the Advanced System Parameter;
 
     .. image:: ../images/ASP_system_tab.png
-      :width: 500
-      :align: center
+       :width: 500
+       :align: center
 
     3. Click on Environment Variable ;
 
     4. Select Path in the system variables, and click on modify;
 
     .. image:: ../images/env_var.png
-      :width: 500
-      :align: center
+       :width: 500
+       :align: center
 
     5. Click on New;
 
@@ -144,8 +144,8 @@ Populse_mia's developer installation for windows 10
     3. Double click on Enable NTFS long path and enable it.
 
     .. image:: ../images/NTFS.png
-      :width: 500
-      :align: center
+       :width: 500
+       :align: center
 
 * Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation: ::
 
@@ -180,8 +180,8 @@ Populse_mia's developer installation for windows 10
   * In the Tools tab, enter the path to your project folder in the Projects preferences.
 
   .. image:: ../images/tool_tab.png
-    :width: 400
-    :align: center
+     :width: 400
+     :align: center
 
   * Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice): ::
 
@@ -197,8 +197,8 @@ Populse_mia's developer installation for windows 10
     ../../Matlab/YourVersionOfMatlab/bin/matlab.exe
 
     .. image:: ../images/pipeline_tab.png
-      :width: 400
-      :align: center
+       :width: 400
+       :align: center
 
   * In the Pipeline tab of MIA preferences, if you have licensed SPM version check Use SPM and enter the path to your spm folder: ::
 
