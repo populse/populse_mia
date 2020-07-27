@@ -37,6 +37,10 @@
 
         python3 -m pip install --force-reinstall pyqt5==5.14.0
         python3 -m pip install --force-reinstall PyQt5-sip==5.0.1
+	
+# Contributing to the project
+
+If you'd like to contribute to the project please read our [developer documetation page](https://populse.github.io/populse_mia/html/documentation/developer_documentation.html). Please also read through [our code of conduct](https://github.com/populse/populse_mia/blob/master/CODE_OF_CONDUCT.md).
 
 # Tests
 
