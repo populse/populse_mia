@@ -48,7 +48,7 @@
 </table>
 <div class="section" id="populse-mia-s-pipeline-manager">
 <h1>Populse_MIA’s Pipeline Manager<a class="headerlink" href="#populse-mia-s-pipeline-manager" title="Permalink to this headline">¶</a></h1>
-<p>This page is a user guide for Populse_MIA’s Pipeline Manager, a tool to build and run processing pipelines in a graphical way.</p>
+<p>This page is a user guide for Populse_mia’s Pipeline Manager, a tool to build and run processing pipelines in a graphical way.</p>
 <div class="section" id="tab-presentation">
 <h2>Tab presentation<a class="headerlink" href="#tab-presentation" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
@@ -61,7 +61,7 @@
 </dd>
 </dl>
 <p>Here is an overview of the Pipeline Manager tab:</p>
-<img alt="documentation/../images/pipeline_manager.png" class="align-center" id="pipeline-manager-tab" src="documentation/../images/pipeline_manager.png" />
+<img alt="../_images/pipeline_manager.png" class="align-center" id="pipeline-manager-tab" src="../_images/pipeline_manager.png" />
 </div>
 <div class="section" id="the-process-library">
 <span id="process-library-label"></span><h2>The process library<a class="headerlink" href="#the-process-library" title="Permalink to this headline">¶</a></h2>
@@ -70,7 +70,7 @@
 <p>To use any of the available processes, drag it from the process library and drop it to the pipeline editor.</p>
 <p>When a pipeline is saved, it is stored in the process library under “User_processes” and can be used as a process.</p>
 <p>Here is an overview of the process library:</p>
-<img alt="documentation/../images/process_library.png" class="align-center" id="process-library" src="documentation/../images/process_library.png" />
+<img alt="../_images/process_library.png" class="align-center" id="process-library" src="../_images/process_library.png" />
 </div>
 <div class="section" id="the-pipeline-editor">
 <span id="pipeline-editor-label"></span><h2>The pipeline editor<a class="headerlink" href="#the-pipeline-editor" title="Permalink to this headline">¶</a></h2>
@@ -145,7 +145,7 @@
 <ul class="simple">
 <li><p>Add a SPM smooth process by dragging it from the process library and dropping it into the pipeline editor</p></li>
 </ul>
-<img alt="documentation/../images/pipeline_tuto_1.png" class="align-center" id="pipeline-tutorial-1" src="documentation/../images/pipeline_tuto_1.png" />
+<img alt="../_images/pipeline_tuto_1.png" class="align-center" id="pipeline-tutorial-1" src="../_images/pipeline_tuto_1.png" />
 <ul class="simple">
 <li><p>Export the input and output plug(s) you want to be able to modify by right-clicking on them and click on “export plug”, rename it if you want and click on “OK”.</p></li>
 </ul>
@@ -153,7 +153,7 @@
 <p>Note 2: to make a pipeline valid, you have to export plugs that are the pipeline global input/outputs. In this example, the “in_files” plug needs to be exported because it is mandatory. The only output plug has to be also exported. The node will then be activated and its color become lighter. It is also possible to export optional plug such as “fwhm” and “output_directory” even if they already have default value.</p>
 <p>Note 3: Nipype’s processes needs values for “output_directory”, “use_mcr”, “paths”, “matlab_cmd” and “mfile” plugs. These are updated from Populse_MIA’s during pipeline initialization.</p>
 <p>Note 4: if you right-click on a node or on the pipeline editor background, you can also export plugs (mandatory or not, input, output or both). This method is usually faster to export plugs.</p>
-<img alt="documentation/../images/pipeline_tuto_2.png" class="align-center" id="pipeline-tutorial-2" src="documentation/../images/pipeline_tuto_2.png" />
+<img alt="../_images/pipeline_tuto_2.png" class="align-center" id="pipeline-tutorial-2" src="../_images/pipeline_tuto_2.png" />
 <p>Now the pipeline is only composed of one process with exported inputs/output. It is still possible to add another process to modify it.</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -168,12 +168,12 @@
 </dl>
 </li>
 </ul>
-<img alt="documentation/../images/pipeline_tuto_3.png" class="align-center" id="pipeline-tutorial-3" src="documentation/../images/pipeline_tuto_3.png" />
+<img alt="../_images/pipeline_tuto_3.png" class="align-center" id="pipeline-tutorial-3" src="../_images/pipeline_tuto_3.png" />
 <p>We now have a pipeline that can smooth an image twice with the same fwhm parameter.</p>
 <ul class="simple">
 <li><p>Save the pipeline in the proposed folder by clicking on the bottom left “Pipeline” menu</p></li>
 </ul>
-<img alt="documentation/../images/pipeline_tuto_4.png" class="align-center" id="pipeline-tutorial-4" src="documentation/../images/pipeline_tuto_4.png" />
+<img alt="../_images/pipeline_tuto_4.png" class="align-center" id="pipeline-tutorial-4" src="../_images/pipeline_tuto_4.png" />
 <ul class="simple">
 <li><dl class="simple">
 <dt>The pipeline is now stored in the process library under “User_processes”. You can use it as a process and add it to a new pipeline editor.</dt><dd><ul>
@@ -184,16 +184,16 @@
 </dl>
 </li>
 </ul>
-<img alt="documentation/../images/pipeline_tuto_5.png" class="align-center" id="pipeline-tutorial-5" src="documentation/../images/pipeline_tuto_5.png" />
+<img alt="../_images/pipeline_tuto_5.png" class="align-center" id="pipeline-tutorial-5" src="../_images/pipeline_tuto_5.png" />
 <p>If you want to change one parameter of the pipeline, it is still possible to make a change following these steps:</p>
 <ul class="simple">
 <li><p>For instance, if you want to change the prefix of the file name generated in the second process, go back to the “double_smooth.py” pipeline, export the “out_prefix” plug and save the pipeline.</p></li>
 </ul>
-<img alt="documentation/../images/pipeline_tuto_6.png" class="align-center" id="pipeline-tutorial-6" src="documentation/../images/pipeline_tuto_6.png" />
+<img alt="../_images/pipeline_tuto_6.png" class="align-center" id="pipeline-tutorial-6" src="../_images/pipeline_tuto_6.png" />
 <ul class="simple">
 <li><p>When you go back to the “New pipeline 1” pipeline, you can see that the “out_prefix” plug has been automatically added and you can now control its value.</p></li>
 </ul>
-<img alt="documentation/../images/pipeline_tuto_7.png" class="align-center" id="pipeline-tutorial-7" src="documentation/../images/pipeline_tuto_7.png" />
+<img alt="../_images/pipeline_tuto_7.png" class="align-center" id="pipeline-tutorial-7" src="../_images/pipeline_tuto_7.png" />
 <p>To set input values and to run the pipeline, follow the steps of <a class="reference internal" href="#node-controller-label"><span class="std std-ref">The node controller</span></a>.</p>
 </div>
 </div>
@@ -204,14 +204,14 @@
 <li><p>Note: to enable the node controller, click on a node. It will display its parameters.</p></li>
 <li><p>Note: when changing a value in the node controller, be sure to press Enter to validate the change.</p></li>
 </ul>
-<img alt="documentation/../images/node_controller_1.png" class="align-center" id="node-controller" src="documentation/../images/node_controller_1.png" />
+<img alt="../_images/node_controller_1.png" class="align-center" id="node-controller" src="../_images/node_controller_1.png" />
 <div class="section" id="how-to-use-the-node-controller">
 <h3>How to use the node controller<a class="headerlink" href="#how-to-use-the-node-controller" title="Permalink to this headline">¶</a></h3>
 <p>This part is based on the Double_smooth.py file created in <a class="reference internal" href="#pipeline-editor-label"><span class="std std-ref">The pipeline editor</span></a>.</p>
 <ul class="simple">
 <li><p>When you have clicked on a pipeline global inputs/outputs node (blue node) it is possible to filter each input plug to set documents directly from the database. For that, click on the “Filter” push button.</p></li>
 </ul>
-<img alt="documentation/../images/node_controller_2.png" class="align-center" id="node-controller-inputs-outputs" src="documentation/../images/node_controller_2.png" />
+<img alt="../_images/node_controller_2.png" class="align-center" id="node-controller-inputs-outputs" src="../_images/node_controller_2.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -220,14 +220,14 @@
 <li><p>You can either filter the database (by setting the filter parameters and clicking on “Search”) or click on the selected documents.</p></li>
 <li><p>The second push button at the bottom left of the window specifies which tag values to set on the selected plug.</p></li>
 </ul>
-<img alt="documentation/../images/plug_filter.png" class="align-center" id="plug-filter" src="documentation/../images/plug_filter.png" />
+<img alt="../_images/plug_filter.png" class="align-center" id="plug-filter" src="../_images/plug_filter.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <ul class="simple">
 <li><p>Press “OK” to set the selected documents to the plug value. The plug value has been updated in the node controller</p></li>
 </ul>
-<img alt="documentation/../images/node_controller_3.png" class="align-center" id="node-controller-inputs-outputs-2" src="documentation/../images/node_controller_3.png" />
+<img alt="../_images/node_controller_3.png" class="align-center" id="node-controller-inputs-outputs-2" src="../_images/node_controller_3.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -240,7 +240,7 @@
 </dl>
 </li>
 </ul>
-<img alt="documentation/../images/node_controller_4.png" class="align-center" id="node-controller-inputs-outputs-3" src="documentation/../images/node_controller_4.png" />
+<img alt="../_images/node_controller_4.png" class="align-center" id="node-controller-inputs-outputs-3" src="../_images/node_controller_4.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -253,7 +253,7 @@
 </dl>
 </li>
 </ul>
-<img alt="documentation/../images/node_controller_5.png" class="align-center" id="node-controller-inputs-outputs-4" src="documentation/../images/node_controller_5.png" />
+<img alt="../_images/node_controller_5.png" class="align-center" id="node-controller-inputs-outputs-4" src="../_images/node_controller_5.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -271,7 +271,7 @@
 <div class="section" id="how-to-use-the-iteration-table">
 <h3>How to use the iteration table<a class="headerlink" href="#how-to-use-the-iteration-table" title="Permalink to this headline">¶</a></h3>
 <p>Assume that the current project contains several patients, so several “Patient” tag values:</p>
-<img alt="documentation/../images/data_browser.png" class="align-center" id="data-browser" src="documentation/../images/data_browser.png" />
+<img alt="../_images/data_browser.png" class="align-center" id="data-browser" src="../_images/data_browser.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -292,14 +292,14 @@
 </dl>
 </li>
 </ul>
-<img alt="documentation/../images/iteration_table.png" class="align-center" id="iteration-table" src="documentation/../images/iteration_table.png" />
+<img alt="../_images/iteration_table.png" class="align-center" id="iteration-table" src="../_images/iteration_table.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <ul class="simple">
 <li><p>When the “Iterate pipeline” check box is checked, before running a pipeline, a pop-up is displayed to let you choose on which value to iterate the pipeline.</p></li>
 </ul>
-<img alt="documentation/../images/iterate_pipeline.png" class="align-center" id="iterate-pipeline" src="documentation/../images/iterate_pipeline.png" />
+<img alt="../_images/iterate_pipeline.png" class="align-center" id="iterate-pipeline" src="../_images/iterate_pipeline.png" />
 <p>Note: if you want to use pipeline iteration, you have to have a pipeline global input called “database_scans”. Only this plug will be updated for each iteration and will contain all the documents that have the correct tag value.</p>
 </div>
 </div>

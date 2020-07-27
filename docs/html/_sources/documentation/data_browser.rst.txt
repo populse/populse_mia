@@ -31,7 +31,6 @@ The toolbar
 
 The toolbar contains several actions to interact with the database which are listed below.
 
-
 Add tag (from "Tags" menu, shortcut: Ctrl+A)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Add a tag for all the documents in the database, specifying its name (mandatory), its default value, a short description, its unit and its type.
