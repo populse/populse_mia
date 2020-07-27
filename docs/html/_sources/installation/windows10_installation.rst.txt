@@ -6,20 +6,19 @@
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
-
 Populse_mia's developer installation for windows 10
 ===================================================
 
 * First, assure that you activated the developer mode in the parameters:
 
-.. warningcd::
+.. warning::
 
   This operation needs administrator rights
 
   * Click on Start --> Parameters
   * Go in Update and Security
 
-  .. image:: ../images/update_and_security.png
+  .. image:: /images/update_and_security.png
     :width: 400
     :align: center
 
@@ -82,7 +81,7 @@ Populse_mia's developer installation for windows 10
 
   2.The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:
 
-  .. image// ../images/vs_Build.png
+  .. image:: ../images/vs_Build.png
       :width: 500
       :align: center
 
@@ -105,7 +104,7 @@ Populse_mia's developer installation for windows 10
 
     2. Click on the Advanced System Parameter;
 
-    .. image// ../images/ASP_system_tab.png
+    .. image:: ../images/ASP_system_tab.png
       :width: 500
       :align: center
 
@@ -113,7 +112,7 @@ Populse_mia's developer installation for windows 10
 
     4. Select Path in the system variables, and click on modify;
 
-    .. image// ../images/env_var.png
+    .. image:: ../images/env_var.png
       :width: 500
       :align: center
 
@@ -144,7 +143,7 @@ Populse_mia's developer installation for windows 10
 
     3. Double click on Enable NTFS long path and enable it.
 
-    .. image// ../images/NTFS.png
+    .. image:: ../images/NTFS.png
       :width: 500
       :align: center
 
@@ -348,3 +347,4 @@ Populse_mia's developer installation for windows 10
 
         python3 -m pip install --force-reinstall pyqt5==5.14.0
         python3 -m pip install --force-reinstall PyQt5-sip==5.0.1
+
