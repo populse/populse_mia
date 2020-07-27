@@ -47,7 +47,7 @@
 * The module is ensured to work on the platforms Linux, OSX and Windows
 * The script of tests is python/populse_mia/test.py, so the following command launches the tests:
 
-      python3 python/populse_mia/test.py (from populse_mia root folder, for example [mia_install_dir])
+      python3 python/populse_mia/test.py (from populse_mia root folder, for example [populse_install_dir]/populse_mia)
 
 # Requirements
 
