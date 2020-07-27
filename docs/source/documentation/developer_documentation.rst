@@ -12,7 +12,7 @@ How to contribute to the populse_mia package
 Non-Populse member
 ------------------
 
-* `Fork <https://help.github.com/articles/fork-a-repo/>`_ Populse_mia on GitHub and clone your Populse_MIA repository
+* `Fork <https://help.github.com/articles/fork-a-repo/>`_ Populse_mia on GitHub and clone your Populse_mia repository
   
 * Get source code from Github using HTTPS or SSH. Replace [populse_install_dir] with a directory of your choice ::
 
@@ -28,7 +28,7 @@ Non-Populse member
 Populse member
 --------------
 
-* `Make a populse_Mia's developer installation for linux or macOS <https://populse.github.io/populse_mia/html/installation/linux_installation.html#populse-mia-s-developer-installation-for-linux-or-macos>`_
+* `Make a populse_mia's developer installation <https://populse.github.io/populse_mia/html/installation/developer_installation.html>`_
   
 * Make sure to work on your own branch ::
 
