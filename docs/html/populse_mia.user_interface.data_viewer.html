@@ -36,15 +36,26 @@
 </div>
 <div class="section" id="module-populse_mia.user_interface.data_viewer.data_viewer">
 <span id="populse-mia-user-interface-data-viewer-data-viewer-module"></span><h2>populse_mia.user_interface.data_viewer.data_viewer module<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.data_viewer" title="Permalink to this headline">¶</a></h2>
-<p>This module provides an abstract bse class for data viewer implemenataions in Populse-MIA.</p>
-<p>Data viewers are supposed to inherit <a class="reference internal" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a> and implement (at least) its methods. A data viewer is given a project and documents list, and is thus allowed to access databasing features and documents attributes.</p>
+<p>This module provides an abstract base class for data viewer implemenataions in
+populse-mia.</p>
+<p>Data viewers are supposed to inherit <a class="reference internal" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a> and implement (at
+least) its methods. A data viewer is given a project and documents list, and is
+thus allowed to access databasing features and documents attributes.</p>
 <div class="section" id="coding-a-data-viewer">
 <h3>Coding a data viewer<a class="headerlink" href="#coding-a-data-viewer" title="Permalink to this headline">¶</a></h3>
-<p>A data viewer is identified after its module name, and is currently searched for as a sumbodule of <a class="reference internal" href="#module-populse_mia.user_interface.data_viewer" title="populse_mia.user_interface.data_viewer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">populse_mia.user_interface.data_viewer</span></code></a>. The data viewer module may be implemented as a “regular” module (.py file) or a package (directory) and should contain at least a class named <code class="docutils literal notranslate"><span class="pre">MiaViewer</span></code> which:</p>
-<ul class="simple">
-<li><p>is a Qt <code class="docutils literal notranslate"><span class="pre">QWidget</span></code> (inherits <code class="docutils literal notranslate"><span class="pre">QWidget</span></code> as 1st inheritance as is required by Qt)</p></li>
-<li><p>implements the <a class="reference internal" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a> API (normally by inheriting it as second inheritance after <code class="docutils literal notranslate"><span class="pre">QWidget</span></code> but this is not technically required if the API is implemented)</p></li>
+<p>A data viewer is identified after its module name, and is currently searched for
+as a sumbodule of <a class="reference internal" href="#module-populse_mia.user_interface.data_viewer" title="populse_mia.user_interface.data_viewer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">populse_mia.user_interface.data_viewer</span></code></a>. The data viewer
+module may be implemented as a “regular” module (.py file) or a package
+(directory) and should contain at least a class named <code class="docutils literal notranslate"><span class="pre">MiaViewer</span></code> which:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>is a Qt <code class="docutils literal notranslate"><span class="pre">QWidget</span></code> (inherits <code class="docutils literal notranslate"><span class="pre">QWidget</span></code> as 1st inheritance as is required
+by Qt)</p></li>
+<li><p>implements the <a class="reference internal" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a> API (normally by inheriting it as second
+inheritance after <code class="docutils literal notranslate"><span class="pre">QWidget</span></code> but this is not technically required if the
+API is implemented)</p></li>
 </ul>
+</div></blockquote>
 <dl class="class">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer.DataViewer">
 <em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.data_viewer.data_viewer.</code><code class="sig-name descname">DataViewer</code><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="Permalink to this definition">¶</a></dt>
