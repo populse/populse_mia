@@ -1,15 +1,14 @@
-.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/windows10_installation.rst: WARNING: document isn't included in any toctree
-
+.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/pre_req_windows10.rst: WARNING: document isn't included in any toctree
 :orphan:
-
-  .. toctree::
+.. toctree::
 
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
-Populse_mia's developer installation for windows 10
-===================================================
+
+Populse_mia's linux - Windows 10 installation, pre-requirements
+===============================================================
 
 * First, assure that you activated the developer mode in the parameters:
 
@@ -178,108 +177,3 @@ Populse_mia's developer installation for windows 10
 
     pip3 install numpy --user # be sure to don't forget the "--user" at the end of the command, otherwise you might get issues from administrator rights
     pip3 install PyQt5 --user # be sure to don't forget the "--user" at the end of the command, otherwise you might get issues from administrator rights
-
-* Get sources code from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mia_install_dir] with the directory of your choice): ::
-
-    git lfs clone https://github.com/populse/populse_mia.git [mia_install_dir] # using HTTPS
-    git lfs clone git@github.com:populse/populse_mia.git [mia_install_dir] # using SSH
-
-* Then, install the Python module distribution: ::
-
-    cd [mia_install_dir]
-    python3 setup.py install --user
-
-  * Note: make sure to don't forget '\--user' at the end of the command. If not you might get access errors linked with administrators rights.
-
-* Then, run Populse_mia :
-
-  * By interpreting the main.py file: ::
-
-      cd [mia_install_dir]/python/populse_mia
-      python3 main.py
-
-  * By launching the package with python: ::
-
-      python3 -m populse_mia
-
-* Now, configure you populse_mia, click on file and MIA preferences:
-
-  * In the Tools tab, enter the path to your project folder in the Projects preferences.
-
-  .. image:: ../images/tool_tab.png
-     :width: 400
-     :align: center
-
-  * Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice): ::
-
-      git lfs clone https://github.com/populse/mri_conv.git [mri_install_directory] # using HTTPS
-      git lfs clone git@github.com:populse/mri_conv.git [mri_install_directory] # using SSH
-
-  * In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences: ::
-
-    [mri_install_dir]/mri_conv/MRIFileManager/MRIManager.jar
-
-  * Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer: ::
-
-    ../../Matlab/YourVersionOfMatlab/bin/matlab.exe
-
-    .. image:: ../images/pipeline_tab.png
-       :width: 400
-       :align: center
-
-  * In the Pipeline tab of MIA preferences, if you have licensed SPM version check Use SPM and enter the path to your spm folder: ::
-
-    ../../Matlab/spm12
-
-  * In the Pipeline tab of MIA preferences, if you have standalone SPM version check Use SPM Standalone and enter the path to your spm12 folde: ::
-
-    ../../spm12_r****/spm12
-
-    * Note: in this scenario you only need to check Use SPM Standalone in the Pipeline tab MIA preferences.
-
-* For developing process, make sure to work on your own branch: ::
-
-      git checkout -b your_branch_name # creates your own branch locally
-      git push -u origin your_branch_name # creates your own branch remotely
-
-|
-|
-|
-nexts lines must be deleted ASAP:
-
-# Usage
-
-  * For all platforms: after a source installation, launching from the source code directory via command line
-
-    * Interprets the main.py file
-
-          cd [mia_install_dir]/python/populse_mia  
-          python3 main.py  
-
-    * Now, to configure your populse_mia, click on file and MIA preferences
-  	* In the Tools tab, enter the path to your project folder under Project preferences ;
-	* Get sources code for MRI_conv from GitHub using HTTPS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) :
-
-			git lfs clone https://github.com/populse/mri_conv.git [mri_install_dir] # using HTTPS
-			git lfs clone git@github.com:populse/mri_conv.git [mri_install_dir] # using SSH
-
-	* In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences
-
-			[mri_install_dir]/mri_conv/MRIFileManager/MRIManager.jar
-
-
-
-        * Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :
-
-			../../Matlab/YourVersionOfMatlab/bin/matlab.exe
-
-	    * In the Pipeline tab of MIA preferences, check Use SPM and enter the path to your spm folder :
-
-			../../Matlab/spm12
-
-  * For all platforms, after a [Populse_MIA’s user installation](https://populse.github.io/populse_mia/html/installation/user_installation.html)
-
-        python3 -m populse_mia
-
-
-

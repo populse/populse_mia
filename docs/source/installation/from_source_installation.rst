@@ -1,6 +1,8 @@
 .. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/from_source_installation.rst: WARNING: document isn't included in any toctree
-:orphan:  
-.. toctree::
+
+:orphan:
+
+  .. toctree::
 
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
@@ -19,5 +21,7 @@ Populse_MIA's from source installation
     python3 setup.py install --user
     cd ..
     rm -rf populse_mia
+
+|
 
 * It is of course possible to do this for all python packages in the populse project (`capsul <https://github.com/populse/capsul>`_, `mia_processes <https://github.com/populse/mia_processes>`_, `populse_db <https://github.com/populse/populse_db>`_, `soma-workflow <https://github.com/populse//soma-workflow>`_ and `soma-base <https://github.com/populse//soma-base>`_
