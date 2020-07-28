@@ -9,10 +9,12 @@
 +-----------------------+---------------------------------------+---------------------------------------------------+--------------------------------------------------+
 
 
-Populse_MIA's preferences
+Populse_mia's preferences
 =========================
 
-This page is a user guide for Populse_MIA's preferences.
+This page is a user guide for populse_mia's preferences.
+
+Access these preferences by going, when populse_mia is launched, to File > Mia preferences
 
 Software presentation
 ---------------------
