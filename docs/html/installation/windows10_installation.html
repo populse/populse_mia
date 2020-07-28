@@ -29,9 +29,7 @@
       <div class="content" role="main">
         
         
-  <div class="toctree-wrapper compound">
-</div>
-<table class="docutils align-default">
+  <table class="docutils align-default">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 33%" />
@@ -59,24 +57,38 @@
 <li><p>Go in Update and Security</p></li>
 </ul>
 <a class="reference internal image-reference" href="../_images/update_and_security.png"><img alt="../_images/update_and_security.png" class="align-center" src="../_images/update_and_security.png" style="width: 400px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ul class="simple">
-<li><p>Click on Developer environment in the left column and activate the Sideload app;</p></li>
+<li><p>Click on Developer environment in the left column and activate the Sideload app</p></li>
 </ul>
 <a class="reference internal image-reference" href="../_images/developer_mode.png"><img alt="../_images/developer_mode.png" class="align-center" src="../_images/developer_mode.png" style="width: 400px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ul class="simple">
 <li><p>You might need to restart your computer</p></li>
 </ul>
 </div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ul>
 <li><p>When you restarted your computer, open a PowerShell window on your computer:</p>
 <ul class="simple">
-<li><p>Click on the Start menu and type “PowerShell”</p></li>
+<li><p>Click on the Start menu and type <code class="docutils literal notranslate"><span class="pre">PowerShell</span></code></p></li>
 </ul>
 <a class="reference internal image-reference" href="../_images/open_powershell.jpg"><img alt="../_images/open_powershell.jpg" class="align-center" src="../_images/open_powershell.jpg" style="width: 300px;" /></a>
 <ul class="simple">
-<li><p>Run the PowerShell application.</p></li>
+<li><p>Run the PowerShell application</p></li>
 </ul>
 </li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
 <li><p>Make sure you have Python installed. You can verify it by typing in PowerShell:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
 </pre></div>
@@ -84,118 +96,157 @@
 <p><em>Note : depending on your versions, you might need to use `python -V` instead on `python3 -V` to check your version of Python.</em></p>
 <ul>
 <li><p>If Python is not installed:</p>
-<ol class="arabic">
+<ul>
 <li><p>In PowerShell, type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span>
 </pre></div>
 </div>
 </li>
 <li><p>The Microsoft Store will open on the Python 3.8 app, click on Install:</p></li>
-</ol>
+</ul>
 <a class="reference internal image-reference" href="../_images/Python3.8.png"><img alt="../_images/Python3.8.png" class="align-center" src="../_images/Python3.8.png" style="width: 500px;" /></a>
-<ol class="arabic" start="3">
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
 <li><p>Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed:</p>
-<p>python3 -V
-pip3 –version</p>
-</li>
-</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
+<span class="n">pip3</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
 <li><p>Make sure you have Git installed. You can verify it by typing in PowerShell:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="o">--</span><span class="n">version</span>
 </pre></div>
 </div>
-<ul>
+<ul class="simple">
 <li><p>If Git is not installed, you need to install it (<a class="reference external" href="https://git-scm.com/download/win">Here</a>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Download</span> <span class="n">the</span> <span class="n">executable</span> <span class="k">for</span> <span class="n">your</span> <span class="n">specific</span> <span class="n">distribution</span> <span class="p">(</span><span class="mi">64</span> <span class="ow">or</span> <span class="mi">32</span> <span class="n">bits</span><span class="p">)</span><span class="o">.</span>
-<span class="n">Run</span> <span class="n">it</span><span class="o">.</span>
-<span class="n">You</span> <span class="n">will</span> <span class="n">be</span> <span class="n">asked</span> <span class="n">many</span> <span class="n">questions</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">you</span> <span class="n">preferences</span><span class="p">,</span> <span class="n">but</span> <span class="n">the</span> <span class="n">default</span> <span class="n">parameters</span> <span class="n">are</span> <span class="n">enough</span><span class="o">.</span>
-</pre></div>
-</div>
-</li>
+<ul>
+<li><p>Download the executable for your specific distribution (64 or 32 bits).</p></li>
+<li><p>Run it.</p></li>
+<li><p>You will be asked many questions depending on you preferences, but the default parameters are enough.</p></li>
 <li><p>At the end of the git installation, you will need to restart PowerShell to restart the environment and be able to use Git.</p></li>
 </ul>
 </li>
-<li><p>During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (<a class="reference external" href="https://www.microsoft.com/fr-fr/download/details.aspx?id=58317">Here</a>):</p>
-<ol class="arabic simple">
-<li><p>Download the executable file and run it.</p></li>
-</ol>
-<p>2.The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:</p>
-<a class="reference internal image-reference" href="../_images/vs_Build.png"><img alt="../_images/vs_Build.png" class="align-center" src="../_images/vs_Build.png" style="width: 500px;" /></a>
-<ol class="arabic simple" start="3">
-<li><p>Select the C++ Build Tools and install it.</p></li>
-</ol>
+</ul>
 </li>
-<li><p>Install java 64-bits for Windows (<a class="reference external" href="https://java.com/fr/download/manual.jsp">Here</a>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Download</span> <span class="n">the</span> <span class="n">offline</span> <span class="p">(</span><span class="mi">64</span> <span class="n">bits</span><span class="p">)</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">run</span> <span class="n">it</span>
-<span class="n">Follow</span> <span class="n">the</span> <span class="n">installation</span>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (<a class="reference external" href="https://www.microsoft.com/fr-fr/download/details.aspx?id=58317">Here</a>):</p>
+<ul class="simple">
+<li><p>Download the executable file and run it.</p></li>
+<li><p>The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/vs_Build.png"><img alt="../_images/vs_Build.png" class="align-center" src="../_images/vs_Build.png" style="width: 500px;" /></a>
+<ul class="simple">
+<li><p>Select the C++ Build Tools and install it.</p></li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Make sure you have java 64-bits installed. You can verify it by typing in PowerShell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span> <span class="o">-</span><span class="n">version</span>
 </pre></div>
 </div>
+<ul class="simple">
+<li><p>If java 64-bits is not installed, you need to install it (<a class="reference external" href="https://java.com/fr/download/manual.jsp">Here</a>):</p>
+<ul>
+<li><p>Download the offline (64 bits) file and run it</p></li>
+<li><p>Follow the installation</p></li>
+</ul>
 </li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
 <li><p>Now you need to configure your java in order to be used by your system and PowerShell:</p></li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This operation needs administrator rights</p>
 <blockquote>
-<div><ol class="arabic">
+<div><ul>
 <li><p>In PowerShell, open a system properties window by typing:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysdm</span><span class="o">.</span><span class="n">cpl</span>
 </pre></div>
 </div>
 </li>
-<li><p>Click on the Advanced System Parameter;</p></li>
-</ol>
+<li><p>Click on the Advanced System Parameter</p></li>
+</ul>
 <a class="reference internal image-reference" href="../_images/ASP_system_tab.png"><img alt="../_images/ASP_system_tab.png" class="align-center" src="../_images/ASP_system_tab.png" style="width: 500px;" /></a>
-<ol class="arabic simple" start="3">
-<li><p>Click on Environment Variable ;</p></li>
-<li><p>Select Path in the system variables, and click on modify;</p></li>
-</ol>
+</div></blockquote>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><p>Click on Environment Variable</p></li>
+<li><p>Select Path in the system variables, and click on modify</p></li>
+</ul>
 <a class="reference internal image-reference" href="../_images/env_var.png"><img alt="../_images/env_var.png" class="align-center" src="../_images/env_var.png" style="width: 500px;" /></a>
-<ol class="arabic" start="5">
-<li><p>Click on New;</p></li>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul>
+<li><p>Click on New</p></li>
 <li><p>Paste the path to the folder containing YOUR java executable, it should LOOK like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Program</span> <span class="n">Files</span>\<span class="n">Java</span>\<span class="n">jre1</span><span class="o">.</span><span class="mf">8.0_251</span>\<span class="nb">bin</span>
 </pre></div>
 </div>
 </li>
-</ol>
+</ul>
 </div></blockquote>
-</div>
 <ul class="simple">
 <li><p>Enable the NTFS long path:</p></li>
 </ul>
-<blockquote>
-<div><div class="admonition warning">
+<div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This operation needs administrator rights</p>
-<ol class="arabic">
+<blockquote>
+<div><ul>
 <li><p>In PowerShell type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpedit</span><span class="o">.</span><span class="n">msc</span>
 </pre></div>
 </div>
 </li>
-<li><p>A Local Group Policy Editor window will open, then Navigate to:</p></li>
-</ol>
-<blockquote>
-<div><p>–&gt; Local Compute Policy
+<li><p>A Local Group Policy Editor window will open, then Navigate to:</p>
+<p>–&gt; Local Compute Policy
 –&gt; Computer Configuration
 –&gt; Administrator Templates
 –&gt; System
 –&gt; FileSystem
 –&gt; NTFS</p>
-</div></blockquote>
-<ol class="arabic simple" start="3">
+</li>
 <li><p>Double click on Enable NTFS long path and enable it.</p></li>
-</ol>
+</ul>
 <a class="reference internal image-reference" href="../_images/NTFS.png"><img alt="../_images/NTFS.png" class="align-center" src="../_images/NTFS.png" style="width: 500px;" /></a>
-</div>
 </div></blockquote>
+</div>
 <ul>
 <li><p>Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># be sure to doin&#39;t forget the &quot;\--user&quot; at the end of the command, otherwise you might get issues from administrator rights</span>
-<span class="n">pip3</span> <span class="n">install</span> <span class="n">PyQt5</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># be sure to don&#39;t forget the &quot;--user&quot; at the end of the command, otherwise you might get issues from administrator rights</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="n">PyQt5</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># be sure to don&#39;t forget the &quot;--user&quot; at the end of the command, otherwise you might get issues from administrator rights</span>
 </pre></div>
 </div>
 </li>
@@ -210,7 +261,9 @@ pip3 –version</p>
 <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
 </pre></div>
 </div>
-<p><a href="#id3"><span class="problematic" id="id4">*</span></a>Note : make sure to don’t forget ‘–user’ at the end of the command. If not you might get access errors linked with administrators rights.</p>
+<ul class="simple">
+<li><p>Note: make sure to don’t forget ‘–user’ at the end of the command. If not you might get access errors linked with administrators rights.</p></li>
+</ul>
 </li>
 <li><p>Then, run Populse_mia :</p>
 <ul>
@@ -259,13 +312,13 @@ pip3 –version</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">spm12_r</span><span class="o">****/</span><span class="n">spm12</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p><a href="#id5"><span class="problematic" id="id6">*</span></a>Note : in this scenario you only need to check Use SPM Standalone in the Pipeline tab MIA preferences.</p>
-</div></blockquote>
+<ul class="simple">
+<li><p>Note: in this scenario you only need to check Use SPM Standalone in the Pipeline tab MIA preferences.</p></li>
+</ul>
 </li>
 </ul>
 </li>
-<li><p>For developing process, make sure to work on your own branch</p>
+<li><p>For developing process, make sure to work on your own branch:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch locally</span>
 <span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch remotely</span>
 </pre></div>
@@ -276,149 +329,8 @@ pip3 –version</p>
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 <div class="line"><br /></div>
-<div class="line"><br /></div>
 </div>
-<dl>
-<dt><code class="docutils literal notranslate"><span class="pre">Coming</span> <span class="pre">from</span> <span class="pre">old</span> <span class="pre">README:</span></code></dt><dd><ul>
-<li><dl>
-<dt>From source, for Windows 10 distribution, please see [Populse_MIA’s developer installation](<a class="reference external" href="https://populse.github.io/populse_mia/html/installation/developer_installation.html">https://populse.github.io/populse_mia/html/installation/developer_installation.html</a>)</dt><dd><blockquote>
-<div><ul>
-<li><dl>
-<dt>First assure that you have activated the developer mode for Windows in the parameters<span class="classifier">(<code class="docutils literal notranslate"><span class="pre">`You</span> <span class="pre">will</span> <span class="pre">need</span> <span class="pre">administrator</span> <span class="pre">right</span> <span class="pre">for</span> <span class="pre">this`</span></code>)</span></dt><dd><ul class="simple">
-<li><p>Click on start and parameters ;</p></li>
-<li><p>Go in Update &amp; Security ;</p></li>
-<li><p>Click on For developer in the left column and activate the Sideload app ;</p></li>
-<li><p>You might need to restart you computer.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Open a PowerShell window on your computer :</dt><dd><ul class="simple">
-<li><p>Click on start menu and type “PowerShell” ;</p></li>
-<li><p>Run the PowerShell application.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p>A compatible version of Python must be installed, to verify it, type in PowerShell :</p>
-<blockquote>
-<div><p>python3 -V</p>
-</div></blockquote>
-</li>
-</ul>
-<p><a href="#id7"><span class="problematic" id="id8">*</span></a>Note : depending on your versions, you might need to use “python -V” instead of “python3 -V” to check you version of Python</p>
-<ul>
-<li><p>If you don’t have python, you need to install it :</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>In PowerShell type :</p></li>
-</ol>
-<p>python3</p>
-<ol class="arabic" start="2">
-<li><p>The Microsoft Store will open with the Python 3.8 app. Click on install ;</p></li>
-<li><p>Install it on your computer ;</p></li>
-<li><p>Reopen PowerShell and check that Python and pip are installed :</p>
-<blockquote>
-<div><p>python3 -V
-pip3 –version</p>
-</div></blockquote>
-</li>
-</ol>
-</div></blockquote>
-</li>
-<li><p>Install a Version Control System, for example [git](<a class="reference external" href="https://git-scm.com/download/win">https://git-scm.com/download/win</a>). Depending of your distribution, [package management system](<a class="reference external" href="https://en.wikipedia.org/wiki/Package_manager">https://en.wikipedia.org/wiki/Package_manager</a>) can be different</p>
-<blockquote>
-<div><p>Download the executable for your specific distribution (64 or 32 bits)
-Execute it
-You will be asked many questions depending on your preferences, but the default parameters are enough</p>
-</div></blockquote>
-</li>
-</ul>
-<blockquote>
-<div><ul class="simple">
-<li><p>At the end of the git installation you will need to restart PowerShell to refresh the environment</p></li>
-</ul>
-</div></blockquote>
-</div></blockquote>
-<ul>
-<li><p>Populse_mia requires java 64-bits for running, you can install it [here](<a class="reference external" href="https://java.com/fr/download/manual.jsp">https://java.com/fr/download/manual.jsp</a>) :</p>
-<blockquote>
-<div><p>Download and run the file
-Follows the installation</p>
-</div></blockquote>
-</li>
-<li><p>Now you need to configure your java in order to be use by your system : (<code class="docutils literal notranslate"><span class="pre">`You</span> <span class="pre">will</span> <span class="pre">need</span> <span class="pre">administrator</span> <span class="pre">right</span> <span class="pre">for</span> <span class="pre">this`</span></code>)</p>
-<ol class="arabic">
-<li><p>In PowerShell, open a system properties windows by typing :</p>
-<blockquote>
-<div><p>sysdm.cpl</p>
-</div></blockquote>
-</li>
-<li><p>Click on the Advanced System Parameter ;</p></li>
-<li><p>Click on Environment Variable ;</p></li>
-<li><p>Select Path in system variable, and click on modify ;</p></li>
-<li><p>Click New ;</p></li>
-<li><p>Paste the path to the folder containing your java executable, it should look like this :</p>
-<blockquote>
-<div><p>C:Program FilesJavajre1.8.0_251bin</p>
-</div></blockquote>
-</li>
-</ol>
-</li>
-<li><p>Enable the NTFS long path (<code class="docutils literal notranslate"><span class="pre">`You</span> <span class="pre">will</span> <span class="pre">need</span> <span class="pre">administrator</span> <span class="pre">right</span> <span class="pre">for</span> <span class="pre">this`</span></code>) :</p>
-<ol class="arabic">
-<li><p>In PowerShell type :</p>
-<blockquote>
-<div><p>gpedit.msc</p>
-</div></blockquote>
-</li>
-<li><dl class="simple">
-<dt>A Local Group Policy Editor window will open, then navigate to :</dt><dd><p>–&gt; Local Compute Policy
-–&gt; Computer Configuration
-–&gt; Administrator Template
-–&gt; System
-–&gt; FileSystem
-–&gt; NTFS</p>
-</dd>
-</dl>
-</li>
-<li><p>Double click Enable NTFS long path and enable it.</p></li>
-</ol>
-</li>
-<li><p>Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation :</p>
-<blockquote>
-<div><p>pip3 install numpy –user # Be sure to don’t forget “–user” at the end of the command, otherwise you might get issues from administrator rights
-pip3 install PyQt5 –user</p>
-</div></blockquote>
-</li>
-<li><p>Get source codes from Github. Replace [mia_install_dir] with a directory of your choice</p>
-<blockquote>
-<div><blockquote>
-<div><p>git lfs clone <a class="reference external" href="https://github.com/populse/populse_mia.git">https://github.com/populse/populse_mia.git</a> [mia_install_dir]</p>
-</div></blockquote>
-<ul>
-<li><p>Or download the zip file (populse_mia-master.zip) of the project ([green button “Clone or download”](<a class="reference external" href="https://github.com/populse/populse_mia">https://github.com/populse/populse_mia</a>)), then extract the data in the directory of your choice [mia_install_dir]</p>
-<blockquote>
-<div><p>unzip populse_mia-master.zip -d [mia_install_dir]  # In this case [mia_install_dir] becomes [mia_install_dir]/populse_mia-master</p>
-</div></blockquote>
-</li>
-<li><p>Install the Python module distribution</p>
-<blockquote>
-<div><p>cd [mia_install_dir]
-python3 setup.py install –user # Ensure that you use python &gt;= 3.5 | Be sure to don’t forget “–user” at the end of the command, otherwise you might get      access issues from administrators rights.</p>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
+<p>nexts lines must be deleted ASAP:</p>
 <p># Usage</p>
 <blockquote>
 <div><ul>
@@ -467,12 +379,6 @@ git lfs clone <a class="reference external" href="mailto:git&#37;&#52;&#48;githu
 <li><p>For all platforms, after a [Populse_MIA’s user installation](<a class="reference external" href="https://populse.github.io/populse_mia/html/installation/user_installation.html">https://populse.github.io/populse_mia/html/installation/user_installation.html</a>)</p>
 <blockquote>
 <div><p>python3 -m populse_mia</p>
-</div></blockquote>
-</li>
-<li><p>Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:</p>
-<blockquote>
-<div><p>python3 -m pip install –force-reinstall pyqt5==5.14.0
-python3 -m pip install –force-reinstall PyQt5-sip==5.0.1</p>
 </div></blockquote>
 </li>
 </ul>
