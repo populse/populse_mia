@@ -60,7 +60,8 @@ POPULSE third party preferences
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   * Absolute path to MRIManager.jar
-      * Sets the path to the executable file of MRI File Manager (usually stored in the "MRIFileManager" folder next to "populse_mia" install path).
+      * Sets the path to the executable file of MRI File Manager (usually stored in the "MRIFileManager" folder next to "populse_mia" install path, `if populse_mia was installed in user mode <../installation/user_installation.html>`_).
+	 * e.g.  /home/ArthurBlair/.populse_mia/MRIFileManager/MRIManager.jar
 
 .. _pipeline-label:
 
@@ -79,10 +80,14 @@ Matlab
       * Enable it if you want to use Matlab (license or compiled version).
 
   * Matlab path
-      * Sets the path to Matlab's executable (e.g. /usr/local/MATLAB/R2018a/bin/matlab).
+      * Sets the path to Matlab's executable
+          * e.g. for linux - macOS: ``/usr/local/MATLAB/R2018a/bin/matlab``
+	  * e.g. for Windows 10: ``C:/Program Files/Matlab/R2019a/bin/matlab.exe``
 
   * Matlab standalone path
-      * Sets the path to Matlab's compiled version folder (e.g. /usr/local/MATLAB/MATLAB_Runtime/v93/).
+      * Sets the path to Matlab's compiled version folder
+	  * e.g. for linux - macOS: ``/usr/local/MATLAB/MATLAB_Runtime/v93/``
+	  * e.g. for Windows 10: Nothing to declare here if you use spm standalone!
 
 SPM
 ^^^
@@ -91,13 +96,17 @@ SPM
       * Enable it if you want to use SPM12 (license version).
 
   * SPM path
-      * Sets the path to SPM12 folder.
+      * Sets the path to SPM12 folder
+          * e.g. for linux - macOS: ``/usr/local/SPM/spm12``
+	  * e.g. for Windows 10: ``C:/Program Files/Matlab/spm12``
 
   * Use SPM standalone
       * Enable it if you want to use SPM12 (standalone version).
 
   * SPM standalone path
-      * Sets the path to SPM12 standalone folder (folder containing run_spm12.sh).
+      * Sets the path to SPM12 standalone folder
+	  * e.g. for linux - macOS: ``/usr/local/SPM/spm12_standalone`` (folder containing run_spm12.sh)
+	  * e.g. for Windows 10: ``C:/Program Files/Matlab/spm12_r7771/spm12`` (with Windows 10, it is not necessary to declare the above Matlab standalone path in this case!)
 
 To use SPM standalone, please make sure to have it installed. To install it, please follow this `manual <https://en.wikibooks.org/wiki/SPM/Standalone>`_.
 
