@@ -790,14 +790,12 @@
             <span class="c1"># Test for matlab launch</span>
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">():</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">use_mcr</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="c1"># node.process.paths = config.get_spm_standalone_path().split() #merdouille</span>
-                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">())</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_command</span><span class="p">()</span>
 
             <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">():</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">use_mcr</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="c1"># node.process.paths = config.get_spm_path().split()</span>
-                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span> <span class="c1">#merdouille</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_command</span><span class="p">()</span>
 
             <span class="c1"># Test for matlab launch</span>
