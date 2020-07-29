@@ -144,7 +144,7 @@ Populse_mia's linux - Windows 10 installation, pre-requirements
 
     * Click on New
 
-    .. image:: ../images/modify_environment_viriable.png
+    .. image:: ../images/modify_environment_variable.png
        :width: 500
        :align: center
 
