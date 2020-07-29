@@ -71,7 +71,7 @@ Populse_mia's linux - Windows 10 installation, pre-requirements
 
     * Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed: ::
 
-        python3 -V  
+        python3 -V
         pip3 --version
 
 |
@@ -143,6 +143,12 @@ Populse_mia's linux - Windows 10 installation, pre-requirements
 |
 
     * Click on New
+
+    .. image:: ../images/modify_environment_viriable.png
+       :width: 500
+       :align: center
+
+|
 
     * Paste the path to the folder containing YOUR java executable, it should LOOK like this: ::
 

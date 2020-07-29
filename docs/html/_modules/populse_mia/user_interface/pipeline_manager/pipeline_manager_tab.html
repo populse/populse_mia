@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 1.3.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -51,12 +52,12 @@
 <span class="c1">##########################################################################</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="k">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span><span class="n">PopUpSelectIteration</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PopUpSelectIteration</span><span class="p">,</span>
                                                 <span class="n">PopUpInheritanceDict</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span> <span class="kn">import</span> <span class="p">(</span>
                                                                  <span class="n">IterationTable</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                               <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
                                               <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">,</span>
                                               <span class="n">BRICK_OUTPUTS</span><span class="p">,</span> <span class="n">BRICK_INPUTS</span><span class="p">,</span>
@@ -65,23 +66,23 @@
                                               <span class="n">TAG_EXP_TYPE</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span>
                                               <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TYPE_NII</span><span class="p">,</span> <span class="n">TYPE_MAT</span><span class="p">,</span>
                                               <span class="n">TYPE_TXT</span><span class="p">,</span> <span class="n">TYPE_UNKNOWN</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="kn">import</span> <span class="p">(</span>
                                                                  <span class="n">NodeController</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="kn">import</span> <span class="p">(</span>
                                                              <span class="n">PipelineEditorTabs</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>
                                                            <span class="n">ProcessLibraryWidget</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="p">(</span><span class="n">get_process_instance</span><span class="p">,</span> <span class="n">NipypeProcess</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_process_instance</span><span class="p">,</span> <span class="n">NipypeProcess</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">,</span>
                         <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">StudyConfig</span><span class="p">,</span> <span class="n">Switch</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="kn">import</span> <span class="p">(</span>
                                                          <span class="n">PipelineDevelopperView</span><span class="p">)</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">Signal</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QMenu</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QSplitter</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Signal</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QMenu</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QSplitter</span><span class="p">,</span>
                              <span class="n">QApplication</span><span class="p">,</span> <span class="n">QToolBar</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span>
                              <span class="n">QScrollArea</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QProgressDialog</span><span class="p">,</span>
                              <span class="n">QPushButton</span><span class="p">)</span>
@@ -94,10 +95,10 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="k">import</span> <span class="n">QtWidgets</span>
-<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
 
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
@@ -147,7 +148,7 @@
 
     <span class="n">item_library_clicked</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PipelineManagerTab.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<div class="viewcode-block" id="PipelineManagerTab.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialization of the Pipeline Manager tab</span>
 
@@ -286,7 +287,7 @@
 
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">p_value</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">p_value</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_plug_value_to_database</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">brick</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_plug_value_to_database</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">brick</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span>
                                                 <span class="n">plug_name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">)</span>
             <span class="k">return</span>
 
@@ -408,7 +409,7 @@
                                 <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">old_value</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
             <span class="c1"># Adding inherited tags</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">:</span>                
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">:</span>
                 <span class="n">database_parent_file</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">parent_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">old_value</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
@@ -599,7 +600,7 @@
         <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        
+
         <span class="c1"># nodes_requir_issue is a dictionary whose keys are the names of the</span>
         <span class="c1"># nodes and whose values are the compatibility of the requirements of</span>
         <span class="c1"># this node with the current configuration of MIA.</span>
@@ -613,18 +614,18 @@
 
         <span class="c1"># nodes_requir_miss == [] if all processes have a defined requirement</span>
         <span class="c1"># object or is a list of node names that do not have a defined</span>
-        <span class="c1"># requirement </span>
+        <span class="c1"># requirement</span>
         <span class="n">nodes_requir_miss</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
         <span class="c1"># nodes_requir_fail == [] if all processes have requirements</span>
         <span class="c1"># corresponding to the current mia configuration or nodes_requir_fail</span>
         <span class="c1"># is a list of node names that requirements do not match the current</span>
         <span class="c1"># mia&#39;s configuration</span>
         <span class="n">nodes_requir_fail</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
         <span class="c1"># nodes_to_check contains the node names that need to be update</span>
         <span class="n">nodes_to_check</span> <span class="o">=</span> <span class="p">[]</span>
-        
+
         <span class="c1"># nodes_inputs_ratio is a dictionary whose keys are the node names</span>
         <span class="c1"># and whose values are a list of two elements: the first one being</span>
         <span class="c1"># the number of activated mandatory input plugs, the second one being</span>
@@ -640,7 +641,7 @@
 
         <span class="c1"># nodes_prev_init contains the nodes previously initialised</span>
         <span class="n">nodes_prev_init</span> <span class="o">=</span> <span class="p">[]</span>
-        
+
         <span class="c1"># If the initialisation is launch for the main pipeline</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="p">:</span>
             <span class="n">pipeline</span> <span class="o">=</span> <span class="n">get_process_instance</span><span class="p">(</span>
@@ -649,7 +650,6 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">main_pipeline</span> <span class="o">=</span> <span class="kc">False</span>
-
         <span class="c1"># Test, if it works, comment.</span>
         <span class="c1">#if hasattr(pipeline, &#39;pipeline_steps&#39;):</span>
         <span class="c1">#    pipeline.pipeline_steps.on_trait_change(</span>
@@ -661,8 +661,8 @@
         <span class="c1">#pipeline.on_trait_change(</span>
         <span class="c1">#    self.pipelineEditorTabs.get_current_editor()._reset_pipeline,</span>
         <span class="c1">#    &#39;user_traits_changed&#39;, remove=True)</span>
- 
-        <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>            
+
+        <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="c1"># Updating the project attribute of the processes</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;process&#39;</span><span class="p">):</span>
                 <span class="n">process</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span>
@@ -674,12 +674,12 @@
             <span class="n">nb_plugs</span> <span class="o">=</span> <span class="mi">0</span>
 
             <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                
+
                 <span class="k">if</span> <span class="p">((</span><span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">)</span> <span class="ow">and</span>
                     <span class="p">(</span><span class="ow">not</span> <span class="n">plug</span><span class="o">.</span><span class="n">output</span><span class="p">)</span> <span class="ow">and</span>
                     <span class="p">(</span><span class="ow">not</span> <span class="n">plug</span><span class="o">.</span><span class="n">optional</span><span class="p">)):</span>
                     <span class="n">nb_plugs</span> <span class="o">+=</span> <span class="mi">1</span>
-                    
+
                     <span class="c1"># If the link comes from the pipeline &quot;global&quot; inputs, it is</span>
                     <span class="c1"># added to compute the ratio</span>
                     <span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
@@ -687,13 +687,13 @@
 
             <span class="k">if</span> <span class="n">nb_plugs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">ratio</span> <span class="o">=</span> <span class="mi">0</span>
-                
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ratio</span> <span class="o">=</span> <span class="n">nb_plugs_from_in</span> <span class="o">/</span> <span class="n">nb_plugs</span>
 
             <span class="n">nodes_to_check</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
             <span class="n">nodes_inputs_ratio</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nb_plugs_from_in</span><span class="p">,</span> <span class="n">nb_plugs</span><span class="p">]</span>
-            <span class="n">nodes_inputs_ratio_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>        
+            <span class="n">nodes_inputs_ratio_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
 
         <span class="c1"># Sorting the nodes_to_check list as the order (the nodes having</span>
         <span class="c1"># the highest ratio being at the end of the list)</span>
@@ -710,7 +710,7 @@
                 <span class="c1"># This node can be initialized so it is placed at the</span>
                 <span class="c1"># end of the nodes_to_check list</span>
                 <span class="n">nodes_to_check</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key_name</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                
+
                 <span class="c1"># It can also be removed from the dictionary</span>
                 <span class="k">del</span> <span class="n">nodes_inputs_ratio</span><span class="p">[</span><span class="n">key_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
@@ -763,7 +763,7 @@
 
                 <span class="n">pipeline</span><span class="o">.</span><span class="n">update_nodes_and_plugs_activation</span><span class="p">()</span>
                 <span class="k">continue</span>
-            
+
             <span class="c1"># Adding the brick to the bricks history</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brick_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brick_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">brick_id</span><span class="p">)</span>
@@ -790,12 +790,14 @@
             <span class="c1"># Test for matlab launch</span>
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">():</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">use_mcr</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="c1"># node.process.paths = config.get_spm_standalone_path().split() #merdouille</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">())</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_command</span><span class="p">()</span>
 
             <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">():</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">use_mcr</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="c1"># node.process.paths = config.get_spm_path().split()</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span> <span class="c1">#merdouille</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_command</span><span class="p">()</span>
 
             <span class="c1"># Test for matlab launch</span>
@@ -822,6 +824,8 @@
             <span class="c1"># plugs from that the output scans will inherit the tags</span>
             <span class="n">initResult_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
+
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># The state, linked or not, of the plugs is passed to the</span>
                 <span class="c1"># list_outputs method, only for nodes not coming from nipype</span>
@@ -833,7 +837,7 @@
                 <span class="n">initResult_dict</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">(</span><span class="n">is_plugged</span><span class="o">=</span><span class="n">is_plugged</span><span class="p">)</span>
 
                 <span class="c1"># For debugging. To be commented if not in debugging.</span>
-                <span class="c1">#print(&#39;initResult_dict after mia brick initialisaton: &#39;,  initResult_dict) </span>
+                <span class="c1">#print(&#39;initResult_dict after mia brick initialisaton: &#39;,  initResult_dict)</span>
 
                 <span class="k">try</span><span class="p">:</span>
 
@@ -857,7 +861,7 @@
                           <span class="s1">&#39;failed during the initialisation step, due to:</span><span class="se">\n</span><span class="s1">&#39;</span>
                           <span class="s1">&#39;&quot;</span><span class="si">{1}</span><span class="s1">&quot;...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
                     <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-                    
+
             <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Trait error for node &quot;</span><span class="si">{0}</span><span class="s1">&quot;:</span><span class="se">\n</span><span class="s1">&#39;</span>
                       <span class="s1">&#39;&quot;</span><span class="si">{1}</span><span class="s1">&quot; ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
@@ -873,27 +877,27 @@
                     <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">_nipype_interface</span>
                                                   <span class="o">.</span><span class="n">_list_outputs</span><span class="p">())</span>
                     <span class="n">tmp_dict</span> <span class="o">=</span> <span class="p">{}</span>
-                    
+
                     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                         <span class="n">tmp_dict</span><span class="p">[</span><span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
-                    
+
                     <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_dict</span>
 
                     <span class="c1"># For debugging. To be commented if not in debugging.</span>
-                    <span class="c1">#print(&#39;initResult_dict after nipype brick initialisaton: &#39;,  initResult_dict) </span>
+                    <span class="c1">#print(&#39;initResult_dict after nipype brick initialisaton: &#39;,  initResult_dict)</span>
 
                 <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Initialisation failed to determine the outputs &#39;</span>
                           <span class="s1">&#39;for the process &quot;</span><span class="si">{0}</span><span class="s1">&quot;:</span><span class="se">\n</span><span class="s1">Did you correctly defined &#39;</span>
                           <span class="s1">&#39;the inputs ...?&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span>
                     <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-      
+
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initialisation failed to determine the outputs &#39;</span>
                           <span class="s1">&#39;for the process &quot;</span><span class="si">{0}</span><span class="s1">&quot;, due to:</span><span class="se">\n</span><span class="s1">&#39;</span>
                           <span class="s1">&#39;&quot;</span><span class="si">{1}</span><span class="s1">&quot;...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
                     <span class="n">check_init</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-                    
+
             <span class="c1"># Management of the requirement object in initResult_dict</span>
             <span class="k">if</span> <span class="s1">&#39;_nipype_interface&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>
 
@@ -906,7 +910,7 @@
                     <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;requirement&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="k">if</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;requirement&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                
+
                 <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;requirement&#39;</span><span class="p">]):</span>
 
                     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;MATLAB&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span>  <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
@@ -914,7 +918,7 @@
 
                     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;SPM&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span>  <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
                         <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;requirement&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SPM&#39;</span>
-                    
+
             <span class="c1"># Management of the outputs and the inheritance_dict objects</span>
             <span class="c1"># in the initResult_dict</span>
             <span class="k">if</span> <span class="s1">&#39;outputs&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">initResult_dict</span><span class="p">:</span>
@@ -953,7 +957,7 @@
 
                 <span class="k">if</span> <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">,</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">]]:</span>
                     <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&lt;undefined&gt;&quot;</span>
-                        
+
             <span class="c1"># Automatically fills few plugs. Only for the nipype process</span>
             <span class="k">if</span> <span class="s1">&#39;NipypeProcess&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Updating the launching parameters for the nipype &#39;</span>
@@ -963,29 +967,29 @@
                                  <span class="s1">&#39;matlab_cmd&#39;</span><span class="p">,</span> <span class="s1">&#39;output_directory&#39;</span><span class="p">]</span>
 
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
-                    
+
                     <span class="c1"># use_mcr parameter</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">keys2consider</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()):</span>
                         <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                        
+
                     <span class="k">elif</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">keys2consider</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
                             <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()):</span>
                         <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-                        
+
                     <span class="c1"># paths parameter</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">keys2consider</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()):</span>
                         <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                        
+
                     <span class="k">elif</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">keys2consider</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">()):</span>
                         <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                        
+
                     <span class="c1"># matlab_cmd parameter</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">keys2consider</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()):</span>
                         <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_command</span><span class="p">()</span>
-                        
+
                     <span class="k">elif</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">keys2consider</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
                             <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()):</span>
                         <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()</span>
@@ -1017,14 +1021,14 @@
                                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Trait error for the &quot;</span><span class="si">{0}</span><span class="s1">&quot; plug (</span><span class="si">{1}</span><span class="s1">):</span><span class="se">\n</span><span class="s1">&#39;</span>
                                       <span class="s1">&#39;</span><span class="si">{2}</span><span class="s1"> ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
 
-            <span class="n">outputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span> 
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                
+
                 <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">,</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">]]:</span>
                     <span class="n">outputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&lt;undefined&gt;&quot;</span>
-                    
+
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">brick_id</span><span class="p">,</span>
                                            <span class="n">BRICK_INPUTS</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
@@ -1039,17 +1043,17 @@
 
                 <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span> <span class="ow">in</span> <span class="n">initResult_dict</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="n">add_plug_value_flag</span> <span class="o">=</span> <span class="kc">False</span>
-                    
+
                     <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                         <span class="k">continue</span>
-                    
+
                     <span class="k">if</span> <span class="n">plug_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&lt;undefined&gt;&quot;</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">]]:</span>
                         <span class="n">nodes_prev_init</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
                         <span class="n">nodes_prev_init</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">nodes_prev_init</span><span class="p">))</span>
-            
+
                         <span class="k">if</span> <span class="n">pipeline_name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                             <span class="n">full_name</span> <span class="o">=</span> <span class="n">pipeline_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">node_name</span>
-                            
+
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">full_name</span> <span class="o">=</span> <span class="n">node_name</span>
 
@@ -1059,7 +1063,7 @@
                                 <span class="n">add_plug_value_flag</span> <span class="o">=</span> <span class="kc">True</span>
 
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">add_plug_value_flag</span> <span class="o">=</span> <span class="kc">True</span>        
+                            <span class="n">add_plug_value_flag</span> <span class="o">=</span> <span class="kc">True</span>
 
                         <span class="k">if</span> <span class="n">add_plug_value_flag</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">add_plug_value_to_database</span><span class="p">(</span><span class="n">plug_value</span><span class="p">,</span>
@@ -1085,15 +1089,15 @@
 
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">node</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span><span class="p">)</span>
-                        
+
                     <span class="k">except</span> <span class="n">TraitError</span><span class="p">:</span>
-                        
+
                         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">plug_value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
                                 <span class="n">plug_value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                            
+
                             <span class="k">try</span><span class="p">:</span>
                                 <span class="n">node</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                                
+
                             <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Trait error for the &quot;</span><span class="si">{0}</span><span class="s1">&quot; plug of the &#39;</span>
                                       <span class="s1">&#39;&quot;</span><span class="si">{1}</span><span class="s1">&quot; node:</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1103,13 +1107,13 @@
 
             <span class="c1"># Adding I/O to database history again to update outputs</span>
             <span class="n">inputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">()</span>
-            
+
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                
+
                 <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">,</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">]]:</span>
                     <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&lt;undefined&gt;&quot;</span>
-    
+
             <span class="n">outputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
@@ -1125,7 +1129,7 @@
             <span class="c1"># Setting brick init state if init finished correctly</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">brick_id</span><span class="p">,</span>
                                            <span class="n">BRICK_INIT</span><span class="p">,</span> <span class="s2">&quot;Done&quot;</span><span class="p">)</span>
-     
+
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span>
 
         <span class="c1"># Test, if it works, comment.</span>
@@ -1152,7 +1156,7 @@
 
             <span class="k">if</span> <span class="n">node_controller_node_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
                 <span class="n">node_controller_node_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-  
+
             <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">display_parameters</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span>
                 <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_controller_node_name</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="p">,</span>
@@ -1177,7 +1181,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message_conf</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The current MIA configuration uses &quot;</span>
                                     <span class="s2">&quot;Matlab but not SPM.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                        
+
             <span class="k">elif</span> <span class="p">((</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">())</span> <span class="ow">and</span>
                   <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())):</span>
 
@@ -1194,9 +1198,9 @@
                                 <span class="s2">&quot;Matlab (including the Compiler Runtime &quot;</span>
                                 <span class="s2">&quot;version) or SPM (including the standalone &quot;</span>
                                 <span class="s2">&quot;version).</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+
             <span class="n">message_base1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-        
+
             <span class="k">if</span> <span class="n">nodes_requir_miss</span><span class="p">:</span> <span class="c1"># So, initResult_dict[&#39;requirement&#39;] is None</span>
 
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes_requir_miss</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1216,17 +1220,17 @@
 
                 <span class="n">message_end</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Please, update your configuration in the MIA &#39;</span>
                                <span class="s1">&#39;preferences, if necessary ...&#39;</span><span class="p">)</span>
-            
+
             <span class="n">mess_base2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-        
-            <span class="k">if</span> <span class="n">nodes_requir_fail</span><span class="p">:</span> 
+
+            <span class="k">if</span> <span class="n">nodes_requir_fail</span><span class="p">:</span>
                 <span class="n">message_end</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Please, update your configuration in the MIA &#39;</span>
                                <span class="s1">&#39;preferences to meet the requirements of &#39;</span>
                                <span class="s1">&#39;the pipeline ...&#39;</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">nodes_requir_miss</span><span class="p">:</span>
                     <span class="n">mess_base2</span> <span class="o">=</span>  <span class="n">mess_base2</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">90</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The &#39;</span>
-                
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">mess_base2</span> <span class="o">=</span>  <span class="n">mess_base2</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">In addition, the &#39;</span>
 
@@ -1236,7 +1240,7 @@
                                             <span class="s1">&#39;configuration (problematic third-&#39;</span>
                                             <span class="s1">&#39;party software(s) is(are) &#39;</span>
                                             <span class="s1">&#39;specified):</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                
+
                 <span class="k">for</span> <span class="n">nodeName</span> <span class="ow">in</span> <span class="n">nodes_requir_fail</span><span class="p">:</span>
                     <span class="n">mess_base2</span> <span class="o">=</span> <span class="n">mess_base2</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;- </span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span>
                                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nodeName</span><span class="p">,</span>
@@ -1249,7 +1253,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;MIA configuration warning!&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">message_conf</span> <span class="o">+</span> <span class="n">message_base1</span> <span class="o">+</span>
                              <span class="n">mess_base2</span> <span class="o">+</span> <span class="n">message_end</span><span class="p">)</span>
-            
+
             <span class="n">yes_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">addButton</span><span class="p">(</span><span class="s2">&quot;Open MIA preferences&quot;</span><span class="p">,</span>
                                             <span class="n">QMessageBox</span><span class="o">.</span><span class="n">YesRole</span><span class="p">)</span>
 
@@ -1257,11 +1261,11 @@
                 <span class="n">ok_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">addButton</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
-            
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">clickedButton</span><span class="p">()</span> <span class="o">==</span> <span class="n">yes_button</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-                
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -1335,7 +1339,7 @@
         <span class="c1">#      info1: process is the brick (node, process, etc.)</span>
         <span class="c1">#             &lt;User_processes.preprocess.spm.spatial_preprocessing</span>
         <span class="c1">#             .Smooth object at ...&gt; object</span>
-        
+
         <span class="c1"># ** User_processes/preprocess/spm/spatial_preprocessing.py</span>
         <span class="c1">#    class Smooth(Process_Mia)</span>
         <span class="c1">#    list_outputs method:</span>
@@ -1617,18 +1621,18 @@
                     <span class="n">name</span><span class="p">,</span> <span class="n">iterated_tag</span><span class="p">,</span> <span class="n">tag_values</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
-            
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">RunProgress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
-                
+
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> When the pipeline was launched, the following &#39;</span>
                       <span class="s1">&#39;exception was raised: </span><span class="si">{0}</span><span class="s1"> ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
                     <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; has not been correctly run.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-                
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
                     <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; has been correctly run.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
@@ -1992,11 +1996,11 @@
 <span class="sd">    :param settings: dictionary of settings when the pipeline is iterated</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RunProgress.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RunProgress.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">RunProgress</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Please wait while the pipeline is &quot;</span>
                                           <span class="s2">&quot;running...&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">settings</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span>
                 <span class="s2">&quot;Pipeline is running (</span><span class="si">{0}</span><span class="s2">/</span><span class="si">{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -2006,7 +2010,7 @@
                                                     <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;tag&#39;</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Pipeline running&quot;</span><span class="p">)</span>
-            
+
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowFlags</span><span class="p">(</span>
             <span class="n">Qt</span><span class="o">.</span><span class="n">Window</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">WindowTitleHint</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">CustomizeWindowHint</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2016,11 +2020,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumDuration</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">350</span><span class="p">)</span> <span class="c1"># For mac OS</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span> <span class="o">=</span> <span class="n">RunWorker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagramView</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div></div>
-        
+
         <span class="c1">#engine \</span>
         <span class="c1">#    = self.diagramView.get_current_pipeline().get_study_config().engine</span>
         <span class="c1">#with engine.study_config.run_lock:</span>
@@ -2028,7 +2032,7 @@
 <div class="viewcode-block" id="RunWorker"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker">[docs]</a><span class="k">class</span> <span class="nc">RunWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run the pipeline&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RunWorker.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">):</span>
+<div class="viewcode-block" id="RunWorker.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_view</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diagramView</span> <span class="o">=</span> <span class="n">diagram_view</span></div>
 
@@ -2044,7 +2048,7 @@
 
         <span class="n">_check_nipype_processes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagramView</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">())</span>
 
-        <span class="n">pipeline</span> <span class="o">=</span> <span class="n">get_process_instance</span><span class="p">(</span>  
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="n">get_process_instance</span><span class="p">(</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">diagramView</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">())</span>
 
         <span class="c1"># Reading config</span>
@@ -2100,7 +2104,7 @@
             <span class="c1">#     info1: study_config = StudyConfig(...) defined before</span>
             <span class="c1">#     info2: from capsul.api import (..., StudyConfig, ...) defined</span>
             <span class="c1">#            before</span>
-            
+
             <span class="c1">#** capsul/study_config/study_config.py</span>
             <span class="c1">#   class StudyConfig(Controller)</span>
             <span class="c1">#    run method:</span>
@@ -2124,7 +2128,7 @@
             <span class="c1">#                            verbose=verbose, **kwargs)</span>
             <span class="c1">#     info1: from capsul.study_config.run import run_process defined</span>
             <span class="c1">#            in the capsul/study_config/study_config.py module</span>
-            
+
             <span class="c1">#** capsul/study_config/run.py; run_process function:</span>
             <span class="c1">#     use: returncode = process_instance._run_process()</span>
             <span class="c1">#     info1: process_instance is the brick (node, process, etc.)</span>
@@ -2134,7 +2138,7 @@
             <span class="c1">#            method but they inherit the Process_Mia class (module</span>
             <span class="c1">#            mia_processes/process_mia.py) that has the</span>
             <span class="c1">#            _run_process method</span>
-            
+
             <span class="c1">#** mia_processes/process_mia.py</span>
             <span class="c1">#   class Process_Mia(ProcessMIA)</span>
             <span class="c1">#   _run_process method</span>
@@ -2142,7 +2146,7 @@
             <span class="c1">#     info1: self is the brick (node, process, etc.) object</span>
             <span class="c1">#            &lt;User_processes.preprocess.spm.spatial_preprocessing</span>
             <span class="c1">#            .Smooth object at ...&gt;</span>
-            
+
             <span class="c1">#** User_processes/preprocess/spm/spatial_preprocessing.py</span>
             <span class="c1">#   class Smooth(Process_Mia)</span>
             <span class="c1">#   run_process_mia method:</span>
@@ -2165,7 +2169,7 @@
             <span class="c1">#** pipeline object introspection: see initialize method in the</span>
             <span class="c1">#                                  PipelineManagerTab class, this</span>
             <span class="c1">#                                  module</span>
-           
+
         <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{0}</span><span class="s1"> has not been launched:</span><span class="se">\n</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                                                <span class="n">e</span><span class="p">))</span>
@@ -2183,7 +2187,7 @@
 
             <span class="c1">#self.diagramView.main_window.statusBar().showMessage(</span>
             <span class="c1">#        &#39;Pipeline &quot;{0}&quot; has not been correctly run.&#39;.format(pipeline.name))</span>
-            
+
             <span class="c1">#self.msg = QMessageBox()</span>
             <span class="c1">#self.msg.setIcon(QMessageBox.Critical)</span>
             <span class="c1">#self.msg.setText(&quot;SPM standalone is not set&quot;)</span>
@@ -2214,7 +2218,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
     </div>
   </body>
 </html>
