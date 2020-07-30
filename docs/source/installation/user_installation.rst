@@ -48,7 +48,7 @@ Installation
 
 * The populse_mia installation is now launched and you have to select three mandatory parameters:
 
-  * Populse_mia installation path: the folder where to install few directories and files necessary for the operation of populse_mia, set by default to ".populse_mia" in the current user's diretory. Two folders will be created in the selected folder
+  * Populse_mia installation path: the folder where to install few directories and files necessary for the operation of populse_mia, set by default to ".populse_mia" in the current user's directory. Two folders will be created in the selected folder
 
     * populse_mia: containing populse_mia's configuration and resources files.
 
