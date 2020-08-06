@@ -7,7 +7,7 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Populse_mia's linux - Windows 10 installation, pre-requirements
+Populse_mia's Windows-PowerShell installation, pre-requirements
 ===============================================================
 
 * First, assure that you activated the developer mode in the parameters:
