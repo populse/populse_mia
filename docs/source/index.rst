@@ -50,12 +50,13 @@ Main features
 * `Complex pipeline processing <./documentation/pipeline_manager.html>`_
 * Data visualization (coming soon)
 
-Installation
-============
+Installation / Configuration
+============================
 
-* `User installation <./installation/user_installation.html>`_
-* `Developer installation <./installation/developer_installation.html>`_
-
+* `User installation <./installation/user_installation.html>`_, from PyPi
+* `Developer installation <./installation/developer_installation.html>`_, by cloning the package
+* `Uses the latest version of populse_mia <./installation/from_source_installation.html>`_, from source installation
+* `Populse_mia’s preferences <./documentation/preferences.html>`_
 
 Documentation
 =============

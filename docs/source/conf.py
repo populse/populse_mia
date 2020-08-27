@@ -14,9 +14,25 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../python'))
-import populse_mia
 
+if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'populse_mia')):
+    print('\nGenerating sphinx documentation in developer mode ...')
+    print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../python')))
+    sys.path.insert(0, os.path.abspath('../../python'))
+
+    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'capsul')):
+        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../capsul')))
+        sys.path.insert(1, os.path.abspath('../../../capsul'))
+
+    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'soma-base')):
+        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../soma-base/python')))
+        sys.path.insert(1, os.path.abspath('../../../soma-base/python'))
+
+    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'populse_db')):
+        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../populse_db/python')))
+        sys.path.insert(1, os.path.abspath('../../../populse_db/python'))
+
+import populse_mia
 
 # -- project information -----------------------------------------------------
 
