@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Populse_MIA’s developer installation &#8212; populse_mia 1.3.0 documentation</title>
+    <title>Populse_mia’s developer installation &#8212; populse_mia 1.3.0 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
           <span>populse_mia 1.3.0 documentation</span></a></h1>
-        <h2 class="heading"><span>Populse_MIA’s developer installation</span></h2>
+        <h2 class="heading"><span>Populse_mia’s developer installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
       
@@ -29,9 +29,7 @@
       <div class="content" role="main">
         
         
-  <div class="toctree-wrapper compound">
-</div>
-<table class="docutils align-default">
+  <table class="docutils align-default">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 33%" />
@@ -47,319 +45,108 @@
 </tbody>
 </table>
 <div class="section" id="populse-mia-s-developer-installation">
-<h1>Populse_MIA’s developer installation<a class="headerlink" href="#populse-mia-s-developer-installation" title="Permalink to this headline">¶</a></h1>
-<p>This page explains how to install Populse_MIA in developer mode.
-Note: A compatible version of Python must be installed (Python &gt; 3.5)</p>
-<div class="section" id="non-populse-member">
-<h2>Non-Populse member<a class="headerlink" href="#non-populse-member" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p><a class="reference external" href="https://help.github.com/articles/fork-a-repo/">Fork</a> Populse_MIA on GitHub and clone your Populse_MIA repository</p>
-<blockquote>
-<div><ul>
-<li><p>Make sure to have git (<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control">git documentation</a>) and git-lfs installed (<a class="reference external" href="https://git-lfs.github.com/">git-lfs documentation</a>).</p></li>
-<li><p>If not, install it (depending of your distribution, <a class="reference external" href="https://en.wikipedia.org/wiki/Package_manager">package management system</a> can be different):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="c1"># Debian like</span>
-<span class="n">sudo</span> <span class="n">dnf</span> <span class="n">install</span> <span class="n">git</span> <span class="c1"># Fedora 22 and later etc.</span>
-</pre></div>
-</div>
-</li>
-<li><p>Get source code from Github using HTTPS or SSH. Replace [mia_install_dir] with a directory of your choice:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">your_user_name</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
-<span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">your_user_name</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using SSH</span>
-</pre></div>
-</div>
-</li>
-<li><p>Then, install the Python module distribution:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span>
-<span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="c1"># Ensure that you use python &gt;= 3.5 (use python3.x to be sure)</span>
-</pre></div>
-</div>
-</li>
-<li><p>Then interprets the main.py file to run Populse_MIA</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">populse_mia</span>
-<span class="n">python3</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span>
-</pre></div>
-</div>
-</li>
-<li><p>If you have made some changes to improve the code and want to share them, feel free to open pull requests:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Commit and push your changes to your personal repository</p></li>
-<li><p>Open a <a class="reference external" href="https://help.github.com/articles/creating-a-pull-request/">pull request</a> on GitHub</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</div>
-<div class="section" id="populse-member">
-<h2>Populse member<a class="headerlink" href="#populse-member" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p>Install Populse_MIA from source (for Linux distributions)</p>
-<blockquote>
-<div><ul>
-<li><p>Make sure to have git installed (<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control">git documentation</a>)</p></li>
-<li><p>If not, install it (depending of your distribution, <a class="reference external" href="https://en.wikipedia.org/wiki/Package_manager">package management system</a> can be different):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="c1"># Debian like</span>
-<span class="n">sudo</span> <span class="n">dnf</span> <span class="n">install</span> <span class="n">git</span> <span class="c1"># Fedora 22 and later etc.</span>
-</pre></div>
-</div>
-</li>
-<li><p>Get source code from Github using HTTPS or SSH. Replace [mia_install_dir] with a directory of your choice:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
-<span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using SSH</span>
-</pre></div>
-</div>
-</li>
-<li><p>Then, install the Python module distribution:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span>
-<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="c1"># Ensure that you use python &gt;= 3.5 (use python3.x to be sure)</span>
-</pre></div>
-</div>
-</li>
-<li><p>Then interprets the main.py file to run Populse_MIA</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">populse_mia</span>
-<span class="n">python3</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span>
-</pre></div>
-</div>
-</li>
-<li><p>Make sure to work on your own branch</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch locally</span>
-<span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch remotely</span>
-</pre></div>
-</div>
-</li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>Install Populse_MIA from sources (for Windows 10 distributions)</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>First, assure that you activated the developer mode in the parameters:</p></li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This operation needs administrator rights</p>
+<h1>Populse_mia’s developer installation<a class="headerlink" href="#populse-mia-s-developer-installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pre-requirements">
+<h2>Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Click on Start –&gt; Parameters</p></li>
-<li><p>Go in Update and Security</p></li>
+<li><p><a class="reference external" href="./pre_req_linux.html">For linux - macOS</a></p></li>
 </ul>
-<a class="reference internal image-reference" href="installation/../images/update_and_security.png"><img alt="installation/../images/update_and_security.png" class="align-center" src="installation/../images/update_and_security.png" style="width: 400px;" /></a>
-<ul class="simple">
-<li><p>Click on Developer environment in the left column and activate the Sideload app;</p></li>
-</ul>
-<a class="reference internal image-reference" href="installation/../images/developer_mode.png"><img alt="installation/../images/developer_mode.png" class="align-center" src="installation/../images/developer_mode.png" style="width: 400px;" /></a>
-<ul class="simple">
-<li><p>You might need to restart your computer</p></li>
-</ul>
-</div>
-<ul>
-<li><p>When you restarted your computer, open a PowerShell window on your computer:</p>
-<ul class="simple">
-<li><p>Click on the Start menu and type “PowerShell”</p></li>
-</ul>
-<a class="reference internal image-reference" href="installation/../images/open_powershell.jpg"><img alt="installation/../images/open_powershell.jpg" class="align-center" src="installation/../images/open_powershell.jpg" style="width: 300px;" /></a>
-<ul class="simple">
-<li><p>Run the PowerShell application.</p></li>
-</ul>
-</li>
-<li><p>Make sure you have Python installed. You can verify it by typing in PowerShell :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
-</pre></div>
-</div>
-<p><a href="#id3"><span class="problematic" id="id4">*</span></a>Note : depending on your versions, you might need to use ‘python -V’ instead on ‘python3 -V’ to check your version of Python.</p>
-<ul>
-<li><p>If Python is not installed:</p>
-<ol class="arabic">
-<li><p>In PowerShell, type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span>
-</pre></div>
-</div>
-</li>
-<li><p>The Microsoft Store will open on the Python 3.8 app, click on Install:</p></li>
-</ol>
-<a class="reference internal image-reference" href="installation/../images/Python3.8.png"><img alt="installation/../images/Python3.8.png" class="align-center" src="installation/../images/Python3.8.png" style="width: 500px;" /></a>
-<ol class="arabic" start="3">
-<li><p>Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
-<span class="n">pip3</span> <span class="o">--</span><span class="n">version</span>
-</pre></div>
-</div>
-</li>
-</ol>
-</li>
-</ul>
-</li>
-<li><p>Make sure you have Git installed. You can verify it by typing in PowerShell :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="o">--</span><span class="n">version</span>
-</pre></div>
-</div>
-<ul>
-<li><p>If Git is not installed, you need to install it (<a class="reference external" href="https://git-scm.com/download/win">Here</a>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Download</span> <span class="n">the</span> <span class="n">executable</span> <span class="k">for</span> <span class="n">your</span> <span class="n">specific</span> <span class="n">distribution</span> <span class="p">(</span><span class="mi">64</span> <span class="ow">or</span> <span class="mi">32</span> <span class="n">bits</span><span class="p">)</span><span class="o">.</span>
-<span class="n">Run</span> <span class="n">it</span><span class="o">.</span>
-<span class="n">You</span> <span class="n">will</span> <span class="n">be</span> <span class="n">asked</span> <span class="n">many</span> <span class="n">questions</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">you</span> <span class="n">preferences</span><span class="p">,</span> <span class="n">but</span> <span class="n">the</span> <span class="n">default</span> <span class="n">parameters</span> <span class="n">are</span> <span class="n">enough</span><span class="o">.</span>
-</pre></div>
-</div>
-</li>
-<li><p>At the end of the git installation, you will need to restart PowerShell to restart the environment and be able to use Git.</p></li>
-</ul>
-</li>
-<li><p>During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (<a class="reference external" href="https://www.microsoft.com/fr-fr/download/details.aspx?id=58317">Here</a>):</p>
-<ol class="arabic simple">
-<li><p>Download the executable file and run it.</p></li>
-</ol>
-<p>2.The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:</p>
-<ol class="arabic simple" start="3">
-<li><p>Select the C++ Build Tools and install it.</p></li>
-</ol>
-</li>
-<li><p>Install java 64-bits for Windows (<a class="reference external" href="https://java.com/fr/download/manual.jsp">Here</a>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Download</span> <span class="n">the</span> <span class="n">offline</span> <span class="p">(</span><span class="mi">64</span> <span class="n">bits</span><span class="p">)</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">run</span> <span class="n">it</span>
-<span class="n">Follow</span> <span class="n">the</span> <span class="n">installation</span>
-</pre></div>
-</div>
-</li>
-<li><p>Now you need to configure your java in order to be used by your system and PowerShell :</p></li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This operation needs administrator rights</p>
-<blockquote>
-<div><ol class="arabic">
-<li><p>In PowerShell, open a system properties window by typing:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysdm</span><span class="o">.</span><span class="n">cpl</span>
-</pre></div>
-</div>
-</li>
-<li><p>Click on the Advanced System Parameter;</p></li>
-</ol>
-<ol class="arabic simple" start="3">
-<li><p>Click on Environment Variable ;</p></li>
-<li><p>Select Path in the system variables, and click on modify;</p></li>
-</ol>
-<ol class="arabic" start="5">
-<li><p>Click on New;</p></li>
-<li><p>Paste the path to the folder containing YOUR java executable, it should LOOK like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Program</span> <span class="n">Files</span>\<span class="n">Java</span>\<span class="n">jre1</span><span class="o">.</span><span class="mf">8.0_251</span>\<span class="nb">bin</span>
-</pre></div>
-</div>
-</li>
-</ol>
-</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
 </div>
 <ul class="simple">
-<li><p>Enable the NTFS long path:</p></li>
+<li><p><a class="reference external" href="./pre_req_windows10.html">For Windows 10</a></p></li>
 </ul>
-<blockquote>
-<div><div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This operation needs administrator rights</p>
-<ol class="arabic">
-<li><p>In PowerShell type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpedit</span><span class="o">.</span><span class="n">msc</span>
-</pre></div>
 </div>
-</li>
-<li><p>A Local Group Policy Editor window will open, then Navigate to:</p></li>
-</ol>
-<blockquote>
-<div><p>–&gt; Local Compute Policy
-–&gt; Computer Configuration
-–&gt; Administrator Templates
-–&gt; System
-–&gt; FileSystem
-–&gt; NTFS</p>
-</div></blockquote>
-<ol class="arabic simple" start="3">
-<li><p>Double click on Enable NTFS long path and enable it.</p></li>
-</ol>
-</div>
-</div></blockquote>
+<div class="section" id="id1">
+<h2>Installation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p>Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># be sure to doin&#39;t forget the &quot;\--user&quot; at the end of the command, otherwise you might get issues from administrator rights</span>
-<span class="n">pip3</span> <span class="n">install</span> <span class="n">PyQt5</span>
-</pre></div>
-</div>
-</li>
-<li><p>Get sources code from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mia_install_dir] with the directory of your choice) :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
-<span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span> <span class="c1"># using SSH</span>
-</pre></div>
-</div>
-</li>
-<li><p>Then, install the Python module distribution :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span>
-<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
-</pre></div>
-</div>
-<p><a href="#id7"><span class="problematic" id="id8">*</span></a>Note : make sure to don’t forget ‘–user’ at the end of the command. If not you might get access errors linked with administrators rights.</p>
-</li>
-<li><p>Then, run Populse_mia :</p>
+<li><p>Clone the source codes</p>
 <ul>
-<li><p>By interpreting the main.py file :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">[</span><span class="n">mia_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">populse_mia</span>
-<span class="n">python3</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span>
+<li><p>Get source codes from Github. Replace [populse_install_dir] with a directory of your choice</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">populse_mia</span> <span class="c1"># &quot;git lfs clone&quot; has been deprecated since Git LFS 2.3.0. From this version, use &quot;git clone&quot; command directly ...</span>
 </pre></div>
 </div>
 </li>
-<li><p>By launching the package with python :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">populse_mia</span>
+<li><p>Or download the zip file (populse_mia-master.zip) of the project (<a class="reference external" href="https://github.com/populse/populse_mia">green button “Code”</a>, Download ZIP), then extract the data in the directory of your choice [populse_install_dir]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unzip</span> <span class="n">populse_mia</span><span class="o">-</span><span class="n">master</span><span class="o">.</span><span class="n">zip</span> <span class="o">-</span><span class="n">d</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span>
+<span class="n">mv</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">-</span><span class="n">master</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">populse_mia</span>
 </pre></div>
 </div>
 </li>
 </ul>
 </li>
-<li><p>Now, configure you populse_mia, click on file and MIA preferences :</p>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>To use the whole populse project in developer mode (and have the latest versions available), repeat the previous step for all other populse packages (<a class="reference external" href="https://github.com/populse/capsul">capsul</a>, <a class="reference external" href="https://github.com/populse/mia_processes">mia_processes</a>, <a class="reference external" href="https://github.com/populse/mri_conv">mri_conv</a>, <a class="reference external" href="https://github.com/populse/populse_db">populse_db</a>, <a class="reference external" href="https://github.com/populse//soma-workflow">soma-workflow</a> and <a class="reference external" href="https://github.com/populse//soma-base">soma-base</a>:</p>
+<ul>
+<li><p>e.g. for capsul:</p>
+<ul>
+<li><p>Get source codes from Github. Replace [populse_install_dir] with a directory of your choice</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">capsul</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">capsul</span> <span class="c1"># &quot;git lfs clone&quot; has been deprecated since Git LFS 2.3.0. From this version, use &quot;git clone&quot; command directly ...</span>
+</pre></div>
+</div>
+</li>
+<li><p>Or download the zip file (capsul-master.zip) of the project (<a class="reference external" href="https://github.com/populse/capsul">green button “Code”</a>, Download ZIP), then extract the data in the directory of your choice [populse_install_dir]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unzip</span> <span class="n">capsul</span><span class="o">-</span><span class="n">master</span><span class="o">.</span><span class="n">zip</span> <span class="o">-</span><span class="n">d</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span>
+<span class="n">mv</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">capsul</span><span class="o">-</span><span class="n">master</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">capsul</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ul class="simple">
-<li><p>In the Tools tab, enter the path to your project folder in the Projects preferences.</p></li>
+<li><p>See the <a class="reference external" href="https://github.com/populse/populse_mia#usage">Usage chapter on the GitHub page</a> to launch populse_mia</p></li>
 </ul>
-<a class="reference internal image-reference" href="installation/../images/tool_tab.png"><img alt="installation/../images/tool_tab.png" class="align-center" src="installation/../images/tool_tab.png" style="width: 400px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ul>
-<li><p>Get sources code for MRI_conv from GitHub using HTTS or SSH in the directory of your choice (the current directory or replace the [mri_install_dir] with the directory of your choice) :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mri_install_directory</span><span class="p">]</span> <span class="c1"># using HTTPS</span>
-<span class="n">git</span> <span class="n">lfs</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">mri_install_directory</span><span class="p">]</span> <span class="c1"># using SSH</span>
-</pre></div>
-</div>
-</li>
-<li><p>In the Tools tab of the MIA preferences window in populse_mia, enter the absolute path to MRIManager.jar in the POPULSE third party preferences :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">mri_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">mri_conv</span><span class="o">/</span><span class="n">MRIFileManager</span><span class="o">/</span><span class="n">MRIManager</span><span class="o">.</span><span class="n">jar</span>
-</pre></div>
-</div>
-</li>
-<li><p>Next, in the Pipeline tab of MIA preferences, check Use Matlab and enter the path to the matlab.exe file of your computer :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">Matlab</span><span class="o">/</span><span class="n">YourVersionOfMatlab</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">matlab</span><span class="o">.</span><span class="n">exe</span>
-</pre></div>
-</div>
-<a class="reference internal image-reference" href="installation/../images/pipeline_tab.png"><img alt="installation/../images/pipeline_tab.png" class="align-center" src="installation/../images/pipeline_tab.png" style="width: 400px;" /></a>
-</li>
-<li><p>In the Pipeline tab of MIA preferences, if you have licensed SPM version check Use SPM and enter the path to your spm folder :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">Matlab</span><span class="o">/</span><span class="n">spm12</span>
-</pre></div>
-</div>
-</li>
-<li><p>In the Pipeline tab of MIA preferences, if you have standalone SPM version check Use SPM Standalone and enter the path to your spm12 folder :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">spm12_r</span><span class="o">****/</span><span class="n">spm12</span>
-</pre></div>
-</div>
-<blockquote>
-<div><p><a href="#id9"><span class="problematic" id="id10">*</span></a>Note : in this scenario you only need to check Use SPM Standalone in the Pipeline tab MIA preferences.</p>
-</div></blockquote>
-</li>
-</ul>
-</li>
-<li><p>For developing process, make sure to work on your own branch</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch locally</span>
-<span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">your_branch_name</span> <span class="c1"># creates your own branch remotely</span>
+<li><p>In development mode the libraries needed for populse_mia are not installed as with pip. So depending on the libraries already installed on your station it may be necessary to complete this installation. Please refer to the <a class="reference external" href="https://github.com/populse/populse_mia#requirements">Requirements chapter on the Github page</a> to install the necessary third party libraries.</p>
+<ul>
+<li><p>e.g. for nibabel</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">nibabel</span> <span class="o">--</span><span class="n">user</span>
 </pre></div>
 </div>
 </li>
 </ul>
-</div></blockquote>
 </li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>For some libraries a special version is required. In case of problems when launching populse_mia, please check that all versions of third party libraries are respected by consulting the REQUIRES object in the <a class="reference external" href="https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py">info.py</a> module.</p>
+<ul>
+<li><p>e.g. for traits</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">traits</span><span class="o">==</span><span class="mf">5.2</span><span class="o">.</span><span class="mi">0</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># The traits librairy is not yet installed</span>
+<span class="n">Pip3</span> <span class="n">install</span> <span class="o">--</span><span class="n">force</span><span class="o">-</span><span class="n">reinstall</span> <span class="n">traits</span><span class="o">==</span><span class="mf">5.2</span><span class="o">.</span><span class="mi">0</span> <span class="o">--</span><span class="n">user</span>  <span class="c1"># The traits librairy is already installed</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>If, in spite of that, you observe an ImportError exception at launch … Well … you will have to install the involved library (see the two steps above). In this case, please send us a message (<a class="reference external" href="mailto:populse-support&#37;&#52;&#48;univ-grenoble-alpes&#46;fr">populse-support<span>&#64;</span>univ-grenoble-alpes<span>&#46;</span>fr</a>) so that we can update the list of third party libraries needed to run populse_mia properly.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>On first launch after a developer installation, please <a class="reference external" href="../documentation/preferences.html">refer to the preferences page</a> to configure populse_mia.</p></li>
 </ul>
 </div>
 </div>

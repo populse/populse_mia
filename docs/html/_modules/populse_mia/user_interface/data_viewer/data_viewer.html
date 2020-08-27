@@ -31,17 +31,26 @@
         
   <h1>Source code for populse_mia.user_interface.data_viewer.data_viewer</h1><div class="highlight"><pre>
 <span></span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">This module provides an abstract bse class for data viewer implemenataions in Populse-MIA.</span>
+<span class="sd">This module provides an abstract base class for data viewer implemenataions in</span>
+<span class="sd">populse-mia.</span>
 
-<span class="sd">Data viewers are supposed to inherit :class:`DataViewer` and implement (at least) its methods. A data viewer is given a project and documents list, and is thus allowed to access databasing features and documents attributes.</span>
+<span class="sd">Data viewers are supposed to inherit :class:`DataViewer` and implement (at</span>
+<span class="sd">least) its methods. A data viewer is given a project and documents list, and is</span>
+<span class="sd">thus allowed to access databasing features and documents attributes.</span>
 
 <span class="sd">Coding a data viewer</span>
 <span class="sd">--------------------</span>
 
-<span class="sd">A data viewer is identified after its module name, and is currently searched for as a sumbodule of :mod:`populse_mia.user_interface.data_viewer`. The data viewer module may be implemented as a &quot;regular&quot; module (.py file) or a package (directory) and should contain at least a class named ``MiaViewer`` which:</span>
+<span class="sd">A data viewer is identified after its module name, and is currently searched for</span>
+<span class="sd">as a sumbodule of :mod:`populse_mia.user_interface.data_viewer`. The data viewer</span>
+<span class="sd">module may be implemented as a &quot;regular&quot; module (.py file) or a package</span>
+<span class="sd">(directory) and should contain at least a class named ``MiaViewer`` which:</span>
+<span class="sd">  * is a Qt ``QWidget`` (inherits ``QWidget`` as 1st inheritance as is required</span>
+<span class="sd">    by Qt)</span>
+<span class="sd">  * implements the :class:`DataViewer` API (normally by inheriting it as second</span>
+<span class="sd">    inheritance after ``QWidget`` but this is not technically required if the</span>
+<span class="sd">    API is implemented)</span>
 
-<span class="sd">* is a Qt ``QWidget`` (inherits ``QWidget`` as 1st inheritance as is required by Qt)</span>
-<span class="sd">* implements the :class:`DataViewer` API (normally by inheriting it as second inheritance after ``QWidget`` but this is not technically required if the API is implemented)</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
 <div class="viewcode-block" id="DataViewer"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer">[docs]</a><span class="k">class</span> <span class="nc">DataViewer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>

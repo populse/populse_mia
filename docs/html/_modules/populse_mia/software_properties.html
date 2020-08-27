@@ -53,6 +53,7 @@
 <span class="c1">##########################################################################</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="k">import</span> <span class="n">Fernet</span>
@@ -66,12 +67,12 @@
 <span class="sd">    The verCmp() function returns a boolean value to indicate whether its</span>
 <span class="sd">    first argument (first_ver) is equal to, less or equal to, or greater or</span>
 <span class="sd">    equal to its second argument (sec_ver), as follows:</span>
-<span class="sd">    - if third argument (comp) is &#39;eq&#39;: when the first argument is equal to the</span>
-<span class="sd">      second argument, return True (False if not).</span>
-<span class="sd">    - if third argument (comp) is &#39;sup&#39;: when the first argument is greater</span>
-<span class="sd">      than the second argument, return True (False if not).</span>
-<span class="sd">    - if third argument (comp) is &#39;inf&#39;: when the first argument is less than</span>
-<span class="sd">      the second argument, return True (False if not).</span>
+<span class="sd">      - if third argument (comp) is &#39;eq&#39;: when the first argument is equal to the</span>
+<span class="sd">        second argument, return True (False if not).</span>
+<span class="sd">      - if third argument (comp) is &#39;sup&#39;: when the first argument is greater</span>
+<span class="sd">        than the second argument, return True (False if not).</span>
+<span class="sd">      - if third argument (comp) is &#39;inf&#39;: when the first argument is less than</span>
+<span class="sd">        the second argument, return True (False if not).</span>
 
 <span class="sd">    :param first_ver: the version of a package (a string; ex. &#39;0.13.0&#39;)</span>
 <span class="sd">    :param sec_ver: the version of a package (a string; ex. &#39;0.13.0&#39;)</span>
@@ -80,8 +81,8 @@
 <span class="sd">    :returns: False or True</span>
 
 <span class="sd">    :Contains:</span>
-<span class="sd">        :Private function:</span>
-<span class="sd">            - normalise</span>
+<span class="sd">      Private function:</span>
+<span class="sd">        - normalise</span>
 
 <span class="sd">     &quot;&quot;&quot;</span>
 
@@ -201,13 +202,12 @@
 <div class="viewcode-block" id="Config.__init__"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the Config class</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        config_path: str (optional)</span>
-<span class="sd">            if provided, the configuration file will be loaded/saved from</span>
-<span class="sd">            the given directory. Otherwise the regular eutristics will be used</span>
-<span class="sd">            to determine the config path. This option allows to use an</span>
-<span class="sd">            alternative config directory (for tests for instance).</span>
+<span class="sd">        :Parameters:</span>
+<span class="sd">            - :config_path: str (optional). If provided, the configuration file</span>
+<span class="sd">               will be loaded/saved from the given directory. Otherwise the</span>
+<span class="sd">               regular eutristics will be used to determine the config path.</span>
+<span class="sd">               This option allows to use an alternative config directory (for</span>
+<span class="sd">               tests for instance).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dev_mode</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">config_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -252,14 +252,19 @@
         <span class="sd">&quot;&quot;&quot;Get Matlab command.</span>
 
 <span class="sd">        :return: Returns path to matlab executable or nothing if matlab</span>
-<span class="sd">        path not specified</span>
+<span class="sd">                 path not specified</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_spm_standalone&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span>
-                    <span class="s1">&#39;run_spm12.sh </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span>
-                                                 <span class="s2">&quot;matlab_standalone&quot;</span><span class="p">])</span> <span class="o">+</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39; script&#39;</span><span class="p">)</span>
+            <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39;spm12_win&#39;</span> <span class="o">+</span> <span class="n">archi</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.exe&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span>
+                        <span class="s1">&#39;run_spm12.sh </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span>
+                                                    <span class="s2">&quot;matlab_standalone&quot;</span><span class="p">])</span> <span class="o">+</span>
+                                        <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39; script&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;matlab&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
@@ -319,7 +324,7 @@
                     <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s1">&#39;5.1&#39;</span><span class="p">,</span> <span class="s1">&#39;sup&#39;</span><span class="p">):</span>
                         <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span>
                                                     <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>    
+                    <span class="k">else</span><span class="p">:</span>
                         <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;dev_mode&quot;</span> <span class="ow">in</span> <span class="n">mia_home_config</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span>
@@ -331,10 +336,10 @@
 
                         <span class="k">while</span> <span class="s2">&quot;properties&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">config_path</span><span class="p">):</span>
                             <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-                            
+
                         <span class="bp">self</span><span class="o">.</span><span class="n">mia_path</span> <span class="o">=</span> <span class="n">config_path</span>
                         <span class="k">return</span> <span class="n">config_path</span>
-                    
+
                     <span class="c1"># Only for user mode</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">dev_mode</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -840,10 +845,6 @@
     <span class="c1">#         self.config[&quot;paths&quot;][&quot;data&quot;] = path</span>
     <span class="c1">#         # Then save the modification</span>
     <span class="c1">#         self.saveConfig()</span>
-
-
-
-
 </pre></div>
 
       </div>

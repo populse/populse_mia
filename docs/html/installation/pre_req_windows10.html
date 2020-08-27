@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Populse_mia’s Windows-PowerShell installation, pre-requirements &#8212; populse_mia 1.3.0 documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 1.3.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Populse_mia’s Windows-PowerShell installation, pre-requirements</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <div class="toctree-wrapper compound">
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 33%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
+<td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
+<td><p><a class="reference external" href="./installation.html">Installation</a></p></td>
+<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="populse-mia-s-windows-powershell-installation-pre-requirements">
+<h1>Populse_mia’s Windows-PowerShell installation, pre-requirements<a class="headerlink" href="#populse-mia-s-windows-powershell-installation-pre-requirements" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>First, assure that you activated the developer mode in the parameters:</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation needs administrator rights</p>
+<ul class="simple">
+<li><p>Click on Start –&gt; Parameters</p></li>
+<li><p>Go in Update and Security</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/update_and_security.png"><img alt="../_images/update_and_security.png" class="align-center" src="../_images/update_and_security.png" style="width: 400px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Click on Developer environment in the left column and activate the Sideload app</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/developer_mode.png"><img alt="../_images/developer_mode.png" class="align-center" src="../_images/developer_mode.png" style="width: 400px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>You might need to restart your computer</p></li>
+</ul>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>When you restarted your computer, open a PowerShell window on your computer:</p>
+<ul class="simple">
+<li><p>Click on the Start menu and type <code class="docutils literal notranslate"><span class="pre">PowerShell</span></code></p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/open_powershell.jpg"><img alt="../_images/open_powershell.jpg" class="align-center" src="../_images/open_powershell.jpg" style="width: 300px;" /></a>
+<ul class="simple">
+<li><p>Run the PowerShell application</p></li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Make sure you have Python installed. You can verify it by typing in PowerShell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
+</pre></div>
+</div>
+<p><em>Note : depending on your versions, you might need to use `python -V` instead on `python3 -V` to check your version of Python.</em></p>
+<ul>
+<li><p>If Python is not installed:</p>
+<ul>
+<li><p>In PowerShell, type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span>
+</pre></div>
+</div>
+</li>
+<li><p>The Microsoft Store will open on the Python 3.8 app, click on Install:</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/Python3.8.png"><img alt="../_images/Python3.8.png" class="align-center" src="../_images/Python3.8.png" style="width: 500px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Check in the shell PowerShell that Python and pip (pip is normally include in the install of Python) are installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">V</span>
+<span class="n">pip3</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Make sure you have Git installed. You can verify it by typing in PowerShell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If Git is not installed, you need to install it (<a class="reference external" href="https://git-scm.com/download/win">Here</a>):</p>
+<ul>
+<li><p>Download the executable for your specific distribution (64 or 32 bits).</p></li>
+<li><p>Run it.</p></li>
+<li><p>You will be asked many questions depending on you preferences, but the default parameters are enough.</p></li>
+<li><p>At the end of the git installation, you will need to restart PowerShell to restart the environment and be able to use Git.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>During the install, you will need C++ Build tools. You can get it by installing Visual Studio Build Tools 2019 and select C++ Build tools (<a class="reference external" href="https://www.microsoft.com/fr-fr/download/details.aspx?id=58317">Here</a>):</p>
+<ul class="simple">
+<li><p>Download the executable file and run it.</p></li>
+<li><p>The installation is in two parts, at the end of the first part a window with every module in charge by Visual Studio will open:</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/vs_Build.png"><img alt="../_images/vs_Build.png" class="align-center" src="../_images/vs_Build.png" style="width: 500px;" /></a>
+<ul class="simple">
+<li><p>Select the C++ Build Tools and install it.</p></li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Make sure you have java 64-bits installed. You can verify it by typing in PowerShell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If java 64-bits is not installed, you need to install it (<a class="reference external" href="https://java.com/fr/download/manual.jsp">Here</a>):</p>
+<ul>
+<li><p>Download the offline (64 bits) file and run it</p></li>
+<li><p>Follow the installation</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Now you need to configure your java in order to be used by your system and PowerShell:</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation needs administrator rights</p>
+<blockquote>
+<div><ul>
+<li><p>In PowerShell, open a system properties window by typing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysdm</span><span class="o">.</span><span class="n">cpl</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click on the Advanced System Parameter</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/ASP_system_tab.png"><img alt="../_images/ASP_system_tab.png" class="align-center" src="../_images/ASP_system_tab.png" style="width: 500px;" /></a>
+</div></blockquote>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><p>Click on Environment Variable</p></li>
+<li><p>Select Path in the system variables, and click on modify</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/env_var.png"><img alt="../_images/env_var.png" class="align-center" src="../_images/env_var.png" style="width: 500px;" /></a>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><p>Click on New</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/modify_environment_variable.png"><img alt="../_images/modify_environment_variable.png" class="align-center" src="../_images/modify_environment_variable.png" style="width: 500px;" /></a>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul>
+<li><p>Paste the path to the folder containing YOUR java executable, it should LOOK like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Program</span> <span class="n">Files</span>\<span class="n">Java</span>\<span class="n">jre1</span><span class="o">.</span><span class="mf">8.0_251</span>\<span class="nb">bin</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>Enable the NTFS long path:</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation needs administrator rights</p>
+<blockquote>
+<div><ul>
+<li><p>In PowerShell type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpedit</span><span class="o">.</span><span class="n">msc</span>
+</pre></div>
+</div>
+</li>
+<li><p>A Local Group Policy Editor window will open, then Navigate to:</p>
+<p>–&gt; Local Compute Policy
+–&gt; Computer Configuration
+–&gt; Administrator Templates
+–&gt; System
+–&gt; FileSystem
+–&gt; NTFS</p>
+</li>
+<li><p>Double click on Enable NTFS long path and enable it.</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/NTFS.png"><img alt="../_images/NTFS.png" class="align-center" src="../_images/NTFS.png" style="width: 500px;" /></a>
+</div></blockquote>
+</div>
+<ul>
+<li><p>Populse_mia requires some specific package for Python and particularly numpy and PyQt5, you need to install them before launching the populse_mia installation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># be sure to don&#39;t forget the &quot;--user&quot; at the end of the command, otherwise you might get issues from administrator rights</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="n">PyQt5</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># be sure to don&#39;t forget the &quot;--user&quot; at the end of the command, otherwise you might get issues from administrator rights</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, populse.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>

@@ -18,7 +18,9 @@
 
 * From PyPI, [for users](https://populse.github.io/populse_mia/html/installation/user_installation.html)
 
-* From source, [for developers](https://populse.github.io/populse_mia/html/installation/developer_installation.html) (or to use the latest version of populse_mia)
+* By cloning the package, [for developers](https://populse.github.io/populse_mia/html/installation/developer_installation.html)
+
+* From source, [to use the latest version of populse_mia](https://populse.github.io/populse_mia/html/installation/from_source_installation.html)
 
 # Usage
 
@@ -28,13 +30,17 @@
 
   * After an [installation in developer mode](https://populse.github.io/populse_mia/html/installation/developer_installation.html), interprets the main.py file from the source code directory:
   
-        cd [mia_install_dir]/python/populse_mia  
+        cd [populse_install_dir]/populse_mia/python/populse_mia  
         python3 main.py  
 
   * Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:
 
         python3 -m pip install --force-reinstall pyqt5==5.14.0
         python3 -m pip install --force-reinstall PyQt5-sip==5.0.1
+	
+# Contributing to the project
+
+If you'd like to contribute to the project please read our [developer documentation page](https://populse.github.io/populse_mia/html/documentation/developer_documentation.html). Please also read through [our code of conduct](https://github.com/populse/populse_mia/blob/master/CODE_OF_CONDUCT.md).
 
 # Tests
 
@@ -45,7 +51,7 @@
 * The module is ensured to work on the platforms Linux, OSX and Windows
 * The script of tests is python/populse_mia/test.py, so the following command launches the tests:
 
-      python3 python/populse_mia/test.py (from populse_mia root folder, for example [mia_install_dir])
+      python3 python/populse_mia/test.py (from populse_mia root folder, for example [populse_install_dir]/populse_mia)
 
 # Requirements
 
