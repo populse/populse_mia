@@ -410,17 +410,28 @@
             <span class="c1"># Adding inherited tags</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">:</span>
                 <span class="n">database_parent_file</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="n">parent_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">old_value</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">old_value</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">parent_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">old_value</span><span class="p">]</span>
+                    <span class="n">own_tags</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">parent_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">old_value</span><span class="p">][</span><span class="s1">&#39;parent&#39;</span><span class="p">]</span>
+                    <span class="n">own_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">old_value</span><span class="p">][</span><span class="s1">&#39;own_tags&#39;</span><span class="p">]</span>
+
                 <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
+
                     <span class="k">if</span> <span class="n">scan</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">parent_file</span><span class="p">):</span>
                         <span class="n">database_parent_file</span> <span class="o">=</span> <span class="n">scan</span>
+
                 <span class="n">banished_tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">TAG_TYPE</span><span class="p">,</span> <span class="n">TAG_EXP_TYPE</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span>
-                                 <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">]</span>
+                                <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">]</span>
+
                 <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">banished_tags</span> <span class="ow">and</span> <span class="n">database_parent_file</span> <span class="ow">is</span> \
-                            <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">banished_tags</span> <span class="ow">and</span> <span class="n">database_parent_file</span><span class="p">:</span>
                         <span class="n">parent_current_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                             <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">database_parent_file</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
@@ -431,6 +442,46 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
                             <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span>
                             <span class="n">parent_initial_value</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">own_tags</span><span class="p">:</span>
+
+                    <span class="k">for</span> <span class="n">tag_to_add</span> <span class="ow">in</span> <span class="n">own_tags</span><span class="p">:</span>
+
+                        <span class="k">if</span> <span class="p">(</span><span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span>
+                              <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span>
+                                 <span class="n">get_fields_names</span><span class="p">)(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)):</span>
+                            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span>
+                                         <span class="n">add_field</span><span class="p">)(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;field_type&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;visibility&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;default_value&#39;</span><span class="p">])</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                                                       <span class="n">p_value</span><span class="p">,</span>
+                                                       <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                                                       <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+
+                        <span class="k">if</span> <span class="p">(</span><span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span>
+                              <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span>
+                                 <span class="n">get_fields_names</span><span class="p">)(</span><span class="n">COLLECTION_INITIAL</span><span class="p">)):</span>
+                            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span>
+                                         <span class="n">add_field</span><span class="p">)(</span><span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;field_type&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;visibility&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">],</span>
+                                                    <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;default_value&#39;</span><span class="p">])</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
+                                                       <span class="n">p_value</span><span class="p">,</span>
+                                                       <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                                                       <span class="n">tag_to_add</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span></div>
 
