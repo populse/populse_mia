@@ -7,7 +7,7 @@
 [![](https://codecov.io/github/populse/populse_mia/coverage.svg?branch=master)](https://codecov.io/github/populse/populse_mia)
 [![](https://img.shields.io/badge/license-CeCILL-blue.svg)](https://github.com/populse/populse_mia/blob/master/LICENSE)
 [![](https://img.shields.io/pypi/v/populse_mia.svg)](https://pypi.org/project/populse-mia/)
-[![](https://img.shields.io/badge/python-3.5%2C%203.6%2C%203.7-yellow.svg)](#)
+[![](https://img.shields.io/badge/python-3.6%2C%203.7%2C%203.8-yellow.svg)](#)
 [![](https://img.shields.io/badge/platform-Linux%2C%20OSX%2C%20Windows-orange.svg)](#)
 
 # Documentation
@@ -47,7 +47,7 @@ If you'd like to contribute to the project please read our [developer documentat
 * Unit tests written thanks to the python module unittest
 * Continuous integration made with Travis (Linux, OSX), and AppVeyor (Windows)
 * Code coverage calculated by the python module codecov
-* The module is ensured to work with Python >= 3.5
+* The module is ensured to work with Python >= 3.6
 * The module is ensured to work on the platforms Linux, OSX and Windows
 * The script of tests is python/populse_mia/test.py, so the following command launches the tests:
 
