@@ -2,6 +2,8 @@ matrix:
   include:
     - os: osx
       language: generic
+      python:
+        - "3.8"
     - os: linux
       dist: xenial
       language: python  
@@ -53,7 +55,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install svn; fi
   - pip3 install --upgrade numpy
   - pip3 install --upgrade cython
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywaveletstry to fix UT's current issue with travis and macos; fi
   - python3 setup.py install
   - pip3 install codecov
   #- pip3 install --upgrade --force-reinstall pyqt5
