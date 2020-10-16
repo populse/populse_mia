@@ -2,7 +2,7 @@ environment:
 
   matrix:
     - PYTHON: "C:\\Python36"
-#    - PYTHON: "C:\\Python37"
+    - PYTHON: "C:\\Python37"
 #    - PYTHON: "C:\\Python38"
 # python3.8 and PyQt5 doesn't seem to be fully compatible yet
 # pip install PyQt5==5.9.2
