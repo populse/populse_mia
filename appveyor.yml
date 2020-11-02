@@ -1,9 +1,17 @@
 environment:
 
   matrix:
-    - PYTHON: "C:\\Python35"
     - PYTHON: "C:\\Python36"
     - PYTHON: "C:\\Python37"
+#    - PYTHON: "C:\\Python38"
+# python3.8 and PyQt5 doesn't seem to be fully compatible yet
+# pip install PyQt5==5.9.2
+# ERROR: Could not find a version that satisfies the requirement PyQt5==5.9.2 (from versions: 5.10.1, 5.11.2, 5.11.3, 5.12, 5.12.1, 5.12.2, 5.12.3, 5.13.0, 5.13.1, 5.13.2, 5.14.0, 5.14.1, 5.14.2, 5.15.0, 5.15.1)
+# and
+# pip install PyQt5==5.10.1
+# Collecting PyQt5==5.10.1
+# Downloading PyQt5-5.10.1-5.10.1-cp35.cp36.cp37.cp38-none-win32.whl (68.6 MB)
+# ERROR: Could not find a version that satisfies the requirement sip<4.20,>=4.19.4 (from PyQt5==5.10.1) (from versions: 5.0.0, 5.0.1, 5.1.0, 5.1.1, 5.1.2, 5.2.0, 5.3.0, 5.4.0)
 
 build: off
 
@@ -18,19 +26,18 @@ install:
   - "pip install pypng"
   - "pip install --upgrade pywavelets"
   - "pip install pypiwin32"
-  # Temporary fix for the issue with kiwisolver 1.2.0 and MarkupSafe 2.0.0a1 which are automatically installed as a required library when installing populse_mia (python3 setup.py install, below) and that crashs with python 3.5 - 16/04/2020
-  - IF "%PYTHON%"=="C:\Python35" pip install "kiwisolver==1.1.0"  "MarkupSafe==1.1.1" "nipype<1.5"
   - "pip install \"scipy<1.5\""
   - "python setup.py install"
   - "git lfs install"
   - "git lfs pull"
   - "echo y | pip uninstall PyQt5"
+  - "echo y | pip uninstall PyQt5-sip"
+  - "echo y | pip uninstall SIP"
   - "pip install \"PyQt5==5.9.2\""
   - "pip uninstall -y capsul soma-base populse_db"
   - "git clone --depth=50 --branch=2.0 https://github.com/populse/populse_db.git C:\\projects\\populse_db"
   - "cd C:\\projects\\populse_db"
   - "pip install -e .[postgres]"
-  #- "pip install --force-reinstall lark-parser==0.6.7"
   - "cd .."
   - "git clone --depth=50 --branch=master https://github.com/populse/soma-base.git C:\\projects\\soma-base"
   - "git clone --depth=50 --branch=master https://github.com/populse/capsul.git C:\\projects\\capsul"
