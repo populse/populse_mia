@@ -37,7 +37,7 @@ Installation
 
 |
 
-* To use the whole populse project in developer mode (and have the latest versions available), repeat the previous step for all other populse packages (`capsul <https://github.com/populse/capsul>`_, `mia_processes <https://github.com/populse/mia_processes>`_, `mri_conv <https://github.com/populse/mri_conv>`_, `populse_db <https://github.com/populse/populse_db>`_, `soma-workflow <https://github.com/populse//soma-workflow>`_ and `soma-base <https://github.com/populse//soma-base>`_:
+* To use the whole populse project in developer mode (and have the latest versions available), repeat the previous step for all other populse packages (`capsul <https://github.com/populse/capsul>`_, `mia_processes <https://github.com/populse/mia_processes>`_, `mri_conv <https://github.com/populse/mri_conv>`_, `populse_db <https://github.com/populse/populse_db>`_, `soma-workflow <https://github.com/populse//soma-workflow>`_ and `soma-base <https://github.com/populse//soma-base>`_):
 
   * e.g. for capsul:
 

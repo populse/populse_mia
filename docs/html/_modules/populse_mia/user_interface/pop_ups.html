@@ -1241,8 +1241,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_layout</span><span class="p">)</span>
         <span class="n">screen_resolution</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">screenGeometry</span><span class="p">()</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="PopUpDataBrowserCurrentSelection.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates the &quot;scan_list&quot; attribute of several widgets.&quot;&quot;&quot;</span>
@@ -3278,8 +3278,9 @@
                         <span class="n">utils</span><span class="o">.</span><span class="n">message_already_exists</span><span class="p">()</span>
                         <span class="k">return</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">msgtext</span> <span class="o">=</span> <span class="s2">&quot;Do you really want to overwrite the &quot;</span> <span class="o">+</span> \
-                                  <span class="n">file_name</span> <span class="o">+</span> <span class="s2">&quot; project ?&quot;</span>
+                        <span class="n">msgtext</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Do you really want to overwrite the &quot;</span> 
+                                   <span class="o">+</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s2">&quot; project ?</span><span class="se">\n</span><span class="s2">This action &quot;</span>
+                                   <span class="s2">&quot;delete all contents inside this folder!&quot;</span><span class="p">)</span>
                         <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                         <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
                         <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;populse_mia - Warning: Overwriting project&quot;</span>
@@ -3802,6 +3803,7 @@
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">QTableWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setVerticalScrollBarPolicy</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ScrollBarAlwaysOn</span><span class="p">)</span>
 
         <span class="c1"># Filling the table</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_INPUTS</span><span class="p">)</span>
@@ -3864,34 +3866,23 @@
             <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setHorizontalHeaderItem</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">sub_widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
-                <span class="n">sub_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
-                <span class="k">for</span> <span class="n">sub_value</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                    <span class="n">value_scan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_value_is_scan</span><span class="p">(</span><span class="n">sub_value</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">value_scan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">value_scan</span><span class="p">)</span>
-                        <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_clicked</span><span class="p">)</span>
-                        <span class="n">sub_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sub_value</span><span class="p">))</span>
-                        <span class="n">sub_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-                <span class="n">sub_widget</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">sub_layout</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">sub_widget</span><span class="p">)</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;[]&#39;</span><span class="p">)</span>
+
+            <span class="n">value_scan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_value_is_scan</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value_scan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+                <span class="n">output_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+                <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">value_scan</span><span class="p">)</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_clicked</span><span class="p">)</span>
+                <span class="n">output_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
+                <span class="n">widget</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">output_layout</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">widget</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">value_scan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_value_is_scan</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">value_scan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
-                    <span class="n">output_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
-                    <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">value_scan</span><span class="p">)</span>
-                    <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_clicked</span><span class="p">)</span>
-                    <span class="n">output_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
-                    <span class="n">widget</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">output_layout</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">widget</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
-                    <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-                    <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+                <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">setTextAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
             <span class="n">column</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c1"># Outputs</span>
@@ -3940,8 +3931,8 @@
 
         <span class="n">screen_resolution</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">screenGeometry</span><span class="p">()</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">width</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="PopUpShowBrick.io_value_is_scan"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowBrick.io_value_is_scan">[docs]</a>    <span class="k">def</span> <span class="nf">io_value_is_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks if the I/O value is a scan.</span>
