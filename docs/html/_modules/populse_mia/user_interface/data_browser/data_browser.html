@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 1.3.0 documentation</title>
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.3.0 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -55,6 +55,7 @@
 
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
@@ -246,8 +247,7 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_advanced_search</span><span class="o">.</span><span class="n">isHidden</span><span class="p">():</span>
             <span class="c1"># If the advanced search is hidden, we reset it and display it</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">scans_list</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">scans_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">frame_advanced_search</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">show_search</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -257,10 +257,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">frame_advanced_search</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="c1"># All the scans are reput in the data_browser</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">scans_list</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">scans_list</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span>
+                                               <span class="n">get_documents_names</span><span class="p">(</span>
+                                                            <span class="n">COLLECTION_CURRENT</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">nots</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
@@ -342,8 +342,8 @@
 <div class="viewcode-block" id="DataBrowser.connect_mini_viewer"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_mini_viewer">[docs]</a>    <span class="k">def</span> <span class="nf">connect_mini_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Display the selected documents in the viewer.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span><span class="n">sizes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span><span class="n">minimumHeight</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span><span class="n">sizes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span>
+                                                               <span class="n">minimumHeight</span><span class="p">()):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -507,8 +507,8 @@
 
 <div class="viewcode-block" id="DataBrowser.move_splitter"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.move_splitter">[docs]</a>    <span class="k">def</span> <span class="nf">move_splitter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if the viewer&#39;s splitter is at its lowest position.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span><span class="n">sizes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span><span class="n">minimumHeight</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span><span class="n">sizes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span>
+                                                               <span class="n">minimumHeight</span><span class="p">()):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connect_mini_viewer</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="DataBrowser.open_filter"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.open_filter">[docs]</a>    <span class="k">def</span> <span class="nf">open_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -534,8 +534,7 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filter_to_apply</span><span class="o">.</span><span class="n">nots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">frame_advanced_search</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">scans_list</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">scans_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">show_search</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">apply_filter</span><span class="p">(</span><span class="n">filter_to_apply</span><span class="p">)</span></div>
 
@@ -1036,10 +1035,10 @@
                                 <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
                                 <span class="k">for</span> <span class="n">brick_number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_value</span><span class="p">)):</span>
                                     <span class="n">brick_uuid</span> <span class="o">=</span> <span class="n">cur_value</span><span class="p">[</span><span class="n">brick_number</span><span class="p">]</span>
-                                    <span class="n">brick_name</span> <span class="o">=</span> \
-                                        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
-                                            <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">brick_uuid</span><span class="p">,</span>
-                                            <span class="n">BRICK_NAME</span><span class="p">)</span>
+                                    <span class="n">brick_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
+                                                               <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
+                                                               <span class="n">brick_uuid</span><span class="p">,</span>
+                                                               <span class="n">BRICK_NAME</span><span class="p">)</span>
                                     <span class="n">brick_name_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">brick_name</span><span class="p">)</span>
                                     <span class="n">brick_name_button</span><span class="o">.</span><span class="n">moveToThread</span><span class="p">(</span>
                                         <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">thread</span><span class="p">())</span>
@@ -1119,13 +1118,14 @@
                 <span class="n">cells_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag_type</span><span class="p">)</span>
 
         <span class="c1"># Error if list with other types</span>
-        <span class="k">if</span> <span class="n">FIELD_TYPE_LIST_DATE</span> <span class="ow">in</span> <span class="n">cells_types</span> <span class="ow">or</span> <span class="n">FIELD_TYPE_LIST_DATETIME</span> \
-                <span class="ow">in</span> <span class="n">cells_types</span> <span class="ow">or</span> <span class="n">FIELD_TYPE_LIST_TIME</span> <span class="ow">in</span> <span class="n">cells_types</span> <span class="ow">or</span> \
-                <span class="n">FIELD_TYPE_LIST_INTEGER</span> <span class="ow">in</span> <span class="n">cells_types</span> <span class="ow">or</span> \
-                <span class="n">FIELD_TYPE_LIST_STRING</span> <span class="ow">in</span> <span class="n">cells_types</span> <span class="ow">or</span> \
-                <span class="n">FIELD_TYPE_LIST_FLOAT</span> <span class="ow">in</span> <span class="n">cells_types</span> <span class="ow">or</span> \
-                <span class="n">FIELD_TYPE_LIST_BOOLEAN</span> <span class="ow">in</span> <span class="n">cells_types</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cells_types</span><span class="p">)</span> \
-                <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(((</span><span class="n">FIELD_TYPE_LIST_DATE</span> <span class="ow">in</span> <span class="n">cells_types</span><span class="p">)</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="n">FIELD_TYPE_LIST_DATETIME</span> <span class="ow">in</span> <span class="n">cells_types</span><span class="p">)</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="n">FIELD_TYPE_LIST_TIME</span> <span class="ow">in</span> <span class="n">cells_types</span><span class="p">)</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="n">FIELD_TYPE_LIST_INTEGER</span> <span class="ow">in</span> <span class="n">cells_types</span><span class="p">)</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="n">FIELD_TYPE_LIST_STRING</span> <span class="ow">in</span> <span class="n">cells_types</span><span class="p">)</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="n">FIELD_TYPE_LIST_FLOAT</span> <span class="ow">in</span> <span class="n">cells_types</span><span class="p">)</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="n">FIELD_TYPE_LIST_BOOLEAN</span> <span class="ow">in</span> <span class="n">cells_types</span><span class="p">))</span> <span class="ow">and</span>
+               <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cells_types</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)):</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Incompatible types&quot;</span><span class="p">)</span>
@@ -1362,14 +1362,15 @@
                             <span class="n">inputs_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Output(s)&quot;</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Output(s)&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Output(s)&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Output(s)&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>\
-                            <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputs_list</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">((</span><span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Output(s)&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                          <span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Output(s)&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputs_list</span><span class="p">)):</span>
                         <span class="n">doc_delete</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Output(s)&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">],</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
                         <span class="n">doc_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
-                            <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
+                                                             <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
                         <span class="n">scan_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
-                            <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">doc_delete</span><span class="p">)</span>
+                                                             <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                                                             <span class="n">doc_delete</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">scan_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                             <span class="n">scan_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scan_object</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">)</span>
                             <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan_name</span><span class="p">)</span>
@@ -1430,15 +1431,11 @@
         <span class="n">collection_row</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
         <span class="n">primary_key</span> <span class="o">=</span> <span class="n">collection_row</span><span class="o">.</span><span class="n">primary_key</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="p">:</span>
-            <span class="n">req</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> IN [</span><span class="si">%s</span><span class="s1">]&#39;</span> \
-                <span class="o">%</span> <span class="p">(</span><span class="n">primary_key</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
-                                           <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="p">]))</span>
-            <span class="c1"># req = &#39;%s IN [%s]&#39; \</span>
-            <span class="c1">#     % (primary_key, &#39;, &#39;.join([&#39;&quot;%s&quot;&#39; % x.replace(&#39;\\&#39;, os.sep).replace(&#39;&quot;&#39;, &#39;\&quot;&#39;)</span>
-            <span class="c1">#                                for x in self.scans_to_visualize]))</span>
-            <span class="c1"># req = &#39;%s IN [%s]&#39; \</span>
-            <span class="c1">#     % (primary_key, &#39;, &#39;.join([&#39;&quot;%s&quot;&#39; % x.replace(&#39;replace(&#39;&quot;&#39;, &#39;\&quot;&#39;)</span>
-            <span class="c1">#                                for x in self.scans_to_visualize]))</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> IN [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">primary_key</span><span class="p">,</span>
+                                  <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span>
+                                             <span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span>
+                                             <span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
+                                             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="p">]))</span>
             <span class="n">scans</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">scans</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1862,37 +1859,49 @@
         <span class="n">scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">scan_list</span>
         <span class="n">repeat_pop_up</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">cancel</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
             <span class="n">scan_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-
             <span class="n">scan_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
-                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">)</span>
+                                                  <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">scan_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">scan_path</span> <span class="ow">in</span> <span class="n">scan_list</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">data_sent</span> <span class="ow">is</span>\
-                        <span class="kc">True</span><span class="p">:</span>
+    
+                <span class="k">if</span> <span class="p">((</span><span class="n">scan_path</span> <span class="ow">in</span> <span class="n">scan_list</span><span class="p">)</span> <span class="ow">and</span>
+                      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">data_sent</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">)):</span>
+
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">repeat_pop_up</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">pop</span> <span class="o">=</span> <span class="n">PopUpRemoveScan</span><span class="p">(</span><span class="n">scan_path</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
                         <span class="n">cancel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="o">.</span><span class="n">stop</span>
                         <span class="n">repeat_pop_up</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="o">.</span><span class="n">repeat</span>
+
                     <span class="k">if</span> <span class="n">cancel</span><span class="p">:</span>
                         <span class="k">continue</span>
+
                 <span class="n">scans_removed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scan_object</span><span class="p">)</span>
 
                 <span class="c1"># Adding removed values to history</span>
                 <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
+
                     <span class="k">if</span> <span class="n">tag</span> <span class="o">!=</span> <span class="n">TAG_FILENAME</span><span class="p">:</span>
                         <span class="n">current_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
-                            <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+                                                             <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                                                             <span class="n">scan_path</span><span class="p">,</span>
+                                                             <span class="n">tag</span><span class="p">)</span>
                         <span class="n">initial_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
-                            <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">current_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
-                                <span class="ow">or</span> <span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="n">values_removed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                                <span class="p">[</span><span class="n">scan_path</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">current_value</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">])</span>
+                                                             <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
+                                                             <span class="n">scan_path</span><span class="p">,</span>
+                                                             <span class="n">tag</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="p">((</span><span class="n">current_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
+                              <span class="p">(</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)):</span>
+                            <span class="n">values_removed</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">scan_path</span><span class="p">,</span>
+                                                   <span class="n">tag</span><span class="p">,</span>
+                                                   <span class="n">current_value</span><span class="p">,</span>
+                                                   <span class="n">initial_value</span><span class="p">])</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">scan_path</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span>
@@ -1909,7 +1918,6 @@
         <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values_removed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">undos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">history_maker</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">redos</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">resizeColumnsToContents</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TableDataBrowser.reset_cell"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_cell">[docs]</a>    <span class="k">def</span> <span class="nf">reset_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -2192,7 +2200,8 @@
 
         <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">column</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()))]</span>
-        <span class="n">scans</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())]</span>
+        <span class="n">scans</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())]</span>
 
         <span class="n">dbs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span>
         <span class="n">collection_row</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
@@ -2200,13 +2209,12 @@
         <span class="n">collection_init</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">)</span>
         <span class="n">primary_key_init</span> <span class="o">=</span> <span class="n">collection_row</span><span class="o">.</span><span class="n">primary_key</span>
         <span class="k">if</span> <span class="n">scans</span><span class="p">:</span>
-            <span class="n">req</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> IN [</span><span class="si">%s</span><span class="s1">]&#39;</span> \
-                <span class="o">%</span> <span class="p">(</span><span class="n">primary_key</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
-                                           <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="p">]))</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> IN [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">primary_key</span><span class="p">,</span>
+                                  <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span>
+                                             <span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span>
+                                             <span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
+                                             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="p">]))</span>
             <span class="n">documents</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
-            <span class="n">req</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> IN [</span><span class="si">%s</span><span class="s1">]&#39;</span> \
-                <span class="o">%</span> <span class="p">(</span><span class="n">primary_key</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
-                                           <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="p">]))</span>
             <span class="n">documents_init</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -2224,14 +2232,27 @@
         <span class="c1"># count visible rows odd/even</span>
         <span class="n">row_even</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">even</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">ro</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()):</span>
             <span class="n">row_even</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">even</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isRowHidden</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isRowHidden</span><span class="p">(</span><span class="n">ro</span><span class="p">):</span>
                 <span class="n">even</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even</span>
 
         <span class="k">for</span> <span class="n">scan_row</span><span class="p">,</span> <span class="n">scan_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">documents_init</span><span class="p">)):</span>
             <span class="n">scan</span><span class="p">,</span> <span class="n">scan_init</span> <span class="o">=</span> <span class="n">scan_i</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="n">table_scans</span><span class="p">[</span><span class="n">scan</span><span class="p">[</span><span class="n">tags</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">table_scans</span><span class="p">[</span><span class="n">scan</span><span class="p">[</span><span class="n">tags</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">An unexpected exception was raised when updating the &#39;</span>
+                      <span class="s1">&#39;DataBrowser. DataBrowser could be in a degraded display &#39;</span>
+                      <span class="s1">&#39;state...!</span><span class="se">\n</span><span class="s1">Traceback:&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+                <span class="k">break</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isRowHidden</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
                 <span class="n">even</span> <span class="o">=</span> <span class="n">row_even</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
@@ -2274,7 +2295,6 @@
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">245</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">215</span><span class="p">)</span>  <span class="c1"># Pink</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">245</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>  <span class="c1"># Red</span>
-
 
                         <span class="n">item</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">BackgroundRole</span><span class="p">,</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QVariant</span><span class="p">(</span><span class="n">color</span><span class="p">))</span>
 
