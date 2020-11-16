@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_editor</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -68,7 +68,8 @@
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">get_process_instance</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">Switch</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="p">(</span><span class="n">get_process_instance</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">Switch</span><span class="p">,</span>
+                        <span class="n">capsul_engine</span><span class="p">,</span> <span class="n">Node</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="k">import</span> <span class="p">(</span>
                                             <span class="n">NodeGWidget</span><span class="p">,</span> <span class="n">PipelineDevelopperView</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.xml</span> <span class="k">import</span> <span class="n">save_xml_pipeline</span>
@@ -130,12 +131,16 @@
                                         <span class="n">show_sub_pipelines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                         <span class="n">enable_edition</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_study_config</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">study_config</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
 
         <span class="c1"># Undo/Redo</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">undos</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">redos</span> <span class="o">=</span> <span class="p">[]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">userlevel</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_level</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_del_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_undo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">from_redo</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a link.</span>
@@ -1178,7 +1183,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">pipeline_saved</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-    <span class="n">node_clicked</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span>
+    <span class="n">node_clicked</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Node</span><span class="p">)</span>
+    <span class="n">process_clicked</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span>
     <span class="n">switch_clicked</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Switch</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PipelineEditorTabs.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
@@ -1231,7 +1237,10 @@
         <span class="c1"># Checking if the pipeline nodes have been modified</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabBarClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_modifications</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_current_node</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">previousIndex</span> <span class="o">=</span> <span class="mi">0</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previousIndex</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># init capsul engine config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.check_modifications"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.check_modifications">[docs]</a>    <span class="k">def</span> <span class="nf">check_modifications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if the nodes of the current pipeline have been modified.</span>
@@ -1308,9 +1317,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">undos</span><span class="p">[</span><span class="n">p_e</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">redos</span><span class="p">[</span><span class="n">p_e</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;process&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">displayNodeParameters</span><span class="p">(</span>
-                <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="p">)</span></div>
+                <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.emit_node_clicked"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.emit_node_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">emit_node_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Emit a signal when a node is clicked.</span>
@@ -1319,7 +1331,10 @@
 <span class="sd">        :param process: process of the corresponding node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">node_clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Process</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node_clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.emit_pipeline_saved"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.emit_pipeline_saved">[docs]</a>    <span class="k">def</span> <span class="nf">emit_pipeline_saved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Emit a signal when a pipeline is saved.</span>
@@ -1357,6 +1372,38 @@
                 <span class="n">node_name</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
                 <span class="n">pipeline_parameter</span><span class="o">=</span><span class="s1">&#39;database_scans&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update_pipeline</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PipelineEditorTabs.get_capsul_engine"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_capsul_engine">[docs]</a>    <span class="k">def</span> <span class="nf">get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a CapsulEngine object from the edited pipeline, and set it up from</span>
+<span class="sd">        MIA config object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># save completion attributes for the current pipeline (other pipelines</span>
+        <span class="c1"># will lose their values)</span>
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
+        <span class="n">completion</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s1">&#39;completion_engine&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">completion</span><span class="p">:</span>
+            <span class="n">att_values</span> <span class="o">=</span> <span class="n">completion</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span><span class="o">.</span><span class="n">export_to_dict</span><span class="p">()</span>
+
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
+
+        <span class="n">study_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span>
+        <span class="n">study_config</span><span class="o">.</span><span class="n">input_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;raw_data&#39;</span><span class="p">)</span>
+        <span class="n">study_config</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;derived_data&#39;</span><span class="p">)</span>
+
+        <span class="c1"># restore completion attributes</span>
+        <span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="k">import</span> <span class="n">ProcessCompletionEngine</span>
+
+        <span class="k">if</span> <span class="n">completion</span><span class="p">:</span>
+            <span class="n">completion</span> \
+                <span class="o">=</span> <span class="n">ProcessCompletionEngine</span><span class="o">.</span><span class="n">get_completion_engine</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">completion</span><span class="p">:</span>
+                <span class="n">completion</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">att_values</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">engine</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.get_current_editor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_current_editor">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the instance of the current editor.</span>
@@ -1528,6 +1575,7 @@
                 <span class="n">new_tab_opened</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="c1"># get only the file name to load</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">load_pipeline</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
             <span class="c1"># Check if this pipeline is already open</span>
@@ -1544,6 +1592,7 @@
                 <span class="n">editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span><span class="n">working_index</span><span class="p">)</span>
                 <span class="c1"># actually load the pipeline</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">editor</span><span class="o">.</span><span class="n">load_pipeline</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">setTabText</span><span class="p">(</span><span class="n">working_index</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">update_scans_list</span><span class="p">()</span>
@@ -1556,7 +1605,7 @@
 <div class="viewcode-block" id="PipelineEditorTabs.load_pipeline_parameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.load_pipeline_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">load_pipeline_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load parameters to the pipeline of the current editor&quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">load_pipeline_parameters</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">load_pipeline_parameters</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.new_tab"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.new_tab">[docs]</a>    <span class="k">def</span> <span class="nf">new_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new tab and a new editor and makes the new tab current.&quot;&quot;&quot;</span>
@@ -1592,7 +1641,9 @@
             <span class="k">return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">insertTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p_e</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_tab_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_tab_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.open_filter"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.open_filter">[docs]</a>    <span class="k">def</span> <span class="nf">open_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open a filter widget.</span>
@@ -1784,12 +1835,14 @@
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s2">&quot;nodes&quot;</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="n">node_name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                        <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                            <span class="k">if</span> <span class="n">plug_name</span> <span class="o">==</span> <span class="s2">&quot;database_scans&quot;</span><span class="p">:</span>
-                                <span class="n">node</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="n">plug_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">)</span></div></div>
+            <span class="k">if</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s1">&#39;database_scans&#39;</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;set database_scans:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s1">&#39;database_scans&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="kn">import</span> <span class="nn">traceback</span>
+                    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span></div></div>
+                    <span class="c1"># but continue...</span>
 
 
 <div class="viewcode-block" id="find_filename"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.find_filename">[docs]</a><span class="k">def</span> <span class="nf">find_filename</span><span class="p">(</span><span class="n">paths_list</span><span class="p">,</span> <span class="n">packages_list</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
@@ -1839,8 +1892,8 @@
 
         <span class="k">if</span> <span class="n">pckg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">prev_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pckg</span><span class="p">)</span>
-            <span class="n">dictionary</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">pckg</span><span class="p">]</span>
-        
+            <span class="n">dictionary</span> <span class="o">=</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pckg</span><span class="p">,</span> <span class="p">{})</span>
+
     <span class="c1"># new_paths is a list containing the packages to the desired module</span>
     <span class="n">new_paths</span> <span class="o">=</span> <span class="n">prev_paths</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>

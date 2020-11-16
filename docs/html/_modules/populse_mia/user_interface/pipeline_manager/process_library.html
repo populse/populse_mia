@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -2317,8 +2317,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="n">node_structure_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">DictionaryTreeModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">expandAll</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">)</span></div>
+        <span class="c1"># there are too many processes in nipype interfaces, opening</span>
+        <span class="c1"># all is untractable.</span>
+        <span class="c1">#self.expandAll()</span>
 
 <div class="viewcode-block" id="ProcessLibrary.mousePressEvent"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Event when the mouse is pressed.&quot;&quot;&quot;</span>
@@ -2426,6 +2428,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span><span class="n">setDragEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span><span class="n">SingleSelection</span><span class="p">)</span>
+        <span class="c1"># we can&#39;t leave all trees open because nipype contains far too many</span>
+        <span class="c1"># processes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span><span class="n">collapseAll</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span><span class="n">expandToDepth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># # Push button to call the package library</span>
         <span class="c1"># push_button_pkg_lib = QPushButton()</span>

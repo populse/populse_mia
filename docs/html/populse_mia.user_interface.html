@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface package &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface package &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -64,7 +64,7 @@ definition, as well as pop ups.</p>
 <li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#module-populse_mia.user_interface.pipeline_manager.iteration_table">populse_mia.user_interface.pipeline_manager.iteration_table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#module-populse_mia.user_interface.pipeline_manager.node_controller">populse_mia.user_interface.pipeline_manager.node_controller module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#module-populse_mia.user_interface.pipeline_manager.pipeline_editor">populse_mia.user_interface.pipeline_manager.pipeline_editor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#module-populse_mia.user_interface.pipeline_manager.pipeline_manager_tab">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse-mia-user-interface-pipeline-manager-pipeline-manager-tab-module">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#module-populse_mia.user_interface.pipeline_manager.process_library">populse_mia.user_interface.pipeline_manager.process_library module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#module-populse_mia.user_interface.pipeline_manager.process_mia">populse_mia.user_interface.pipeline_manager.process_mia module</a></li>
 </ul>
@@ -85,285 +85,8 @@ definition, as well as pop ups.</p>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-populse_mia.user_interface.main_window">
-<span id="populse-mia-user-interface-main-window-module"></span><h2>populse_mia.user_interface.main_window module<a class="headerlink" href="#module-populse_mia.user_interface.main_window" title="Permalink to this headline">¶</a></h2>
-<p>Module to define main window appearance, functions and settings.</p>
-<p>Initialize the software appearance and defines interactions with the user.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains</dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Class</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>MainWindow</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="class">
-<dt id="populse_mia.user_interface.main_window.MainWindow">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.main_window.</code><code class="sig-name descname">MainWindow</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">test=False</em>, <em class="sig-param">deleted_projects=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
-<p>Initialize software appearance and define interactions with the user.</p>
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">test=False</em>, <em class="sig-param">deleted_projects=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main window class, initializes the software appearance and defines
-interactions with the user.</p>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">Parameter</dt>
-<dd class="field-odd"><ul class="simple">
-<li><dl class="field-list simple">
-<dt class="field-odd">project</dt>
-<dd class="field-odd"><p>current project in the software</p>
-</dd>
-</dl>
-</li>
-<li><dl class="field-list simple">
-<dt class="field-odd">test</dt>
-<dd class="field-odd"><p>boolean if the widget is launched from unit tests
-or not</p>
-</dd>
-</dl>
-</li>
-<li><dl class="field-list simple">
-<dt class="field-odd">deleted_projects</dt>
-<dd class="field-odd"><p>projects that have been deleted</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</div></blockquote>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.add_clinical_tags">
-<code class="sig-name descname">add_clinical_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.add_clinical_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.add_clinical_tags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the clinical tags to the database and the data browser</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.check_unsaved_modifications">
-<code class="sig-name descname">check_unsaved_modifications</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.check_unsaved_modifications"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.check_unsaved_modifications" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if there are differences between the current project and the
-database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean. True if there are unsaved modifications,
-False otherwise</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.closeEvent">
-<code class="sig-name descname">closeEvent</code><span class="sig-paren">(</span><em class="sig-param">event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.closeEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.closeEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override the QWidget closing event to check if there are unsaved
-modifications</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>event</strong> – closing event</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.create_project_pop_up">
-<code class="sig-name descname">create_project_pop_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.create_project_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.create_project_pop_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new project.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.create_tabs">
-<code class="sig-name descname">create_tabs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.create_tabs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.create_tabs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the tabs and initializes the DataBrowser and PipelineManager
-classes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.create_view_actions">
-<code class="sig-name descname">create_view_actions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.create_view_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.create_view_actions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the actions and their shortcuts in each menu</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.create_view_menus">
-<code class="sig-name descname">create_view_menus</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.create_view_menus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.create_view_menus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the menu-bar view.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.create_view_window">
-<code class="sig-name descname">create_view_window</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.create_view_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.create_view_window" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the main window view.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.credits">
-<code class="sig-name descname">credits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.credits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.credits" title="Permalink to this definition">¶</a></dt>
-<dd><p>“Open the credits in a web browser.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.delete_project">
-<code class="sig-name descname">delete_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.delete_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.delete_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a pop-up to open a project and updates the recent projects.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.documentation">
-<em class="property">static </em><code class="sig-name descname">documentation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.documentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.documentation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open the documentation in a web browser.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.import_data">
-<code class="sig-name descname">import_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.import_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.import_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call the import software (MRI File Manager), reads the imported
-files and loads them into the database.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.install_processes_pop_up">
-<code class="sig-name descname">install_processes_pop_up</code><span class="sig-paren">(</span><em class="sig-param">folder=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.install_processes_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.install_processes_pop_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open the install processes pop-up.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>folder</strong> – boolean, True if installing from a folder</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.open_project_pop_up">
-<code class="sig-name descname">open_project_pop_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.open_project_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.open_project_pop_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a pop-up to open a project and updates the recent projects.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.open_recent_project">
-<code class="sig-name descname">open_recent_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.open_recent_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.open_recent_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a recent project.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.package_library_pop_up">
-<code class="sig-name descname">package_library_pop_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.package_library_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.package_library_pop_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open the package library pop-up</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.project_properties_pop_up">
-<code class="sig-name descname">project_properties_pop_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.project_properties_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.project_properties_pop_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open the project properties pop-up</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.redo">
-<code class="sig-name descname">redo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.redo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Redo the last action made by the user.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.remove_raw_files_useless">
-<code class="sig-name descname">remove_raw_files_useless</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.remove_raw_files_useless"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.remove_raw_files_useless" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the useless raw files of the current project</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.save">
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save either the current project or the current pipeline</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.saveChoice">
-<code class="sig-name descname">saveChoice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.saveChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.saveChoice" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the project needs to be ‘saved as’ or just ‘saved’.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.save_as">
-<code class="sig-name descname">save_as</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.save_as"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.save_as" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save either the current project or the current pipeline under a new
-name.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.save_project_as">
-<code class="sig-name descname">save_project_as</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.save_project_as"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.save_project_as" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a pop-up to save the current project as</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.see_all_projects">
-<code class="sig-name descname">see_all_projects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.see_all_projects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.see_all_projects" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a pop-up to show the recent projects.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.software_preferences_pop_up">
-<code class="sig-name descname">software_preferences_pop_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.software_preferences_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.software_preferences_pop_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open the MIA2 preferences pop-up.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.switch_project">
-<code class="sig-name descname">switch_project</code><span class="sig-paren">(</span><em class="sig-param">file_path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.switch_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.switch_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if it’s possible to open the selected project
-and quit the current one.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> – raw file_path</p></li>
-<li><p><strong>name</strong> – project name</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Boolean</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.tab_changed">
-<code class="sig-name descname">tab_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.tab_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.tab_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the window when the tab is changed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.undo">
-<code class="sig-name descname">undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.undo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Undo the last action made by the user.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.update_project">
-<code class="sig-name descname">update_project</code><span class="sig-paren">(</span><em class="sig-param">file_path</em>, <em class="sig-param">call_update_table=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.update_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.update_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the project once the database has been updated.
-Update the database, the window title and the recent and saved
-projects menus.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> – File name of the new project</p></li>
-<li><p><strong>call_update_table</strong> – boolean, True if we need to call</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.main_window.MainWindow.update_recent_projects_actions">
-<code class="sig-name descname">update_recent_projects_actions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.update_recent_projects_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.update_recent_projects_actions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the list of recent projects.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="populse-mia-user-interface-main-window-module">
+<h2>populse_mia.user_interface.main_window module<a class="headerlink" href="#populse-mia-user-interface-main-window-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-populse_mia.user_interface.pop_ups">
 <span id="populse-mia-user-interface-pop-ups-module"></span><h2>populse_mia.user_interface.pop_ups module<a class="headerlink" href="#module-populse_mia.user_interface.pop_ups" title="Permalink to this headline">¶</a></h2>
@@ -1073,6 +796,11 @@ values.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config">
+<code class="sig-name descname">edit_capsul_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences.edit_capsul_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.edit_config_file">

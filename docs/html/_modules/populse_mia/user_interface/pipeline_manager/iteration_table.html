@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.iteration_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -63,7 +63,7 @@
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
 <span class="kn">from</span> <span class="nn">populse_mia.utils.tools</span> <span class="k">import</span> <span class="n">ClickableLabel</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
-
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="n">PopUpSelectIteration</span>
 
 <div class="viewcode-block" id="IterationTable"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable">[docs]</a><span class="k">class</span> <span class="nc">IterationTable</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Widget that handles pipeline iteration.</span>
@@ -84,7 +84,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">iteration_table_updated</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">iteration_table_updated</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="IterationTable.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -133,6 +133,10 @@
         <span class="c1"># QComboBox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span> <span class="o">=</span> <span class="n">QComboBox</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_table</span><span class="p">)</span>
+
+        <span class="c1"># filter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Filter&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_values</span><span class="p">)</span>
 
         <span class="c1"># QTableWidget</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table</span> <span class="o">=</span> <span class="n">QTableWidget</span><span class="p">()</span>
@@ -195,24 +199,15 @@
 
 <div class="viewcode-block" id="IterationTable.emit_iteration_table_updated"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.emit_iteration_table_updated">[docs]</a>    <span class="k">def</span> <span class="nf">emit_iteration_table_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Emit a signal when the iteration scans have been updated.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span>\
-                <span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span>\
-                <span class="n">init_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span>\
-                <span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span> \
-                <span class="n">init_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">checkState</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;scans&#39;</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iteration_scans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iteration_scans</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">all_iterations_scans</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">,</span>
+                                                  <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="IterationTable.fill_values"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.fill_values">[docs]</a>    <span class="k">def</span> <span class="nf">fill_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -257,7 +252,10 @@
 
         <span class="n">third_v_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">third_v_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag_push_button</span><span class="p">)</span>
-        <span class="n">third_v_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="p">)</span>
+        <span class="n">hbox</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">hbox</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="p">)</span>
+        <span class="n">hbox</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_button</span><span class="p">)</span>
+        <span class="n">third_v_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox</span><span class="p">)</span>
 
         <span class="n">top_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">top_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">first_v_layout</span><span class="p">)</span>
@@ -301,6 +299,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ui_select</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_iterated_tag</span><span class="p">(</span><span class="n">ui_select</span><span class="o">.</span><span class="n">selected_tag</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IterationTable.filter_values"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.filter_values">[docs]</a>    <span class="k">def</span> <span class="nf">filter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">iterated_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span>
+        <span class="n">tag_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_tag_values</span>
+        <span class="n">ui_iteration</span> <span class="o">=</span> <span class="n">PopUpSelectIteration</span><span class="p">(</span><span class="n">iterated_tag</span><span class="p">,</span> <span class="n">tag_values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ui_iteration</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tag_values_list</span> <span class="o">=</span> <span class="n">ui_iteration</span><span class="o">.</span><span class="n">final_values</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_values_list</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_table</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="IterationTable.select_visualized_tag"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.select_visualized_tag">[docs]</a>    <span class="k">def</span> <span class="nf">select_visualized_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open a pop-up to let the user select which tag to visualize in the</span>
@@ -348,6 +358,8 @@
                                                        <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag_value</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_values_list</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tag_values_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tag_value</span><span class="p">))</span>
+        <span class="c1"># duplucate the values list to have the initial, unfiltered, one</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_tag_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_values_list</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_values_list</span><span class="p">)</span>
@@ -407,8 +419,23 @@
                     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
+        <span class="n">all_iterations_scans</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">tag_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_values_list</span><span class="p">:</span>
+            <span class="c1"># Searching the database scans that correspond to iterated tag value</span>
+            <span class="n">filter_query</span> <span class="o">=</span> <span class="s2">&quot;({&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;} &quot;</span> <span class="o">+</span> <span class="s2">&quot;==&quot;</span> \
+                  <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag_value</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">)&quot;</span>
+            <span class="n">scans_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
+                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">filter_query</span><span class="p">)</span>
+            <span class="n">scans_res</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">scans_list</span><span class="p">]</span>
+            <span class="n">all_iterations_scans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span><span class="n">scans_res</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_iterations_scans</span> <span class="o">=</span> <span class="n">all_iterations_scans</span>
+        <span class="c1">#self.scans = True</span>
+
         <span class="c1"># This will change the scans list in the current Pipeline Manager tab</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iteration_scans</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iteration_scans</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">all_iterations_scans</span><span class="p">)</span></div></div>
 </pre></div>
 
       </div>

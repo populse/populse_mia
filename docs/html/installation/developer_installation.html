@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Populse_mia’s developer installation &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>Populse_mia’s developer installation &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_mia’s developer installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -147,6 +147,53 @@
 </div>
 <ul class="simple">
 <li><p>On first launch after a developer installation, please <a class="reference external" href="../documentation/preferences.html">refer to the preferences page</a> to configure populse_mia.</p></li>
+</ul>
+</div>
+<div class="section" id="installation-in-a-virtual-environment-the-sources-only-tested-on-linux-and-macos">
+<h2>Installation in a <a class="reference external" href="https://www.geeksforgeeks.org/creating-python-virtual-environment-windows-linux/">virtual environment</a> the sources (only tested on linux and macos)<a class="headerlink" href="#installation-in-a-virtual-environment-the-sources-only-tested-on-linux-and-macos" title="Permalink to this headline">¶</a></h2>
+<p>The different steps are noted such that they are independent. Obviously the <strong>workon</strong> command is only necessary once in a terminal session if several of the steps are performed. All the code will reside in a directory called <strong>populse_mia_dir</strong>, and the virtual environment in this example is <strong>populse_mia_env</strong>. Both can be adapted at will (and possibly have the same name if desired).</p>
+<ul>
+<li><p>Prepare virtual environment and working directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkvirtualenv</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> <span class="o">--</span><span class="n">python</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python3</span> <span class="n">populse_mia_env</span>
+<span class="n">mkdir</span> <span class="o">~/</span><span class="n">my_code_directory</span><span class="o">/</span><span class="n">populse_mia_dir</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install populse_mia</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">my_code_directory</span><span class="o">/</span><span class="n">populse_mia_dir</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="n">populse_mia</span>
+<span class="n">cd</span> <span class="n">populse_mia</span>
+<span class="n">workon</span> <span class="n">populse_mia_env</span>
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">prefix</span> <span class="o">~/.</span><span class="n">virtualenvs</span><span class="o">/</span><span class="n">populse_mia_env</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install mia_processes</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">my_code_directory</span><span class="o">/</span><span class="n">populse_mia_dir</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">mia_processes</span><span class="o">.</span><span class="n">git</span> <span class="n">mia_processes</span>
+<span class="n">cd</span> <span class="n">mia_processes</span>
+<span class="n">workon</span> <span class="n">populse_mia_env</span>
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">prefix</span> <span class="o">~/.</span><span class="n">virtualenvs</span><span class="o">/</span><span class="n">populse_mia_env</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install capsul</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">my_code_directory</span><span class="o">/</span><span class="n">populse_mia_dir</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">populse</span><span class="o">/</span><span class="n">capsul</span><span class="o">.</span><span class="n">git</span> <span class="n">capsul</span>
+<span class="n">cd</span> <span class="n">capsul</span>
+<span class="n">workon</span> <span class="n">populse_mia_env</span>
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">prefix</span> <span class="o">~/.</span><span class="n">virtualenvs</span><span class="o">/</span><span class="n">populse_mia_env</span>
+</pre></div>
+</div>
+</li>
+<li><p>And so on according to the packages you want to install in the virtual environment (soma-base, soma-worflow, populse_db, mri_conv, etc.)</p></li>
+<li><p>Run populse_mia</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">my_code_directory</span><span class="o">/</span><span class="n">populse_mia_dir</span><span class="o">/</span><span class="n">populse_mia</span>
+<span class="n">workon</span> <span class="n">populse_mia_env</span>
+<span class="n">python3</span> <span class="n">python</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">/</span><span class="n">main</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
 </ul>
 </div>
 </div>

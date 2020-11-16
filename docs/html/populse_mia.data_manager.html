@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.data_manager package &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.data_manager package &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -195,30 +195,20 @@ populse_db and some of its methods</p>
 </dl>
 <dl class="class">
 <dt id="populse_mia.data_manager.database_mia.DatabaseMIA">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.data_manager.database_mia.</code><code class="sig-name descname">DatabaseMIA</code><span class="sig-paren">(</span><em class="sig-param">string_engine</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.data_manager.database_mia.</code><code class="sig-name descname">DatabaseMIA</code><span class="sig-paren">(</span><em class="sig-param">database_url</em>, <em class="sig-param">caches=None</em>, <em class="sig-param">list_tables=None</em>, <em class="sig-param">query_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">populse_db.database.Database</span></code></p>
 <p>Class overriding the default behavior of populse_db</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string_engine</strong> – Path of the new database file</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="populse_mia.data_manager.database_mia.DatabaseMIA.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">string_engine</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialization of the DatabaseMIA class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string_engine</strong> – Path of the new database file</p>
-</dd>
-</dl>
+<dl class="attribute">
+<dt id="populse_mia.data_manager.database_mia.DatabaseMIA.database_session_class">
+<code class="sig-name descname">database_session_class</code><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.database_session_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA" title="populse_mia.data_manager.database_mia.DatabaseSessionMIA"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatabaseSessionMIA</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.data_manager.database_mia.</code><code class="sig-name descname">DatabaseSessionMIA</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.data_manager.database_mia.</code><code class="sig-name descname">DatabaseSessionMIA</code><span class="sig-paren">(</span><em class="sig-param">database</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">populse_db.database.DatabaseSession</span></code></p>
 <p>Class overriding the database session of populse_db</p>
 <dl class="method">
@@ -268,6 +258,11 @@ default</p></li>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field_attributes_collection">
+<code class="sig-name descname">add_field_attributes_collection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.add_field_attributes_collection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field_attributes_collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_fields">
 <code class="sig-name descname">add_fields</code><span class="sig-paren">(</span><em class="sig-param">fields</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.add_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the list of fields.</p>
@@ -280,23 +275,70 @@ default</p></li>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_field">
+<code class="sig-name descname">get_field</code><span class="sig-paren">(</span><em class="sig-param">collection</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.get_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the field row, given a field name and a collection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collection</strong> – Document collection (str, must be existing)</p></li>
+<li><p><strong>name</strong> – Field name (str, must be existing)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The field row if the field exists, None otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_fields">
+<code class="sig-name descname">get_fields</code><span class="sig-paren">(</span><em class="sig-param">collection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.get_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the list of all fields rows, given a collection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>collection</strong> – Fields collection (str, must be existing)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of all fields rows of the collection if it exists, None otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_shown_tags">
 <code class="sig-name descname">get_shown_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.get_shown_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_shown_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Give the list of visible tags.</p>
+<p>the list of visible tags</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA.remove_field">
+<code class="sig-name descname">remove_field</code><span class="sig-paren">(</span><em class="sig-param">collection</em>, <em class="sig-param">fields</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.remove_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.remove_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a field in the collection</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the list of visible tags</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collection</strong> – Field collection (str, must be existing)</p></li>
+<li><p><strong>field</strong> – Field name (str, must be existing), or list of fields (list of str, must all be existing)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<li><p>If the collection does not exist</p></li>
+<li><p>If the field does not exist</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.data_manager.database_mia.DatabaseSessionMIA.set_shown_tags">
-<code class="sig-name descname">set_shown_tags</code><span class="sig-paren">(</span><em class="sig-param">field_showed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.set_shown_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.set_shown_tags" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_shown_tags</code><span class="sig-paren">(</span><em class="sig-param">fields_shown</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/database_mia.html#DatabaseSessionMIA.set_shown_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseSessionMIA.set_shown_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the list of visible tags.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>field_showed</strong> – list of visible tags</p>
+<dl class="simple">
+<dt>fields_shown: list</dt><dd><p>list of visible tags</p>
 </dd>
 </dl>
 </dd></dl>

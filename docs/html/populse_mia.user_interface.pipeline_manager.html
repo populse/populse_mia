@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -107,6 +107,11 @@
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.filter_values">
+<code class="sig-name descname">filter_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.filter_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.filter_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.iteration_table_updated">
 <code class="sig-name descname">iteration_table_updated</code><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.iteration_table_updated" title="Permalink to this definition">¶</a></dt>
@@ -181,6 +186,115 @@ iteration table.</p>
 </dl>
 </dd>
 </dl>
+<dl class="class">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter">
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.node_controller.</code><code class="sig-name descname">AttributesFilter</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">scans_list</em>, <em class="sig-param">process</em>, <em class="sig-param">node_name</em>, <em class="sig-param">plug_name</em>, <em class="sig-param">node_controller</em>, <em class="sig-param">main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#AttributesFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter" title="populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter</span></code></a></p>
+<p>Filter widget used on an attributes set for completion.</p>
+<p>The widget displays a browser with the selected files of the database,
+a rapid search and an advanced search to filter these files. Once the
+filtering is done, the result (as a list of files) is set to the plug.</p>
+<dl class="attribute">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.attributes_selected">
+<code class="sig-name descname">attributes_selected</code><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.attributes_selected" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked">
+<code class="sig-name descname">ok_clicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#AttributesFilter.ok_clicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the new value to the node plug and closes the widget.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController">
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.node_controller.</code><code class="sig-name descname">CapsulNodeController</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">scan_list</em>, <em class="sig-param">pipeline_manager_tab</em>, <em class="sig-param">main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QWidget</span></code></p>
+<p>Implementation of NodeController using Capsul AttributedProcessWidget
+widget</p>
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">scan_list</em>, <em class="sig-param">pipeline_manager_tab</em>, <em class="sig-param">main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.display_parameters">
+<code class="sig-name descname">display_parameters</code><span class="sig-paren">(</span><em class="sig-param">node_name</em>, <em class="sig-param">process</em>, <em class="sig-param">pipeline</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.display_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.display_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display the parameters of the selected node.</p>
+<p>The node parameters are read and line labels/line edits/push buttons
+are created for each of them. This methods consists mainly in widget
+and layout organization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_name</strong> – name of the node</p></li>
+<li><p><strong>process</strong> – process of the node</p></li>
+<li><p><strong>pipeline</strong> – current pipeline</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.filter_attributes">
+<code class="sig-name descname">filter_attributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.filter_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.filter_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a filter widget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_name</strong> – name of the node</p></li>
+<li><p><strong>plug_name</strong> – name of the plug</p></li>
+<li><p><strong>parameters</strong> – tuple containing the index of the plug, the current
+pipeline instance and the type of the plug value</p></li>
+<li><p><strong>process</strong> – process of the node</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter">
+<code class="sig-name descname">update_attributes_from_filter</code><span class="sig-paren">(</span><em class="sig-param">attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_attributes_from_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">
+<code class="sig-name descname">update_node_name</code><span class="sig-paren">(</span><em class="sig-param">pipeline</em>, <em class="sig-param">new_node_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the name of the selected node and updates the pipeline.</p>
+<p>Because the nodes are stored in a dictionary, we have to create
+a new node that has the same traits as the selected one and create
+new links that are the same than the selected node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline</strong> – current pipeline</p></li>
+<li><p><strong>new_node_name</strong> – new node name (is None except when this method</p></li>
+</ul>
+</dd>
+</dl>
+<p>is called from an undo/redo)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_parameters">
+<code class="sig-name descname">update_parameters</code><span class="sig-paren">(</span><em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the parameters values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>process</strong> – process of the node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.value_changed">
+<code class="sig-name descname">value_changed</code><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.value_changed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget">
 <em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.node_controller.</code><code class="sig-name descname">FilterWidget</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">node_name</em>, <em class="sig-param">node</em>, <em class="sig-param">main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#FilterWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget" title="Permalink to this definition">¶</a></dt>
@@ -838,6 +952,13 @@ redo</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_capsul_engine">
+<code class="sig-name descname">get_capsul_engine</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditorTabs.get_capsul_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_capsul_engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a CapsulEngine object from the edited pipeline, and set it up from
+MIA config object</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_current_editor">
 <code class="sig-name descname">get_current_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditorTabs.get_current_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_current_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the instance of the current editor.</p>
@@ -1068,6 +1189,11 @@ nodes.</p>
 <code class="sig-name descname">pipeline_saved</code><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.pipeline_saved" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.process_clicked">
+<code class="sig-name descname">process_clicked</code><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.process_clicked" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.reset_pipeline">
 <code class="sig-name descname">reset_pipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditorTabs.reset_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.reset_pipeline" title="Permalink to this definition">¶</a></dt>
@@ -1229,313 +1355,8 @@ nodes.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-populse_mia.user_interface.pipeline_manager.pipeline_manager_tab">
-<span id="populse-mia-user-interface-pipeline-manager-pipeline-manager-tab-module"></span><h2>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab module<a class="headerlink" href="#module-populse_mia.user_interface.pipeline_manager.pipeline_manager_tab" title="Permalink to this headline">¶</a></h2>
-<p>Module to define pipeline manager tab appearance, settings and methods.</p>
-<dl class="simple">
-<dt>Contains:</dt><dd><dl class="simple">
-<dt>Class:</dt><dd><ul class="simple">
-<li><p>PipelineManagerTab</p></li>
-<li><p>RunProgress</p></li>
-<li><p>RunWorker</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="class">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</code><code class="sig-name descname">PipelineManagerTab</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">scan_list</em>, <em class="sig-param">main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QWidget</span></code></p>
-<p>Widget that handles the Pipeline Manager tab.</p>
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">scan_list</em>, <em class="sig-param">main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialization of the Pipeline Manager tab</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – current project in the software</p></li>
-<li><p><strong>scan_list</strong> – list of the selected database files</p></li>
-<li><p><strong>main_window</strong> – main window of the software</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_plug_value_to_database">
-<code class="sig-name descname">add_plug_value_to_database</code><span class="sig-paren">(</span><em class="sig-param">p_value</em>, <em class="sig-param">brick</em>, <em class="sig-param">node_name</em>, <em class="sig-param">plug_name</em>, <em class="sig-param">full_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.add_plug_value_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_plug_value_to_database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the plug value to the database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>p_value</strong> – plug value, a file name or a list of file names</p></li>
-<li><p><strong>brick</strong> – brick id</p></li>
-<li><p><strong>node_name</strong> – name of the node</p></li>
-<li><p><strong>plug_name</strong> – name of the plug</p></li>
-<li><p><strong>full_name</strong> – full name of the node, including parent brick(s).
-If there is no parent brick, full_name = node_name.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_process_to_preview">
-<code class="sig-name descname">add_process_to_preview</code><span class="sig-paren">(</span><em class="sig-param">class_process</em>, <em class="sig-param">node_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.add_process_to_preview"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_process_to_preview" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a process to the pipeline.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>class_process</strong> – process class’s name (str)</p></li>
-<li><p><strong>node_name</strong> – name of the corresponding node
-(using when undo/redo) (str)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.controller_value_changed">
-<code class="sig-name descname">controller_value_changed</code><span class="sig-paren">(</span><em class="sig-param">signal_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.controller_value_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.controller_value_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update history when a pipeline node is changed</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>signal_list</strong> – list of the needed parameters to update history</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.displayNodeParameters">
-<code class="sig-name descname">displayNodeParameters</code><span class="sig-paren">(</span><em class="sig-param">node_name</em>, <em class="sig-param">process</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.displayNodeParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.displayNodeParameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Display the node controller when a node is clicked</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – name of the node to display parameters</p></li>
-<li><p><strong>process</strong> – process instance of the corresponding node</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.find_process">
-<code class="sig-name descname">find_process</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.find_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.find_process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the dropped process in the system’s paths</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> – class’s path (e.g. “nipype.interfaces.spm.Smooth”) (str)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.init_pipeline">
-<code class="sig-name descname">init_pipeline</code><span class="sig-paren">(</span><em class="sig-param">pipeline=None</em>, <em class="sig-param">pipeline_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.init_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.init_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the current pipeline of the pipeline editor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline</strong> – not None if this method call a sub-pipeline</p></li>
-<li><p><strong>pipeline_name</strong> – name of the parent pipeline</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clean previous initialization then initialize the current
-pipeline.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.item_library_clicked">
-<code class="sig-name descname">item_library_clicked</code><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.item_library_clicked" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.layout_view">
-<code class="sig-name descname">layout_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.layout_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.layout_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize layout for the pipeline manager tab</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadParameters">
-<code class="sig-name descname">loadParameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.loadParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadParameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load pipeline parameters to the current pipeline of the pipeline editor</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadPipeline">
-<code class="sig-name descname">loadPipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.loadPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadPipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a pipeline to the pipeline editor</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.redo">
-<code class="sig-name descname">redo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.redo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Redo the last undone action on the current pipeline editor</p>
-<dl class="simple">
-<dt>Actions that can be redone:</dt><dd><ul class="simple">
-<li><p>add_process</p></li>
-<li><p>delete_process</p></li>
-<li><p>export_plug</p></li>
-<li><p>export_plugs</p></li>
-<li><p>remove_plug</p></li>
-<li><p>update_node_name</p></li>
-<li><p>update_plug_value</p></li>
-<li><p>add_link</p></li>
-<li><p>delete_link</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.runPipeline">
-<code class="sig-name descname">runPipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.runPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.runPipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the current pipeline of the pipeline editor.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.saveParameters">
-<code class="sig-name descname">saveParameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.saveParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.saveParameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the pipeline parameters of the the current pipeline of the
-pipeline editor</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline">
-<code class="sig-name descname">savePipeline</code><span class="sig-paren">(</span><em class="sig-param">uncheck=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.savePipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the current pipeline of the pipeline editor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>uncheck</strong> – a flag to warn (False) or not (True) if a pipeline is
-going to be overwritten during saving operation</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipelineAs">
-<code class="sig-name descname">savePipelineAs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.savePipelineAs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipelineAs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the current pipeline of the pipeline editor under another name</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.undo">
-<code class="sig-name descname">undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.undo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Undo the last action made on the current pipeline editor</p>
-<dl class="simple">
-<dt>Actions that can be undone:</dt><dd><ul class="simple">
-<li><p>add_process</p></li>
-<li><p>delete_process</p></li>
-<li><p>export_plug</p></li>
-<li><p>export_plugs</p></li>
-<li><p>remove_plug</p></li>
-<li><p>update_node_name</p></li>
-<li><p>update_plug_value</p></li>
-<li><p>add_link</p></li>
-<li><p>delete_link</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.updateProcessLibrary">
-<code class="sig-name descname">updateProcessLibrary</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.updateProcessLibrary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.updateProcessLibrary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the library of processes when a pipeline is saved</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> – file name of the pipeline that has been saved</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project">
-<code class="sig-name descname">update_project</code><span class="sig-paren">(</span><em class="sig-param">project</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the project attribute of several objects</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>project</strong> – current project in the software</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_scans_list">
-<code class="sig-name descname">update_scans_list</code><span class="sig-paren">(</span><em class="sig-param">iteration_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_scans_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_scans_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the user-selected list of scans</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>iteration_list</strong> – current list of scans in the iteration table</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode">
-<code class="sig-name descname">update_user_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_user_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the visibility of widgets/actions depending of the chosen mode</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</code><code class="sig-name descname">RunProgress</code><span class="sig-paren">(</span><em class="sig-param">diagram_view</em>, <em class="sig-param">settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunProgress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QProgressDialog</span></code></p>
-<p>Create the pipeline progress bar and launch the thread.</p>
-<p>The progress bar is closed when the thread finishes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>diagram_view</strong> – A pipelineEditorTabs</p></li>
-<li><p><strong>settings</strong> – dictionary of settings when the pipeline is iterated</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">diagram_view</em>, <em class="sig-param">settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunProgress.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</code><code class="sig-name descname">RunWorker</code><span class="sig-paren">(</span><em class="sig-param">diagram_view</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtCore.QThread</span></code></p>
-<p>Run the pipeline</p>
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">diagram_view</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunWorker.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunWorker.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.values">
-<code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</code><code class="sig-name descname">values</code><span class="sig-paren">(</span><em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<div class="section" id="populse-mia-user-interface-pipeline-manager-pipeline-manager-tab-module">
+<h2>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab module<a class="headerlink" href="#populse-mia-user-interface-pipeline-manager-pipeline-manager-tab-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-populse_mia.user_interface.pipeline_manager.process_library">
 <span id="populse-mia-user-interface-pipeline-manager-process-library-module"></span><h2>populse_mia.user_interface.pipeline_manager.process_library module<a class="headerlink" href="#module-populse_mia.user_interface.pipeline_manager.process_library" title="Permalink to this headline">¶</a></h2>
@@ -2445,6 +2266,69 @@ are empty.</p>
 </dd>
 </dl>
 <dl class="class">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine">
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">MIAProcessCompletionEngine</code><span class="sig-paren">(</span><em class="sig-param">process</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">capsul.attributes.completion_engine.ProcessCompletionEngine</span></code></p>
+<p>A specialized <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessCompletionEngine</span></code> for
+<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessMIA</span></code></a> instances completion.</p>
+<p>Such processes use their method <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ProcessMIA.list_outputs()</span></code></a> to perform
+completion from given input parameters. It is currently not based on
+attributes like in capsul completion.</p>
+<p>Processes also get their matlab / SPM settings filled in from the config if
+they need them.</p>
+<p>If the process use it and it is in the study config, their “project”
+parameter is also filled in, as well as the “output_directory” parameter.</p>
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">
+<code class="sig-name descname">complete_parameters</code><span class="sig-paren">(</span><em class="sig-param">process_inputs={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.complete_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Completes file parameters from given inputs parameters, which may
+include both “regular” process parameters (file names) and attributes.</p>
+<dl class="simple">
+<dt>process_inputs: dict (optional)</dt><dd><p>parameters to be set on the process. It may include “regular”
+process parameters, and attributes used for completion. Attributes
+should be in a sub-dictionary under the key “capsul_attributes”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory">
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">MIAProcessCompletionEngineFactory</code><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngineFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">capsul.attributes.completion_engine.ProcessCompletionEngineFactory</span></code></p>
+<p>Completion engine factory specialization for ProcessMIA process instances.
+Its <code class="docutils literal notranslate"><span class="pre">factory_id</span></code> is “mia_completion”.</p>
+<p>This factory is activated in the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">StudyConfig</span></code> instance by setting
+2 parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">study_config</span><span class="o">.</span><span class="n">attributes_schema_paths</span> <span class="o">=</span> <span class="n">study_config</span><span class="o">.</span><span class="n">attributes_schema_paths</span>             <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;populse_mia.user_interface.pipeline_manager.process_mia&#39;</span><span class="p">]</span>
+<span class="n">study_config</span><span class="o">.</span><span class="n">process_completion</span> <span class="o">=</span>  <span class="s1">&#39;mia_completion&#39;</span>
+</pre></div>
+</div>
+<p>Once this is done, the completion system will work for all MIA processes.</p>
+<dl class="attribute">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.factory_id">
+<code class="sig-name descname">factory_id</code><em class="property"> = 'mia_completion'</em><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.factory_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.get_completion_engine">
+<code class="sig-name descname">get_completion_engine</code><span class="sig-paren">(</span><em class="sig-param">process</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngineFactory.get_completion_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.get_completion_engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for ProcessCompletionEngine: get an ProcessCompletionEngine
+instance for a process in the context of a given StudyConfig.</p>
+<p>The study_config should specify which completion system(s) is (are)
+used (FOM, …)
+If nothing is configured, a ProcessCompletionEngine base instance will
+be returned. It will not be able to perform completion at all, but will
+conform to the API.</p>
+<p>The base class implementation returns a base ProcessCompletionEngine
+instance, which is quite incomplete.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA">
 <em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">ProcessMIA</code><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">capsul.process.process.Process</span></code></p>
@@ -2543,6 +2427,11 @@ are empty.</p>
 <dd><p>Set the Matlab’s config parameters when a Nipype process is used.</p>
 <p>Called in bricks.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.relax_nipype_exists_constraints">
+<code class="sig-name descname">relax_nipype_exists_constraints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.relax_nipype_exists_constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.relax_nipype_exists_constraints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.remove_brick_output">

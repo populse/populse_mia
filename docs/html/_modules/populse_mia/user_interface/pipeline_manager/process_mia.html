@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -51,9 +51,12 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="k">import</span> <span class="n">Undefined</span>
 <span class="kn">from</span> <span class="nn">traits.trait_handlers</span> <span class="k">import</span> <span class="n">TraitListObject</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1"># Capsul imports</span>
 <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">Process</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="k">import</span> <span class="n">ProcessNode</span>
+<span class="kn">from</span> <span class="nn">soma.controller.trait_utils</span> <span class="k">import</span> <span class="n">relax_exists_constraint</span>
 
 <span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="p">(</span><span class="n">BRICK_EXEC</span><span class="p">,</span> <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
@@ -94,22 +97,6 @@
 <div class="viewcode-block" id="ProcessMIA.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ProcessMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
         <span class="c1"># self.filters = {}  # use if the filters are set on plugs</span>
-
-    <span class="k">def</span> <span class="nf">_after_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_process_result</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method called after the process being run.</span>
-
-<span class="sd">        :param run_process_result: Result of the run process</span>
-<span class="sd">        :return: the result of the run process</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">manage_brick_after_run</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">run_process_result</span>
-
-    <span class="k">def</span> <span class="nf">_before_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method called before running the process.</span>
-
-<span class="sd">        Add the exec status Not Done and exec time to the process history</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">manage_brick_before_run</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ProcessMIA.get_brick_to_update"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.get_brick_to_update">[docs]</a>    <span class="k">def</span> <span class="nf">get_brick_to_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Give the brick to update, given the scan list of bricks.</span>
@@ -160,9 +147,15 @@
                                                       <span class="n">scan</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
+<div class="viewcode-block" id="ProcessMIA.relax_nipype_exists_constraints"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.relax_nipype_exists_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">relax_nipype_exists_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;process&#39;</span><span class="p">):</span>
+            <span class="n">ni_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">inputs</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">ni_inputs</span><span class="o">.</span><span class="n">traits</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">relax_exists_constraint</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="ProcessMIA.list_outputs"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override the outputs of the process.&quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relax_nipype_exists_constraints</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ProcessMIA.manage_brick_after_run"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_after_run">[docs]</a>    <span class="k">def</span> <span class="nf">manage_brick_after_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Manages the brick history after the run (Done status).&quot;&quot;&quot;</span>
@@ -220,7 +213,9 @@
 
 <span class="sd">        Called in bricks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">):</span>
+        <span class="c1"># Note: this is a non-general trick which should probably not be here.</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;inputs&#39;</span><span class="p">)</span> \
+                <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;use_mcr&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">use_mcr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_mcr</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_cmd</span>
@@ -249,6 +244,153 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
                             <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">output_bricks</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span></div></div>
+
+
+<span class="c1"># ---- completion system for Capsul ---</span>
+
+<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">ProcessCompletionEngine</span><span class="p">,</span>
+    <span class="n">ProcessCompletionEngineFactory</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MIAProcessCompletionEngine"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine">[docs]</a><span class="k">class</span> <span class="nc">MIAProcessCompletionEngine</span><span class="p">(</span><span class="n">ProcessCompletionEngine</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A specialized :class:`~cpasul.attributes.completion_engine.ProcessCompletionEngine` for</span>
+<span class="sd">    :class:`ProcessMIA` instances completion.</span>
+
+<span class="sd">    Such processes use their method :meth:`ProcessMIA.list_outputs` to perform</span>
+<span class="sd">    completion from given input parameters. It is currently not based on</span>
+<span class="sd">    attributes like in capsul completion.</span>
+
+<span class="sd">    Processes also get their matlab / SPM settings filled in from the config if</span>
+<span class="sd">    they need them.</span>
+
+<span class="sd">    If the process use it and it is in the study config, their &quot;project&quot;</span>
+<span class="sd">    parameter is also filled in, as well as the &quot;output_directory&quot; parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">complete_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="p">{}):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">process_inputs</span><span class="p">)</span>
+        <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ProcessNode</span><span class="p">):</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span>
+
+            <span class="n">is_plugged</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">plug</span><span class="o">.</span><span class="n">links_to</span><span class="p">)</span>
+                                <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">))</span>
+                                        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_plugged</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># we cannot get this info</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">initResult_dict</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">(</span><span class="n">is_plugged</span><span class="o">=</span><span class="n">is_plugged</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">initResult_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">initResult_dict</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># the process is not really configured</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">initResult_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">for</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">parameter</span> <span class="o">==</span> <span class="s1">&#39;notInDb&#39;</span><span class="p">:</span>
+                <span class="k">continue</span>  <span class="c1"># special non-param</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exception:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param:&#39;</span><span class="p">,</span> <span class="n">pname</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;value:&#39;</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                    <span class="kn">import</span> <span class="nn">traceback</span>
+                    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+
+       <span class="c1"># Test for matlab launch</span>
+        <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s1">&#39;use_mcr&#39;</span><span class="p">):</span>
+
+            <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
+
+            <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">():</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">use_mcr</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">paths</span> \
+                    <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_command</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">():</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">use_mcr</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_command</span><span class="p">()</span>
+
+        <span class="c1"># add &quot;project&quot; attribute if the process is using it</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;get_study_config&#39;</span><span class="p">):</span>
+            <span class="n">study_config</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_study_config</span><span class="p">()</span>
+            <span class="n">project</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">study_config</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">project</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;use_project&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">use_project</span><span class="p">:</span>
+                    <span class="n">process</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span>
+                <span class="c1"># set output_directory</span>
+                <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s1">&#39;output_directory&#39;</span><span class="p">)</span> \
+                        <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">output_directory</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+                    <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
+                                                           <span class="s1">&#39;scripts&#39;</span><span class="p">))</span>
+                    <span class="n">process</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">out_dir</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span></div></div>
+
+
+<div class="viewcode-block" id="MIAProcessCompletionEngineFactory"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory">[docs]</a><span class="k">class</span> <span class="nc">MIAProcessCompletionEngineFactory</span><span class="p">(</span><span class="n">ProcessCompletionEngineFactory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Completion engine factory specialization for ProcessMIA process instances.</span>
+<span class="sd">    Its ``factory_id`` is &quot;mia_completion&quot;.</span>
+
+<span class="sd">    This factory is activated in the</span>
+<span class="sd">    :class:`~capsul.study_config.study_config.StudyConfig` instance by setting</span>
+<span class="sd">    2 parameters::</span>
+
+<span class="sd">        study_config.attributes_schema_paths = study_config.attributes_schema_paths \</span>
+<span class="sd">            + [&#39;populse_mia.user_interface.pipeline_manager.process_mia&#39;]</span>
+<span class="sd">        study_config.process_completion =  &#39;mia_completion&#39;</span>
+
+<span class="sd">    Once this is done, the completion system will work for all MIA processes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">factory_id</span> <span class="o">=</span> <span class="s1">&#39;mia_completion&#39;</span>
+
+<div class="viewcode-block" id="MIAProcessCompletionEngineFactory.get_completion_engine"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.get_completion_engine">[docs]</a>    <span class="k">def</span> <span class="nf">get_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;completion_engine&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">process</span><span class="o">.</span><span class="n">completion_engine</span>
+
+        <span class="n">in_process</span> <span class="o">=</span> <span class="n">process</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">ProcessNode</span><span class="p">):</span>
+            <span class="n">in_process</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">process</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="n">ProcessMIA</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">MIAProcessCompletionEngine</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">engine_factory</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;get_study_config&#39;</span><span class="p">):</span>
+            <span class="n">study_config</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_study_config</span><span class="p">()</span>
+            <span class="n">engine</span> <span class="o">=</span> <span class="n">study_config</span><span class="o">.</span><span class="n">engine</span>
+            <span class="k">if</span> <span class="s1">&#39;capsul.engine.module.attributes&#39;</span> <span class="ow">in</span> <span class="n">engine</span><span class="o">.</span><span class="n">_loaded_modules</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">former_factory</span> <span class="o">=</span> <span class="s1">&#39;builtin&#39;</span>  <span class="c1"># TODO how to store this ?</span>
+                    <span class="n">engine_factory</span> \
+                        <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">_modules_data</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span> \
+                            <span class="p">[</span><span class="s1">&#39;attributes_factory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                <span class="s1">&#39;process_completion&#39;</span><span class="p">,</span> <span class="n">former_factory</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">pass</span> <span class="c1"># not found</span>
+        <span class="k">if</span> <span class="n">engine_factory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine_factory</span> \
+              <span class="kn">import</span> <span class="nn">BuiltinProcessCompletionEngineFactory</span>
+
+            <span class="n">engine_factory</span> <span class="o">=</span> <span class="n">BuiltinProcessCompletionEngineFactory</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">engine_factory</span><span class="o">.</span><span class="n">get_completion_engine</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div></div>
 
 
 </pre></div>

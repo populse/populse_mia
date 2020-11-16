@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -56,6 +56,7 @@
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="k">import</span> <span class="n">Fernet</span>
 
 <span class="n">CONFIG</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc=&#39;</span>
@@ -199,6 +200,8 @@
 <span class="sd">        - setThumbnailTag: sets the tag that is displayed in the mini viewer</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">capsul_engine</span> <span class="o">=</span> <span class="kc">None</span>
+
 <div class="viewcode-block" id="Config.__init__"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the Config class</span>
 
@@ -228,6 +231,108 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
+<div class="viewcode-block" id="Config.get_capsul_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get CAPSUL config dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+            <span class="s2">&quot;engine_modules&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">])</span>
+        <span class="n">sconf</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;study_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;attributes_schema_paths&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;capsul.attributes.completion_engine_factory&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;populse_mia.user_interface.pipeline_manager.process_mia&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;process_completion&#39;</span><span class="p">:</span> <span class="s1">&#39;mia_completion&#39;</span><span class="p">})</span>
+
+        <span class="c1"># update study config from mia config values</span>
+        <span class="n">spm_standalone_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()</span>
+        <span class="n">spm_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span>
+        <span class="n">matlab_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()</span>
+        <span class="n">matlab_standalone_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">()</span>
+        <span class="n">use_spm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">()</span>
+        <span class="n">use_spm_standalone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()</span>
+        <span class="n">use_matlab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">use_spm_standalone</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+                <span class="n">spm_standalone_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+                    <span class="n">matlab_standalone_path</span><span class="p">):</span>
+
+            <span class="n">spm_exec</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_standalone_path</span><span class="p">,</span>
+                                              <span class="s1">&#39;run_spm*.sh&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">spm_exec</span><span class="p">:</span>
+                <span class="n">spm_exec</span> <span class="o">=</span> <span class="n">spm_exec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">sconf</span><span class="p">[</span><span class="s1">&#39;spm_exec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spm_exec</span>
+
+            <span class="k">if</span> <span class="n">use_matlab</span> <span class="ow">and</span> <span class="n">matlab_path</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">matlab_path</span><span class="p">):</span>
+
+                <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span>
+                    <span class="n">matlab_exec</span><span class="o">=</span><span class="n">matlab_path</span><span class="p">,</span>
+                    <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span>
+                    <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="c1"># Using without SPM standalone</span>
+        <span class="k">elif</span> <span class="n">use_spm</span> <span class="ow">and</span> <span class="n">use_matlab</span><span class="p">:</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">matlab_exec</span><span class="o">=</span><span class="n">matlab_path</span><span class="p">,</span>
+                <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_path</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">use_matlab</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_spm</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">capsul_config</span></div>
+
+<div class="viewcode-block" id="Config.get_capsul_engine"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_capsul_engine">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_capsul_engine</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a global CapsulEngine object used for all operations in MIA</span>
+<span class="sd">        application. The engine is created once when needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+        <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">Config</span><span class="o">.</span><span class="n">capsul_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Config</span><span class="o">.</span><span class="n">capsul_engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
+            <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">update_capsul_config</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Config</span><span class="o">.</span><span class="n">capsul_engine</span></div>
+
+<div class="viewcode-block" id="Config.update_capsul_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.update_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">update_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update a global CapsulEngine object used for all operations in MIA</span>
+<span class="sd">        application. The engine is created once when needed, and updated</span>
+<span class="sd">        each time the config is saved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capsul_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># don&#39;t do anything until the config is really created: this</span>
+            <span class="c1"># avoids unneeded updates before it is actually used.</span>
+            <span class="k">return</span>
+
+        <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">capsul_engine</span>
+
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">,</span> <span class="p">[])</span> \
+                <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span> <span class="s1">&#39;axon&#39;</span><span class="p">]:</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+
+        <span class="n">study_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span>
+        <span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+
+        <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">engine_config</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">environment</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">engine_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">engine</span></div>
+
+
 <div class="viewcode-block" id="Config.get_user_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_user_mode">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get if user mode is disabled or enabled in the preferences.</span>
 
@@ -235,6 +340,16 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_mode&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_user_level"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_user_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the user level in the Capsul config</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        userlevel: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;study_config&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_level&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.get_mainwindow_maximized"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_mainwindow_maximized">[docs]</a>    <span class="k">def</span> <span class="nf">get_mainwindow_maximized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the maximized (fullscreen) flag</span>
@@ -258,13 +373,17 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_spm_standalone&quot;</span><span class="p">):</span>
             <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
             <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span>
-                        <span class="s1">&#39;spm12_win&#39;</span> <span class="o">+</span> <span class="n">archi</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.exe&#39;</span><span class="p">)</span>
+                <span class="n">spm_script</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">],</span>
+                                                    <span class="s1">&#39;spm*_win&#39;</span> <span class="o">+</span> <span class="n">archi</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.exe&#39;</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span>
-                        <span class="s1">&#39;run_spm12.sh </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span>
-                                                    <span class="s2">&quot;matlab_standalone&quot;</span><span class="p">])</span> <span class="o">+</span>
-                                        <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39; script&#39;</span><span class="p">)</span>
+                <span class="n">spm_script</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">],</span>
+                                                    <span class="s1">&#39;run_spm*.sh&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">spm_script</span><span class="p">:</span>
+                <span class="n">spm_script</span> <span class="o">=</span> <span class="n">spm_script</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> script&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">spm_script</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;matlab_standalone&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># will not work.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;matlab&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
@@ -560,7 +679,10 @@
                     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">decrypted</span><span class="p">)</span>
 
             <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error loading YAML file: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">config_file</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+                <span class="c1">#import traceback</span>
+                <span class="c1">#traceback.print_stack()</span>
         <span class="c1"># in case of problem, return an empty config</span>
         <span class="k">return</span> <span class="p">{}</span></div>
 
@@ -571,10 +693,11 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_file</span><span class="p">)):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
-
             <span class="n">stream</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                       <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">configfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span></div>
+            <span class="n">configfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_capsul_config</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Config.set_admin_hash"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_admin_hash">[docs]</a>    <span class="k">def</span> <span class="nf">set_admin_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">hash</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the password hash.</span>
@@ -585,6 +708,52 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;admin_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.set_capsul_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">set_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capsul_config_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set CAPSUL configuration dict into MIA config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;capsul_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">capsul_config_dict</span>
+
+        <span class="c1"># update MIA values</span>
+        <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">engine_config</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+            <span class="n">new_engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">environment</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">engine_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">new_engine</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+            <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">new_engine</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">export_to_dict</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">capsul_config_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="n">matlab_path</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;matlab_exec&#39;</span><span class="p">)</span>
+        <span class="n">use_matlab</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_matlab&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_matlab</span> <span class="ow">and</span> <span class="n">matlab_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="n">matlab_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">use_matlab</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_spm&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">spm_dir</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spm_directory&#39;</span><span class="p">)</span>
+            <span class="n">spm_standalone</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spm_standalone&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">spm_standalone</span><span class="p">:</span>
+                <span class="n">mcr</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_dir</span><span class="p">,</span> <span class="s1">&#39;mcr&#39;</span><span class="p">,</span> <span class="s1">&#39;v713&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">mcr</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_dir</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_spm_standalone_path</span><span class="p">(</span><span class="n">spm_dir</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">mcr</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_spm_path</span><span class="p">(</span><span class="n">spm_dir</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.set_user_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_user_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_mode</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Enable of disable user mode.</span>

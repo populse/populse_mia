@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -87,8 +87,8 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">QCoreApplication</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">QCoreApplication</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">QCheckBox</span><span class="p">,</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span>
@@ -101,7 +101,7 @@
 <span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
-    <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span> <span class="n">LIST_TYPES</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_INTEGER</span><span class="p">,</span> <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">)</span>
 
@@ -115,7 +115,7 @@
     <span class="n">TAG_TYPE</span><span class="p">,</span> <span class="n">TYPE_NII</span><span class="p">,</span> <span class="n">TYPE_MAT</span><span class="p">,</span> <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TYPE_UNKNOWN</span><span class="p">,</span> <span class="n">TYPE_TXT</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">verCmp</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser</span> <span class="k">import</span> <span class="n">data_browser</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="n">Project</span>
 
@@ -357,7 +357,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="n">LIST_TYPES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;list_&#39;</span><span class="p">):</span>
             <span class="c1"># We display the pop up to create the list if the checkbox is</span>
             <span class="c1"># checked, otherwise we do nothing</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">list_creation</span> <span class="o">=</span> <span class="n">DefaultValueListCreation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -2111,9 +2111,25 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_spm</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_spm</span><span class="p">)</span>
 
+        <span class="c1"># Groupbox &quot;CAPSUL&quot;</span>
+        <span class="n">groupbox_capsul</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;CAPSUL&quot;</span><span class="p">)</span>
+        <span class="n">capsul_config_button</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span>
+            <span class="s2">&quot;Edit CAPSUL config&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">autoDefault</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">capsul_config_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_capsul_config</span><span class="p">)</span>
+        <span class="n">h_box_capsul</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_capsul</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">capsul_config_button</span><span class="p">)</span>
+        <span class="n">h_box_capsul</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">v_box_capsul</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">v_box_capsul</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_capsul</span><span class="p">)</span>
+
+        <span class="n">groupbox_capsul</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_capsul</span><span class="p">)</span>
+
+        <span class="c1"># general layout</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_matlab</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_spm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">groupbox_capsul</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="p">)</span>
 
@@ -2361,9 +2377,83 @@
             <span class="n">edit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">stream</span> <span class="o">=</span> <span class="n">edit</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">toPlainText</span><span class="p">()</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s1">&#39;5.1&#39;</span><span class="p">,</span> <span class="s1">&#39;sup&#39;</span><span class="p">):</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PopUpPreferences.edit_capsul_config"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">edit_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+        <span class="c1">#from soma.qt_gui.controller_widget import ScrollControllerWidget</span>
+        <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.settings_editor</span> <span class="k">import</span> <span class="n">SettingsEditor</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+        <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">]</span>
+        <span class="n">sc_dict</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">]</span>
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;axon&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;nipype&#39;</span><span class="p">]:</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">sc_dict</span><span class="p">)</span>
+        <span class="n">envs</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">for</span> <span class="n">env</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="n">envs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">SettingsEditor</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+        <span class="c1">#dialog = Qt.QDialog()</span>
+        <span class="c1">#layout = Qt.QVBoxLayout()</span>
+        <span class="c1">#dialog.setLayout(layout)</span>
+        <span class="c1">#cwidget = ScrollControllerWidget(engine.study_config, live=True)</span>
+        <span class="c1">#layout.addWidget(cwidget)</span>
+        <span class="c1">#hlayout = Qt.QHBoxLayout()</span>
+        <span class="c1">#layout.addLayout(hlayout)</span>
+        <span class="c1">#ok = Qt.QPushButton(&quot;OK&quot;, default=True)</span>
+        <span class="c1">#cancel = Qt.QPushButton(&quot;Cancel&quot;)</span>
+        <span class="c1">#hlayout.addStretch(1)</span>
+        <span class="c1">#hlayout.addWidget(ok)</span>
+        <span class="c1">#hlayout.addWidget(cancel)</span>
+        <span class="c1">#ok.clicked.connect(dialog.accept)</span>
+        <span class="c1">#cancel.clicked.connect(dialog.reject)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">envs</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_all_environments</span><span class="p">()</span>
+            <span class="n">settings</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="n">envs</span><span class="p">:</span>
+                <span class="n">settings</span><span class="p">[</span><span class="n">env</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+            <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span>
+            <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">_loaded_modules</span><span class="p">)</span>
+
+            <span class="c1">#sc_dict = engine.study_config.export_to_dict(</span>
+                <span class="c1">#dict_class=dict, exclude_none=True, exclude_undefined=True)</span>
+            <span class="c1">#capsul_config[&#39;study_config&#39;] = sc_dict</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_capsul_config</span><span class="p">(</span><span class="n">capsul_config</span><span class="p">)</span>
+
+            <span class="c1"># update matlab/SPM GUI which might have changed</span>
+            <span class="n">use_matlab</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">()</span>
+            <span class="n">use_matlab</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span> <span class="k">if</span> <span class="n">use_matlab</span> <span class="k">else</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">use_matlab</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">())</span>
+            <span class="n">use_matlab_sa</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">()</span>
+            <span class="n">use_matlab_sa</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span> <span class="k">if</span> <span class="n">use_matlab_sa</span> <span class="k">else</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">use_matlab_sa</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">())</span>
+            <span class="n">use_spm</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">()</span>
+            <span class="n">use_spm</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span> <span class="k">if</span> <span class="n">use_spm</span> <span class="k">else</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">use_spm</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">())</span>
+            <span class="n">use_spm_sa</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()</span>
+            <span class="n">use_spm_sa</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span> <span class="k">if</span> <span class="n">use_spm_sa</span> <span class="k">else</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">use_spm_sa</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">())</span>
+
+        <span class="c1">#del ok, cancel, cwidget, hlayout, layout</span>
+        <span class="k">del</span> <span class="n">dialog</span>
+        <span class="k">del</span> <span class="n">engine</span></div>
 
 <div class="viewcode-block" id="PopUpPreferences.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Saves the modifications to the config file and apply them.</span>
@@ -2373,7 +2463,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="n">QApplication</span><span class="o">.</span><span class="n">setOverrideCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WaitCursor</span><span class="p">)</span>
+        <span class="n">QApplication</span><span class="o">.</span><span class="n">setOverrideCursor</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">WaitCursor</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Testing configuration ...&quot;</span><span class="p">)</span>
         <span class="n">QCoreApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
         <span class="c1"># Auto-save</span>
@@ -3504,7 +3594,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_boxes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">tag_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_values</span><span class="p">:</span>
             <span class="n">check_box</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="n">tag_value</span><span class="p">)</span>
-            <span class="n">check_box</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">)</span>
+            <span class="n">check_box</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">check_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_box</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">v_box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">check_box</span><span class="p">)</span>
 
@@ -3803,7 +3893,7 @@
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">QTableWidget</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setVerticalScrollBarPolicy</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ScrollBarAlwaysOn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setVerticalScrollBarPolicy</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ScrollBarAlwaysOn</span><span class="p">)</span>
 
         <span class="c1"># Filling the table</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_INPUTS</span><span class="p">)</span>
@@ -3817,7 +3907,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setHorizontalHeaderItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">))</span>
-        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="c1"># Brick init</span>
@@ -3826,7 +3916,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setHorizontalHeaderItem</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_INIT</span><span class="p">))</span>
-        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="c1"># Brick init time</span>
@@ -3834,7 +3924,7 @@
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">BRICK_INIT_TIME</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setHorizontalHeaderItem</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
-        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_INIT_TIME</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_INIT_TIME</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
@@ -3845,7 +3935,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setHorizontalHeaderItem</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_EXEC</span><span class="p">))</span>
-        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="c1"># Brick execution time</span>
@@ -3853,7 +3943,7 @@
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">BRICK_EXEC_TIME</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setHorizontalHeaderItem</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
-        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_EXEC_TIME</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">brick_row</span><span class="p">,</span> <span class="n">BRICK_EXEC_TIME</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
@@ -3880,8 +3970,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
                 <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-                <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
-                <span class="n">item</span><span class="o">.</span><span class="n">setTextAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">setTextAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
             <span class="n">column</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -3918,7 +4008,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
                     <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-                    <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+                    <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">^</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
             <span class="n">column</span> <span class="o">+=</span> <span class="mi">1</span>
 
