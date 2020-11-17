@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 1.4.0-dev+2a47d32a documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+2a47d32a documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -296,8 +296,9 @@
 
         <span class="n">outputs</span> <span class="o">=</span> <span class="n">initResult_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="k">for</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">parameter</span> <span class="o">==</span> <span class="s1">&#39;notInDb&#39;</span><span class="p">:</span>
-                <span class="k">continue</span>  <span class="c1"># special non-param</span>
+            <span class="k">if</span> <span class="n">parameter</span> <span class="o">==</span> <span class="s1">&#39;notInDb&#39;</span> \
+                    <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">is_parameter_protected</span><span class="p">(</span><span class="n">parameter</span><span class="p">):</span>
+                <span class="k">continue</span>  <span class="c1"># special non-param or set manually</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -308,7 +309,7 @@
                     <span class="kn">import</span> <span class="nn">traceback</span>
                     <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
 
-       <span class="c1"># Test for matlab launch</span>
+        <span class="c1"># Test for matlab launch</span>
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s1">&#39;use_mcr&#39;</span><span class="p">):</span>
 
             <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 1.4.0-dev+31a83e23 documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 1.4.0-dev+2a47d32a documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 1.4.0-dev+31a83e23 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+2a47d32a documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -128,9 +128,16 @@
 <span class="sd">    Object that handles the configuration of the software</span>
 
 <span class="sd">    .. Methods:</span>
-<span class="sd">        - get_admin_hash: returns the value of the hash of the admin password</span>
-<span class="sd">        - get_user_mode: returns the value of &quot;user mode&quot; checkbox</span>
-<span class="sd">          in the preferences</span>
+<span class="sd">        - get_admin_hash: get the value of the hash of the admin password</span>
+<span class="sd">        - getBackgroundColor: get background color</span>
+<span class="sd">        - get_capsul_config: get CAPSUL config dictionary</span>
+<span class="sd">        - get_capsul_engine: get a global CapsulEngine object used for all</span>
+<span class="sd">          operations in MIA application</span>
+<span class="sd">        - getChainCursors: returns if the &quot;chain cursors&quot; checkbox of the</span>
+<span class="sd">          mini viewer is activated</span>
+<span class="sd">        - get_config_path: returns the configuration file directory</span>
+<span class="sd">        - get_mainwindow_maximized: get the maximized (fullscreen) flag</span>
+<span class="sd">        - get_mainwindow_size: get the main window size</span>
 <span class="sd">        - get_matlab_command: returns Matlab command</span>
 <span class="sd">        - get_matlab_path: returns the path of Matlab&#39;s executable</span>
 <span class="sd">        - get_matlab_standalone_path: returns the path of Matlab Compiler</span>
@@ -138,66 +145,75 @@
 <span class="sd">        - get_max_projects: returns the maximum number of projects displayed in</span>
 <span class="sd">          the &quot;Saved projects&quot; menu</span>
 <span class="sd">        - get_mia_path: returns the software&#39;s install path</span>
-<span class="sd">        - get_config_path: returns the configuration file directory</span>
+<span class="sd">        - get_mri_conv_path: sets the MRIManager.jar path</span>
+<span class="sd">        - getNbAllSlicesMax: returns the maximum number of slices to display in</span>
+<span class="sd">          the mini viewer</span>
+<span class="sd">        - get_opened_projects: returns the opened projects</span>
+<span class="sd">        - getPathToProjectsFolder: returns the project&#39;s path</span>
 <span class="sd">        - get_projects_save_path: returns the folder where the projects are</span>
 <span class="sd">          saved</span>
+<span class="sd">        - getShowAllSlices: returns if the &quot;show all slices&quot; checkbox of the</span>
+<span class="sd">          mini viewer is activated</span>
+<span class="sd">        - getSourceImageDir: get the source directory for project images</span>
 <span class="sd">        - get_spm_path: returns the path of SPM12 (license version)</span>
 <span class="sd">        - get_spm_standalone_path: returns the path of SPM12 (standalone</span>
 <span class="sd">          version)</span>
+<span class="sd">        - getTextColor: return the text color</span>
+<span class="sd">        - getThumbnailTag: returns the tag that is displayed in the mini viewer</span>
 <span class="sd">        - get_use_matlab: returns the value of &quot;use matlab&quot; checkbox in the</span>
 <span class="sd">          preferences</span>
 <span class="sd">        - get_use_matlab_standalone: returns the value of &quot;use matlab</span>
 <span class="sd">          standalone&quot; checkbox in the preferences</span>
-<span class="sd">        - get_mri_conv_path: sets the MRIManager.jar path</span>
+<span class="sd">        - get_user_level: get the user level in the Capsul config</span>
+<span class="sd">        - get_user_mode: returns the value of &quot;user mode&quot; checkbox</span>
+<span class="sd">          in the preferences</span>
 <span class="sd">        - get_use_spm: returns the value of &quot;use spm&quot; checkbox in the</span>
 <span class="sd">          preferences</span>
 <span class="sd">        - get_use_spm_standalone: returns the value of &quot;use spm standalone&quot;</span>
 <span class="sd">          checkbox in the preferences</span>
-<span class="sd">        - getBackgroundColor: returns the background color</span>
-<span class="sd">        - getChainCursors: returns if the &quot;chain cursors&quot; checkbox of the</span>
-<span class="sd">          mini viewer is activated</span>
-<span class="sd">        - getNbAllSlicesMax: returns the maximum number of slices to display in</span>
-<span class="sd">          the mini viewer</span>
-<span class="sd">        - get_opened_projects: returns the opened projects</span>
-<span class="sd">        - getPathData: returns the data&#39;s path</span>
+<span class="sd">        - getPathData: returns the data&#39;s path (currently commented)</span>
 <span class="sd">        - getPathToProjectsDBFile: returns the already-saved projects&#39;s path</span>
-<span class="sd">        - getPathToProjectsFolder: returns the project&#39;s path</span>
-<span class="sd">        - getShowAllSlices: returns if the &quot;show all slices&quot; checkbox of the</span>
-<span class="sd">          mini viewer is activated</span>
-<span class="sd">        - getTextColor: return the text color</span>
-<span class="sd">        - getThumbnailTag: returns the tag that is displayed in the mini viewer</span>
+<span class="sd">          (currently commented)</span>
 <span class="sd">        - isAutoSave: checks if auto-save mode is activated</span>
 <span class="sd">        - loadConfig: reads the config in the config.yml file</span>
 <span class="sd">        - saveConfig: saves the config to the config.yml file</span>
+<span class="sd">        - set_admin_hash: set the password hash</span>
 <span class="sd">        - setAutoSave: sets the auto-save mode</span>
 <span class="sd">        - setBackgroundColor: sets the background color</span>
-<span class="sd">        - set_user_mode: sets the value of &quot;user mode&quot; checkbox in</span>
-<span class="sd">          the preferences</span>
-<span class="sd">        - set_matlab_path: sets the path of Matlab&#39;s executable</span>
-<span class="sd">        - set_matlab_standalone_path: sets the path of Matlab Compiler Runtime</span>
-<span class="sd">        - set_max_projects: sets the maximum number of projects displayed in</span>
+<span class="sd">        - set_capsul_config: set CAPSUL configuration dict into MIA config</span>
+<span class="sd">        - setChainCursors: set the &quot;chain cursors&quot; checkbox of the mini viewer</span>
+<span class="sd">        - set_mainwindow_maximized: set the maximized (fullscreen) flag</span>
+<span class="sd">        - set_mainwindow_size: set main window size</span>
+<span class="sd">        - set_matlab_path: set the path of Matlab&#39;s executable</span>
+<span class="sd">        - set_matlab_standalone_path: set the path of Matlab Compiler Runtime</span>
+<span class="sd">        - set_max_projects: set the maximum number of projects displayed in</span>
 <span class="sd">          the &quot;Saved projects&quot; menu</span>
-<span class="sd">        - set_mia_path: sets the software&#39;s install path</span>
-<span class="sd">        - set_mri_conv_path: sets the MRIManager.jar path</span>
-<span class="sd">        - set_projects_save_path: sets the folder where the projects are saved</span>
-<span class="sd">        - set_spm_path: sets the path of SPM12 (license version)</span>
-<span class="sd">        - set_spm_standalone_path: sets the path of SPM12 (standalone version)</span>
-<span class="sd">        - set_use_matlab: sets the value of &quot;use matlab&quot; checkbox in the</span>
-<span class="sd">          preferences</span>
-<span class="sd">        - set_use_matlab_standalone: sets the value of &quot;use matlab standalone&quot;</span>
-<span class="sd">          checkbox in the preferences</span>
-<span class="sd">        - set_use_spm: sets the value of &quot;use spm&quot; checkbox in the preferences</span>
-<span class="sd">        - set_use_spm_standalone: sets the value of &quot;use spm standalone&quot;</span>
-<span class="sd">          checkbox in the preferences</span>
-<span class="sd">        - setChainCursors: sets the &quot;chain cursors&quot; checkbox of the mini viewer</span>
-<span class="sd">        - setNbAllSlicesMax: sets the maximum number of slices to display in</span>
+<span class="sd">        - set_mri_conv_path: set the MRIManager.jar path</span>
+<span class="sd">        - setNbAllSlicesMax: set the maximum number of slices to display in</span>
 <span class="sd">          the mini viewer</span>
-<span class="sd">        - set_opened_projects: sets the opened projects</span>
-<span class="sd">        - setPathToData: sets the data&#39;s path</span>
-<span class="sd">        - setShowAllSlices: sets the &quot;show all slices&quot; checkbox of the mini</span>
+<span class="sd">        - set_opened_projects: set the opened projects</span>
+<span class="sd">        - set_projects_save_path: set the folder where the projects are saved</span>
+<span class="sd">        - setShowAllSlices: set the &quot;show all slices&quot; checkbox of the mini</span>
 <span class="sd">          viewer</span>
-<span class="sd">        - setTextColor: sets the text color</span>
-<span class="sd">        - setThumbnailTag: sets the tag that is displayed in the mini viewer</span>
+<span class="sd">        - setSourceImageDir: set the source directory for project images</span>
+<span class="sd">        - set_spm_path: set the path of SPM12 (license version)</span>
+<span class="sd">        - set_spm_standalone_path: set the path of SPM12 (standalone version)</span>
+<span class="sd">        - setTextColor: set the text color</span>
+<span class="sd">        - setThumbnailTag: set the tag that is displayed in the mini viewer</span>
+<span class="sd">        - set_use_matlab: set the value of &quot;use matlab&quot; checkbox in the</span>
+<span class="sd">          preferences</span>
+<span class="sd">        - set_use_matlab_standalone: set the value of &quot;use matlab standalone&quot;</span>
+<span class="sd">          checkbox in the preferences</span>
+<span class="sd">        - set_user_mode: set the value of &quot;user mode&quot; checkbox in</span>
+<span class="sd">          the preferences</span>
+<span class="sd">        - set_use_spm: set the value of &quot;use spm&quot; checkbox in the preferences</span>
+<span class="sd">        - set_use_spm_standalone: set the value of &quot;use spm standalone&quot;</span>
+<span class="sd">          checkbox in the preferences</span>
+<span class="sd">        - set_mia_path: set the software&#39;s install path (currently commented)</span>
+<span class="sd">        - setPathToData: set the data&#39;s path (currently commented)</span>
+<span class="sd">        - update_capsul_config: update a global CapsulEngine object used for</span>
+<span class="sd">          all operations in MIA application</span>
+
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">capsul_engine</span> <span class="o">=</span> <span class="kc">None</span>
@@ -732,7 +748,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">use_matlab</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="c1"># self.set_matlab_path(&quot;&quot;)</span>
 
         <span class="k">if</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_spm&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">spm_dir</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spm_directory&#39;</span><span class="p">)</span>
@@ -744,6 +760,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">mcr</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">():</span>
