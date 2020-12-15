@@ -32,7 +32,7 @@ from populse_mia.data_manager.project import TAG_FILENAME, COLLECTION_CURRENT
 
 # Populse_db imports
 from populse_db.database import (
-    LIST_TYPES, FIELD_TYPE_STRING, FIELD_TYPE_BOOLEAN)
+    ALL_TYPES, FIELD_TYPE_STRING, FIELD_TYPE_BOOLEAN)
 
 
 class AdvancedSearch(QWidget):
@@ -280,30 +280,28 @@ class AdvancedSearch(QWidget):
 
         tag_name = field.currentText()
         tag_row = self.project.session.get_field(COLLECTION_CURRENT, tag_name)
-        no_operators_tags = []
-        for list_type in LIST_TYPES:
-            no_operators_tags.append(list_type)
+        no_operators_tags = [i for i in ALL_TYPES if i.startswith('list_')]
         no_operators_tags.append(FIELD_TYPE_STRING)
         no_operators_tags.append(FIELD_TYPE_BOOLEAN)
         no_operators_tags.append(None)
 
-        if (tag_row is not None and tag_row.type in no_operators_tags) or \
+        if (tag_row is not None and tag_row.field_type in no_operators_tags) or \
                 tag_name == "All visualized tags":
             condition.removeItem(condition.findText("<"))
             condition.removeItem(condition.findText(">"))
             condition.removeItem(condition.findText("<="))
             condition.removeItem(condition.findText(">="))
             condition.removeItem(condition.findText("BETWEEN"))
-        elif tag_row is None or tag_row.type not in no_operators_tags:
+        elif tag_row is None or tag_row.field_type not in no_operators_tags:
             operators_to_reput = ["<", ">", "<=", ">=", "BETWEEN"]
             for operator in operators_to_reput:
                 is_op_existing = condition.findText(operator) != -1
                 if not is_op_existing:
                     condition.addItem(operator)
 
-        if tag_row is not None and tag_row.type in LIST_TYPES:
+        if tag_row is not None and tag_row.field_type.startswith('list_'):
             condition.removeItem(condition.findText("IN"))
-        elif tag_row is None or tag_row.type not in LIST_TYPES:
+        elif tag_row is None or not tag_row.field_type.startswith('list_'):
             operators_to_reput = ["IN"]
             for operator in operators_to_reput:
                 is_op_existing = condition.findText(operator) != -1
@@ -375,9 +373,7 @@ class AdvancedSearch(QWidget):
                         nots.append(child.currentText())
 
         operators = ["<", ">", "<=", ">=", "BETWEEN"]
-        no_operators_tags = []
-        for list_type in LIST_TYPES:
-            no_operators_tags.append(list_type)
+        no_operators_tags = [i for i in ALL_TYPES if i.startswith('list_')]
         no_operators_tags.append(FIELD_TYPE_STRING)
         no_operators_tags.append(FIELD_TYPE_BOOLEAN)
 
@@ -389,7 +385,7 @@ class AdvancedSearch(QWidget):
                 for tag in fields[i].copy():
                     tag_row = self.project.session.get_field(
                         COLLECTION_CURRENT, tag)
-                    if tag_row.type in LIST_TYPES:
+                    if tag_row.type.startswith('list_'):
                         fields[i].remove(tag)
             elif conditions[i] in operators:
                 for tag in fields[i].copy():

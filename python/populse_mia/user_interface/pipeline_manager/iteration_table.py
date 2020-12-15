@@ -31,7 +31,7 @@ from populse_mia.user_interface.pop_ups import \
 from populse_mia.data_manager.project import COLLECTION_CURRENT, TAG_FILENAME
 from populse_mia.utils.tools import ClickableLabel
 from populse_mia.software_properties import Config
-
+from populse_mia.user_interface.pop_ups import PopUpSelectIteration
 
 class IterationTable(QWidget):
     """Widget that handles pipeline iteration.
@@ -52,7 +52,7 @@ class IterationTable(QWidget):
 
     """
 
-    iteration_table_updated = pyqtSignal(list)
+    iteration_table_updated = pyqtSignal(list, list)
 
     def __init__(self, project, scan_list, main_window):
         """
@@ -101,6 +101,10 @@ class IterationTable(QWidget):
         # QComboBox
         self.combo_box = QComboBox()
         self.combo_box.currentIndexChanged.connect(self.update_table)
+
+        # filter
+        self.filter_button = QPushButton('Filter')
+        self.filter_button.clicked.connect(self.filter_values)
 
         # QTableWidget
         self.iteration_table = QTableWidget()
@@ -163,24 +167,15 @@ class IterationTable(QWidget):
 
     def emit_iteration_table_updated(self):
         """Emit a signal when the iteration scans have been updated."""
-        if self.check_box_iterate.isChecked():
-            self.main_window.pipeline_manager.\
-                run_pipeline_action.setDisabled(False)
-            self.main_window.pipeline_manager.\
-                init_pipeline_action.setDisabled(True)
-        else:
-            self.main_window.pipeline_manager.\
-                run_pipeline_action.setDisabled(True)
-            self.main_window.pipeline_manager. \
-                init_pipeline_action.setDisabled(False)
-
         if self.check_box_iterate.checkState():
             if hasattr(self, 'scans'):
-                self.iteration_table_updated.emit(self.iteration_scans)
+                self.iteration_table_updated.emit(self.iteration_scans,
+                                                  self.all_iterations_scans)
             else:
-                self.iteration_table_updated.emit(self.scan_list)
+                self.iteration_table_updated.emit(self.scan_list,
+                                                  [self.scan_list])
         else:
-            self.iteration_table_updated.emit(self.scan_list)
+            self.iteration_table_updated.emit(self.scan_list, [self.scan_list])
 
     def fill_values(self, idx):
         """
@@ -225,7 +220,10 @@ class IterationTable(QWidget):
 
         third_v_layout = QVBoxLayout()
         third_v_layout.addWidget(self.iterated_tag_push_button)
-        third_v_layout.addWidget(self.combo_box)
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.combo_box)
+        hbox.addWidget(self.filter_button)
+        third_v_layout.addLayout(hbox)
 
         top_layout = QHBoxLayout()
         top_layout.addLayout(first_v_layout)
@@ -269,6 +267,19 @@ class IterationTable(QWidget):
             self.iterated_tag)
         if ui_select.exec_():
             self.update_iterated_tag(ui_select.selected_tag)
+
+    def filter_values(self):
+        iterated_tag = self.iterated_tag
+        tag_values = self.all_tag_values
+        ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
+        if ui_iteration.exec_():
+            self.tag_values_list = [t.replace('&', '')
+                                    for t in ui_iteration.final_values]
+
+            self.combo_box.clear()
+            self.combo_box.addItems(self.tag_values_list)
+
+            self.update_table()
 
     def select_visualized_tag(self, idx):
         """Open a pop-up to let the user select which tag to visualize in the
@@ -316,6 +327,8 @@ class IterationTable(QWidget):
                                                        scan_name, tag_name)
             if str(tag_value) not in self.tag_values_list:
                 self.tag_values_list.append(str(tag_value))
+        # duplucate the values list to have the initial, unfiltered, one
+        self.all_tag_values = list(self.tag_values_list)
 
         self.combo_box.clear()
         self.combo_box.addItems(self.tag_values_list)
@@ -339,7 +352,8 @@ class IterationTable(QWidget):
 
         # Headers
         for idx in range(len(self.push_buttons)):
-            header_name = self.push_buttons[idx].text()
+            # FIXME should not use GUI text values !!
+            header_name = self.push_buttons[idx].text().replace('&', '')
             if header_name not in self.project.session.get_fields_names(
                     COLLECTION_CURRENT):
                 print("{0} not in the project's tags".format(header_name))
@@ -351,7 +365,7 @@ class IterationTable(QWidget):
 
         # Searching the database scans that correspond to iterated tag value
         filter_query = "({" + str(self.iterated_tag) + "} " + "==" + " \"" + \
-                       str(self.combo_box.currentText()) + "\")"
+                       str(self.combo_box.currentText()).replace('&', '') + "\")"
         scans_list = self.project.session.filter_documents(COLLECTION_CURRENT,
                                                            filter_query)
         scans_res = [getattr(document, TAG_FILENAME)
@@ -368,12 +382,27 @@ class IterationTable(QWidget):
         for scan_name in self.iteration_scans:
             row += 1
             for idx in range(len(self.push_buttons)):
-                tag_name = self.push_buttons[idx].text()
+                tag_name = self.push_buttons[idx].text().replace('&', '')
 
                 item = QTableWidgetItem()
                 item.setText(str(self.project.session.get_value(
                     COLLECTION_CURRENT, scan_name, tag_name)))
                 self.iteration_table.setItem(row, idx, item)
 
+        all_iterations_scans = []
+        for tag_value in self.tag_values_list:
+            # Searching the database scans that correspond to iterated tag value
+            filter_query = "({" + str(self.iterated_tag) + "} " + "==" \
+                  + " \"" + str(tag_value) + "\")"
+            scans_list = self.project.session.filter_documents(
+                COLLECTION_CURRENT, filter_query)
+            scans_res = [getattr(document, TAG_FILENAME)
+                         for document in scans_list]
+            all_iterations_scans.append(list(
+                set(scans_res).intersection(self.scan_list)))
+        self.all_iterations_scans = all_iterations_scans
+        #self.scans = True
+
         # This will change the scans list in the current Pipeline Manager tab
-        self.iteration_table_updated.emit(self.iteration_scans)
+        self.iteration_table_updated.emit(self.iteration_scans,
+                                          self.all_iterations_scans)

@@ -417,10 +417,22 @@ class MiniViewer(QWidget):
         #      defined in skimage since version 0.14.0
 
         if version.parse(sk.__version__) >= version.Version("0.14.0"):
-            im2D = resize(im2D, display_size, mode='constant',
-                          anti_aliasing=False)
+
+            try:
+                im2D = resize(im2D, display_size, mode='constant',
+                              anti_aliasing=False)
+
+            except ValueError:
+                im2D = resize(im2D.byteswap().newbyteorder(), display_size,
+                              mode='constant', anti_aliasing=False)
         else:
-            im2D = resize(im2D, display_size, mode='constant')
+
+            try:
+                im2D = resize(im2D, display_size, mode='constant')
+
+            except ValueError:
+                im2D = resize(im2D.byteswap().newbyteorder(), display_size,
+                              mode='constant')
 
         # Rescale image while handling Nans and infinite values
         im_mask = np.isfinite(im2D)

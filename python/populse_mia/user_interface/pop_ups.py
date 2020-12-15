@@ -55,8 +55,8 @@ from datetime import datetime
 from functools import partial
 
 # PyQt5 imports
-from PyQt5 import QtGui, QtWidgets, QtCore
-from PyQt5.QtCore import Qt, pyqtSignal, QCoreApplication
+from PyQt5 import QtGui, QtWidgets, QtCore, Qt
+from PyQt5.QtCore import pyqtSignal, QCoreApplication
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (
     QCheckBox, QComboBox, QLineEdit, QFileDialog, QTableWidget,
@@ -69,7 +69,7 @@ from PyQt5.QtWidgets import (
 from populse_db.database import (
     FIELD_TYPE_LIST_TIME, FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_DATETIME,
     FIELD_TYPE_DATE, FIELD_TYPE_LIST_DATE, FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_INTEGER, LIST_TYPES,
+    FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_INTEGER,
     FIELD_TYPE_STRING, FIELD_TYPE_INTEGER, FIELD_TYPE_FLOAT,
     FIELD_TYPE_BOOLEAN, FIELD_TYPE_TIME, FIELD_TYPE_DATETIME)
 
@@ -83,7 +83,7 @@ from populse_mia.data_manager.project import (
     TAG_TYPE, TYPE_NII, TYPE_MAT, TAG_CHECKSUM, TAG_FILENAME,
     COLLECTION_CURRENT, TYPE_UNKNOWN, TYPE_TXT)
 
-from populse_mia.software_properties import Config
+from populse_mia.software_properties import Config, verCmp
 from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.data_manager.project import Project
 
@@ -325,7 +325,7 @@ class DefaultValueQLineEdit(QtWidgets.QLineEdit):
 
         """
 
-        if self.parent.type in LIST_TYPES:
+        if self.parent.type.startswith('list_'):
             # We display the pop up to create the list if the checkbox is
             # checked, otherwise we do nothing
             self.list_creation = DefaultValueListCreation(self,
@@ -2079,9 +2079,25 @@ class PopUpPreferences(QDialog):
 
         self.groupbox_spm.setLayout(v_box_spm)
 
+        # Groupbox "CAPSUL"
+        groupbox_capsul = Qt.QGroupBox("CAPSUL")
+        capsul_config_button = Qt.QPushButton(
+            "Edit CAPSUL config", default=False, autoDefault=False)
+        capsul_config_button.clicked.connect(self.edit_capsul_config)
+        h_box_capsul = Qt.QHBoxLayout()
+        h_box_capsul.addWidget(capsul_config_button)
+        h_box_capsul.addStretch(1)
+        v_box_capsul = Qt.QVBoxLayout()
+        v_box_capsul.addLayout(h_box_capsul)
+
+        groupbox_capsul.setLayout(v_box_capsul)
+
+        # general layout
+
         self.tab_pipeline_layout = QtWidgets.QVBoxLayout()
         self.tab_pipeline_layout.addWidget(self.groupbox_matlab)
         self.tab_pipeline_layout.addWidget(self.groupbox_spm)
+        self.tab_pipeline_layout.addWidget(groupbox_capsul)
         self.tab_pipeline_layout.addStretch(1)
         self.tab_pipeline.setLayout(self.tab_pipeline_layout)
 
@@ -2329,9 +2345,96 @@ class PopUpPreferences(QDialog):
             edit.close()
         else:
             stream = edit.txt.toPlainText()
-            config.config = yaml.load(stream, Loader=yaml.FullLoader)
+            if verCmp(yaml.__version__, '5.1', 'sup'):
+                config.config = yaml.load(stream, Loader=yaml.FullLoader)
+            else:
+                config.config = yaml.load(stream)
             config.saveConfig()
             self.close()
+
+    def edit_capsul_config(self):
+        from capsul.api import capsul_engine
+        #from soma.qt_gui.controller_widget import ScrollControllerWidget
+        from capsul.qt_gui.widgets.settings_editor import SettingsEditor
+
+        config = Config()
+        capsul_config = config.get_capsul_config()
+        modules = capsul_config.get('engine_modules', [])
+        sc_dict = capsul_config.get('study_config', {})
+        # build a temporary new engine (because it may not be validated)
+        engine = capsul_engine()
+        for module in modules + ['fom', 'axon', 'python', 'fsl', 'freesurfer',
+                                 'nipype']:
+            engine.load_module(module)
+        engine.study_config.import_from_dict(sc_dict)
+        envs = capsul_config.get('engine', {})
+        for env, conf in envs.items():
+            c = dict(conf)
+            if 'capsul_engine' not in c \
+                    or 'uses' not in c['capsul_engine']:
+                c['capsul_engine'] = {
+                    'uses': {engine.settings.module_name(m): 'ALL'
+                                for m in conf.keys()}}
+            for mod, val in conf.items():
+                if 'config_id' not in val:
+                    val['config_id'] = mod.split('.')[-1]
+            engine.settings.import_configs(env, c)
+
+        dialog = SettingsEditor(engine)
+        #dialog = Qt.QDialog()
+        #layout = Qt.QVBoxLayout()
+        #dialog.setLayout(layout)
+        #cwidget = ScrollControllerWidget(engine.study_config, live=True)
+        #layout.addWidget(cwidget)
+        #hlayout = Qt.QHBoxLayout()
+        #layout.addLayout(hlayout)
+        #ok = Qt.QPushButton("OK", default=True)
+        #cancel = Qt.QPushButton("Cancel")
+        #hlayout.addStretch(1)
+        #hlayout.addWidget(ok)
+        #hlayout.addWidget(cancel)
+        #ok.clicked.connect(dialog.accept)
+        #cancel.clicked.connect(dialog.reject)
+        result = dialog.exec()
+        if result:
+            envs = engine.settings.get_all_environments()
+            settings = {}
+            for env in envs:
+                settings[env] = engine.settings.select_configurations(env)
+
+            capsul_config['engine'] = settings
+            capsul_config['engine_modules'] = list(engine._loaded_modules)
+
+            #sc_dict = engine.study_config.export_to_dict(
+                #dict_class=dict, exclude_none=True, exclude_undefined=True)
+            #capsul_config['study_config'] = sc_dict
+            if 'study_config' in capsul_config:
+                del capsul_config['study_config']
+            config.set_capsul_config(capsul_config)
+
+            # update matlab/SPM GUI which might have changed
+            use_matlab = config.get_use_matlab()
+            use_matlab = Qt.Qt.Checked if use_matlab else Qt.Qt.Unchecked
+            self.use_matlab_checkbox.setCheckState(use_matlab)
+            self.matlab_choice.setText(config.get_matlab_path())
+            use_matlab_sa = config.get_use_matlab_standalone()
+            use_matlab_sa = Qt.Qt.Checked if use_matlab_sa else Qt.Qt.Unchecked
+            self.use_matlab_standalone_checkbox.setCheckState(use_matlab_sa)
+            self.matlab_standalone_choice.setText(
+                config.get_matlab_standalone_path())
+            use_spm = config.get_use_spm()
+            use_spm = Qt.Qt.Checked if use_spm else Qt.Qt.Unchecked
+            self.use_spm_checkbox.setCheckState(use_spm)
+            self.spm_choice.setText(config.get_spm_path())
+            use_spm_sa = config.get_use_spm_standalone()
+            use_spm_sa = Qt.Qt.Checked if use_spm_sa else Qt.Qt.Unchecked
+            self.use_spm_standalone_checkbox.setCheckState(use_spm_sa)
+            self.spm_standalone_choice.setText(
+                config.get_spm_standalone_path())
+
+        #del ok, cancel, cwidget, hlayout, layout
+        del dialog
+        del engine
 
     def ok_clicked(self, main_window):
         """Saves the modifications to the config file and apply them.
@@ -2341,7 +2444,7 @@ class PopUpPreferences(QDialog):
         """
 
         config = Config()
-        QApplication.setOverrideCursor(Qt.WaitCursor)
+        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
         self.status_label.setText("Testing configuration ...")
         QCoreApplication.processEvents()
         # Auto-save
@@ -2431,10 +2534,11 @@ class PopUpPreferences(QDialog):
         main_window.setWindowTitle(main_window.windowName +
                                    main_window.projectName)
 
-        # SPM & Matlab
+        # SPM & Matlab (license) config test
 
         matlab_input = self.matlab_choice.text()
         spm_input = self.spm_choice.text()
+        
         if (matlab_input != "" and
             spm_input != "") or self.use_spm_checkbox.isChecked():
             if not os.path.isfile(matlab_input):
@@ -2479,7 +2583,8 @@ class PopUpPreferences(QDialog):
             else:
                 self.wrong_path(spm_input, "SPM")
                 return
-        # Matlab
+            
+        # Matlab alone config test
         if matlab_input != "" or self.use_matlab_checkbox.isChecked():
             if matlab_input == config.get_matlab_path():
                 if self.use_matlab_checkbox.isChecked():
@@ -2509,48 +2614,65 @@ class PopUpPreferences(QDialog):
             else:
                 self.wrong_path(matlab_input, "Matlab")
                 return
-
+            
+        # SPM (standalone) & Matlab (MCR)  config test
         spm_input = self.spm_standalone_choice.text()
         matlab_input = self.matlab_standalone_choice.text()
         archi = platform.architecture()
-        if (matlab_input != "" and
-            spm_input != "") or self.use_spm_standalone_checkbox.isChecked():
-            if not os.path.isdir(matlab_input) and \
-                                            not 'Windows' in archi[1]:
+
+        if ((matlab_input != "" and spm_input != "") or
+                self.use_spm_standalone_checkbox.isChecked()):
+
+            if ((not os.path.isdir(matlab_input)) and 
+                    (not 'Windows' in archi[1])):
                 self.wrong_path(matlab_input, "Matlab standalone")
                 return
-            if matlab_input == config.get_matlab_standalone_path() and \
-                    spm_input == config.get_spm_standalone_path():
+
+            if ((matlab_input == config.get_matlab_standalone_path()) and
+                    (spm_input == config.get_spm_standalone_path())):
+
                 if self.use_spm_standalone_checkbox.isChecked():
                     config.set_use_spm_standalone(True)
+
                     if 'Windows' in archi[1]:
                         config.set_use_matlab(True)
                         config.set_use_matlab_standalone(False)
+
                     else:
                         config.set_use_matlab(True)
                         config.set_use_matlab_standalone(True)
+
             elif os.path.isdir(spm_input):
+
                 if 'Windows' in archi[1]:
-                    mcr = glob.glob(os.path.join(spm_input, 'spm12_win*.exe'))
+                    mcr = glob.glob(os.path.join(spm_input, 'spm*_win*.exe'))
                     pos = -1
                     nb_bit_sys = archi[0]
+
                     for i in range(len(mcr)):
                         spm_path, spm_file_name = os.path.split(mcr[i])
+
                         if nb_bit_sys[:2] in spm_file_name:
                             pos = i
+
                     if pos == -1:
                         self.wrong_path(spm_input, "SPM standalone")
                         return
-                elif os.path.isdir(matlab_input): # to check if no issues with Linux
+
+                elif os.path.isdir(matlab_input):
                     mcr = glob.glob(os.path.join(spm_input, 'run_spm*.sh'))
+
                 if mcr:
+
                     try:
+
                         if 'Windows' in archi[1]:
                             p = subprocess.Popen([mcr[pos],
                                                 '--version'],
                                                 stdin=subprocess.PIPE,
                                                 stdout=subprocess.PIPE,
                                                 stderr=subprocess.PIPE)
+
                         else:
                             p = subprocess.Popen([mcr[0],
                                                   matlab_input,
@@ -2558,49 +2680,84 @@ class PopUpPreferences(QDialog):
                                                  stdin=subprocess.PIPE,
                                                  stdout=subprocess.PIPE,
                                                  stderr=subprocess.PIPE)
+
                         output, err = p.communicate()
+
                         if ((err == b'' and output != b'')
                                 or output.startswith(b'SPM8 ')):
                             # spm8 standalone doesn't accept --version argument
                             # but prints a message that we can interpret as
                             # saying that SPM8 is working anyway.
+
+                            if self.use_spm_standalone_checkbox.isChecked():
+                                config.set_use_spm_standalone(True)
+                                config.set_use_matlab_standalone(True)
+
+                            config.set_spm_standalone_path(spm_input)
+                            config.set_matlab_standalone_path(matlab_input)
+
+                        elif ((err != b'') and
+                              (b'version' in output.split()[2:]) and
+                              (b'(standalone)' in output.split()[2:])):
+
                             if self.use_spm_standalone_checkbox.isChecked():
                                 config.set_use_spm_standalone(True)
                                 config.set_use_matlab_standalone(True)
                             config.set_spm_standalone_path(spm_input)
                             config.set_matlab_standalone_path(matlab_input)
+
+                            if isinstance(err, bytes):
+                                err = err.decode('utf-8')
+
+                            print("\nWarning: The configuration for Matlab MCR "
+                                  "and SPM standalone as defined in Mia's "
+                                  "preferences seems to be valid but the "
+                                  "following issue has been detected:\n{}\n"
+                                  "Please fix this problem to avoid a "
+                                  "malfunction ...".format(err))
+                            
                         elif err != b'':
+
                             if "shared libraries" in str(err):
                                 self.wrong_path(matlab_input,
                                                 "Matlab standalone")
                                 return
+
                             else:
                                 self.wrong_path(spm_input, "SPM standalone")
                                 return
+
                         else:
                             self.wrong_path(spm_input, "SPM standalone")
                             return
+
                     except Exception as e:
                         self.wrong_path(spm_input, "SPM standalone")
                         return
+
                 else:
                     self.wrong_path(spm_input, "SPM standalone")
                     return
             else:
                 self.wrong_path(spm_input, "SPM standalone")
                 return
+
+        # Matlab (MCR)  alone config test
         if matlab_input != "" or self.use_matlab_standalone_checkbox.isChecked():
+
             if 'Windows' in archi[1]:
                 print('WARNING : Matlab Standalone Path enter, this',
                         'is unnecessary to use SPM12.')
                 config.set_use_matlab(True)
                 config.set_use_matlab_standalone(False)
                 config.set_matlab_standalone_path(matlab_input)
+
             elif os.path.isdir(matlab_input):
                 if self.use_matlab_standalone_checkbox.isChecked():
                     config.set_use_matlab(True)
                     config.set_use_matlab_standalone(True)
                 config.set_matlab_standalone_path(matlab_input)
+
             else:
                 self.wrong_path(matlab_input, "Matlab standalone")
                 return
@@ -3472,7 +3629,7 @@ class PopUpSelectIteration(QDialog):
         self.check_boxes = []
         for tag_value in self.tag_values:
             check_box = QCheckBox(tag_value)
-            check_box.setCheckState(Qt.Checked)
+            check_box.setCheckState(QtCore.Qt.Checked)
             self.check_boxes.append(check_box)
             self.v_box.addWidget(check_box)
 
@@ -3771,7 +3928,7 @@ class PopUpShowBrick(QDialog):
         layout = QVBoxLayout()
 
         self.table = QTableWidget()
-        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
 
         # Filling the table
         inputs = getattr(brick_row, BRICK_INPUTS)
@@ -3785,7 +3942,7 @@ class PopUpShowBrick(QDialog):
         self.table.setHorizontalHeaderItem(0, item)
         item = QTableWidgetItem()
         item.setText(getattr(brick_row, BRICK_NAME))
-        item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
         self.table.setItem(0, 0, item)
 
         # Brick init
@@ -3794,7 +3951,7 @@ class PopUpShowBrick(QDialog):
         self.table.setHorizontalHeaderItem(1, item)
         item = QTableWidgetItem()
         item.setText(getattr(brick_row, BRICK_INIT))
-        item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
         self.table.setItem(0, 1, item)
 
         # Brick init time
@@ -3802,7 +3959,7 @@ class PopUpShowBrick(QDialog):
         item.setText(BRICK_INIT_TIME)
         self.table.setHorizontalHeaderItem(2, item)
         item = QTableWidgetItem()
-        item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
         if getattr(brick_row, BRICK_INIT_TIME) is not None:
             item.setText(str(getattr(brick_row, BRICK_INIT_TIME)))
             self.table.setItem(0, 2, item)
@@ -3813,7 +3970,7 @@ class PopUpShowBrick(QDialog):
         self.table.setHorizontalHeaderItem(3, item)
         item = QTableWidgetItem()
         item.setText(getattr(brick_row, BRICK_EXEC))
-        item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
         self.table.setItem(0, 3, item)
 
         # Brick execution time
@@ -3821,7 +3978,7 @@ class PopUpShowBrick(QDialog):
         item.setText(BRICK_EXEC_TIME)
         self.table.setHorizontalHeaderItem(4, item)
         item = QTableWidgetItem()
-        item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
         if getattr(brick_row, BRICK_EXEC_TIME) is not None:
             item.setText(str(getattr(brick_row, BRICK_EXEC_TIME)))
         self.table.setItem(0, 4, item)
@@ -3848,8 +4005,8 @@ class PopUpShowBrick(QDialog):
             else:
                 item = QTableWidgetItem()
                 item.setText(str(value))
-                item.setFlags(item.flags() ^ Qt.ItemIsEditable)
-                item.setTextAlignment(Qt.AlignCenter)
+                item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.table.setItem(0, column, item)
             column += 1
 
@@ -3886,7 +4043,7 @@ class PopUpShowBrick(QDialog):
                 else:
                     item = QTableWidgetItem()
                     item.setText(str(value))
-                    item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+                    item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
                     self.table.setItem(0, column, item)
             column += 1
 

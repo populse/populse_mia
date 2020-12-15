@@ -161,7 +161,7 @@ class ModifyTable(QDialog):
                 tag = self.tags[cell]
                 tag_object = self.project.session.get_field(
                     COLLECTION_CURRENT, tag)
-                tag_type = tag_object.type
+                tag_type = tag_object.field_type
 
                 database_value = []
 

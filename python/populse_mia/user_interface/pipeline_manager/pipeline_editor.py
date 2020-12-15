@@ -36,7 +36,8 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtWidgets import QInputDialog, QLineEdit, QMessageBox
 
 # Capsul imports
-from capsul.api import get_process_instance, Process, PipelineNode, Switch
+from capsul.api import (get_process_instance, Process, PipelineNode, Switch,
+                        capsul_engine, Node)
 from capsul.qt_gui.widgets.pipeline_developper_view import (
                                             NodeGWidget, PipelineDevelopperView)
 from capsul.pipeline.xml import save_xml_pipeline
@@ -98,12 +99,16 @@ class PipelineEditor(PipelineDevelopperView):
                                         show_sub_pipelines=True,
                                         enable_edition=True)
 
+        engine = Config.get_capsul_engine()
+        self.scene.pipeline.set_study_config(engine.study_config)
+
         self.project = project
         self.main_window = main_window
 
         # Undo/Redo
         self.undos = []
         self.redos = []
+        self.userlevel = Config().get_user_level()
 
     def _del_link(self, link=None, from_undo=False, from_redo=False):
         """Delete a link.
@@ -1146,7 +1151,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
     """
 
     pipeline_saved = QtCore.pyqtSignal(str)
-    node_clicked = QtCore.pyqtSignal(str, Process)
+    node_clicked = QtCore.pyqtSignal(str, Node)
+    process_clicked = QtCore.pyqtSignal(str, Process)
     switch_clicked = QtCore.pyqtSignal(str, Switch)
 
     def __init__(self, project, scan_list, main_window):
@@ -1200,6 +1206,9 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         self.tabBarClicked.connect(self.check_modifications)
         self.currentChanged.connect(self.update_current_node)
         self.previousIndex = 0
+
+        # init capsul engine config
+        self.get_capsul_engine()
 
     def check_modifications(self, current_index):
         """Check if the nodes of the current pipeline have been modified.
@@ -1276,9 +1285,12 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             self.undos[p_e] = []
             self.redos[p_e] = []
 
+            self.get_capsul_engine()
+
         for node_name, node in self.get_current_pipeline().nodes.items():
+            process = getattr(node, 'process', node)
             self.main_window.pipeline_manager.displayNodeParameters(
-                node_name, node.process)
+                node_name, process)
 
     def emit_node_clicked(self, node_name, process):
         """Emit a signal when a node is clicked.
@@ -1287,7 +1299,10 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         :param process: process of the corresponding node
         """
 
-        self.node_clicked.emit(node_name, process)
+        if isinstance(process, Process):
+            self.process_clicked.emit(node_name, process)
+        else:
+            self.node_clicked.emit(node_name, process)
 
     def emit_pipeline_saved(self, filename):
         """Emit a signal when a pipeline is saved.
@@ -1325,6 +1340,38 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                 node_name, 'input',
                 pipeline_parameter='database_scans')
         self.get_current_editor().scene.update_pipeline()
+
+    def get_capsul_engine(self):
+        """
+        Get a CapsulEngine object from the edited pipeline, and set it up from
+        MIA config object
+        """
+
+        # save completion attributes for the current pipeline (other pipelines
+        # will lose their values)
+        pipeline = self.get_current_pipeline()
+        completion = getattr(pipeline, 'completion_engine', None)
+        if completion:
+            att_values = completion.get_attribute_values().export_to_dict()
+
+        engine = Config.get_capsul_engine()
+
+        study_config = engine.study_config
+        study_config.input_directory = os.path.join(
+            os.path.abspath(self.project.folder), 'data', 'raw_data')
+        study_config.output_directory = os.path.join(
+            os.path.abspath(self.project.folder), 'data', 'derived_data')
+
+        # restore completion attributes
+        from capsul.attributes.completion_engine import ProcessCompletionEngine
+
+        if completion:
+            completion \
+                = ProcessCompletionEngine.get_completion_engine(pipeline)
+            if completion:
+                completion.get_attribute_values().import_from_dict(att_values)
+
+        return engine
 
     def get_current_editor(self):
         """Get the instance of the current editor.
@@ -1496,6 +1543,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                 new_tab_opened = True
             # get only the file name to load
             filename = self.get_current_editor().load_pipeline('', False)
+            self.get_capsul_engine()
 
         if filename:
             # Check if this pipeline is already open
@@ -1512,6 +1560,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                 editor = self.get_editor_by_index(working_index)
                 # actually load the pipeline
                 filename = editor.load_pipeline(filename)
+                self.get_capsul_engine()
                 if filename:
                     self.setTabText(working_index, os.path.basename(filename))
                     self.update_scans_list()
@@ -1561,6 +1610,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         self.insertTab(self.count() - 1, p_e, name)
         self.set_tab_index(self.count() - 2)
+
+        self.get_capsul_engine()
 
     def open_filter(self, node_name):
         """Open a filter widget.
@@ -1752,12 +1803,14 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         for i in range(self.count() - 1):
             pipeline = self.widget(i).scene.pipeline
-            if hasattr(pipeline, "nodes"):
-                for node_name, node in pipeline.nodes.items():
-                    if node_name == "":
-                        for plug_name, plug in node.plugs.items():
-                            if plug_name == "database_scans":
-                                node.set_plug_value(plug_name, self.scan_list)
+            if pipeline.trait('database_scans'):
+                print('set database_scans:', self.scan_list)
+                try:
+                    setattr(pipeline, 'database_scans', self.scan_list)
+                except Exception as e:
+                    import traceback
+                    traceback.print_exc()
+                    # but continue...
 
 
 def find_filename(paths_list, packages_list, file_name):
@@ -1807,8 +1860,8 @@ def get_path(name, dictionary, prev_paths=None, pckg=None):
 
         if pckg is not None:
             prev_paths.append(pckg)
-            dictionary = dictionary[pckg]
-        
+            dictionary = dictionary.get(pckg, {})
+
     # new_paths is a list containing the packages to the desired module
     new_paths = prev_paths.copy()
     for idx, (key, value) in enumerate(dictionary.items()):

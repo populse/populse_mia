@@ -47,7 +47,7 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_LIST_DATETIME,
                                  FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_INTEGER,
                                  FIELD_TYPE_LIST_STRING, FIELD_TYPE_LIST_TIME,
-                                 FIELD_TYPE_STRING, FIELD_TYPE_TIME, LIST_TYPES)
+                                 FIELD_TYPE_STRING, FIELD_TYPE_TIME)
 
 # capsul import
 from capsul.api import get_process_instance
@@ -106,6 +106,18 @@ class TestMIADataBrowser(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
+    def get_new_test_project(self):
+        # copy the test project in a location we can modify safely
+        project_path = os.path.join(self.config_path, 'project_8')
+        if os.path.exists(project_path):
+            shutil.rmtree(project_path)
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+                                      'project_8')
+        shutil.copytree(project_8_path, project_path)
+        return project_path
+
     def test_add_path(self):
         """
         Tests the popup to add a path
@@ -142,7 +154,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Testing without tag name
@@ -230,7 +242,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         scans_displayed = []
@@ -311,14 +323,15 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         bricks_column = self.main_window.data_browser.table_data.get_tag_column("Bricks")
+
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(8, bricks_column)
-        smmooth_button = bricks_widget.children()[1]
-        self.assertEqual(smmooth_button.text(), "smooth1")
-        QTest.mouseClick(smmooth_button, Qt.LeftButton)
+        smooth_button = bricks_widget.layout().itemAt(0).widget()
+        self.assertEqual(smooth_button.text(), "smooth1")
+        QTest.mouseClick(smooth_button, Qt.LeftButton)
         brick_history = self.main_window.data_browser.table_data.show_brick_popup
         brick_table = brick_history.table
         self.assertEqual(brick_table.horizontalHeaderItem(0).text(), "Name")
@@ -351,7 +364,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Selecting a cell
@@ -380,7 +393,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Testing without new tag name
@@ -416,7 +429,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(test_row.description, bandwidth_row.description)
         self.assertEqual(test_row.unit, bandwidth_row.unit)
         self.assertEqual(test_row.default_value, bandwidth_row.default_value)
-        self.assertEqual(test_row.type, bandwidth_row.type)
+        self.assertEqual(test_row.field_type, bandwidth_row.field_type)
         self.assertEqual(test_row.origin, TAG_ORIGIN_USER)
         self.assertEqual(test_row.visibility, True)
         test_row = self.main_window.project.session.get_field(COLLECTION_INITIAL, "Test")
@@ -424,7 +437,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(test_row.description, bandwidth_row.description)
         self.assertEqual(test_row.unit, bandwidth_row.unit)
         self.assertEqual(test_row.default_value, bandwidth_row.default_value)
-        self.assertEqual(test_row.type, bandwidth_row.type)
+        self.assertEqual(test_row.field_type, bandwidth_row.field_type)
         self.assertEqual(test_row.origin, TAG_ORIGIN_USER)
         self.assertEqual(test_row.visibility, True)
 
@@ -447,7 +460,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         QTest.mouseClick(self.main_window.data_browser.count_table_button, Qt.LeftButton)
@@ -473,12 +486,14 @@ class TestMIADataBrowser(unittest.TestCase):
 
         self.assertEqual(count_table.table.horizontalHeaderItem(0).text(), "BandWidth")
         self.assertEqual(count_table.table.horizontalHeaderItem(1).text(), "75")
-        self.assertEqual(count_table.table.horizontalHeaderItem(2).text(), "5.8239923")
+        self.assertAlmostEqual(
+            float(count_table.table.horizontalHeaderItem(2).text()), 5.8239923)
         self.assertEqual(count_table.table.horizontalHeaderItem(3).text(), "5")
         self.assertEqual(count_table.table.verticalHeaderItem(3).text(), "Total")
         self.assertEqual(count_table.table.item(0, 0).text(), "50000")
         self.assertEqual(count_table.table.item(1, 0).text(), "25000")
-        self.assertEqual(count_table.table.item(2, 0).text(), "65789.48")
+        self.assertAlmostEqual(float(count_table.table.item(2, 0).text()),
+                               65789.48)
         self.assertEqual(count_table.table.item(3, 0).text(), "3")
         self.assertEqual(count_table.table.item(0, 1).text(), "2")
         self.assertEqual(count_table.table.item(1, 1).text(), "")
@@ -567,9 +582,9 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(config.getTextColor(), "")
         self.assertEqual(config.getThumbnailTag(), "SequenceName")
 
-        self.assertEqual(version.parse(yaml.__version__) > version.parse("5.1"), True)
+        #self.assertEqual(version.parse(yaml.__version__) > version.parse("5.1"), True)
         self.assertEqual(version.parse(yaml.__version__) > version.parse("9.1"), False)
-        self.assertEqual(version.parse(yaml.__version__) < version.parse("5.1"), False)
+        #self.assertEqual(version.parse(yaml.__version__) < version.parse("5.1"), False)
         self.assertEqual(version.parse(yaml.__version__) < version.parse("9.1"), True)
 
         self.assertEqual(config.get_projects_save_path(),
@@ -582,8 +597,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
-                                      'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
         scans_displayed = []
         item = self.main_window.data_browser.table_data.item(0, 0)
@@ -598,6 +612,7 @@ class TestMIADataBrowser(unittest.TestCase):
         # Test that the value will not change if the tag's type is incorrect
         old_value = self.main_window.project.session.get_value(
             COLLECTION_CURRENT, scans_displayed[0], "FOV")
+
         mod = ModifyTable(self.main_window.project,
                           value,
                           [type("string")],
@@ -613,7 +628,7 @@ class TestMIADataBrowser(unittest.TestCase):
             COLLECTION_CURRENT, "FOV")
         mod = ModifyTable(self.main_window.project,
                           value,
-                          [tag_object.type],
+                          [tag_object.field_type],
                           scans_displayed,
                           tag_name)
         mod.update_table_values(True)
@@ -629,7 +644,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         self.main_window.data_browser.table_data.itemChanged.disconnect()
@@ -669,7 +684,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         self.assertEqual(self.main_window.project.getName(), "project_8")
@@ -704,7 +719,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         self.main_window.data_browser.open_filter_action.trigger()
@@ -734,8 +749,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
-                                      'project_8')
+        project_8_path = self.get_new_test_project()
 
         os.remove(os.path.join(config.get_config_path(), 'saved_projects.yml'))
 
@@ -776,7 +790,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Checking that the 8 scans are shown in the databrowser
@@ -848,7 +862,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         scans_displayed = []
@@ -929,7 +943,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         bandwidth_column = self.main_window.data_browser.table_data.get_tag_column("BandWidth")
@@ -985,7 +999,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         bandwidth_column = self.main_window.data_browser.table_data.get_tag_column("BandWidth")
@@ -1077,7 +1091,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         bw_column = self.main_window.data_browser.table_data.get_tag_column("BandWidth")
@@ -1113,8 +1127,7 @@ class TestMIADataBrowser(unittest.TestCase):
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
         something_path = os.path.join(mia_path, 'projects', 'something')
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
-                                      'project_8')
+        project_8_path = self.get_new_test_project()
 
         self.main_window.saveChoice() # Saves the project 'something'
         self.assertEqual(self.main_window.project.getName(), "something")
@@ -1166,7 +1179,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Checking that the pipeline manager has an empty list at the beginning
@@ -1241,7 +1254,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Checking that the pipeline manager has an empty list at the beginning
@@ -1316,7 +1329,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         value = float(self.main_window.project.session.get_value(COLLECTION_CURRENT, "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14_10-23-17-02-G1_Guerbet_Anat-RARE__pvm_-00-02-20.000.nii", "BandWidth"))
@@ -1350,7 +1363,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         mixed_bandwidths = []
@@ -1390,8 +1403,7 @@ class TestMIADataBrowser(unittest.TestCase):
     def test_tab_change(self):
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
-                                      'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         self.main_window.tabs.setCurrentIndex(2)
@@ -1413,7 +1425,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         self.assertEqual(self.main_window.project.undos, [])
@@ -1507,7 +1519,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(self.main_window.project.session.get_documents_names(COLLECTION_CURRENT), [])
         self.assertEqual(self.main_window.project.session.get_documents_names(COLLECTION_INITIAL), [])
         collections = self.main_window.project.session.get_collections_names()
-        self.assertEqual(len(collections), 3)
+        self.assertEqual(len(collections), 4)
         self.assertTrue(COLLECTION_INITIAL in collections)
         self.assertTrue(COLLECTION_CURRENT in collections)
         self.assertTrue(COLLECTION_BRICK in collections)
@@ -1576,25 +1588,25 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Testing that FileName is not displayed in the list of visible tags
         settings.tab_tags.search_bar.setText("")
-        visibles_tags = []
+        visible_tags = []
         for row in range (0, settings.tab_tags.list_widget_selected_tags.count()):
             item = settings.tab_tags.list_widget_selected_tags.item(row).text()
-            visibles_tags.append(item)
-        self.assertEqual(len(visibles_tags), 3)
-        self.assertTrue(TAG_BRICKS in visibles_tags)
-        self.assertTrue(TAG_EXP_TYPE in visibles_tags)
-        self.assertTrue(TAG_TYPE in visibles_tags)
+            visible_tags.append(item)
+        self.assertEqual(len(visible_tags), 3)
+        self.assertTrue(TAG_BRICKS in visible_tags)
+        self.assertTrue(TAG_EXP_TYPE in visible_tags)
+        self.assertTrue(TAG_TYPE in visible_tags)
 
         # Testing when hiding a tag
-        settings.tab_tags.list_widget_selected_tags.item(0).setSelected(True) # Bricks tag selected
+        settings.tab_tags.list_widget_selected_tags.item(2).setSelected(True) # Bricks tag selected
         QTest.mouseClick(settings.tab_tags.push_button_unselect_tag, Qt.LeftButton)
-        visibles_tags = []
+        visible_tags = []
         for row in range(0, settings.tab_tags.list_widget_selected_tags.count()):
             item = settings.tab_tags.list_widget_selected_tags.item(row).text()
-            visibles_tags.append(item)
-        self.assertEqual(len(visibles_tags), 2)
-        self.assertTrue(TAG_TYPE in visibles_tags)
-        self.assertTrue(TAG_EXP_TYPE in visibles_tags)
+            visible_tags.append(item)
+        self.assertEqual(len(visible_tags), 2)
+        self.assertTrue(TAG_TYPE in visible_tags)
+        self.assertTrue(TAG_EXP_TYPE in visible_tags)
         QTest.mouseClick(settings.push_button_ok, Qt.LeftButton)
 
         new_visibles = self.main_window.project.session.get_shown_tags()
@@ -1684,6 +1696,18 @@ class TestMIAPipelineManager(unittest.TestCase):
     def tearDownClass(cls):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
+
+    def get_new_test_project(self):
+        # copy the test project in a location we can modify safely
+        project_path = os.path.join(self.config_path, 'project_8')
+        if os.path.exists(project_path):
+            shutil.rmtree(project_path)
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+                                      'project_8')
+        shutil.copytree(project_8_path, project_path)
+        return project_path
 
     def test_add_tab(self):
         """
@@ -1827,14 +1851,15 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         input_process = pipeline.nodes[""].process
         node_controller.display_parameters("inputs", get_process_instance(input_process), pipeline)
-        index = node_controller.get_index_from_plug_name("synchronize", "in")
-        node_controller.line_edit_input[index].setText("2")
-        node_controller.line_edit_input[index].returnPressed.emit()  # This calls "update_plug_value" method
+        if hasattr(node_controller, 'get_index_from_plug_name'):
+            index = node_controller.get_index_from_plug_name("synchronize", "in")
+            node_controller.line_edit_input[index].setText("2")
+            node_controller.line_edit_input[index].returnPressed.emit()  # This calls "update_plug_value" method
 
-        # Calling the display_filter method
-        node_controller.display_filter("inputs", "synchronize", (), input_process)
-        node_controller.pop_up.close()
-        self.assertEqual(2, pipeline.nodes["threshold1"].get_plug_value("synchronize"))
+            # Calling the display_filter method
+            node_controller.display_filter("inputs", "synchronize", (), input_process)
+            node_controller.pop_up.close()
+            self.assertEqual(2, pipeline.nodes["threshold1"].get_plug_value("synchronize"))
 
         # TODO: open a project and modify the filter pop-up
 
@@ -2026,8 +2051,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
-                                      'project_8')
+        project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         iteration_table = self.main_window.pipeline_manager.iterationTable
@@ -2100,7 +2124,10 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         with open(os.path.join(config.get_mia_path(), 'properties',
                                'process_config.yml'), 'r') as stream:
-            pro_dic = yaml.load(stream, Loader=yaml.FullLoader)
+            if verCmp(yaml.__version__, '5.1', 'sup'):
+                pro_dic = yaml.load(stream, Loader=yaml.FullLoader)
+            else:
+                pro_dic = yaml.load(stream)
             self.assertIn("mia_processes", pro_dic["Packages"])
             self.assertIn("brick_test", pro_dic["Packages"])
 
@@ -2117,7 +2144,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         with open(os.path.join(config.get_mia_path(),
                                'properties',
                                'process_config.yml'), 'r') as stream:
-            pro_dic = yaml.load(stream, Loader=yaml.FullLoader)
+            if verCmp(yaml.__version__, '5.1', 'sup'):
+                pro_dic = yaml.load(stream, Loader=yaml.FullLoader)
+            else:
+                pro_dic = yaml.load(stream)
             self.assertNotIn("mia_processes", pro_dic["Packages"])
             self.assertNotIn("brick_test", pro_dic["Packages"])
 
@@ -2279,17 +2309,18 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(1, len(pipeline.nodes["smooth1"].plugs["_smoothed_files"].links_to))
 
         # Updating a plug value
-        index = node_controller.get_index_from_plug_name("out_prefix", "in")
-        node_controller.line_edit_input[index].setText("PREFIX")
-        node_controller.update_plug_value("in", "out_prefix", pipeline, str)
+        if hasattr(node_controller, 'get_index_from_plug_name'):
+            index = node_controller.get_index_from_plug_name("out_prefix", "in")
+            node_controller.line_edit_input[index].setText("PREFIX")
+            node_controller.update_plug_value("in", "out_prefix", pipeline, str)
 
-        self.assertEqual("PREFIX", pipeline.nodes["my_smooth"].get_plug_value("out_prefix"))
+            self.assertEqual("PREFIX", pipeline.nodes["my_smooth"].get_plug_value("out_prefix"))
 
-        pipeline_manager.undo()
-        self.assertEqual("s", pipeline.nodes["my_smooth"].get_plug_value("out_prefix"))
+            pipeline_manager.undo()
+            self.assertEqual("s", pipeline.nodes["my_smooth"].get_plug_value("out_prefix"))
 
-        pipeline_manager.redo()
-        self.assertEqual("PREFIX", pipeline.nodes["my_smooth"].get_plug_value("out_prefix"))
+            pipeline_manager.redo()
+            self.assertEqual("PREFIX", pipeline.nodes["my_smooth"].get_plug_value("out_prefix"))
 
     def test_update_node_name(self):
         """
@@ -2360,16 +2391,17 @@ class TestMIAPipelineManager(unittest.TestCase):
         node_controller.display_parameters("threshold1", get_process_instance(process_class), pipeline)
 
         # Updating the value of the "synchronize" plug
-        index = node_controller.get_index_from_plug_name("synchronize", "in")
-        node_controller.line_edit_input[index].setText("1")
-        node_controller.line_edit_input[index].returnPressed.emit()  # This calls "update_plug_value" method
-        self.assertEqual(1, pipeline.nodes["threshold1"].get_plug_value("synchronize"))
+        if hasattr(node_controller, 'get_index_from_plug_name'):
+            index = node_controller.get_index_from_plug_name("synchronize", "in")
+            node_controller.line_edit_input[index].setText("1")
+            node_controller.line_edit_input[index].returnPressed.emit()  # This calls "update_plug_value" method
+            self.assertEqual(1, pipeline.nodes["threshold1"].get_plug_value("synchronize"))
 
-        # Updating the value of the "_activation_forced" plug
-        index = node_controller.get_index_from_plug_name("_activation_forced", "out")
-        node_controller.line_edit_output[index].setText("True")
-        node_controller.line_edit_output[index].returnPressed.emit()  # This calls "update_plug_value" method
-        self.assertEqual(True, pipeline.nodes["threshold1"].get_plug_value("_activation_forced"))
+            # Updating the value of the "_activation_forced" plug
+            index = node_controller.get_index_from_plug_name("_activation_forced", "out")
+            node_controller.line_edit_output[index].setText("True")
+            node_controller.line_edit_output[index].returnPressed.emit()  # This calls "update_plug_value" method
+            self.assertEqual(True, pipeline.nodes["threshold1"].get_plug_value("_activation_forced"))
 
         # Exporting the input plugs and modifying the "synchronize" input plug
         pipeline_editor_tabs.get_current_editor().current_node_name = "threshold1"
@@ -2378,10 +2410,11 @@ class TestMIAPipelineManager(unittest.TestCase):
         input_process = pipeline.nodes[""].process
         node_controller.display_parameters("inputs", get_process_instance(input_process), pipeline)
 
-        index = node_controller.get_index_from_plug_name("synchronize", "in")
-        node_controller.line_edit_input[index].setText("2")
-        node_controller.line_edit_input[index].returnPressed.emit()  # This calls "update_plug_value" method
-        self.assertEqual(2, pipeline.nodes["threshold1"].get_plug_value("synchronize"))
+        if hasattr(node_controller, 'get_index_from_plug_name'):
+            index = node_controller.get_index_from_plug_name("synchronize", "in")
+            node_controller.line_edit_input[index].setText("2")
+            node_controller.line_edit_input[index].returnPressed.emit()  # This calls "update_plug_value" method
+            self.assertEqual(2, pipeline.nodes["threshold1"].get_plug_value("synchronize"))
 
     def test_z_get_editor(self):
         """

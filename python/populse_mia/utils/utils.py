@@ -35,7 +35,7 @@ from populse_db.database import (
     FIELD_TYPE_INTEGER, FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_STRING,
     FIELD_TYPE_BOOLEAN, FIELD_TYPE_FLOAT, FIELD_TYPE_TIME, FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME, FIELD_TYPE_LIST_TIME, FIELD_TYPE_LIST_DATETIME,
-    FIELD_TYPE_LIST_DATE, LIST_TYPES, FIELD_TYPE_LIST_FLOAT,
+    FIELD_TYPE_LIST_DATE, FIELD_TYPE_LIST_FLOAT,
     FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_STRING)
 
 from populse_mia.software_properties import Config
@@ -75,7 +75,8 @@ def check_value_type(value, value_type, is_subvalue=False):
             return True
         except Exception:
             return False
-    elif value_type in LIST_TYPES and not is_subvalue:
+    elif isinstance(value_type, str) and value_type.startswith('list_') \
+            and not is_subvalue:
         if isinstance(value, str):
             value = ast.literal_eval(value)
         is_valid_value = True
@@ -159,7 +160,7 @@ def set_item_data(item, value, value_type):
     :param value_type: new value type
     """
 
-    if value_type in LIST_TYPES:
+    if value_type.startswith('list_'):
         if isinstance(value, str):
             value = ast.literal_eval(value)
         if value_type == FIELD_TYPE_LIST_DATE:
@@ -276,7 +277,7 @@ def table_to_database(value, value_type):
         elif isinstance(value, str):
             format = "%H:%M:%S.%f"
             return datetime.strptime(value, format).time()
-    elif value_type in LIST_TYPES:
+    elif value_type.startswith('list_'):
         old_list = ast.literal_eval(value)
         list_to_return = []
         for old_element in old_list:

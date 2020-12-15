@@ -102,6 +102,7 @@ ENV/
 
 # Editor backup files
 ~*
+*~
 
 # processes directory
 processes/*

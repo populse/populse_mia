@@ -370,7 +370,7 @@ class ImportWorker(QThread):
             self.project.session.add_document(COLLECTION_INITIAL, documents[
                 document], flush=False)
 
-        self.project.session.session.flush()
+        self.project.session.commit()
         self.notifyProgress.emit(3)
         sleep(0.1)
 

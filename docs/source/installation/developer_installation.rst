@@ -78,3 +78,46 @@ Installation
 |
 
 * On first launch after a developer installation, please `refer to the preferences page <../documentation/preferences.html>`_ to configure populse_mia.
+
+
+Installation in a `virtual environment <https://www.geeksforgeeks.org/creating-python-virtual-environment-windows-linux/>`_ the sources (only tested on linux and macos)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The different steps are noted such that they are independent. Obviously the **workon** command is only necessary once in a terminal session if several of the steps are performed. All the code will reside in a directory called **populse_mia_dir**, and the virtual environment in this example is **populse_mia_env**. Both can be adapted at will (and possibly have the same name if desired).
+
+* Prepare virtual environment and working directory ::
+
+    mkvirtualenv --no-site-packages --python=/usr/bin/python3 populse_mia_env
+    mkdir ~/my_code_directory/populse_mia_dir
+
+* Install populse_mia ::
+
+    cd ~/my_code_directory/populse_mia_dir
+    git clone git@github.com:populse/populse_mia.git populse_mia
+    cd populse_mia
+    workon populse_mia_env
+    python3 setup.py install --prefix ~/.virtualenvs/populse_mia_env
+
+* Install mia_processes ::
+
+    cd ~/my_code_directory/populse_mia_dir
+    git clone git@github.com:populse/mia_processes.git mia_processes
+    cd mia_processes
+    workon populse_mia_env
+    python3 setup.py install --prefix ~/.virtualenvs/populse_mia_env
+
+* Install capsul ::
+
+    cd ~/my_code_directory/populse_mia_dir
+    git clone git@github.com:populse/capsul.git capsul
+    cd capsul
+    workon populse_mia_env
+    python3 setup.py install --prefix ~/.virtualenvs/populse_mia_env
+
+* And so on according to the packages you want to install in the virtual environment (soma-base, soma-worflow, populse_db, mri_conv, etc.)
+
+* Run populse_mia ::
+
+    cd ~/my_code_directory/populse_mia_dir/populse_mia
+    workon populse_mia_env
+    python3 python/populse_mia/main.py

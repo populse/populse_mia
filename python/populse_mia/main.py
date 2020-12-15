@@ -38,6 +38,8 @@ from PyQt5.QtCore import QDir, QLockFile, Qt
 from PyQt5.QtWidgets import (QApplication, QDialog, QPushButton, QLabel,
                              QFileDialog, QVBoxLayout, QHBoxLayout, QLineEdit)
 
+pypath = []
+
 # Adding populse_mia path to the sys.path if in developer mode
 if not os.path.dirname(os.path.dirname(
         os.path.realpath(__file__))) in sys.path:           # "developer" mode
@@ -46,22 +48,47 @@ if not os.path.dirname(os.path.dirname(
                      os.path.dirname(
                        os.path.dirname(
                          os.path.dirname(os.path.realpath(__file__)))))
+    branch = ''
+    populse_bdir = ''
+    capsul_bdir = ''
+    soma_bdir = ''
+
+    if not os.path.isdir(os.path.join(root_dev_dir, 'populse_mia')):
+        # different sources layout - try casa_distro mode
+        root_dev_dir = os.path.dirname(
+                     os.path.dirname(
+                       os.path.dirname(
+                         os.path.dirname(os.path.dirname(__file__)))))
+        if os.path.basename(root_dev_dir) == 'populse':
+            root_dev_dir = os.path.dirname(root_dev_dir)
+            populse_bdir = 'populse'
+            soma_bdir = 'soma'
+        print('root_dev_dir:', root_dev_dir)
+        branch = os.path.basename(os.path.dirname(
+                     os.path.dirname(
+                       os.path.dirname(__file__))))
+        print('branch:', branch)
+
     i = 0
     # Adding populse_mia
     print('\n- Mia in "developer" mode')
-    mia_dev_dir = os.path.join(root_dev_dir, 'populse_mia', 'python')
+    mia_dev_dir = os.path.join(root_dev_dir, populse_bdir, 'populse_mia',
+                               branch, 'python')
     print('  . Using populse_mia package from {} ...'.format(mia_dev_dir))
     sys.path.insert(i, mia_dev_dir)
+    pypath.append(mia_dev_dir)
     del mia_dev_dir
     from populse_mia import info
     print(f"    populse_mia version : {info.__version__}")
 
     # Adding capsul
-    if os.path.isdir(os.path.join(root_dev_dir, 'capsul')):
+    if os.path.isdir(os.path.join(root_dev_dir, capsul_bdir, 'capsul')):
         i += 1
-        capsul_dev_dir = os.path.join(root_dev_dir, 'capsul')
+        capsul_dev_dir = os.path.join(root_dev_dir, capsul_bdir, 'capsul',
+                                      branch)
         print('  . Using capsul package from {} ...'.format(capsul_dev_dir))
         sys.path.insert(i, capsul_dev_dir)
+        pypath.append(capsul_dev_dir)
         del capsul_dev_dir
 
     else:
@@ -72,11 +99,13 @@ if not os.path.dirname(os.path.dirname(
         del capsul
 
      # Adding soma_base:
-    if os.path.isdir(os.path.join(root_dev_dir, 'soma-base')):
+    if os.path.isdir(os.path.join(root_dev_dir, soma_bdir, 'soma-base')):
         i += 1
-        soma_b_dev_dir = os.path.join(root_dev_dir, 'soma-base', 'python')
+        soma_b_dev_dir = os.path.join(root_dev_dir, soma_bdir, 'soma-base',
+                                      branch, 'python')
         print('  . Using soma package from {} ...'.format(soma_b_dev_dir))
         sys.path.insert(i, soma_b_dev_dir)
+        pypath.append(soma_b_dev_dir)
         del soma_b_dev_dir
 
     else:
@@ -87,12 +116,14 @@ if not os.path.dirname(os.path.dirname(
         del soma
 
     # Adding soma_workflow:
-    if os.path.isdir(os.path.join(root_dev_dir, 'soma-workflow')):
+    if os.path.isdir(os.path.join(root_dev_dir, soma_bdir, 'soma-workflow')):
         i += 1
-        soma_w_dev_dir = os.path.join(root_dev_dir, 'soma-workflow', 'python')
+        soma_w_dev_dir = os.path.join(root_dev_dir, soma_bdir, 'soma-workflow',
+                                      branch, 'python')
         print('  . Using soma_workflow package from {} '
               '...'.format(soma_w_dev_dir))
         sys.path.insert(i, soma_w_dev_dir)
+        pypath.append(soma_w_dev_dir)
         del soma_w_dev_dir
 
     else:
@@ -103,12 +134,14 @@ if not os.path.dirname(os.path.dirname(
         del soma_workflow
 
     # Adding populse_db:
-    if os.path.isdir(os.path.join(root_dev_dir, 'populse_db')):
+    if os.path.isdir(os.path.join(root_dev_dir, populse_bdir, 'populse_db')):
         i += 1
-        populse_db_dev_dir = os.path.join(root_dev_dir, 'populse_db', 'python')
+        populse_db_dev_dir = os.path.join(root_dev_dir, populse_bdir,
+                                          'populse_db', branch, 'python')
         print('  . Using populse_db package from {} '
               '...'.format(populse_db_dev_dir))
         sys.path.insert(i, populse_db_dev_dir)
+        pypath.append(populse_db_dev_dir)
         del populse_db_dev_dir
 
     else:
@@ -119,14 +152,15 @@ if not os.path.dirname(os.path.dirname(
         del populse_db
 
     # Adding mia_processes:
-    if os.path.isdir(os.path.join(root_dev_dir, 'mia_processes')):
+    if os.path.isdir(os.path.join(root_dev_dir, populse_bdir,
+                                  'mia_processes')):
         i += 1
-        mia_processes_dev_dir = os.path.join(root_dev_dir,
-                                             'mia_processes',
-                                             'python')
+        mia_processes_dev_dir = os.path.join(root_dev_dir, populse_bdir,
+                                             'mia_processes', branch, 'python')
         print('  . Using mia_processes package from {} '
               '...'.format(mia_processes_dev_dir))
         sys.path.insert(i, mia_processes_dev_dir)
+        pypath.append(mia_processes_dev_dir)
         del mia_processes_dev_dir
 
     else:
@@ -619,6 +653,32 @@ def main():
             msg.setLayout(vbox_layout)
             msg.exec()
             del app
+
+    global pypath
+    if DEV_MODE and pypath:
+        config = Config()
+        config.get_capsul_engine()
+        c = config.get_capsul_config()
+        pc = c.setdefault('engine', {}).setdefault(
+            'global', {}).setdefault('capsul.engine.module.python', {})
+        pc['executable'] = sys.executable
+        if 'path' in pc:
+            matches=[os.path.join('populse_mia', 'python'),
+                     'capsul',
+                     os.path.join('populse_db', 'python'),
+                     os.path.join('mia_processes', 'python'),
+                     os.path.join('soma-base', 'python'),
+                     os.path.join('soma-workflow', 'python')]
+
+            for i in pc['path']:
+
+               if i not in pypath and not any(x in i for x in matches):
+                    pypath.append(i)
+        pc['path'] = pypath
+        print('\nChanged python conf:', pc)
+
+        config.update_capsul_config()
+        config.saveConfig()
 
     verify_processes()
     check_python_version()

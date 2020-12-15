@@ -17,7 +17,7 @@ Contains:
 
 import os
 import tempfile
-from datetime import datetime
+from datetime import datetime, timedelta
 import yaml
 import json
 import glob
@@ -35,6 +35,10 @@ from populse_db.database import (
     FIELD_TYPE_STRING, FIELD_TYPE_LIST_STRING,
     FIELD_TYPE_JSON, FIELD_TYPE_DATETIME,
     FIELD_TYPE_INTEGER)
+
+from capsul.api import Pipeline
+from capsul.pipeline import pipeline_tools
+from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
 
 COLLECTION_CURRENT = "current"
 COLLECTION_INITIAL = "initial"
@@ -108,7 +112,7 @@ class Project():
 
         if project_root_folder is None:
             self.isTempProject = True
-            self.folder = os.path.abspath(tempfile.mkdtemp())
+            self.folder = os.path.relpath(tempfile.mkdtemp())
         else:
             self.isTempProject = False
             self.folder = project_root_folder
@@ -124,11 +128,14 @@ class Project():
                 "The project at " + str(self.folder) + " is already opened "
                                                        "in another instance "
                                                        "of the software.")
-
-        self.database = DatabaseMIA('sqlite:///' + os.path.join(self.folder,
-                                                                'database',
-                                                                'mia.db'))
+        
+        db_folder = os.path.join(self.folder, 'database')
+        if not os.path.exists(db_folder):
+            os.makedirs(db_folder)
+        db = 'sqlite:///' + os.path.join(db_folder, 'mia.db')
+        self.database = DatabaseMIA(db)
         self.session = self.database.__enter__()
+        self.session.add_field_attributes_collection()
 
         if new_project:
 
@@ -251,9 +258,8 @@ class Project():
                                            field_type, clinical_tag, True,
                                            TAG_ORIGIN_BUILTIN, None, None)
 
-            self.session.save_modifications()
-            # Base modifications, do not count for unsaved modifications
-
+        self.session.commit()
+        
         self.properties = self.loadProperties()
 
         self._unsavedModifications = False
@@ -288,7 +294,8 @@ class Project():
                         COLLECTION_INITIAL, getattr(scan, TAG_FILENAME),
                         clinical_tag, None)
                 return_tags.append(clinical_tag)
-
+                self.session.commit()
+                
         return return_tags
 
     def getDate(self):
@@ -358,8 +365,7 @@ class Project():
         False otherwise
         """
 
-        return self.unsavedModifications \
-               or self.session.has_unsaved_modifications()
+        return self.unsavedModifications;
 
     def init_filters(self):
         """Initialize the filters at project opening."""
@@ -538,7 +544,7 @@ class Project():
                     else:
                         set_item_data(
                             item, new_value, self.session.get_field(
-                                COLLECTION_CURRENT, tag).type)
+                                COLLECTION_CURRENT, tag).field_type)
                 table.update_colors()
                 table.itemChanged.connect(table.change_cell_color)
 
@@ -552,7 +558,7 @@ class Project():
                 # Columns updated
                 table.update_visualized_columns(
                     old_tags, self.session.get_shown_tags())
-
+            
     def reput_values(self, values):
         """Re-put the value objects in the database.
 
@@ -639,7 +645,6 @@ class Project():
         still not saved).
         """
 
-        self.session.save_modifications()
         self.saveConfig()
         self.unsavedModifications = False
 
@@ -732,12 +737,12 @@ class Project():
                     tag_to_reput = tags_removed[i][0]
                     self.session.add_field(
                         COLLECTION_CURRENT, tag_to_reput.field_name,
-                        tag_to_reput.type, tag_to_reput.description,
+                        tag_to_reput.field_type, tag_to_reput.description,
                         tag_to_reput.visibility, tag_to_reput.origin,
                         tag_to_reput.unit, tag_to_reput.default_value)
                     self.session.add_field(
                         COLLECTION_INITIAL, tag_to_reput.field_name,
-                        tag_to_reput.type, tag_to_reput.description,
+                        tag_to_reput.field_type, tag_to_reput.description,
                         tag_to_reput.visibility, tag_to_reput.origin,
                         tag_to_reput.unit, tag_to_reput.default_value)
                 # The third element is a list of tags values (Value class)
@@ -824,7 +829,7 @@ class Project():
                             COLLECTION_CURRENT, scan, tag, old_value)
                         set_item_data(
                             item, old_value, self.session.get_field(
-                                COLLECTION_CURRENT, tag).type)
+                                COLLECTION_CURRENT, tag).field_type)
                         # If the new value is None,
                         # the not defined font must be removed
                         if new_value is None:
@@ -878,5 +883,406 @@ class Project():
     def unsaveModifications(self):
         """Unsave the pending operations of the project."""
 
-        self.session.unsave_modifications()
         self.unsavedModifications = False
+
+    def files_in_project(self, files):
+        """
+        Return values in files that are file / directory names within the
+        project folder.
+
+        `files` are walked recursively and can be, or contain, lists, tuples,
+        sets, dicts (only dict `values()` are considered). Dict keys are
+        dropped and all filenames are merged into a single set.
+
+        The returned value is a set of filenames (str).
+        """
+        proj_dir = os.path.join(os.path.abspath(
+            os.path.normpath(self.folder)), '')
+        pl = len(proj_dir)
+
+        values = set()
+        tval = [files]
+        while tval:
+            value = tval.pop(0)
+            if isinstance(value, (list, tuple, set)):
+                tval += value
+                continue
+            if isinstance(value, dict):
+                tval += value.values()
+                continue
+            if not isinstance(value, str):
+                continue
+            aval = os.path.abspath(os.path.normpath(value))
+            if not aval.startswith(proj_dir):
+                continue
+
+            values.add(aval[pl:])
+
+        return values
+
+    def get_data_history(self, path, timepoint=None):
+        """
+        Get the processing history for the given data file.
+
+        the history dict contains several elements:
+
+        - 'parent_files': set of other data used (directy or indirectly) to
+        produce the data.
+        - 'processes': processing bricks set from each ancestor data which
+        lead to the given one. Elements are process (brick) UUIDs.
+
+        Returns
+        -------
+        history: dict
+        """
+
+        def latest_before(datetimes, timepoint):
+            dbest = None
+            ibest = None
+            for i, d in enumerate(datetimes):
+                if d is not None:
+                    delta = timepoint - d
+                    if (delta >= timedelta(0)
+                        and (dbest is None or delta < dbest)):
+                        dbest = delta
+                        ibest = i
+            return ibest
+
+        def latest_brick_before(bricks, timepoint):
+            dates = [b[BRICK_EXEC_TIME] for b in bricks]
+            return latest_before(dates, timepoint)
+
+        parents = set()
+        procs = set()
+        proj_dir = os.path.join(os.path.abspath(
+            os.path.normpath(self.folder)), '')
+        pl = len(proj_dir)
+
+        if timepoint is None:
+            timepoint = datetime.now()
+
+        my_path = path
+        todo = [(path, timepoint)]
+        obsolete = set()
+
+        while todo:
+            path, timepoint = todo.pop(0)
+            bricks = self.session.get_document(
+                COLLECTION_CURRENT, path, fields=[TAG_BRICKS], as_list=True)
+            if not bricks or not bricks[0]:
+                continue
+
+            bricks = bricks[0]
+            # print('bricks:', bricks)
+            brick_docs = list(self.session.get_documents(
+                COLLECTION_BRICK, document_ids=bricks))
+            best = latest_brick_before(brick_docs, timepoint)
+            if best is None:
+                continue
+
+            brick = brick_docs[best]
+            brid = brick[BRICK_ID]
+
+            if path == my_path:
+                obsolete = set(b.ID for b in brick_docs
+                               if b is not None and b.Exec == 'Done')
+            bid = set(b.ID for b in brick_docs)
+            dropped = [b for b in bricks if b not in bid]
+            obsolete.update(dropped)
+
+            #for brid in reversed(bricks):  # process from newer to older
+
+            if brid in procs:
+                continue
+            procs.add(brid)
+            #brick = self.session.get_document(COLLECTION_BRICK, brid)
+            if brick.Exec != 'Done':
+                # not run, this brick has not produced outputs
+                continue
+            brick_timepoint = brick[BRICK_EXEC_TIME]
+
+            inputs = brick[BRICK_INPUTS]
+            values = []
+            tval = list(inputs.values())
+            while tval:
+                value = tval.pop(0)
+                if isinstance(value, list):
+                    tval += value
+                    continue
+                if not isinstance(value, str):
+                    continue
+                aval = os.path.abspath(os.path.normpath(value))
+                if not aval.startswith(proj_dir):
+                    continue
+
+                values.append(aval[pl:])
+
+            values = [value for value in values
+                      if value not in parents]
+            parents.update(values)
+            todo += [(v, brick_timepoint) for v in values]
+
+        obsolete = obsolete.difference(procs)
+
+        return {'parent_files': parents,
+                'processes': procs,
+                'obsolete': obsolete}
+
+    def update_data_history(self, data):
+        """
+        Cleanup earlier history of given data by removing in their bricks list
+        those which correspond to obsolete runs (data has been re-written by
+        more recent runs). This function only updates data status (bricks
+        list), it does not remove obsolete bricks from the database.
+
+        Returns
+        -------
+        obsolete: set
+            set of obsolete bricks thay may become orphan.
+        """
+        #
+        scan_bricks = list(self.session.get_documents(
+            COLLECTION_CURRENT, document_ids=list(data),
+            fields=[TAG_FILENAME, TAG_BRICKS], as_list=True))
+        scan_bricks = {brick[0]: brick[1] for brick in scan_bricks
+                       if brick and brick[0] is not None}
+
+        obsolete = set()
+        for output in data:
+            old_bricks = scan_bricks.get(output)
+            o_hist = self.get_data_history(output)
+            obsolete.update(o_hist['obsolete'])
+            if old_bricks:
+                new_bricks = [brid for brid in old_bricks
+                              if brid in o_hist['processes']]
+                if len(new_bricks) != len(old_bricks):
+                    print('update file history for:', output, ':', old_bricks,
+                          '->', new_bricks)
+                    self.session.set_value(
+                        COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks)
+
+        return obsolete
+
+
+    def finished_bricks(self, engine, pipeline=None, include_done=False):
+        """
+        """
+        bricks = self.get_finished_bricks_in_workflows(engine)
+        if pipeline:
+            pbricks = self.get_finished_bricks_in_pipeline(engine, pipeline)
+            pbricks.update(bricks)
+            bricks = pbricks
+
+        # filter jobs actually in MIA database
+        docs = self.session.get_documents(
+            COLLECTION_BRICK, document_ids=list(bricks.keys()),
+            fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS], as_list=True)
+        docs = {brid: {'brick_exec': brick_exec, 'outputs': outputs}
+                for brid, brick_exec, outputs in docs
+                if include_done or brick_exec == 'Not Done'}
+
+        def updated(d1, d2):
+            d1.update(d2)
+            return d1
+
+        bricks = {brid: updated(value, docs[brid])
+                  for brid, value in bricks.items() if brid in docs}
+
+        # get complete list of outputs to be updated in the database
+        outputs = set()
+        proj_dir = os.path.join(os.path.abspath(os.path.normpath(
+            self.folder)), '')
+        lp = len(proj_dir)
+
+        def _update_set(outputs, output):
+            ''' update the outputs set with file/dir names in output, relative
+            to the project directory '''
+            todo = [output]
+            while todo:
+                output = todo.pop(0)
+                if isinstance(output, (list, set, tuple)):
+                    todo += output
+                elif isinstance(output, str):
+                    path = os.path.abspath(os.path.normpath(output))
+                    if path.startswith(proj_dir): # and os.path.exists(path):
+                        # record only existing files
+                        output = path[lp:]
+                        outputs.add(output)
+
+        procs = {}
+
+        for brid, brdesc in bricks.items():
+            out_data = brdesc['outputs']
+            for param, output in out_data.items():
+                _update_set(outputs, output)
+
+        return {'bricks': bricks, 'outputs': outputs}
+
+    def get_finished_bricks_in_workflows(self, engine):
+        """
+        """
+        import soma_workflow.client as swclient
+        from soma_workflow import constants
+
+        swm = engine.study_config.modules['SomaWorkflowConfig']
+        swm.connect_resource(engine.connected_to())
+        controller = swm.get_workflow_controller()
+
+        jobs = {}
+
+        for wf_id in controller.workflows():
+            wf_st = controller.workflow_elements_status(wf_id)
+
+            finished_jobs = {}
+            for job_st in wf_st[0]:
+                job_id = job_st[0]
+                if job_st[1] != 'done' or job_st[3][0] != 'finished_regularly':
+                    continue
+                finished_jobs[job_id] = job_st
+
+            if not finished_jobs:
+                continue
+
+            wf = controller.workflow(wf_id)
+            for job in wf.jobs:
+                brid = getattr(job, 'uuid', None)
+                if not brid:
+                    continue
+                # get engine job
+                ejob = wf.job_mapping[job]
+                job_id = ejob.job_id
+                status = finished_jobs.get(job_id, None)
+                if not status:
+                    continue
+
+                jobs[brid] = {'workflow': wf_id,
+                              'job': job,
+                              'job_id': job_id,
+                              'swf_status': status}
+
+        return jobs
+
+    def get_finished_bricks_in_pipeline(self, engine, pipeline):
+        """
+        """
+        if not isinstance(pipeline, Pipeline):
+            # it's a single process...
+            procs = {}
+            brid = getattr(pipeline, 'uuid', None)
+            if brid is not None:
+                procs[brid] = {'process': pipeline}
+
+            return procs
+
+        nodes_list = [n for n in pipeline.nodes.items()
+                      if n[0] != ''
+                          and pipeline_tools.is_node_enabled(
+                              pipeline, n[0], n[1])]
+
+        all_nodes = list(nodes_list)
+        while nodes_list:
+            node_name, node = nodes_list.pop(0)
+            if hasattr(node, 'process'):
+                process = node.process
+
+                if isinstance(node, PipelineNode):
+                    new_nodes = [
+                        n for n in process.nodes.items()
+                        if n[0] != ''
+                            and pipeline_tools.is_node_enabled(
+                                process, n[0], n[1])]
+                    nodes_list += new_nodes
+                    all_nodes += new_nodes
+
+        procs = {}
+
+        for node_name, node in all_nodes:
+            if isinstance(node, ProcessNode):
+                process = node.process
+                brid = getattr(process, 'uuid', None)
+                if brid is not None:
+                    procs[brid] = {'process': process}
+
+        return procs
+
+    def get_orphan_bricks(self, bricks=None):
+        """
+        """
+        orphan = set()
+        orphan_weak_files = set()
+        used_bricks = set()
+        if bricks is not None and not isinstance(bricks, list):
+            bricks = list(bricks)
+
+        brick_docs = self.session.get_documents(
+            COLLECTION_BRICK, document_ids=bricks,
+            fields=[BRICK_ID, BRICK_OUTPUTS], as_list=True)
+
+        proj_dir = os.path.join(os.path.abspath(os.path.normpath(
+            self.folder)), '')
+        lp = len(proj_dir)
+
+        for brick in brick_docs:
+            brid = brick[0]
+            if brid is None:
+                continue
+            if brick[1] is None:
+                orphan.add(brid)
+                continue
+
+            todo = list(brick[1].values())
+            values = set()
+            while todo:
+                value = todo.pop(0)
+                if isinstance(value, (list, set, tuple)):
+                    todo += value
+                elif isinstance(value, str):
+                    path = os.path.abspath(os.path.normpath(value))
+                    if path.startswith(proj_dir):
+                        value = path[lp:]
+                        values.add(value)
+            docs = self.session.get_documents(
+                COLLECTION_CURRENT, document_ids=list(values),
+                fields=[TAG_FILENAME, TAG_BRICKS], as_list=True)
+            used = False
+            orphan_files = set()
+            for doc in docs:
+                if doc[1] and brid in doc[1]:
+                    if doc[0].startswith('scripts/'):
+                        # script files are "weak" and should not prevent
+                        # brick deletion.
+                        orphan_files.add(doc[0])
+                        continue
+                    used = True
+                    used_bricks.add(brid)
+                    break
+            if not used:
+                orphan.add(brid)
+                orphan_weak_files.update(orphan_files)
+        if bricks:
+            orphan.update(brid for brid in bricks if brid not in used_bricks)
+
+        return (orphan, orphan_weak_files)
+
+    def cleanup_orphan_bricks(self, bricks=None):
+        """
+        Remove orphan bricks frol the database
+        """
+        obsolete, orphan_files = self.get_orphan_bricks(bricks)
+        print('really orphan:', obsolete)
+        for brick in obsolete:
+            print('remove obsolete brick:', brick)
+            try:
+                self.session.remove_document(COLLECTION_BRICK, brick)
+            except ValueError:
+                pass  # malformed database, the brick doesn't exist
+        for doc in orphan_files:
+            print('remove orphan file:', doc)
+            try:
+                self.session.remove_document(COLLECTION_CURRENT, doc)
+                self.session.remove_document(COLLECTION_INITIAL, doc)
+            except ValueError:
+                pass  # malformed database, the file doesn't exist
+            if os.path.exists(os.path.join(self.folder, doc)):
+                os.unlink(os.path.join(self.folder, doc))
+
