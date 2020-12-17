@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 1.4.0-dev+c71a7bf1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 1.4.0-dev+6651be7b documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.4.0-dev+c71a7bf1 documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+6651be7b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -49,6 +49,7 @@
 <span class="c1">##########################################################################</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="k">import</span> <span class="n">Undefined</span>
 <span class="kn">from</span> <span class="nn">traits.trait_handlers</span> <span class="k">import</span> <span class="n">TraitListObject</span>
 
@@ -71,11 +72,14 @@
 <span class="sd">    .. Methods:</span>
 <span class="sd">        - _after_run_process: method called after the process being run</span>
 <span class="sd">        - _before_run_process: method called before running the process</span>
+<span class="sd">        - _run_process: called to run the process</span>
 <span class="sd">        - get_brick_to_update: give the brick to update given the scan list</span>
 <span class="sd">           of bricks</span>
 <span class="sd">        - get_scan_bricks: give the list of bricks given an output value</span>
 <span class="sd">        - list_outputs: generates the outputs of the process (need to be</span>
 <span class="sd">           overridden)</span>
+<span class="sd">        - make_initResult: make the final dictionnary for outputs,</span>
+<span class="sd">           inheritance and requirement from the initialisation of a brick</span>
 <span class="sd">        - manage_brick_after_run: update process history after the run</span>
 <span class="sd">           (Done status)</span>
 <span class="sd">        - manage_brick_before_run: update process history before running</span>
@@ -87,12 +91,20 @@
 <span class="sd">        - manage_matlab_launch_parameters: Set the Matlab&#39;s config parameters</span>
 <span class="sd">           when a Nipype process is used</span>
 <span class="sd">        - remove_brick_output: remove the bricks from the outputs</span>
+<span class="sd">        - run_process_mia: (need to be overridden)</span>
+<span class="sd">        - switch_to_scripts_dir: Changes the current working directory to</span>
+<span class="sd">           the scripts directory</span>
+<span class="sd">        - switch_to_cur_work_dir: Changes the scripts directory to the</span>
+<span class="sd">           current working directory</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    
 <div class="viewcode-block" id="ProcessMIA.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ProcessMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ProcessMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_dir</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span> <span class="o">=</span> <span class="p">{}</span></div>
         <span class="c1"># self.filters = {}  # use if the filters are set on plugs</span>
 
     <span class="k">def</span> <span class="nf">_after_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_process_result</span><span class="p">):</span>
@@ -111,6 +123,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manage_brick_before_run</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called to run the process.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_dir</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">switch_to_scripts_dir</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_process_mia</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_dir</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">switch_to_cur_work_dir</span><span class="p">()</span>
 <div class="viewcode-block" id="ProcessMIA.get_brick_to_update"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.get_brick_to_update">[docs]</a>    <span class="k">def</span> <span class="nf">get_brick_to_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Give the brick to update, given the scan list of bricks.</span>
 
@@ -163,6 +184,28 @@
 <div class="viewcode-block" id="ProcessMIA.list_outputs"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override the outputs of the process.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ProcessMIA.make_initResult"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.make_initResult">[docs]</a>    <span class="k">def</span> <span class="nf">make_initResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make the initResult_dict from initialisation.&quot;&quot;&quot;</span>        
+        <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">During the </span><span class="si">{0}</span><span class="s1"> process initialisation, some possible &#39;</span>
+                   <span class="s1">&#39;problems were detected:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+             
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- requirement attribute was not found ...&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- inheritance_dict attribute was not found ...&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- outputs attribute was not found ...&#39;</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;requirement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span>
+                <span class="s1">&#39;inheritance_dict&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="ProcessMIA.manage_brick_after_run"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_after_run">[docs]</a>    <span class="k">def</span> <span class="nf">manage_brick_after_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Manages the brick history after the run (Done status).&quot;&quot;&quot;</span>
@@ -248,9 +291,51 @@
                             <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">output_bricks</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
                             <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">output_bricks</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="ProcessMIA.run_process_mia"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.run_process_mia">[docs]</a>    <span class="k">def</span> <span class="nf">run_process_mia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements specific runs for Process_Mia subclasses</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
+<div class="viewcode-block" id="ProcessMIA.switch_to_scripts_dir"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.switch_to_scripts_dir">[docs]</a>    <span class="k">def</span> <span class="nf">switch_to_scripts_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method that changes the current working directory to the scripts</span>
+<span class="sd">           directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cwd</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;output_directory&#39;</span><span class="p">)</span> <span class="ow">or</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;output_directory is not set but is mandatory to &#39;</span>
+                             <span class="s1">&#39;run a Process_Mia&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Changing from </span><span class="si">{0}</span><span class="s1"> directory to </span><span class="si">{1}</span><span class="s1"> directory ...</span><span class="se">\n</span><span class="s1">&#39;</span>
+                                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="ProcessMIA.switch_to_cur_work_dir"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.switch_to_cur_work_dir">[docs]</a>    <span class="k">def</span> <span class="nf">switch_to_cur_work_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method that changes the scripts directory to the current</span>
+<span class="sd">           working directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cwd1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="n">cwd1</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Changing from </span><span class="si">{0}</span><span class="s1"> directory to </span><span class="si">{1}</span><span class="s1"> directory ...</span><span class="se">\n</span><span class="s1">&#39;</span>
+                                                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cwd1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div></div>
 </pre></div>
 
       </div>
