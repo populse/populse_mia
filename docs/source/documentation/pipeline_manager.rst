@@ -230,6 +230,8 @@ The iteration table is a tool used to handle pipeline iteration and is located o
 
 The iteration table is composed of several components that are described below in this tutorial.
 
+Please, read the `"Pipeline iteration" chapter of the "A pipeline example with Populse_MIA's" page <./pipeline_example.html#pipeline-iteration>`_, in order to have a complete vision of how to use iteration.
+
 How to use the iteration table
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
