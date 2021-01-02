@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 1.4.0-dev+2a47d32a documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 1.4.0-dev+761d3b81 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 1.4.0-dev+2a47d32a documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+761d3b81 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -255,6 +255,17 @@ pipeline instance and the type of the plug value</p></li>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed">
+<code class="sig-name descname">parameters_changed</code><span class="sig-paren">(</span><em class="sig-param">param</em>, <em class="sig-param">value</em>, <em class="sig-param">old_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.parameters_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process">
+<code class="sig-name descname">release_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.release_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove notification from process</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter">
 <code class="sig-name descname">update_attributes_from_filter</code><span class="sig-paren">(</span><em class="sig-param">attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_attributes_from_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -281,6 +292,8 @@ new links that are the same than the selected node.</p>
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_parameters">
 <code class="sig-name descname">update_parameters</code><span class="sig-paren">(</span><em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the parameters values.</p>
+<p>Does nothing any longer since the controller widget already reacts to
+changes in the process parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>process</strong> – process of the node</p>
@@ -2259,6 +2272,8 @@ are empty.</p>
 <dd class="field-odd"><dl class="field-list simple">
 <dt class="field-odd">Class</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p>MIAProcessCompletionEngine</p></li>
+<li><p>MIAProcessCompletionEngineFactory</p></li>
 <li><p>ProcessMIA</p></li>
 </ul>
 </dd>
@@ -2267,17 +2282,49 @@ are empty.</p>
 </dl>
 <dl class="class">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">MIAProcessCompletionEngine</code><span class="sig-paren">(</span><em class="sig-param">process</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">MIAProcessCompletionEngine</code><span class="sig-paren">(</span><em class="sig-param">process</em>, <em class="sig-param">name</em>, <em class="sig-param">fallback_engine</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">capsul.attributes.completion_engine.ProcessCompletionEngine</span></code></p>
-<p>A specialized <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessCompletionEngine</span></code> for
-<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessMIA</span></code></a> instances completion.</p>
-<p>Such processes use their method <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ProcessMIA.list_outputs()</span></code></a> to perform
-completion from given input parameters. It is currently not based on
-attributes like in capsul completion.</p>
+<p>A specialized
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessCompletionEngine</span></code> for
+completion of <em>all processes</em> within the Populse_MIA context.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">PopulseMIA</span></code> processes instances and :class:NipypeProcess` instances
+have a special handling.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">PopulseMIA</span></code> processes use their method
+<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ProcessMIA.list_outputs()</span></code></a> to perform completion from given input
+parameters. It is currently not based on attributes like in capsul
+completion, but on filenames.</p>
 <p>Processes also get their matlab / SPM settings filled in from the config if
-they need them.</p>
+they need them (<code class="xref py py-class docutils literal notranslate"><span class="pre">NipypeProcess</span></code> instances).</p>
 <p>If the process use it and it is in the study config, their “project”
 parameter is also filled in, as well as the “output_directory” parameter.</p>
+<p>The “normal” Capsul completion system is also complemented using MIA
+database: attributes from input parameters in the database (called “tags”
+here in MIA) are added to the completion attributes.</p>
+<p>The MIA project will keep track of completed processes, in the correct
+completion order, so that other operations can be performed following the
+same order later after completion.</p>
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">process</em>, <em class="sig-param">name</em>, <em class="sig-param">fallback_engine</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_attributes_with_database">
+<code class="sig-name descname">complete_attributes_with_database</code><span class="sig-paren">(</span><em class="sig-param">process_inputs={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.complete_attributes_with_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_attributes_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Augments the Capsul completion system attributes associated with a
+process. Attributes from the database are queried for input parameters,
+and added to the completion attributes values, if they match.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_nipype_common">
+<em class="property">static </em><code class="sig-name descname">complete_nipype_common</code><span class="sig-paren">(</span><em class="sig-param">process</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.complete_nipype_common"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_nipype_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Nipype parameters for SPM. This is used both on
+<code class="xref py py-class docutils literal notranslate"><span class="pre">NipypeProcess</span></code> and <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessMIA</span></code></a> instances which have the
+appropriate parameters.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">
 <code class="sig-name descname">complete_parameters</code><span class="sig-paren">(</span><em class="sig-param">process_inputs={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.complete_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters" title="Permalink to this definition">¶</a></dt>
@@ -2291,13 +2338,56 @@ should be in a sub-dictionary under the key “capsul_attributes”.</p>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters_mia">
+<code class="sig-name descname">complete_parameters_mia</code><span class="sig-paren">(</span><em class="sig-param">process_inputs={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.complete_parameters_mia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters_mia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Completion for <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessMIA</span></code></a> instances. This is done using their
+:meth: <cite>ProcessMIA.list_outputs</cite> method, which fills in output
+parameters from input values, and sets the internal <cite>inheritance_dict</cite>
+used after completion for data indexation in MIA.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_attribute_values">
+<code class="sig-name descname">get_attribute_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.get_attribute_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_attribute_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get attributes Controller associated to a process or node</p>
+<p>attributes: ProcessAttributes instance</p>
+<p>The default implementation does nothing for a
+single Process instance, and merges attributes from its children if
+the process is a pipeline.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_path_completion_engine">
+<code class="sig-name descname">get_path_completion_engine</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.get_path_completion_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_path_completion_engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a PathCompletionEngine object for the given process.
+The default implementation queries PathCompletionEngineFactory,
+but some specific ProcessCompletionEngine implementations may override
+it for path completion at the process level (FOMs for instance).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_project">
+<em class="property">static </em><code class="sig-name descname">get_project</code><span class="sig-paren">(</span><em class="sig-param">process</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.get_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.path_attributes">
+<code class="sig-name descname">path_attributes</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">parameter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.path_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.path_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.remove_switch_observer">
+<code class="sig-name descname">remove_switch_observer</code><span class="sig-paren">(</span><em class="sig-param">observer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.remove_switch_observer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.remove_switch_observer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory">
 <em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">MIAProcessCompletionEngineFactory</code><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngineFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">capsul.attributes.completion_engine.ProcessCompletionEngineFactory</span></code></p>
-<p>Completion engine factory specialization for ProcessMIA process instances.
+<p>Completion engine factory specialization for Popules MIA context.
 Its <code class="docutils literal notranslate"><span class="pre">factory_id</span></code> is “mia_completion”.</p>
 <p>This factory is activated in the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">StudyConfig</span></code> instance by setting
@@ -2306,7 +2396,10 @@ Its <code class="docutils literal notranslate"><span class="pre">factory_id</spa
 <span class="n">study_config</span><span class="o">.</span><span class="n">process_completion</span> <span class="o">=</span>  <span class="s1">&#39;mia_completion&#39;</span>
 </pre></div>
 </div>
-<p>Once this is done, the completion system will work for all MIA processes.</p>
+<p>Once this is done, the completion system will be activated for all
+processes, and use differently all MIA processes and nipype processes. For
+regular processes, additional database operations will be performed, then
+the underlying completion system will be called (FOM or other).</p>
 <dl class="attribute">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.factory_id">
 <code class="sig-name descname">factory_id</code><em class="property"> = 'mia_completion'</em><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.factory_id" title="Permalink to this definition">¶</a></dt>
@@ -2330,10 +2423,10 @@ instance, which is quite incomplete.</p>
 
 <dl class="class">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">ProcessMIA</code><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">populse_mia.user_interface.pipeline_manager.process_mia.</code><code class="sig-name descname">ProcessMIA</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">capsul.process.process.Process</span></code></p>
 <dl class="simple">
-<dt>Class overriding the default capsul Process class, in order to</dt><dd><p>personalise the run for MIA bricks.</p>
+<dt>Class overriding the default capsul Process class, in order to</dt><dd><p>customise the run for MIA bricks.</p>
 </dd>
 </dl>
 <p>This class is mainly used by MIA bricks.</p>
@@ -2349,36 +2442,14 @@ instance, which is quite incomplete.</p>
 </div>
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the Process class.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.get_brick_to_update">
-<code class="sig-name descname">get_brick_to_update</code><span class="sig-paren">(</span><em class="sig-param">bricks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.get_brick_to_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.get_brick_to_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Give the brick to update, given the scan list of bricks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>bricks</strong> – list of scan bricks</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Brick to update</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.get_scan_bricks">
-<code class="sig-name descname">get_scan_bricks</code><span class="sig-paren">(</span><em class="sig-param">output_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.get_scan_bricks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.get_scan_bricks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Give the list of bricks, given an output value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>output_value</strong> – output value</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of bricks related to the output</p>
-</dd>
-</dl>
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.init_default_traits">
+<code class="sig-name descname">init_default_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.init_default_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.init_default_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically initialise necessary parameters for nipype or capsul</p>
 </dd></dl>
 
 <dl class="method">
@@ -2388,63 +2459,28 @@ instance, which is quite incomplete.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_after_run">
-<code class="sig-name descname">manage_brick_after_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.manage_brick_after_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_after_run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manages the brick history after the run (Done status).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_before_run">
-<code class="sig-name descname">manage_brick_before_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.manage_brick_before_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_before_run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates process history, before running the process.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_output_after_run">
-<code class="sig-name descname">manage_brick_output_after_run</code><span class="sig-paren">(</span><em class="sig-param">output_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.manage_brick_output_after_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_output_after_run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manages the bricks history before the run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>output_value</strong> – output value</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_output_before_run">
-<code class="sig-name descname">manage_brick_output_before_run</code><span class="sig-paren">(</span><em class="sig-param">output_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.manage_brick_output_before_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_brick_output_before_run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manages the bricks history before the run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>output_value</strong> – output value</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_matlab_launch_parameters">
-<code class="sig-name descname">manage_matlab_launch_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.manage_matlab_launch_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.manage_matlab_launch_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the Matlab’s config parameters when a Nipype process is used.</p>
-<p>Called in bricks.</p>
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.make_initResult">
+<code class="sig-name descname">make_initResult</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.make_initResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.make_initResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the initResult_dict from initialisation.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.relax_nipype_exists_constraints">
 <code class="sig-name descname">relax_nipype_exists_constraints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.relax_nipype_exists_constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.relax_nipype_exists_constraints" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Relax the exists constraint of the process.inputs traits</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.remove_brick_output">
-<code class="sig-name descname">remove_brick_output</code><span class="sig-paren">(</span><em class="sig-param">brick</em>, <em class="sig-param">output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.remove_brick_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.remove_brick_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes the bricks from the outputs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>output</strong> – output</p></li>
-<li><p><strong>brick</strong> – brick</p></li>
-</ul>
-</dd>
-</dl>
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.requirements">
+<code class="sig-name descname">requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capsul Process.requirements() implementation using MIA’s
+ProcessMIA.requirement attribute</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.run_process_mia">
+<code class="sig-name descname">run_process_mia</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA.run_process_mia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.run_process_mia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements specific runs for Process_Mia subclasses</p>
 </dd></dl>
 
 </dd></dl>

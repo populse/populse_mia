@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 1.4.0-dev+2a47d32a documentation</title>
+    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 1.4.0-dev+761d3b81 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 1.4.0-dev+2a47d32a documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+761d3b81 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.mini_viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -388,19 +388,22 @@
         <span class="c1"># The image to display depends on the dimension of the image</span>
         <span class="c1"># In the 3D case, each slice is displayed</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">im_2D</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1">#im_2D = im.get_fdata()[:, :, i].copy()</span>
+            <span class="n">im_2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="c1"># In the 4D case, each middle slice of the 3D dimension is displayed</span>
         <span class="c1"># for each time in the 4D dimension</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="n">im_3D</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1">#im_3D = im.get_fdata()[:, :, :, i].copy()</span>
+            <span class="n">im_3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">middle_slice</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">im_3D</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">im_2D</span> <span class="o">=</span> <span class="n">im_3D</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">middle_slice</span><span class="p">]</span>
 
         <span class="c1"># In the 5D case, each first time of the 4D dimension and</span>
         <span class="c1"># its middle slice of the 3D dimension is displayed</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-            <span class="n">im_4D</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1">#im_4D = im.get_fdata()[:, :, :, :, i].copy()</span>
+            <span class="n">im_4D</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">im_3D</span> <span class="o">=</span> <span class="n">im_4D</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">middle_slice</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">im_3D</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">im_2D</span> <span class="o">=</span> <span class="n">im_3D</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">middle_slice</span><span class="p">]</span>
@@ -427,7 +430,8 @@
 
         <span class="n">display_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
         <span class="n">display_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span>  <span class="c1"># this MUST be an integer data type</span>
-        <span class="n">display_pctl</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># percentile (0.5%) of values to clip at the low and high end of intensities.</span>
+        <span class="n">display_pctl</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># percentile (0.5%) of values to clip at the</span>
+                            <span class="c1"># low and high end of intensities.</span>
         <span class="n">display_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">display_type</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
         <span class="n">display_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">display_type</span><span class="p">)</span><span class="o">.</span><span class="n">min</span>
 
@@ -436,30 +440,51 @@
             <span class="n">im2D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">im_2D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
 
         <span class="c1"># Resize image first, for three reasons:</span>
-        <span class="c1">#  1 - it may slightly changes the intensity scale, so re-scaling should be done after this</span>
-        <span class="c1">#  2 - rescaling before rotation is slightly faster, specially for large images (&gt; display_size).</span>
-        <span class="c1">#  3 - rescaling may alter the occurrence of nan or infinite values (e.g. an image may become all-nan)</span>
-        <span class="c1"># anti_aliasing keyword is defined in skimage since version 0.14.0</span>
+        <span class="c1">#  1 - it may slightly changes the intensity scale, so re-scaling</span>
+        <span class="c1">#      should be done after this</span>
+        <span class="c1">#  2 - rescaling before rotation is slightly faster, specially for</span>
+        <span class="c1">#      large images (&gt; display_size).</span>
+        <span class="c1">#  3 - rescaling may alter the occurrence of nan or infinite values</span>
+        <span class="c1">#      (e.g. an image may become all-nan), anti_aliasing keyword is</span>
+        <span class="c1">#      defined in skimage since version 0.14.0</span>
 
         <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sk</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">version</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="s2">&quot;0.14.0&quot;</span><span class="p">):</span>
-            <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span>
-                          <span class="n">anti_aliasing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span>
+                              <span class="n">anti_aliasing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">im2D</span><span class="o">.</span><span class="n">byteswap</span><span class="p">()</span><span class="o">.</span><span class="n">newbyteorder</span><span class="p">(),</span> <span class="n">display_size</span><span class="p">,</span>
+                              <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">anti_aliasing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">im2D</span><span class="o">.</span><span class="n">byteswap</span><span class="p">()</span><span class="o">.</span><span class="n">newbyteorder</span><span class="p">(),</span> <span class="n">display_size</span><span class="p">,</span>
+                              <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
 
         <span class="c1"># Rescale image while handling Nans and infinite values</span>
         <span class="n">im_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">im2D</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">im_mask</span><span class="p">):</span>  <span class="c1"># if we have any finite value to work with</span>
-            <span class="n">im2D</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">im2D</span><span class="p">[</span><span class="n">im_mask</span><span class="p">],</span> <span class="n">display_pctl</span><span class="p">)</span>  <span class="c1"># shift the lower percentile chosen to 0.0</span>
-            <span class="n">im_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">im2D</span><span class="p">[</span><span class="n">im_mask</span><span class="p">],</span> <span class="mf">100.0</span> <span class="o">-</span> <span class="n">display_pctl</span><span class="p">)</span>  <span class="c1"># determine max from upper percentile</span>
+            <span class="c1"># shift the lower percentile chosen to 0.0</span>
+            <span class="n">im2D</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">im2D</span><span class="p">[</span><span class="n">im_mask</span><span class="p">],</span> <span class="n">display_pctl</span><span class="p">)</span>
+            <span class="c1"># determine max from upper percentile</span>
+            <span class="n">im_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">im2D</span><span class="p">[</span><span class="n">im_mask</span><span class="p">],</span> <span class="mf">100.0</span> <span class="o">-</span> <span class="n">display_pctl</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">im_max</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># avoid dividing by zero</span>
-                <span class="n">im2D</span> <span class="o">*=</span> <span class="p">(</span><span class="n">display_max</span> <span class="o">-</span> <span class="n">display_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">im_max</span>  <span class="c1"># re-scale to display range</span>
-            <span class="n">im2D</span> <span class="o">+=</span> <span class="n">display_min</span>  <span class="c1"># shift lowest value to lower limit of display range</span>
-
-        <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_min</span><span class="p">,</span> <span class="n">display_max</span><span class="p">,</span> <span class="n">im2D</span><span class="p">)</span>  <span class="c1"># clip all values to display range, remove infinite values</span>
-        <span class="n">im2D</span> <span class="o">=</span> <span class="n">im2D</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">display_type</span><span class="p">)</span>  <span class="c1"># convert to integer display data type. NaNs get converted to 0.</span>
-
-        <span class="n">im2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Rotate. Copy array to avoid negative strides (Qt doesn&#39;t handle that)</span>
+                <span class="c1"># re-scale to display range</span>
+                <span class="n">im2D</span> <span class="o">*=</span> <span class="p">(</span><span class="n">display_max</span> <span class="o">-</span> <span class="n">display_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">im_max</span>
+            <span class="c1"># shift lowest value to lower limit of display range</span>
+            <span class="n">im2D</span> <span class="o">+=</span> <span class="n">display_min</span>
+            
+        <span class="c1"># clip all values to display range, remove infinite values</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_min</span><span class="p">,</span> <span class="n">display_max</span><span class="p">,</span> <span class="n">im2D</span><span class="p">)</span>
+        <span class="c1"># convert to integer display data type. NaNs get converted to 0.</span>
+        <span class="n">im2D</span> <span class="o">=</span> <span class="n">im2D</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">display_type</span><span class="p">)</span>
+        <span class="c1"># Rotate. Copy array to avoid negative strides (Qt doesn&#39;t handle that)</span>
+        <span class="n">im2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">im2d_provided</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">im2D</span>
@@ -479,20 +504,27 @@
         <span class="c1"># Depending on the dimension, reading the image data and</span>
         <span class="c1"># changing the cursors maximum</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1">#self.im_2D.insert(</span>
+            <span class="c1">#    idx, self.img[idx].get_fdata()[:, :, sl3D].copy())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">im_2D</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
-                <span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+                <span class="n">idx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_4D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_5D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="c1">#self.im_2D.insert(</span>
+            <span class="c1">#    idx, self.img[idx].get_fdata()[:, :, sl3D, sl4D].copy())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">im_2D</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
-                <span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">,</span> <span class="n">sl4D</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+                <span class="n">idx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">,</span> <span class="n">sl4D</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_4D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_5D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+           <span class="c1"># self.im_2D.insert(</span>
+           <span class="c1">#     idx, self.img[idx].get_fdata()[:, :, sl3D, sl4D, sl5D].copy())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">im_2D</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
-                <span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">,</span> <span class="n">sl4D</span><span class="p">,</span> <span class="n">sl5D</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+                <span class="n">idx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">,</span>
+                                                       <span class="n">sl4D</span><span class="p">,</span> <span class="n">sl5D</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_4D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_5D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></div>

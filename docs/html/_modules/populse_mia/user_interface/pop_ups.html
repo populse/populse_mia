@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 1.4.0-dev+2a47d32a documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 1.4.0-dev+761d3b81 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 1.4.0-dev+2a47d32a documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+761d3b81 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -2391,8 +2391,9 @@
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
-        <span class="n">modules</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">]</span>
-        <span class="n">sc_dict</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">]</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">sc_dict</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="c1"># build a temporary new engine (because it may not be validated)</span>
         <span class="n">engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;axon&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;nipype&#39;</span><span class="p">]:</span>
@@ -2400,7 +2401,16 @@
         <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">sc_dict</span><span class="p">)</span>
         <span class="n">envs</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="k">for</span> <span class="n">env</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="n">envs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;capsul_engine&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span> \
+                    <span class="ow">or</span> <span class="s1">&#39;uses&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]:</span>
+                <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;uses&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">module_name</span><span class="p">(</span><span class="n">m</span><span class="p">):</span> <span class="s1">&#39;ALL&#39;</span>
+                                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">keys</span><span class="p">()}}</span>
+            <span class="k">for</span> <span class="n">mod</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s1">&#39;config_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                    <span class="n">val</span><span class="p">[</span><span class="s1">&#39;config_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
         <span class="n">dialog</span> <span class="o">=</span> <span class="n">SettingsEditor</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
         <span class="c1">#dialog = Qt.QDialog()</span>
@@ -2423,12 +2433,15 @@
             <span class="n">settings</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="n">envs</span><span class="p">:</span>
                 <span class="n">settings</span><span class="p">[</span><span class="n">env</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
             <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span>
             <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">_loaded_modules</span><span class="p">)</span>
 
             <span class="c1">#sc_dict = engine.study_config.export_to_dict(</span>
                 <span class="c1">#dict_class=dict, exclude_none=True, exclude_undefined=True)</span>
             <span class="c1">#capsul_config[&#39;study_config&#39;] = sc_dict</span>
+            <span class="k">if</span> <span class="s1">&#39;study_config&#39;</span> <span class="ow">in</span> <span class="n">capsul_config</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">]</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_capsul_config</span><span class="p">(</span><span class="n">capsul_config</span><span class="p">)</span>
 
             <span class="c1"># update matlab/SPM GUI which might have changed</span>
@@ -2553,10 +2566,11 @@
         <span class="n">main_window</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+</span>
                                    <span class="n">main_window</span><span class="o">.</span><span class="n">projectName</span><span class="p">)</span>
 
-        <span class="c1"># SPM &amp; Matlab</span>
+        <span class="c1"># SPM &amp; Matlab (license) config test</span>
 
         <span class="n">matlab_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">spm_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        
         <span class="k">if</span> <span class="p">(</span><span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span>
             <span class="n">spm_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
@@ -2601,7 +2615,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
-        <span class="c1"># Matlab</span>
+            
+        <span class="c1"># Matlab alone config test</span>
         <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">():</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
@@ -2631,48 +2646,65 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
-
+            
+        <span class="c1"># SPM (standalone) &amp; Matlab (MCR)  config test</span>
         <span class="n">spm_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">matlab_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span>
-            <span class="n">spm_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span> <span class="ow">and</span> \
-                                            <span class="ow">not</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">spm_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()):</span>
+
+            <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">))</span> <span class="ow">and</span> 
+                    <span class="p">(</span><span class="ow">not</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab standalone&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
-            <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">()</span> <span class="ow">and</span> \
-                    <span class="n">spm_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="p">((</span><span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">())</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="n">spm_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">())):</span>
+
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
                     <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_input</span><span class="p">):</span>
+
                 <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s1">&#39;spm12_win*.exe&#39;</span><span class="p">))</span>
+                    <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s1">&#39;spm*_win*.exe&#39;</span><span class="p">))</span>
                     <span class="n">pos</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
                     <span class="n">nb_bit_sys</span> <span class="o">=</span> <span class="n">archi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mcr</span><span class="p">)):</span>
                         <span class="n">spm_path</span><span class="p">,</span> <span class="n">spm_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">mcr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
                         <span class="k">if</span> <span class="n">nb_bit_sys</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="n">spm_file_name</span><span class="p">:</span>
                             <span class="n">pos</span> <span class="o">=</span> <span class="n">i</span>
+
                     <span class="k">if</span> <span class="n">pos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                         <span class="k">return</span>
-                <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span> <span class="c1"># to check if no issues with Linux</span>
+
+                <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
                     <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s1">&#39;run_spm*.sh&#39;</span><span class="p">))</span>
+
                 <span class="k">if</span> <span class="n">mcr</span><span class="p">:</span>
+
                     <span class="k">try</span><span class="p">:</span>
+
                         <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                             <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">mcr</span><span class="p">[</span><span class="n">pos</span><span class="p">],</span>
                                                 <span class="s1">&#39;--version&#39;</span><span class="p">],</span>
                                                 <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                                 <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                                 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">mcr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                                   <span class="n">matlab_input</span><span class="p">,</span>
@@ -2680,49 +2712,84 @@
                                                  <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                                  <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                                  <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+
                         <span class="n">output</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
                         <span class="k">if</span> <span class="p">((</span><span class="n">err</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">output</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                                 <span class="ow">or</span> <span class="n">output</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;SPM8 &#39;</span><span class="p">)):</span>
                             <span class="c1"># spm8 standalone doesn&#39;t accept --version argument</span>
                             <span class="c1"># but prints a message that we can interpret as</span>
                             <span class="c1"># saying that SPM8 is working anyway.</span>
+
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+                                <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                                <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+                            <span class="n">config</span><span class="o">.</span><span class="n">set_spm_standalone_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">)</span>
+                            <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
+
+                        <span class="k">elif</span> <span class="p">((</span><span class="n">err</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                              <span class="p">(</span><span class="sa">b</span><span class="s1">&#39;version&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">:])</span> <span class="ow">and</span>
+                              <span class="p">(</span><span class="sa">b</span><span class="s1">&#39;(standalone)&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">:])):</span>
+
                             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                                 <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                                 <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">set_spm_standalone_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">)</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                                <span class="n">err</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Warning: The configuration for Matlab MCR &quot;</span>
+                                  <span class="s2">&quot;and SPM standalone as defined in Mia&#39;s &quot;</span>
+                                  <span class="s2">&quot;preferences seems to be valid but the &quot;</span>
+                                  <span class="s2">&quot;following issue has been detected:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                  <span class="s2">&quot;Please fix this problem to avoid a &quot;</span>
+                                  <span class="s2">&quot;malfunction ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+                            
                         <span class="k">elif</span> <span class="n">err</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+
                             <span class="k">if</span> <span class="s2">&quot;shared libraries&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">):</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span>
                                                 <span class="s2">&quot;Matlab standalone&quot;</span><span class="p">)</span>
                                 <span class="k">return</span>
+
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                                 <span class="k">return</span>
+
                         <span class="k">else</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                             <span class="k">return</span>
+
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                         <span class="k">return</span>
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                     <span class="k">return</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
+
+        <span class="c1"># Matlab (MCR)  alone config test</span>
         <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+
             <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING : Matlab Standalone Path enter, this&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;is unnecessary to use SPM12.&#39;</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab standalone&quot;</span><span class="p">)</span>
                 <span class="k">return</span>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 1.4.0-dev+2a47d32a documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 1.4.0-dev+761d3b81 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 1.4.0-dev+2a47d32a documentation</span></a></h1>
+          <span>populse_mia 1.4.0-dev+761d3b81 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -247,10 +247,10 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="Config.get_capsul_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Config.get_capsul_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_from_engine</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get CAPSUL config dictionary</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
             <span class="s2">&quot;engine_modules&quot;</span><span class="p">,</span>
             <span class="p">[</span><span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">])</span>
@@ -301,6 +301,16 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_spm</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
+        <span class="k">if</span> <span class="n">sync_from_engine</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">capsul_engine</span><span class="p">:</span>
+            <span class="n">econf</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">for</span> <span class="n">environment</span> <span class="ow">in</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">capsul_engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_all_environments</span><span class="p">():</span>
+                <span class="n">eeconf</span> <span class="o">=</span> <span class="n">econf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="c1"># would need a better merging system</span>
+                <span class="n">eeconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">capsul_engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span>
+                        <span class="n">environment</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">capsul_config</span></div>
 
 <div class="viewcode-block" id="Config.get_capsul_engine"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_capsul_engine">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -331,7 +341,7 @@
             <span class="c1"># avoids unneeded updates before it is actually used.</span>
             <span class="k">return</span>
 
-        <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
+        <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">(</span><span class="n">sync_from_engine</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">engine</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">capsul_engine</span>
 
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">,</span> <span class="p">[])</span> \
@@ -344,7 +354,16 @@
         <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">engine_config</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">environment</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">engine_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;capsul_engine&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span> \
+                        <span class="ow">or</span> <span class="s1">&#39;uses&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]:</span>
+                    <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;uses&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">module_name</span><span class="p">(</span><span class="n">m</span><span class="p">):</span> <span class="s1">&#39;ALL&#39;</span>
+                                  <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">()}}</span>
+                <span class="k">for</span> <span class="n">mod</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="s1">&#39;config_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="n">val</span><span class="p">[</span><span class="s1">&#39;config_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">engine</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">engine</span></div>
 
@@ -365,7 +384,8 @@
 <span class="sd">        userlevel: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s2">&quot;study_config&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_level&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+            <span class="s2">&quot;engine&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+              <span class="s1">&#39;capsul.engine.module.axon&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_level&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.get_mainwindow_maximized"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_mainwindow_maximized">[docs]</a>    <span class="k">def</span> <span class="nf">get_mainwindow_maximized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the maximized (fullscreen) flag</span>
@@ -729,6 +749,7 @@
         <span class="sd">&quot;&quot;&quot;Set CAPSUL configuration dict into MIA config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;capsul_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">capsul_config_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_capsul_config</span><span class="p">()</span>  <span class="c1"># store into capsul engine</span>
 
         <span class="c1"># update MIA values</span>
         <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
