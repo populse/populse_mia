@@ -86,10 +86,10 @@ If you'd like to contribute to the project please read our [developer documentat
 
 * The whole populse project is open source
 * Populse_mia is precisely released under the CeCILL software license
-* You can find all the details on the license [here](http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html), or refer to the license file [here](https://github.com/populse/populse_mia/blob/master/LICENSE)
+* All license details can be found [here](http://cecill.info/licences/Licence_CeCILL_V2.1-en.html), or refer to the license file [here](https://github.com/populse/populse_mia/blob/master/LICENSE).
 
 # Support and Communication
 
-If you have a problem or would like to ask a question about how to do something in populse_mia, please [open an issue](https://github.com/populse/populse_mia/issues).
+In case of a problem or to ask a question about how to do something in populse_mia, please [open an issue](https://github.com/populse/populse_mia/issues).
 
-You can even contact the developer team by using populse-support@univ-grenoble-alpes.fr.
+The developer team can even be contacted using populse-support@univ-grenoble-alpes.fr.
