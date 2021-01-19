@@ -37,7 +37,7 @@ import populse_mia
 # -- project information -----------------------------------------------------
 
 project = 'populse_mia'
-copyright = '2018, populse'
+copyright = '2021, populse'
 author = 'populse'
 
 # The short X.Y version

@@ -21,3 +21,7 @@ Populse_MIA's installation
 |
 
 * `Installation from source (to use the latest version of populse_mia) <./from_source_installation.html>`_
+
+|
+
+* `Third party software installations <./3rd-party_installations.html>`_
