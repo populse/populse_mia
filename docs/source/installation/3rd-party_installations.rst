@@ -50,7 +50,7 @@ Installation of FSL 6
 Installation of MRtrix 3
 ------------------------
 
- * From `MRtrix documentation <https://www.fil.ion.ucl.ac.uk/spm/software/download/>`_: ::
+ * From `MRtrix documentation <http://userdocs.mrtrix.org/en/3.0.1/installation/build_from_source.html>`_: ::
 	
      sudo apt-get install git g++ python-is-python3 libeigen3-dev zlib1g-dev libqt5opengl5-dev libqt5svg5-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev libpng-dev
 
@@ -126,7 +126,7 @@ Installation of SPM 12 Standalone and Matlab Runtime
 Installation of Cuda 11.1
 -------------------------
 
- * Install NVidia driver 455 metapackage from Ubuntu 'Update Manager' -> 'paramètres de mises à jour' -> 'pilotes additionnels'.
+ * Install NVidia driver 455 metapackage from Ubuntu 'Software Update Manager' icon -> 'Settings & Livepatch ...' button -> 'Additional Drivers' tab.
 	
  * From	`NVidia documentation <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html>`_: ::
 
@@ -153,11 +153,13 @@ Installation of Cuda 11.1
 Installation of Populse in python3 virtual environment
 ------------------------------------------------------
 
- * From `documentation populse_mia installation <https://populse.github.io/populse_mia/html/installation/installation.html>`_ for developper: :: 
+ * From `documentation populse_mia installation for developper <https://populse.github.io/populse_mia/html/installation/developer_installation.html>`_: :: 
 
+     # require for mri_conv
      sudo apt install openjdk-14-jre-headless
      # to use a python3 virtual environment
      sudo apt install python3-venv
+ 
      mkdir ~/DEV
      mkdir ~/DEV/populse_dev
      cd ~/DEV/populse_dev
@@ -174,7 +176,7 @@ Installation of Populse in python3 virtual environment
      source ~/DEV/py3env/bin/activate
      # For python modules requirements look at https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py of populse_mia
      pip install wheel pyyaml traits==5.2.0 sqlalchemy lark-parser nibabel scikit-image nipype
-     # if you want have an enhanced python editor/debugger
+     # if you want an enhanced python editor/debugger, ie spyder
      pip install spyder
      # to launch it
      cd ~/DEV/populse_dev/populse_mia/python/populse_mia
@@ -230,12 +232,12 @@ Installation of TractSeg
 
 |
 
-Installation de MRIcroGL12 (dcm2nniix, 2d-3d viewer, manual ROI)
+Installation of MRIcroGL12 (dcm2nniix, 2d-3d viewer, manual ROI)
 ----------------------------------------------------------------
 
  * References: 
-	https://www.mccauslandcenter.sc.edu/mricrogl/source
-	https://github.com/rordenlab/MRIcroGL12
+	`Original website <https://www.mccauslandcenter.sc.edu/mricrogl/source>`_
+	`Github website <https://github.com/rordenlab/MRIcroGL12>`_
 
  * `Download last MRIcroGL <https://www.nitrc.org/frs/?group_id=889&release_id=4371>`_, then in a terminal: ::
 
