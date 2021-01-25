@@ -22,6 +22,8 @@
 
 * From source, [to use the latest version of populse_mia](https://populse.github.io/populse_mia/html/installation/from_source_installation.html)
 
+* [Third-party software](https://populse.github.io/populse_mia/html/installation/3rd-party_installations.html)
+
 # Usage
 
   * After an [installation in user mode](https://populse.github.io/populse_mia/html/installation/user_installation.html):

@@ -236,7 +236,7 @@ Installation of MRIcroGL12 (dcm2nniix, 2d-3d viewer, manual ROI)
 ----------------------------------------------------------------
 
  * References: 
-	`Original website <https://www.mccauslandcenter.sc.edu/mricrogl/source>`_
+	`Original website <https://www.mccauslandcenter.sc.edu/mricrogl/source>`_ &
 	`Github website <https://github.com/rordenlab/MRIcroGL12>`_
 
  * `Download last MRIcroGL <https://www.nitrc.org/frs/?group_id=889&release_id=4371>`_, then in a terminal: ::
