@@ -1,5 +1,5 @@
 
-**Short**:
+**Short**:  
   Read-only container:
   - "for Linux, two software must be installed: Python (version >= 2.7) and Singularity (version > 3.6)"
   - mkdir -p $HOME/casa_distro/brainvisa-opensource-master # create an installation directory
