@@ -7,7 +7,7 @@
   - singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.0-1.sif branch=master distro=opensource #Execute the container image using Singularity
   - "set the bin/ directory of the installation directory in the PATH environment variable of the host system, typically add `export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"` in $HOME/.bashrc if unix bash shell
   - "add `cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3` in the [ build $CASA_BUILD ] section of the $HOME/casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg file (host) to make python3 as default"
-  - bv_maker #  to build from within the terminal or from outside the container
+  - bv_maker #  to build from within container terminal or from outside the container
   - bv # to run the configuration GUI
   - bv bash # to open a terminal in the container
 
