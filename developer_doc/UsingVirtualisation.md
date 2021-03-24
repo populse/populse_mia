@@ -10,7 +10,7 @@
   - bv_maker #  to build from within the terminal or from outside the container
   - bv # to run the configuration GUI
   - bv bash # to open a terminal in the container
-  - 
+
   To create a container within a writable directory:
   - sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.0-1_wr $HOME/casa_distro/casa-dev-5.0-1.sif # To make an editable image (casa-dev-5.0-1_wr)
   - sudo singularity run --writable $HOME/casa_distro/casa-dev-5.0-1_wr bash # To modify the image
