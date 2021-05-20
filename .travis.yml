@@ -33,8 +33,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink python@2; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python@3.8; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew uninstall --ignore-dependencies python@3.9; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade freetype; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --force python@3.8; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install freetype; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --overwrite freetype; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libpng; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install git-lfs; fi
@@ -56,14 +56,38 @@ install:
   - pip3 install --upgrade numpy
   - pip3 install --upgrade cython
   #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install --upgrade pywavelets; fi
+  - pip3 install 'scipy<1.5'
+  - pip3 install 'matplotlib'
+  - python3 -c "import matplotlib; print(matplotlib.__version__)"
   - python3 setup.py install
   #- pip3 install codecov
   - python3 -m pip install codecov
   - python3 -m pip install --force-reinstall pyqt5==5.11.3
+  - pip3 install -U 'six>=1.13'
   - cd ..
-  - git clone --depth=50 --branch=master https://github.com/populse/populse_db.git
+  - git clone --depth=50 --branch=2.0 https://github.com/populse/populse_db.git
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes populse_db; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes populse_db; fi
   - cd populse_db
   - pip3 install -e .[postgres]
+  - cd ..
+  - git clone --depth=50 --branch=master https://github.com/populse/soma-base.git
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-base; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-base; fi
+  - cd soma-base
+  - python3 setup.py install
+  - cd ..
+  - git clone --depth=50 --branch=master https://github.com/populse/soma-workflow.git
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-workflow; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-workflow; fi
+  - cd soma-workflow
+  - python3 setup.py install
+  - cd ..
+  - git clone --depth=50 --branch=master https://github.com/populse/capsul.git
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes capsul; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes capsul; fi
+  - cd capsul
+  - python3 setup.py install
   - cd ..
   - cd populse_mia
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PYTHONPATH="$PYTHONPATH:/home/travis/build/populse/populse_mia/python"; fi
