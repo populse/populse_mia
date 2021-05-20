@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 2.0.0-dev+5de7418c documentation</title>
+    <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
+          <span>populse_mia 2.0.0-dev+5de7418c documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.data_manager.database_mia</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for populse_mia.data_manager.database_mia</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*- #</span>
+<span class="sd">&quot;&quot;&quot;Module that contains class to override the default behaviour of</span>
+<span class="sd">populse_db and some of its methods</span>
+
+<span class="sd">:Contains:</span>
+<span class="sd">   Class:</span>
+<span class="sd">      - DatabaseMIA</span>
+<span class="sd">      - DatabaseSessionMIA</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1">##########################################################################</span>
+<span class="c1"># Populse_mia - Copyright (C) IRMaGe/CEA, 2018</span>
+<span class="c1"># Distributed under the terms of the CeCILL license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">##########################################################################</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">create_engine</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span>
+    <span class="n">Enum</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Table</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">ArgumentError</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.schema</span> <span class="k">import</span> <span class="n">CreateTable</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">mapper</span>
+
+<span class="c1"># Populse_db imports</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Database</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_INTEGER</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_JSON</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_JSON</span><span class="p">,</span>
+    <span class="n">DatabaseSession</span><span class="p">)</span>
+
+<span class="n">TAG_ORIGIN_BUILTIN</span> <span class="o">=</span> <span class="s2">&quot;builtin&quot;</span>
+<span class="n">TAG_ORIGIN_USER</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span>
+
+<span class="c1"># Tag unit</span>
+<span class="n">TAG_UNIT_MS</span> <span class="o">=</span> <span class="s2">&quot;ms&quot;</span>
+<span class="n">TAG_UNIT_MM</span> <span class="o">=</span> <span class="s2">&quot;mm&quot;</span>
+<span class="n">TAG_UNIT_DEGREE</span> <span class="o">=</span> <span class="s2">&quot;degree&quot;</span>
+<span class="n">TAG_UNIT_HZPIXEL</span> <span class="o">=</span> <span class="s2">&quot;Hz/pixel&quot;</span>
+<span class="n">TAG_UNIT_MHZ</span> <span class="o">=</span> <span class="s2">&quot;MHz&quot;</span>
+
+<span class="n">ALL_UNITS</span> <span class="o">=</span> <span class="p">[</span><span class="n">TAG_UNIT_MS</span><span class="p">,</span> <span class="n">TAG_UNIT_MM</span><span class="p">,</span>
+             <span class="n">TAG_UNIT_DEGREE</span><span class="p">,</span> <span class="n">TAG_UNIT_HZPIXEL</span><span class="p">,</span> <span class="n">TAG_UNIT_MHZ</span><span class="p">]</span>
+    
+<span class="n">FIELD_ATTRIBUTES_COLLECTION</span> <span class="o">=</span> <span class="s1">&#39;mia_field_attributes&#39;</span>
+
+
+<div class="viewcode-block" id="DatabaseSessionMIA"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA">[docs]</a><span class="k">class</span> <span class="nc">DatabaseSessionMIA</span><span class="p">(</span><span class="n">DatabaseSession</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class overriding the database session of populse_db</span>
+
+<span class="sd">    .. Methods:</span>
+<span class="sd">        - add_collection: overrides the method adding a collection</span>
+<span class="sd">        - add_field: adds a field to the database, if it does not already exist</span>
+<span class="sd">        - add_fields: adds the list of fields</span>
+<span class="sd">        - get_shown_tags: gives the list of visible tags</span>
+<span class="sd">        - set_shown_tags: sets the list of visible tags</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.add_collection"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_collection">[docs]</a>    <span class="k">def</span> <span class="nf">add_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">visibility</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span>
+                       <span class="n">default_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override the method adding a collection of populse_db.</span>
+
+<span class="sd">        :param name: New collection name</span>
+<span class="sd">        :param primary_key: New collection primary_key column</span>
+<span class="sd">        :param visibility: Primary key visibility</span>
+<span class="sd">        :param origin: Primary key origin</span>
+<span class="sd">        :param unit: Primary key unit</span>
+<span class="sd">        :param default_value: Primary key default value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_field_attributes_collection</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                          <span class="p">{</span>
+                              <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">|</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">),</span>
+                              <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="n">primary_key</span><span class="p">,</span>
+                              <span class="s1">&#39;visibility&#39;</span><span class="p">:</span> <span class="n">visibility</span><span class="p">,</span>
+                              <span class="s1">&#39;origin&#39;</span><span class="p">:</span> <span class="n">origin</span><span class="p">,</span>
+                              <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="n">unit</span><span class="p">,</span>
+                              <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="n">default_value</span><span class="p">,</span>
+                          <span class="p">})</span></div>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.add_field_attributes_collection"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field_attributes_collection">[docs]</a>    <span class="k">def</span> <span class="nf">add_field_attributes_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span>
+                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="s1">&#39;visibility&#39;</span><span class="p">,</span>
+                <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="s1">&#39;origin&#39;</span><span class="p">,</span>
+                <span class="n">FIELD_TYPE_STRING</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="s1">&#39;unit&#39;</span><span class="p">,</span>
+                <span class="n">FIELD_TYPE_STRING</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="s1">&#39;default_value&#39;</span><span class="p">,</span>
+                <span class="n">FIELD_TYPE_STRING</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.add_field"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field">[docs]</a>    <span class="k">def</span> <span class="nf">add_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
+                  <span class="n">visibility</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">default_value</span><span class="p">,</span>
+                  <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a field to the database, if it does not already exist.</span>
+
+<span class="sd">        :param collection: field collection (str)</span>
+<span class="sd">        :param name: field name (str)</span>
+<span class="sd">        :param field_type: field type (string, int, float, boolean, date,</span>
+<span class="sd">                           datetime, time, list_string, list_int, list_float,</span>
+<span class="sd">                           list_boolean, list_date, list_datetime, or list_time)</span>
+<span class="sd">        :param description: field description (str or None)</span>
+<span class="sd">        :param visibility: Bool to know if the field is visible in the</span>
+<span class="sd">                           databrowser</span>
+<span class="sd">        :param origin: To know the origin of a field,</span>
+<span class="sd">                       in [TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER]</span>
+<span class="sd">        :param unit: Origin of the field, in [TAG_UNIT_MS, TAG_UNIT_MM,</span>
+<span class="sd">                     TAG_UNIT_DEGREE, TAG_UNIT_HZPIXEL, TAG_UNIT_MHZ]</span>
+<span class="sd">        :param default_value: Default_value of the field, can be str or None</span>
+<span class="sd">        :param flush: bool to know if the table classes must be updated (put</span>
+<span class="sd">                      False if in the middle of filling fields) =&gt; True by</span>
+<span class="sd">                      default</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                          <span class="p">{</span>
+                              <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">|</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
+                              <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                              <span class="s1">&#39;visibility&#39;</span><span class="p">:</span> <span class="n">visibility</span><span class="p">,</span>
+                              <span class="s1">&#39;origin&#39;</span><span class="p">:</span> <span class="n">origin</span><span class="p">,</span>
+                              <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="n">unit</span><span class="p">,</span>
+                              <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="n">default_value</span><span class="p">,</span>
+                          <span class="p">})</span></div>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.add_fields"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_fields">[docs]</a>    <span class="k">def</span> <span class="nf">add_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add the list of fields.</span>
+
+<span class="sd">        :param fields: list of fields (collection, name, type, description,</span>
+<span class="sd">        visibility, origin, unit, default_value)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="c1"># Adding each field</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                           <span class="n">field</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.remove_field"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.remove_field">[docs]</a>    <span class="k">def</span> <span class="nf">remove_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a field in the collection</span>
+
+<span class="sd">        :param collection: Field collection (str, must be existing)</span>
+
+<span class="sd">        :param field: Field name (str, must be existing), or list of fields (list of str, must all be existing)</span>
+
+<span class="sd">        :raise ValueError: - If the collection does not exist</span>
+<span class="sd">                           - If the field does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">remove_field</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">fields</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                                 <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">|</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.get_field"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_field">[docs]</a>    <span class="k">def</span> <span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">|</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;visibility&#39;</span><span class="p">,</span> <span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="s1">&#39;unit&#39;</span><span class="p">,</span> <span class="s1">&#39;default_value&#39;</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span><span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">field</span></div>
+    
+<div class="viewcode-block" id="DatabaseSessionMIA.get_fields"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_fields">[docs]</a>    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_fields</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">field_name</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">|</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;visibility&#39;</span><span class="p">,</span> <span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="s1">&#39;unit&#39;</span><span class="p">,</span> <span class="s1">&#39;default_value&#39;</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span><span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fields</span></div>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.get_shown_tags"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_shown_tags">[docs]</a>    <span class="k">def</span> <span class="nf">get_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Give the list of visible tags.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        the list of visible tags</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">visible_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">names_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                                       <span class="s1">&#39;</span><span class="si">{visibility}</span><span class="s1"> == true&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_set</span><span class="p">:</span>
+                <span class="n">names_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">field</span><span class="p">)</span>
+                <span class="n">visible_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">field</span><span class="p">)</span>  <span class="c1"># respect list order</span>
+        <span class="k">return</span> <span class="n">visible_names</span></div>
+
+<div class="viewcode-block" id="DatabaseSessionMIA.set_shown_tags"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.set_shown_tags">[docs]</a>    <span class="k">def</span> <span class="nf">set_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_shown</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the list of visible tags.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fields_shown: list</span>
+<span class="sd">            list of visible tags</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                           <span class="s1">&#39;visibility&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">field</span> <span class="ow">in</span> <span class="n">fields_shown</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="DatabaseMIA"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA">[docs]</a><span class="k">class</span> <span class="nc">DatabaseMIA</span><span class="p">(</span><span class="n">Database</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class overriding the default behavior of populse_db</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">database_session_class</span> <span class="o">=</span> <span class="n">DatabaseSessionMIA</span></div>
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, populse.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>
