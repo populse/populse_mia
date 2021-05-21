@@ -7,9 +7,9 @@ import sys
 
 # Current version
 version_major = 1
-version_minor = 4
+version_minor = 5
 version_micro = 0
-version_extra = "dev" # leave empty for release
+version_extra = "" # leave empty for release
 
 # Expected by setup.py: string of form "X.Y.Z"
 if version_extra:
@@ -101,11 +101,11 @@ REQUIRES = [
     'jinja2 == 2.8.1',
     'lark-parser >= 0.7.0',
     'matplotlib',
-    'mia-processes >= 1.3.0',
+    'mia-processes == 1.5.0',
     'nibabel',
     'nipype',
     'pillow',
-    'populse-db',
+    'populse-db == 1.5.0',
     'pyqt5 == 5.14.0',
     'python-dateutil',
     'pyyaml',
