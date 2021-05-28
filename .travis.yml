@@ -65,12 +65,12 @@ install:
   - python3 -m pip install --force-reinstall pyqt5==5.11.3
   - pip3 install -U 'six>=1.13'
   - cd ..
-  - git clone --depth=50 --branch=2.0 https://github.com/populse/populse_db.git
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes populse_db; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes populse_db; fi
-  - cd populse_db
-  - pip3 install -e .[postgres]
-  - cd ..
+  #- git clone --depth=50 --branch=mater https://github.com/populse/populse_db.git
+  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes populse_db; fi
+  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes populse_db; fi
+  #- cd populse_db
+  #- pip3 install -e .[postgres]
+  #- cd ..
   - git clone --depth=50 --branch=master https://github.com/populse/soma-base.git
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip3 uninstall --yes soma-base; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 uninstall --yes soma-base; fi
