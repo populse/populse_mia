@@ -229,7 +229,7 @@ Pipeline iteration
 
 A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use "iterations" which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.
 
-The pipeline manager simplifies this operation using the "Iterate pipeline" button and :ref:`iteration-table-loabel`.
+The pipeline manager simplifies this operation using the "Iterate pipeline" button and :ref:`iteration-table-label`.
 
 There are two ways to iterate a pipeline (or a process): one is by cerating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
 
@@ -289,6 +289,8 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 Via input filters
 ^^^^^^^^^^^^^^^^^
 
+Input filters are filters applying to the database entries. The filter process that is ready to use in the mia_processes package, since the 1.1.1 release (Input_filter brick). The mia_processes package is available from the `Cheese Shop`_.
+
 Quickly
 #######
 
@@ -324,77 +326,26 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 Manually
 ########
 
-To be able to iterate the pipeline correctly, you will need a filter process that is ready to use in the mia_processes package, since the 1.1.1 release (Input_filter brick). The mia_processes package is available from the `Cheese Shop`_.
+It is possible to use input filter processes manually. They should be connected to the main ``database_scans`` parameter of the pipeline (or exported under this name), which acts as a data source for filters.
 
+* Add a process or a pipeline in a new editor by dragging it from the process library (under User_processes) and dropping it to the pipeline editor. An example is provided in :doc:`pipeline_example`, in the :ref:`iteration section <pipeline-iter-filter-example-label>`.
 
-* Add the previously saved pipeline in a new editor by dragging it from the process library (under User_processes) and dropping it to the pipeline editor.
+* If the process is not designed for iteration (if its parameters are not lists), then click the "iterate pipeline" button in order to create an iteration node with lists as parameters.
 
-.. image:: ../images/pipeline_example_4.png
-   :align: center
-   :name: Pipeline example 4
-
-|
-
-* Add Input_filter processes in front of each input that comes from the database (Anat_file, FLASH_file and MDEFT_file)
-    * Note: a file_to_list process is added before the Anat_file plug because Input_filter's output is of type List, and Anat_file plug is of type File.
-
-.. image:: ../images/pipeline_example_5.png
-   :align: center
-   :name: Pipeline example 5
-
-|
+* Add Input_filter processes in front of each input that comes from the database
 
 * For each Input_filter process, right-click on it and select "Open filter". In the filter pop-up, modify the filter to apply.
     * For exemple, for the Anat_file plug. Set : "Exp Type == Anat" in the Advanced Search.
-
-.. image:: ../images/pipeline_example_6.png
-   :align: center
-   :name: Pipeline example 6
-
-|
 
 * Right-click on one of the Input_filter processes and select "Export to database_scans".
 
 * Add links between "database_scans" and the input of the other Input_filter processes.
 
-.. image:: ../images/pipeline_example_7.png
-   :align: center
-   :name: Pipeline example 7
-
-|
-
 * Export the other node plugs by right-clicking on "realign_coreg_smooth1" node and selecting "Export all unconnected plugs".
     * The pipeline becomes enabled.
 
-.. image:: ../images/pipeline_example_8.png
-   :align: center
-   :name: Pipeline example 8
-
-|
-
-* Save the pipeline in the proposed folder by clicking on the bottom left "Pipeline" menu.
-
-* Click on the "inputs" or "outputs" node and modify the parameters in the node controller
-
-.. image:: ../images/pipeline_example_9.png
-   :align: center
-   :name: Pipeline example 9
-
-|
-
-* Save the set of parameters that you have just modified by clicking on "Save pipeline parameters" in the bottom left "Pipeline" menu.
-    * This step is not mandatory. But by saving these parameters, the next time you open the pipeline, you will be able load them directly by clicking on "Load pipeline parameters" in the bottom left "Pipeline" menu.
-
-* Set up the iteration table.
-    * Check the "Iterate pipeline" check box and select to iterate over the "Patient" tag.
+* Set up the iteration table: see :ref:`iteration-table-label`.
     * By changing the value of the selected Patient, you change the list of documents in "database_scans"
-
-.. image:: ../images/pipeline_example_10.png
-   :align: center
-   :name: Pipeline example 10
-
-
-
 
 
 .. _iteration-table-label:
@@ -441,6 +392,7 @@ Assume that the current project contains several patients, so several "Patient" 
 
 Note: if you want to use pipeline iteration, you have to have a pipeline global input called "database_scans". Only this plug will be updated for each iteration and will contain all the documents that have the correct tag value.
 
+.. _`Cheese Shop`: https://pypi.org/search/?q=mia_processes
 
 
 
