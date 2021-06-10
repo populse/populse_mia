@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+5de7418c documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+ffbee46a documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.0-dev+ffbee46a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+5de7418c documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+ffbee46a documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,7 +36,7 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <h1>Source code for populse_mia.software_properties</h1><div class="highlight"><pre>
@@ -57,7 +67,7 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="k">import</span> <span class="n">Fernet</span>
+<span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="kn">import</span> <span class="n">Fernet</span>
 
 <span class="n">CONFIG</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc=&#39;</span>
 
@@ -145,6 +155,8 @@
 <span class="sd">          Runtime</span>
 <span class="sd">        - get_max_projects: returns the maximum number of projects displayed in</span>
 <span class="sd">          the &quot;Saved projects&quot; menu</span>
+<span class="sd">        - get_max_thumbnails:  get max thumbnails number at the data browser</span>
+<span class="sd">          bottom</span>
 <span class="sd">        - get_mia_path: returns the software&#39;s install path</span>
 <span class="sd">        - get_mri_conv_path: sets the MRIManager.jar path</span>
 <span class="sd">        - getNbAllSlicesMax: returns the maximum number of slices to display in</span>
@@ -178,15 +190,20 @@
 <span class="sd">        - getPathToProjectsDBFile: returns the already-saved projects&#39;s path</span>
 <span class="sd">          (currently commented)</span>
 <span class="sd">        - isAutoSave: checks if auto-save mode is activated</span>
+<span class="sd">        - isControlV1: checks if the selected display of the controller is of </span>
+<span class="sd">          V1 type</span>
 <span class="sd">        - loadConfig: reads the config in the config.yml file</span>
 <span class="sd">        - saveConfig: saves the config to the config.yml file</span>
 <span class="sd">        - set_admin_hash: set the password hash</span>
 <span class="sd">        - setAutoSave: sets the auto-save mode</span>
 <span class="sd">        - setBackgroundColor: sets the background color</span>
+<span class="sd">        - setControlV1: Set controller display mode (True if V1)</span>
 <span class="sd">        - set_capsul_config: set CAPSUL configuration dict into MIA config</span>
 <span class="sd">        - setChainCursors: set the &quot;chain cursors&quot; checkbox of the mini viewer</span>
 <span class="sd">        - set_mainwindow_maximized: set the maximized (fullscreen) flag</span>
 <span class="sd">        - set_mainwindow_size: set main window size</span>
+<span class="sd">        - set_max_thumbnails: set max thumbnails number at the data browser</span>
+<span class="sd">          bottom</span>
 <span class="sd">        - set_fsl_config: set the path of the FSL config file</span>
 <span class="sd">        - set_matlab_path: set the path of Matlab&#39;s executable</span>
 <span class="sd">        - set_matlab_standalone_path: set the path of Matlab Compiler Runtime</span>
@@ -223,7 +240,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">capsul_engine</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Config.__init__"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the Config class</span>
 
 <span class="sd">        :Parameters:</span>
@@ -239,7 +256,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loadConfig</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;mia_user_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Config.get_admin_hash"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_admin_hash">[docs]</a>    <span class="k">def</span> <span class="nf">get_admin_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the value of the hash of the admin password.</span>
@@ -333,7 +350,7 @@
 <span class="sd">        Get a global CapsulEngine object used for all operations in MIA</span>
 <span class="sd">        application. The engine is created once when needed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
@@ -486,6 +503,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_projects&quot;</span><span class="p">])</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">5</span></div>
+
+<div class="viewcode-block" id="Config.get_max_thumbnails"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_max_thumbnails">[docs]</a>    <span class="k">def</span> <span class="nf">get_max_thumbnails</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the max thumbnails number at the data browser bottom.</span>
+
+<span class="sd">        :return: Integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_thumbnails&quot;</span><span class="p">])</span>
+
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">5</span></div>
 
@@ -742,8 +772,15 @@
 <span class="sd">        :return: boolean</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># used only in tests and when the background/text color is changed</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;auto_save&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.isControlV1"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.isControlV1">[docs]</a>    <span class="k">def</span> <span class="nf">isControlV1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get if the display of the controller is of V1 type.</span>
+
+<span class="sd">        :return: boolean</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;control_V1&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.loadConfig"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.loadConfig">[docs]</a>    <span class="k">def</span> <span class="nf">loadConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read the config in the config.yml file.</span>
@@ -805,7 +842,7 @@
         <span class="c1"># update MIA values</span>
         <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">engine_config</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+            <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
             <span class="n">new_engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">environment</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">engine_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">new_engine</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
@@ -906,6 +943,16 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_projects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nb_max_projects</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.set_max_thumbnails"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_max_thumbnails">[docs]</a>    <span class="k">def</span> <span class="nf">set_max_thumbnails</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_max_thumbnails</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set max thumbnails number at the data browser bottom.</span>
+
+<span class="sd">        :param: nb_max_thumbnails: Integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_thumbnails&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nb_max_thumbnails</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
@@ -1036,6 +1083,15 @@
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Config.setControlV1"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setControlV1">[docs]</a>    <span class="k">def</span> <span class="nf">setControlV1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controlV1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set controller display mode (True if V1).</span>
+
+<span class="sd">        :param: controlV1: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;control_V1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">controlV1</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Config.setNbAllSlicesMax"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setNbAllSlicesMax">[docs]</a>    <span class="k">def</span> <span class="nf">setNbAllSlicesMax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_slices_max</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the number of slices to display in the miniviewer.</span>
 
@@ -1136,7 +1192,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

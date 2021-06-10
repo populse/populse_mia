@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.0.0-dev+5de7418c documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.0.0-dev+ffbee46a documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.0.0-dev+ffbee46a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+5de7418c documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+ffbee46a documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,7 +36,7 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <h1>Source code for populse_mia.user_interface.pop_ups</h1><div class="highlight"><pre>
@@ -83,14 +93,14 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">QCoreApplication</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">QCoreApplication</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QCheckBox</span><span class="p">,</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span>
     <span class="n">QTableWidgetItem</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QTreeWidget</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">,</span>
     <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QHeaderView</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span>
@@ -98,30 +108,30 @@
     <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QFormLayout</span><span class="p">,</span> <span class="n">QPlainTextEdit</span><span class="p">)</span>
 
 <span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_INTEGER</span><span class="p">,</span> <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">TAG_ORIGIN_USER</span><span class="p">,</span> <span class="n">TAG_UNIT_MS</span><span class="p">,</span> <span class="n">TAG_UNIT_MM</span><span class="p">,</span> <span class="n">TAG_UNIT_HZPIXEL</span><span class="p">,</span>
     <span class="n">TAG_UNIT_DEGREE</span><span class="p">,</span> <span class="n">TAG_UNIT_MHZ</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">,</span> <span class="n">BRICK_EXEC</span><span class="p">,</span> <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span> <span class="n">BRICK_INIT</span><span class="p">,</span>
     <span class="n">BRICK_INIT_TIME</span><span class="p">,</span> <span class="n">BRICK_INPUTS</span><span class="p">,</span> <span class="n">BRICK_OUTPUTS</span><span class="p">,</span> <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
     <span class="n">TAG_TYPE</span><span class="p">,</span> <span class="n">TYPE_NII</span><span class="p">,</span> <span class="n">TYPE_MAT</span><span class="p">,</span> <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TYPE_UNKNOWN</span><span class="p">,</span> <span class="n">TYPE_TXT</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">verCmp</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser</span> <span class="k">import</span> <span class="n">data_browser</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="n">Project</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">verCmp</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser</span> <span class="kn">import</span> <span class="n">data_browser</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">Project</span>
 
-<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="k">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.tools</span> <span class="k">import</span> <span class="n">ClickableLabel</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="k">import</span> <span class="n">check_value_type</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.tools</span> <span class="kn">import</span> <span class="n">ClickableLabel</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="n">check_value_type</span>
 
 
 <div class="viewcode-block" id="DefaultValueListCreation"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.DefaultValueListCreation">[docs]</a><span class="k">class</span> <span class="nc">DefaultValueListCreation</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
@@ -137,7 +147,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DefaultValueListCreation.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.DefaultValueListCreation.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param type: type of the list (e.g. list of int, list of float, etc.)</span>
@@ -227,7 +237,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_layout</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_final</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DefaultValueListCreation.add_element"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.DefaultValueListCreation.add_element">[docs]</a>    <span class="k">def</span> <span class="nf">add_element</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;One more element added to the list.</span>
@@ -346,9 +356,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DefaultValueQLineEdit.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.DefaultValueQLineEdit.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 
 <div class="viewcode-block" id="DefaultValueQLineEdit.mousePressEvent"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.DefaultValueQLineEdit.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Mouse pressed on the QLineEdit.</span>
@@ -379,7 +389,7 @@
     <span class="c1"># has been created</span>
     <span class="n">signal_add_tag</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpAddTag.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpAddTag.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -515,7 +525,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">700</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Add a tag&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpAddTag.ok_action"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpAddTag.ok_action">[docs]</a>    <span class="k">def</span> <span class="nf">ok_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Verifies that each field is correct and send the new tag</span>
@@ -646,7 +656,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpAddPath.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpAddPath.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the PopUp AddPath.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -689,7 +699,7 @@
         <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ok_button</span><span class="p">)</span>
         <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">cancel_button</span><span class="p">)</span>
         <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_layout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_layout</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_layout</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpAddPath.file_to_choose"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpAddPath.file_to_choose">[docs]</a>    <span class="k">def</span> <span class="nf">file_to_choose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Lets the user choose a file to import.</span>
@@ -817,7 +827,7 @@
     <span class="c1"># has been created</span>
     <span class="n">signal_clone_tag</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpCloneTag.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpCloneTag.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -898,7 +908,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox</span><span class="p">)</span>
 
         <span class="c1"># Connecting the OK push button</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok_action</span><span class="p">(</span><span class="n">project</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok_action</span><span class="p">(</span><span class="n">project</span><span class="p">))</span>
 
 <div class="viewcode-block" id="PopUpCloneTag.ok_action"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpCloneTag.ok_action">[docs]</a>    <span class="k">def</span> <span class="nf">ok_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Verifies the specified name is correct and send the</span>
@@ -998,7 +1008,7 @@
     <span class="n">do_not_save_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
     <span class="n">cancel_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpClosePipeline.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpClosePipeline.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param pipeline_name: name of the pipeline (basename)</span>
@@ -1036,7 +1046,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_save_as</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_as_clicked</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_do_not_save</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">do_not_save_clicked</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_clicked</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_clicked</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpClosePipeline.can_exit"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpClosePipeline.can_exit">[docs]</a>    <span class="k">def</span> <span class="nf">can_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the value of bool_exit.</span>
@@ -1076,7 +1086,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpDeleteProject.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDeleteProject.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1132,7 +1142,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpDeleteProject.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDeleteProject.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete the selected projects after confirmation.&quot;&quot;&quot;</span>
@@ -1180,7 +1190,7 @@
 <div class="viewcode-block" id="PopUpDeletedProject"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDeletedProject">[docs]</a><span class="k">class</span> <span class="nc">PopUpDeletedProject</span><span class="p">(</span><span class="n">QMessageBox</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Indicate the names of deleted project when the software starts.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpDeletedProject.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDeletedProject.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;These projects have been renamed, moved or deleted:</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -1193,7 +1203,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="PopUpDataBrowserCurrentSelection"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection">[docs]</a><span class="k">class</span> <span class="nc">PopUpDataBrowserCurrentSelection</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
@@ -1204,7 +1214,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpDataBrowserCurrentSelection.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -1242,7 +1252,7 @@
         <span class="n">screen_resolution</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">screenGeometry</span><span class="p">()</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
 
 <div class="viewcode-block" id="PopUpDataBrowserCurrentSelection.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates the &quot;scan_list&quot; attribute of several widgets.&quot;&quot;&quot;</span>
@@ -1269,7 +1279,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpFilterSelection.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpFilterSelection.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -1328,7 +1338,7 @@
         <span class="n">vbox_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">vbox_top_left</span><span class="p">)</span>
         <span class="n">vbox_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_buttons</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_final</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_final</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpFilterSelection.cancel_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpFilterSelection.cancel_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Closes the pop-up.&quot;&quot;&quot;</span>
@@ -1373,7 +1383,7 @@
     <span class="c1"># has been created</span>
     <span class="n">signal_preferences_change</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpInformation.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpInformation.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -1395,13 +1405,13 @@
         <span class="n">box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">date_label</span><span class="p">)</span>
         <span class="n">box</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">box</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">box</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PopUpInheritanceDict"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpInheritanceDict">[docs]</a><span class="k">class</span> <span class="nc">PopUpInheritanceDict</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Is called to select from which input the output will inherit the tags.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="PopUpInheritanceDict.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpInheritanceDict.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">iterate</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">iterate</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization</span>
 
 <span class="sd">        :param values: A dictionary with input name as key and their paths</span>
@@ -1486,7 +1496,7 @@
             <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;&lt;i&gt;Theses choices will be valid for each iteration.&lt;/i&gt;&quot;</span>
             <span class="n">v_box_values</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">QLabel</span><span class="p">(</span><span class="n">label</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_values</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_values</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpInheritanceDict.on_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpInheritanceDict.on_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">on_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Event when radiobutton is clicked&quot;&quot;&quot;</span>
@@ -1543,7 +1553,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpMultipleSort.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpMultipleSort.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">table_data_browser</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">table_data_browser</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -1608,7 +1618,7 @@
         <span class="c1"># Layouts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_layout</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_layout</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PopUpMultipleSort.add_tag"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpMultipleSort.add_tag">[docs]</a>    <span class="k">def</span> <span class="nf">add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds a push button.&quot;&quot;&quot;</span>
@@ -1709,7 +1719,7 @@
     <span class="c1"># has been created</span>
     <span class="n">signal_create_project</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpNewProject.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpNewProject.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.&quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -1717,7 +1727,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setAcceptMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">AcceptSave</span><span class="p">)</span>
 
         <span class="c1"># Setting the projects directory as default</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="n">utils</span><span class="o">.</span><span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpNewProject.get_filename"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpNewProject.get_filename">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name_tuple</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sets the widget&#39;s attributes depending on the selected file name.</span>
@@ -1757,14 +1767,14 @@
     <span class="c1"># has been created</span>
     <span class="n">signal_create_project</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpOpenProject.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpOpenProject.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">DontUseNativeDialog</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">Directory</span><span class="p">)</span>
 
         <span class="c1"># Setting the projects directory as default</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="n">utils</span><span class="o">.</span><span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpOpenProject.get_filename"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpOpenProject.get_filename">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name_tuple</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sets the widget&#39;s attributes depending on the selected file name.</span>
@@ -1819,7 +1829,7 @@
     <span class="n">signal_preferences_change</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
     <span class="n">use_user_mode_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpPreferences.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param main_window: main window object of the software</span>
@@ -1847,9 +1857,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_tools</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;tab_tools&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_widget</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_tools</span><span class="p">,</span> <span class="n">_translate</span><span class="p">(</span><span class="s2">&quot;Dialog&quot;</span><span class="p">,</span> <span class="s2">&quot;Tools&quot;</span><span class="p">))</span>
 
-        <span class="c1"># Groupbox &quot;Global preferences&quot;</span>
+        <span class="c1">## Groupbox &quot;Global preferences&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_global</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;Global preferences&quot;</span><span class="p">)</span>
 
+        <span class="c1">## Auto save</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Auto save&quot;</span><span class="p">)</span>
 
@@ -1861,6 +1872,7 @@
         <span class="n">h_box_auto_save</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_label</span><span class="p">)</span>
         <span class="n">h_box_auto_save</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
+        <span class="c1">## Admin mode + Change password + Edit config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_switch</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Admin mode&quot;</span><span class="p">)</span>
@@ -1888,18 +1900,47 @@
         <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span><span class="p">)</span>
         <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
+        <span class="c1">## Version 1 controller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Version 1 controller&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">control_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">h_box_control</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_control</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_checkbox</span><span class="p">)</span>
+        <span class="n">h_box_control</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_label</span><span class="p">)</span>
+        <span class="n">h_box_control</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1">## Max thumbnails number at the data browser bottom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span>
+            <span class="s1">&#39;Max thumbnails number at the data browser bottom:&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSpinBox</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span><span class="o">.</span><span class="n">setMinimum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_max_thumbnails</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">h_box_max_thumbnails</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_max_thumbnails</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span><span class="p">)</span>
+        <span class="n">h_box_max_thumbnails</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1">## Draws graphic objects</span>
         <span class="n">v_box_global</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_auto_save</span><span class="p">)</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_user_mode</span><span class="p">)</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_psswd</span><span class="p">)</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span><span class="p">)</span>
+        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_control</span><span class="p">)</span>
+        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_label</span><span class="p">)</span>
+        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_max_thumbnails</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_global</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_global</span><span class="p">)</span>
 
-        <span class="c1"># Groupbox &quot;Projects preferences&quot;</span>
+        <span class="c1">### Groupbox &quot;Projects preferences&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_projects</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;Projects preferences&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Projects folder label/line edit</span>
+        <span class="c1">### Projects folder label/line edit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projects_save_path_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Projects folder:&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projects_save_path_line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span>
             <span class="n">config</span><span class="o">.</span><span class="n">get_projects_save_path</span><span class="p">())</span>
@@ -1907,7 +1948,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">projects_save_path_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">browse_projects_save_path</span><span class="p">)</span>
 
-        <span class="c1"># Max projects in &quot;Saved projects&quot;</span>
+        <span class="c1">### Max projects in &quot;Saved projects&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_projects_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span>
             <span class="s1">&#39;Number of projects in &quot;Saved projects&quot;:&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_projects_box</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSpinBox</span><span class="p">()</span>
@@ -1917,7 +1958,7 @@
         <span class="c1"># self.max_projects_box.setDecimals(0)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_projects_box</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># Projects preferences layouts</span>
+        <span class="c1">### Draws graphic objects</span>
         <span class="n">h_box_projects_save</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_projects_save</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projects_save_path_line_edit</span><span class="p">)</span>
         <span class="n">h_box_projects_save</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projects_save_path_browse</span><span class="p">)</span>
@@ -1940,17 +1981,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_projects</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">projects_layout</span><span class="p">)</span>
 
-        <span class="c1"># Groupbox &quot;POPULSE third party preferences&quot;</span>
+        <span class="c1">#### Groupbox &quot;POPULSE third party preferences&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_populse</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span>
             <span class="s2">&quot;POPULSE third party preference&quot;</span><span class="p">)</span>
 
-        <span class="c1"># MRI File Manager folder label/line edit</span>
+        <span class="c1">#### MRI File Manager folder label/line edit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Absolute path to MRIManager.jar:&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path_line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mri_conv_path</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path_browse</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browse_mri_conv_path</span><span class="p">)</span>
 
-        <span class="c1"># MRI File Manager layouts</span>
+        <span class="c1">#### Draws graphic objects</span>
         <span class="n">h_box_mri_conv</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_mri_conv</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path_line_edit</span><span class="p">)</span>
         <span class="n">h_box_mri_conv</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path_browse</span><span class="p">)</span>
@@ -2271,7 +2312,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_changed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_changed</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_changed</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpPreferences.browse_fsl"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_fsl">[docs]</a>    <span class="k">def</span> <span class="nf">browse_fsl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called when fsl browse button is clicked.&quot;&quot;&quot;</span>
@@ -2429,9 +2470,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpPreferences.edit_capsul_config"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">edit_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
         <span class="c1">#from soma.qt_gui.controller_widget import ScrollControllerWidget</span>
-        <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.settings_editor</span> <span class="k">import</span> <span class="n">SettingsEditor</span>
+        <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.settings_editor</span> <span class="kn">import</span> <span class="n">SettingsEditor</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
@@ -2546,6 +2587,17 @@
             <span class="n">config</span><span class="o">.</span><span class="n">setAutoSave</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">setAutoSave</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Version 1 controller</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">setControlV1</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">setControlV1</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Max thumbnails number at the data browser bottom</span>
+        <span class="n">max_thumbnails</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span><span class="o">.</span><span class="n">value</span><span class="p">(),</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">15</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_max_thumbnails</span><span class="p">(</span><span class="n">max_thumbnails</span><span class="p">)</span>
 
         <span class="c1"># Projects folder</span>
         <span class="n">projects_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projects_save_path_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
@@ -3070,7 +3122,7 @@
     <span class="c1"># been created</span>
     <span class="n">signal_settings_change</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpProperties.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpProperties.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">old_tags</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">old_tags</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -3123,7 +3175,7 @@
         <span class="n">vbox</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_widget</span><span class="p">)</span>
         <span class="n">vbox</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_buttons</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpProperties.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpProperties.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Saves the modifications and updates the data browser.&quot;&quot;&quot;</span>
@@ -3167,7 +3219,7 @@
     <span class="n">do_not_save_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
     <span class="n">cancel_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpQuit.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpQuit.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param database: current database in the project</span>
@@ -3204,7 +3256,7 @@
 
         <span class="n">push_button_save_as</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_as_clicked</span><span class="p">)</span>
         <span class="n">push_button_do_not_save</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">do_not_save_clicked</span><span class="p">)</span>
-        <span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_clicked</span><span class="p">)</span></div>
+        <span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_clicked</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpQuit.can_exit"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpQuit.can_exit">[docs]</a>    <span class="k">def</span> <span class="nf">can_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the value of bool_exit.</span>
@@ -3244,7 +3296,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpRemoveScan.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpRemoveScan.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;The document exists in the pipeline manager&quot;</span><span class="p">)</span>
@@ -3281,7 +3333,7 @@
         <span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_clicked</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">push_button_yes_all</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yes_all_clicked</span><span class="p">)</span>
-            <span class="n">push_button_no_all</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">no_all_clicked</span><span class="p">)</span></div>
+            <span class="n">push_button_no_all</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">no_all_clicked</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpRemoveScan.cancel_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpRemoveScan.cancel_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stop</span> <span class="o">=</span> <span class="kc">True</span>
@@ -3319,7 +3371,7 @@
     <span class="c1"># the project has been created</span>
     <span class="n">signal_remove_tag</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpRemoveTag.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpRemoveTag.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Initialization</span>
 
 <span class="sd">        :param databrowser: current project in the software</span>
@@ -3382,7 +3434,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox</span><span class="p">)</span>
 
         <span class="c1"># Connecting the OK push buttone</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ok_action</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ok_action</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpRemoveTag.ok_action"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpRemoveTag.ok_action">[docs]</a>    <span class="k">def</span> <span class="nf">ok_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Verifies the selected tags and send the information to the data</span>
@@ -3427,8 +3479,8 @@
 <div class="viewcode-block" id="QLabel_clickable"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.QLabel_clickable">[docs]</a><span class="k">class</span> <span class="nc">QLabel_clickable</span><span class="p">(</span><span class="n">QLabel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Custom class to click on a QLabel&quot;&quot;&quot;</span>
     <span class="n">clicked</span><span class="o">=</span><span class="n">pyqtSignal</span><span class="p">()</span>
-<div class="viewcode-block" id="QLabel_clickable.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.QLabel_clickable.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">QLabel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QLabel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
 
 <div class="viewcode-block" id="QLabel_clickable.mousePressEvent"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.QLabel_clickable.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div></div>
@@ -3447,7 +3499,7 @@
     <span class="c1"># that the new file name has been chosen</span>
     <span class="n">signal_saved_project</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpSaveProjectAs.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Save project as&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="kc">False</span>
@@ -3507,7 +3559,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_text</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span>
 
         <span class="c1"># self.finished.connect(self.return_value)</span>
 
@@ -3584,7 +3636,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpSeeAllProjects.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSeeAllProjects.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_projects</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_projects</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param saved_projects: List of saved projects</span>
@@ -3645,7 +3697,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">vBox</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treeWidget</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vBox</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hBoxButtons</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vBox</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vBox</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpSeeAllProjects.checkState"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSeeAllProjects.checkState">[docs]</a>    <span class="k">def</span> <span class="nf">checkState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks if the project still exists and returns the corresponding</span>
@@ -3711,7 +3763,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpSelectFilter.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -3729,7 +3781,7 @@
         <span class="k">for</span> <span class="nb">filter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">filters</span><span class="p">:</span>
             <span class="n">item</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QListWidgetItem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_filters</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-            <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+            <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpSelectFilter.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectFilter.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Saves the modifications and updates the data browser.&quot;&quot;&quot;</span>
@@ -3756,7 +3808,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpSelectIteration.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectIteration.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterated_tag</span><span class="p">,</span> <span class="n">tag_values</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterated_tag</span><span class="p">,</span> <span class="n">tag_values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param iterated_tag: name of the iterated tag</span>
@@ -3812,7 +3864,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_bottom</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpSelectIteration.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectIteration.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sends the selected values to the pipeline manager.&quot;&quot;&quot;</span>
@@ -3841,7 +3893,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpTagSelection.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpTagSelection.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -3900,7 +3952,7 @@
         <span class="n">vbox_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">vbox_top_left</span><span class="p">)</span>
         <span class="n">vbox_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_buttons</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_final</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_final</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpTagSelection.cancel_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpTagSelection.cancel_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Closes the pop-up.&quot;&quot;&quot;</span>
@@ -3964,7 +4016,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpSelectTag.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectTag.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -3986,7 +4038,7 @@
                     <span class="n">item</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
                 <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">sortItems</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">sortItems</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PopUpSelectTag.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectTag.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -4011,7 +4063,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpSelectTagCountTable.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">tags_to_display</span><span class="p">,</span> <span class="n">tag_name_checked</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">tags_to_display</span><span class="p">,</span> <span class="n">tag_name_checked</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -4033,7 +4085,7 @@
                     <span class="n">item</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
                 <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">sortItems</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">sortItems</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PopUpSelectTagCountTable.ok_clicked"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates the selected tag and closes the pop-up.&quot;&quot;&quot;</span>
@@ -4057,7 +4109,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PopUpShowBrick.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowBrick.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">brick_uuid</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">brick_uuid</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Prepares the brick history popup.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -4209,7 +4261,7 @@
         <span class="n">screen_resolution</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">screenGeometry</span><span class="p">()</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">width</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">width</span><span class="p">))</span>
 
 <div class="viewcode-block" id="PopUpShowBrick.io_value_is_scan"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowBrick.io_value_is_scan">[docs]</a>    <span class="k">def</span> <span class="nf">io_value_is_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks if the I/O value is a scan.</span>
@@ -4258,7 +4310,7 @@
     <span class="c1"># have been changed</span>
     <span class="n">signal_preferences_change</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PopUpVisualizedTags.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpVisualizedTags.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">visualized_tags</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">visualized_tags</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -4354,7 +4406,7 @@
                     <span class="c1"># Tag visible: right side</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_selected_tags</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
                 <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">sortItems</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">sortItems</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PopUpVisualizedTags.search_str"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpVisualizedTags.search_str">[docs]</a>    <span class="k">def</span> <span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Matches the searched pattern with the tags of the project.</span>
@@ -4424,7 +4476,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>
