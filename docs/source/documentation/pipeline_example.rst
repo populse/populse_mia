@@ -69,7 +69,7 @@ Pipeline creation
 Pipeline iteration
 ------------------
 
-There are two ways to iterate a pipeline (or a process): one is by cerating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
+There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
 
 Direct iteration
 ++++++++++++++++
