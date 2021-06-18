@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+ffbee46a documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+ffbee46a',
+        VERSION:     '2.0.0-dev+792625ea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+ffbee46a documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -192,6 +192,8 @@
 <span class="sd">        - isAutoSave: checks if auto-save mode is activated</span>
 <span class="sd">        - isControlV1: checks if the selected display of the controller is of </span>
 <span class="sd">          V1 type</span>
+<span class="sd">        - isRadioView: checks if miniviewer in radiological orientation (if</span>
+<span class="sd">           not, then it is in neurological orientation)</span>
 <span class="sd">        - loadConfig: reads the config in the config.yml file</span>
 <span class="sd">        - saveConfig: saves the config to the config.yml file</span>
 <span class="sd">        - set_admin_hash: set the password hash</span>
@@ -214,6 +216,8 @@
 <span class="sd">          the mini viewer</span>
 <span class="sd">        - set_opened_projects: set the opened projects</span>
 <span class="sd">        - set_projects_save_path: set the folder where the projects are saved</span>
+<span class="sd">        - set_radioView: set the orientation in miniviewer (True for</span>
+<span class="sd">           radiological, False for neurological orientation)</span>
 <span class="sd">        - setShowAllSlices: set the &quot;show all slices&quot; checkbox of the mini</span>
 <span class="sd">          viewer</span>
 <span class="sd">        - setSourceImageDir: set the source directory for project images</span>
@@ -782,6 +786,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;control_V1&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Config.isRadioView"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.isRadioView">[docs]</a>    <span class="k">def</span> <span class="nf">isRadioView</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get if the display in miniviewer is in radiological orientation.</span>
+
+<span class="sd">        True for radiolological</span>
+<span class="sd">        False for neurological</span>
+
+<span class="sd">        :return: boolean</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;radio_view&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Config.loadConfig"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.loadConfig">[docs]</a>    <span class="k">def</span> <span class="nf">loadConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read the config in the config.yml file.</span>
 
@@ -982,6 +997,18 @@
 <span class="sd">        :param: path: string of path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;projects_save_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.set_radioView"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_radioView">[docs]</a>    <span class="k">def</span> <span class="nf">set_radioView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radio_view</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the radiological orientation in miniviewer.</span>
+
+<span class="sd">        True for radiological</span>
+<span class="sd">        False for radiological</span>
+
+<span class="sd">        :param: radio_view: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;radio_view&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">radio_view</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 

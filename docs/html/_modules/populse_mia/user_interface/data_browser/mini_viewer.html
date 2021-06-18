@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 2.0.0-dev+ffbee46a documentation</title>
+    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+ffbee46a',
+        VERSION:     '2.0.0-dev+792625ea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+ffbee46a documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.mini_viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -169,6 +169,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_nb_slices</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_nb_slices</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getNbAllSlicesMax</span><span class="p">()))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_nb_slices</span><span class="o">.</span><span class="n">returnPressed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_nb_slices</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_orientation</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">isRadioView</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_orientation</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Radiological orientation&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_orientation</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Neurological orientation&quot;</span><span class="p">)</span>
 
         <span class="c1"># All these objects are depending on the number of scans to visualize</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">im_2D</span> <span class="o">=</span> <span class="p">[]</span>
@@ -494,8 +502,13 @@
         <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_min</span><span class="p">,</span> <span class="n">display_max</span><span class="p">,</span> <span class="n">im2D</span><span class="p">)</span>
         <span class="c1"># convert to integer display data type. NaNs get converted to 0.</span>
         <span class="n">im2D</span> <span class="o">=</span> <span class="n">im2D</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">display_type</span><span class="p">)</span>
+
         <span class="c1"># Rotate. Copy array to avoid negative strides (Qt doesn&#39;t handle that)</span>
-        <span class="n">im2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">isRadioView</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">im2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">im2D</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># radiological</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">im2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># neurological</span>
 
         <span class="k">if</span> <span class="n">im2d_provided</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">im2D</span>
@@ -507,6 +520,7 @@
 
 <span class="sd">        :param idx: the selected index</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># Getting the sliders value</span>
         <span class="n">sl3D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
         <span class="n">sl4D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slider_4D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
@@ -520,14 +534,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_4D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_5D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">im_2D</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
                 <span class="n">idx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">,</span> <span class="n">sl4D</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_4D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slider_5D</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">im_2D</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
                 <span class="n">idx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="n">sl3D</span><span class="p">,</span>
@@ -541,6 +555,7 @@
 
 <span class="sd">        :param idx: the selected index</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">indexImage</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayPosValue</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
 
@@ -616,9 +631,8 @@
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_paths</span><span class="o">.</span><span class="n">copy</span><span class="p">()):</span>
 
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="c1">#self.img.insert(idx, nib.load(file_path))</span>
-                    <span class="n">chk</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-                    
+                    <span class="n">chk</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">as_closest_canonical</span><span class="p">(</span><span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+
                 <span class="k">except</span> <span class="n">nib</span><span class="o">.</span><span class="n">filebasedimages</span><span class="o">.</span><span class="n">ImageFileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error while trying to display the </span><span class="si">{}</span><span class="s2"> image ...!</span><span class="se">\n</span><span class="s2">&quot;</span>
                           <span class="s2">&quot;Traceback:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_path</span><span class="p">)))</span>
@@ -814,6 +828,8 @@
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_box_slices</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_orientation</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">label_nb_slices</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_nb_slices</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_nb_slices</span><span class="p">)</span>
@@ -822,6 +838,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">check_box_cursors</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_box_cursors</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_orientation</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">h_box_check_box</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">label_nb_slices</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_nb_slices</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -864,7 +882,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">check_box_slices</span><span class="o">.</span><span class="n">setCheckable</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">check_box_slices</span><span class="o">.</span><span class="n">setCheckable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">show_slices</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_slices</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">isRadioView</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_orientation</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Radiological orientation&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_orientation</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Neurological orientation&quot;</span><span class="p">)</span></div></div>
 
     <span class="c1"># def check_differences(self, file_paths):</span>
     <span class="c1">#     old_to_new = []</span>
@@ -902,7 +926,6 @@
     <span class="c1">#         w = item.widget()</span>
     <span class="c1">#         if w:</span>
     <span class="c1">#             w.deleteLater()&quot;&quot;&quot;</span>
-
 </pre></div>
 
       </div>

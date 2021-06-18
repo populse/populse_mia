@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface package &#8212; populse_mia 2.0.0-dev+ffbee46a documentation</title>
+    <title>populse_mia.user_interface package &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+ffbee46a',
+        VERSION:     '2.0.0-dev+792625ea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+ffbee46a documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -384,16 +384,16 @@ projects menus.</p>
 <tr class="field-odd field"><th class="field-name">Class:</th><td class="field-body"><ul class="first last simple">
 <li>DefaultValueListCreation</li>
 <li>DefaultValueQLineEdit</li>
-<li>PopUpAddTag</li>
 <li>PopUpAddPath</li>
+<li>PopUpAddTag</li>
 <li>PopUpCloneTag</li>
 <li>PopUpClosePipeline</li>
-<li>PopUpDeleteProject</li>
-<li>PopUpDeletedProject</li>
 <li>PopUpDataBrowserCurrentSelection</li>
+<li>PopUpDeletedProject</li>
+<li>PopUpDeleteProject</li>
 <li>PopUpFilterSelection</li>
-<li>PopUpInheritanceDict</li>
 <li>PopUpInformation</li>
+<li>PopUpInheritanceDict</li>
 <li>PopUpMultipleSort</li>
 <li>PopUpNewProject</li>
 <li>PopUpOpenProject</li>
@@ -406,11 +406,12 @@ projects menus.</p>
 <li>PopUpSeeAllProjects</li>
 <li>PopUpSelectFilter</li>
 <li>PopUpSelectIteration</li>
-<li>PopUpTagSelection</li>
+<li>PopUpTagSelection  (must precede PopUpSelectTag)</li>
 <li>PopUpSelectTag</li>
 <li>PopUpSelectTagCountTable</li>
 <li>PopUpShowBrick</li>
 <li>PopUpVisualizedTags</li>
+<li>QLabel_clickable</li>
 </ul>
 </td>
 </tr>
@@ -462,7 +463,7 @@ projects menus.</p>
 <em class="property">class </em><code class="descclassname">populse_mia.user_interface.pop_ups.</code><code class="descname">DefaultValueQLineEdit</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#DefaultValueQLineEdit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.DefaultValueQLineEdit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QLineEdit</span></code></p>
 <p>Overrides the QLineEdit for the default value.</p>
-<p>We need to override the MousePressEvent.</p>
+<p>We need to override the mousePressEvent.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.pop_ups.DefaultValueQLineEdit.mousePressEvent">
 <code class="descname">mousePressEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#DefaultValueQLineEdit.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.DefaultValueQLineEdit.mousePressEvent" title="Permalink to this definition">¶</a></dt>
@@ -952,12 +953,21 @@ values.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config">
 <code class="descname">edit_capsul_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences.edit_capsul_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>capsul engine edition</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.edit_config_file">
 <code class="descname">edit_config_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences.edit_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_config_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a window to view, edit the mia configuration file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.findChar">
+<code class="descname">findChar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences.findChar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.findChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlights characters in red when using the Find button’
+when editing configuration.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.ok_clicked">
@@ -1123,7 +1133,8 @@ values.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>scan</strong> – The scan that may be removed</li>
-<li><strong>size</strong> – The number of scan the user wants to remove</li>
+<li><strong>size</strong> – <p>The number of scan the user wants to remove</p>
+</li>
 </ul>
 </td>
 </tr>

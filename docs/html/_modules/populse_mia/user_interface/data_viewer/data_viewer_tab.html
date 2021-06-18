@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 2.0.0-dev+ffbee46a documentation</title>
+    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+ffbee46a',
+        VERSION:     '2.0.0-dev+792625ea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+ffbee46a documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -51,8 +51,10 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">import</span> <span class="nn">anatomist.direct.api</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 
 
 <div class="viewcode-block" id="DataViewerTab"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab">[docs]</a><span class="k">class</span> <span class="nc">DataViewerTab</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
@@ -65,7 +67,6 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">DataViewerTab</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
-
         <span class="n">lay</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">lay</span><span class="p">)</span>
 
@@ -78,14 +79,46 @@
         <span class="n">hlay</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;Anatomist&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">activated</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_activated</span><span class="p">)</span>
-        <span class="n">lay</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;Mia_viewer&#39;</span><span class="p">)</span>
+            
+        <span class="n">stacks</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QStackedLayout</span><span class="p">()</span>
+        <span class="n">lay</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">stacks</span><span class="p">)</span>
 
+        <span class="c1">#Try import both viewers</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module_anatomist</span> <span class="o">=</span> <span class="s1">&#39;populse_mia.user_interface.data_viewer.anatomist&#39;</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+            <span class="n">viewer_module_anatomist</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_anatomist</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="s1">&#39;user_interface/data_viewer/anatomist/__init__.py&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer_anatomist</span> <span class="o">=</span> <span class="n">viewer_module_anatomist</span><span class="o">.</span><span class="n">MiaViewer</span><span class="p">()</span>
+
+            <span class="n">module_miaViewer</span> <span class="o">=</span> <span class="s1">&#39;populse_mia.user_interface.data_viewer.mia_viewer&#39;</span>
+            <span class="n">viewer_module_miaViewer</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_miaViewer</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="s1">&#39;user_interface/data_viewer/mia_viewer/__init__.py&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer_miaViewer</span> <span class="o">=</span> <span class="n">viewer_module_miaViewer</span><span class="o">.</span><span class="n">MiaViewer</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{0}</span><span class="s1"> viewer is not available or not working &#39;</span>
+                  <span class="s1">&#39;...!</span><span class="se">\n</span><span class="s1">Traceback:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">viewer_name</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="c1">#Add Widgets to QStackLayout (defaulf display is the first widget added)</span>
+        <span class="n">stacks</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_anatomist</span><span class="p">)</span>
+        <span class="n">stacks</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_miaViewer</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stacks</span> <span class="o">=</span> <span class="n">stacks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">lay</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewer_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="c1"># self.viewer_activated(0)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_viewer</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DataViewerTab.change_viewer"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer">[docs]</a>    <span class="k">def</span> <span class="nf">change_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewer_activated</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">docs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataViewerTab.current_viewer"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer">[docs]</a>    <span class="k">def</span> <span class="nf">current_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -95,35 +128,26 @@
 
 <div class="viewcode-block" id="DataViewerTab.viewer_activated"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.viewer_activated">[docs]</a>    <span class="k">def</span> <span class="nf">viewer_activated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="n">viewer_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">itemText</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">activate_viewer</span><span class="p">(</span><span class="n">viewer_name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataViewerTab.activate_viewer"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer">[docs]</a>    <span class="k">def</span> <span class="nf">activate_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_name</span> <span class="o">==</span> <span class="n">viewer_name</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;activate viewer:&#39;</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">viewer_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
-                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">viewer_name</span><span class="p">))</span>
-            <span class="n">viewer</span> <span class="o">=</span> <span class="n">viewer_module</span><span class="o">.</span><span class="n">MiaViewer</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;viewer </span><span class="si">%s</span><span class="s1"> is not available or not working.&#39;</span> <span class="o">%</span> <span class="n">viewer_name</span><span class="p">)</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewer_name</span> <span class="o">=</span> <span class="n">viewer_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="n">viewer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">insertWidget</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">viewer</span><span class="p">)</span></div>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- activate viewer:&#39;</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">viewer_name</span> <span class="o">==</span> <span class="s1">&#39;anatomist&#39;</span><span class="p">:</span>
+            <span class="n">viewer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_anatomist</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">viewer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_miaViewer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stacks</span><span class="o">.</span><span class="n">setCurrentWidget</span><span class="p">(</span><span class="n">viewer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="n">viewer</span></div>
 
 <div class="viewcode-block" id="DataViewerTab.set_documents"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.set_documents">[docs]</a>    <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">)</span></div></div>
-
-
-
-
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">documents</span></div></div>
 </pre></div>
 
       </div>

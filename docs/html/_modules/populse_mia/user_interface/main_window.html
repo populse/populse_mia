@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.main_window &#8212; populse_mia 2.0.0-dev+ffbee46a documentation</title>
+    <title>populse_mia.user_interface.main_window &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0-dev+ffbee46a',
+        VERSION:     '2.0.0-dev+792625ea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+ffbee46a documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.main_window</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -681,7 +681,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
             <span class="k">else</span><span class="p">:</span>
-            
+
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
                     <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
@@ -713,8 +713,11 @@
                 <span class="n">entire_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
                 <span class="n">path</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">entire_path</span><span class="p">)</span>
                 <span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">relative_path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">relative_path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
                 <span class="c1"># We switch the project</span>
+                <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
+                    <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MainWindow.package_library_pop_up"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.package_library_pop_up">[docs]</a>    <span class="k">def</span> <span class="nf">package_library_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open the package library pop-up&quot;&quot;&quot;</span>
@@ -961,8 +964,8 @@
                                                            <span class="s1">&#39;downloaded_data&#39;</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">old_folder_rel</span><span class="p">,</span> <span class="s1">&#39;filters&#39;</span><span class="p">)):</span>
-                    
-                    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">old_folder</span><span class="p">,</span> 
+
+                    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">old_folder</span><span class="p">,</span>
                                                            <span class="s1">&#39;filters&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)):</span>
                         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filters_path</span><span class="p">))</span>
 
