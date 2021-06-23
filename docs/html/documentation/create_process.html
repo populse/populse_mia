@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Populse_MIA’s pipeline processes &#8212; populse_mia 2.0.0-dev+5de7418c documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Populse_MIA’s pipeline processes &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.0-dev+792625ea',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+5de7418c documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s pipeline processes</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,23 +36,23 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <div class="toctree-wrapper compound">
 </div>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 14%" />
-<col style="width: 24%" />
-<col style="width: 31%" />
-<col style="width: 31%" />
+<col width="14%" />
+<col width="24%" />
+<col width="31%" />
+<col width="31%" />
 </colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
-<td><p><a class="reference external" href="./documentation.html">Documentation</a></p></td>
-<td><p><a class="reference external" href="../installation/installation.html">Installation</a></p></td>
-<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference external" href="../index.html">Home</a></td>
+<td><a class="reference external" href="./documentation.html">Documentation</a></td>
+<td><a class="reference external" href="../installation/installation.html">Installation</a></td>
+<td><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></td>
 </tr>
 </tbody>
 </table>
@@ -55,20 +65,20 @@
 <p>MIA processes are Capsul processes made specific for Populse_MIA. They need at least three methods to work properly: __init__, list_outputs and _run_process.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>__init__()</strong></p></li>
+<li><strong>__init__()</strong></li>
 </ul>
 <p>Definition of the inputs/outputs of the process. Each input/output is typed using the <a class="reference external" href="https://docs.enthought.com/traits/">Enthought’s Traits library</a> and is either mandatory or optional.</p>
 <ul class="simple">
-<li><p><strong>list_outputs()</strong></p></li>
+<li><strong>list_outputs()</strong></li>
 </ul>
 <p>This method is called during a pipeline initialization to generate the process outputs and their inheritances (from which input they depends). The return value of this method must at least be a dictionary of this type {‘name_of_the_output_plug’: ‘value’, …}. To improve the file tracking, antoher dictionary can be added to the return value. This dictionary called inheritance dictionary specifies for each output which input generated it: {‘output_value’: ‘input_value’, …}.</p>
 <ul class="simple">
-<li><p><strong>_run_process()</strong></p></li>
+<li><strong>_run_process()</strong></li>
 </ul>
 <p>This method is called during a pipeline run. It has to contain the desired processing and need no return value.</p>
 </div></blockquote>
 <p><strong>Note:</strong> if you are using a Nipype interface that need to use Matlab script. Make sure to use the “manage_matlab_launch_parameters” method in the _run_process method to set the Matlab’s parameters of your Populse_MIA’s config to the Nipype interface.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">Smooth</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">Smooth</span><span class="p">()</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">manage_matlab_launch_parameters</span><span class="p">()</span>
 
 <span class="c1"># Then set the several inputs of the interface</span>
@@ -77,17 +87,17 @@
 </pre></div>
 </div>
 <p><strong>Example:</strong> creating a smooth process using SPM Smooth (from Nipype’s interfaces) or Scipy’s gaussian filtering function.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>  <span class="c1"># used to declare the inputs/outputs of the process</span>
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>  <span class="c1"># used to read and save Nifti images</span>
-<span class="kn">from</span> <span class="nn">nipype.interfaces</span> <span class="k">import</span> <span class="n">spm</span>  <span class="c1"># used to use SPM&#39;s Smooth</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="k">import</span> <span class="n">gaussian_filter</span>  <span class="c1"># used to apply the smoothing on an array</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="k">import</span> <span class="n">ProcessMIA</span>  <span class="c1"># base class that the created process has to inherit from</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces</span> <span class="kn">import</span> <span class="n">spm</span>  <span class="c1"># used to use SPM&#39;s Smooth</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>  <span class="c1"># used to apply the smoothing on an array</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>  <span class="c1"># base class that the created process has to inherit from</span>
 
 
 <span class="k">class</span> <span class="nc">SmoothSpmScipy</span><span class="p">(</span><span class="n">ProcessMIA</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SmoothSpmScipy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="c1"># Inputs</span>
@@ -195,7 +205,7 @@
 <div class="section" id="creating-a-python-package-containing-the-process">
 <h2>Creating a Python package containing the process<a class="headerlink" href="#creating-a-python-package-containing-the-process" title="Permalink to this headline">¶</a></h2>
 <p>Make sure that the file containing the Smooth class is contained in a Python package and add this to the __init__.py file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.name_of_file</span> <span class="k">import</span> <span class="n">SmoothSpmScipy</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.name_of_file</span> <span class="kn">import</span> <span class="n">SmoothSpmScipy</span>
 </pre></div>
 </div>
 </div>
@@ -217,7 +227,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Populse_mia’s 3rd party installations &#8212; populse_mia 2.0.0-dev+5de7418c documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Populse_mia’s 3rd party installations &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.0-dev+792625ea',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+5de7418c documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
         <h2 class="heading"><span>Populse_mia’s 3rd party installations</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,21 +36,21 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
-  <table class="docutils align-default">
+  <table border="1" class="docutils">
 <colgroup>
-<col style="width: 14%" />
-<col style="width: 33%" />
-<col style="width: 23%" />
-<col style="width: 30%" />
+<col width="14%" />
+<col width="33%" />
+<col width="23%" />
+<col width="30%" />
 </colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
-<td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
-<td><p><a class="reference external" href="./installation.html">Installation</a></p></td>
-<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference external" href="../index.html">Home</a></td>
+<td><a class="reference external" href="../documentation/documentation.html">Documentation</a></td>
+<td><a class="reference external" href="./installation.html">Installation</a></td>
+<td><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></td>
 </tr>
 </tbody>
 </table>
@@ -48,18 +58,18 @@
 <h1>Populse_mia’s 3rd party installations<a class="headerlink" href="#populse-mia-s-3rd-party-installations" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div><ul class="simple">
-<li><p>This installations notes are based on Ubuntu 20.04 which use Python3 as default (when you type ‘python’ in a command line).</p></li>
-<li><p>‘/pathto/softs’ is the destination folder where you want to have the softwares installed, ie: /opt, /home/APPS or what you want.</p></li>
-<li><p>A Python3 virtual environment is used. How to do that ? See below at Populse installation in python3 virtual environment.</p></li>
-<li><p>Lines with ‘#’ are comments.</p></li>
+<li>This installations notes are based on Ubuntu 20.04 which use Python3 as default (when you type ‘python’ in a command line).</li>
+<li>‘/pathto/softs’ is the destination folder where you want to have the softwares installed, ie: /opt, /home/APPS or what you want.</li>
+<li>A Python3 virtual environment is used. How to do that ? See below at Populse installation in python3 virtual environment.</li>
+<li>Lines with ‘#’ are comments.</li>
 </ul>
 </div></blockquote>
 <div class="section" id="installation-of-fsl-6">
 <h2>Installation of FSL 6<a class="headerlink" href="#installation-of-fsl-6" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p>Download <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/">fslinstaller.py</a> then:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># fsl installer needs python2</span>
+<li><p class="first">Download <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/">fslinstaller.py</a> then:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># fsl installer needs python2</span>
 <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python</span>
 <span class="c1"># the destination folder where put FSL, do right access with chown</span>
 <span class="n">mkdir</span> <span class="o">/</span><span class="n">pathto</span><span class="o">/</span><span class="n">softs</span><span class="o">/</span><span class="n">FSL</span>
@@ -69,8 +79,8 @@
 </pre></div>
 </div>
 </li>
-<li><p>In ~/.profile file check if this lines includes (if not, put it):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>FSLDIR=/pathto/softs/FSL/6.04
+<li><p class="first">In ~/.profile file check if this lines includes (if not, put it):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>FSLDIR=/pathto/softs/FSL/6.04
 PATH=${FSLDIR}/bin:${PATH}
 export FSLDIR PATH
 . ${FSLDIR}/etc/fslconf/fsl.sh
@@ -78,9 +88,10 @@ export FSLDIR PATH
 </div>
 <p>fsl.sh defines other environment variables for FSL like FSLOUTPUTTYPE=NIFTI-GZ</p>
 </li>
-<li><p>log out and log in for changes take effect</p></li>
-<li><p>Test it:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fsleyes</span>
+<li><p class="first">log out and log in for changes take effect</p>
+</li>
+<li><p class="first">Test it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fsleyes</span>
 </pre></div>
 </div>
 </li>
@@ -94,8 +105,8 @@ export FSLDIR PATH
 <h2>Installation of MRtrix 3<a class="headerlink" href="#installation-of-mrtrix-3" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p>From <a class="reference external" href="http://userdocs.mrtrix.org/en/3.0.1/installation/build_from_source.html">MRtrix documentation</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">g</span><span class="o">++</span> <span class="n">python</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">python3</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libqt5opengl5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libqt5svg5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgl1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">dev</span> <span class="n">libfftw3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libtiff5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libpng</span><span class="o">-</span><span class="n">dev</span>
+<li><p class="first">From <a class="reference external" href="http://userdocs.mrtrix.org/en/3.0.1/installation/build_from_source.html">MRtrix documentation</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">g</span><span class="o">++</span> <span class="n">python</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">python3</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libqt5opengl5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libqt5svg5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgl1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">dev</span> <span class="n">libfftw3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libtiff5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libpng</span><span class="o">-</span><span class="n">dev</span>
 
 <span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MRtrix3</span><span class="o">/</span><span class="n">mrtrix3</span><span class="o">.</span><span class="n">git</span>
@@ -111,15 +122,15 @@ export FSLDIR PATH
 </pre></div>
 </div>
 </li>
-<li><p>Test if it works:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mrview</span>
+<li><p class="first">Test if it works:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mrview</span>
 </pre></div>
 </div>
 </li>
-<li><p>Notes:</p>
+<li><p class="first">Notes:</p>
 <ul class="simple">
-<li><p>dwipreproc has changed name to dwifslpreproc</p></li>
-<li><p>mrresize, mrpad, mrcrop commands has been reunified in unique mrgrid command</p></li>
+<li>dwipreproc has changed name to dwifslpreproc</li>
+<li>mrresize, mrpad, mrcrop commands has been reunified in unique mrgrid command</li>
 </ul>
 </li>
 </ul>
@@ -132,29 +143,29 @@ export FSLDIR PATH
 <h2>Installation of SPM 12 Standalone and Matlab Runtime<a class="headerlink" href="#installation-of-spm-12-standalone-and-matlab-runtime" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p><a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/">Download</a> the desired version of standalone SPM 12.</p>
+<li><p class="first"><a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/">Download</a> the desired version of standalone SPM 12.</p>
 <p>Unzip it. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span><span class="o">/</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span><span class="o">/</span>
 <span class="n">unzip</span> <span class="n">spm12_r7771_Linux_R2019b</span><span class="o">.</span><span class="n">zip</span>
 </pre></div>
 </div>
 </li>
-<li><p>Download and install the corresponding R20xxa/b Matlab Runtime installation for linux <a class="reference external" href="https://uk.mathworks.com/products/compiler/matlab-runtime.html">here</a>.</p>
+<li><p class="first">Download and install the corresponding R20xxa/b Matlab Runtime installation for linux <a class="reference external" href="https://uk.mathworks.com/products/compiler/matlab-runtime.html">here</a>.</p>
 <p>Unzip it in a matlabRT/ folder:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
 <span class="n">mkdir</span> <span class="n">matlabRT</span>
 <span class="n">unzip</span> <span class="o">-</span><span class="n">d</span> <span class="n">matlabRT</span><span class="o">/</span> <span class="n">MATLAB_Runtime_R2019b_Update_3_glnxa64</span><span class="o">.</span><span class="n">zip</span>
 <span class="n">sudo</span> <span class="n">matlabRT</span><span class="o">/./</span><span class="n">install</span>
 </pre></div>
 </div>
 <ul>
-<li><p>After the installation, you get the following message (ex. for R2019b (9.7) Matlab Runtime):</p>
+<li><p class="first">After the installation, you get the following message (ex. for R2019b (9.7) Matlab Runtime):</p>
 <p>“On the target computer, append the following to your LD_LIBRARY_PATH environment variable:
 /usr/local/MATLAB/MATLAB_Runtime/v97/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/extern/bin/glnxa64
 If MATLAB Runtime is to be used with MATLAB Production Server, you do not need to modify the above environment variable.”</p>
 </li>
-<li><p>Then if necessary, create a .conf file in the /etc/ld.so.conf.d/ folder and add those previous paths in the file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ld</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">your_lib</span><span class="o">.</span><span class="n">conf</span>
+<li><p class="first">Then if necessary, create a .conf file in the /etc/ld.so.conf.d/ folder and add those previous paths in the file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ld</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">your_lib</span><span class="o">.</span><span class="n">conf</span>
     <span class="c1"># Matlab 2020b Runtine Library</span>
     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">runtime</span><span class="o">/</span><span class="n">glnxa64</span>
     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glnxa64</span>
@@ -163,8 +174,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </pre></div>
 </div>
 <ul>
-<li><p>Run ldconfig to update the cache:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ldconfig</span>
+<li><p class="first">Run ldconfig to update the cache:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ldconfig</span>
 </pre></div>
 </div>
 </li>
@@ -172,8 +183,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </li>
 </ul>
 </li>
-<li><p>Execute SPM12, the second path being the path to the Matlab Runtime:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spm12</span><span class="o">/./</span><span class="n">run_spm12</span><span class="o">.</span><span class="n">sh</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span>
+<li><p class="first">Execute SPM12, the second path being the path to the Matlab Runtime:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spm12</span><span class="o">/./</span><span class="n">run_spm12</span><span class="o">.</span><span class="n">sh</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span>
 </pre></div>
 </div>
 </li>
@@ -187,9 +198,10 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 <h2>Installation of Cuda 11.1<a class="headerlink" href="#installation-of-cuda-11-1" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p>Install NVidia driver 455 metapackage from Ubuntu ‘Software Update Manager’ icon -&gt; ‘Settings &amp; Livepatch …’ button -&gt; ‘Additional Drivers’ tab.</p></li>
-<li><p>From <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">NVidia documentation</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">developer</span><span class="o">.</span><span class="n">download</span><span class="o">.</span><span class="n">nvidia</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">compute</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">ubuntu2004</span><span class="o">/</span><span class="n">x86_64</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="n">ubuntu2004</span><span class="o">.</span><span class="n">pin</span>
+<li><p class="first">Install NVidia driver 455 metapackage from Ubuntu ‘Software Update Manager’ icon -&gt; ‘Settings &amp; Livepatch …’ button -&gt; ‘Additional Drivers’ tab.</p>
+</li>
+<li><p class="first">From <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">NVidia documentation</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">get</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">developer</span><span class="o">.</span><span class="n">download</span><span class="o">.</span><span class="n">nvidia</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">compute</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">ubuntu2004</span><span class="o">/</span><span class="n">x86_64</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="n">ubuntu2004</span><span class="o">.</span><span class="n">pin</span>
 <span class="n">sudo</span> <span class="n">mv</span> <span class="n">cuda</span><span class="o">-</span><span class="n">ubuntu2004</span><span class="o">.</span><span class="n">pin</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">preferences</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="n">repository</span><span class="o">-</span><span class="n">pin</span><span class="o">-</span><span class="mi">600</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">adv</span> <span class="o">--</span><span class="n">fetch</span><span class="o">-</span><span class="n">keys</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">developer</span><span class="o">.</span><span class="n">download</span><span class="o">.</span><span class="n">nvidia</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">compute</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">ubuntu2004</span><span class="o">/</span><span class="n">x86_64</span><span class="o">/</span><span class="mi">7</span><span class="n">fa2af80</span><span class="o">.</span><span class="n">pub</span>
 <span class="n">sudo</span> <span class="n">add</span><span class="o">-</span><span class="n">apt</span><span class="o">-</span><span class="n">repository</span> <span class="s2">&quot;deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /&quot;</span>
@@ -199,8 +211,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </pre></div>
 </div>
 </li>
-<li><p>To compile samples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">freeglut3</span><span class="o">-</span><span class="n">dev</span>
+<li><p class="first">To compile samples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">freeglut3</span><span class="o">-</span><span class="n">dev</span>
 <span class="n">sudo</span> <span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">userloginname</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="mf">11.1</span><span class="o">/</span><span class="n">samples</span>
 <span class="c1"># choose a sample application</span>
 <span class="n">cd</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="mf">11.1</span><span class="o">/</span><span class="n">samples</span><span class="o">/</span><span class="mi">1</span><span class="n">_Utilities</span><span class="o">/</span><span class="n">deviceQuery</span>
@@ -220,8 +232,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 <h2>Installation of Populse in python3 virtual environment<a class="headerlink" href="#installation-of-populse-in-python3-virtual-environment" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p>From <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/developer_installation.html">documentation populse_mia installation for developper</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># require for mri_conv</span>
+<li><p class="first">From <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/developer_installation.html">documentation populse_mia installation for developper</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># require for mri_conv</span>
 <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">openjdk</span><span class="o">-</span><span class="mi">14</span><span class="o">-</span><span class="n">jre</span><span class="o">-</span><span class="n">headless</span>
 <span class="c1"># to use a python3 virtual environment</span>
 <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">venv</span>
@@ -252,8 +264,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </pre></div>
 </div>
 </li>
-<li><p>quit/exit the python3 virtual environment:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+<li><p class="first">quit/exit the python3 virtual environment:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
 </pre></div>
 </div>
 </li>
@@ -267,16 +279,16 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 <h2>Installation of PyTorch<a class="headerlink" href="#installation-of-pytorch" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p>Simply:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># activate the python3 virtual environment</span>
+<li><p class="first">Simply:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># activate the python3 virtual environment</span>
 <span class="n">source</span> <span class="o">~/</span><span class="n">DEV</span><span class="o">/</span><span class="n">py3env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
 <span class="c1"># install</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">torch</span><span class="o">==</span><span class="mf">1.7</span><span class="o">.</span><span class="mi">0</span><span class="o">+</span><span class="n">cu110</span> <span class="n">torchvision</span><span class="o">==</span><span class="mf">0.8</span><span class="o">.</span><span class="mi">1</span><span class="o">+</span><span class="n">cu110</span> <span class="n">torchaudio</span><span class="o">==</span><span class="mf">0.7</span><span class="o">.</span><span class="mi">0</span> <span class="o">-</span><span class="n">f</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">whl</span><span class="o">/</span><span class="n">torch_stable</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
 </div>
 </li>
-<li><p>Test it in python3:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span>
+<li><p class="first">Test it in python3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">torch</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -291,8 +303,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </pre></div>
 </div>
 </li>
-<li><p>quit/exit the python3 virtual environment:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+<li><p class="first">quit/exit the python3 virtual environment:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
 </pre></div>
 </div>
 </li>
@@ -306,8 +318,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 <h2>Installation of TractSeg<a class="headerlink" href="#installation-of-tractseg" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p>Simply:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/</span><span class="n">DEV</span><span class="o">/</span><span class="n">py3env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+<li><p class="first">Simply:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/</span><span class="n">DEV</span><span class="o">/</span><span class="n">py3env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">TractSeg</span>
 <span class="n">deactivate</span>
 </pre></div>
@@ -323,14 +335,15 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 <h2>Installation of MRIcroGL12 (dcm2nniix, 2d-3d viewer, manual ROI)<a class="headerlink" href="#installation-of-mricrogl12-dcm2nniix-2d-3d-viewer-manual-roi" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><dl class="simple">
-<dt>References:</dt><dd><p><a class="reference external" href="https://www.mccauslandcenter.sc.edu/mricrogl/source">Original website</a> &amp;
+<li><dl class="first docutils">
+<dt>References:</dt>
+<dd><p class="first last"><a class="reference external" href="https://www.mccauslandcenter.sc.edu/mricrogl/source">Original website</a> &amp;
 <a class="reference external" href="https://github.com/rordenlab/MRIcroGL12">Github website</a></p>
 </dd>
 </dl>
 </li>
-<li><p><a class="reference external" href="https://www.nitrc.org/frs/?group_id=889&amp;release_id=4371">Download last MRIcroGL</a>, then in a terminal:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
+<li><p class="first"><a class="reference external" href="https://www.nitrc.org/frs/?group_id=889&amp;release_id=4371">Download last MRIcroGL</a>, then in a terminal:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
 <span class="n">unzip</span> <span class="n">MRIcroGL_linux</span><span class="o">.</span><span class="n">zip</span>
 <span class="n">sudo</span> <span class="n">mv</span> <span class="n">MRIcroGL</span> <span class="o">/</span><span class="n">pathto</span><span class="o">/</span><span class="n">softs</span><span class="o">/</span>         <span class="c1"># put the / at the end of path</span>
 <span class="n">sudo</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">pathto</span><span class="o">/</span><span class="n">softs</span><span class="o">/</span><span class="n">MRIcroGL</span><span class="o">/</span><span class="n">MRIcroGL</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">MRIcroGL</span>
@@ -338,8 +351,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </pre></div>
 </div>
 </li>
-<li><p>Test it:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MRIcroGL</span>
+<li><p class="first">Test it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MRIcroGL</span>
 <span class="n">dcm2niix</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">destfolder</span>  <span class="o">/</span><span class="n">dicomfolder</span>
 </pre></div>
 </div>
@@ -354,8 +367,8 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 <h2>Installation of ITKsnap 3 (auto/semi-automatic ROI)<a class="headerlink" href="#installation-of-itksnap-3-auto-semi-automatic-roi" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p><a class="reference external" href="http://www.itksnap.org/pmwiki/pmwiki.php?n=Downloads.SNAP3">Download the itksnap3 software</a> then in a terminal:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd ~/Downloads
+<li><p class="first"><a class="reference external" href="http://www.itksnap.org/pmwiki/pmwiki.php?n=Downloads.SNAP3">Download the itksnap3 software</a> then in a terminal:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd ~/Downloads
 tar -xzf itksnap-3.8.0-20190612-Linux-x86_64.tar.gz
 cd ..
 sudo mv ~/Downloads/itksnap-3.8.0-20190612-Linux-x86_64  /pathto/softs/itksnap-3.8.0
@@ -364,11 +377,13 @@ nano ~/.profile
 </pre></div>
 </div>
 </li>
-<li><dl>
-<dt>To solve the libpng12.so.0 requirement:</dt><dd><ul>
-<li><p>See <a class="reference external" href="https://www.linuxuprising.com/2018/05/fix-libpng12-0-missing-in-ubuntu-1804.html">help</a></p></li>
-<li><p><a class="reference external" href="http://ppa.launchpad.net/linuxuprising/libpng12/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1.1+1~ppa0~focal_amd64.deb">Download the library package</a> installer for Focal Ubuntu 20.04, then :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
+<li><dl class="first docutils">
+<dt>To solve the libpng12.so.0 requirement:</dt>
+<dd><ul class="first last">
+<li><p class="first">See <a class="reference external" href="https://www.linuxuprising.com/2018/05/fix-libpng12-0-missing-in-ubuntu-1804.html">help</a></p>
+</li>
+<li><p class="first"><a class="reference external" href="http://ppa.launchpad.net/linuxuprising/libpng12/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1.1+1~ppa0~focal_amd64.deb">Download the library package</a> installer for Focal Ubuntu 20.04, then :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
 <span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">-</span><span class="n">i</span> <span class="n">libpng12</span><span class="o">-</span><span class="mf">0_1.2</span><span class="o">.</span><span class="mi">54</span><span class="o">-</span><span class="mi">1</span><span class="n">ubuntu1</span><span class="o">.</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">~</span><span class="n">ppa0</span><span class="o">~</span><span class="n">focal_amd64</span><span class="o">.</span><span class="n">deb</span>
 </pre></div>
 </div>
@@ -377,8 +392,8 @@ nano ~/.profile
 </dd>
 </dl>
 </li>
-<li><p>Finaly:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libcanberra</span><span class="o">-</span><span class="n">gtk</span><span class="o">-</span><span class="n">module</span>
+<li><p class="first">Finaly:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libcanberra</span><span class="o">-</span><span class="n">gtk</span><span class="o">-</span><span class="n">module</span>
 <span class="c1"># launch it</span>
 <span class="n">itksnap</span>
 </pre></div>
@@ -401,7 +416,7 @@ nano ~/.profile
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>
