@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+e8077d63 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+792625ea',
+        VERSION:     '2.0.0-dev+e8077d63',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+e8077d63 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -165,6 +165,7 @@
 <span class="sd">        - getPathToProjectsFolder: returns the project&#39;s path</span>
 <span class="sd">        - get_projects_save_path: returns the folder where the projects are</span>
 <span class="sd">          saved</span>
+<span class="sd">        - get_referential: returns boolean to indicate DataViewer referential</span>
 <span class="sd">        - getShowAllSlices: returns if the &quot;show all slices&quot; checkbox of the</span>
 <span class="sd">          mini viewer is activated</span>
 <span class="sd">        - getSourceImageDir: get the source directory for project images</span>
@@ -173,6 +174,8 @@
 <span class="sd">          version)</span>
 <span class="sd">        - getTextColor: return the text color</span>
 <span class="sd">        - getThumbnailTag: returns the tag that is displayed in the mini viewer</span>
+<span class="sd">        - getViewerConfig: returns the DataViewer configuration (neuro or radio), by default neuro</span>
+<span class="sd">        - getViewerFramerate: returns the DataViewer framerate for automatic time running images</span>
 <span class="sd">        - get_use_fsl: returns the value of &quot;use fsl&quot; checkbox in the</span>
 <span class="sd">          preferences</span>
 <span class="sd">        - get_use_matlab: returns the value of &quot;use matlab&quot; checkbox in the</span>
@@ -190,7 +193,7 @@
 <span class="sd">        - getPathToProjectsDBFile: returns the already-saved projects&#39;s path</span>
 <span class="sd">          (currently commented)</span>
 <span class="sd">        - isAutoSave: checks if auto-save mode is activated</span>
-<span class="sd">        - isControlV1: checks if the selected display of the controller is of </span>
+<span class="sd">        - isControlV1: checks if the selected display of the controller is of</span>
 <span class="sd">          V1 type</span>
 <span class="sd">        - isRadioView: checks if miniviewer in radiological orientation (if</span>
 <span class="sd">           not, then it is in neurological orientation)</span>
@@ -218,6 +221,7 @@
 <span class="sd">        - set_projects_save_path: set the folder where the projects are saved</span>
 <span class="sd">        - set_radioView: set the orientation in miniviewer (True for</span>
 <span class="sd">           radiological, False for neurological orientation)</span>
+<span class="sd">        - set_referential: sets the DataViewer referential </span>
 <span class="sd">        - setShowAllSlices: set the &quot;show all slices&quot; checkbox of the mini</span>
 <span class="sd">          viewer</span>
 <span class="sd">        - setSourceImageDir: set the source directory for project images</span>
@@ -225,6 +229,8 @@
 <span class="sd">        - set_spm_standalone_path: set the path of SPM12 (standalone version)</span>
 <span class="sd">        - setTextColor: set the text color</span>
 <span class="sd">        - setThumbnailTag: set the tag that is displayed in the mini viewer</span>
+<span class="sd">        - setViewerConfig: set the Viewer configuration neuro or radio</span>
+<span class="sd">        - setViewerFramerate: set the Viewer frame rate for automatic running time images</span>
 <span class="sd">        - set_use_fsl: set the value of &quot;use fsl&quot; checkbox in the preferences</span>
 <span class="sd">        - set_use_matlab: set the value of &quot;use matlab&quot; checkbox in the</span>
 <span class="sd">          preferences</span>
@@ -304,7 +310,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_fsl</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-        
+
         <span class="k">if</span> <span class="n">use_spm_standalone</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
                 <span class="n">spm_standalone_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
                     <span class="n">matlab_standalone_path</span><span class="p">):</span>
@@ -391,12 +397,12 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{}))</span>
-            
+
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">An issue is detected in the Mia&#39;s configuration&quot;</span>
                   <span class="s2">&quot;:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">Please check the settings in File &gt; Mia &quot;</span>
                   <span class="s2">&quot;Preferences &gt; Pipeline ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
-    
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
 
@@ -404,7 +410,7 @@
 
                 <span class="k">for</span> <span class="n">environment</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">engine_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="n">c</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-                    
+
                     <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;capsul_engine&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span> <span class="ow">or</span>
                                               <span class="s1">&#39;uses&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]):</span>
                         <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -650,6 +656,13 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;projects&#39;</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;projects&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Config.get_referential"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_referential">[docs]</a>    <span class="k">def</span> <span class="nf">get_referential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; checks in dataViewer which referential has been chosen by user</span>
+
+<span class="sd">        :return: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ref&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Config.get_spm_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_spm_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_spm_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the path of SPM12.</span>
 
@@ -769,6 +782,22 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thumbnail_tag&quot;</span><span class="p">,</span> <span class="s2">&quot;SequenceName&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.getViewerConfig"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.getViewerConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getViewerConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the viewer config neuro or radio, neuro by default_flow_style</span>
+
+<span class="sd">        :return: String</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_NeuRad&quot;</span><span class="p">,</span> <span class="s2">&quot;neuro&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.getViewerFramerate"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.getViewerFramerate">[docs]</a>    <span class="k">def</span> <span class="nf">getViewerFramerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the Viewer framerate</span>
+
+<span class="sd">        :return: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;im_sec&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.isAutoSave"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.isAutoSave">[docs]</a>    <span class="k">def</span> <span class="nf">isAutoSave</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get if the auto-save mode is enabled or not.</span>
@@ -1012,6 +1041,19 @@
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Config.set_referential"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_referential">[docs]</a>    <span class="k">def</span> <span class="nf">set_referential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the referential to image ref or world coordinates</span>
+
+<span class="sd">        True for Image ref</span>
+<span class="sd">        False for World Coordinates</span>
+
+<span class="sd">        :param: ref: boolean</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Config.set_spm_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_spm_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_spm_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the path of SPM12 (license version).</span>
 
@@ -1163,7 +1205,28 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;thumbnail_tag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thumbnail_tag</span>
         <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.setViewerConfig"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setViewerConfig">[docs]</a>    <span class="k">def</span> <span class="nf">setViewerConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_NeuRad</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;sets user&#39;s configuration neuro or radio for data_viewer</span>
+
+<span class="sd">        :param: config_NeuRad: string</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;config_NeuRad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_NeuRad</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.setViewerFramerate"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setViewerFramerate">[docs]</a>    <span class="k">def</span> <span class="nf">setViewerFramerate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_sec</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;sets user&#39;s framerate for data_viewer</span>
+
+<span class="sd">        :param: im_sec: int</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;im_sec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">im_sec</span>
+        <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div></div>
+
 
     <span class="c1"># def set_mia_path(self, path):</span>
     <span class="c1">#     &quot;&quot;&quot;</span>

@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+e8077d63 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+792625ea',
+        VERSION:     '2.0.0-dev+e8077d63',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+e8077d63 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -196,9 +196,11 @@ iteration table.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Class:</th><td class="field-body"><ul class="first last simple">
+<li>PlugFilter (must be declared before AttributesFilter)</li>
+<li>AttributesFilter</li>
+<li>CapsulNodeController</li>
 <li>FilterWidget</li>
 <li>NodeController</li>
-<li>PlugFilter</li>
 </ul>
 </td>
 </tr>
@@ -224,7 +226,8 @@ filtering is done, the result (as a list of files) is set to the plug.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked">
 <code class="descname">ok_clicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#AttributesFilter.ok_clicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Close the widget</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -260,43 +263,31 @@ and layout organization.</p>
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.filter_attributes">
 <code class="descname">filter_attributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.filter_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.filter_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a filter widget.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>node_name</strong> – name of the node</li>
-<li><strong>plug_name</strong> – name of the plug</li>
-<li><strong>parameters</strong> – tuple containing the index of the plug, the current
-pipeline instance and the type of the plug value</li>
-<li><strong>process</strong> – process of the node</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed">
 <code class="descname">parameters_changed</code><span class="sig-paren">(</span><em>param</em>, <em>value</em>, <em>old_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.parameters_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Emit the value_changed signal.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process">
 <code class="descname">release_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.release_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process" title="Permalink to this definition">¶</a></dt>
-<dd><p>remove notification from process</p>
+<dd><p>Remove notification from process</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.static_release">
 <em class="property">static </em><code class="descname">static_release</code><span class="sig-paren">(</span><em>process</em>, <em>param_changed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.static_release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.static_release" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Remove notification</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter">
 <code class="descname">update_attributes_from_filter</code><span class="sig-paren">(</span><em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_attributes_from_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Update attributes from filter widger</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">

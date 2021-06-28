@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+e8077d63 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+792625ea',
+        VERSION:     '2.0.0-dev+e8077d63',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+e8077d63 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -691,6 +691,34 @@ or not in the miniviewer.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.software_properties.Config.getViewerConfig">
+<code class="descname">getViewerConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getViewerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getViewerConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the viewer config neuro or radio, neuro by default_flow_style</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.getViewerFramerate">
+<code class="descname">getViewerFramerate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getViewerFramerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getViewerFramerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Viewer framerate</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.software_properties.Config.get_admin_hash">
 <code class="descname">get_admin_hash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_admin_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_admin_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the value of the hash of the admin password.</p>
@@ -871,6 +899,20 @@ parameter of the configuration.yml</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.get_referential">
+<code class="descname">get_referential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_referential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_referential" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks in dataViewer which referential has been chosen by user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1181,6 +1223,34 @@ False for neurological</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.software_properties.Config.setViewerConfig">
+<code class="descname">setViewerConfig</code><span class="sig-paren">(</span><em>config_NeuRad</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setViewerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setViewerConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets user’s configuration neuro or radio for data_viewer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">config_NeuRad: string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.setViewerFramerate">
+<code class="descname">setViewerFramerate</code><span class="sig-paren">(</span><em>im_sec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setViewerFramerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setViewerFramerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets user’s framerate for data_viewer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">im_sec: int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.software_properties.Config.set_admin_hash">
 <code class="descname">set_admin_hash</code><span class="sig-paren">(</span><em>hash</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_admin_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_admin_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the password hash.</p>
@@ -1336,6 +1406,22 @@ False for radiological</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">radio_view: boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.set_referential">
+<code class="descname">set_referential</code><span class="sig-paren">(</span><em>ref</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_referential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_referential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the referential to image ref or world coordinates</p>
+<p>True for Image ref
+False for World Coordinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">ref: boolean</td>
 </tr>
 </tbody>
 </table>

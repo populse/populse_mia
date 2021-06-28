@@ -66,97 +66,12 @@ Pipeline creation
    :name: Pipeline example 3
 
 
+.. _pipeline-iter-filter-example-label:
+
 Pipeline iteration
 ------------------
 
-There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
-
-Direct iteration
-++++++++++++++++
-
-Iterative pipeline
-##################
-
-* Add the previously saved pipeline in a new editor by dragging it from the process library (under User_processes) and dropping it to the pipeline editor.
-
-.. image:: ../images/pipeline_example_4.png
-   :align: center
-   :name: Pipeline example 4
-
-The pipeline here is "already" a kind of iterative pipeline: it takes lists of files as inputs, thus is able to work iteratively. If that's enough for your needs, let's use it directly:
-
-* click on the "Filter" button of the "FLASH_file" parameter. Select the appropriate files from the database.
-* do the same for the parameter "MDEFT_file".
-* do it also for the parameter "Anat_file", but here you can select only one file, because this parameter is not a list.
-* click the "Initialize pipeline" button. The "Run pipeline" button becomes enabled.
-* click the "Run pipeline" button.
-
-Non-iterative pipeline
-######################
-
-Starting with a new, empty pipeline tab in the Pipeline Manager:
-
-* Add the pipeline mia_processes > pipelines > preprocess > spatial Preprocessing 1 to the pipeline editor
-
-* The ``func_files`` parameter is a list. We will use only one item per iteration. In order to disambiguate the "list of list" situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.
-
-  * Use the "capsul > pipeline > custom_nodes > reduce_node > ReduceNode" brick.
-  * validate the default node parameters. The reduce node appears in the pipeline editor.
-
-* connect the ``outputs`` plug of the reduce node to the ``func_files`` plug of the spatial_preprocessing node
-
-* export the ``input_0`` plug of the reduce node, renamed as ``func_files`` (for clarity)
-
-* export all unconnected plugs of the spatial preprocessing node (right click on the node then select "export all unconnected plugs")
-
-* check on the "iterate pipeline" button.
-
-  A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if's OK, then just click "OK".
-
-  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.
-
-* select the ``inputs`` node
-
-* click the "Filter" button for the ``anat files`` parameter, and select the files (anatomical MRIs) you wish to extract the brain from.
-
-* similarly, click on the "Filter" button for the ``func_files`` parameter and select the same number of functional files.
-
-* TODO: check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
-
-* click on "Initialize pipeline". The Run button becomes enabled.
-
-* click on "Run pipeline".
-
-
-Via input filters
-+++++++++++++++++
-
-Quickly
-#######
-
-Starting with a new, empty pipeline tab in the Pipeline Manager:
-
-* Add the pipeline mia_processes > pipelines > preprocess > spatial Preprocessing 1 to the pipeline editor
-
-* check on the "iterate pipeline" button.
-
-  A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for "database") on each input parameter.
-
-  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two "input filter" nodes. The former pipeline is now inside the iterative node.
-
-* right-click on the ``anat_file_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select anatomical files.
-
-* similarly, right-click on the "func_files_filter" node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select functional files.
-
-* TODO: check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
-
-* click on "Initialize pipeline". The Run button becomes enabled.
-
-* click on "Run pipeline".
-
-
-Manually
-########
+There are several ways to iterate a pipeline (or a process). See :ref:`pipeline-iteration-label` for details. Here we are using and detailing the manual "input filters" method.
 
 To be able to iterate the pipeline correctly, you will need a filter process that is ready to use in the mia_processes package, since the 1.1.1 release (Input_filter brick). The mia_processes package is available from the `Cheese Shop`_.
 

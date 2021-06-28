@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+792625ea documentation</title>
+    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+e8077d63 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.0-dev+792625ea',
+        VERSION:     '2.0.0-dev+e8077d63',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+792625ea documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+e8077d63 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Pipeline Manager</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -67,6 +67,7 @@
 <li><a class="reference internal" href="#process-library-label"><span class="std std-ref">The process library</span></a></li>
 <li><a class="reference internal" href="#pipeline-editor-label"><span class="std std-ref">The pipeline editor</span></a></li>
 <li><a class="reference internal" href="#node-controller-label"><span class="std std-ref">The node controller</span></a></li>
+<li><a class="reference internal" href="#pipeline-iteration-label"><span class="std std-ref">Pipeline iteration</span></a></li>
 <li><a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a></li>
 </ul>
 </dd>
@@ -284,6 +285,115 @@
 <li>The pipeline can now be run by selecting “Run pipeline” in the Pipeline Manager’s “Pipeline” menu.</li>
 <li>At the end of the run, ‘Pipeline “Double_smooth.py” been correctly run’ should be run in the bottom left’s status bar of the software.</li>
 </ul>
+</div>
+</div>
+<div class="section" id="pipeline-iteration">
+<span id="pipeline-iteration-label"></span><h2>Pipeline iteration<a class="headerlink" href="#pipeline-iteration" title="Permalink to this headline">¶</a></h2>
+<p>A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use “iterations” which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.</p>
+<p>The pipeline manager simplifies this operation using the “Iterate pipeline” button and <a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a>.</p>
+<p>There are two ways to iterate a pipeline (or a process): one is by cerating a regular iterative pipeline (with “direct” inputs), the other is using input filters linked to the database.</p>
+<div class="section" id="direct-iteration">
+<h3>Direct iteration<a class="headerlink" href="#direct-iteration" title="Permalink to this headline">¶</a></h3>
+<p>Starting with a new, empty pipeline tab in the Pipeline Manager:</p>
+<ul>
+<li><p class="first">Add the pipeline mia_processes &gt; pipelines &gt; preprocess &gt; spatial Preprocessing 1 to the pipeline editor</p>
+</li>
+<li><p class="first">The <code class="docutils literal"><span class="pre">func_files</span></code> parameter is a list. We will use only one item per iteration. In order to disambiguate the “list of list” situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.</p>
+<ul class="simple">
+<li>Use the “capsul &gt; pipeline &gt; custom_nodes &gt; reduce_node &gt; ReduceNode” brick.</li>
+<li>validate the default node parameters. The reduce node appears in the pipeline editor.</li>
+</ul>
+</li>
+<li><p class="first">connect the <code class="docutils literal"><span class="pre">outputs</span></code> plug of the reduce node to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the spatial_preprocessing node</p>
+</li>
+<li><p class="first">export the <code class="docutils literal"><span class="pre">input_0</span></code> plug of the reduce node, renamed as <code class="docutils literal"><span class="pre">func_files</span></code> (for clarity)</p>
+</li>
+<li><p class="first">export all unconnected plugs of the spatial preprocessing node (right click on the node then select “export all unconnected plugs”)</p>
+<img alt="../_images/pipeline_iter_1.jpg" class="align-center" id="pipeline-iteration-1" src="../_images/pipeline_iter_1.jpg" />
+</li>
+<li><p class="first">check on the “iterate pipeline” button.</p>
+<p>A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if’s OK, then just click “OK”.</p>
+<img alt="../_images/pipeline_iter_2.jpg" class="align-center" id="pipeline-iteration-2" src="../_images/pipeline_iter_2.jpg" />
+<p>The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.</p>
+<img alt="../_images/pipeline_iter_3.jpg" class="align-center" id="pipeline-iteration-3" src="../_images/pipeline_iter_3.jpg" />
+</li>
+<li><p class="first">select the <code class="docutils literal"><span class="pre">inputs</span></code> node</p>
+</li>
+<li><p class="first">click the “Filter” button for the <code class="docutils literal"><span class="pre">anat</span> <span class="pre">files</span></code> parameter, and select the files (anatomical MRIs) you wish to extract the brain from.</p>
+<img alt="../_images/pipeline_iter_4.jpg" class="align-center" id="pipeline-iteration-4" src="../_images/pipeline_iter_4.jpg" />
+</li>
+<li><p class="first">similarly, click on the “Filter” button for the <code class="docutils literal"><span class="pre">func_files</span></code> parameter and select the same number of functional files.</p>
+</li>
+<li><p class="first">TODO: check that anats and corresponding functional files are in the same order… The database filters do not ensure that and do not allow to specify any order…</p>
+</li>
+<li><p class="first">click on “Initialize pipeline”. The Run button becomes enabled.</p>
+</li>
+<li><p class="first">click on “Run pipeline”.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="via-input-filters">
+<h3>Via input filters<a class="headerlink" href="#via-input-filters" title="Permalink to this headline">¶</a></h3>
+<p>Input filters are filters applying to the database entries. The filter process that is ready to use in the mia_processes package, since the 1.1.1 release (Input_filter brick). The mia_processes package is available from the <a class="reference external" href="https://pypi.org/search/?q=mia_processes">Cheese Shop</a>.</p>
+<div class="section" id="quickly">
+<h4>Quickly<a class="headerlink" href="#quickly" title="Permalink to this headline">¶</a></h4>
+<p>Starting with a new, empty pipeline tab in the Pipeline Manager:</p>
+<ul>
+<li><p class="first">Add the pipeline mia_processes &gt; pipelines &gt; preprocess &gt; spatial Preprocessing 1 to the pipeline editor</p>
+</li>
+<li><p class="first">check on the “iterate pipeline” button.</p>
+<p>A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for “database”) on each input parameter.</p>
+<img alt="../_images/pipeline_iter_5.jpg" class="align-center" id="pipeline-iteration-5" src="../_images/pipeline_iter_5.jpg" />
+<p>The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two “input filter” nodes. The former pipeline is now inside the iterative node.</p>
+<img alt="../_images/pipeline_iter_6.jpg" class="align-center" id="pipeline-iteration-6" src="../_images/pipeline_iter_6.jpg" />
+</li>
+<li><p class="first">right-click on the <code class="docutils literal"><span class="pre">anat_file_filter</span></code> node, and select “Open filter”.  In the filter pop-up, modify the filter to apply to select anatomical files.</p>
+</li>
+<li><p class="first">similarly, right-click on the “func_files_filter” node, and select “Open filter”.  In the filter pop-up, modify the filter to apply to select functional files.</p>
+</li>
+<li><p class="first">TODO: check that anats and corresponding functional files are in the same order… The database filters do not ensure that and do not allow to specify any order…</p>
+</li>
+<li><p class="first">click on “Initialize pipeline”. The Run button becomes enabled.</p>
+</li>
+<li><p class="first">click on “Run pipeline”.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="manually">
+<h4>Manually<a class="headerlink" href="#manually" title="Permalink to this headline">¶</a></h4>
+<p>It is possible to use input filter processes manually. They should be connected to the main <code class="docutils literal"><span class="pre">database_scans</span></code> parameter of the pipeline (or exported under this name), which acts as a data source for filters.</p>
+<ul class="simple">
+<li>Add a process or a pipeline in a new editor by dragging it from the process library (under User_processes) and dropping it to the pipeline editor. An example is provided in <a class="reference internal" href="pipeline_example.html"><span class="doc">A pipeline example with Populse_MIA’s</span></a>, in the <a class="reference internal" href="pipeline_example.html#pipeline-iter-filter-example-label"><span class="std std-ref">iteration section</span></a>.</li>
+<li>If the process is not designed for iteration (if its parameters are not lists), then click the “iterate pipeline” button in order to create an iteration node with lists as parameters.</li>
+<li>Add Input_filter processes in front of each input that comes from the database</li>
+<li><dl class="first docutils">
+<dt>For each Input_filter process, right-click on it and select “Open filter”. In the filter pop-up, modify the filter to apply.</dt>
+<dd><ul class="first last">
+<li>For exemple, for the Anat_file plug. Set : “Exp Type == Anat” in the Advanced Search.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>Right-click on one of the Input_filter processes and select “Export to database_scans”.</li>
+<li>Add links between “database_scans” and the input of the other Input_filter processes.</li>
+<li><dl class="first docutils">
+<dt>Export the other node plugs by right-clicking on “realign_coreg_smooth1” node and selecting “Export all unconnected plugs”.</dt>
+<dd><ul class="first last">
+<li>The pipeline becomes enabled.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Set up the iteration table: see <a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a>.</dt>
+<dd><ul class="first last">
+<li>By changing the value of the selected Patient, you change the list of documents in “database_scans”</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="section" id="the-iteration-table">

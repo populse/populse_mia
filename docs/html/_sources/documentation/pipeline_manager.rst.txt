@@ -19,6 +19,7 @@ The Pipeline Manager tab is composed of four main elements:
   * :ref:`process-library-label`
   * :ref:`pipeline-editor-label`
   * :ref:`node-controller-label`
+  * :ref:`pipeline-iteration-label`
   * :ref:`iteration-table-label`
 
 Here is an overview of the Pipeline Manager tab:
@@ -221,6 +222,132 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
 * At the end of the run, 'Pipeline "Double_smooth.py" been correctly run' should be run in the bottom left's status bar of the software.
 
 
+.. _pipeline-iteration-label:
+
+Pipeline iteration
+------------------
+
+A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use "iterations" which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.
+
+The pipeline manager simplifies this operation using the "Iterate pipeline" button and :ref:`iteration-table-label`.
+
+There are two ways to iterate a pipeline (or a process): one is by cerating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
+
+Direct iteration
+^^^^^^^^^^^^^^^^
+
+Starting with a new, empty pipeline tab in the Pipeline Manager:
+
+* Add the pipeline mia_processes > pipelines > preprocess > spatial Preprocessing 1 to the pipeline editor
+
+* The ``func_files`` parameter is a list. We will use only one item per iteration. In order to disambiguate the "list of list" situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.
+
+  * Use the "capsul > pipeline > custom_nodes > reduce_node > ReduceNode" brick.
+  * validate the default node parameters. The reduce node appears in the pipeline editor.
+
+* connect the ``outputs`` plug of the reduce node to the ``func_files`` plug of the spatial_preprocessing node
+
+* export the ``input_0`` plug of the reduce node, renamed as ``func_files`` (for clarity)
+
+* export all unconnected plugs of the spatial preprocessing node (right click on the node then select "export all unconnected plugs")
+
+  .. image:: ../images/pipeline_iter_1.jpg
+    :align: center
+    :name: Pipeline iteration 1
+
+* check on the "iterate pipeline" button.
+
+  A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if's OK, then just click "OK".
+
+  .. image:: ../images/pipeline_iter_2.jpg
+    :align: center
+    :name: Pipeline iteration 2
+
+  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.
+
+  .. image:: ../images/pipeline_iter_3.jpg
+    :align: center
+    :name: Pipeline iteration 3
+
+* select the ``inputs`` node
+
+* click the "Filter" button for the ``anat files`` parameter, and select the files (anatomical MRIs) you wish to extract the brain from.
+
+  .. image:: ../images/pipeline_iter_4.jpg
+    :align: center
+    :name: Pipeline iteration 4
+
+* similarly, click on the "Filter" button for the ``func_files`` parameter and select the same number of functional files.
+
+* TODO: check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
+
+* click on "Initialize pipeline". The Run button becomes enabled.
+
+* click on "Run pipeline".
+
+
+Via input filters
+^^^^^^^^^^^^^^^^^
+
+Input filters are filters applying to the database entries. The filter process that is ready to use in the mia_processes package, since the 1.1.1 release (Input_filter brick). The mia_processes package is available from the `Cheese Shop`_.
+
+Quickly
+#######
+
+Starting with a new, empty pipeline tab in the Pipeline Manager:
+
+* Add the pipeline mia_processes > pipelines > preprocess > spatial Preprocessing 1 to the pipeline editor
+
+* check on the "iterate pipeline" button.
+
+  A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for "database") on each input parameter.
+
+  .. image:: ../images/pipeline_iter_5.jpg
+    :align: center
+    :name: Pipeline iteration 5
+
+  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two "input filter" nodes. The former pipeline is now inside the iterative node.
+
+  .. image:: ../images/pipeline_iter_6.jpg
+    :align: center
+    :name: Pipeline iteration 6
+
+* right-click on the ``anat_file_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select anatomical files.
+
+* similarly, right-click on the "func_files_filter" node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select functional files.
+
+* TODO: check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
+
+* click on "Initialize pipeline". The Run button becomes enabled.
+
+* click on "Run pipeline".
+
+
+Manually
+########
+
+It is possible to use input filter processes manually. They should be connected to the main ``database_scans`` parameter of the pipeline (or exported under this name), which acts as a data source for filters.
+
+* Add a process or a pipeline in a new editor by dragging it from the process library (under User_processes) and dropping it to the pipeline editor. An example is provided in :doc:`pipeline_example`, in the :ref:`iteration section <pipeline-iter-filter-example-label>`.
+
+* If the process is not designed for iteration (if its parameters are not lists), then click the "iterate pipeline" button in order to create an iteration node with lists as parameters.
+
+* Add Input_filter processes in front of each input that comes from the database
+
+* For each Input_filter process, right-click on it and select "Open filter". In the filter pop-up, modify the filter to apply.
+    * For exemple, for the Anat_file plug. Set : "Exp Type == Anat" in the Advanced Search.
+
+* Right-click on one of the Input_filter processes and select "Export to database_scans".
+
+* Add links between "database_scans" and the input of the other Input_filter processes.
+
+* Export the other node plugs by right-clicking on "realign_coreg_smooth1" node and selecting "Export all unconnected plugs".
+    * The pipeline becomes enabled.
+
+* Set up the iteration table: see :ref:`iteration-table-label`.
+    * By changing the value of the selected Patient, you change the list of documents in "database_scans"
+
+
 .. _iteration-table-label:
 
 The iteration table
@@ -265,6 +392,7 @@ Assume that the current project contains several patients, so several "Patient" 
 
 Note: if you want to use pipeline iteration, you have to have a pipeline global input called "database_scans". Only this plug will be updated for each iteration and will contain all the documents that have the correct tag value.
 
+.. _`Cheese Shop`: https://pypi.org/search/?q=mia_processes
 
 
 
