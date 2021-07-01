@@ -164,9 +164,11 @@ The node controller is a controller that updates pipeline nodes and is located o
 
 * Note: when changing a value in the node controller, be sure to press Enter to validate the change.
 
-.. image:: ../images/node_controller_1.png
-   :align: center
-   :name: Node controller
+  .. figure:: ../images/node_controllerV1V2_1.png
+     :scale: 100 %
+
+     The controller in V1 (left) and V2 (right) mode
+	
 
 How to use the node controller 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
