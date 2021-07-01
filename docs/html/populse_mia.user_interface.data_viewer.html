@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.data_viewer package &#8212; populse_mia 2.0.0-dev+e8077d63 documentation</title>
+    <title>populse_mia.user_interface.data_viewer package &#8212; populse_mia 2.0.0-dev+341a083f documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+e8077d63',
+        VERSION:     '2.0.0-dev+341a083f',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+e8077d63 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+341a083f documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -128,7 +128,11 @@ remove given files.</p>
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab">
 <em class="property">class </em><code class="descclassname">populse_mia.user_interface.data_viewer.data_viewer_tab.</code><code class="descname">DataViewerTab</code><span class="sig-paren">(</span><em>main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QWidget</span></code></p>
-<p>DataViewerTab is the widget in the data viewer tab of Populse-MIA GUI.</p>
+<p>DataViewerTab is the widget in the data viewer tab of Populse-MIA GUI.
+A combobox containing the available viewers will always appear
+If import of anatomist and anatomist_2 fails, it won’t impact the work of Mia itself
+Viewers are put in Qt.QStackedLayout in order to share a same project
+A new viewer can be added</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer">
 <code class="descname">activate_viewer</code><span class="sig-paren">(</span><em>viewer_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.activate_viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer" title="Permalink to this definition">¶</a></dt>
@@ -137,7 +141,9 @@ remove given files.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer">
 <code class="descname">change_viewer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.change_viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>switche to viewer selected in the combobox
+pass the project from on viewer to the other</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer">

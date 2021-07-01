@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 2.0.0-dev+e8077d63 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 2.0.0-dev+341a083f documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+e8077d63',
+        VERSION:     '2.0.0-dev+341a083f',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+e8077d63 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+341a083f documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.iteration_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -123,6 +123,7 @@
 
         <span class="c1"># values_list will contain the different values of each selected tag</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values_list</span> <span class="o">=</span> <span class="p">[[],</span> <span class="p">[]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_tag_values</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Checkbox to choose to iterate the pipeline or not</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_iterate</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s2">&quot;Iterate pipeline&quot;</span><span class="p">)</span>
@@ -307,8 +308,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">ui_select</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update_iterated_tag</span><span class="p">(</span><span class="n">ui_select</span><span class="o">.</span><span class="n">selected_tag</span><span class="p">)</span></div>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ui_select</span><span class="o">.</span><span class="n">selected_tag</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_iterated_tag</span><span class="p">(</span><span class="n">ui_select</span><span class="o">.</span><span class="n">selected_tag</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="IterationTable.filter_values"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.filter_values">[docs]</a>    <span class="k">def</span> <span class="nf">filter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">iterated_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span>
@@ -330,11 +337,11 @@
 <span class="sd">        :param idx: index of the clicked push button</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">popUp</span> <span class="o">=</span> <span class="n">PopUpSelectTagCountTable</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">popUp</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
+        <span class="n">popUp</span> <span class="o">=</span> <span class="n">PopUpSelectTagCountTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
+                                                            <span class="n">COLLECTION_CURRENT</span><span class="p">),</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">popUp</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="ow">and</span> <span class="n">popUp</span><span class="o">.</span><span class="n">selected_tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">popUp</span><span class="o">.</span><span class="n">selected_tag</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fill_values</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_table</span><span class="p">()</span></div>
