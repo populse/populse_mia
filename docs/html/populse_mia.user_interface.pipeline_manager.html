@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+341a083f documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+c6afbefd documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+341a083f',
+        VERSION:     '2.0.0-dev+c6afbefd',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+341a083f documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+c6afbefd documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -61,128 +61,8 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-populse_mia.user_interface.pipeline_manager.iteration_table">
-<span id="populse-mia-user-interface-pipeline-manager-iteration-table-module"></span><h2>populse_mia.user_interface.pipeline_manager.iteration_table module<a class="headerlink" href="#module-populse_mia.user_interface.pipeline_manager.iteration_table" title="Permalink to this headline">¶</a></h2>
-<p>Module that handles pipeline iteration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Class:</th><td class="field-body"><ul class="first last simple">
-<li>IterationTable</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="class">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable">
-<em class="property">class </em><code class="descclassname">populse_mia.user_interface.pipeline_manager.iteration_table.</code><code class="descname">IterationTable</code><span class="sig-paren">(</span><em>project</em>, <em>scan_list</em>, <em>main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QWidget</span></code></p>
-<p>Widget that handles pipeline iteration.</p>
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.add_tag">
-<code class="descname">add_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.add_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.add_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a tag to visualize in the iteration table.</p>
-<p>Used only for tests</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.emit_iteration_table_updated">
-<code class="descname">emit_iteration_table_updated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.emit_iteration_table_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.emit_iteration_table_updated" title="Permalink to this definition">¶</a></dt>
-<dd><p>Emit a signal when the iteration scans have been updated.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.fill_values">
-<code class="descname">fill_values</code><span class="sig-paren">(</span><em>idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.fill_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.fill_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill values_list depending on the visualized tags</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idx</strong> – Index of the tag</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.filter_values">
-<code class="descname">filter_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.filter_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.filter_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.iteration_table_updated">
-<code class="descname">iteration_table_updated</code><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.iteration_table_updated" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.refresh_layout">
-<code class="descname">refresh_layout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.refresh_layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.refresh_layout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the layout of the widget.</p>
-<p>Called in widget’s initialization and when a tag push button
-is added or removed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.remove_tag">
-<code class="descname">remove_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.remove_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.remove_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a tag to visualize in the iteration table.</p>
-<p>Used only for tests.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.select_iteration_tag">
-<code class="descname">select_iteration_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.select_iteration_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.select_iteration_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a pop-up to let the user select on which tag to iterate.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.select_visualized_tag">
-<code class="descname">select_visualized_tag</code><span class="sig-paren">(</span><em>idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.select_visualized_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.select_visualized_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a pop-up to let the user select which tag to visualize in the
-iteration table.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idx</strong> – index of the clicked push button</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_iterated_tag">
-<code class="descname">update_iterated_tag</code><span class="sig-paren">(</span><em>tag_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.update_iterated_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_iterated_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the widget when the iterated tag is modified.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag_name</strong> – name of the iterated tag</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_table">
-<code class="descname">update_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.update_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the iteration table.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="populse-mia-user-interface-pipeline-manager-iteration-table-module">
+<h2>populse_mia.user_interface.pipeline_manager.iteration_table module<a class="headerlink" href="#populse-mia-user-interface-pipeline-manager-iteration-table-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-populse_mia.user_interface.pipeline_manager.node_controller">
 <span id="populse-mia-user-interface-pipeline-manager-node-controller-module"></span><h2>populse_mia.user_interface.pipeline_manager.node_controller module<a class="headerlink" href="#module-populse_mia.user_interface.pipeline_manager.node_controller" title="Permalink to this headline">¶</a></h2>

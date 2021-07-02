@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+341a083f documentation</title>
+    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+c6afbefd documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.0-dev+341a083f',
+        VERSION:     '2.0.0-dev+c6afbefd',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+341a083f documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+c6afbefd documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Pipeline Manager</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -296,22 +296,29 @@
 <span id="pipeline-iteration-label"></span><h2>Pipeline iteration<a class="headerlink" href="#pipeline-iteration" title="Permalink to this headline">¶</a></h2>
 <p>A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use “iterations” which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.</p>
 <p>The pipeline manager simplifies this operation using the “Iterate pipeline” button and <a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a>.</p>
-<p>There are two ways to iterate a pipeline (or a process): one is by cerating a regular iterative pipeline (with “direct” inputs), the other is using input filters linked to the database.</p>
-<div class="section" id="direct-iteration">
-<h3>Direct iteration<a class="headerlink" href="#direct-iteration" title="Permalink to this headline">¶</a></h3>
+<p>There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with “direct” inputs), the other is using input filters linked to the database.</p>
+<div class="section" id="direct-iteration-without-use-of-the-iteration-table">
+<h3>Direct iteration (without use of the iteration table)<a class="headerlink" href="#direct-iteration-without-use-of-the-iteration-table" title="Permalink to this headline">¶</a></h3>
 <p>Starting with a new, empty pipeline tab in the Pipeline Manager:</p>
 <ul>
 <li><p class="first">Add the pipeline mia_processes &gt; pipelines &gt; preprocess &gt; spatial Preprocessing 1 to the pipeline editor</p>
 </li>
 <li><p class="first">The <code class="docutils literal"><span class="pre">func_files</span></code> parameter is a list. We will use only one item per iteration. In order to disambiguate the “list of list” situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.</p>
+</li>
+<li><p class="first">Use the “capsul &gt; pipeline &gt; custom_nodes &gt; reduce_node &gt; ReduceNode” or the “mia_processes &gt; bricks &gt; tools &gt; Files_To_List” brick.</p>
 <ul class="simple">
-<li>Use the “capsul &gt; pipeline &gt; custom_nodes &gt; reduce_node &gt; ReduceNode” brick.</li>
-<li>validate the default node parameters. The reduce node appears in the pipeline editor.</li>
+<li>In case of the ReduceNode brick:<ul>
+<li>Validate the default node parameters (just click on OK button). The reduce node appears in the pipeline editor.</li>
+<li>Connect the <code class="docutils literal"><span class="pre">outputs</span></code> plug of the reduce node to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the spatial_preprocessing node.</li>
+<li>Export the <code class="docutils literal"><span class="pre">input_0</span></code> plug of the reduce node (right click on the <code class="docutils literal"><span class="pre">input_0</span></code> plug then select export plug), renamed as <code class="docutils literal"><span class="pre">func_files</span></code> (for clarity).</li>
 </ul>
 </li>
-<li><p class="first">connect the <code class="docutils literal"><span class="pre">outputs</span></code> plug of the reduce node to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the spatial_preprocessing node</p>
+<li>In case of the Files_To_List brick:<ul>
+<li>Connect the <code class="docutils literal"><span class="pre">file_list</span></code> plug of the Files_To_List node to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the spatial_preprocessing node.</li>
+<li>Export the <code class="docutils literal"><span class="pre">file1</span></code> plug of the Files_To_List node (right click on the <code class="docutils literal"><span class="pre">file1</span></code> plug then select export plug), renamed as <code class="docutils literal"><span class="pre">func_files</span></code> (for clarity).</li>
+</ul>
 </li>
-<li><p class="first">export the <code class="docutils literal"><span class="pre">input_0</span></code> plug of the reduce node, renamed as <code class="docutils literal"><span class="pre">func_files</span></code> (for clarity)</p>
+</ul>
 </li>
 <li><p class="first">export all unconnected plugs of the spatial preprocessing node (right click on the node then select “export all unconnected plugs”)</p>
 <img alt="../_images/pipeline_iter_1.jpg" class="align-center" id="pipeline-iteration-1" src="../_images/pipeline_iter_1.jpg" />
