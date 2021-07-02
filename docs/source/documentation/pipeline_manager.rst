@@ -233,10 +233,10 @@ A pipeline is generally designed to perform a series of tasks on a single data, 
 
 The pipeline manager simplifies this operation using the "Iterate pipeline" button and :ref:`iteration-table-label`.
 
-There are two ways to iterate a pipeline (or a process): one is by cerating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
+There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
 
-Direct iteration
-^^^^^^^^^^^^^^^^
+Direct iteration (without use of the iteration table)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Starting with a new, empty pipeline tab in the Pipeline Manager:
 
@@ -244,12 +244,22 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 * The ``func_files`` parameter is a list. We will use only one item per iteration. In order to disambiguate the "list of list" situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.
 
-  * Use the "capsul > pipeline > custom_nodes > reduce_node > ReduceNode" brick.
-  * validate the default node parameters. The reduce node appears in the pipeline editor.
+* Use the "capsul > pipeline > custom_nodes > reduce_node > ReduceNode" or the "mia_processes > bricks > tools > Files_To_List" brick.
 
-* connect the ``outputs`` plug of the reduce node to the ``func_files`` plug of the spatial_preprocessing node
+  * In case of the ReduceNode brick:
+    
+    * Validate the default node parameters (just click on OK button). The reduce node appears in the pipeline editor.
 
-* export the ``input_0`` plug of the reduce node, renamed as ``func_files`` (for clarity)
+    * Connect the ``outputs`` plug of the reduce node to the ``func_files`` plug of the spatial_preprocessing node.
+
+    * Export the ``input_0`` plug of the reduce node (right click on the ``input_0`` plug then select export plug), renamed as ``func_files`` (for clarity).
+
+  * In case of the Files_To_List brick:
+
+    * Connect the ``file_list`` plug of the Files_To_List node to the ``func_files`` plug of the spatial_preprocessing node.
+
+    * Export the ``file1`` plug of the Files_To_List node (right click on the ``file1`` plug then select export plug), renamed as ``func_files`` (for clarity).
+    
 
 * export all unconnected plugs of the spatial preprocessing node (right click on the node then select "export all unconnected plugs")
 
