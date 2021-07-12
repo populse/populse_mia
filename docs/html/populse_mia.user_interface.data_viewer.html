@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.data_viewer package &#8212; populse_mia 2.0.0-dev+c6afbefd documentation</title>
+    <title>populse_mia.user_interface.data_viewer package &#8212; populse_mia 2.0.0-dev+c5cefb9d documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+c6afbefd',
+        VERSION:     '2.0.0-dev+c5cefb9d',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+c6afbefd documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+c5cefb9d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -83,6 +83,11 @@ remove given files.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.data_viewer.data_viewer.DataViewer.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer.DataViewer.display_files">
 <code class="descname">display_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.display_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.display_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display the selected document files</p>
@@ -129,41 +134,84 @@ remove given files.</p>
 <em class="property">class </em><code class="descclassname">populse_mia.user_interface.data_viewer.data_viewer_tab.</code><code class="descname">DataViewerTab</code><span class="sig-paren">(</span><em>main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QWidget</span></code></p>
 <p>DataViewerTab is the widget in the data viewer tab of Populse-MIA GUI.
-A combobox containing the available viewers will always appear
-If import of anatomist and anatomist_2 fails, it won’t impact the work of Mia itself
-Viewers are put in Qt.QStackedLayout in order to share a same project
-A new viewer can be added</p>
+A combobox containing the available viewers will always appear.
+If import of viewers fails, it won’t impact the work of Mia itself.
+Viewers are put in Qt.QStackedLayout in order to share a same project.
+A new viewer can be added simply by placing it in the data_viewer directory.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer">
 <code class="descname">activate_viewer</code><span class="sig-paren">(</span><em>viewer_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.activate_viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Activates viewer viewer_name which was selected
+in the combobox.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>viewer_name</strong> – a viewer name (a string)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer">
 <code class="descname">change_viewer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.change_viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer" title="Permalink to this definition">¶</a></dt>
-<dd><p>switche to viewer selected in the combobox
-pass the project from on viewer to the other</p>
+<dd><p>Switches to viewer selected in the combobox
+pass the project from on viewer to the other.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all loaded viewers before closing Mia.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.closeEvent">
+<code class="descname">closeEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.closeEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.closeEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>clears and closes all events before closing Mia.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer">
 <code class="descname">current_viewer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.current_viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return current viewer (selected viewer in combobox)
+used when user changes from BrowserTab or PipelineManagerTab
+to DataViewerTab.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.load_viewer">
 <code class="descname">load_viewer</code><span class="sig-paren">(</span><em>viewer_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.load_viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.load_viewer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Available viewers in data_viewer folder are loaded as soon
+as Data Viewer tab is clicked.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>viewer_name</strong> – string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.set_documents">
 <code class="descname">set_documents</code><span class="sig-paren">(</span><em>project</em>, <em>documents</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.set_documents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.set_documents" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.viewer_activated">
-<code class="descname">viewer_activated</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.viewer_activated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.viewer_activated" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Shares project with documents to all viewers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> – whole project</li>
+<li><strong>documents</strong> – objects (images) contained in the project</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -173,10 +221,15 @@ pass the project from on viewer to the other</p>
 <p>MIA data viewer implementation based on <a class="reference external" href="http://brainvisa.info/anatomist/user_doc/index.html">Anatomist</a></p>
 <dl class="class">
 <dt id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer">
-<em class="property">class </em><code class="descclassname">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</code><code class="descname">MiaViewer</code><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</code><code class="descname">MiaViewer</code><span class="sig-paren">(</span><em>init_global_handlers=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QWidget</span></code>, <a class="reference internal" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal"><span class="pre">populse_mia.user_interface.data_viewer.data_viewer.DataViewer</span></code></a></p>
 <p><a class="reference internal" href="#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal"><span class="pre">MIA</span> <span class="pre">data</span> <span class="pre">viewer</span></code></a>
 implementation based on <a class="reference external" href="http://brainvisa.info/pyanatomist/sphinx/index.html">PyAnatomist</a></p>
+<dl class="method">
+<dt id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.display_files">
 <code class="descname">display_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.display_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.display_files" title="Permalink to this definition">¶</a></dt>

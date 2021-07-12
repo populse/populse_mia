@@ -17,8 +17,8 @@ Software presentation
 
 Populse_MIA is composed of three main tabs:
   * Data Browser (`manual <./data_browser.html>`_)
-      * Provides an overview of the data (image or non-image) available in the current analysis project (raw data and derived data) 
-  * Data Viewer (not available yet)
+      * Provides an overview of the data (image or non-image) available in the current analysis project (raw data and derived data)
+  * Data Viewer (`manual <./data_viewer.html>`_)
       * An advanced viewer of up to 5-dimensional data, mostly but not exclusively MRI data, spectra,  plots linked to image and non-image data
   * Pipeline Manager (`manual <./pipeline_manager.html>`_)
       * Advanced and graphical construction of processing pipelines (see a complete example `here <./pipeline_example.html>`_)
@@ -44,7 +44,7 @@ Menu bar actions
     * MIA preferences
         * Opens the software preferences dialog (see preferences manual `here <./preferences.html>`_)
     * Project properties
-        * Opens the project properties dialog 
+        * Opens the project properties dialog
     * Package library manager
         * Opens the package library dialog
     * Exit
@@ -66,4 +66,3 @@ Menu bar actions
             * Installs processes to the Process Library from a folder
         * From zip file
             * Installs processes to the Process Library from a zip file
-
