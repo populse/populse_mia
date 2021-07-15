@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Populse_MIA’s Data Viewer &#8212; populse_mia 2.0.0-dev+c5cefb9d documentation</title>
+    <title>Populse_MIA’s Data Viewer &#8212; populse_mia 2.0.0-dev+034e7959 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.0-dev+c5cefb9d',
+        VERSION:     '2.0.0-dev+034e7959',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+c5cefb9d documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+034e7959 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Data Viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -62,7 +62,7 @@
 <div class="section" id="tab-presentation">
 <h2>Tab presentation<a class="headerlink" href="#tab-presentation" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
-<dt>The Data Viewer is composed of six main elements:</dt>
+<dt>The Data Viewer is composed of seven main elements:</dt>
 <dd><ul class="first last simple">
 <li>A selector containing the available viewers</li>
 <li>A toolbar containing the main tools to visualize and interact with the images</li>
@@ -70,19 +70,164 @@
 <li>An object box, containing the loaded objects</li>
 <li>A volume box, containing the displayed volumes</li>
 <li>A coordinates box, giving information about space and time coordinates</li>
+<li>Other accessible tools</li>
 </ul>
 </dd>
 </dl>
-<p>Here is a global overview of the Data Viewer tab:</p>
-<img alt="../_images/data_viewer.png" class="align-center" id="data-viewer-tab" src="../_images/data_viewer.png" />
+<p>Here is a global overview of the Data Viewer tab with some indications:</p>
+<img alt="../_images/data_viewer_bubbles.png" class="align-center" id="data-viewer-tab" src="../_images/data_viewer_bubbles.png" />
 </div>
 <div class="section" id="the-selector">
 <h2>The selector<a class="headerlink" href="#the-selector" title="Permalink to this headline">¶</a></h2>
-<p>The toolbar contains several actions to interact with the database which are listed below.</p>
-<div class="section" id="add-tag-from-tags-menu-shortcut-ctrl-a">
-<h3>Add tag (from “Tags” menu, shortcut: Ctrl+A)<a class="headerlink" href="#add-tag-from-tags-menu-shortcut-ctrl-a" title="Permalink to this headline">¶</a></h3>
-<p>Add a tag for all the documents in the database, specifying its name (mandatory), its default value, a short description, its unit and its type.</p>
-<img alt="../_images/add_tag.png" class="align-center" id="add-tag-pop-up" src="../_images/add_tag.png" />
+<img alt="../_images/selector.png" class="align-left" id="selector" src="../_images/selector.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p>A drop-down menu is displayed next to the ‘use viewer:’ label (top left) and contains available viewers.
+For now, Mia provides two viewers, anatomist and anatomist_2. Both viewers are based on tools provided by the API of Anatomist,
+available <a class="reference external" href="https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#introduction">here</a>.</p>
+<p>Users own viewers can be simply added to the data_viewer folder. The viewer will then be automatically detected and added to the drop-down menu.
+Github link of data_viewer folder:
+<a class="reference external" href="https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer">https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer</a></p>
+<p>In the following section we will focused on anatomist_2 viewer which is an improved version of anatomist viewer.</p>
+</div>
+<div class="section" id="the-toolbar">
+<h2>The toolbar<a class="headerlink" href="#the-toolbar" title="Permalink to this headline">¶</a></h2>
+<p>The toolbar contains several actions to interact with the objects (images).</p>
+<div class="section" id="open-file">
+<h3>Open file<a class="headerlink" href="#open-file" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/folder.png" id="id1"><img alt="../_images/folder.png" class="align-left" id="id1" src="../_images/folder.png" style="width: 20.48px; height: 20.48px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Open files from desktop directory. Files must have an image format (Dicom, NifTi, Bids …). All loaded objects will be displayed in the object box entitled “Objects”.
+Add a tag for all the documents in the database, specifying its name (mandatory), its default value, a short description, its unit and its type.</p>
+<a class="reference internal image-reference" href="../_images/file_open.png" id="id2"><img alt="../_images/file_open.png" class="align-center" id="id2" src="../_images/file_open.png" style="width: 496.8px; height: 356.8px;" /></a>
+</div>
+<div class="section" id="filter-object-from-data-browser">
+<h3>Filter object from Data Browser<a class="headerlink" href="#filter-object-from-data-browser" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/database.png" id="database"><img alt="../_images/database.png" class="align-left" id="database" src="../_images/database.png" style="width: 19.6px; height: 19.6px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Transfer the objects from the Data Browser to the Data Viewer. Objects will appear in the pop-up shown below. A quick search bar is implemented on top, in order to filter the objects quickly by name.
+If multiple objects are selected, all will be loaded in the object box but only the first of the list will be displayed in the main window.
+Objects cannot be imported twice.</p>
+<a class="reference internal image-reference" href="../_images/Filter_documents.png" id="filter-file"><img alt="../_images/Filter_documents.png" class="align-center" id="filter-file" src="../_images/Filter_documents.png" style="width: 801.5px; height: 373.09999999999997px;" /></a>
+</div>
+<div class="section" id="settings">
+<h3>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/settings.png" id="id3"><img alt="../_images/settings.png" class="align-left" id="id3" src="../_images/settings.png" style="width: 20.48px; height: 20.48px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="docutils">
+<dt>Preferences concerning the Data Viewer. Parameters that can be changed are:</dt>
+<dd><ul class="first last simple">
+<li>Number of  dynamics per second (frames per second) for automatic running of functional images (see <strong>Play button</strong>)</li>
+<li>Configuration : neurological or radiological orientation</li>
+<li>Referential (World Coordinates will display images  in a conventional way, corresponding most of the time to scanner coordinates)</li>
+</ul>
+</dd>
+</dl>
+<p>Objects will be reloaded in the case where configuration or referential has changed.</p>
+<a class="reference internal image-reference" href="../_images/Preferences.png" id="id4"><img alt="../_images/Preferences.png" class="align-center" id="id4" src="../_images/Preferences.png" style="width: 417.9px; height: 303.09999999999997px;" /></a>
+</div>
+<div class="section" id="plus-button">
+<h3>Plus button<a class="headerlink" href="#plus-button" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/plus.png" id="id5"><img alt="../_images/plus.png" class="align-left" id="id5" src="../_images/plus.png" style="width: 15.36px; height: 15.36px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Displays selected object of the object box in the main window. If the object is already displayed, button will be disabled.</p>
+</div>
+<div class="section" id="minus-button">
+<h3>Minus button<a class="headerlink" href="#minus-button" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/signe-moins.png" id="id6"><img alt="../_images/signe-moins.png" class="align-left" id="id6" src="../_images/signe-moins.png" style="width: 15.36px; height: 15.36px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Removes selected object of the object box from the main window. If the object is not displayed, button will be disabled. Objects will be removed from main window but won’t disappear from the object box.</p>
+</div>
+<div class="section" id="delete-button">
+<h3>Delete button<a class="headerlink" href="#delete-button" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/delete.png" id="id7"><img alt="../_images/delete.png" class="align-left" id="id7" src="../_images/delete.png" style="width: 15.36px; height: 15.36px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Deletes selected object from Data Viewer tab. Objects will disappear from the object box and will be removed from main window but they will still be available in the Data Browser and thus from the filter action.</p>
+</div>
+<div class="section" id="capture-button">
+<h3>Capture button<a class="headerlink" href="#capture-button" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/camera.png" id="camera-button"><img alt="../_images/camera.png" class="align-left" id="camera-button" src="../_images/camera.png" style="width: 15.36px; height: 15.36px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Not available yet.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>THE VIEWS</strong></p>
+</div>
+<div class="section" id="view-buttons">
+<h3>View buttons<a class="headerlink" href="#view-buttons" title="Permalink to this headline">¶</a></h3>
+<p>Manage the display of the views in the main window (more details in main window section). If no object is displayed, the views will appear empty.</p>
+<a class="reference internal image-reference" href="../_images/views.png" id="views"><img alt="../_images/views.png" class="align-center" id="views" src="../_images/views.png" style="width: 310.09999999999997px; height: 125.99999999999999px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="reference internal image-reference" href="../_images/ax-01.png" id="axial-view"><img alt="../_images/ax-01.png" class="align-left" id="axial-view" src="../_images/ax-01.png" style="width: 25.59px; height: 25.59px;" /></a>
+<p><strong>Axial button</strong></p>
+<p>If button is checked, axial view is added to the main window</p>
+<a class="reference internal image-reference" href="../_images/sag-01.png" id="sagittal-view"><img alt="../_images/sag-01.png" class="align-left" id="sagittal-view" src="../_images/sag-01.png" style="width: 25.59px; height: 25.59px;" /></a>
+<p><strong>Sagittal button</strong></p>
+<p>If button is checked, sagittal view is added to the main window</p>
+<a class="reference internal image-reference" href="../_images/coro-01.png" id="coronal-view"><img alt="../_images/coro-01.png" class="align-left" id="coronal-view" src="../_images/coro-01.png" style="width: 25.59px; height: 25.59px;" /></a>
+<p><strong>Coronal button</strong></p>
+<p>If button is checked, sagittal view is added to the main window</p>
+<a class="reference internal image-reference" href="../_images/dimension-01.png" id="d-view"><img alt="../_images/dimension-01.png" class="align-left" id="d-view" src="../_images/dimension-01.png" style="width: 25.59px; height: 25.59px;" /></a>
+<p><strong>3D button</strong></p>
+<p>If button is checked, sagittal view is added to the main window</p>
+<p>Once an object has been loaded, at least one view will always be displayed.
+Here are two objects displayed in two views:</p>
+<a class="reference internal image-reference" href="../_images/2_views.png" id="id8"><img alt="../_images/2_views.png" class="align-center" id="id8" src="../_images/2_views.png" style="width: 1256.5px; height: 535.5px;" /></a>
+</div>
+<div class="section" id="palettes">
+<h3>Palettes<a class="headerlink" href="#palettes" title="Permalink to this headline">¶</a></h3>
+<p>A drop-down menu is available showing several default color palettes. If an object is selected in the object box, its color palette can be changed in this menu. More palettes are available by right clicking on an object (described below in Object section).</p>
+<a class="reference internal image-reference" href="../_images/palette.png" id="color-palette"><img alt="../_images/palette.png" class="align-center" id="color-palette" src="../_images/palette.png" style="width: 335.29999999999995px; height: 39.199999999999996px;" /></a>
+</div>
+<div class="section" id="opacity">
+<h3>Opacity<a class="headerlink" href="#opacity" title="Permalink to this headline">¶</a></h3>
+<p>In order to fully understand how to use this tool some basic notions of Anatomist renderings must be described.</p>
+<a class="reference internal image-reference" href="../_images/opacity.png" id="id9"><img alt="../_images/opacity.png" class="align-center" id="id9" src="../_images/opacity.png" style="width: 627.1999999999999px; height: 156.1px;" /></a>
+<p>To make this more understandable, we will distinguish two cases:</p>
+<ul>
+<li><p class="first"><strong>Only one object is displayed</strong></p>
+<p>The opacity slider will change the opacity of the selected object. From left to right the cursor sets opacity from 0 to 100%. If no object is selected, the slider has no effect.</p>
+</li>
+<li><p class="first"><strong>Multiple objects are displayed</strong></p>
+<p>Mia’s Data Viewer uses several Anatomist functionalities and when multiple objects are displayed, a fusion of images must be made in order to improve image rendering. Thus, we can’t directly modify the opacity of an object. However, the mixing rate of the objects can be changed. Two examples are described below but the principle is the same and thus it remains valid for more than three objects.</p>
+<ul>
+<li><p class="first"><strong>Two objects A and B are displayed</strong></p>
+<blockquote>
+<div><p>Both objects will be displayed in the main window with respective chosen color palettes and what will in fact appear, is a fusion of both objects. Now, if A is selected and the opacity slider’s position is changed, it will modify the percentage of A in the fusion A-B on the area where both images overlap.
+Set the position of the slider to the middle will correspond to 50% of A and 50% of B, set the position to 3/4, will correspond to 75% of A and 25% of B. If the cursor is set to 100%, B will completely disappear.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Three objects A, B, C are displayed</strong></p>
+<blockquote>
+<div><p>The principle is the same, the resulting image is a fusion of all three objects. Now let’s see how the opacity slider works here.
+C is selected: changing the slider’s position will change the percentage of C in the B-C mix (on the overlapping area). Let’s imagine it’s set to 100%. As seen before, B will completely disappear.
+Now, B is selected: In theory, what would be expected is that setting the slider’s position to 100% would set B to 100%. Nevertheless, by selecting B, we are modifying the mixing rate of the B-C fusion with A. Thus, setting the cursor’s position to 100% will set the mix to 100% and A to 0. But as a display percentage for B in the B-C mix was chosen before (0%), B won’t appear in the main window.</p>
+<p>The interesting thing about this method is that changing the mixing rates instead of simply choosing the opacity gives much more possibilities. On the other hand, changing the mixing rates is not independent from one object to another.
+Some more specific documentation is available on the Brainvisa-Anatomist website under the following link: <a class="reference external" href="https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes">https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes</a>.</p>
+</div></blockquote>
+</li>
+</ul>
+</li>
+</ul>
 </div>
 <div class="section" id="clone-tag-from-tags-menu">
 <h3>Clone tag (from “Tags” menu)<a class="headerlink" href="#clone-tag-from-tags-menu" title="Permalink to this headline">¶</a></h3>
