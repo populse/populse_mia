@@ -32,7 +32,7 @@ Here is a global overview of the Data Viewer tab with some indications:
    :align: center
    :name: Data viewer tab
 
-The selector
+**The selector**
 ------------
 
 .. image:: ../images/selector.png
@@ -50,9 +50,9 @@ Users own viewers can be simply added to the data_viewer folder. The viewer will
 Github link of data_viewer folder:
 `<https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer>`_
 
-In the following section we will focused on anatomist_2 viewer which is an improved version of anatomist viewer.
+In the following section we will focuse on anatomist_2 viewer which is an improved version of anatomist simple viewer.
 
-The toolbar
+**The toolbar**
 ------------
 
 The toolbar contains several actions to interact with the objects (images).
@@ -102,15 +102,15 @@ Settings
 |
 
 Preferences concerning the Data Viewer. Parameters that can be changed are:
-  * Number of  dynamics per second (frames per second) for automatic running of functional images (see **Play button**)
+  * Automatic time image display which corresponds to the frame rate for automatic running of functional images (see :ref:`play-button-label`)
   * Configuration : neurological or radiological orientation
   * Referential (World Coordinates will display images  in a conventional way, corresponding most of the time to scanner coordinates)
 Objects will be reloaded in the case where configuration or referential has changed.
 
-.. image:: ../images/Preferences.png
+.. image:: ../images/preferences.png
   :align: center
   :name: settings
-  :scale: 70 %
+  :scale: 50 %
 
 Plus button
 ^^^^^^^^^^^^
@@ -152,18 +152,12 @@ Capture button
   :name: camera_button
   :scale: 3 %
 
-|
-
 Not available yet.
-
-|
-
-**THE VIEWS**
 
 View buttons
 ^^^^^^^^^^^^^
 
-Manage the display of the views in the main window (more details in main window section). If no object is displayed, the views will appear empty.
+Manage the display of the views in the main window (more details in :ref:`main-window-label` section). If no object is displayed, the views will appear empty.
 
 .. image:: ../images/views.png
   :align: center
@@ -214,7 +208,7 @@ Here are two objects displayed in two views:
 Palettes
 ^^^^^^^^^
 
-A drop-down menu is available showing several default color palettes. If an object is selected in the object box, its color palette can be changed in this menu. More palettes are available by right clicking on an object (described below in Object section).
+A drop-down menu is available showing several default color palettes. If an object is selected in the object box, its color palette can be changed in this menu. More palettes are available by right clicking on an object (described below in :ref:`object-label` section).
 
 .. image:: ../images/palette.png
   :align: center
@@ -222,7 +216,7 @@ A drop-down menu is available showing several default color palettes. If an obje
   :scale: 70 %
 
 Opacity
-^^^^^^^^^
+^^^^^^^^
 
 In order to fully understand how to use this tool some basic notions of Anatomist renderings must be described.
 
@@ -241,7 +235,7 @@ To make this more understandable, we will distinguish two cases:
   Mia’s Data Viewer uses several Anatomist functionalities and when multiple objects are displayed, a fusion of images must be made in order to improve image rendering. Thus, we can’t directly modify the opacity of an object. However, the mixing rate of the objects can be changed. Two examples are described below but the principle is the same and thus it remains valid for more than three objects.
 
   * **Two objects A and B are displayed**
-  
+
       Both objects will be displayed in the main window with respective chosen color palettes and what will in fact appear, is a fusion of both objects. Now, if A is selected and the opacity slider’s position is changed, it will modify the percentage of A in the fusion A-B on the area where both images overlap.
       Set the position of the slider to the middle will correspond to 50% of A and 50% of B, set the position to 3/4, will correspond to 75% of A and 25% of B. If the cursor is set to 100%, B will completely disappear.
 
@@ -254,260 +248,77 @@ To make this more understandable, we will distinguish two cases:
       The interesting thing about this method is that changing the mixing rates instead of simply choosing the opacity gives much more possibilities. On the other hand, changing the mixing rates is not independent from one object to another.
       Some more specific documentation is available on the Brainvisa-Anatomist website under the following link: `<https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes>`_.
 
-Clone tag (from "Tags" menu)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Copy an existing tag to another name for all the documents in the database.
+.. _play-button-label:
 
-.. image:: ../images/clone_tag.png
-   :align: center
-   :name: Clone tag pop-up
+Play button
+^^^^^^^^^^^^
 
-Remove tag (from "Tags" menu)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Remove a cloned or added tag for all the documents in the database.
+.. image:: ../images/play.png
+  :align: left
+  :name: play_button
+  :scale: 70 %
 
-.. image:: ../images/remove_tag.png
-   :align: center
-   :name: Remove tag pop-up
-
-Save the current filter (from "Filters" menu)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Save to a json file the content of the current filter in the rapid or advanced search. This file is stored in the "filters" folder of the current project.
-
-.. image:: ../images/save_filter.png
-   :align: center
-   :name: Save filter pop-up
-
-Open a filter (from "Filters" menu)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Open a filter contained in the "filters" folder of the current project.
-
-.. image:: ../images/open_filter.png
-   :align: center
-   :name: Open filter pop-up
-
-
-Visualized tags
-^^^^^^^^^^^^^^^
-Update the tags that are visualized in the table, which can also be changed in the Project properties.
-
-The widget is composed of two lists. The one on the left contains the tags of the database that are not displayed in the table. To make one tag visible, select it in the list and press on the middle cross "-->" to pass it to the list on the right, that contains the visualized tags. Save your changes by pressing "OK".
-
-.. image:: ../images/visualized_tags.png
-   :align: center
-   :name: Visualized tags pop-up
-
-Count table
-^^^^^^^^^^^
-Count and verify the scans in the current project.
-
-It is composed of push buttons on its top, each one corresponding to a tag selected by the user.
-When, the "Count scans" button is clicked, a table is created with all the combinations possible
-for the values of the first n-1 tags. Then, the m values that can take the last tag are displayed
-in the header of the m last columns of the table. The cells are then filled with a green plus or
-a red cross depending on if there is at least a scan that has all the tags values or not.
-
-Example 1:
-
-In this case, by setting the first tag to "Patient" and the second to "Exp Type", it is possible to see that the MDEFT scan for Patient K49 and the FLASH scan for Patient K51 are missing, which could be problematic for the follow-up of the analysis.
-
-.. image:: ../images/count_table.png
-   :align: center
-   :name: Count table pop-up
+Allows automatic scrolling of dynamics for functional MRI data. The frame rate can be changed in the settings of the viewer. Time coordinates will appear in the coordinates box below. In order to start at a particular moment, the time moment in seconds can be entered manually in the coordinates box and then the play button can be pressed. Time cursors at the right of each view are not synchronized if used alone.
 
 |
 
-Example 2:
+.. _main-window-label:
 
-Assume that the current project has scans for two patients (P1 and P2) and three time points (T1,
-T2 and T3). For each (patient, time point), several sequences have been made (two RARE, one MDEFT
-and one FLASH). Selecting [PatientName, TimePoint, SequenceName] as tags, the table will be:
-
-+-------------+-----------+------+-------+-------+
-| PatientName | TimePoint | RARE | MDEFT | FLASH |
-+=============+===========+======+=======+=======+
-| P1          | T1        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P1          | T2        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P1          | T3        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P2          | T1        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P2          | T2        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P2          | T3        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-
-with v(n) meaning that n scans corresponds of the selected values for (PatientName, TimePoint,
-SequenceName).
-
-If no scans corresponds for a triplet value, a red cross will be displayed. For example, if you forget to import one RARE for P1 at T2 and one FLASH for P2 at T3. The table will be:
-
-+-------------+-----------+------+-------+-------+
-| PatientName | TimePoint | RARE | MDEFT | FLASH |
-+=============+===========+======+=======+=======+
-| P1          | T1        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P1          | T2        | v(1) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P1          | T3        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P2          | T1        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P2          | T2        | v(2) | v(1)  | v(1)  |
-+-------------+-----------+------+-------+-------+
-| P2          | T3        | v(2) | v(1)  | x     |
-+-------------+-----------+------+-------+-------+
-
-Thus, thanks to the CountTable tool, you directly know if some scans are missing.
-
-Rapid search
-^^^^^^^^^^^^
-Search for a pattern in the table (for all the visualized tags).
-
-Enter `%` to replace any string, `_` to replace any character , `*Not Defined*` for the scans with missing value(s). Dates are in the following format: yyyy-mm-dd hh:mm:ss.fff"
-
-Rapid search example:
-
-.. image:: ../images/rapid_search.png
-   :align: center
-   :name: Rapid search example
-
-Advanced search
-^^^^^^^^^^^^^^^
-Create a complex filter to extract the information in the table.
-
-The advanced search creates a complex query to the database and is a combination of several "query lines" which are linked with AND or OR and all composed of:
-  * A negation or not
-  * A tag name or all visible tags
-  * A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN)
-  * A value
-
-Advanced search example:
-
-.. image:: ../images/advanced_search.png
-   :align: center
-   :name: Advanced search example
-
-The table
----------
-
-The table displays the documents contained in the database and their associated tags. Some information about it:
-
-  * Any cell can be selected and modified (except the FileName column).
-  * To select several cells, drag onto them or use Ctrl or Shift.
-  * A red cell means that the tag is a cloned or a user tag.
-  * A blue cell means that the original value of the tag has been modified.
-  * To sort the table depending a column, click one time on its header.
-  * To select an entire column, double click on its header.
-
-By right clicking in the table, a sub-menu is displayed and contains action to apply on the selected cells. These actions are listed below.
-
-Reset cell(s)
-^^^^^^^^^^^^^
-Reset the selected cells to their original values.
-
-Reset column(s)
-^^^^^^^^^^^^^^^
-Reset the selected columns to their original values (no need to select the entire column).
-
-Reset row(s)
-^^^^^^^^^^^^
-Reset the selected rows to their original values (no need to select the entire row).
-
-Clear cell(s)
-^^^^^^^^^^^^^
-Set the `*Not Defined*` value to the selected cells.
-
-Add document
-^^^^^^^^^^^^
-Add a document to the database. This action can also be done using the green cross on the bottom left of the bottom left of the table.
-
-.. image:: ../images/add_document.png
-   :align: center
-   :name: Add document example
-
-Remove document(s)
-^^^^^^^^^^^^^^^^^^
-Remove the selected documents from the database.
-
-Select column(s)
-^^^^^^^^^^^^^^^^
-Select the entire column.
-
-Multiple sort
-^^^^^^^^^^^^^
-Sort the table on several tag values, in an ascending or descending way.
-
-Example:
-
-Sorting the table in a descending way, for all the Exp Type values and then the Patient values.
-
-.. image:: ../images/multiple_sort.png
-   :align: center
-   :name: Multiple sort example
-
-The table is now sorted depending on the Exp Type tag, in a descending way. For a same Exp Type value, the documents are sorted depending the Patient values, in a descending way too.
-
-.. image:: ../images/multiple_sort_result.png
-   :align: center
-   :name: Multiple sort result example
-
-Send documents to the Pipeline Manager
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Use the selected documents to the Pipeline Manager.
-
-A pop-up is displayed to confirm the selected documents. Click on "OK" to use these documents in the follow-up of the analysis.
-
-.. image:: ../images/send_to_pipeline.png
-   :align: center
-   :name: Send documents to pipeline example
-
-The image viewer
+**The main window**
 ----------------
 
-The Data Browser's image viewer is a simple tool to display MRI data contained in the database. It can be hidden using the splitter. The selected document(s) (up to 4) in the table are displayed. Several options are available and are described below.
+The main window contains the views of the displayed objects. The display is in line and default one shows axial, sagittal and coronal view. Depending on which buttons are checked (described above), one to four views can be displayed. For anatomical images, a cursor will appear on the right of each view, enabling scrolling through the image set. For functional images, a second cursor will appear on the right of the first one the enable scrolling through time.
+Moreover, several controls are enabled in the views:
+  * Left mouse button manages the displacement of the red cross  which allows moving in 3D and thus changes the other views
+  * Middle mouse button scrolling inside a view manages the zoom
+  * CTRL + middle mouse button click manages intrinsic displacement
+  * Right mouse button manages the thresholding (horizontal movement changes the  minimum threshold and vertical displacement changes the maximum threshold)
 
+.. _object-label:
 
-Chain cursors
-^^^^^^^^^^^^^
-When several documents are selected, moving a cursor moves the same cursors on all the images.
+**The object box**
+---------------
 
-Image viewer with chained cursors:
+.. image:: ../images/Objects.png
+  :align: center
+  :name: object_box
+  :scale: 70 %
 
-.. image:: ../images/chain_cursors.png
-   :align: center
-   :name: Chain cursors example
+The object box contains all the loaded objects (from computer file browser or from Data Browser). The objects are not necessarily displayed. Displayed objects will appear on green background and with a check icon on the left. A selected object appears on blue background.
+Plus, minus and delete button manage the object display (described above).
+Right click on an object enables several options to change object display properties. For example, more color palettes are available than in the drop-down menu of the toolbar. New palettes will be automatically added to the drop-down menu. Material settings such as object properties of referential settings can also be accessed through this menu. For more information on object display properties, please consult the documentation directly on the Anatomist website (`<https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu>`_)
 
-Image viewer with unchained cursors:
+**The volume box**
+---------------
 
-.. image:: ../images/no_chain_cursors.png
-   :align: center
-   :name: No chain cursors example
+.. image:: ../images/Volumes.png
+  :align: center
+  :name: volumes_box
+  :scale: 70 %
 
-Show all slices
-^^^^^^^^^^^^^^^
-Display slices of a selected file (work with only one document) depending on the dimension of the image. The number of displayed slices can be modified.
+The Volume Box displays the intensity values at the current location (defined as the centre of the red cross in three dimensions) for each visible image (object).
 
-  * 3D: display all the slices.
-  * 4D: display the middle slice of the third dimension for each time of the fourth dimension.
-  * 5D: display the middle slice of the third dimension for the first time of the fourth dimension for each time of the fifth dimension.
+**The coordinates box**
+--------------------
 
-.. image:: ../images/show_all_slices.png
-   :align: center
-   :name: Show all slices example
+.. image:: ../images/coordinates.png
+  :align: center
+  :name: coordinates_box
+  :scale: 70 %
 
-Change the visualized tag
-^^^^^^^^^^^^^^^^^^^^^^^^^
-By clicking on the label below the images, it is possible to change the tag that is visualized in the image viewer. By default, it is set to SequenceName.
+Display of space and time coordinates. Can be entered manually. Time values will only affect functional images and they are linked to the time cursor on the right of each view. Space coordinates will affect the red cross inside each view and image scrolling on space cursors (also on the right of each view).
 
-.. image:: ../images/viewer_tag_selection.png
-   :align: center
-   :name: Viewer tag selection example
+.. image:: ../images/Cursors.png
+  :align: center
+  :name: cursors_image
+  :scale: 50 %
 
-The visualized tag has been updated in the image viewer:
+**Other accessible tools**
+-----------------------
 
-.. image:: ../images/viewer_tag_selection_result.png
-   :align: center
-   :name: Viewer tag selection result example
+Some other (more specific) tools are available thanks to right click on an object. Specific settings on file, color, referential and object properties are available. Moreover, the feature “Open in new view” enables opening the selected object in a new window. The new window (shown below) will stay in front of Mia’s main window. All views (Axial, Sagittal, Coronal and 3D views) are available, but one at a time. No overlays are enabled but controls work just like in the main window.
+
+.. image:: ../images/new_view.png
+  :align: center
+  :name: new_view_popup
+  :scale: 30 %
