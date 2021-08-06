@@ -26,3 +26,25 @@ Execute SPM12, the second path being the path of the MCR (that has been chosen d
 ./run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v93
 
 P.S. Tested on linux with http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip (part 1 above), https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip (part 2 above) and without using parts 5 and 6 above: It works!
+
+MacOS
+=====
+
+1- Download the spm12_r7771.zip file: https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/
+Unzip it. In the same directory where run_spm12.sh can be found unzip spm12_maci64.zip
+
+2- Download the corresponding MCR for MATLAB Compiler Runtime (MCR) v4.13 (MATLAB R2010a) MCRInstaller.dmg file: https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/MCR/maci64/
+
+3- Start the MATLAB Runtime installer: double click in MCRInstaller.dmg then right click on  MCRInstaller.pkg, then choose Open with > Installer (default). The MATLAB Runtime installer starts, it displays a dialog box. Read the information and then click Next (or continue) to proceed with the installation. Then click Install. The default MATLAB Runtime installation directory is now in /Applications/MATLAB/MATLAB_Compiler_Runtime/v713.
+
+4- Usage: Go where run_spm12.sh can be found, then just type ./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/
+If No Java runtime is already installed, a pop-up is opened with a `No Java runtime present, requesting install` message.
+
+5- Download Java for OS X 2017-001: https://support.apple.com/kb/DL1572?locale=en_US
+Click on Download then Open with > DiskImageMounter (default) > Ok.
+Right click on the JavaForOSX.pkg then choose Open with Installer (default).
+The Java for OS X 2017-001installer starts, it displays a dialog box. Answer the questions  then install.
+
+6- ./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri works fine now !!!
+
+P.S. Tested on macOS 10.13.6.
