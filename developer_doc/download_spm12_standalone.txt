@@ -1,3 +1,6 @@
+Linux
+=====
+
 1- Download the desired version of spm: https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/
 Unzip it
 
