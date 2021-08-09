@@ -1,7 +1,10 @@
-
+Linux
+=====
+With Linux, Singularity seems to work perfectly well. Given the characteristics of the 2 proposed technologies ([container or virtual machine](https://www.geeksforgeeks.org/difference-between-virtual-machines-and-containers/)) it is clear that it is better to use a container for performance reasons.
+In the following we propose exclusively for linux the use of a Singularity container.
 **Short**:  
   *Read-only container*:
-  - "for Linux, two software must be installed: Python (version >= 2.7) and Singularity (version > 3.6)"
+  - "Two softwares must be installed: Python (version >= 3.7) and Singularity (version > 3.6)"
   - mkdir -p $HOME/casa_distro/brainvisa-opensource-master # create an installation directory
   - "[download the last casa-dev image](https://brainvisa.info/download/) (ex. casa-dev-5.0-1.sif), preferably into the $HOME/casa_distro directory"
   - singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.0-1.sif branch=master distro=opensource # execute the container image using Singularity
@@ -23,3 +26,9 @@
   - "Then using `bv` or `bv bash` will use the casa-dev-5.0-1_wr image" 
 
 **[Longer](https://brainvisa.info/web/download.html)**
+
+MacOS
+=====
+
+Windows
+=======
