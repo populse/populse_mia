@@ -48,7 +48,7 @@ Main features
 * `MRI data conversion <./documentation/mri_file_manager.html>`_
 * `Metadata enhancement <./documentation/data_browser.html>`_
 * `Complex pipeline processing <./documentation/pipeline_manager.html>`_
-* Data visualization (coming soon)
+* `Data visualization <./documentation/data_viewer.html>`_
 
 Installation / Configuration
 ============================

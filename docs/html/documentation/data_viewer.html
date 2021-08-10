@@ -1,32 +1,22 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Populse_MIA’s Data Viewer &#8212; populse_mia 2.0.0-dev+49a5ad83 documentation</title>
+    <meta charset="utf-8" />
+    <title>Populse_MIA’s Data Viewer &#8212; populse_mia 2.0.0-dev+15d073e4 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.0.0-dev+49a5ad83',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+49a5ad83 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+15d073e4 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Data Viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -36,23 +26,23 @@
         </p>
 
       </div>
-      <div class="content">
+      <div class="content" role="main">
         
         
   <div class="toctree-wrapper compound">
 </div>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="14%" />
-<col width="24%" />
-<col width="31%" />
-<col width="31%" />
+<col style="width: 14%" />
+<col style="width: 24%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference external" href="../index.html">Home</a></td>
-<td><a class="reference external" href="./documentation.html">Documentation</a></td>
-<td><a class="reference external" href="../installation/installation.html">Installation</a></td>
-<td><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
+<td><p><a class="reference external" href="./documentation.html">Documentation</a></p></td>
+<td><p><a class="reference external" href="../installation/installation.html">Installation</a></p></td>
+<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -61,16 +51,15 @@
 <p>This page is a user guide for Mia’s Data Viewer, a tool to visualize medical images.</p>
 <div class="section" id="tab-presentation">
 <h2>Tab presentation<a class="headerlink" href="#tab-presentation" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>The Data Viewer is composed of seven main elements:</dt>
-<dd><ul class="first last simple">
-<li>A selector containing the available viewers</li>
-<li>A toolbar containing the main tools to visualize and interact with the images</li>
-<li>A main window to display the objects</li>
-<li>An object box, containing the loaded objects</li>
-<li>A volume box, containing the displayed volumes</li>
-<li>A coordinates box, giving information about space and time coordinates</li>
-<li>Other accessible tools</li>
+<dl class="simple">
+<dt>The Data Viewer is composed of seven main elements:</dt><dd><ul class="simple">
+<li><p>A selector containing the available viewers</p></li>
+<li><p>A toolbar containing the main tools to visualize and interact with the images</p></li>
+<li><p>A main window to display the objects</p></li>
+<li><p>An object box, containing the loaded objects</p></li>
+<li><p>A volume box, containing the displayed volumes</p></li>
+<li><p>A coordinates box, giving information about space and time coordinates</p></li>
+<li><p>Other accessible tools</p></li>
 </ul>
 </dd>
 </dl>
@@ -84,12 +73,10 @@
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 </div>
-<p>A drop-down menu is displayed next to the ‘use viewer:’ label (top left) and contains available viewers.
+<p>A drop-down menu is displayed next to the <cite>use viewer:</cite> label (top left) and contains available viewers.
 For now, Mia provides two viewers, anatomist and anatomist_2. Both viewers are based on tools provided by the API of Anatomist,
 available <a class="reference external" href="https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#introduction">here</a>.</p>
-<p>Users own viewers can be simply added to the data_viewer folder. The viewer will then be automatically detected and added to the drop-down menu.
-Github link of data_viewer folder:
-<a class="reference external" href="https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer">https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer</a></p>
+<p>Users own viewers can be simply added to the <a class="reference external" href="https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer">data_viewer folder</a>. The viewer will then be automatically detected and added to the drop-down menu.</p>
 <p>In the following section we will focuse on anatomist_2 viewer which is an improved version of anatomist simple viewer.</p>
 </div>
 <div class="section" id="the-toolbar">
@@ -122,12 +109,11 @@ Objects cannot be imported twice.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<dl class="docutils">
-<dt>Preferences concerning the Data Viewer. Parameters that can be changed are:</dt>
-<dd><ul class="first last simple">
-<li>Automatic time image display which corresponds to the frame rate for automatic running of functional images (see <a class="reference internal" href="#play-button-label"><span class="std std-ref">Play button</span></a>)</li>
-<li>Configuration : neurological or radiological orientation</li>
-<li>Referential (World Coordinates will display images  in a conventional way, corresponding most of the time to scanner coordinates)</li>
+<dl class="simple">
+<dt>Preferences concerning the Data Viewer. Parameters that can be changed are:</dt><dd><ul class="simple">
+<li><p>Automatic time image display which corresponds to the frame rate for automatic running of functional images (see <a class="reference internal" href="#play-button-label"><span class="std std-ref">Play button</span></a>)</p></li>
+<li><p>Configuration : neurological or radiological orientation</p></li>
+<li><p>Referential (World Coordinates will display images  in a conventional way, corresponding most of the time to scanner coordinates)</p></li>
 </ul>
 </dd>
 </dl>
@@ -197,25 +183,25 @@ Here are two objects displayed in two views:</p>
 <a class="reference internal image-reference" href="../_images/opacity.png" id="id9"><img alt="../_images/opacity.png" class="align-center" id="id9" src="../_images/opacity.png" style="width: 627.1999999999999px; height: 156.1px;" /></a>
 <p>To make this more understandable, we will distinguish two cases:</p>
 <ul>
-<li><p class="first"><strong>Only one object is displayed</strong></p>
+<li><p><strong>Only one object is displayed</strong></p>
 <p>The opacity slider will change the opacity of the selected object. From left to right the cursor sets opacity from 0 to 100%. If no object is selected, the slider has no effect.</p>
 </li>
-<li><p class="first"><strong>Multiple objects are displayed</strong></p>
+<li><p><strong>Multiple objects are displayed</strong></p>
 <p>Mia’s Data Viewer uses several Anatomist functionalities and when multiple objects are displayed, a fusion of images must be made in order to improve image rendering. Thus, we can’t directly modify the opacity of an object. However, the mixing rate of the objects can be changed. Two examples are described below but the principle is the same and thus it remains valid for more than three objects.</p>
 <ul>
-<li><p class="first"><strong>Two objects A and B are displayed</strong></p>
+<li><p><strong>Two objects A and B are displayed</strong></p>
 <blockquote>
 <div><p>Both objects will be displayed in the main window with respective chosen color palettes and what will in fact appear, is a fusion of both objects. Now, if A is selected and the opacity slider’s position is changed, it will modify the percentage of A in the fusion A-B on the area where both images overlap.
 Set the position of the slider to the middle will correspond to 50% of A and 50% of B, set the position to 3/4, will correspond to 75% of A and 25% of B. If the cursor is set to 100%, B will completely disappear.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><strong>Three objects A, B, C are displayed</strong></p>
+<li><p><strong>Three objects A, B, C are displayed</strong></p>
 <blockquote>
 <div><p>The principle is the same, the resulting image is a fusion of all three objects. Now let’s see how the opacity slider works here.
 C is selected: changing the slider’s position will change the percentage of C in the B-C mix (on the overlapping area). Let’s imagine it’s set to 100%. As seen before, B will completely disappear.
 Now, B is selected: In theory, what would be expected is that setting the slider’s position to 100% would set B to 100%. Nevertheless, by selecting B, we are modifying the mixing rate of the B-C fusion with A. Thus, setting the cursor’s position to 100% will set the mix to 100% and A to 0. But as a display percentage for B in the B-C mix was chosen before (0%), B won’t appear in the main window.</p>
 <p>The interesting thing about this method is that changing the mixing rates instead of simply choosing the opacity gives much more possibilities. On the other hand, changing the mixing rates is not independent from one object to another.
-Some more specific documentation is available on the Brainvisa-Anatomist website under the following link: <a class="reference external" href="https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes">https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes</a>.</p>
+Some more specific documentation is available on the <a class="reference external" href="https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes">Brainvisa-Anatomist website</a>.</p>
 </div></blockquote>
 </li>
 </ul>
@@ -237,10 +223,10 @@ Some more specific documentation is available on the Brainvisa-Anatomist website
 Moreover, several controls are enabled in the views:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Left mouse button manages the displacement of the red cross  which allows moving in 3D and thus changes the other views</li>
-<li>Middle mouse button scrolling inside a view manages the zoom</li>
-<li>CTRL + middle mouse button click manages intrinsic displacement</li>
-<li>Right mouse button manages the thresholding (horizontal movement changes the  minimum threshold and vertical displacement changes the maximum threshold)</li>
+<li><p>Left mouse button manages the displacement of the red cross  which allows moving in 3D and thus changes the other views</p></li>
+<li><p>Middle mouse button scrolling inside a view manages the zoom</p></li>
+<li><p>CTRL + middle mouse button click manages intrinsic displacement</p></li>
+<li><p>Right mouse button manages the thresholding (horizontal movement changes the  minimum threshold and vertical displacement changes the maximum threshold)</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -249,7 +235,7 @@ Moreover, several controls are enabled in the views:</p>
 <a class="reference internal image-reference" href="../_images/Objects.png" id="object-box"><img alt="../_images/Objects.png" class="align-center" id="object-box" src="../_images/Objects.png" style="width: 825.3px; height: 168.0px;" /></a>
 <p>The object box contains all the loaded objects (from computer file browser or from Data Browser). The objects are not necessarily displayed. Displayed objects will appear on green background and with a check icon on the left. A selected object appears on blue background.
 Plus, minus and delete button manage the object display (described above).
-Right click on an object enables several options to change object display properties. For example, more color palettes are available than in the drop-down menu of the toolbar. New palettes will be automatically added to the drop-down menu. Material settings such as object properties of referential settings can also be accessed through this menu. For more information on object display properties, please consult the documentation directly on the Anatomist website (<a class="reference external" href="https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu">https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu</a>)</p>
+Right click on an object enables several options to change object display properties. For example, more color palettes are available than in the drop-down menu of the toolbar. New palettes will be automatically added to the drop-down menu. Material settings such as object properties of referential settings can also be accessed through this menu. For more information on object display properties, please consult the <a class="reference external" href="https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu">documentation directly on the Anatomist website</a>.</p>
 </div>
 <div class="section" id="the-volume-box">
 <h2><strong>The volume box</strong><a class="headerlink" href="#the-volume-box" title="Permalink to this headline">¶</a></h2>
@@ -281,7 +267,7 @@ Right click on an object enables several options to change object display proper
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>
