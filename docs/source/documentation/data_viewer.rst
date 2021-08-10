@@ -42,13 +42,11 @@ Here is a global overview of the Data Viewer tab with some indications:
 |
 |
 
-A drop-down menu is displayed next to the ‘use viewer:’ label (top left) and contains available viewers.
+A drop-down menu is displayed next to the `use viewer:` label (top left) and contains available viewers.
 For now, Mia provides two viewers, anatomist and anatomist_2. Both viewers are based on tools provided by the API of Anatomist,
 available `here <https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#introduction>`_.
 
-Users own viewers can be simply added to the data_viewer folder. The viewer will then be automatically detected and added to the drop-down menu.
-Github link of data_viewer folder:
-`<https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer>`_
+Users own viewers can be simply added to the `data_viewer folder <https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer>`_. The viewer will then be automatically detected and added to the drop-down menu.
 
 In the following section we will focuse on anatomist_2 viewer which is an improved version of anatomist simple viewer.
 
@@ -246,7 +244,7 @@ To make this more understandable, we will distinguish two cases:
       Now, B is selected: In theory, what would be expected is that setting the slider’s position to 100% would set B to 100%. Nevertheless, by selecting B, we are modifying the mixing rate of the B-C fusion with A. Thus, setting the cursor’s position to 100% will set the mix to 100% and A to 0. But as a display percentage for B in the B-C mix was chosen before (0%), B won’t appear in the main window.
 
       The interesting thing about this method is that changing the mixing rates instead of simply choosing the opacity gives much more possibilities. On the other hand, changing the mixing rates is not independent from one object to another.
-      Some more specific documentation is available on the Brainvisa-Anatomist website under the following link: `<https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes>`_.
+      Some more specific documentation is available on the `Brainvisa-Anatomist website <https://brainvisa.info/anatomist/user_doc/anatomist_manual2.html#more-on-colors-and-palettes>`_.
 
 .. _play-button-label:
 
@@ -286,7 +284,7 @@ Moreover, several controls are enabled in the views:
 
 The object box contains all the loaded objects (from computer file browser or from Data Browser). The objects are not necessarily displayed. Displayed objects will appear on green background and with a check icon on the left. A selected object appears on blue background.
 Plus, minus and delete button manage the object display (described above).
-Right click on an object enables several options to change object display properties. For example, more color palettes are available than in the drop-down menu of the toolbar. New palettes will be automatically added to the drop-down menu. Material settings such as object properties of referential settings can also be accessed through this menu. For more information on object display properties, please consult the documentation directly on the Anatomist website (`<https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu>`_)
+Right click on an object enables several options to change object display properties. For example, more color palettes are available than in the drop-down menu of the toolbar. New palettes will be automatically added to the drop-down menu. Material settings such as object properties of referential settings can also be accessed through this menu. For more information on object display properties, please consult the `documentation directly on the Anatomist website <https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu>`_.
 
 **The volume box**
 ---------------
