@@ -1,6 +1,6 @@
 .. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/documentation/create_process.rst: WARNING: document isn't included in any toctree
+
 :orphan:
-.. toctree::
 
 +-----------------------+---------------------------------------+---------------------------------------------------+--------------------------------------------------+
 |`Home <../index.html>`_|`Documentation <./documentation.html>`_|`Installation <../installation/installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
@@ -20,6 +20,7 @@ Creating a MIA process
 MIA processes are Capsul processes made specific for Populse_MIA. They need at least three methods to work properly: __init__, list_outputs and _run_process.
 
     * **__init__()**
+
     Definition of the inputs/outputs of the process. Each input/output is typed using the `Enthought’s Traits library <https://docs.enthought.com/traits/>`_ and is either mandatory or optional.
 
 
