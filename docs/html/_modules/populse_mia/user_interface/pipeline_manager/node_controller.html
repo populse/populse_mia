@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.0.0-dev+15d073e4 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.0.0-dev+f9c27016 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+15d073e4',
+        VERSION:     '2.0.0-dev+f9c27016',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+15d073e4 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+f9c27016 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -584,7 +584,7 @@
 
 <span class="sd">        :param pipeline: current pipeline</span>
 <span class="sd">        :param new_node_name: new node name (is None except when this method</span>
-<span class="sd">        is called from an undo/redo)</span>
+<span class="sd">         is called from an undo/redo)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Copying the old node</span>
         <span class="n">old_node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">]</span>
@@ -962,7 +962,7 @@
 <span class="sd">        :param node_name: name of the node</span>
 <span class="sd">        :param plug_name: name of the plug</span>
 <span class="sd">        :param parameters: tuple containing the index of the plug, the current</span>
-<span class="sd">           pipeline instance and the type of the plug value</span>
+<span class="sd">                           pipeline instance and the type of the plug value</span>
 <span class="sd">        :param process: process of the node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up</span> <span class="o">=</span> <span class="n">PlugFilter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span>
@@ -1155,7 +1155,7 @@
 
 <span class="sd">        :param pipeline: current pipeline</span>
 <span class="sd">        :param new_node_name: new node name (is None except when this method</span>
-<span class="sd">        is called from an undo/redo)</span>
+<span class="sd">                              is called from an undo/redo)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Copying the old node</span>
         <span class="n">old_node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">]</span>
@@ -1231,7 +1231,7 @@
 <span class="sd">        :param pipeline: current pipeline</span>
 <span class="sd">        :param value_type: type of the plug value</span>
 <span class="sd">        :param new_value: new value for the plug (is None except when this</span>
-<span class="sd">        method is called from an undo/redo)</span>
+<span class="sd">                          method is called from an undo/redo)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_index_from_plug_name</span><span class="p">(</span><span class="n">plug_name</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">)</span>
@@ -1307,8 +1307,8 @@
         <span class="sd">&quot;&quot;&quot;Update the plug value from a filter result.</span>
 
 <span class="sd">        :param plug_name: name of the plug</span>
-<span class="sd">        :param parameters: tuple containing the index of the plug,</span>
-<span class="sd">        the current pipeline instance and the type of the plug value</span>
+<span class="sd">        :param parameters: tuple containing the index of the plug, the current</span>
+<span class="sd">                           pipeline instance and the type of the plug value</span>
 <span class="sd">        :param filter_res_list: list of the filtered files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1330,7 +1330,7 @@
 
 <div class="viewcode-block" id="NodeController.release_process"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.release_process">[docs]</a>    <span class="k">def</span> <span class="nf">release_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        remove notification from process</span>
+<span class="sd">        Remove notification from process</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># only implemented in CapsulNodeController</span>
         <span class="k">pass</span></div></div>

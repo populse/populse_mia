@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>populse_mia.utils package &#8212; populse_mia 2.0.0-dev+15d073e4 documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>populse_mia.utils package &#8212; populse_mia 2.0.0-dev+f9c27016 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.0-dev+f9c27016',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+15d073e4 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+f9c27016 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,17 +36,19 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <div class="section" id="module-populse_mia.utils">
 <span id="populse-mia-utils-package"></span><h1>populse_mia.utils package<a class="headerlink" href="#module-populse_mia.utils" title="Permalink to this headline">¶</a></h1>
 <p>Utilities and tools used across the software</p>
-<dl class="simple">
-<dt>Contains:</dt><dd><dl class="simple">
-<dt>Module:</dt><dd><ul class="simple">
-<li><p>utils</p></li>
-<li><p>tools</p></li>
+<dl class="docutils">
+<dt>Contains:</dt>
+<dd><dl class="first last docutils">
+<dt>Module:</dt>
+<dd><ul class="first last simple">
+<li>utils</li>
+<li>tools</li>
 </ul>
 </dd>
 </dl>
@@ -48,49 +60,175 @@
 <div class="section" id="module-populse_mia.utils.tools">
 <span id="populse-mia-utils-tools-module"></span><h2>populse_mia.utils.tools module<a class="headerlink" href="#module-populse_mia.utils.tools" title="Permalink to this headline">¶</a></h2>
 <p>Module define a clickable label class used across the software.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains</dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Class</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>ClickableLabel</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Class:</th><td class="field-body"><ul class="first last simple">
+<li>ClickableLabel</li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="class">
 <dt id="populse_mia.utils.tools.ClickableLabel">
-<em class="property">class </em><code class="sig-prename descclassname">populse_mia.utils.tools.</code><code class="sig-name descname">ClickableLabel</code><a class="reference internal" href="_modules/populse_mia/utils/tools.html#ClickableLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.tools.ClickableLabel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QLabel</span></code></p>
+<em class="property">class </em><code class="descclassname">populse_mia.utils.tools.</code><code class="descname">ClickableLabel</code><a class="reference internal" href="_modules/populse_mia/utils/tools.html#ClickableLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.tools.ClickableLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QLabel</span></code></p>
 <p>QLabel with a clicked signal</p>
-<dl class="method">
-<dt id="populse_mia.utils.tools.ClickableLabel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/tools.html#ClickableLabel.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.tools.ClickableLabel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="populse_mia.utils.tools.ClickableLabel.clicked">
-<code class="sig-name descname">clicked</code><a class="headerlink" href="#populse_mia.utils.tools.ClickableLabel.clicked" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clicked</code><a class="headerlink" href="#populse_mia.utils.tools.ClickableLabel.clicked" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.utils.tools.ClickableLabel.mousePressEvent">
-<code class="sig-name descname">mousePressEvent</code><span class="sig-paren">(</span><em class="sig-param">event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/tools.html#ClickableLabel.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.tools.ClickableLabel.mousePressEvent" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mousePressEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/tools.html#ClickableLabel.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.tools.ClickableLabel.mousePressEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overrides the mousePressEvent method by emitting the clicked signal</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>event</strong> – clicked event</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event</strong> – clicked event</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="populse-mia-utils-utils-module">
-<h2>populse_mia.utils.utils module<a class="headerlink" href="#populse-mia-utils-utils-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-populse_mia.utils.utils">
+<span id="populse-mia-utils-utils-module"></span><h2>populse_mia.utils.utils module<a class="headerlink" href="#module-populse_mia.utils.utils" title="Permalink to this headline">¶</a></h2>
+<p>Module that contains multiple functions used across the software.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Functions:</th><td class="field-body"><ul class="first last simple">
+<li>check_value_type</li>
+<li>message_already_exists</li>
+<li>set_filters_directory_as_default</li>
+<li>set_item_data</li>
+<li>set_projects_directory_as_default</li>
+<li>table_to_database</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="populse_mia.utils.utils.check_value_type">
+<code class="descclassname">populse_mia.utils.utils.</code><code class="descname">check_value_type</code><span class="sig-paren">(</span><em>value</em>, <em>value_type</em>, <em>is_subvalue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#check_value_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.check_value_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the type of a new value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> – Value of the cell</li>
+<li><strong>value_type</strong> – Type expected</li>
+<li><strong>is_subvalue</strong> – To know if the value is a subvalue of a list</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True if the value is valid to replace the old one, False otherwise</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="populse_mia.utils.utils.message_already_exists">
+<code class="descclassname">populse_mia.utils.utils.</code><code class="descname">message_already_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#message_already_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.message_already_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a message box to tell that a name already exists</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="populse_mia.utils.utils.set_filters_directory_as_default">
+<code class="descclassname">populse_mia.utils.utils.</code><code class="descname">set_filters_directory_as_default</code><span class="sig-paren">(</span><em>dialog</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_filters_directory_as_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.set_filters_directory_as_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the filters directory as default (Json files)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dialog</strong> – current file dialog</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="populse_mia.utils.utils.set_item_data">
+<code class="descclassname">populse_mia.utils.utils.</code><code class="descname">set_item_data</code><span class="sig-paren">(</span><em>item</em>, <em>value</em>, <em>value_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_item_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.set_item_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the item data in the data browser</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>item</strong> – item to set</li>
+<li><strong>value</strong> – new item value</li>
+<li><strong>value_type</strong> – new value type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="populse_mia.utils.utils.set_projects_directory_as_default">
+<code class="descclassname">populse_mia.utils.utils.</code><code class="descname">set_projects_directory_as_default</code><span class="sig-paren">(</span><em>dialog</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_projects_directory_as_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.set_projects_directory_as_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the projects directory as default</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dialog</strong> – current file dialog</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="populse_mia.utils.utils.table_to_database">
+<code class="descclassname">populse_mia.utils.utils.</code><code class="descname">table_to_database</code><span class="sig-paren">(</span><em>value</em>, <em>value_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#table_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.table_to_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the value to the database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> – Value to convert</li>
+<li><strong>value_type</strong> – Value type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The value converted for the database</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 </div>
 
@@ -106,7 +244,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

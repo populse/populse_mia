@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 2.0.0-dev+15d073e4 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 2.0.0-dev+f9c27016 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+15d073e4',
+        VERSION:     '2.0.0-dev+f9c27016',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+15d073e4 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+f9c27016 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -379,7 +379,7 @@
         <span class="sd">&quot;&quot;&quot;Open a file dialog to get the folder or zip file to install.</span>
 
 <span class="sd">        :param folder: True if the dialog installs from folder, False if</span>
-<span class="sd">        from zip file</span>
+<span class="sd">                       from zip file</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         
@@ -1119,7 +1119,7 @@
 <span class="sd">        - recursive_checks: checks/unchecks all child items</span>
 <span class="sd">        - recursive_checks_from_child: checks/unchecks all parent items</span>
 <span class="sd">        - set_module_view: sets if a module has to be enabled or disabled in</span>
-<span class="sd">        the process library</span>
+<span class="sd">                           the process library</span>
 <span class="sd">        - update_checks: updates the checks of the tree from an item</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1247,9 +1247,9 @@
 <span class="sd">        library.</span>
 
 <span class="sd">        :param item: item selected in the current tree</span>
-<span class="sd">        :param state: checked or not checked (Qt.Checked == 2. So if val ==</span>
-<span class="sd">        2 -&gt; checkbox is checked, and if val == 0 -&gt; checkbox is not checked)</span>
-
+<span class="sd">        :param state: checked or not checked (Qt.Checked == 2. So if</span>
+<span class="sd">                      val == 2 -&gt; checkbox is checked, and if</span>
+<span class="sd">                      val == 0 -&gt; checkbox is not checked)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">:</span>
@@ -2278,7 +2278,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tree to display the available Capsul&#39;s processes</span>
 
-<span class="sd">    :param d: dictionary: dictionary corresponding to the tree</span>
+<span class="sd">    :param d: dictionary corresponding to the tree (dict)</span>
 
 <span class="sd">    .. Methods:</span>
 <span class="sd">        - keyPressEvent: event when the delete key is pressed</span>
@@ -2320,7 +2320,7 @@
         <span class="sd">&quot;&quot;&quot;Load a dictionary to the tree.</span>
 
 <span class="sd">        :param d: dictionary to load. See the packages attribute in the</span>
-<span class="sd">        ProcessLibraryWidget class</span>
+<span class="sd">                  ProcessLibraryWidget class</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         

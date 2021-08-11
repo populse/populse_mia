@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+15d073e4 documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+f9c27016 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.0-dev+f9c27016',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+15d073e4 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+f9c27016 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,7 +36,7 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <h1>Source code for populse_mia.software_properties</h1><div class="highlight"><pre>
@@ -57,7 +67,7 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="k">import</span> <span class="n">Fernet</span>
+<span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="kn">import</span> <span class="n">Fernet</span>
 
 <span class="n">CONFIG</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc=&#39;</span>
 
@@ -68,6 +78,7 @@
 <span class="sd">    The verCmp() function returns a boolean value to indicate whether its</span>
 <span class="sd">    first argument (first_ver) is equal to, less or equal to, or greater or</span>
 <span class="sd">    equal to its second argument (sec_ver), as follows:</span>
+
 <span class="sd">      - if third argument (comp) is &#39;eq&#39;: when the first argument is equal to the</span>
 <span class="sd">        second argument, return True (False if not).</span>
 <span class="sd">      - if third argument (comp) is &#39;sup&#39;: when the first argument is greater</span>
@@ -240,7 +251,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">capsul_engine</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Config.__init__"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the Config class</span>
 
 <span class="sd">        :Parameters:</span>
@@ -256,7 +267,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loadConfig</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;mia_user_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Config.get_admin_hash"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_admin_hash">[docs]</a>    <span class="k">def</span> <span class="nf">get_admin_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the value of the hash of the admin password.</span>
@@ -352,7 +363,7 @@
 <span class="sd">        Get a global CapsulEngine object used for all operations in MIA</span>
 <span class="sd">        application. The engine is created once when needed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
@@ -436,9 +447,8 @@
 <div class="viewcode-block" id="Config.get_user_level"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_user_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the user level in the Capsul config</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        userlevel: int</span>
+<span class="sd">        :return: integer</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s2">&quot;engine&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
@@ -878,7 +888,7 @@
         <span class="c1"># update MIA values</span>
         <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">engine_config</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
+            <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
             <span class="n">new_engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">environment</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">engine_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">new_engine</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
@@ -1274,7 +1284,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

@@ -312,7 +312,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 * check on the "iterate pipeline" button.
 
-  A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for "database") on each input parameter.
+  A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for "database") on each input parameter. Click on the OK button.
 
   .. image:: ../images/pipeline_iter_5.jpg
     :align: center
