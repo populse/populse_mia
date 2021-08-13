@@ -1,5 +1,7 @@
 .. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/documentation/pipeline_manager.rst: WARNING: document isn't included in any toctree
+
 :orphan:
+
 .. toctree::
 
 +-----------------------+---------------------------------------+---------------------------------------------------+--------------------------------------------------+
@@ -229,18 +231,20 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
 Pipeline iteration
 ------------------
 
-A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use "iterations" which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.
+A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use *iterations* which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.
 
-The pipeline manager simplifies this operation using the "Iterate pipeline" button and :ref:`iteration-table-label`.
+The Pipeline Manager simplifies this operation using the **Iterate pipeline** button and :ref:`iteration-table-label`.
 
-There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with "direct" inputs), the other is using input filters linked to the database.
+There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with "direct" inputs and without use of the iteration table), the other is using input filters linked to the database.
 
-Direct iteration (without use of the iteration table)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. _My target:
+
+Via a regular iterative pipeline (without use of the iteration table)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Starting with a new, empty pipeline tab in the Pipeline Manager:
 
-* Add the pipeline mia_processes > pipelines > preprocess > spatial Preprocessing 1 to the pipeline editor
+* Add the pipeline mia_processes > pipelines > preprocess > Spatial_preprocessing_1 to the pipeline editor
 
 * The ``func_files`` parameter is a list. We will use only one item per iteration. In order to disambiguate the "list of list" situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.
 
@@ -248,34 +252,34 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
   * In case of the ReduceNode brick:
     
-    * Validate the default node parameters (just click on OK button). The reduce node appears in the pipeline editor.
+    * Validate the default node parameters (just click on OK button). The ReduceNode appears in the pipeline editor.
 
-    * Connect the ``outputs`` plug of the reduce node to the ``func_files`` plug of the spatial_preprocessing node.
+    * Connect the ``outputs`` plug of the ReduceNode to the ``func_files`` plug of the Spatial_preprocessing_1 node.
 
-    * Export the ``input_0`` plug of the reduce node (right click on the ``input_0`` plug then select export plug), renamed as ``func_files`` (for clarity).
+    * Export the ``input_0`` plug of the ReduceNode (right click on the ``input_0`` plug then select export plug), renamed as ``func_files`` (for clarity).
 
   * In case of the Files_To_List brick:
 
-    * Connect the ``file_list`` plug of the Files_To_List node to the ``func_files`` plug of the spatial_preprocessing node.
+    * Connect the ``file_list`` plug of the Files_To_List node to the ``func_files`` plug of the Spatial_preprocessing_1 node.
 
     * Export the ``file1`` plug of the Files_To_List node (right click on the ``file1`` plug then select export plug), renamed as ``func_files`` (for clarity).
     
 
-* export all unconnected plugs of the spatial preprocessing node (right click on the node then select "export all unconnected plugs")
+* export all unconnected plugs of the Spatial_preprocessing_1 node (right click on the node then select "export all unconnected plugs")
 
   .. image:: ../images/pipeline_iter_1.jpg
     :align: center
     :name: Pipeline iteration 1
 
-* check on the "iterate pipeline" button.
+* check on the **iterate pipeline** button.
 
-  A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if's OK, then just click "OK".
+* A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if's OK, then just click "OK".
 
   .. image:: ../images/pipeline_iter_2.jpg
     :align: center
     :name: Pipeline iteration 2
 
-  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.
+* The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.
 
   .. image:: ../images/pipeline_iter_3.jpg
     :align: center
@@ -291,7 +295,9 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 * similarly, click on the "Filter" button for the ``func_files`` parameter and select the same number of functional files.
 
-* TODO: check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
+.. warning::
+
+   In :ref:`my target` mode, check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
 
 * click on "Initialize pipeline". The Run button becomes enabled.
 

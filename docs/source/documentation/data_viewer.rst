@@ -10,7 +10,7 @@
 
 
 Populse_MIA's Data Viewer
-==========================
+=========================
 
 This page is a user guide for Mia’s Data Viewer, a tool to visualize medical images.
 
@@ -33,7 +33,7 @@ Here is a global overview of the Data Viewer tab with some indications:
    :name: Data viewer tab
 
 **The selector**
-------------
+----------------
 
 .. image:: ../images/selector.png
   :align: left
@@ -51,12 +51,12 @@ Users own viewers can be simply added to the `data_viewer folder <https://github
 In the following section we will focuse on anatomist_2 viewer which is an improved version of anatomist simple viewer.
 
 **The toolbar**
-------------
+---------------
 
 The toolbar contains several actions to interact with the objects (images).
 
 Open file
-^^^^^^^^^^
+^^^^^^^^^
 .. image:: ../images/folder.png
   :align: left
   :name: open_file
@@ -69,11 +69,11 @@ Add a tag for all the documents in the database, specifying its name (mandatory)
 
 .. image:: ../images/file_open.png
   :align: center
-  :name: open_file
+  :name: fileFromDD
   :scale: 80 %
 
 Filter object from Data Browser
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. image:: ../images/database.png
   :align: left
   :name: database
@@ -91,7 +91,7 @@ Objects cannot be imported twice.
   :scale: 70 %
 
 Settings
-^^^^^^^^^
+^^^^^^^^
 .. image:: ../images/settings.png
   :align: left
   :name: settings
@@ -103,15 +103,16 @@ Preferences concerning the Data Viewer. Parameters that can be changed are:
   * Automatic time image display which corresponds to the frame rate for automatic running of functional images (see :ref:`play-button-label`)
   * Configuration : neurological or radiological orientation
   * Referential (World Coordinates will display images  in a conventional way, corresponding most of the time to scanner coordinates)
+
 Objects will be reloaded in the case where configuration or referential has changed.
 
 .. image:: ../images/preferences.png
   :align: center
-  :name: settings
+  :name: preferences
   :scale: 50 %
 
 Plus button
-^^^^^^^^^^^^
+^^^^^^^^^^^
 .. image:: ../images/plus.png
   :align: left
   :name: plus_button
@@ -122,7 +123,7 @@ Plus button
 Displays selected object of the object box in the main window. If the object is already displayed, button will be disabled.
 
 Minus button
-^^^^^^^^^^^^^
+^^^^^^^^^^^^
 .. image:: ../images/signe-moins.png
   :align: left
   :name: minus_button
@@ -133,7 +134,7 @@ Minus button
 Removes selected object of the object box from the main window. If the object is not displayed, button will be disabled. Objects will be removed from main window but won’t disappear from the object box.
 
 Delete button
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 .. image:: ../images/delete.png
   :align: left
   :name: delete_button
@@ -144,7 +145,7 @@ Delete button
 Deletes selected object from Data Viewer tab. Objects will disappear from the object box and will be removed from main window but they will still be available in the Data Browser and thus from the filter action.
 
 Capture button
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
 .. image:: ../images/camera.png
   :align: left
   :name: camera_button
@@ -153,7 +154,7 @@ Capture button
 Not available yet.
 
 View buttons
-^^^^^^^^^^^^^
+^^^^^^^^^^^^
 
 Manage the display of the views in the main window (more details in :ref:`main-window-label` section). If no object is displayed, the views will appear empty.
 
@@ -163,10 +164,12 @@ Manage the display of the views in the main window (more details in :ref:`main-w
   :scale: 70 %
 
 |
+
 .. image:: ../images/ax-01.png
   :align: left
   :name: axial_view
   :scale: 3 %
+
 **Axial button**
 
 If button is checked, axial view is added to the main window
@@ -175,6 +178,7 @@ If button is checked, axial view is added to the main window
   :align: left
   :name: sagittal_view
   :scale: 3 %
+
 **Sagittal button**
 
 If button is checked, sagittal view is added to the main window
@@ -183,6 +187,7 @@ If button is checked, sagittal view is added to the main window
   :align: left
   :name: coronal_view
   :scale: 3 %
+
 **Coronal button**
 
 If button is checked, sagittal view is added to the main window
@@ -191,6 +196,7 @@ If button is checked, sagittal view is added to the main window
   :align: left
   :name: 3D_view
   :scale: 3 %
+
 **3D button**
 
 If button is checked, sagittal view is added to the main window
@@ -200,11 +206,11 @@ Here are two objects displayed in two views:
 
 .. image:: ../images/2_views.png
   :align: center
-  :name: views
+  :name: 2_views
   :scale: 70 %
 
 Palettes
-^^^^^^^^^
+^^^^^^^^
 
 A drop-down menu is available showing several default color palettes. If an object is selected in the object box, its color palette can be changed in this menu. More palettes are available by right clicking on an object (described below in :ref:`object-label` section).
 
@@ -214,7 +220,7 @@ A drop-down menu is available showing several default color palettes. If an obje
   :scale: 70 %
 
 Opacity
-^^^^^^^^
+^^^^^^^
 
 In order to fully understand how to use this tool some basic notions of Anatomist renderings must be described.
 
@@ -249,7 +255,7 @@ To make this more understandable, we will distinguish two cases:
 .. _play-button-label:
 
 Play button
-^^^^^^^^^^^^
+^^^^^^^^^^^
 
 .. image:: ../images/play.png
   :align: left
@@ -263,9 +269,10 @@ Allows automatic scrolling of dynamics for functional MRI data. The frame rate c
 .. _main-window-label:
 
 **The main window**
-----------------
+-------------------
 
 The main window contains the views of the displayed objects. The display is in line and default one shows axial, sagittal and coronal view. Depending on which buttons are checked (described above), one to four views can be displayed. For anatomical images, a cursor will appear on the right of each view, enabling scrolling through the image set. For functional images, a second cursor will appear on the right of the first one the enable scrolling through time.
+
 Moreover, several controls are enabled in the views:
   * Left mouse button manages the displacement of the red cross  which allows moving in 3D and thus changes the other views
   * Middle mouse button scrolling inside a view manages the zoom
@@ -275,7 +282,7 @@ Moreover, several controls are enabled in the views:
 .. _object-label:
 
 **The object box**
----------------
+------------------
 
 .. image:: ../images/Objects.png
   :align: center
@@ -287,7 +294,7 @@ Plus, minus and delete button manage the object display (described above).
 Right click on an object enables several options to change object display properties. For example, more color palettes are available than in the drop-down menu of the toolbar. New palettes will be automatically added to the drop-down menu. Material settings such as object properties of referential settings can also be accessed through this menu. For more information on object display properties, please consult the `documentation directly on the Anatomist website <https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu>`_.
 
 **The volume box**
----------------
+------------------
 
 .. image:: ../images/Volumes.png
   :align: center
@@ -297,7 +304,7 @@ Right click on an object enables several options to change object display proper
 The Volume Box displays the intensity values at the current location (defined as the centre of the red cross in three dimensions) for each visible image (object).
 
 **The coordinates box**
---------------------
+-----------------------
 
 .. image:: ../images/coordinates.png
   :align: center
@@ -312,7 +319,7 @@ Display of space and time coordinates. Can be entered manually. Time values will
   :scale: 50 %
 
 **Other accessible tools**
------------------------
+--------------------------
 
 Some other (more specific) tools are available thanks to right click on an object. Specific settings on file, color, referential and object properties are available. Moreover, the feature “Open in new view” enables opening the selected object in a new window. The new window (shown below) will stay in front of Mia’s main window. All views (Axial, Sagittal, Coronal and 3D views) are available, but one at a time. No overlays are enabled but controls work just like in the main window.
 
