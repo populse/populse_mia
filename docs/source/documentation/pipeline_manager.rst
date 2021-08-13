@@ -87,7 +87,7 @@ Shortcuts
 How to use the pipeline editor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The pipeline edtior uses the PipelineDevelopperView tool from `Capsul <http://brainvisa.info/capsul/index.html>`_ to create pipelines in a graphical way. Here is a tutorial to help you create and save a simple pipeline (no initialization and no run):
+The pipeline edtior uses the PipelineDevelopperView tool from `Capsul <http://brainvisa.info/capsul/index.html>`_ to create pipelines in a graphical way. Here is a tutorial to help to create and save a simple pipeline (no initialization and no run):
 
 - Add a SPM smooth process by dragging it from the process library and dropping it into the pipeline editor
 
@@ -95,15 +95,17 @@ The pipeline edtior uses the PipelineDevelopperView tool from `Capsul <http://br
    :align: center
    :name: Pipeline tutorial 1
 
-- Export the input and output plug(s) you want to be able to modify by right-clicking on them and click on "export plug", rename it if you want and click on "OK". 
+|
 
-Note 1: a plug is either mandatory or optional. When it is mandatory, it is represented as a triangle and has to be exported or connected to another plug to run the pipeline. When it is optional, it is represented as a rectangle and can be exported or connected or not. Usually optional plugs have default values, e.g. "fwhm" plug from SPM's smooth is [6, 6, 6], so do not need to be exported and/or modified. It all depends if you want to have access to this plug when the pipeline will be used as a process.
+- Export the input and output plug(s) we want to be able to modify by right-clicking on them and click on "export plug", rename it if we want and click on "OK". 
 
-Note 2: to make a pipeline valid, you have to export plugs that are the pipeline global input/outputs. In this example, the "in_files" plug needs to be exported because it is mandatory. The only output plug has to be also exported. The node will then be activated and its color become lighter. It is also possible to export optional plug such as "fwhm" and "output_directory" even if they already have default value.
+Note 1: a plug is either mandatory or optional. When it is mandatory, it is represented as a triangle and has to be exported or connected to another plug to run the pipeline. When it is optional, it is represented as a rectangle and can be exported or connected or not. Usually optional plugs have default values, e.g. "fwhm" plug from SPM's smooth is [6, 6, 6], so do not need to be exported and/or modified. It all depends if we want to have access to this plug when the pipeline will be used as a process.
+
+Note 2: to make a pipeline valid, we have to export plugs that are the pipeline global input/outputs. In this example, the "in_files" plug needs to be exported because it is mandatory. The only output plug has to be also exported. The node will then be activated and its color become lighter. It is also possible to export optional plug such as "fwhm" and "output_directory" even if they already have default value.
 
 Note 3: Nipype's processes needs values for "output_directory", "use_mcr", "paths", "matlab_cmd" and "mfile" plugs. These are updated from Populse_MIA's during pipeline initialization. 
 
-Note 4: if you right-click on a node or on the pipeline editor background, you can also export plugs (mandatory or not, input, output or both). This method is usually faster to export plugs. 
+Note 4: if we right-click on a node or on the pipeline editor background, we can also export plugs (mandatory or not, input, output or both). This method is usually faster to export plugs. 
 
 .. image:: ../images/pipeline_tuto_2.png
    :align: center
@@ -130,23 +132,27 @@ We now have a pipeline that can smooth an image twice with the same fwhm paramet
    :align: center
    :name: Pipeline tutorial 4
 
-- The pipeline is now stored in the process library under "User_processes". You can use it as a process and add it to a new pipeline editor.
-      - You can visualize the pipeline by double-clicking on the node.
-      - You can edit the pipeline by right-clicking on the node and selecting "Open sub-pipeline". It will open "double_smooth.py" in a new editor tab.
+|
+
+- The pipeline is now stored in the process library under "User_processes". We can use it as a process and add it to a new pipeline editor.
+      - We can visualize the pipeline by double-clicking on the nodee
+      - We can edit the pipeline by right-clicking on the node and selecting "Open sub-pipeline". It will open "double_smooth.py" in a new editor tab.
 
 .. image:: ../images/pipeline_tuto_5.png
    :align: center
    :name: Pipeline tutorial 5
 
-If you want to change one parameter of the pipeline, it is still possible to make a change following these steps:
+If we want to change one parameter of the pipeline, it is still possible to make a change following these steps:
 
-- For instance, if you want to change the prefix of the file name generated in the second process, go back to the "double_smooth.py" pipeline, export the "out_prefix" plug and save the pipeline.
+- For instance, if we want to change the prefix of the file name generated in the second process, go back to the "double_smooth.py" pipeline, export the "out_prefix" plug and save the pipeline.
 
 .. image:: ../images/pipeline_tuto_6.png
    :align: center
    :name: Pipeline tutorial 6
 
-- When you go back to the "New pipeline 1" pipeline, you can see that the "out_prefix" plug has been automatically added and you can now control its value.
+|
+
+- When we go back to the "New pipeline 1" pipeline, we can see that the "out_prefix" plug has been automatically added and we can now control its value.
 
 .. image:: ../images/pipeline_tuto_7.png
    :align: center
@@ -170,14 +176,13 @@ The node controller is a controller that updates pipeline nodes and is located o
      :scale: 100 %
 
      The controller in V1 (left) and V2 (right) mode
-	
 
 How to use the node controller 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This part is based on the Double_smooth.py file created in :ref:`pipeline-editor-label`.
 
-* When you have clicked on a pipeline global inputs/outputs node (blue node) it is possible to filter each input plug to set documents directly from the database. For that, click on the "Filter" push button.
+* When we have clicked on a pipeline global inputs/outputs node (blue node) it is possible to filter each input plug to set documents directly from the database. For that, click on the "Filter" push button.
 
 .. image:: ../images/node_controller_2.png
    :align: center
@@ -185,8 +190,8 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
 
 |
 
-* A pop-up similar to the Data Browser will be displayed and you will be able to choose which documents of the database to set on the plug by using Rapid or Advanced Search.
-* You can either filter the database (by setting the filter parameters and clicking on "Search") or click on the selected documents.
+* A pop-up similar to the Data Browser will be displayed and we will be able to choose which documents of the database to set on the plug by using Rapid or Advanced Search.
+* We can either filter the database (by setting the filter parameters and clicking on "Search") or click on the selected documents.
 * The second push button at the bottom left of the window specifies which tag values to set on the selected plug.
 
 .. image:: ../images/plug_filter.png
@@ -203,7 +208,7 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
 
 |
 
-* You can also modify the plug values by hand
+* We can also modify the plug values by hand
     * Note: the "output_directory" of a Nipype process corresponds to the folder where Nipype writes the Matlab scripts during execution and has to be set.
 
 .. image:: ../images/node_controller_4.png
@@ -235,9 +240,9 @@ A pipeline is generally designed to perform a series of tasks on a single data, 
 
 The Pipeline Manager simplifies this operation using the **Iterate pipeline** button and :ref:`iteration-table-label`.
 
-There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with "direct" inputs and without use of the iteration table), the other is using input filters linked to the database.
+There are two ways to iterate a pipeline (or a brick/process): one is by creating a regular iterative pipeline (with "direct" inputs and without use of the iteration table), the other is using Input_Filter linked to the database.
 
-.. _My target:
+.. _viaRegularItPi:
 
 Via a regular iterative pipeline (without use of the iteration table)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -271,6 +276,8 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
     :align: center
     :name: Pipeline iteration 1
 
+|
+
 * check on the **iterate pipeline** button.
 
 * A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if's OK, then just click "OK".
@@ -279,44 +286,51 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
     :align: center
     :name: Pipeline iteration 2
 
+|
+
 * The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.
 
   .. image:: ../images/pipeline_iter_3.jpg
     :align: center
     :name: Pipeline iteration 3
 
+|
+
 * select the ``inputs`` node
 
-* click the "Filter" button for the ``anat files`` parameter, and select the files (anatomical MRIs) you wish to extract the brain from.
+* click the "Filter" button for the ``anat files`` parameter, and select the files (anatomical MRIs) we wish to extract the brain from.
 
   .. image:: ../images/pipeline_iter_4.jpg
     :align: center
     :name: Pipeline iteration 4
 
+|
+
 * similarly, click on the "Filter" button for the ``func_files`` parameter and select the same number of functional files.
 
 .. warning::
 
-   In :ref:`my target` mode, check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
+   In :ref:`regular iterative pipeline<viaRegularItPi>` iteration mode, check that anatomical and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
 
 * click on "Initialize pipeline". The Run button becomes enabled.
 
 * click on "Run pipeline".
 
+Via Input_Filter brick/process
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Via input filters
-^^^^^^^^^^^^^^^^^
+Input_Filters are filters applied between the database and the input of a pipeline (or a brick/process). The Input_Filter brick/process is provided in the mia_processes package, since version 1.1.1. The mia_processes package is available from the `Cheese Shop`_.
 
-Input filters are filters applying to the database entries. The filter process that is ready to use in the mia_processes package, since the 1.1.1 release (Input_filter brick). The mia_processes package is available from the `Cheese Shop`_.
+.. _viaInputFilBri:
 
-Quickly
-#######
+Without use of the iteration table
+##################################
 
 Starting with a new, empty pipeline tab in the Pipeline Manager:
 
-* Add the pipeline mia_processes > pipelines > preprocess > spatial Preprocessing 1 to the pipeline editor
+* Add the pipeline mia_processes > pipelines > preprocess > Spatial_preprocessing_1 to the pipeline editor.
 
-* check on the "iterate pipeline" button.
+* check on the **iterate pipeline** button.
 
   A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for "database") on each input parameter. Click on the OK button.
 
@@ -324,46 +338,52 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
     :align: center
     :name: Pipeline iteration 5
 
-  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two "input filter" nodes. The former pipeline is now inside the iterative node.
+  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two Input_Filters bricks/processes (anat_file_filter and func_files_filter nodes). The former pipeline is now inside the iterative node.
 
   .. image:: ../images/pipeline_iter_6.jpg
     :align: center
     :name: Pipeline iteration 6
 
-* right-click on the ``anat_file_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select anatomical files.
+|
 
-* similarly, right-click on the "func_files_filter" node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select functional files.
+* right-click on the ``anat_file_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select the wanted anatomical files.
 
-* TODO: check that anats and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
+  Here is an example where we select all the anatomical images excluding the patient "alej":
+
+  .. image:: ../images/Input_Filter_anat.png
+    :align: center
+    :name: Input Filter anat
+
+|
+
+* similarly, right-click on the ``func_files_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select the wanted functional files.
+
+  Here is an example where we select all the functional images excluding the patient "alej":
+
+  .. image:: ../images/Input_Filter_func.png
+    :align: center
+    :name: Input Filter func
+
+.. warning::
+
+  In :ref:`via Input_Filter  (without use of the iteration table)<viaInputFilBri>` iteration mode, check that anatomical and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
 
 * click on "Initialize pipeline". The Run button becomes enabled.
 
 * click on "Run pipeline".
 
+.. _manually:
 
-Manually
-########
+With use of the iteration table
+###############################
 
-It is possible to use input filter processes manually. They should be connected to the main ``database_scans`` parameter of the pipeline (or exported under this name), which acts as a data source for filters.
-
-* Add a process or a pipeline in a new editor by dragging it from the process library (under User_processes) and dropping it to the pipeline editor. An example is provided in :doc:`pipeline_example`, in the :ref:`iteration section <pipeline-iter-filter-example-label>`.
-
-* If the process is not designed for iteration (if its parameters are not lists), then click the "iterate pipeline" button in order to create an iteration node with lists as parameters.
-
-* Add Input_filter processes in front of each input that comes from the database
+* Follow the same procedure as for the first two points of the :ref:`via Input_Filter  (without use of the iteration table)<viaInputFilBri>` iteration mode.
 
 * For each Input_filter process, right-click on it and select "Open filter". In the filter pop-up, modify the filter to apply.
-    * For exemple, for the Anat_file plug. Set : "Exp Type == Anat" in the Advanced Search.
+    * For example, for the anat_file_filter node, set "Exp Type == anat" in the Advanced Search part and for the func_files_filter node, set "Exp Type == " finc in the Advanced Search part.
 
-* Right-click on one of the Input_filter processes and select "Export to database_scans".
-
-* Add links between "database_scans" and the input of the other Input_filter processes.
-
-* Export the other node plugs by right-clicking on "realign_coreg_smooth1" node and selecting "Export all unconnected plugs".
-    * The pipeline becomes enabled.
-
-* Set up the iteration table: see :ref:`iteration-table-label`.
-    * By changing the value of the selected Patient, you change the list of documents in "database_scans"
+* Set up the iteration table:
+    * By changing the value of the selected Patient, we change the list of documents in "database_scans"
 
 
 .. _iteration-table-label:
@@ -393,7 +413,7 @@ Assume that the current project contains several patients, so several "Patient" 
 - Select on which tag to iterate the pipeline by clicking on the "Select" push button and select "Patient".
       - "Patient" is not a tag that comes from the data, it has been added manually.
 
-- You can visualize for each "Patient" value which documents are associated thanks to the combo box
+- we can visualize for each "Patient" value which documents are associated thanks to the combo box
       - The visualized tags are by default "SequenceName" and "AcquisitionDate" but can be changed at the bottom at the widget by clicking on the push buttons.
 
 .. image:: ../images/iteration_table.png
@@ -402,13 +422,13 @@ Assume that the current project contains several patients, so several "Patient" 
 
 |
 
-- When the "Iterate pipeline" check box is checked, before running a pipeline, a pop-up is displayed to let you choose on which value to iterate the pipeline.
+- When the "Iterate pipeline" check box is checked, before running a pipeline, a pop-up is displayed to let we choose on which value to iterate the pipeline.
 
 .. image:: ../images/iterate_pipeline.png
    :align: center
    :name: Iterate pipeline
 
-Note: if you want to use pipeline iteration, you have to have a pipeline global input called "database_scans". Only this plug will be updated for each iteration and will contain all the documents that have the correct tag value.
+Note: if we want to use pipeline iteration, you have to have a pipeline global input called "database_scans". Only this plug will be updated for each iteration and will contain all the documents that have the correct tag value.
 
 .. _`Cheese Shop`: https://pypi.org/search/?q=mia_processes
 
