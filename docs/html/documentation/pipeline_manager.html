@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+f9c27016 documentation</title>
+    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+157c935b documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.0-dev+f9c27016',
+        VERSION:     '2.0.0-dev+157c935b',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+f9c27016 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+157c935b documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Pipeline Manager</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -294,39 +294,41 @@
 </div>
 <div class="section" id="pipeline-iteration">
 <span id="pipeline-iteration-label"></span><h2>Pipeline iteration<a class="headerlink" href="#pipeline-iteration" title="Permalink to this headline">¶</a></h2>
-<p>A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use “iterations” which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.</p>
-<p>The pipeline manager simplifies this operation using the “Iterate pipeline” button and <a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a>.</p>
-<p>There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with “direct” inputs), the other is using input filters linked to the database.</p>
-<div class="section" id="direct-iteration-without-use-of-the-iteration-table">
-<h3>Direct iteration (without use of the iteration table)<a class="headerlink" href="#direct-iteration-without-use-of-the-iteration-table" title="Permalink to this headline">¶</a></h3>
+<p>A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use <em>iterations</em> which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.</p>
+<p>The Pipeline Manager simplifies this operation using the <strong>Iterate pipeline</strong> button and <a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a>.</p>
+<p>There are two ways to iterate a pipeline (or a process): one is by creating a regular iterative pipeline (with “direct” inputs and without use of the iteration table), the other is using input filters linked to the database.</p>
+<div class="section" id="via-a-regular-iterative-pipeline-without-use-of-the-iteration-table">
+<span id="my-target"></span><h3>Via a regular iterative pipeline (without use of the iteration table)<a class="headerlink" href="#via-a-regular-iterative-pipeline-without-use-of-the-iteration-table" title="Permalink to this headline">¶</a></h3>
 <p>Starting with a new, empty pipeline tab in the Pipeline Manager:</p>
 <ul>
-<li><p class="first">Add the pipeline mia_processes &gt; pipelines &gt; preprocess &gt; spatial Preprocessing 1 to the pipeline editor</p>
+<li><p class="first">Add the pipeline mia_processes &gt; pipelines &gt; preprocess &gt; Spatial_preprocessing_1 to the pipeline editor</p>
 </li>
 <li><p class="first">The <code class="docutils literal"><span class="pre">func_files</span></code> parameter is a list. We will use only one item per iteration. In order to disambiguate the “list of list” situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.</p>
 </li>
 <li><p class="first">Use the “capsul &gt; pipeline &gt; custom_nodes &gt; reduce_node &gt; ReduceNode” or the “mia_processes &gt; bricks &gt; tools &gt; Files_To_List” brick.</p>
 <ul class="simple">
 <li>In case of the ReduceNode brick:<ul>
-<li>Validate the default node parameters (just click on OK button). The reduce node appears in the pipeline editor.</li>
-<li>Connect the <code class="docutils literal"><span class="pre">outputs</span></code> plug of the reduce node to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the spatial_preprocessing node.</li>
-<li>Export the <code class="docutils literal"><span class="pre">input_0</span></code> plug of the reduce node (right click on the <code class="docutils literal"><span class="pre">input_0</span></code> plug then select export plug), renamed as <code class="docutils literal"><span class="pre">func_files</span></code> (for clarity).</li>
+<li>Validate the default node parameters (just click on OK button). The ReduceNode appears in the pipeline editor.</li>
+<li>Connect the <code class="docutils literal"><span class="pre">outputs</span></code> plug of the ReduceNode to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the Spatial_preprocessing_1 node.</li>
+<li>Export the <code class="docutils literal"><span class="pre">input_0</span></code> plug of the ReduceNode (right click on the <code class="docutils literal"><span class="pre">input_0</span></code> plug then select export plug), renamed as <code class="docutils literal"><span class="pre">func_files</span></code> (for clarity).</li>
 </ul>
 </li>
 <li>In case of the Files_To_List brick:<ul>
-<li>Connect the <code class="docutils literal"><span class="pre">file_list</span></code> plug of the Files_To_List node to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the spatial_preprocessing node.</li>
+<li>Connect the <code class="docutils literal"><span class="pre">file_list</span></code> plug of the Files_To_List node to the <code class="docutils literal"><span class="pre">func_files</span></code> plug of the Spatial_preprocessing_1 node.</li>
 <li>Export the <code class="docutils literal"><span class="pre">file1</span></code> plug of the Files_To_List node (right click on the <code class="docutils literal"><span class="pre">file1</span></code> plug then select export plug), renamed as <code class="docutils literal"><span class="pre">func_files</span></code> (for clarity).</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p class="first">export all unconnected plugs of the spatial preprocessing node (right click on the node then select “export all unconnected plugs”)</p>
+<li><p class="first">export all unconnected plugs of the Spatial_preprocessing_1 node (right click on the node then select “export all unconnected plugs”)</p>
 <img alt="../_images/pipeline_iter_1.jpg" class="align-center" id="pipeline-iteration-1" src="../_images/pipeline_iter_1.jpg" />
 </li>
-<li><p class="first">check on the “iterate pipeline” button.</p>
-<p>A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if’s OK, then just click “OK”.</p>
+<li><p class="first">check on the <strong>iterate pipeline</strong> button.</p>
+</li>
+<li><p class="first">A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if’s OK, then just click “OK”.</p>
 <img alt="../_images/pipeline_iter_2.jpg" class="align-center" id="pipeline-iteration-2" src="../_images/pipeline_iter_2.jpg" />
-<p>The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.</p>
+</li>
+<li><p class="first">The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.</p>
 <img alt="../_images/pipeline_iter_3.jpg" class="align-center" id="pipeline-iteration-3" src="../_images/pipeline_iter_3.jpg" />
 </li>
 <li><p class="first">select the <code class="docutils literal"><span class="pre">inputs</span></code> node</p>
@@ -336,12 +338,14 @@
 </li>
 <li><p class="first">similarly, click on the “Filter” button for the <code class="docutils literal"><span class="pre">func_files</span></code> parameter and select the same number of functional files.</p>
 </li>
-<li><p class="first">TODO: check that anats and corresponding functional files are in the same order… The database filters do not ensure that and do not allow to specify any order…</p>
-</li>
-<li><p class="first">click on “Initialize pipeline”. The Run button becomes enabled.</p>
-</li>
-<li><p class="first">click on “Run pipeline”.</p>
-</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In <a class="reference internal" href="#my-target"><span class="std std-ref">Via a regular iterative pipeline (without use of the iteration table)</span></a> mode, check that anats and corresponding functional files are in the same order… The database filters do not ensure that and do not allow to specify any order…</p>
+</div>
+<ul class="simple">
+<li>click on “Initialize pipeline”. The Run button becomes enabled.</li>
+<li>click on “Run pipeline”.</li>
 </ul>
 </div>
 <div class="section" id="via-input-filters">
