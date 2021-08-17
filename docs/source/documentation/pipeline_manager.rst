@@ -321,6 +321,12 @@ Via Input_Filter brick/process
 
 Input_Filters are filters applied between the database and the input of a pipeline (or a brick/process). The Input_Filter brick/process is provided in the mia_processes package, since version 1.1.1. The mia_processes package is available from the `Cheese Shop`_.
 
+In the following, we will use a database with the Exp Type and PatientName tags correctly filled in, for example:
+
+  .. image:: ../images/iter_allTagsUsed.png
+    :align: center
+    :name: iter_allTagsUsed
+
 .. _viaInputFilBri:
 
 Without use of the iteration table
@@ -379,12 +385,44 @@ With use of the iteration table
 
 * Follow the same procedure as for the first two points of the :ref:`via Input_Filter  (without use of the iteration table)<viaInputFilBri>` iteration mode.
 
-* For each Input_filter process, right-click on it and select "Open filter". In the filter pop-up, modify the filter to apply.
-    * For example, for the anat_file_filter node, set "Exp Type == anat" in the Advanced Search part and for the func_files_filter node, set "Exp Type == " finc in the Advanced Search part.
+* Right-click on each Input_filter process and select "Open Filter". In the filter pop-up window, change the filter to be applied to select all anatomical images for the `anat_file` input and all functional images for the func_files input.
+
+  * For example, for the anat_file_filter node, set "Exp Type == anat" (or "Exp Type CONTAINS anat") in the advanced search field and for the func_files_filter node, set "Exp Type == "func" (or "Exp Type CONTAINS func") in the advanced search field.
+
+    .. image:: ../images/Input_Filter_anat2.png
+      :width: 47.3%
+    .. image:: ../images/Input_Filter_func2.png
+      :width: 50%
+
+|
 
 * Set up the iteration table:
-    * By changing the value of the selected Patient, we change the list of documents in "database_scans"
 
+  * In the iteration section (top right of the pipeline manager tab), click on the "iterate over" feature ("Select" button).
+    A dialog pops up and displays all the tags in the current project. Check the tag on which the pipeline will be iterated, a good choice could be here the "PatientName" tag.
+
+  * So below the "iterate over" part there is now a "PatientName" part (in place of "select a tag", before).
+
+    * The first button on this "PatientName" part is a Combobox where it is possible to see all the values of the selected tags used to iterate.
+    
+    .. image:: ../images/PatientName_Combobox.png
+      :align: center
+      :name: iteration_PatientName_combobox
+
+|
+
+    * It is possible to change the values used for the iteration by clicking on the next "Filter" button.
+      In the example below we only want to iterate on the "alej" and "rocmi" patients.
+
+    .. image:: ../images/PatientName_Filter.png
+      :align: center
+      :name: iteration_filter
+
+|
+
+* click on "Initialize pipeline". The Run button becomes enabled.
+
+* click on "Run pipeline".
 
 .. _iteration-table-label:
 
