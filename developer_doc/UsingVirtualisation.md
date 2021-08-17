@@ -131,7 +131,7 @@ C - Install Brainvisa:
 	4 - export PATH="$HOME/brainvisa-5.0.2/bin:$PATH"
 	
 **
-after these steps when I type the 'bv'command I have this error message : 
+after these steps when we type the 'bv'command, we have this error message : 
 
 	QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-vagrant'
 	qt.qpa.screen: QXcbConnection: Could not connect to display 
