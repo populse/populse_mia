@@ -27,7 +27,8 @@ In the following we propose exclusively for linux the use of a Singularity conta
 
 **[Longer](https://brainvisa.info/web/download.html)**
 
-MacOS
+
+MacOS (VirtualBox)
 =====
 
 While waiting for a working version of Singularity for Mac, here the procedure to use VirtualBox :
@@ -104,6 +105,37 @@ D - MIA install
 
 **
 there is still a problem to be solved: Anatomist does not work in populse
+**
+
+
+MacOS (SingularityCE Vagrant Box)
+=====
+
+** not finished **
+
+A - Install Vagrant:
+
+	1 - brew tap hashicorp/tap
+	2 - brew install vagrant
+	
+B - Install SingularityCE Vagrant Box:
+
+	1 - mkdir vm-singularity && cd vm-singularity
+	2 - export VM=sylabs/singularity-ce-3.8-ubuntu-bionic64 && vagrant init $VM && vagrant up && vagrant ssh
+	
+C - Install Brainvisa:
+
+	1 - mkdir brainvisa-5.0.2 && cd brainvisa-5.0.2
+	2 - wget https://brainvisa.info/download/brainvisa-5.0.2.sif
+	3 - singularity run -B .:/casa/setup brainvisa-5.0.2.sif
+	4 - export PATH="$HOME/brainvisa-5.0.2/bin:$PATH"
+	
+**
+after these steps when I type the 'bv'command I have this error message : 
+
+	QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-vagrant'
+	qt.qpa.screen: QXcbConnection: Could not connect to display 
+	Could not connect to any X display.
 **
 
 Windows
