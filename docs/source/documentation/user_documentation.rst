@@ -1,5 +1,7 @@
 .. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/documentation/user_documentation.rst: WARNING: document isn't included in any toctree
+
 :orphan:
+
 .. toctree::
 
 +-----------------------+---------------------------------------+---------------------------------------------------+--------------------------------------------------+
@@ -16,14 +18,14 @@ Software presentation
 ---------------------
 
 Populse_MIA is composed of three main tabs:
-  * Data Browser (`manual <./data_browser.html>`_)
+  * The `Data Browser <./data_browser.html>`_ tab
       * Provides an overview of the data (image or non-image) available in the current analysis project (raw data and derived data)
-  * Data Viewer (`manual <./data_viewer.html>`_)
+  * The `Data Viewer <./data_viewer.html>`_ tab
       * An advanced viewer of up to 5-dimensional data, mostly but not exclusively MRI data, spectra,  plots linked to image and non-image data
-  * Pipeline Manager (`manual <./pipeline_manager.html>`_)
-      * Advanced and graphical construction of processing pipelines (see a complete example `here <./pipeline_example.html>`_)
+  * The `Pipeline Manager <./pipeline_manager.html>`_ tab
+      * An advanced graphical tool for building process pipelines (`see a complete example here <./pipeline_example.html>`_)
 
-Populse_MIA uses a Populse third party software called MRI File Manager (`manual <./mri_file_manager.html>`_) to import MRI data and convert them to Nifti/JSON format.
+Populse_MIA uses a Populse third party software called `MRI File Manager <./mri_file_manager.html>`_) to import MRI data and convert them to Nifti/JSON format.
 
 Menu bar actions
 ----------------

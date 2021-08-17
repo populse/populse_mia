@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+5e8b3370 documentation</title>
+    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+e9cf0fce documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.0-dev+5e8b3370',
+        VERSION:     '2.0.0-dev+e9cf0fce',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+5e8b3370 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+e9cf0fce documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Pipeline Manager</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -379,6 +379,10 @@
 <div class="section" id="via-input-filter-brick-process">
 <h3>Via Input_Filter brick/process<a class="headerlink" href="#via-input-filter-brick-process" title="Permalink to this headline">¶</a></h3>
 <p>Input_Filters are filters applied between the database and the input of a pipeline (or a brick/process). The Input_Filter brick/process is provided in the mia_processes package, since version 1.1.1. The mia_processes package is available from the <a class="reference external" href="https://pypi.org/search/?q=mia_processes">Cheese Shop</a>.</p>
+<p>In the following, we will use a database with the Exp Type and PatientName tags correctly filled in, for example:</p>
+<blockquote>
+<div><img alt="../_images/iter_allTagsUsed.png" class="align-center" id="iter-alltagsused" src="../_images/iter_allTagsUsed.png" />
+</div></blockquote>
 <div class="section" id="without-use-of-the-iteration-table">
 <span id="viainputfilbri"></span><h4>Without use of the iteration table<a class="headerlink" href="#without-use-of-the-iteration-table" title="Permalink to this headline">¶</a></h4>
 <p>Starting with a new, empty pipeline tab in the Pipeline Manager:</p>
@@ -421,24 +425,52 @@
 </div>
 <div class="section" id="with-use-of-the-iteration-table">
 <span id="manually"></span><h4>With use of the iteration table<a class="headerlink" href="#with-use-of-the-iteration-table" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">Follow the same procedure as for the first two points of the <a class="reference internal" href="#viainputfilbri"><span class="std std-ref">via Input_Filter  (without use of the iteration table)</span></a> iteration mode.</p>
+</li>
+<li><p class="first">Right-click on each Input_filter process and select “Open Filter”. In the filter pop-up window, change the filter to be applied to select all anatomical images for the <cite>anat_file</cite> input and all functional images for the func_files input.</p>
+<ul>
+<li><p class="first">For example, for the anat_file_filter node, set “Exp Type == anat” (or “Exp Type CONTAINS anat”) in the advanced search field and for the func_files_filter node, set “Exp Type == “func” (or “Exp Type CONTAINS func”) in the advanced search field.</p>
+<a class="reference internal image-reference" href="../_images/Input_Filter_anat2.png"><img alt="../_images/Input_Filter_anat2.png" src="../_images/Input_Filter_anat2.png" style="width: 47.3%;" /></a>
+<a class="reference internal image-reference" href="../_images/Input_Filter_func2.png"><img alt="../_images/Input_Filter_func2.png" src="../_images/Input_Filter_func2.png" style="width: 50%;" /></a>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p class="first">Set up the iteration table:</p>
+<ul>
+<li><p class="first">In the iteration section (top right of the pipeline manager tab), click on the “iterate over” feature (“Select” button).
+A dialog pops up and displays all the tags in the current project. Check the tag on which the pipeline will be iterated, a good choice could be here the “PatientName” tag.</p>
+</li>
+<li><p class="first">So below the “iterate over” part there is now a “PatientName” part (in place of “select a tag”, before).</p>
 <ul class="simple">
-<li>Follow the same procedure as for the first two points of the <a class="reference internal" href="#viainputfilbri"><span class="std std-ref">via Input_Filter  (without use of the iteration table)</span></a> iteration mode.</li>
-<li><dl class="first docutils">
-<dt>For each Input_filter process, right-click on it and select “Open filter”. In the filter pop-up, modify the filter to apply.</dt>
-<dd><ul class="first last">
-<li>For example, for the anat_file_filter node, set “Exp Type == anat” in the Advanced Search part and for the func_files_filter node, set “Exp Type == ” finc in the Advanced Search part.</li>
+<li>The first button on this “PatientName” part is a Combobox where it is possible to see all the values of the selected tags used to iterate.</li>
 </ul>
-</dd>
-</dl>
+<img alt="../_images/PatientName_Combobox.png" class="align-center" id="iteration-patientname-combobox" src="../_images/PatientName_Combobox.png" />
 </li>
-<li><dl class="first docutils">
-<dt>Set up the iteration table:</dt>
-<dd><ul class="first last">
-<li>By changing the value of the selected Patient, we change the list of documents in “database_scans”</li>
 </ul>
-</dd>
-</dl>
 </li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li>It is possible to change the values used for the iteration by clicking on the next “Filter” button.
+In the example below we only want to iterate on the “alej” and “rocmi” patients.</li>
+</ul>
+<img alt="../_images/PatientName_Filter.png" class="align-center" id="iteration-filter" src="../_images/PatientName_Filter.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li>click on “Initialize pipeline”. The Run button becomes enabled.</li>
+<li>click on “Run pipeline”.</li>
 </ul>
 </div>
 </div>
