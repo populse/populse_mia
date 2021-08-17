@@ -30,5 +30,81 @@ In the following we propose exclusively for linux the use of a Singularity conta
 MacOS
 =====
 
+While waiting for a working version of Singularity for Mac, here the procedure to use VirtualBox :
+
+A - VirtualBox install
+
+	1 - Go to the VirtualBox site  https://www.virtualbox.org
+	2 - click on Download VirtualBox 6.1
+	3 - choose OS X hosts
+	4 - a dmg file is downloading
+	5 - double click on this file,  a virtual disk named ‘VirtualBox’ will appear on the Desktop
+	6 - Open this disk, double click on ‘VirtualBox.pkg’ and follow the instructions
+ 
+B – BrainVisa install
+
+	1 - go to https://brainvisa.info/web/download.html#vbox-install (chapiter ‘Install with VirtualBox’)
+	2 - download the image file Brainvisa 5.0.2 (8Gb)
+	3 - start VirtualBox
+	4 - in VirtualBox, import the downloaded image
+	5 - enter parameters (CPU, RAM, DVD ...) and complete the 'Machine Base Folder' field
+	6 - click on 'Import'
+	7 - a 'brainvisa-5.0.2' session appears, start it
+
+if you have pb with Kernel driver not installed (rc=-1908) do the following procedure : ([for illustration see here](https://medium.com/@Aenon/mac-virtualbox-kernel-driver-error-df39e7e10cd8 ))
+
+	1 - reboot your machine
+	2 - start VirtualBox
+	3 - start 'brainvisa-5.0.2' session (the error window reappears)
+	4 - launch System Preferences
+	5 - click on Security & Privacy
+	6 - click 'Allow'
+	7 - relaunch 'brainvisa-5.0.2' session
+ 
+ C - Requirements install
+
+	1 - open a terminal (double click  'LXTerminal' on desktop)
+	2 - sudo apt-get update (password: brainvisa)
+	
+	Python3.7 install:
+	3 - sudo apt install software-properties-common</p>
+	4 - sudo add-apt-repository ppa:deadsnakes/ppa
+	5 - sudo apt install python3.7
+	6 - sudo apt-get install python3.7-dev
+	7 - sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
+	8 - sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
+	9 - sudo update-alternatives --config  python3 (enter 2 for Python3.7)
+
+	Git install:
+	10 - sudo apt install git 
+	11 - sudo apt install git-lfs
+ 
+	Pip install:
+	12 - sudo apt install python3-pip
+	13 - pip3 install --upgrade pip
+	
+D - MIA install
+	
+	1 - pip3 install --target /home/brainvisa/.local/lib/python3.7/site_packages/ PyQt5
+	2 - pip3 install --target /home/brainvisa/.local/lib/python3.7/site_packages/ scikit-image
+	3 - pip3 install --target /home/brainvisa/.local/lib/python3.7/site_packages/ nipype
+	4 - pip3 install --target /home/brainvisa/.local/lib/python3.7/site_packages/ lark
+	6 - pip3 install --target /home/brainvisa/.local/lib/python3.7/site_packages/ cryptography
+	7 - mkdir $HOME/Mia && cd Mia (create and go to the installation directory)
+	8 - git clone https://github.com/populse/populse_mia.git
+	9 - git clone https://github.com/populse/mia_processes.git
+	10 - cd populse_mia
+	11 - sudo python3 setup.py install
+	12 - cd ..
+	13 - git clone https://github.com/populse/soma-base.git
+	14 - git clone https://github.com/populse/soma-workflow.git
+	15 - git clone https://github.com/populse/capsul.git
+	16 - cd soma-base
+	17 - sudo python3 setup install
+
+**
+there is still a problem to be solved: Anatomist does not work in populse
+**
+
 Windows
 =======
