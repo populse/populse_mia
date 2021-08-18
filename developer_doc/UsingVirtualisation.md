@@ -2,6 +2,7 @@ Linux
 =====
 With Linux, Singularity seems to work perfectly well. Given the characteristics of the 2 proposed technologies ([container or virtual machine](https://www.geeksforgeeks.org/difference-between-virtual-machines-and-containers/)) it is clear that it is better to use a container for performance reasons.
 In the following we propose exclusively for linux the use of a Singularity container.
+
 **Short**:  
   *Read-only container*:
   - "Two softwares must be installed: Python (version >= 3.7) and Singularity (version > 3.6)"
