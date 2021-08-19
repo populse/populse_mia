@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 2.0.0-dev+e9cf0fce documentation</title>
+    <title>populse_mia.data_manager.project &#8212; populse_mia 2.0.0-dev+6522f3e4 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0-dev+e9cf0fce',
+        VERSION:     '2.0.0-dev+6522f3e4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+e9cf0fce documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+6522f3e4 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -125,7 +125,7 @@
 <span class="sd">        - getSortOrder: return the sort order of the project</span>
 <span class="sd">        - getSortedTag: return the sorted tag of the project</span>
 <span class="sd">        - hasUnsavedModifications: return if the project has unsaved</span>
-<span class="sd">          modifications or not</span>
+<span class="sd">                                   modifications or not</span>
 <span class="sd">        - init_filters: initialize the filters at project opening</span>
 <span class="sd">        - loadProperties: load the properties file</span>
 <span class="sd">        - redo: redo the last action made by the user on the project</span>
@@ -135,13 +135,14 @@
 <span class="sd">        - setCurrentFilter: set the current filter of the project</span>
 <span class="sd">        - setDate: set the date of the project</span>
 <span class="sd">        - saveModifications: save the pending operations of the project</span>
-<span class="sd">          (actions still not saved)</span>
+<span class="sd">                             (actions still not saved)</span>
 <span class="sd">        - setName: set the name of the project</span>
 <span class="sd">        - setSortOrder: set the sort order of the project</span>
 <span class="sd">        - setSortedTag: set the sorted tag of the project</span>
 <span class="sd">        - undo: undo the last action made by the user on the project</span>
-<span class="sd">        - unsavedModifications(self, value): Modify the window title</span>
-<span class="sd">          depending of whether the project has unsaved modifications or not.</span>
+<span class="sd">        - unsavedModifications(self, value): Modify the window title depending</span>
+<span class="sd">                                             of whether the project has unsaved</span>
+<span class="sd">                                             modifications or not.</span>
 <span class="sd">        - unsaveModifications: unsaves the pending operations of the project</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -344,7 +345,7 @@
         <span class="sd">&quot;&quot;&quot;Return the date of creation of the project.</span>
 
 <span class="sd">        :returns: string of the date of creation of the project if it&#39;s not</span>
-<span class="sd">        Unnamed project, otherwise empty string</span>
+<span class="sd">                  Unnamed project, otherwise empty string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span></div>
@@ -376,8 +377,7 @@
         <span class="sd">&quot;&quot;&quot;Return the name of the project.</span>
 
 <span class="sd">        :returns: string of the name of the project if it&#39;s not Unnamed</span>
-<span class="sd">        project,</span>
-<span class="sd">        otherwise empty string</span>
+<span class="sd">                  project, otherwise empty string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
@@ -386,7 +386,7 @@
         <span class="sd">&quot;&quot;&quot;Return the sorted tag of the project.</span>
 
 <span class="sd">        :returns: string of the sorted tag of the project if it&#39;s not Unnamed</span>
-<span class="sd">        project, otherwise empty string</span>
+<span class="sd">                  project, otherwise empty string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sorted_tag&quot;</span><span class="p">]</span></div>
@@ -395,7 +395,7 @@
         <span class="sd">&quot;&quot;&quot;Return the sort order of the project.</span>
 
 <span class="sd">        :returns: string of the sort order of the project if it&#39;s not Unnamed</span>
-<span class="sd">        project, otherwise empty string</span>
+<span class="sd">                  project, otherwise empty string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sort_order&quot;</span><span class="p">]</span></div>
@@ -404,7 +404,7 @@
         <span class="sd">&quot;&quot;&quot;Return if the project has unsaved modifications or not.</span>
 
 <span class="sd">        :returns: boolean, True if the project has pending modifications,</span>
-<span class="sd">        False otherwise</span>
+<span class="sd">                  False otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsavedModifications</span><span class="p">;</span></div>

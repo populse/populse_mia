@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.data_manager package &#8212; populse_mia 2.0.0-dev+e9cf0fce documentation</title>
+    <title>populse_mia.data_manager package &#8212; populse_mia 2.0.0-dev+6522f3e4 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+e9cf0fce',
+        VERSION:     '2.0.0-dev+6522f3e4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+e9cf0fce documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+6522f3e4 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -304,11 +304,11 @@ default</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fields</strong> – list of fields (collection, name, type, description,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fields</strong> – list of fields (collection, name, type, description,
+visibility, origin, unit, default_value)</td>
 </tr>
 </tbody>
 </table>
-<p>visibility, origin, unit, default_value)</p>
 </dd></dl>
 
 <dl class="method">
@@ -385,7 +385,7 @@ rapid and advanced search</p>
 <dl class="docutils">
 <dt>Contains:</dt>
 <dd>Class:
--Filter</dd>
+- Filter</dd>
 </dl>
 <dl class="class">
 <dt id="populse_mia.data_manager.filter.Filter">
@@ -412,14 +412,14 @@ are linked with AND or OR and all composed of:
 <li><strong>values</strong> – list of values</li>
 <li><strong>fields</strong> – list of list of fields</li>
 <li><strong>links</strong> – list of links (AND/OR)</li>
-<li><strong>conditions</strong> – list of conditions (==, !=, &lt;, &gt;, &lt;=, &gt;=, IN,</li>
+<li><strong>conditions</strong> – list of conditions (==, !=, &lt;, &gt;, &lt;=, &gt;=, IN,
+BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</li>
+<li><strong>search_bar</strong> – value in the rapid search bar</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)
-:param search_bar: value in the rapid search bar</p>
 <dl class="method">
 <dt id="populse_mia.data_manager.filter.Filter.generate_filter">
 <code class="descname">generate_filter</code><span class="sig-paren">(</span><em>current_project</em>, <em>scans</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/filter.html#Filter.generate_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.filter.Filter.generate_filter" title="Permalink to this definition">¶</a></dt>
@@ -534,11 +534,11 @@ dropped and all filenames are merged into a single set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the date of creation of the project if it’s not</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the date of creation of the project if it’s not
+Unnamed project, otherwise empty string</td>
 </tr>
 </tbody>
 </table>
-<p>Unnamed project, otherwise empty string</p>
 </dd></dl>
 
 <dl class="method">
@@ -579,12 +579,11 @@ dropped and all filenames are merged into a single set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the name of the project if it’s not Unnamed</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the name of the project if it’s not Unnamed
+project, otherwise empty string</td>
 </tr>
 </tbody>
 </table>
-<p>project,
-otherwise empty string</p>
 </dd></dl>
 
 <dl class="method">
@@ -595,11 +594,11 @@ otherwise empty string</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the sort order of the project if it’s not Unnamed</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the sort order of the project if it’s not Unnamed
+project, otherwise empty string</td>
 </tr>
 </tbody>
 </table>
-<p>project, otherwise empty string</p>
 </dd></dl>
 
 <dl class="method">
@@ -610,11 +609,11 @@ otherwise empty string</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the sorted tag of the project if it’s not Unnamed</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the sorted tag of the project if it’s not Unnamed
+project, otherwise empty string</td>
 </tr>
 </tbody>
 </table>
-<p>project, otherwise empty string</p>
 </dd></dl>
 
 <dl class="method">
@@ -667,11 +666,11 @@ lead to the given one. Elements are process (brick) UUIDs.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean, True if the project has pending modifications,</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean, True if the project has pending modifications,
+False otherwise</td>
 </tr>
 </tbody>
 </table>
-<p>False otherwise</p>
 </dd></dl>
 
 <dl class="method">

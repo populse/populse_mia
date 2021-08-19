@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+e9cf0fce documentation</title>
+    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.0.0-dev+6522f3e4 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.0-dev+e9cf0fce',
+        VERSION:     '2.0.0-dev+6522f3e4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+e9cf0fce documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+6522f3e4 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Pipeline Manager</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -426,7 +426,7 @@
 <div class="section" id="with-use-of-the-iteration-table">
 <span id="manually"></span><h4>With use of the iteration table<a class="headerlink" href="#with-use-of-the-iteration-table" title="Permalink to this headline">¶</a></h4>
 <ul>
-<li><p class="first">Follow the same procedure as for the first two points of the <a class="reference internal" href="#viainputfilbri"><span class="std std-ref">via Input_Filter  (without use of the iteration table)</span></a> iteration mode.</p>
+<li><p class="first">Follow the same procedure as for the first two points of the <a class="reference internal" href="#viainputfilbri"><span class="std std-ref">via Input_Filter (without use of the iteration table)</span></a> iteration mode.</p>
 </li>
 <li><p class="first">Right-click on each Input_filter process and select “Open Filter”. In the filter pop-up window, change the filter to be applied to select all anatomical images for the <cite>anat_file</cite> input and all functional images for the func_files input.</p>
 <ul>
@@ -477,30 +477,23 @@ In the example below we only want to iterate on the “alej” and “rocmi” p
 </div>
 <div class="section" id="the-iteration-table">
 <span id="iteration-table-label"></span><h2>The iteration table<a class="headerlink" href="#the-iteration-table" title="Permalink to this headline">¶</a></h2>
-<p>The iteration table is a tool used to handle pipeline iteration and is located on the top right of the Pipeline Manager tab. For now in Populse_MIA, iteration can only be done at a pipeline level. An iteration can only be made over one tag (e.g. a pipeline in run for each “Patient” value in the database).</p>
+<p>The iteration table is a tool used to handle pipeline iteration and is located on the top right of the Pipeline Manager tab. An iteration can only be made over one tag (e.g. a pipeline in run for each “Patient” value in the database).</p>
 <p>The iteration table is composed of several components that are described below in this tutorial.</p>
 <p>Please, read the <a class="reference external" href="./pipeline_example.html#pipeline-iteration">“Pipeline iteration” chapter of the “A pipeline example with Populse_MIA’s” page</a>, in order to have a complete vision of how to use iteration.</p>
 <div class="section" id="how-to-use-the-iteration-table">
 <h3>How to use the iteration table<a class="headerlink" href="#how-to-use-the-iteration-table" title="Permalink to this headline">¶</a></h3>
-<p>Assume that the current project contains several patients, so several “Patient” tag values:</p>
-<img alt="../_images/data_browser.png" class="align-center" id="data-browser" src="../_images/data_browser.png" />
+<p>Assume that the current project contains several patients, so several “PatientName” tag values (the values for the PatientName” tag can be changed manually):</p>
+<img alt="../_images/iter_allTagsUsed.png" class="align-center" id="iter-alltagsused2" src="../_images/iter_allTagsUsed.png" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <ul class="simple">
 <li>Go to the Pipeline Manager and check the “Iterate pipeline” check box to activate the iteration table.</li>
+<li>Select which tag to iterate the pipeline on by clicking on the “Select” push button and select the “PatientName” tag. The push button then takes the name of the chosen tag (here PatientName).</li>
 <li><dl class="first docutils">
-<dt>Select on which tag to iterate the pipeline by clicking on the “Select” push button and select “Patient”.</dt>
+<dt>We can visualise for each “PatientName” value which documents are associated thanks to the combo box beside the “Filter” button.</dt>
 <dd><ul class="first last">
-<li>“Patient” is not a tag that comes from the data, it has been added manually.</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>we can visualize for each “Patient” value which documents are associated thanks to the combo box</dt>
-<dd><ul class="first last">
-<li>The visualized tags are by default “SequenceName” and “AcquisitionDate” but can be changed at the bottom at the widget by clicking on the push buttons.</li>
+<li>The displayed tags are by default “SequenceName” and “AcquisitionDate” but can be changed at the bottom of the window by clicking on the push buttons, next to “Tags to visualize:”.</li>
 </ul>
 </dd>
 </dl>
@@ -511,10 +504,9 @@ In the example below we only want to iterate on the “alej” and “rocmi” p
 <div class="line"><br /></div>
 </div>
 <ul class="simple">
-<li>When the “Iterate pipeline” check box is checked, before running a pipeline, a pop-up is displayed to let we choose on which value to iterate the pipeline.</li>
+<li>It is possible to choose on which values of the chosen tag we want to iterate the pipeline by clicking on the “Filter” button. Indeed, when the “Filter” button is clicked, a pop-up is displayed to allow us to choose on which values to iterate the pipeline. In the following example we will iterate only on the “coug” and “rocmi” values:</li>
 </ul>
 <img alt="../_images/iterate_pipeline.png" class="align-center" id="iterate-pipeline" src="../_images/iterate_pipeline.png" />
-<p>Note: if we want to use pipeline iteration, you have to have a pipeline global input called “database_scans”. Only this plug will be updated for each iteration and will contain all the documents that have the correct tag value.</p>
 </div>
 </div>
 </div>
