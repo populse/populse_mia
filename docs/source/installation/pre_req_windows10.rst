@@ -1,5 +1,7 @@
 .. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/pre_req_windows10.rst: WARNING: document isn't included in any toctree
+
 :orphan:
+
 .. toctree::
 
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
@@ -80,7 +82,7 @@ Populse_mia's Windows-PowerShell installation, pre-requirements
 
     git --version
 
-  * If Git is not installed, you need to install it (`Here <https://git-scm.com/download/win>`_):
+  * If Git is not installed, you need to `install it <https://git-scm.com/download/win>`__:
 
     * Download the executable for your specific distribution (64 or 32 bits).
     * Run it.
@@ -107,7 +109,7 @@ Populse_mia's Windows-PowerShell installation, pre-requirements
 
     java -version
 
-  * If java 64-bits is not installed, you need to install it (`Here <https://java.com/fr/download/manual.jsp>`_):
+  * If java 64-bits is not installed, you need to `install it <https://java.com/fr/download/manual.jsp>`__):
 
     * Download the offline (64 bits) file and run it
     * Follow the installation
