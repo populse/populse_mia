@@ -1,5 +1,7 @@
 .. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/user_installation.rst: WARNING: document isn't included in any toctree
+
 :orphan:
+
 .. toctree::
 
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
@@ -96,8 +98,10 @@ Installation
 
 .. image:: ../images/mia_install_2.png
    :align: center
-   :name: Populse_MIA install widget
+   :name: Populse_MIA install widge
+
 |
+
 * Click on "Install" to install populse_mia with the selected parameters.
 
 |
