@@ -2,13 +2,13 @@ matrix:
   include:
     - os: osx
       language: generic
-    - os: linux
-      dist: xenial
-      language: python  
-      python:
-        - "3.6"
-      services:
-        - xvfb
+    #- os: linux
+    #  dist: xenial
+    #  language: python  
+    #  python:
+    #    - "3.6"
+    #  services:
+    #    - xvfb
     - os: linux
       dist: xenial
       language: python  
@@ -16,13 +16,13 @@ matrix:
         - "3.7"
       services:
         - xvfb
-    - os: linux
-      dist: xenial
-      language: python  
-      python:
-        - "3.8"
-      services:
-        - xvfb
+    #- os: linux
+    #  dist: xenial
+    #  language: python  
+    #  python:
+    #    - "3.8"
+    #  services:
+    #    - xvfb
 
 
 # osx deps
