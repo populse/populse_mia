@@ -2,7 +2,8 @@ environment:
 
   matrix:
     - PYTHON: "C:\\Python37"
-    - PYTHON: "C:\\Python38"
+    #- PYTHON: "C:\\Python38"
+    #- PYTHON: "C:\\Python39"
 
 build: off
 
@@ -21,10 +22,9 @@ install:
   - "python setup.py install"
   - "git lfs install"
   - "git lfs pull"
-  #- "echo y | pip uninstall PyQt5"
-  #- "echo y | pip uninstall PyQt5-sip"
-  #- "echo y | pip uninstall SIP"
-  #- "pip install \"PyQt5==5.9.2\""
+  - "echo y | pip uninstall PyQt5"
+  - "echo y | pip uninstall PyQt5-sip"
+  - "pip install \"PyQt5==5.9.2\""
   - "pip uninstall -y capsul soma-base populse_db"
   - "git clone --depth=50 --branch=2.0 https://github.com/populse/populse_db.git C:\\projects\\populse_db"
   - "cd C:\\projects\\populse_db"
