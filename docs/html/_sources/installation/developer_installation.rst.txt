@@ -30,7 +30,7 @@ Installation
 
       git lfs clone https://github.com/populse/populse_mia.git [populse_install_dir]/populse_mia # "git lfs clone" has been deprecated since Git LFS 2.3.0. From this version, use "git clone" command directly ...
 
-  * Or download the zip file (populse_mia-master.zip) of the project (`green button "Code" <https://github.com/populse/populse_mia>`_, Download ZIP), then extract the data in the directory of your choice [populse_install_dir] ::
+  * Or download the zip file (populse_mia-master.zip) of the project (`green button "Code" <https://github.com/populse/populse_mia>`__, Download ZIP), then extract the data in the directory of your choice [populse_install_dir] ::
 
       unzip populse_mia-master.zip -d [populse_install_dir]
       mv [populse_install_dir]/populse_mia-master [populse_install_dir]/populse_mia
@@ -45,7 +45,7 @@ Installation
 
         git lfs clone https://github.com/populse/capsul.git [populse_install_dir]/capsul # "git lfs clone" has been deprecated since Git LFS 2.3.0. From this version, use "git clone" command directly ...
 
-    * Or download the zip file (capsul-master.zip) of the project (`green button "Code" <https://github.com/populse/capsul>`_, Download ZIP), then extract the data in the directory of your choice [populse_install_dir] ::
+    * Or download the zip file (capsul-master.zip) of the project (`green button "Code" <https://github.com/populse/capsul>`__, Download ZIP), then extract the data in the directory of your choice [populse_install_dir] ::
 
         unzip capsul-master.zip -d [populse_install_dir]
 	mv [populse_install_dir]/capsul-master [populse_install_dir]/capsul

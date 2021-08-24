@@ -383,7 +383,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 With use of the iteration table
 ###############################
 
-* Follow the same procedure as for the first two points of the :ref:`via Input_Filter  (without use of the iteration table)<viaInputFilBri>` iteration mode.
+* Follow the same procedure as for the first two points of the :ref:`via Input_Filter (without use of the iteration table)<viaInputFilBri>` iteration mode.
 
 * Right-click on each Input_filter process and select "Open Filter". In the filter pop-up window, change the filter to be applied to select all anatomical images for the `anat_file` input and all functional images for the func_files input.
 
@@ -429,7 +429,7 @@ With use of the iteration table
 The iteration table
 -------------------
 
-The iteration table is a tool used to handle pipeline iteration and is located on the top right of the Pipeline Manager tab. For now in Populse_MIA, iteration can only be done at a pipeline level. An iteration can only be made over one tag (e.g. a pipeline in run for each "Patient" value in the database).
+The iteration table is a tool used to handle pipeline iteration and is located on the top right of the Pipeline Manager tab. An iteration can only be made over one tag (e.g. a pipeline in run for each "Patient" value in the database).
 
 The iteration table is composed of several components that are described below in this tutorial.
 
@@ -438,21 +438,20 @@ Please, read the `"Pipeline iteration" chapter of the "A pipeline example with P
 How to use the iteration table
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Assume that the current project contains several patients, so several "Patient" tag values:
+Assume that the current project contains several patients, so several "PatientName" tag values (the values for the PatientName" tag can be changed manually):
 
-.. image:: ../images/data_browser.png
+.. image:: ../images/iter_allTagsUsed.png
    :align: center
-   :name: Data Browser
+   :name: iter_allTagsUsed2
 
 |
 
 - Go to the Pipeline Manager and check the "Iterate pipeline" check box to activate the iteration table.
 
-- Select on which tag to iterate the pipeline by clicking on the "Select" push button and select "Patient".
-      - "Patient" is not a tag that comes from the data, it has been added manually.
+- Select which tag to iterate the pipeline on by clicking on the "Select" push button and select the "PatientName" tag. The push button then takes the name of the chosen tag (here PatientName).
 
-- we can visualize for each "Patient" value which documents are associated thanks to the combo box
-      - The visualized tags are by default "SequenceName" and "AcquisitionDate" but can be changed at the bottom at the widget by clicking on the push buttons.
+- We can visualise for each "PatientName" value which documents are associated thanks to the combo box beside the "Filter" button.
+      - The displayed tags are by default "SequenceName" and "AcquisitionDate" but can be changed at the bottom of the window by clicking on the push buttons, next to "Tags to visualize:".
 
 .. image:: ../images/iteration_table.png
    :align: center
@@ -460,13 +459,11 @@ Assume that the current project contains several patients, so several "Patient" 
 
 |
 
-- When the "Iterate pipeline" check box is checked, before running a pipeline, a pop-up is displayed to let we choose on which value to iterate the pipeline.
+-  It is possible to choose on which values of the chosen tag we want to iterate the pipeline by clicking on the "Filter" button. Indeed, when the "Filter" button is clicked, a pop-up is displayed to allow us to choose on which values to iterate the pipeline. In the following example we will iterate only on the "coug" and "rocmi" values:
 
 .. image:: ../images/iterate_pipeline.png
    :align: center
    :name: Iterate pipeline
-
-Note: if we want to use pipeline iteration, you have to have a pipeline global input called "database_scans". Only this plug will be updated for each iteration and will contain all the documents that have the correct tag value.
 
 .. _`Cheese Shop`: https://pypi.org/search/?q=mia_processes
 
