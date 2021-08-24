@@ -344,7 +344,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
     :align: center
     :name: Pipeline iteration 5
 
-  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two Input_Filters bricks/processes (anat_file_filter and func_files_filter nodes). The former pipeline is now inside the iterative node.
+  The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two Input_Filters nodes (anat_file_filter and func_files_filter). The former pipeline is now inside the iterative node.
 
   .. image:: ../images/pipeline_iter_6.jpg
     :align: center
