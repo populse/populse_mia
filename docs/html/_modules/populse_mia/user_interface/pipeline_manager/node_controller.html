@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.0.0-dev+aabe9ee1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.0.0-dev+253aa585 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+aabe9ee1',
+        VERSION:     '2.0.0-dev+253aa585',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+aabe9ee1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+253aa585 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -575,7 +575,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">value_changed</span><span class="o">.</span><span class="n">emit</span><span class="p">([</span><span class="s2">&quot;plug_value&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span>
                                  <span class="n">param</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">value</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="CapsulNodeController.update_node_name"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">[docs]</a>    <span class="k">def</span> <span class="nf">update_node_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">new_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="CapsulNodeController.update_node_name"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">[docs]</a>    <span class="k">def</span> <span class="nf">update_node_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">new_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">old_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_undo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">from_redo</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Change the name of the selected node and updates the pipeline.</span>
 
 <span class="sd">        Because the nodes are stored in a dictionary, we have to create</span>
@@ -585,26 +587,57 @@
 <span class="sd">        :param pipeline: current pipeline</span>
 <span class="sd">        :param new_node_name: new node name (is None except when this method</span>
 <span class="sd">         is called from an undo/redo)</span>
+<span class="sd">        :param old_node_name: old node name (is None except when this method</span>
+<span class="sd">         is called from an undo/redo)</span>
+<span class="sd">        :param from_undo: boolean, True if the action has been made using an</span>
+<span class="sd">         undo</span>
+<span class="sd">        :param from_redo: boolean, True if the action has been made using a</span>
+<span class="sd">         redo</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Copying the old node</span>
-        <span class="n">old_node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">]</span>
-        <span class="n">old_node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="n">new_node_name</span><span class="p">:</span>
             <span class="n">new_node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">old_node_name</span><span class="p">:</span>
+            <span class="n">old_node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span>
+
+        <span class="c1"># Copying the old node</span>
+        <span class="n">old_node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">old_node_name</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="n">new_node_name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Node name already in pipeline&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Update of the node name from &#39;</span><span class="si">{0}</span><span class="s2">&#39; to &#39;</span><span class="si">{1}</span><span class="s2">&#39;: impossible, &quot;</span>
+                  <span class="s2">&quot;the node &#39;</span><span class="si">{1}</span><span class="s2">&#39; already exists !&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">old_node_name</span><span class="p">,</span>
+                                                           <span class="n">new_node_name</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pipeline</span><span class="o">.</span><span class="n">rename_node</span><span class="p">(</span><span class="n">old_node_name</span><span class="p">,</span> <span class="n">new_node_name</span><span class="p">)</span>
 
             <span class="c1"># Updating the node_name attribute</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">new_node_name</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">update_nodes_and_plugs_activation</span><span class="p">()</span>
+
             <span class="c1"># To undo/redo</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value_changed</span><span class="o">.</span><span class="n">emit</span><span class="p">([</span><span class="s2">&quot;node_name&quot;</span><span class="p">,</span>
                                      <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">new_node_name</span><span class="p">],</span>
                                      <span class="n">new_node_name</span><span class="p">,</span> <span class="n">old_node_name</span><span class="p">])</span>
+
+            <span class="c1"># For history</span>
+            <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;update_node_name&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">from_undo</span><span class="p">:</span>
+
+                <span class="c1">#TODO: next line is strange!</span>
+                <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span>
+                  
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">new_node_name</span><span class="p">])</span>
+                <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_node_name</span><span class="p">)</span>
+                <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">old_node_name</span><span class="p">)</span>
+                
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span>
+                    <span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">update_history</span><span class="p">)(</span><span class="n">history_maker</span><span class="p">,</span>
+                                                         <span class="n">from_undo</span><span class="p">,</span>
+                                                         <span class="n">from_redo</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
                 <span class="s1">&#39;Node name &quot;</span><span class="si">{0}</span><span class="s1">&quot; has been changed to &quot;</span><span class="si">{1}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">old_node_name</span><span class="p">,</span> <span class="n">new_node_name</span><span class="p">))</span></div>
@@ -982,7 +1015,6 @@
 <span class="sd">        :param process: process of the node</span>
 <span class="sd">        :param pipeline: current pipeline</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">node_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_process</span> <span class="o">=</span> <span class="n">process</span>
 
@@ -1008,6 +1040,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">returnPressed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
                 <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_node_name</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">))</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Pipeline inputs/outputs&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setReadOnly</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1168,9 +1201,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Node name already in pipeline&quot;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-
             <span class="n">pipeline</span><span class="o">.</span><span class="n">rename_node</span><span class="p">(</span><span class="n">old_node_name</span><span class="p">,</span> <span class="n">new_node_name</span><span class="p">)</span>
-
             <span class="c1"># Updating the node_name attribute</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">new_node_name</span>
 

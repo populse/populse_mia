@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+aabe9ee1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+253aa585 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+aabe9ee1',
+        VERSION:     '2.0.0-dev+253aa585',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+aabe9ee1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+253aa585 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -290,7 +290,7 @@ and layout organization.</p>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">
-<code class="descname">update_node_name</code><span class="sig-paren">(</span><em>pipeline</em>, <em>new_node_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_node_name</code><span class="sig-paren">(</span><em>pipeline</em>, <em>new_node_name=None</em>, <em>old_node_name=None</em>, <em>from_undo=False</em>, <em>from_redo=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the name of the selected node and updates the pipeline.</p>
 <p>Because the nodes are stored in a dictionary, we have to create
 a new node that has the same traits as the selected one and create
@@ -303,6 +303,12 @@ new links that are the same than the selected node.</p>
 <li><strong>pipeline</strong> – current pipeline</li>
 <li><strong>new_node_name</strong> – new node name (is None except when this method
 is called from an undo/redo)</li>
+<li><strong>old_node_name</strong> – old node name (is None except when this method
+is called from an undo/redo)</li>
+<li><strong>from_undo</strong> – boolean, True if the action has been made using an
+undo</li>
+<li><strong>from_redo</strong> – boolean, True if the action has been made using a
+redo</li>
 </ul>
 </td>
 </tr>
@@ -1529,11 +1535,7 @@ the database.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>signal_list</strong> – list of the needed parameters to update history
-According to populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed()
-the list should be, for a parameter change:
-[“plug_value”, self.node_name, old_value, param, value_type, value]
-This is not the case!</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>signal_list</strong> – list of the needed parameters to update history</td>
 </tr>
 </tbody>
 </table>

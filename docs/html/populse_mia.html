@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+aabe9ee1 documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+253aa585 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+aabe9ee1',
+        VERSION:     '2.0.0-dev+253aa585',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+aabe9ee1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+253aa585 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1626,7 +1626,8 @@ the second argument, return True (False if not).</li>
 <dl class="method">
 <dt id="populse_mia.test.TestMIADataBrowser.get_new_test_project">
 <code class="descname">get_new_test_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.get_new_test_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.get_new_test_project" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Copy the test project in a location we can modify safely</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIADataBrowser.setUp">
@@ -1637,7 +1638,8 @@ the second argument, return True (False if not).</li>
 <dl class="classmethod">
 <dt id="populse_mia.test.TestMIADataBrowser.setUpClass">
 <em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.setUpClass" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called once at the beginning of the class</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIADataBrowser.tearDown">
@@ -1648,7 +1650,8 @@ the second argument, return True (False if not).</li>
 <dl class="classmethod">
 <dt id="populse_mia.test.TestMIADataBrowser.tearDownClass">
 <em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.tearDownClass" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called once at the end of the class</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_add_path">
@@ -1797,7 +1800,8 @@ the second argument, return True (False if not).</li>
 <dl class="method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_tab_change">
 <code class="descname">test_tab_change</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_tab_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_tab_change" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests the tab change from data browser to pipeline manager</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_undo_redo_databrowser">
@@ -1831,8 +1835,14 @@ the second argument, return True (False if not).</li>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
 <p>Tests for the pipeline manager tab.</p>
 <dl class="method">
-<dt id="populse_mia.test.TestMIAPipelineManager.execute_click">
-<code class="descname">execute_click</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.execute_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.execute_click" title="Permalink to this definition">¶</a></dt>
+<dt id="populse_mia.test.TestMIAPipelineManager.execute_QDialogAccept">
+<code class="descname">execute_QDialogAccept</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.execute_QDialogAccept"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.execute_QDialogAccept" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is supposed to accept (close) a QDialog window</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.test.TestMIAPipelineManager.execute_QMessageBox_clickYes">
+<code class="descname">execute_QMessageBox_clickYes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.execute_QMessageBox_clickYes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.execute_QMessageBox_clickYes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is supposed to allow to press the Yes button if a pipeline is 
 overwritten in the test_zz_check_modifications method</p>
 </dd></dl>
@@ -1840,7 +1850,8 @@ overwritten in the test_zz_check_modifications method</p>
 <dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.get_new_test_project">
 <code class="descname">get_new_test_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.get_new_test_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.get_new_test_project" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Copy the test project in a location we can modify safely</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.setUp">
@@ -1851,7 +1862,8 @@ overwritten in the test_zz_check_modifications method</p>
 <dl class="classmethod">
 <dt id="populse_mia.test.TestMIAPipelineManager.setUpClass">
 <em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.setUpClass" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called once at the beginning of the class</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.tearDown">
@@ -1862,7 +1874,8 @@ overwritten in the test_zz_check_modifications method</p>
 <dl class="classmethod">
 <dt id="populse_mia.test.TestMIAPipelineManager.tearDownClass">
 <em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.tearDownClass" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called once at the end of the class</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.test.TestMIAPipelineManager.test_add_tab">
@@ -1889,8 +1902,8 @@ overwritten in the test_zz_check_modifications method</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="populse_mia.test.TestMIAPipelineManager.test_find_process">
-<code class="descname">test_find_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.test_find_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.test_find_process" title="Permalink to this definition">¶</a></dt>
+<dt id="populse_mia.test.TestMIAPipelineManager.test_drop_process">
+<code class="descname">test_drop_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManager.test_drop_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManager.test_drop_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a Nipype SPM’s Smooth process using the find_process method</p>
 </dd></dl>
 

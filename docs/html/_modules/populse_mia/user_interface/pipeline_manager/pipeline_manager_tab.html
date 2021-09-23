@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.0.0-dev+aabe9ee1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.0.0-dev+253aa585 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+aabe9ee1',
+        VERSION:     '2.0.0-dev+253aa585',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+aabe9ee1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+253aa585 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1029,11 +1029,12 @@
 <span class="sd">        Update history when a pipeline node is changed</span>
 
 <span class="sd">        :param signal_list: list of the needed parameters to update history</span>
-<span class="sd">         According to populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed()</span>
-<span class="sd">         the list should be, for a parameter change:</span>
-<span class="sd">         [&quot;plug_value&quot;, self.node_name, old_value, param, value_type, value]</span>
-<span class="sd">         This is not the case!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: According to</span>
+        <span class="c1"># populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed()</span>
+        <span class="c1"># the list should be, for a parameter change:</span>
+        <span class="c1"># [&quot;plug_value&quot;, self.node_name, old_value, param, value_type, value]</span>
+        <span class="c1"># This is not the case!</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">signal_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -1098,7 +1099,6 @@
 <span class="sd">        :param process: process instance of the corresponding node</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">():</span>
@@ -1641,7 +1641,6 @@
 <span class="sd">            - delete_link</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">c_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span>
 
         <span class="c1"># We can redo if we have an action to make again</span>
@@ -1662,14 +1661,10 @@
                 <span class="n">node_name</span> <span class="o">=</span> <span class="n">to_redo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">c_e</span><span class="o">.</span><span class="n">del_node</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">from_redo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;export_plug&quot;</span><span class="p">:</span>
-                <span class="n">temp_plug_name</span> <span class="o">=</span> <span class="n">to_redo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;export_plugs&quot;</span><span class="p">:</span>
+                <span class="n">temp_plug_name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="n">to_redo</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="n">c_e</span><span class="o">.</span><span class="n">_remove_plug</span><span class="p">(</span>
                     <span class="n">_temp_plug_name</span><span class="o">=</span><span class="n">temp_plug_name</span><span class="p">,</span> <span class="n">from_redo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;export_plugs&quot;</span><span class="p">:</span>
-                <span class="c1"># No redo possible</span>
-                <span class="k">pass</span>
 
             <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;remove_plug&quot;</span><span class="p">:</span>
                 <span class="n">temp_plug_name</span> <span class="o">=</span> <span class="n">to_redo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1684,12 +1679,14 @@
                 <span class="c1"># Connecting all the plugs that were connected</span>
                 <span class="c1"># to the original plugs</span>
                 <span class="k">for</span> <span class="n">plug_tuple</span> <span class="ow">in</span> <span class="n">new_temp_plugs</span><span class="p">:</span>
+
                     <span class="c1"># Checking if the original plug is a pipeline</span>
                     <span class="c1"># input or output to adapt</span>
                     <span class="c1"># the links to add.</span>
                     <span class="k">if</span> <span class="n">temp_plug_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;inputs&#39;</span><span class="p">:</span>
                         <span class="n">source</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">temp_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                         <span class="n">dest</span> <span class="o">=</span> <span class="n">plug_tuple</span>
+
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">source</span> <span class="o">=</span> <span class="n">plug_tuple</span>
                         <span class="n">dest</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">temp_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -1988,7 +1985,6 @@
 <span class="sd">            - add_link</span>
 <span class="sd">            - delete_link</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">c_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span>
 
         <span class="c1"># We can undo if we have an action to revert</span>
@@ -2009,22 +2005,21 @@
                 <span class="n">c_e</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span>
                     <span class="n">class_name</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">from_undo</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="n">links</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;export_plug&quot;</span><span class="p">:</span>
-                <span class="n">temp_plug_name</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">c_e</span><span class="o">.</span><span class="n">_remove_plug</span><span class="p">(</span>
-                    <span class="n">_temp_plug_name</span><span class="o">=</span><span class="n">temp_plug_name</span><span class="p">,</span> <span class="n">from_undo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
             <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;export_plugs&quot;</span><span class="p">:</span>
-                <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">parameters</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">node_name</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameter_list</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">parameters</span><span class="o">=</span> <span class="p">[</span><span class="n">parameters</span><span class="p">]</span>
+
+                <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
                     <span class="n">temp_plug_name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
-                    <span class="n">c_e</span><span class="o">.</span><span class="n">_remove_plug</span><span class="p">(</span>
-                        <span class="n">_temp_plug_name</span><span class="o">=</span><span class="n">temp_plug_name</span><span class="p">,</span>
-                        <span class="n">from_undo</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">from_export_plugs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">c_e</span><span class="o">.</span><span class="n">_remove_plug</span><span class="p">(</span><span class="n">_temp_plug_name</span><span class="o">=</span><span class="n">temp_plug_name</span><span class="p">,</span>
+                                     <span class="n">from_undo</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">from_export_plugs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-                    <span class="s2">&quot;Plugs </span><span class="si">{0}</span><span class="s2"> have been removed.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)))</span>
+                    <span class="s2">&quot;Plugs </span><span class="si">{0}</span><span class="s2"> have been removed.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">parameters</span><span class="p">)))</span>
 
             <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;remove_plug&quot;</span><span class="p">:</span>
                 <span class="n">temp_plug_name</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
