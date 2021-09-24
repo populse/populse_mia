@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.test &#8212; populse_mia 2.0.0-dev+253aa585 documentation</title>
+    <title>populse_mia.test &#8212; populse_mia 2.0.0-dev+546718f1 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+253aa585',
+        VERSION:     '2.0.0-dev+546718f1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+253aa585 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+546718f1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -2288,41 +2288,25 @@
 
 
 <div class="viewcode-block" id="TestMIAPipelineManager.test_process_library"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAPipelineManager.test_process_library">[docs]</a>    <span class="k">def</span> <span class="nf">test_process_library</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="c1">#        &quot;&quot;&quot;</span>
+<span class="c1">#        Install the brick_test and mia_processes libraries and then remove them</span>
+<span class="c1">#        &quot;&quot;&quot;</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Install the brick_test and mia_processes libraries and then remove them</span>
+<span class="sd">        Install the brick_test and then remove it</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span>
 
-
-        <span class="c1">#input(&#39;1&#39;)</span>
-
         <span class="n">pkg</span> <span class="o">=</span> <span class="n">InstallProcesses</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        
-
-        <span class="c1">#input(&#39;2&#39;)</span>
-
-        
         <span class="n">brick</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;resources&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;mia&#39;</span><span class="p">,</span> <span class="s1">&#39;brick_test.zip&#39;</span><span class="p">)</span>
-
-        <span class="c1">#input(&#39;3&#39;)</span>
-        
+                             <span class="s1">&#39;mia&#39;</span><span class="p">,</span> <span class="s1">&#39;brick_test.zip&#39;</span><span class="p">)</span>
         <span class="n">pkg</span><span class="o">.</span><span class="n">path_edit</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">brick</span>
         <span class="n">pkg</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
 
-
-        <span class="c1">#input(&#39;4&#39;)</span>
-        
         <span class="n">pkg</span> <span class="o">=</span> <span class="n">PackageLibraryDialog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="p">)</span>
-        <span class="n">pkg</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;mia_processes&quot;</span>
-        <span class="n">pkg</span><span class="o">.</span><span class="n">add_package_with_text</span><span class="p">()</span>
-
-        <span class="c1">#input(&#39;5&#39;)</span>
-        
+        <span class="c1">#pkg.line_edit.text = lambda: &quot;mia_processes&quot;</span>
+        <span class="c1">#pkg.add_package_with_text()</span>
         <span class="n">pkg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-
-        <span class="c1">#input(&#39;6&#39;)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;properties&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;process_config.yml&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
@@ -2333,12 +2317,13 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">pro_dic</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">,</span> <span class="n">pro_dic</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">])</span>
+            <span class="c1">#self.assertIn(&quot;mia_processes&quot;, pro_dic[&quot;Packages&quot;])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;brick_test&quot;</span><span class="p">,</span> <span class="n">pro_dic</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">])</span>
 
-        <span class="n">pkg</span><span class="o">.</span><span class="n">remove_package</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">)</span>
+        <span class="c1">#pkg.remove_package(&quot;mia_processes&quot;)</span>
         <span class="n">pkg</span><span class="o">.</span><span class="n">remove_package</span><span class="p">(</span><span class="s2">&quot;brick_test&quot;</span><span class="p">)</span>
         <span class="n">pkg</span><span class="o">.</span><span class="n">save_config</span><span class="p">()</span>
+
         <span class="n">process</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;processes&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;brick_test&#39;</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">process</span><span class="p">)</span>
@@ -2353,9 +2338,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">pro_dic</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">,</span> <span class="n">pro_dic</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">])</span>
+            <span class="c1">#self.assertNotIn(&quot;mia_processes&quot;, pro_dic[&quot;Packages&quot;])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s2">&quot;brick_test&quot;</span><span class="p">,</span> <span class="n">pro_dic</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">])</span></div>
-
 
 <div class="viewcode-block" id="TestMIAPipelineManager.test_save_pipeline"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAPipelineManager.test_save_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">test_save_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
