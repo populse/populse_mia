@@ -19,6 +19,8 @@ install:
   - "pip install --upgrade pywavelets"
   - "pip install pypiwin32"
   - "pip install \"scipy<1.5\""
+  - "pip install coverage"
+  - "pip install codecov"
   - "python setup.py install"
   - "git lfs install"
   - "git lfs pull"
@@ -41,6 +43,10 @@ install:
 test_script:
   - "python --version"
   - "python .\\python\\populse_mia\\test.py -v"
+  - "coverage run .\\python\\populse_mia\\test.py -v"
+
+after_test:
+  - "codecov"
 
 notifications:
   - provider: Email
