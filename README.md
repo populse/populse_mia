@@ -2,7 +2,7 @@
 	<img src="https://github.com/populse/populse_mia/blob/master/python/populse_mia/sources_images/Logo_populse_mia_HR.jpeg" alt="populse_mia logo" height="220" width="300">
 </p>
 
-#[![](https://travis-ci.com/populse/populse_mia.svg?branch=master)](https://app.travis-ci.com/github/populse/populse_mia)
+[//]: [![](https://travis-ci.com/populse/populse_mia.svg?branch=master)](https://app.travis-ci.com/github/populse/populse_mia)
 [![](https://ci.appveyor.com/api/projects/status/2km9ddxkpfkgra7v?svg=true)](https://ci.appveyor.com/project/populse/populse-mia)
 [![](https://codecov.io/github/populse/populse_mia/coverage.svg?branch=master)](https://codecov.io/github/populse/populse_mia)
 [![](https://img.shields.io/badge/license-CeCILL-blue.svg)](https://github.com/populse/populse_mia/blob/master/LICENSE)
@@ -71,7 +71,6 @@ If you'd like to contribute to the project please read our [developer documentat
 * scikit-image
 * scipy
 * SIP
-* sqlalchemy
 * snakeviz
 * soma_workflow
 * traits
