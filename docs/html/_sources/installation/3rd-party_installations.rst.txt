@@ -175,7 +175,7 @@ Installation of Populse in python3 virtual environment
      python -m venv ~/DEV/py3env
      source ~/DEV/py3env/bin/activate
      # For python modules requirements look at https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py of populse_mia
-     pip install wheel pyyaml traits==5.2.0 sqlalchemy lark-parser nibabel scikit-image nipype
+     pip install wheel pyyaml traits==5.2.0 lark-parser nibabel scikit-image nipype
      # if you want an enhanced python editor/debugger, ie spyder
      pip install spyder
      # to launch it
