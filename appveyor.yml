@@ -4,7 +4,7 @@ environment:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: "C:\\Python37"
-      APPVEYOR_RDP_PASSWORD: "RoueN76!"
+#      APPVEYOR_RDP_PASSWORD:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       PYTHON: "$HOME/venv3.7"
@@ -80,17 +80,13 @@ install:
 
 test_script:
   - cmd: python .\\python\\populse_mia\\test.py -v
-  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python3 ./python/populse_mia/test.py -v; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then python3 ./python/populse_mia/test.py -v; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python3 ./python/populse_mia/test.py -v; fi
 
-  - cmd: coverage run .\\python\\populse_mia\\test.py -v
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./python/populse_mia/test.py -v; fi
-  - sh: if [[ $(uname -s) == Darwin ]]; then coverage run ./python/populse_mia/test.py -v; fi
 
 after_test:
-  - cmd: codecov
-  - sh: codecov
-  
+  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
 
 notifications:
   - provider: Email
