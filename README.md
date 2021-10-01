@@ -7,6 +7,7 @@
 [![codecov](https://codecov.io/gh/populse/populse_mia/branch/master/graph/badge.svg?token=40NTt0KVVV)](https://codecov.io/gh/populse/populse_mia)
 [![](https://img.shields.io/badge/license-CeCILL-blue.svg)](https://github.com/populse/populse_mia/blob/master/LICENSE)
 [![](https://img.shields.io/pypi/v/populse_mia.svg)](https://pypi.org/project/populse-mia/)
+[![](https://pypip.in/status/populse_mia/badge.png)](https://pypi.python.org/pypi/populse-mia/)
 [![](https://img.shields.io/badge/python-3.6%2C%203.7%2C%203.8-yellow.svg)](#)
 [![](https://img.shields.io/badge/platform-Linux%2C%20OSX%2C%20Windows-orange.svg)](#)
 
