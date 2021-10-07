@@ -30,7 +30,7 @@ In the following we propose exclusively for linux the use of a Singularity conta
 
 
 MacOS (VirtualBox)
-=====
+====================
 
 While waiting for a working version of Singularity for Mac, here the procedure to use VirtualBox :
 
@@ -109,35 +109,58 @@ there is still a problem to be solved: Anatomist does not work in populse
 **
 
 
-MacOS (SingularityCE Vagrant Box)
-=====
 
-** not finished **
+MacOS (SingularityCE Vagrant Box)
+===================================
+
+Under MacOS High Sierra (10.13.6), Singularity Vagrant Box seems to work well enough and better than with VirtualBox.
 
 A - Install Vagrant:
 
 	1 - brew tap hashicorp/tap
 	2 - brew install vagrant
-	
-B - Install SingularityCE Vagrant Box:
+
+B - Install Xquartz:
+
+	1 - go to https://www.xquartz.org and download XQuartz-2.8.1.dmg
+	2 - Install it
+	3 - cd /etc/ssh
+	4 - sudo nano ssh_config
+	5 - add 'ForwardX11 yes' in Host * section
+	6 - reboot machine
+
+C - Install SingularityCE Vagrant Box:
 
 	1 - mkdir vm-singularity && cd vm-singularity
 	2 - export VM=sylabs/singularity-ce-3.8-ubuntu-bionic64 && vagrant init $VM && vagrant up && vagrant ssh
-	
-C - Install Brainvisa:
+	3 - exit (exit vagrant)
 
-	1 - mkdir brainvisa-5.0.2 && cd brainvisa-5.0.2
-	2 - wget https://brainvisa.info/download/brainvisa-5.0.2.sif
-	3 - singularity run -B .:/casa/setup brainvisa-5.0.2.sif
-	4 - export PATH="$HOME/brainvisa-5.0.2/bin:$PATH"
-	
-**
-after these steps when we type the 'bv'command, we have this error message : 
+D - Install Brainvisa
 
-	QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-vagrant'
-	qt.qpa.screen: QXcbConnection: Could not connect to display 
-	Could not connect to any X display.
-**
+	1 - cd  vm-singularity
+	2 - vagrant up && vagrant ssh (the 'vagrant@vagrant' prompt appears and XQuartz is launched)
+	3 - mkdir casa-dev-5.0.4 && cd casa-dev-5.0.4
+	4 - wget https://brainvisa.info/download/casa-dev-5.0-4.sif
+	5 - singularity run -B .:/casa/setup casa-dev-5.0-4.sif branch=master distro=opensource
+	4 - cd conf/
+	5 - nano bv_maker.cfg
+	6 - add cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3 in the [ build $CASA_BUILD ] section
+	7 - cd
+	8 - nano .bashrc
+	9 - add export PATH="$HOME/casa-dev-5.0.4/bin:$PATH" 
+	10 - bv_maker (this step is long)
+
+E - Install Populse-mia
+
+	1 - bv bash (the 'opensource-master' prompt appears)
+	2 - cd
+	3 - mkdir Mia && cd Mia
+	4 - git clone https://github.com/populse/populse_mia.git
+	5 - git clone https://github.com/populse/mia_processes.git
+	6 - git clone https://github.com/populse/soma-base.git
+	7 - git clone https://github.com/populse/soma-workflow.git
+	8 - git clone https://github.com/populse/populse_db.git
+
 
 Windows
 =======
