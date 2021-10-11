@@ -170,7 +170,7 @@ Created Friday 01 October 2021
 
 Before everything, we need to have WSL (windows Subsystem Linux). With this we can install a linux ubuntu.
 
-==== WSL2 (Windows Subsystem Linux) installation ====
+#### WSL2 (Windows Subsystem Linux) installation
 
 	* Windows 10 must be up to date
 	* You need to have enough free space on your system disk : around 20 Gb
@@ -199,8 +199,8 @@ To know more :
 	* [[https://docs.microsoft.com/en-us/windows/wsl/install|Install WSL]]
 	* [[https://docs.microsoft.com/en-us/windows/wsl/basic-commands|Basic commands for WSL]]
 
+#### Installation d’un serveur X sous windows avec VcXsrv 
 
-==== Installation d’un serveur X sous windows avec VcXsrv ====
 We also need a X windows serveur to allow linux applications graphic user interface (GUI) works
 
 Get VcXsrv https://sourceforge.net/projects/vcxsrv/files/latest/download
@@ -215,8 +215,7 @@ and at the end :
 
 Allow access asked by WIndows Firewall
 
-
-==== Singularity Installation ====
+#### Singularity Installation 
 
 On ubuntu, at this time (27-08-2021) there is no package for singularity
 
@@ -282,12 +281,10 @@ Test it with :
 	''/opt/singularity/bin/singularity version''
 
 
-==== singularity BrainVisa image installation ====
+#### Singularity BrainVisa image installation
 
-pour cela il faut avoir l’image .sif en ecriture et brainvisa compatible python 3, QT5, Récupérer l’image développeur de brainvisa
+For this we need the brainvisa singularity image compatible with python 3, QT5
  
-voir doc : https://github.com/populse/populse_mia/blob/master/developer_doc/UsingVirtualisation.md
-
 ==== Installation du conteneur singularity brainvisa_dev==casa-distro_dev : ====
 this allow to have a anatomist viewer in populse_mia
 
@@ -315,9 +312,9 @@ bv_maker
 
 sudo apt-get install python3-dev 
 
-# require for mri_conv
+**require for mri_conv**
 sudo apt install openjdk-14-jre-headless
-# to use a python3 virtual environment
+**to use a python3 virtual environment**
 sudo apt install python3-venv git git-lfs
 
 mkdir ~/DEV
