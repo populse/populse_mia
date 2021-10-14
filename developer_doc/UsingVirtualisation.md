@@ -30,7 +30,7 @@ In the following we propose exclusively for linux the use of a Singularity conta
 
 
 MacOS (VirtualBox)
-====================
+==================
 
 While waiting for a working version of Singularity for Mac, here the procedure to use VirtualBox :
 
@@ -148,7 +148,7 @@ D - Install Brainvisa
 	7 - cd
 	8 - nano .bashrc
 	9 - add export PATH="$HOME/casa-dev-5.0.4/bin:$PATH" 
-	10 - bv_maker (this step is long)
+	10 - bv_maker #(this step takes a long time)
 
 E - Install Populse-mia
 
@@ -164,108 +164,119 @@ E - Install Populse-mia
 
 Windows
 =======
+Here you find documentation to install Populse_MIA in Windows 10.
+We use virtualization with Singularity or with VirtualBox.
 
-====== Singularity ======
-Created Friday 01 October 2021
 
-Before everything, we need to have WSL (windows Subsystem Linux). With this we can install a linux ubuntu.
+## Windows 10, Singularity
 
-#### WSL2 (Windows Subsystem Linux) installation
+Before everything, we need to have WSL (Windows Subsystem Linux). With this we can install a linux Ubuntu.
 
-	* Windows 10 must be up to date
-	* You need to have enough free space on your system disk : around 20 Gb
-	* open a powershell as administrator (right clic on powershell icon) :
-		''wsl --install -d Ubuntu-20.04''
 
-	{{./pasted_image.png}}
-	
-	* Reboot the computer	
-	* Normaly a linux ubuntu window is already available, enter it :
-		* tape a user / pwd who will be administrator of this linux
-		* then you can write your first commands to make ubuntu up to date :
-		'''
+#### 1 - WSL2 (Windows Subsystem Linux) installation
+
+   - Windows 10 must be up to date
+   - You need to have enough free space on your system disk : around 20 Gb
+   - Open a powershell as administrator (right clic on powershell icon) :
+    	- `wsl --install -d Ubuntu-20.04`
+
+{{./pasted_image.png}}
+
+   - Reboot the computer	
+   - Normaly a linux ubuntu window is already available, enter it:
+        - tape a user / pwd who will be administrator of this linux
+        - then you can write your first commands to make ubuntu up to date:
+		```
 		sudo apt update
 		#at this first sudo command, the system may ask you to enter the password you just enter before.
 		sudo apt upgrade -y
 		exit
-		'''
+		```
+   - close this window
 
-	* close this window
+Usefull : in the Ubuntu WSL Windows terminal, we can access windows files via `/mnt/c/`
 
-Usefull : in the Ubuntu wsl Windows terminal, we can access windows files via [[/mnt/c/]]
+To know more:
+   - [Manual installation steps for older versions of WSL](https://docs.microsoft.com/en-us/windows/wsl/install-manual)
+   - [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
+   - [Basic commands for WSL](https://docs.microsoft.com/en-us/windows/wsl/basic-commands)
 
-To know more :  
-	* [[https://docs.microsoft.com/en-us/windows/wsl/install-manual|Manual installation steps for older versions of WSL]]
-	* [[https://docs.microsoft.com/en-us/windows/wsl/install|Install WSL]]
-	* [[https://docs.microsoft.com/en-us/windows/wsl/basic-commands|Basic commands for WSL]]
 
-#### Installation d’un serveur X sous windows avec VcXsrv 
+#### 2 - X server installation in windows with VcXsrv 
 
-We also need a X windows serveur to allow linux applications graphic user interface (GUI) works
+We also need a X windows server to allow linux applications graphic user interface (GUI) works
 
-Get VcXsrv https://sourceforge.net/projects/vcxsrv/files/latest/download
-Execute it, click next and install to Install it 
+Get [VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)
+	
+	Execute it, 
+	click 'next' then 'install' to install it 
+
 Looking for XLaunch application icon, launch it
 
 and at the end :
+
 	uncheck Native Opengl
 	check Disable access control
 
 	do 'Save Configuration' in a file that allow you to launch it later
 
-Allow access asked by WIndows Firewall
+Allow access asked by Windows firewall
 
-#### Singularity Installation 
 
-On ubuntu, at this time (27-08-2021) there is no package for singularity
-
-Then to allow singularity installation we need go language and some dependances for compilation :
-	https://singularity.hpcng.org/admin-docs/3.8/
-
-If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig. In that case Singularity can be uninstalled simply by deleting the parent directory. Or it may be useful to install Singularity using a package manager so that it can be updated and/or uninstalled with ease in the future. 
-
-Open an ubuntu session in windows : 
-	click on ubuntu new icon 
-	or 
-	open a normal windows powershell >
-		''ubuntu.20.04.exe''
+#### 3 - Dependencies Installation 
 
 In Ubuntu window terminal, install the following dependencies:
 
-'''
-sudo apt-get update && sudo apt-get install -y \
-	build-essential python3-dev \
+Open an Ubuntu session in Windows: 
+	click on Ubuntu new icon 
+	or 
+	open a normal windows powershell >
+		`ubuntu.20.04.exe`
+```
+sudo apt install -y \
+	build-essential \
 	uuid-dev \
 	libgpgme-dev \
 	squashfs-tools \
 	libseccomp-dev \
 	wget \
 	pkg-config \
-	git \
+	git git_lfs \
 	cryptsetup-bin \
-	python-is-python3 \
-	golang
+	python3-distutils \
+	python3-dev \
+	python-is-python3 
+```
 
-sudo apt install golang #ubuntu 20.04
-'''
-  need golang version > 1.13 not available on ubuntu 18,04 (1.10 only)		
-		''cd /tmp''
-''	wget https://golang.org/dl/go1.17.linux-amd64.tar.gz''
-''	tar -xzf go1.17.linux-amd64.tar.gz''
-''	chown -R root:root go''
-''	sudo mv go /usr/local/''
-''	rm go1.17.linux-amd64.tar.gz''
+
+#### 4 - Singularity Installation 
+
+On ubuntu, at this time (27-08-2021) there is no package for singularity
+
+Then to allow [singularity installation](https://singularity.hpcng.org/admin-docs/3.8/) we need go language and some dependances for compilation.
+
+If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig. In that case Singularity can be uninstalled simply by deleting the parent directory.
+	
+```
+#Ubuntu 20.04
+	sudo apt install golang 
+
+#Ubuntu 18.04, singularity need golang version > 1.13 wich is not available on ubuntu 18.04 (1.10 only)		
+	cd /tmp''
+	wget https://golang.org/dl/go1.17.linux-amd64.tar.gz''
+	tar -xzf go1.17.linux-amd64.tar.gz''
+	chown -R root:root go''
+	sudo mv go /usr/local/''
+	rm go1.17.linux-amd64.tar.gz''
  
-'''
 echo 'export GOPATH=${HOME}/go' >> ~/.bashrc 
 echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc 
 source ~/.bashrc
-'''
-
+```
 
 Get singularity :
 
-'''
+```
 export VERSION=3.8.0 && # adjust this as necessary \
 	wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
 	tar -xzf singularity-ce-${VERSION}.tar.gz && \
@@ -275,19 +286,19 @@ sudo mkdir /opt/singularity
 cd /home/gpi/singularity-ce-3.8.0/builddir
 make
 sudo make install
-'''
+```
 
 Test it with : 
-	''/opt/singularity/bin/singularity version''
+
+	`/opt/singularity/bin/singularity version`
 
 
-#### Singularity BrainVisa image installation
+#### 5 - Populse_MIA with BrainVisa Singularity image installation
 
-For this we need the brainvisa singularity image compatible with python 3, QT5
+In the aim to install Populse_MIA with anatomist viewer, we need the Brainvisa dev singularity image compatible with python 3, QT5
  
-==== Installation du conteneur singularity brainvisa_dev==casa-distro_dev : ====
-this allow to have a anatomist viewer in populse_mia
-
+- ##### 5 - 1 - Brainvisa Installation
+```
 mkdir brainvisa_dev_5.0.4
 cd brainvisa_dev_5.0.4
 wget https://brainvisa.info/download/casa-dev-5.0-4.sif
@@ -296,26 +307,22 @@ echo	'export PATH=${PATH}:/opt/singularity/bin/:${HOME}/brainvisa_dev_5.0.4/brai
 source ~/.bashrc
 singularity run -B $HOME/brainvisa_dev_5.0.4/brainvisa_ro:/casa/setup $HOME/brainvisa_dev_5.0.4/casa-dev-5.0-4.sif
 
-echo "export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0" >> ~/.bashrc &&\
-source ~/.bashrc
+# we get the ip address to allow X server access and this ip can change when Windows reboot
+echo "export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0" >> ~/.bashrc && source ~/.bashrc
 
 nano brainvisa_ro/conf/bv_maker.cfg
   cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
   cmake_options += -DDESIRED_QT_VERSION=5
 
-sudo apt install python3-distutils -y 
-
-sudo ln -s python3 /usr/bin/python
-
-bv_maker
-
-
-sudo apt-get install python3-dev 
-
+bv_maker 
+# it takes time to compile
+```
+- ###### 5 - 2 - Populse_MIA Installation
+```
 **require for mri_conv**
 sudo apt install openjdk-14-jre-headless
 **to use a python3 virtual environment**
-sudo apt install python3-venv git git-lfs
+sudo apt install python3-venv
 
 mkdir ~/DEV
 mkdir ~/DEV/populse_dev
@@ -325,6 +332,7 @@ git clone https://github.com/populse/mia_processes
 git clone https://github.com/populse/mri_conv
 
 bv python populse_mia/python/populse_mia/main.py
+```
 
-
+## Windows 10, VirtualBox
 
