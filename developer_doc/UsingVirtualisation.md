@@ -211,16 +211,21 @@ Get [VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)
 	Execute it, 
 	click 'next' then 'install' to install it 
 
-Looking for XLaunch application icon, launch it
+Looking for XLaunch application icon, launch it  
 
-and at the end :
+Configure it like the screenshots below  
 
-	uncheck Native Opengl
-	check Disable access control
+<img src="images/Saved Pictures/Xlaunch_1.png" width=50%>  
 
-	do 'Save Configuration' in a file that allow you to launch it later
+<img src="images/Saved Pictures/Xlaunch_2.png" width=50%>  
 
-Allow access asked by Windows firewall
+<img src="images/Saved Pictures/Xlaunch_3.png" width=50%>  
+
+<img src="images/Saved Pictures/Xlaunch_4.png" width=80%>
+
+do 'Save Configuration' in a file that allow you to launch it later (ie on the Desktop)
+
+Allow access asked by Windows firewall  
 
 
 #### 3 - Dependencies Installation 
@@ -251,12 +256,9 @@ sudo apt install -y \
 
 #### 4 - Singularity Installation 
 
-On ubuntu, at this time (27-08-2021) there is no package for singularity
-
-Then to allow [singularity installation](https://singularity.hpcng.org/admin-docs/3.8/) we need go language and some dependances for compilation.
-
-If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig. In that case Singularity can be uninstalled simply by deleting the parent directory.
-	
+On ubuntu, at this time (27-08-2021) there is no package for singularity  
+Then to allow [singularity installation](https://singularity.hpcng.org/admin-docs/3.8/) we need go language and some dependances for compilation.  
+If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig. In that case Singularity can be uninstalled simply by deleting the parent directory.  
 ```
 #Ubuntu 20.04
 	sudo apt install golang 
@@ -288,8 +290,7 @@ make
 sudo make install
 ```
 
-Test it with : 
-
+Test it with :  
 	`/opt/singularity/bin/singularity version`
 
 
