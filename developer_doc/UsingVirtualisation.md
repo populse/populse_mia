@@ -164,169 +164,171 @@ E - Install Populse-mia
 
 Windows
 =======
-Here you find documentation to install Populse_MIA in Windows 10.
-We use virtualization with Singularity or with VirtualBox.
+Here you find documentation to install Populse_MIA in Windows 10.  
+We use virtualization with Singularity.  
+
+Before everything, we need to have WSL (Windows Subsystem Linux). With this we can install a linux Ubuntu 20.04 or 18.04.  
 
 
-## Windows 10, Singularity
+### 1 - WSL2 (Windows Subsystem Linux) installation
 
-Before everything, we need to have WSL (Windows Subsystem Linux). With this we can install a linux Ubuntu.
-
-
-#### 1 - WSL2 (Windows Subsystem Linux) installation
-
-   - Windows 10 must be up to date
-   - You need to have enough free space on your system disk : around 20 Gb
-   - Open a powershell as administrator (right clic on powershell icon) :
-    	- `wsl --install -d Ubuntu-20.04`
-
-{{./pasted_image.png}}
+   - In an administrator type Windows account:  
+      - Windows 10 must be up to date
+      - You need to have enough free space on your system disk : around 20 Gb
+      - Open a **PowerShell as administrator** (right clic on powershell icon):  
+      - enter `wsl --install -d Ubuntu-20.04` 
+      - <img src="images/screenshots/Windows 10 - PowerShell - WSL2.png" width=80%>  
 
    - Reboot the computer	
-   - Normaly a linux ubuntu window is already available, enter it:
-        - tape a user / pwd who will be administrator of this linux
-        - then you can write your first commands to make ubuntu up to date:
-		```
-		sudo apt update
-		#at this first sudo command, the system may ask you to enter the password you just enter before.
-		sudo apt upgrade -y
-		exit
-		```
+   - Normaly a linux ubuntu window is already available, enter it:  
+      - enter a user / password who will be administrator of this linux (asked by the system)
+      - <img src="images/screenshots/Windows 10 - Ubuntu.png" width=80%>
+      - then you can write your first commands to make ubuntu up to date:  
+```bash
+      sudo apt update
+      #at this first sudo command, the system may ask you to enter the password you just enter before.
+      sudo apt upgrade -y
+      exit
+```
    - close this window
 
-Usefull : in the Ubuntu WSL Windows terminal, we can access windows files via `/mnt/c/`
+Now you have WSL2 and an Ubuntu 20.04 linux.   
+Before you install a new distribution using `wsl --install -d distribution`, make sure that WSL is in 2 mode with:  
+   `wsl --set-default-version 2`  
+The distribution is only available for the current Windows user.  
+Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via `/mnt/c/`  
 
-To know more:
+To know more:  
    - [Manual installation steps for older versions of WSL](https://docs.microsoft.com/en-us/windows/wsl/install-manual)
    - [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
-   - [Basic commands for WSL](https://docs.microsoft.com/en-us/windows/wsl/basic-commands)
+   - [Basic commands for WSL](https://docs.microsoft.com/en-us/windows/wsl/basic-commands)  
 
 
-#### 2 - X server installation in windows with VcXsrv 
 
-We also need a X windows server to allow linux applications graphic user interface (GUI) works
+### 2 - X server installation in windows with VcXsrv 
 
-Get [VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)
-	
-	Execute it, 
-	click 'next' then 'install' to install it 
+We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
 
-Looking for XLaunch application icon, launch it  
+- Get [VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)  
+  - Execute it, 
+  - click 'next' then 'install' to install it 
 
-Configure it like the screenshots below  
+- Looking for XLaunch application icon, launch it  
 
-<img src="images/Saved Pictures/Xlaunch_1.png" width=50%>  
+- Configure it like the screenshots below:
+   - <img src="images/screenshots/Xlaunch_1.png" width=50%>
+   - <img src="images/screenshots/Xlaunch_2.png" width=50%>  
+   - Disable *'Native opengl'*
+   - Enable *'Disable access control'*
+   - <img src="images/screenshots/Xlaunch_3.png" width=50%>
+   - Do *'Save Configuration'* in a file that allow you to launch it later (ie on the Desktop)  
+   - <img src="images/screenshots/Xlaunch_4.png" width=80%>
 
-<img src="images/Saved Pictures/Xlaunch_2.png" width=50%>  
+- Allow access asked by Windows firewall  
+  
+  
+### 3 - Dependencies Installation 
 
-<img src="images/Saved Pictures/Xlaunch_3.png" width=50%>  
+- Open an Ubuntu session in Windows by: 
+   - click on Ubuntu new icon  
+  or 
+   - open a normal Windows PowerShell,  
+  enter `ubuntu.20.04.exe`
 
-<img src="images/Saved Pictures/Xlaunch_4.png" width=80%>
+- In this Ubuntu window terminal, install the following dependencies:  
 
-do 'Save Configuration' in a file that allow you to launch it later (ie on the Desktop)
-
-Allow access asked by Windows firewall  
-
-
-#### 3 - Dependencies Installation 
-
-In Ubuntu window terminal, install the following dependencies:
-
-Open an Ubuntu session in Windows: 
-	click on Ubuntu new icon 
-	or 
-	open a normal windows powershell >
-		`ubuntu.20.04.exe`
-```
-sudo apt install -y \
-	build-essential \
-	uuid-dev \
-	libgpgme-dev \
-	squashfs-tools \
-	libseccomp-dev \
-	wget \
-	pkg-config \
-	git git_lfs \
-	cryptsetup-bin \
-	python3-distutils \
-	python3-dev \
-	python-is-python3 
+```bash
+   sudo apt install -y build-essential uuid-dev libgpgme-dev squashfs-tools libseccomp-dev wget pkg-config git git-lfs cryptsetup-bin python3-distutils python3-dev 
+   # Ubuntu 20.04
+   sudo apt install python-is-python3
+   # Ubuntu 18.04
+   sudo ln -s python3 /usr/bin/python
 ```
 
 
-#### 4 - Singularity Installation 
+### 4 - Singularity Installation 
 
 On ubuntu, at this time (27-08-2021) there is no package for singularity  
 Then to allow [singularity installation](https://singularity.hpcng.org/admin-docs/3.8/) we need go language and some dependances for compilation.  
 If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig. In that case Singularity can be uninstalled simply by deleting the parent directory.  
-```
+```bash
 #Ubuntu 20.04
-	sudo apt install golang 
+	sudo apt install -y golang 
 
-#Ubuntu 18.04, singularity need golang version > 1.13 wich is not available on ubuntu 18.04 (1.10 only)		
-	cd /tmp''
-	wget https://golang.org/dl/go1.17.linux-amd64.tar.gz''
-	tar -xzf go1.17.linux-amd64.tar.gz''
-	chown -R root:root go''
-	sudo mv go /usr/local/''
-	rm go1.17.linux-amd64.tar.gz''
+#Ubuntu 18.04, singularity need golang version >= 1.13 wich is not available on ubuntu 18.04 (1.10 only)		
+	cd /tmp &&\
+	wget https://golang.org/dl/go1.17.linux-amd64.tar.gz &&\
+	tar -xzf go1.17.linux-amd64.tar.gz &&\
+	sudo chown -R root:root go &&\
+	sudo mv go /usr/local/ &&\
+	rm go1.17.linux-amd64.tar.gz 
  
-echo 'export GOPATH=${HOME}/go' >> ~/.bashrc 
-echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc 
+echo 'export GOPATH=${HOME}/go' >> ~/.bashrc &&\
+echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc  &&\
 source ~/.bashrc
 ```
 
 Get singularity :
 
-```
+```bash
 export VERSION=3.8.0 && # adjust this as necessary \
 	wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
 	tar -xzf singularity-ce-${VERSION}.tar.gz && \
 	cd singularity-ce-${VERSION}
 sudo mkdir /opt/singularity
-./mconfig –prefix=/opt/singularity
-cd /home/gpi/singularity-ce-3.8.0/builddir
+./mconfig --prefix=/opt/singularity
+cd builddir
 make
 sudo make install
 ```
 
 Test it with :  
-	`/opt/singularity/bin/singularity version`
+```bash
+/opt/singularity/bin/singularity version
+```
+Then remove installation files:  
+```bash
+cd ../.. &&\  
+rm -R singularity-ce-${VERSION}*
+```
 
 
-#### 5 - Populse_MIA with BrainVisa Singularity image installation
+### 5 - Populse_MIA with BrainVisa Singularity image installation
 
 In the aim to install Populse_MIA with anatomist viewer, we need the Brainvisa dev singularity image compatible with python 3, QT5
  
-- ##### 5 - 1 - Brainvisa Installation
-```
-mkdir brainvisa_dev_5.0.4
-cd brainvisa_dev_5.0.4
+- #### 5 - 1 - Brainvisa Installation
+```bash
+mkdir ~/brainvisa_dev_5.0.4
+cd ~/brainvisa_dev_5.0.4
 wget https://brainvisa.info/download/casa-dev-5.0-4.sif
 mkdir brainvisa_ro
 echo	'export PATH=${PATH}:/opt/singularity/bin/:${HOME}/brainvisa_dev_5.0.4/brainvisa_ro/bin' >> ~/.bashrc &&\
 source ~/.bashrc
-singularity run -B $HOME/brainvisa_dev_5.0.4/brainvisa_ro:/casa/setup $HOME/brainvisa_dev_5.0.4/casa-dev-5.0-4.sif
+singularity run -B brainvisa_ro:/casa/setup casa-dev-5.0-4.sif branch=master distro=opensource
 
 # we get the ip address to allow X server access and this ip can change when Windows reboot
-echo "export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0" >> ~/.bashrc && source ~/.bashrc
+echo "export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')" >> ~/.bashrc && source ~/.bashrc
 
 nano brainvisa_ro/conf/bv_maker.cfg
-  cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
-  cmake_options += -DDESIRED_QT_VERSION=5
+  [ build $CASA_BUILD ]
+     cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
+     cmake_options += -DDESIRED_QT_VERSION=5
 
 bv_maker 
 # it takes time to compile
 ```
-- ###### 5 - 2 - Populse_MIA Installation
-```
-**require for mri_conv**
-sudo apt install openjdk-14-jre-headless
-**to use a python3 virtual environment**
-sudo apt install python3-venv
 
-mkdir ~/DEV
-mkdir ~/DEV/populse_dev
+- #### 5 - 2 - Populse_MIA Installation
+```bash
+### require for mri_conv ###
+#Ubuntu 18.04
+sudo apt install -y openjdk-14-jre-headless
+#Ubuntu 20.04
+sudo apt install -y openjdk-16-jre-headless
+
+mkdir ~/DEV &&\
+mkdir ~/DEV/populse_dev &&\
 cd ~/DEV/populse_dev
 git-lfs clone https://github.com/populse/populse_mia.git #git-lfs allow icons and other ressources to be download
 git clone https://github.com/populse/mia_processes
@@ -334,6 +336,4 @@ git clone https://github.com/populse/mri_conv
 
 bv python populse_mia/python/populse_mia/main.py
 ```
-
-## Windows 10, VirtualBox
 
