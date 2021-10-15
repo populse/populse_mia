@@ -322,10 +322,7 @@ bv_maker
 - #### 5 - 2 - Populse_MIA Installation
 ```bash
 ### require for mri_conv ###
-#Ubuntu 18.04
-sudo apt install -y openjdk-14-jre-headless
-#Ubuntu 20.04
-sudo apt install -y openjdk-16-jre-headless
+sudo apt install -y openjdk-17-jre-headless
 
 mkdir ~/DEV &&\
 mkdir ~/DEV/populse_dev &&\
