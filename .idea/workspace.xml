@@ -1,267 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="5721660a-f86e-4b3e-b40e-c50a858aff24" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/developer_doc/sphinx_tutorial.md" beforeDir="false" afterPath="$PROJECT_DIR$/developer_doc/sphinx_tutorial.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/create_process.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/create_process.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/data_browser.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/data_browser.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/developer_documentation.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/developer_documentation.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/documentation.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/documentation.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/mri_file_manager.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/mri_file_manager.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/pipeline_example.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/pipeline_example.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/pipeline_manager.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/pipeline_manager.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/preferences.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/preferences.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/documentation/user_documentation.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/documentation/user_documentation.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/environment.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/environment.pickle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/index.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/index.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/installation/developer_installation.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/installation/developer_installation.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/installation/installation.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/installation/installation.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/installation/user_installation.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/installation/user_installation.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.data_browser.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.data_browser.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.image_viewer.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.image_viewer.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.main_window.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.main_window.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.pipeline_manager.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.pipeline_manager.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.pop_ups.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.pop_ups.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.project.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.project.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.software_properties.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.software_properties.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doctrees/populse_mia.utils.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doctrees/populse_mia.utils.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/.buildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/.buildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/advanced_search.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/advanced_search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/count_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/count_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/data_browser.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/data_browser.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/mini_viewer.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/mini_viewer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/modify_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/modify_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/rapid_search.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/data_browser/rapid_search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/main_window/main_window.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/main_window/main_window.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/iteration_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/iteration_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/node_controller.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/node_controller.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/pipeline_editor.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/pipeline_editor.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/pipeline_manager_tab.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/pipeline_manager_tab.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/process_library.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/process_library.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/process_mia.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pipeline_manager/process_mia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_add_path.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_add_path.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_add_tag.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_add_tag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_clone_tag.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_clone_tag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_close_pipeline.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_close_pipeline.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_data_browser_current_selection.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_data_browser_current_selection.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_filter_selection.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_filter_selection.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_information.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_information.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_multiple_sort.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_multiple_sort.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_new_project.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_new_project.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_open_project.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_open_project.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_preferences.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_preferences.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_properties.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_properties.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_quit.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_quit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_remove_tag.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_remove_tag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_save_project_as.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_save_project_as.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_see_all_projects.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_see_all_projects.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_filter.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_filter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_iteration.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_iteration.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_tag.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_tag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_tag_count_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_select_tag_count_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_show_brick.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_show_brick.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_tag_selection.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_tag_selection.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_visualized_tags.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/pop_ups/pop_up_visualized_tags.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/controller.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/controller.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/database_mia.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/database_mia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/filter.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/filter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/project.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/project/project.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/software_properties/config.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/software_properties/config.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/software_properties/saved_projects.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/software_properties/saved_projects.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/utils/tools.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/utils/tools.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_modules/populse_mia/utils/utils.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_modules/populse_mia/utils/utils.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/documentation/create_process.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/documentation/create_process.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.data_browser.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.data_browser.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.main_window.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.main_window.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.pipeline_manager.capsul_files.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.pipeline_manager.capsul_files.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.pipeline_manager.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.pipeline_manager.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.pop_ups.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.pop_ups.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.project.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.project.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.software_properties.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.software_properties.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.src.modules.main_window.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.src.modules.main_window.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_sources/populse_mia.utils.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_sources/populse_mia.utils.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/_static/documentation_options.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/_static/documentation_options.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/create_process.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/create_process.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/data_browser.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/data_browser.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/developer_documentation.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/developer_documentation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/documentation.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/documentation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/mri_file_manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/mri_file_manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/pipeline_example.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/pipeline_example.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/pipeline_manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/pipeline_manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/preferences.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/preferences.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/documentation/user_documentation.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/documentation/user_documentation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/genindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/genindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/installation/developer_installation.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/installation/developer_installation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/installation/installation.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/installation/installation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/installation/user_installation.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/installation/user_installation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/modules.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/modules.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/objects.inv" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/objects.inv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.data_browser.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.data_browser.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.image_viewer.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.image_viewer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.main_window.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.main_window.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.pipeline_manager.capsul_files.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.pipeline_manager.capsul_files.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.pipeline_manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.pipeline_manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.pop_ups.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.pop_ups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.project.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.project.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.software_properties.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.software_properties.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.src.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.src.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.src.modules.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.src.modules.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.src.modules.main_window.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.src.modules.main_window.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/populse_mia.utils.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/populse_mia.utils.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/py-modindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/py-modindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/html/searchindex.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/html/searchindex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/conf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/documentation/create_process.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/documentation/create_process.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.data_browser.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.data_browser.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.main_window.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.main_window.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.pipeline_manager.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.pipeline_manager.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.pop_ups.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.pop_ups.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.project.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.project.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.software_properties.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.software_properties.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/populse_mia.utils.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/populse_mia.utils.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/properties/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/properties/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/data_manager/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/data_manager/data_loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/data_manager/database_mia.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/data_manager/database_mia.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/data_manager/filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/data_manager/filter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/data_manager/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/data_manager/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/data_manager/project_properties.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/data_manager/project_properties.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/install_mia.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/install_mia.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/install_processes.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/install_processes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/software_properties.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/software_properties.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/count_table.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/count_table.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/data_browser.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/data_browser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/mini_viewer.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/mini_viewer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/modify_table.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/modify_table.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/rapid_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/rapid_search.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/main_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/iteration_table.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/iteration_table.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/pipeline_editor.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/pipeline_editor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/process_library.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/process_library.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/process_mia.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/process_mia.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/user_interface/pop_ups.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/user_interface/pop_ups.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/utils/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/utils/tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/populse_mia/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/populse_mia/utils/utils.py" afterDir="false" />
-    </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="5721660a-f86e-4b3e-b40e-c50a858aff24" name="Default Changelist" comment="'correct hasattr typo'" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="60" column="57" selection-start-line="60" selection-start-column="57" selection-end-line="60" selection-end-column="57" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/software_properties.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-106">
-              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
-              <folding>
-                <element signature="e#625#634#0" expanded="true" />
-                <element signature="e#733#20439#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/user_interface/pipeline_manager/process_mia.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="170" column="49" lean-forward="true" selection-start-line="170" selection-start-column="49" selection-end-line="170" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/data_browser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1418">
-              <caret line="2270" column="78" lean-forward="true" selection-start-line="2270" selection-start-column="78" selection-end-line="2270" selection-end-column="78" />
-              <folding>
-                <element signature="e#695#705#0" expanded="true" />
-                <element signature="e#82780#85230#0" />
-                <element signature="e#85272#85803#0" />
-                <element signature="e#85868#87080#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/user_interface/data_browser/modify_table.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="27" lean-forward="true" selection-start-line="25" selection-start-column="27" selection-end-line="25" selection-end-column="27" />
-              <folding>
-                <element signature="e#398#427#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/data_manager/project.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="691" column="25" lean-forward="true" selection-start-line="691" selection-start-column="25" selection-end-line="691" selection-end-column="25" />
-              <folding>
-                <element signature="e#521#530#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/utils/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
-              <caret line="259" column="36" lean-forward="true" selection-start-line="259" selection-start-column="36" selection-end-line="259" selection-end-column="36" />
-              <folding>
-                <element signature="e#398#408#0" expanded="true" />
-                <element signature="e#1119#3836#0" />
-                <element signature="e#3714#4047#0" />
-                <element signature="e#4099#4544#0" />
-                <element signature="e#4594#7350#0" />
-                <element signature="e#7403#7707#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/populse_mia/data_manager/filter.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-60">
-              <caret line="26" column="11" selection-start-line="26" selection-start-column="11" selection-end-line="26" selection-end-column="11" />
-              <folding>
-                <element signature="e#587#638#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -430,18 +177,6 @@
       <recent name="$PROJECT_DIR$/python/populse_mia/user_interface" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="populse_mia" />
@@ -525,6 +260,9 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/python/populse_mia/user_interface/pop_ups/pop_up_data_browser_current_selection.py" />
