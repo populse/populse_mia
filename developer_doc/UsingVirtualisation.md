@@ -308,7 +308,9 @@ source ~/.bashrc
 singularity run -B brainvisa_ro:/casa/setup casa-dev-5.0-4.sif branch=master distro=opensource
 
 # we get the ip address to allow X server access and this ip can change when Windows reboot
-echo "export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')" >> ~/.bashrc && source ~/.bashrc
+nano ~/.bashrc
+	export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')
+source ~/.bashrc
 
 nano brainvisa_ro/conf/bv_maker.cfg
   [ build $CASA_BUILD ]
