@@ -30,20 +30,21 @@ In the following we propose exclusively for linux the use of a Singularity conta
 
 
 
+
 MacOS (SingularityCE Vagrant Box)
 ===================================
 
 Under MacOS High Sierra (10.13.6), Singularity Vagrant Box seems to work well enough, better than VirtualBox alone.
 
-A - Install a Vagrant provider like VirtualBox (if not already installed) :
+A - Install a Vagrant provider like VirtualBox (if not already installed):
 
 	1 - Download VirtualBox OSX dmg file [here](https://www.virtualbox.org/wiki/Downloads)
 	2 - Open it and Install it 
 	3 - Maybe you'll need to allow this Oracle application in Preferences Panel then Security icon
 
-B - Install Homebrew (if not already installed) :
+B - Install Homebrew (if not already installed):
 
-	1 - In a Terminal (in Applications/Utilities) enter :
+	1 - In a Terminal (in Applications/Utilities) enter:
 	2 - ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 C - Install Vagrant:
@@ -81,10 +82,10 @@ F - Install Brainvisa
 	8 - >source ~/.bashrc
 	9 - >bv_maker #(this step takes a long time 30mn to 2h)
 
-F - Install Populse-mia
+G - Install Populse-mia
 
 	1 - >bv bash 
-	2 - the 'opensource-master' prompt appears >>
+	2 - the 'opensource-master' prompt appears represented here by >>
 	3 - >>cd
 	4 - >>mkdir Mia && cd Mia
 	5 - >>git clone https://github.com/populse/populse_mia.git
