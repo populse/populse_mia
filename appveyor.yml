@@ -43,6 +43,7 @@ install:
   - sh: pip3 install 'scipy<1.5'
 
   - pip install codecov
+  - pip install --upgrade --force-reinstall pyparsing==2.4.7
   - python setup.py install
   - git lfs install
   - git lfs pull
