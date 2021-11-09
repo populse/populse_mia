@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.0.0-dev+487845bc documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0-dev+487845bc',
+        VERSION:     '2.0.0-dev+93bc52b1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+487845bc documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1192,7 +1192,6 @@
         <span class="k">for</span> <span class="n">project</span> <span class="ow">in</span> <span class="n">project_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span> <span class="n">project</span><span class="p">)):</span>
                 <span class="n">check_box</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
-                <span class="c1"># check_box.setCheckState(Qt.Checked)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">check_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_box</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">v_box</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">check_box</span><span class="p">)</span>
 
@@ -1837,7 +1836,7 @@
 <span class="sd">        - use_spm_changed: called when the use_spm checkbox is changed</span>
 <span class="sd">        - use_spm_standalone_changed: called when the use_spm_standalone</span>
 <span class="sd">          checkbox is changed</span>
-<span class="sd">        - user_mode_switch: called when the user mode checkbox</span>
+<span class="sd">        - admin_mode_switch: called when the admin mode checkbox</span>
 <span class="sd">           is clicked</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1845,7 +1844,7 @@
     <span class="c1"># Signal that will be emitted at the end to tell that the project</span>
     <span class="c1"># has been created</span>
     <span class="n">signal_preferences_change</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
-    <span class="n">use_user_mode_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">use_clinical_mode_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization.</span>
@@ -1882,7 +1881,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">save_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Auto save&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isAutoSave</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isAutoSave</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">h_box_auto_save</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
@@ -1890,10 +1889,22 @@
         <span class="n">h_box_auto_save</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_label</span><span class="p">)</span>
         <span class="n">h_box_auto_save</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
+        <span class="c1">## Clinical mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_clinical</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Clinical mode&quot;</span><span class="p">)</span>
+        <span class="n">h_box_clinical</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_clinical</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="p">)</span>
+        <span class="n">h_box_clinical</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_label</span><span class="p">)</span>
+        <span class="n">h_box_clinical</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
         <span class="c1">## Admin mode + Change password + Edit config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_switch</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Admin mode&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_switch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Admin mode&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">change_psswd</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Change password&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                          <span class="n">autoDefault</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Edit config&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -1902,20 +1913,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_config_file</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">change_psswd</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">change_psswd</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">h_box_user_mode</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="p">)</span>
-        <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_mode_label</span><span class="p">)</span>
-        <span class="n">h_box_user_mode</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">h_box_admin_mode</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_admin_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="p">)</span>
+        <span class="n">h_box_admin_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_label</span><span class="p">)</span>
+        <span class="n">h_box_admin_mode</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">h_box_change_psswd</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_change_psswd</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_psswd</span><span class="p">)</span>
@@ -1925,12 +1935,11 @@
         <span class="n">h_box_edit_config</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span><span class="p">)</span>
         <span class="n">h_box_edit_config</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        
         <span class="c1">## Version 1 controller</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">control_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">control_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Version 1 controller&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">control_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">h_box_control</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
@@ -1953,9 +1962,10 @@
 
         <span class="c1">## Radiological vs neurological orientation in miniviewer data browser</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radioView_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">radioView_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Radiological orientation in miniviewer (data browser)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radioView_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Radiological orientation in &quot;</span>
+                                      <span class="s2">&quot;miniviewer (data browser)&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isRadioView</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isRadioView</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">radioView_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">h_box_radioView</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
@@ -1966,7 +1976,8 @@
         <span class="c1">## Draws graphic objects</span>
         <span class="n">v_box_global</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_auto_save</span><span class="p">)</span>
-        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_user_mode</span><span class="p">)</span>
+        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_clinical</span><span class="p">)</span>
+        <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_admin_mode</span><span class="p">)</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_change_psswd</span><span class="p">)</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_edit_config</span><span class="p">)</span>
         <span class="n">v_box_global</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_control</span><span class="p">)</span>
@@ -2119,7 +2130,8 @@
         <span class="n">v_box_matlab_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_matlab_path</span><span class="p">)</span>
 
         <span class="n">h_box_use_matlab_standalone</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">h_box_use_matlab_standalone</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="p">)</span>
+        <span class="n">h_box_use_matlab_standalone</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="p">)</span>
         <span class="n">h_box_use_matlab_standalone</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_label</span><span class="p">)</span>
         <span class="n">h_box_use_matlab_standalone</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -2476,12 +2488,13 @@
 <div class="viewcode-block" id="PopUpPreferences.edit_config_file"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_config_file">[docs]</a>    <span class="k">def</span> <span class="nf">edit_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a window to view, edit the mia configuration file.&quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span> <span class="o">=</span> <span class="n">QDialog</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_config_path</span><span class="p">(),</span>
                                                   <span class="s1">&#39;config.yml&#39;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span> <span class="o">=</span> <span class="n">QPlainTextEdit</span><span class="p">()</span>
         <span class="n">stream</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                      <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                           <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">insertPlainText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
         <span class="n">textWidth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">+</span> <span class="mi">100</span>
         <span class="n">textHeight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">+</span> <span class="mi">200</span>
@@ -2489,10 +2502,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">textWidth</span><span class="p">,</span> <span class="n">textHeight</span><span class="p">)</span>
 
         <span class="n">buttonBox</span> <span class="o">=</span> <span class="n">QDialogButtonBox</span><span class="p">(</span>
-            <span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Ok</span> <span class="o">|</span> <span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Cancel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+                            <span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Ok</span> <span class="o">|</span> <span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Cancel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">buttonBox</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span><span class="o">.</span><span class="n">setDefault</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">buttonBox</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Cancel</span><span class="p">)</span><span class="o">.</span><span class="n">setDefault</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">findChar_line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
         <span class="n">findChar_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Find&quot;</span><span class="p">)</span>
+        <span class="n">findChar_button</span><span class="o">.</span><span class="n">setDefault</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        
         <span class="n">h_box_find</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_find</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">findChar_line_edit</span><span class="p">)</span>
         <span class="n">h_box_find</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">findChar_button</span><span class="p">)</span>
@@ -2520,7 +2537,7 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
             <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PopUpPreferences.findChar"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.findChar">[docs]</a>    <span class="k">def</span> <span class="nf">findChar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Highlights characters in red when using the Find button&#39;</span>
@@ -2558,14 +2575,15 @@
         <span class="sd">&quot;&quot;&quot;capsul engine edition&quot;&quot;&quot;</span>
         
         <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
-        <span class="c1">#from soma.qt_gui.controller_widget import ScrollControllerWidget</span>
         <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.settings_editor</span> <span class="kn">import</span> <span class="n">SettingsEditor</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
         <span class="n">modules</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="n">sc_dict</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
+        <span class="c1"># TODO1: Currently, this is only done for the global environment:</span>
+        <span class="c1"># TODO2: Currently, quick and dirty, only done for FSL. May be necessary</span>
+        <span class="c1">#        to do the same for other softs as SPM, MATLAB, etc?:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_fsl</span><span class="p">():</span>
 
             <span class="k">try</span><span class="p">:</span>
@@ -2581,6 +2599,14 @@
 
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                 <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">][</span><span class="s1">&#39;fsl_config&#39;</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="n">sc_dict</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="c1"># build a temporary new engine (because it may not be validated)</span>
         <span class="n">engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
@@ -2602,20 +2628,6 @@
             <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
         <span class="n">dialog</span> <span class="o">=</span> <span class="n">SettingsEditor</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-        <span class="c1">#dialog = Qt.QDialog()</span>
-        <span class="c1">#layout = Qt.QVBoxLayout()</span>
-        <span class="c1">#dialog.setLayout(layout)</span>
-        <span class="c1">#cwidget = ScrollControllerWidget(engine.study_config, live=True)</span>
-        <span class="c1">#layout.addWidget(cwidget)</span>
-        <span class="c1">#hlayout = Qt.QHBoxLayout()</span>
-        <span class="c1">#layout.addLayout(hlayout)</span>
-        <span class="c1">#ok = Qt.QPushButton(&quot;OK&quot;, default=True)</span>
-        <span class="c1">#cancel = Qt.QPushButton(&quot;Cancel&quot;)</span>
-        <span class="c1">#hlayout.addStretch(1)</span>
-        <span class="c1">#hlayout.addWidget(ok)</span>
-        <span class="c1">#hlayout.addWidget(cancel)</span>
-        <span class="c1">#ok.clicked.connect(dialog.accept)</span>
-        <span class="c1">#cancel.clicked.connect(dialog.reject)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
@@ -2627,9 +2639,6 @@
             <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span>
             <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">_loaded_modules</span><span class="p">)</span>
 
-            <span class="c1">#sc_dict = engine.study_config.export_to_dict(</span>
-                <span class="c1">#dict_class=dict, exclude_none=True, exclude_undefined=True)</span>
-            <span class="c1">#capsul_config[&#39;study_config&#39;] = sc_dict</span>
             <span class="k">if</span> <span class="s1">&#39;study_config&#39;</span> <span class="ow">in</span> <span class="n">capsul_config</span><span class="p">:</span>
                 <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">]</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_capsul_config</span><span class="p">(</span><span class="n">capsul_config</span><span class="p">)</span>
@@ -2654,7 +2663,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">())</span>
 
-        <span class="c1">#del ok, cancel, cwidget, hlayout, layout</span>
         <span class="k">del</span> <span class="n">dialog</span>
         <span class="k">del</span> <span class="n">engine</span></div>
 
@@ -2751,30 +2759,51 @@
 
         <span class="c1"># Use FSL</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_fsl</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_fsl</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             
-        <span class="c1"># Use Matlab or Matlab standalone</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">(</span>
-        <span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+        <span class="c1"># Use Matlab</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Use Matlab Runtime:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Use SPM</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Use SPM standalone</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># User mode</span>
+        <span class="c1"># User / Admin mode</span>
         <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">=</span> <span class="s2">&quot;MIA - Multiparametric Image Analysis&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+=</span> <span class="s2">&quot; (Admin mode)&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">use_user_mode_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+            <span class="c1">#self.use_user_mode_signal.emit()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_clinical_mode_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
         <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+=</span> <span class="s2">&quot; - &quot;</span>
         <span class="n">main_window</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+</span>
@@ -2829,16 +2858,21 @@
         
         <span class="k">if</span> <span class="p">(</span><span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span>
             <span class="n">spm_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
-            <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()</span> <span class="ow">and</span> <span class="n">spm_input</span> <span class="o">==</span> \
-                    <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()</span> <span class="ow">and</span>
+                                       <span class="n">spm_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()):</span>
+
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_input</span><span class="p">):</span>
+
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">matlab_cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;restoredefaultpath; &quot;</span>
                                   <span class="s2">&quot;addpath(&#39;&quot;</span> <span class="o">+</span> <span class="n">spm_input</span> <span class="o">+</span> <span class="s2">&quot;&#39;); &quot;</span>
@@ -2852,22 +2886,29 @@
                                          <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                          <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
                     <span class="n">output</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
                     <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
+
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                             <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
                         <span class="n">config</span><span class="o">.</span><span class="n">set_spm_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">)</span>
+
                     <span class="k">elif</span> <span class="s2">&quot;spm&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM&quot;</span><span class="p">)</span>
                         <span class="k">return</span>
+
                     <span class="k">else</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab&quot;</span><span class="p">)</span>
                         <span class="k">return</span>
+
                 <span class="k">except</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab&quot;</span><span class="p">)</span>
                     <span class="k">return</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
@@ -2903,7 +2944,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
             
-        <span class="c1"># SPM (standalone) &amp; Matlab (MCR)  config test</span>
+        <span class="c1"># SPM (standalone) &amp; Matlab (MCR) config test</span>
         <span class="n">spm_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">matlab_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
@@ -2927,7 +2968,6 @@
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_input</span><span class="p">):</span>
@@ -3030,8 +3070,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
 
-        <span class="c1"># Matlab (MCR)  alone config test</span>
-        <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+        <span class="c1"># Matlab (MCR) alone config test</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()):</span>
 
             <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING : Matlab Standalone Path enter, this&#39;</span><span class="p">,</span>
@@ -3041,10 +3082,10 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
+
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab standalone&quot;</span><span class="p">)</span>
@@ -3065,14 +3106,210 @@
         <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_x_spinbox</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow_size_y_spinbox</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_mainwindow_size</span><span class="p">([</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+
         <span class="k">if</span> <span class="n">fullscreen</span><span class="p">:</span>
             <span class="n">main_window</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">main_window</span><span class="o">.</span><span class="n">showNormal</span><span class="p">()</span>
-            <span class="c1">#main_window.resize(w, h)  # don&#39;t apply now</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">signal_preferences_change</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
+        <span class="n">c_c</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;capsul_config&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">c_e</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">c_c</span> <span class="ow">and</span> <span class="n">c_e</span><span class="p">:</span>
+
+            <span class="c1"># FSL CapsulConfig</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_fsl</span><span class="p">():</span>
+
+                <span class="c1"># TODO: We only deal here with the global environment</span>
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+                    <span class="n">configfsl</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">configfsl</span><span class="p">:</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">configfsl</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                <span class="c1">#TODO: We could use a generic method to deal with c_c?</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                                        <span class="s1">&#39;capsul.engine.module.fsl&#39;</span><span class="p">][</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                                          <span class="s1">&#39;capsul.engine.module.fsl&#39;</span><span class="p">][</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">][</span><span class="s1">&#39;fsl_config&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># SPM standalone CapsulConfig</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">():</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.spm&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.spm&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;standalone&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                    <span class="n">settings</span><span class="o">.</span><span class="n">new_config</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                <span class="p">{</span><span class="s1">&#39;config_id&#39;</span><span class="p">:</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;standalone&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                 <span class="s1">&#39;directory&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()})</span>
+
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.matlab&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;executable&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># SPM</span>
+            <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">():</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.spm&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                    <span class="n">settings</span><span class="o">.</span><span class="n">new_config</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                       <span class="p">{</span><span class="s1">&#39;config_id&#39;</span><span class="p">:</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;directory&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">(),</span>
+                                        <span class="s1">&#39;standalone&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                    <span class="n">settings</span><span class="o">.</span><span class="n">new_config</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                       <span class="p">{</span><span class="s1">&#39;config_id&#39;</span><span class="p">:</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;executable&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()})</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.matlab&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;executable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># no SPM at all</span>
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.spm&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;directory&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">][</span><span class="s1">&#39;spm_directory&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># no MATLAB at all</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">()</span> <span class="ow">and</span>
+                                  <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">()):</span>
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+            
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.matlab&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;executable&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># only MATLAB</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">():</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.matlab&#39;</span><span class="p">][</span>
+                            <span class="s1">&#39;executable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                    <span class="n">settings</span><span class="o">.</span><span class="n">new_config</span><span class="p">(</span><span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                       <span class="p">{</span><span class="s1">&#39;config_id&#39;</span><span class="p">:</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;executable&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()})</span>
+
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">configs</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+        <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
@@ -3127,7 +3364,6 @@
         <span class="sd">&quot;&quot;&quot;Called when the use_spm checkbox is changed.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="c1"># self.use_matlab_checkbox.setChecked(False)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -3163,25 +3399,32 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PopUpPreferences.user_mode_switch"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.user_mode_switch">[docs]</a>    <span class="k">def</span> <span class="nf">user_mode_switch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Called when the user mode checkbox is clicked.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PopUpPreferences.admin_mode_switch"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.admin_mode_switch">[docs]</a>    <span class="k">def</span> <span class="nf">admin_mode_switch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when the admin mode checkbox is clicked.&quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="n">psswd</span><span class="p">,</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">QInputDialog</span><span class="o">.</span><span class="n">getText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Password Input Dialog&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;Enter the admin password:&#39;</span><span class="p">,</span>
-                                            <span class="n">QLineEdit</span><span class="o">.</span><span class="n">Password</span><span class="p">)</span>
+                                             <span class="s1">&#39;Enter the admin password:&#39;</span><span class="p">,</span>
+                                             <span class="n">QLineEdit</span><span class="o">.</span><span class="n">Password</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
                 <span class="n">salt_psswd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">+</span> <span class="n">psswd</span>
                 <span class="n">hash_psswd</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">salt_psswd</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
                 <span class="k">if</span> <span class="n">hash_psswd</span> <span class="o">!=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&lt;i style=&#39;color:red&#39;&gt;Wrong &quot;</span>
                                               <span class="s2">&quot;password.&lt;/i&gt;&quot;</span><span class="p">)</span>
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">change_psswd</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">user_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">change_psswd</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">edit_config</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
@@ -3654,8 +3897,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layout</span><span class="p">)</span>
 
-        <span class="c1"># self.finished.connect(self.return_value)</span>
-
 <div class="viewcode-block" id="PopUpSaveProjectAs.fill_input"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.fill_input">[docs]</a>    <span class="k">def</span> <span class="nf">fill_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fills the input field with the name of a project.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
@@ -3670,12 +3911,6 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_name_tuple</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name_tuple</span>
-
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            projects_folder = os.path.join(os.path.join(</span>
-<span class="sd">                os.path.relpath(os.curdir), &#39;..&#39;, &#39;..&#39;), &#39;projects&#39;)</span>
-<span class="sd">            projects_folder = os.path.abspath(projects_folder)</span>
-<span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">projects_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_path</span>
 
             <span class="k">if</span> <span class="n">file_name</span><span class="p">:</span>

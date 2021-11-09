@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+487845bc documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+487845bc',
+        VERSION:     '2.0.0-dev+93bc52b1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+487845bc documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -213,10 +213,11 @@ in a recursive way.</p>
 <dl class="method">
 <dt id="populse_mia.main.PackagesInstall.add_package">
 <code class="descname">add_package</code><span class="sig-paren">(</span><em>module_name</em>, <em>class_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#PackagesInstall.add_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.PackagesInstall.add_package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provide recursive representation of a package and its
-subpackages/modules, to construct the mia’s pipeline library.</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<dd><dl class="docutils">
+<dt>Provide recursive representation of a package and its</dt>
+<dd>subpackages/modules, to construct the mia’s pipeline library.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -244,14 +245,13 @@ library (optional)</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body"><p class="first last">dictionary of dictionaries containing
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dictionary of dictionaries containing
 package/subpackages/pipelines status.
 ex: {package: {subpackage: {pipeline: ‘process_enabled’}}}</p>
 </td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 </dd></dl>
 
 </dd></dl>
@@ -363,10 +363,7 @@ on the disk.</p>
 <code class="descclassname">populse_mia.main.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make basic configuration check then actual launch of mia.</p>
 <p>Checks if MIA is called from the site/dist packages (user mode) or from a
-cloned git repository (developer mode). Tries to update the dev_mode
-parameter accordingly and the mia_path if necessary, in the
-~/.populse_mia/configuration.yml file (this file must be available from
-the ~/.populse_mia directory). Launches the verify_processes()
+cloned git repository (developer mode). Launches the verify_processes()
 function, then the launch_mia() function (mia’s real launch !!). When
 mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the
 dev_mode parameter to False.</p>
@@ -374,11 +371,7 @@ dev_mode parameter to False.</p>
 <li><dl class="first docutils">
 <dt>If launched from a cloned git repository (‘developer mode’):</dt>
 <dd><ul class="first last">
-<li>if the ~/.populse_mia/configuration.yml exists, updates
-the dev_mode parameter to True</li>
-<li>if the ~/.populse_mia/configuration.yml is not existing
-nothing is done (in developer mode, the mia_path is the
-cloned git repository.</li>
+<li>the mia_path is the cloned git repository.</li>
 </ul>
 </dd>
 </dl>
@@ -386,10 +379,7 @@ cloned git repository.</li>
 <li><dl class="first docutils">
 <dt>If launched from the site/dist packages (‘user mode’):</dt>
 <dd><ul class="first last">
-<li>if the ~/.populse_mia/configuration.yml exists, updates
-the dev_mode parameter to False and, if not found, update
-the mia_path parameter.</li>
-<li>if the file ~/.populse_mia/configuration.yml file does
+<li>if the file ~/.populse_mia/configuration.yml file is not found or does
 not exist or if the returned mia_path parameter is incorrect, a
 valid mia_path path is requested from the user, in order
 to try to fix a corruption of this file.</li>
@@ -413,8 +403,8 @@ to try to fix a corruption of this file.</li>
 <dd><p class="first">The user define the mia_path parameter.</p>
 <p>This method, used only if the mia configuration parameters are
 not accessible, goes with the _verify_miaConfig function,
-which
-will use the value of the mia_path parameter, defined here.</p>
+which will use the value of the mia_path parameter,
+defined here.</p>
 <table class="last docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -441,14 +431,13 @@ this parameter).</p>
 _browse_mia_path() function, the latter having allowed the
 definition of the mia_user_path parameter, the objective here
 is to check if the value of this parameter is valid. The
-dev_mode=False and mia_path parameters are saved in the
+mia_path parameters are saved in the
 ~/.populse_mia/configuration.yml file (the mia_user_path
 parameter is mandatory in the user mode). Then the data in the
 mia_path/properties/config.yml file are checked. If an
-exception
-is raised during the  _verify_miaConfig function, the “MIA path
-selection” window is not closed and the user is prompted again
-to set the mia_user_path parameter.</p>
+exception is raised during the _verify_miaConfig function, the
+“MIA path selection” window is not closed and the user is
+prompted again to set the mia_user_path parameter.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -475,7 +464,10 @@ function)</td>
 <dl class="function">
 <dt id="populse_mia.main.verify_processes">
 <code class="descclassname">populse_mia.main.</code><code class="descname">verify_processes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#verify_processes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.verify_processes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Install or update to the last version available on the station, of the        nipype and the mia_processes processes libraries.</p>
+<dd><dl class="docutils">
+<dt>Install or update to the last version available on the station, of the</dt>
+<dd>nipype and the mia_processes processes libraries.</dd>
+</dl>
 <p>By default, mia provides two process libraries in the pipeline library
 (available in Pipeline Manager tab). The nipype, given as it is because
 it is developed by another team (<a class="reference external" href="https://github.com/nipy/nipype">https://github.com/nipy/nipype</a>), and
@@ -519,8 +511,10 @@ Editor.</p>
 <dt><strong>param old_dic</strong>: the dic representation of the previous</dt>
 <dd><p class="first last">package configuration</p>
 </dd>
+<dt><strong>param new_dic</strong>: the dic representation of the new package</dt>
+<dd><p class="first last">configuration</p>
+</dd>
 </dl>
-<p><strong>param new_dic</strong>: the dic representation of the new package                   configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -576,7 +570,7 @@ pop-up in the config.yml file.</p>
 </table>
 <dl class="class">
 <dt id="populse_mia.software_properties.Config">
-<em class="property">class </em><code class="descclassname">populse_mia.software_properties.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config_path=None</em>, <em>load=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">populse_mia.software_properties.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Object that handles the configuration of the software</p>
 <dl class="attribute">
@@ -660,6 +654,14 @@ or not in the miniviewer.</p>
 <dt id="populse_mia.software_properties.Config.getSourceImageDir">
 <code class="descname">getSourceImageDir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getSourceImageDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getSourceImageDir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the source directory for project images.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the path</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -693,7 +695,7 @@ or not in the miniviewer.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.getViewerConfig">
 <code class="descname">getViewerConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getViewerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getViewerConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the viewer config neuro or radio, neuro by default_flow_style</p>
+<dd><p>Get the viewer config neuro or radio, neuro by default</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -735,7 +737,17 @@ or not in the miniviewer.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.get_capsul_config">
 <code class="descname">get_capsul_config</code><span class="sig-paren">(</span><em>sync_from_engine=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_capsul_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_capsul_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get CAPSUL config dictionary</p>
+<dd><p>Get CAPSUL config dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sync_from_engine</strong> – boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">capsul_config: dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -743,30 +755,70 @@ or not in the miniviewer.</p>
 <em class="property">static </em><code class="descname">get_capsul_engine</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_capsul_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_capsul_engine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a global CapsulEngine object used for all operations in MIA
 application. The engine is created once when needed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Config.capsul_engine: capsul.engine.CapsulEngine object</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.get_config_path">
 <code class="descname">get_config_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_config_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_config_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the MIA config path (including “properties” directory)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of directory path to the config.yml file</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.get_fsl_config">
 <code class="descname">get_fsl_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_fsl_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_fsl_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the FSL config file  path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of path to the fsl/etc/fslconf/fsl.sh file</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.get_mainwindow_maximized">
 <code class="descname">get_mainwindow_maximized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mainwindow_maximized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mainwindow_maximized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the maximized (fullscreen) flag</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.get_mainwindow_size">
 <code class="descname">get_mainwindow_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mainwindow_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mainwindow_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the main window size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list or None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -777,8 +829,7 @@ application. The engine is created once when needed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns path to matlab executable or nothing if matlab
-path not specified</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">matlab executable path or nothing if matlab path not specified</td>
 </tr>
 </tbody>
 </table>
@@ -870,7 +921,7 @@ parameter of the configuration.yml</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the path</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of the pathto the MRIManager.jar</td>
 </tr>
 </tbody>
 </table>
@@ -907,12 +958,12 @@ parameter of the configuration.yml</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.get_referential">
 <code class="descname">get_referential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_referential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_referential" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks in dataViewer which referential has been chosen by user</p>
+<dd><p>Checks in anatomist_2 data viewer which referential has been chosen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">0 for World Coordinates, 1 for Image ref</td>
 </tr>
 </tbody>
 </table>
@@ -941,6 +992,20 @@ parameter of the configuration.yml</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String of path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.get_use_clinical">
+<code class="descname">get_use_clinical</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_clinical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_clinical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the clinical mode in the preferences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1077,8 +1142,10 @@ preferences.</p>
 <dt id="populse_mia.software_properties.Config.isRadioView">
 <code class="descname">isRadioView</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.isRadioView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.isRadioView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get if the display in miniviewer is in radiological orientation.</p>
-<p>True for radiolological
-False for neurological</p>
+<ul class="simple">
+<li>True for radiolological</li>
+<li>False for neurological</li>
+</ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1117,7 +1184,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">save: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1131,7 +1198,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">color: Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>color</strong> – Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’,
 ‘Orange’, ‘Red’, ‘Yellow’, ‘White’)</td>
 </tr>
 </tbody>
@@ -1146,7 +1213,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">chain_cursors: Boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chain_cursors</strong> – Boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1160,7 +1227,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">controlV1: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controlV1</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1174,7 +1241,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">nb_slices_max: Int</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nb_slices_max</strong> – Int</td>
 </tr>
 </tbody>
 </table>
@@ -1188,7 +1255,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">show_all_slices: Boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show_all_slices</strong> – Boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1198,6 +1265,14 @@ False for neurological</p>
 <dt id="populse_mia.software_properties.Config.setSourceImageDir">
 <code class="descname">setSourceImageDir</code><span class="sig-paren">(</span><em>source_image_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setSourceImageDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setSourceImageDir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the source directory for project images.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_image_dir</strong> – String of path</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1208,7 +1283,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">color: Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>color</strong> – Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’,
 ‘Orange’, ‘Red’, ‘Yellow’, ‘White’)</td>
 </tr>
 </tbody>
@@ -1223,7 +1298,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">thumbnail_tag: String</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thumbnail_tag</strong> – String</td>
 </tr>
 </tbody>
 </table>
@@ -1233,11 +1308,15 @@ False for neurological</p>
 <dt id="populse_mia.software_properties.Config.setViewerConfig">
 <code class="descname">setViewerConfig</code><span class="sig-paren">(</span><em>config_NeuRad</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setViewerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setViewerConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets user’s configuration neuro or radio for data_viewer</p>
+<ul class="simple">
+<li>neuro: neurological</li>
+<li>radio: radiological</li>
+</ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">config_NeuRad: string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_NeuRad</strong> – string</td>
 </tr>
 </tbody>
 </table>
@@ -1251,7 +1330,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">im_sec: int</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im_sec</strong> – int</td>
 </tr>
 </tbody>
 </table>
@@ -1265,7 +1344,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of hash</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of hash</td>
 </tr>
 </tbody>
 </table>
@@ -1275,6 +1354,29 @@ False for neurological</p>
 <dt id="populse_mia.software_properties.Config.set_capsul_config">
 <code class="descname">set_capsul_config</code><span class="sig-paren">(</span><em>capsul_config_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_capsul_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_capsul_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set CAPSUL configuration dict into MIA config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>capsul_config_dict</strong> – a dict; {‘engine’: {…},
+‘engine_modules’: […]}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.set_clinical_mode">
+<code class="descname">set_clinical_mode</code><span class="sig-paren">(</span><em>clinical_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_clinical_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_clinical_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable of disable clinical mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>clinical_mode</strong> – boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1285,7 +1387,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of path to fsl/etc/fslconf/fsl.sh</td>
 </tr>
 </tbody>
 </table>
@@ -1295,12 +1397,28 @@ False for neurological</p>
 <dt id="populse_mia.software_properties.Config.set_mainwindow_maximized">
 <code class="descname">set_mainwindow_maximized</code><span class="sig-paren">(</span><em>enabled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_maximized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_maximized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the maximized (fullscreen) flag</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enabled</strong> – boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_mainwindow_size">
 <code class="descname">set_mainwindow_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set main window size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> – list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1311,7 +1429,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of path</td>
 </tr>
 </tbody>
 </table>
@@ -1325,7 +1443,7 @@ False for neurological</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of path</td>
 </tr>
 </tbody>
 </table>
@@ -1340,7 +1458,7 @@ the “Saved projects” menu.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">nb_max_projects: Integer</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nb_max_projects</strong> – Integer</td>
 </tr>
 </tbody>
 </table>
@@ -1354,7 +1472,7 @@ the “Saved projects” menu.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">nb_max_thumbnails: Integer</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nb_max_thumbnails</strong> – Integer</td>
 </tr>
 </tbody>
 </table>
@@ -1368,7 +1486,7 @@ the “Saved projects” menu.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of the path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of the path</td>
 </tr>
 </tbody>
 </table>
@@ -1382,7 +1500,7 @@ the “Saved projects” menu.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">new_projects: List of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_projects</strong> – List of path</td>
 </tr>
 </tbody>
 </table>
@@ -1396,7 +1514,7 @@ the “Saved projects” menu.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of path</td>
 </tr>
 </tbody>
 </table>
@@ -1405,14 +1523,16 @@ the “Saved projects” menu.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_radioView">
 <code class="descname">set_radioView</code><span class="sig-paren">(</span><em>radio_view</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_radioView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_radioView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the radiological orientation in miniviewer.</p>
-<p>True for radiological
-False for radiological</p>
+<dd><p>Set the radiological/neurological orientation in miniviewer.</p>
+<ul class="simple">
+<li>True for radiological</li>
+<li>False for neurological</li>
+</ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">radio_view: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>radio_view</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1421,14 +1541,13 @@ False for radiological</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_referential">
 <code class="descname">set_referential</code><span class="sig-paren">(</span><em>ref</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_referential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_referential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the referential to image ref or world coordinates</p>
-<p>True for Image ref
-False for World Coordinates</p>
+<dd><p>Set the referential to image ref or world coordinates in anatomist_2
+data viewer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">ref: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ref</strong> – str; 0 for World Coordinates, 1 for Image ref</td>
 </tr>
 </tbody>
 </table>
@@ -1442,7 +1561,7 @@ False for World Coordinates</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of path</td>
 </tr>
 </tbody>
 </table>
@@ -1456,7 +1575,7 @@ False for World Coordinates</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">path: string of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of path</td>
 </tr>
 </tbody>
 </table>
@@ -1465,12 +1584,12 @@ False for World Coordinates</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_use_fsl">
 <code class="descname">set_use_fsl</code><span class="sig-paren">(</span><em>use_fsl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_use_fsl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_fsl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the value of “use fsl” checkbox in the preferences.</p>
+<dd><p>Set the value of “use_fsl” checkbox in the preferences.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">use_fsl: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>use_fsl</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1484,7 +1603,7 @@ False for World Coordinates</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">use_matlab: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>use_matlab</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1499,7 +1618,7 @@ preferences.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">use_matlab: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>use_matlab</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1513,7 +1632,7 @@ preferences.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">use_spm: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>use_spm</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1523,7 +1642,14 @@ preferences.</p>
 <dt id="populse_mia.software_properties.Config.set_use_spm_standalone">
 <code class="descname">set_use_spm_standalone</code><span class="sig-paren">(</span><em>use_spm_standalone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_use_spm_standalone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_spm_standalone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of “use spm standalone” checkbox in the preferences.</p>
-<p>:param:use_spm_standalone: boolean</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>use_spm_standalone</strong> – boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1534,7 +1660,7 @@ preferences.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">user_mode: boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_mode</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1546,6 +1672,14 @@ preferences.</p>
 <dd><p>Update a global CapsulEngine object used for all operations in MIA
 application. The engine is created once when needed, and updated
 each time the config is saved.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Config.capsul_engine: capsul.engine.CapsulEngine object</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

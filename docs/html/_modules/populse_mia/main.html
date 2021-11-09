@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.main &#8212; populse_mia 2.0.0-dev+487845bc documentation</title>
+    <title>populse_mia.main &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+487845bc',
+        VERSION:     '2.0.0-dev+93bc52b1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+487845bc documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -313,7 +313,7 @@
 
 <div class="viewcode-block" id="PackagesInstall.add_package"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.main.PackagesInstall.add_package">[docs]</a>    <span class="k">def</span> <span class="nf">add_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Provide recursive representation of a package and its</span>
-<span class="sd">subpackages/modules, to construct the mia&#39;s pipeline library.</span>
+<span class="sd">           subpackages/modules, to construct the mia&#39;s pipeline library.</span>
 
 <span class="sd">        :Parameters:</span>
 <span class="sd">            - :module_name: name of the module to add in the pipeline</span>
@@ -352,7 +352,7 @@
                             <span class="k">continue</span>
                         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;__module__&#39;</span><span class="p">):</span>
                             <span class="n">vname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-                        <span class="k">elif</span> <span class="n">hashattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;__package__&#39;</span><span class="p">):</span>
+                        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;__package__&#39;</span><span class="p">):</span>
                             <span class="n">vname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">__package__</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no module nor package for&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
@@ -395,7 +395,8 @@
 
                 <span class="c1"># check if there are subpackages, in this case explore them</span>
                 <span class="n">path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span> <span class="s1">&#39;__path__&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span> <span class="s1">&#39;__file__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__init__.&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span> <span class="s1">&#39;__file__&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__init__.&#39;</span><span class="p">)):</span>
                     <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)]</span>
 
 
@@ -542,25 +543,15 @@
     <span class="sd">&quot;&quot;&quot;Make basic configuration check then actual launch of mia.</span>
 
 <span class="sd">    Checks if MIA is called from the site/dist packages (user mode) or from a</span>
-<span class="sd">    cloned git repository (developer mode). Tries to update the dev_mode</span>
-<span class="sd">    parameter accordingly and the mia_path if necessary, in the</span>
-<span class="sd">    ~/.populse_mia/configuration.yml file (this file must be available from</span>
-<span class="sd">    the ~/.populse_mia directory). Launches the verify_processes()</span>
+<span class="sd">    cloned git repository (developer mode). Launches the verify_processes()</span>
 <span class="sd">    function, then the launch_mia() function (mia&#39;s real launch !!). When</span>
 <span class="sd">    mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the</span>
 <span class="sd">    dev_mode parameter to False.</span>
 
 <span class="sd">    - If launched from a cloned git repository (&#39;developer mode&#39;):</span>
-<span class="sd">        - if the ~/.populse_mia/configuration.yml exists, updates</span>
-<span class="sd">          the dev_mode parameter to True</span>
-<span class="sd">        - if the ~/.populse_mia/configuration.yml is not existing</span>
-<span class="sd">          nothing is done (in developer mode, the mia_path is the</span>
-<span class="sd">          cloned git repository.</span>
+<span class="sd">        - the mia_path is the cloned git repository.</span>
 <span class="sd">    - If launched from the site/dist packages (&#39;user mode&#39;):</span>
-<span class="sd">        - if the ~/.populse_mia/configuration.yml exists, updates</span>
-<span class="sd">          the dev_mode parameter to False and, if not found, update</span>
-<span class="sd">          the mia_path parameter.</span>
-<span class="sd">        - if the file ~/.populse_mia/configuration.yml file does</span>
+<span class="sd">        - if the file ~/.populse_mia/configuration.yml file is not found or does</span>
 <span class="sd">          not exist or if the returned mia_path parameter is incorrect, a</span>
 <span class="sd">          valid mia_path path is requested from the user, in order</span>
 <span class="sd">          to try to fix a corruption of this file.</span>
@@ -572,8 +563,8 @@
 
 <span class="sd">                This method, used only if the mia configuration parameters are</span>
 <span class="sd">                not accessible, goes with the _verify_miaConfig function,</span>
-<span class="sd">                which</span>
-<span class="sd">                will use the value of the mia_path parameter, defined here.</span>
+<span class="sd">                which will use the value of the mia_path parameter,</span>
+<span class="sd">                defined here.</span>
 
 <span class="sd">                :Parameters dialog: QtWidgets.QDialog object (&#39;msg&#39; in the main</span>
 <span class="sd">                   function)</span>
@@ -592,14 +583,13 @@
 <span class="sd">                _browse_mia_path() function, the latter having allowed the</span>
 <span class="sd">                definition of the mia_user_path parameter, the objective here</span>
 <span class="sd">                is to check if the value of this parameter is valid. The</span>
-<span class="sd">                dev_mode=False and mia_path parameters are saved in the</span>
+<span class="sd">                mia_path parameters are saved in the</span>
 <span class="sd">                ~/.populse_mia/configuration.yml file (the mia_user_path</span>
 <span class="sd">                parameter is mandatory in the user mode). Then the data in the</span>
 <span class="sd">                mia_path/properties/config.yml file are checked. If an</span>
-<span class="sd">                exception</span>
-<span class="sd">                is raised during the  _verify_miaConfig function, the &quot;MIA path</span>
-<span class="sd">                selection&quot; window is not closed and the user is prompted again</span>
-<span class="sd">                to set the mia_user_path parameter.</span>
+<span class="sd">                exception is raised during the _verify_miaConfig function, the</span>
+<span class="sd">                &quot;MIA path selection&quot; window is not closed and the user is</span>
+<span class="sd">                prompted again to set the mia_user_path parameter.</span>
 
 <span class="sd">                :Parameters dialog: QtWidgets.QDialog object (&#39;msg&#39; in the main</span>
 <span class="sd">                   function)</span>
@@ -634,7 +624,7 @@
         <span class="k">elif</span> <span class="n">dialog</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># &quot;user&quot; mode only if problem</span>
 
             <span class="n">mia_home_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-            <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;dev_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1">############mia_home_config[&quot;dev_mode&quot;] = False</span>
             <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">New values in ~/.populse_mia/configuration.yml: &#39;</span><span class="p">)</span>
 
@@ -697,27 +687,27 @@
 
     <span class="k">if</span> <span class="n">DEV_MODE</span><span class="p">:</span>                         <span class="c1"># &quot;developer&quot; mode</span>
 
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{0}</span><span class="s1"> has been detected.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
-
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-
-                <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;5.1&quot;</span><span class="p">):</span>
-                    <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span>
-                                                <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-
-            <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;dev_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
-                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">mia_home_config</span><span class="p">,</span>
-                          <span class="n">configfile</span><span class="p">,</span>
-                          <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                          <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{0}</span><span class="s1"> has not been detected.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
+        <span class="c1">#if os.path.isfile(dot_mia_config):</span>
+        <span class="c1">#    print(&#39;\n{0} has been detected.&#39;.format(dot_mia_config))</span>
+        <span class="c1">#</span>
+        <span class="c1">#    with open(dot_mia_config, &#39;r&#39;) as stream:</span>
+        <span class="c1">#</span>
+        <span class="c1">#        if version.parse(yaml.__version__) &gt; version.parse(&quot;5.1&quot;):</span>
+        <span class="c1">#            mia_home_config = yaml.load(stream,</span>
+        <span class="c1">#                                        Loader=yaml.FullLoader)</span>
+        <span class="c1">#        else:</span>
+        <span class="c1">#            mia_home_config = yaml.load(stream)</span>
+        <span class="c1">#</span>
+        <span class="c1">#    mia_home_config[&quot;dev_mode&quot;] = True</span>
+        <span class="c1">#</span>
+        <span class="c1">#    with open(dot_mia_config, &#39;w&#39;, encoding=&#39;utf8&#39;) as configfile:</span>
+        <span class="c1">#        yaml.dump(mia_home_config,</span>
+        <span class="c1">#                  configfile,</span>
+        <span class="c1">#                  default_flow_style=False,</span>
+        <span class="c1">#                  allow_unicode=True)</span>
+        <span class="c1">#</span>
+        <span class="c1">#else:</span>
+        <span class="c1">#    print(&#39;\n{0} has not been detected.&#39;.format(dot_mia_config))</span>
 
         <span class="n">_verify_miaConfig</span><span class="p">()</span>
 
@@ -728,7 +718,8 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The </span><span class="si">{0}</span><span class="s1"> directory is created &#39;</span>
                       <span class="s1">&#39;...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)))</span>
-
+                
+            <span class="c1"># Just to check if dot_mia_config file is well readable/writeable</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
 
                 <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;5.1&quot;</span><span class="p">):</span>
@@ -737,7 +728,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
-            <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;dev_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1">#mia_home_config[&quot;dev_mode&quot;] = False</span>
 
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
                 <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">mia_home_config</span><span class="p">,</span> <span class="n">configfile</span><span class="p">,</span>
@@ -752,7 +743,7 @@
                   <span class="s1">&#39; the ~/.populse_mia/configuration.yml file&#39;</span>
                   <span class="s1">&#39; or with the parameters returned from this file: &#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
             <span class="n">mia_home_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-            <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;dev_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1">#mia_home_config[&quot;dev_mode&quot;] = False</span>
 
             <span class="c1"># open popup, user choose the path to .populse_mia/populse_mia</span>
             <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
@@ -811,29 +802,29 @@
 
     <span class="n">verify_processes</span><span class="p">()</span>
     <span class="n">check_python_version</span><span class="p">()</span>
-    <span class="n">launch_mia</span><span class="p">()</span>
+    <span class="n">launch_mia</span><span class="p">()</span></div>
 
     <span class="c1"># set the dev_mode to False when exiting mia,</span>
     <span class="c1"># if ~/.populse_mia/configuration.yml file exists</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">):</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-
-            <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;5.1&quot;</span><span class="p">):</span>
-                <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span>
-                                            <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-
-        <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;dev_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
-            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">mia_home_config</span><span class="p">,</span> <span class="n">configfile</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                      <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="c1">#if os.path.isfile(dot_mia_config):</span>
+    <span class="c1">#</span>
+    <span class="c1">#    with open(dot_mia_config, &#39;r&#39;) as stream:</span>
+    <span class="c1">#</span>
+    <span class="c1">#        if version.parse(yaml.__version__) &gt; version.parse(&quot;5.1&quot;):</span>
+    <span class="c1">#            mia_home_config = yaml.load(stream,</span>
+    <span class="c1">#                                        Loader=yaml.FullLoader)</span>
+    <span class="c1">#        else:</span>
+    <span class="c1">#            mia_home_config = yaml.load(stream)</span>
+    <span class="c1">#</span>
+    <span class="c1">#    mia_home_config[&quot;dev_mode&quot;] = False</span>
+    <span class="c1">#</span>
+    <span class="c1">#    with open(dot_mia_config, &#39;w&#39;, encoding=&#39;utf8&#39;) as configfile:</span>
+    <span class="c1">#        yaml.dump(mia_home_config, configfile, default_flow_style=False,</span>
+    <span class="c1">#                  allow_unicode=True)</span>
 
 
 <div class="viewcode-block" id="verify_processes"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.main.verify_processes">[docs]</a><span class="k">def</span> <span class="nf">verify_processes</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Install or update to the last version available on the station, of the \</span>
+    <span class="sd">&quot;&quot;&quot;Install or update to the last version available on the station, of the</span>
 <span class="sd">       nipype and the mia_processes processes libraries.</span>
 
 <span class="sd">    By default, mia provides two process libraries in the pipeline library</span>
@@ -873,7 +864,7 @@
 <span class="sd">               **param old_dic**: the dic representation of the previous</span>
 <span class="sd">                 package configuration</span>
 
-<span class="sd">               **param new_dic**: the dic representation of the new package \</span>
+<span class="sd">               **param new_dic**: the dic representation of the new package</span>
 <span class="sd">                  configuration</span>
 
 <span class="sd">               :returns: True if the current level is a pipeline that existed</span>
@@ -1058,7 +1049,7 @@
                             <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;processes&#39;</span><span class="p">)))</span>
 
                 <span class="c1"># the processes/ directory being already in the sys.path, the</span>
-                <span class="c1"># package is certainly not properly installed in the processes/</span>
+                <span class="c1"># package is certainly not properly installed in the processes</span>
                 <span class="c1"># directory</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No module named &#39;</span><span class="si">{0}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pckg</span><span class="p">))</span>
@@ -1219,8 +1210,8 @@
             <span class="n">final_pckgs</span><span class="p">[</span><span class="s2">&quot;Versions&quot;</span><span class="p">][</span><span class="s2">&quot;nipype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nipypeVer</span>
 
             <span class="k">if</span> <span class="n">old_nipypeVer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Installation in mia of the </span><span class="si">{0}</span><span class="s1"> processes library, &#39;</span>
-                  <span class="s1">&#39;</span><span class="si">{1}</span><span class="s1"> version ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pckg</span><span class="p">,</span> <span class="n">nipypeVer</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Installation in mia of the </span><span class="si">{0}</span><span class="s1"> processes &#39;</span>
+                      <span class="s1">&#39;library, </span><span class="si">{1}</span><span class="s1"> version ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pckg</span><span class="p">,</span> <span class="n">nipypeVer</span><span class="p">))</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Upgrading of the </span><span class="si">{0}</span><span class="s1"> processes library, &#39;</span>
@@ -1232,8 +1223,8 @@
             <span class="n">final_pckgs</span><span class="p">[</span><span class="s2">&quot;Versions&quot;</span><span class="p">][</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">miaProcVer</span>
 
             <span class="k">if</span> <span class="n">old_miaProcVer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Installation in mia of the </span><span class="si">{0}</span><span class="s1"> processes library, &#39;</span>
-                  <span class="s1">&#39;</span><span class="si">{1}</span><span class="s1"> version ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pckg</span><span class="p">,</span> <span class="n">miaProcVer</span> <span class="p">))</span>
+                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Installation in mia of the </span><span class="si">{0}</span><span class="s1"> processes &#39;</span>
+                       <span class="s1">&#39;library, </span><span class="si">{1}</span><span class="s1"> version ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pckg</span><span class="p">,</span> <span class="n">miaProcVer</span> <span class="p">))</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Upgrading of the </span><span class="si">{0}</span><span class="s1"> processes library, &#39;</span>
@@ -1245,8 +1236,8 @@
             <span class="n">final_pckgs</span><span class="p">[</span><span class="s2">&quot;Versions&quot;</span><span class="p">][</span><span class="s2">&quot;capsul&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">capsulVer</span>
 
             <span class="k">if</span> <span class="n">old_capsulVer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Installation in mia of the </span><span class="si">{0}</span><span class="s1"> processes library, &#39;</span>
-                  <span class="s1">&#39;</span><span class="si">{1}</span><span class="s1"> version ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pckg</span><span class="p">,</span> <span class="n">capsulVer</span> <span class="p">))</span>
+                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Installation in mia of the </span><span class="si">{0}</span><span class="s1"> processes &#39;</span>
+                       <span class="s1">&#39;library, </span><span class="si">{1}</span><span class="s1"> version ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pckg</span><span class="p">,</span> <span class="n">capsulVer</span> <span class="p">))</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">** Upgrading of the </span><span class="si">{0}</span><span class="s1"> processes library, &#39;</span>

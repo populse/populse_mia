@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.0.0-dev+487845bc documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+487845bc',
+        VERSION:     '2.0.0-dev+93bc52b1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+487845bc documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -664,12 +664,18 @@
                     <span class="n">all_cvalues</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="n">all_cvalues</span><span class="p">[</span><span class="n">param</span><span class="p">]}</span>
                     <span class="n">all_ivalues</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="n">all_ivalues</span><span class="p">[</span><span class="n">param</span><span class="p">]}</span>
                 <span class="k">elif</span> <span class="ow">not</span> <span class="n">attributes</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">already_in_db</span><span class="p">:</span>
-                    <span class="c1"># (if there are attrbutes from completion, use them</span>
+                    <span class="c1"># (if there are attributes from completion, use them</span>
                     <span class="c1"># without asking)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no attributes for:&#39;</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">p_value</span><span class="p">)</span>
-                    <span class="n">pop_up</span> <span class="o">=</span> <span class="n">PopUpInheritanceDict</span><span class="p">(</span>
-                      <span class="n">parent_files</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span>
-                      <span class="bp">self</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no attributes for:&#39;</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span>
+                                                <span class="n">plug_name</span><span class="p">,</span>
+                                                <span class="n">full_name</span><span class="p">,</span>
+                                                <span class="n">p_value</span><span class="p">)</span>
+                    <span class="n">pop_up</span> <span class="o">=</span> <span class="n">PopUpInheritanceDict</span><span class="p">(</span><span class="n">parent_files</span><span class="p">,</span>
+                                                  <span class="n">full_name</span><span class="p">,</span>
+                                                  <span class="n">plug_name</span><span class="p">,</span>
+                                                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span>
+                                                              <span class="n">check_box_iterate</span><span class="o">.</span>
+                                                              <span class="n">isChecked</span><span class="p">)())</span>
                     <span class="n">pop_up</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ignore_node</span> <span class="o">=</span> <span class="n">pop_up</span><span class="o">.</span><span class="n">everything</span>
                     <span class="k">if</span> <span class="n">pop_up</span><span class="o">.</span><span class="n">ignore</span><span class="p">:</span>
@@ -1283,14 +1289,6 @@
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- Pipeline initialising ...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-
-        <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_filename</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;NoName&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-            <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; is getting initialized. &#39;</span>
-            <span class="s1">&#39;Please wait.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-
         <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
         <span class="c1"># If the initialisation is launch for the main pipeline</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="p">:</span>
@@ -1300,6 +1298,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">main_pipeline</span> <span class="o">=</span> <span class="kc">False</span>
 
+        <span class="c1">#name = os.path.basename(</span>
+        <span class="c1">#    self.pipelineEditorTabs.get_current_filename())</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Pipeline&#39;</span><span class="p">:</span> <span class="n">name</span><span class="o">=</span> <span class="s2">&quot;NoName&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+            <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; is getting initialized. &#39;</span>
+            <span class="s1">&#39;Please wait.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
         <span class="n">init_result</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># complete config for completion</span>
@@ -1313,11 +1318,17 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Completion done.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># check missing inputs</span>
+        <span class="n">req_messages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">init_messages</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">missing_inputs</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get_missing_mandatory_parameters</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_inputs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">ptype</span> <span class="o">=</span> <span class="s1">&#39;pipeline&#39;</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;In </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">: missing mandatory parameters: </span><span class="si">%s</span><span class="s1">&#39;</span>
-                  <span class="o">%</span> <span class="p">(</span><span class="n">ptype</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_inputs</span><span class="p">)))</span>
+            <span class="n">mssg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;In </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1">, missing mandatory &#39;</span>
+                   <span class="s1">&#39;parameters: </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ptype</span><span class="p">,</span>
+                                             <span class="n">name</span><span class="p">,</span>
+                                             <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_inputs</span><span class="p">))</span>
+            <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mssg</span><span class="p">)</span>
             <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1">#missing_inputs = pipeline_tools.nodes_with_missing_inputs(pipeline)</span>
@@ -1330,19 +1341,163 @@
             <span class="c1">#init_result = False</span>
 
         <span class="c1"># check requirements</span>
-        <span class="n">req_messages</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">requirements</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">check_requirements</span><span class="p">(</span><span class="s1">&#39;global&#39;</span><span class="p">,</span>
                                                    <span class="n">message_list</span><span class="o">=</span><span class="n">req_messages</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">requirements</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pipeline requirements are not met&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pipeline requirements are not met.&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">req_messages</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;current configuration:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">study_config</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span><span class="s1">&#39;global&#39;</span><span class="p">))</span>
             <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requirements are not met. &#39;</span>
+                                 <span class="s1">&#39;Please see the standard output for more &#39;</span>
+                                 <span class="s1">&#39;information.&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">requirements</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">requirements</span><span class="o">=</span><span class="p">[</span><span class="n">requirements</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">requirements</span><span class="p">:</span>
+                <span class="c1"># QUESTION: Would it be better to write a general method for</span>
+                <span class="c1">#           testing all modules (currently each module test is</span>
+                <span class="c1">#           hard coded below)?</span>
+                <span class="c1"># TODO: Are these tests compatible with remote run?</span>
+
+                <span class="c1"># FSL:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">][</span><span class="s1">&#39;uses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;capsul.engine.module.&#39;</span>
+                                                        <span class="s1">&#39;fsl&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">KeyError</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="c1"># The process don&#39;t need FSL</span>
+                    <span class="k">pass</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;capsul.engine.module.fsl&#39;</span> <span class="ow">in</span> <span class="n">req</span><span class="p">:</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul.engine.module.&#39;</span>
+                                   <span class="s1">&#39;fsl&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;directory&#39;</span><span class="p">,</span>
+                                              <span class="kc">False</span><span class="p">):</span>
+                            <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires FSL &#39;</span>
+                                                 <span class="s1">&#39;but it seems FSL is not &#39;</span>
+                                                 <span class="s1">&#39;configured in mia &#39;</span>
+                                                 <span class="s1">&#39;preferences.&#39;</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires FSL but it &#39;</span>
+                                             <span class="s1">&#39;seems FSL is not configured in &#39;</span>
+                                             <span class="s1">&#39;mia preferences.&#39;</span><span class="p">)</span>
+
+                <span class="c1"># Matlab:</span>
+                <span class="k">try</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">][</span><span class="s1">&#39;uses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;capsul.engine.module.&#39;</span>
+                                                         <span class="s1">&#39;matlab&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span>
+                                             <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">()):</span>
+                        <span class="k">raise</span> <span class="ne">KeyError</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="c1"># The process don&#39;t need matlab</span>
+                    <span class="k">pass</span>
+
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="s1">&#39;capsul.engine.module.matlab&#39;</span> <span class="ow">in</span> <span class="n">req</span><span class="p">:</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul.engine.module.&#39;</span>
+                                   <span class="s1">&#39;matlab&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executable&#39;</span><span class="p">,</span>
+                                                 <span class="kc">False</span><span class="p">):</span>
+                            <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires Matlab &#39;</span>
+                                                 <span class="s1">&#39;but it seems Matlab is not &#39;</span>
+                                                 <span class="s1">&#39;configured in mia &#39;</span>
+                                                 <span class="s1">&#39;preferences.&#39;</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires Matlab but &#39;</span>
+                                             <span class="s1">&#39;it seems Matlab is not &#39;</span>
+                                             <span class="s1">&#39;configured in mia preferences.&#39;</span><span class="p">)</span>
+
+                <span class="c1"># SPM</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">][</span><span class="s1">&#39;uses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;capsul.engine.module.&#39;</span>
+                                                        <span class="s1">&#39;spm&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">KeyError</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="c1"># The process don&#39;t need spm</span>
+                    <span class="k">pass</span>
+
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="s1">&#39;capsul.engine.module.spm&#39;</span> <span class="ow">in</span> <span class="n">req</span><span class="p">:</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul.engine.module.spm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;directory&#39;</span><span class="p">,</span>
+                                                                   <span class="kc">False</span><span class="p">):</span>
+                            <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires SPM &#39;</span>
+                                                 <span class="s1">&#39;but it seems SPM is not &#39;</span>
+                                                 <span class="s1">&#39;configured in mia &#39;</span>
+                                                 <span class="s1">&#39;preferences.&#39;</span><span class="p">)</span>
+
+                        <span class="k">elif</span> <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul.engine.module.spm&#39;</span><span class="p">][</span><span class="s1">&#39;standalone&#39;</span><span class="p">]:</span>
+                          
+                            <span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires &#39;</span>
+                                                     <span class="s1">&#39;SPM but it seems that in &#39;</span>
+                                                     <span class="s1">&#39;mia preferences, SPM has &#39;</span>
+                                                     <span class="s1">&#39;been configured as &#39;</span>
+                                                     <span class="s1">&#39;standalone while matlab &#39;</span>
+                                                     <span class="s1">&#39;Runtime is not &#39;</span>
+                                                     <span class="s1">&#39;configured.&#39;</span><span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul.engine.module.matlab&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                                                   <span class="s1">&#39;executable&#39;</span><span class="p">)</span>
+
+                            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                                <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires &#39;</span>
+                                                     <span class="s1">&#39;SPM but it seems that in &#39;</span>
+                                                     <span class="s1">&#39;mia preferences, SPM has &#39;</span>
+                                                     <span class="s1">&#39;been configured as &#39;</span>
+                                                     <span class="s1">&#39;non-standalone while &#39;</span>
+                                                     <span class="s1">&#39;matlab with license is &#39;</span>
+                                                     <span class="s1">&#39;not configured.&#39;</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;The pipeline requires SPM but it &#39;</span>
+                                             <span class="s1">&#39;seems SPM is not configured in &#39;</span>
+                                             <span class="s1">&#39;mia preferences.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check that completion for output parameters is fine</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">process_order</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+                    <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
+                    
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Pipeline&#39;</span><span class="p">:</span>
+                        <span class="n">node_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">node_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">context_name</span>
+
+                    <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;It seems that no output parameter &#39;</span>
+                                         <span class="s1">&#39; has been automatically set for the &#39;</span>
+                                         <span class="s1">&#39;&quot;</span><span class="si">{0}</span><span class="s1">&quot; brick.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">init_result</span><span class="p">:</span>
 
-            <span class="c1"># add process characteristics in  the database</span>
+            <span class="c1"># add process characteristics in the database</span>
             <span class="c1"># if init is otherwise OK</span>
             <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">process_order</span><span class="p">:</span>
                 <span class="n">process</span> <span class="o">=</span> <span class="n">node</span>
@@ -1428,22 +1583,25 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;MIA configuration warning!&quot;</span><span class="p">)</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The pipeline could not be initialized properly.&#39;</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The pipeline could not be initialised properly.&#39;</span>
 
+                <span class="k">if</span> <span class="n">init_messages</span><span class="p">:</span>
+
+                    <span class="k">for</span> <span class="n">mssg</span> <span class="ow">in</span> <span class="n">init_messages</span><span class="p">:</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="n">message</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">- &#39;</span> <span class="o">+</span> <span class="n">mssg</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="n">yes_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">addButton</span><span class="p">(</span><span class="s2">&quot;Open MIA preferences&quot;</span><span class="p">,</span>
                                                 <span class="n">QMessageBox</span><span class="o">.</span><span class="n">YesRole</span><span class="p">)</span>
-
                 <span class="n">ok_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">addButton</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">clickedButton</span><span class="p">()</span> <span class="o">==</span> <span class="n">yes_button</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span>
+                                                  <span class="n">tab_widget</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">)(</span><span class="mi">1</span><span class="p">)</span>
 
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
                 <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; was not initialised successfully.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
@@ -1451,7 +1609,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span>
-                        <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+                                                          <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>

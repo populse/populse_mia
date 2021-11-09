@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.utils.utils &#8212; populse_mia 2.0.0-dev+487845bc documentation</title>
+    <title>populse_mia.utils.utils &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0-dev+487845bc',
+        VERSION:     '2.0.0-dev+93bc52b1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+487845bc documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -292,9 +292,9 @@
     <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_INTEGER</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
     <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">):</span>
