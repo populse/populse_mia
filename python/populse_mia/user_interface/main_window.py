@@ -957,6 +957,27 @@ class MainWindow(QMainWindow):
                         msg.buttonClicked.connect(msg.close)
                         msg.exec()
                         return False
+
+                    except ValueError:
+                        msg = QMessageBox()
+                        msg.setIcon(QMessageBox.Warning)
+                        msg.setText(
+                            "The project cannot be read by Mia. Please check "
+                            "if the version of the project is compatible with "
+                            "the version of the running mia...")
+                        msg.setWindowTitle("Warning")
+                        msg.setStandardButtons(QMessageBox.Ok)
+                        msg.buttonClicked.connect(msg.close)
+                        msg.exec()
+                        config = Config()
+                        opened_projects = config.get_opened_projects()
+
+                        if file_path in opened_projects:
+                            opened_projects.remove(file_path)
+                            config.set_opened_projects(opened_projects)
+                            config.saveConfig()
+                        return False
+                    
                     problem_list = data_loader.verify_scans(temp_database)
 
                     # Message if invalid files
