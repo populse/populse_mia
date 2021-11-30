@@ -53,7 +53,7 @@ install:
   - cmd: "pip install \"PyQt5==5.9.2\""
   - sh: pip3 install 'PyQt5==5.9.2'
 
-  - pip uninstall -y populse_db soma-base capsul
+  - pip uninstall -y populse_db soma-base soma-workflow capsul
 
   - cmd: git clone --depth=50 --branch=master https://github.com/populse/populse_db.git C:\\projects\\populse_db
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/populse_db.git /home/appveyor/projects/populse_db; fi
@@ -69,6 +69,10 @@ install:
   - cmd: git clone --depth=50 --branch=master https://github.com/populse/soma-base.git C:\\projects\\soma-base
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/soma-base.git /home/appveyor/projects/soma-base; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=master https://github.com/populse/soma-base.git /Users/appveyor/projects/soma-base; fi
+
+  - cmd: git clone --depth=50 --branch=master https://github.com/populse/soma-workflow.git C:\\projects\\soma-workflow
+  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/soma-workflow.git /home/appveyor/projects/soma-workflow; fi
+  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=master https://github.com/populse/soma-workflow.git /Users/appveyor/projects/soma-workflow; fi
 
   - cmd: git clone --depth=50 --branch=master https://github.com/populse/capsul.git C:\\projects\\capsul
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/capsul.git /home/appveyor/projects/capsul; fi
