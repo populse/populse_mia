@@ -178,6 +178,9 @@ class MainWindow(QMainWindow):
         self.action_import = QAction(QIcon(os.path.join(sources_images_dir,
                                                         'Blue.png')),
                                      'Import', self)
+        self.action_export_bids = QAction(QIcon(os.path.join(sources_images_dir,
+                                                             'export.png')),
+                                          'Export to BIDS', self)
         self.action_see_all_projects = QAction('See all projects', self)
         self.action_project_properties = QAction('Project properties', self)
         self.action_software_preferences = QAction('MIA preferences', self)
@@ -289,6 +292,7 @@ class MainWindow(QMainWindow):
         self.addAction(self.action_delete)
 
         self.action_import.setShortcut('Ctrl+I')
+        self.action_export_bids.setShortcut('Ctrl+E')
 
         for i in range(self.config.get_max_projects()):
             self.saved_projects_actions.append(QAction(self, visible=False,
@@ -324,6 +328,7 @@ class MainWindow(QMainWindow):
         self.action_save_as.triggered.connect(self.save_as)
         self.action_delete.triggered.connect(self.delete_project)
         self.action_import.triggered.connect(self.import_data)
+        self.action_export_bids.triggered.connect(self.export_to_bids)
         self.action_see_all_projects.triggered.connect(self.see_all_projects)
         self.action_project_properties.triggered.connect(
             self.project_properties_pop_up)
@@ -354,6 +359,7 @@ class MainWindow(QMainWindow):
         self.action_delete_project.triggered.connect(self.delete_project)
         self.menu_file.addSeparator()
         self.menu_file.addAction(self.action_import)
+        self.menu_file.addAction(self.action_export_bids)
         self.menu_file.addSeparator()
         self.menu_file.addMenu(self.menu_saved_projects)
         for i in range(self.config.get_max_projects()):
@@ -531,6 +537,12 @@ class MainWindow(QMainWindow):
         """Open the documentation in a web browser."""
         webbrowser.open(
             'https://populse.github.io/populse_mia/html/index.html')
+        
+    def export_to_bids(self):
+        documents = self.project.session.get_documents_names(
+                COLLECTION_CURRENT)
+        print('export to BIDS (' + str(len(documents)) + ' files)')
+        print(documents)
 
     def install_processes_pop_up(self, folder=False):
         """Open the install processes pop-up.
