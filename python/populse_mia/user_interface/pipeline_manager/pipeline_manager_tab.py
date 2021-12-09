@@ -1326,15 +1326,13 @@ class PipelineManagerTab(QWidget):
         req_messages = []
         init_messages = []
 
-        # Capsul parameters completion
-        print('Completion ...')
-        self.complete_pipeline_parameters(pipeline)
-        print('\nCompletion done.\n')
-
-        # retrieve workflow
-        # when pipeline is iterated, this seems to perform completion again
+        # completion / retrieve workflow
         try:
-            self.workflow = workflow_from_pipeline(pipeline)
+
+            print('Completion / workflow...')
+            self.workflow = workflow_from_pipeline(pipeline,
+                                                   complete_parameters=True)
+            print('\nWorkflow done.\n')
 
         except (TypeError, ValueError) as error:
             init_result = False

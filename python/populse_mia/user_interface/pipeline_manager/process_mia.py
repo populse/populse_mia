@@ -257,7 +257,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
                 process.mfile = True
 
-    def complete_parameters(self, process_inputs={}):
+    def complete_parameters(self, process_inputs={}, complete_iterations=True):
 
         self.completion_progress = self.fallback_engine.completion_progress
         self.completion_progress_total \
@@ -298,7 +298,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                         '.'.join((in_process.__module__,
                                   in_process.__class__.__name__))))
 
-            self.fallback_engine.complete_parameters(process_inputs)
+            self.fallback_engine.complete_parameters(
+                process_inputs, complete_iterations=complete_iterations)
             self.completion_progress = self.fallback_engine.completion_progress
             self.completion_progress_total = (self.fallback_engine.
                                               completion_progress_total)
