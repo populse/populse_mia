@@ -56,6 +56,7 @@ from populse_mia.user_interface.pop_ups import (PopUpDeleteProject,
                                                 PopUpSeeAllProjects)
 from populse_mia.user_interface.data_viewer.data_viewer_tab import (
     DataViewerTab)
+from populse_mia.data_manager.export_bids import ExportToBIDS
 
 CLINICAL_TAGS = ["Site", "Spectro", "MR", "PatientRef", "Pathology", "Age",
                  "Sex", "Message"]
@@ -539,10 +540,7 @@ class MainWindow(QMainWindow):
             'https://populse.github.io/populse_mia/html/index.html')
         
     def export_to_bids(self):
-        documents = self.project.session.get_documents_names(
-                COLLECTION_CURRENT)
-        print('export to BIDS (' + str(len(documents)) + ' files)')
-        print(documents)
+        ExportToBIDS(self.project)
 
     def install_processes_pop_up(self, folder=False):
         """Open the install processes pop-up.
