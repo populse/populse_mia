@@ -598,6 +598,7 @@ class MiniViewer(QWidget):
 
                 try:
                     chk = nib.as_closest_canonical(nib.load(file_path))
+                    #chk = nib.load(file_path)
 
                 except nib.filebasedimages.ImageFileError as e:
                     print("Error while trying to display the {} image ...!\n"
@@ -842,12 +843,17 @@ class MiniViewer(QWidget):
         """
         # Updating the config
         self.config = Config()
+
+        self.img = []
+
         if len(file_paths) > 1:
             self.config.setShowAllSlices(False)
             self.check_box_slices.setCheckState(Qt.Unchecked)
             self.check_box_slices.setCheckable(False)
+
         else:
             self.check_box_slices.setCheckable(True)
+
         self.show_slices(file_paths)
 
         if self.config.isRadioView() is True:
