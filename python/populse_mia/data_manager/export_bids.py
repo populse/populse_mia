@@ -4,13 +4,15 @@ import yaml
 import json
 import gzip
 import shutil
-from PyQt5.QtWidgets import QMainWindow, QProgressBar, QApplication, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QProgressBar, QApplication, QFileDialog,\
+    QMessageBox
 import sys
 # import threading
 # from multiprocessing import Queue, Process
 # import time
 
 from populse_mia.data_manager.project import COLLECTION_CURRENT
+from PyQt5.QtCore import Qt
 
 
 # data_path =  '..../data/raw_data'
@@ -26,8 +28,8 @@ class ProgressBar(QMainWindow):
         self.pbar.setGeometry(30, 40, 250, 25)
         self.pbar.setValue(0)
 
-        self.setWindowTitle("Conversion progress ... ")
-        self.setGeometry(32,32,300,100)
+        self.setWindowTitle("Export progress ... ")
+        self.setGeometry(300,350,300,100)
 
 
 class ExportToBIDS():
@@ -57,6 +59,9 @@ class ExportToBIDS():
 
                 self.layout = BIDSLayout(self.data_export)
                 self.p = ProgressBar()
+                self.p.show()
+                self.p.pbar.setValue(0)
+                QApplication.processEvents()
                 self.startExport()
 
     def dialogbox_dir(self):
@@ -80,11 +85,7 @@ class ExportToBIDS():
             with gzip.open(dest_file, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
 
-    def save_json(self, tags_orig, dest_file):
-        new_tags = {}
-        for keys_tg, val_tg in tags_orig.items():
-            if isinstance(val_tg, dict):
-                new_tags[keys_tg.replace(" ","")] = val_tg['value'][0]
+    def save_json(self, new_tags, dest_file):
         with open(dest_file, 'w') as f:
             json.dump(new_tags, f)
 
@@ -97,6 +98,8 @@ class ExportToBIDS():
         shutil.copy(bvec_bval, new_bvec_bval)
 
     def startExport(self):
+        
+        error = False
 
         list_nii, sub = [], {}
         
@@ -109,9 +112,9 @@ class ExportToBIDS():
         #                                     COLLECTION_CURRENT,
         #                                     doc,
         #                                     lst)))
-        
-        data_path = self.project.folder
 
+        data_path = self.project.folder
+        
         for doc in self.documents:
             if doc.endswith('.nii') and 'raw_data' in doc:
                 list_nii.append(doc)
@@ -140,15 +143,10 @@ class ExportToBIDS():
 
         n = len(list_nii)
         i = 0
-        self.p.pbar.setValue(i)
-        self.p.show()
         
         for doc in list_nii:
-
             QApplication.processEvents()
-            i += round(100 / n)
             self.p.pbar.setValue(i)
-
             tmp = sub[self.project.session.get_value(
                                             COLLECTION_CURRENT,
                                             doc,
@@ -179,22 +177,41 @@ class ExportToBIDS():
                          # acq-{acquisition}][_
                          # rec-{reconstruction}][_
                          # run-{run}][_echo-{echo}]_{suffix}.nii.gz"
+
+            if not suff_found:
+                suff_found = ('', '')
+                
+            if suff_found[1] == 'fieldmap':
+                suff_found = (suff_found[0], 'magnitude1')
         
-            entities = {
-            'subject': tmp[0],
-            'session': '0' + str(tmp[1].index(self.project.session.get_value(
-                                            COLLECTION_CURRENT,
-                                            doc,
-                                            'CreationDate')) + 1),
-            # 'run': 2,
-            # 'task': 'nback',
-            'datatype': suff_found[0],
-            'suffix': suff_found[1]
-            }
+            if suff_found[1] in ['magnitude1', 'bold']:
+                entities = {
+                    'subject': tmp[0],
+                    'session': '0' + str(tmp[1].index(self.project.session.get_value(
+                                                COLLECTION_CURRENT,
+                                                doc,
+                                                'CreationDate')) + 1),
+                    # 'run': "1",
+                    'task': '01',
+                    'datatype': suff_found[0],
+                    'suffix': suff_found[1]
+                }
+            else:
+                entities = {
+                    'subject': tmp[0],
+                    'session': '0' + str(tmp[1].index(self.project.session.get_value(
+                                                COLLECTION_CURRENT,
+                                                doc,
+                                                'CreationDate')) + 1),
+                    # 'run': 2,
+                    # 'task': 'nback',
+                    'datatype': suff_found[0],
+                    'suffix': suff_found[1]
+                }
             path_nii = os.path.join(data_path, doc)
             path_nii_without_ext = os.path.splitext(path_nii)[0]
             tags = {}
-            tags["Name"] = "OM"
+            tags["Name"] = "populse"
 
             try:
                 path_const = self.layout.build_path(entities, validate=True)
@@ -217,7 +234,21 @@ class ExportToBIDS():
 
                 # print(' ' * 10, 'exported to ', path_const)
             except Exception as e:
+                error = True
                 print(path_nii)
                 print("can't build this data : ", e)
-        
+
+            i += round(100 / n)
+
         self.p.close()
+        
+        if error:
+            message = 'There were errors during the export, see terminal'
+        else:
+            message = 'Export successfully completed'
+            
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Dialog")
+        dlg.setText(message)
+        dlg.setWindowModality(Qt.ApplicationModal)
+        dlg.exec_()
