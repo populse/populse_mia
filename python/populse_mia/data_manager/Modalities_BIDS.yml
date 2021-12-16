@@ -10,8 +10,8 @@ listProtocols:
 
    anat :
       T1w:
-         Bruker : ['*T1_RARE*', '*DCE*']
-         Philips : ['*T1W*', '*DCE*']
+         Bruker : ['*T1_RARE*', '*DCE*', '*MDEFT*']
+         Philips : ['*T1W*', '*DCE*', '*T1TFE*']
          Dicom : []
          Nifti : []
       T2w:
@@ -90,7 +90,7 @@ listProtocols:
    func:
       bold:
          Bruker : []
-         Philips : []
+         Philips : ['*BOLD*']
          Dicom : []
          Nifti : []
       cbv:
@@ -110,3 +110,4 @@ listProtocols:
          Philips : []
          Dicom : []
          Nifti : []
+
