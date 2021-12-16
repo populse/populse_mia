@@ -56,12 +56,10 @@ from populse_mia.user_interface.pop_ups import (PopUpDeleteProject,
                                                 PopUpSeeAllProjects)
 from populse_mia.user_interface.data_viewer.data_viewer_tab import (
     DataViewerTab)
-<<<<<<< HEAD
 from populse_mia.data_manager.export_bids import ExportToBIDS
-=======
+
 import threading
 import sys
->>>>>>> 7d8de90b63e7b7fe50fc1d5c57e67880a3664873
 
 CLINICAL_TAGS = ["Site", "Spectro", "MR", "PatientRef", "Pathology", "Age",
                  "Sex", "Message"]
