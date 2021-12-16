@@ -932,8 +932,6 @@ class PipelineManagerTab(QWidget):
                     include_optional=True)
                 pipeline = new_pipeline
                 iteration_name = old_node_name
-            else:
-                iteration_name = pipeline.name
 
             if isinstance(trait.trait_type, traits.List):
                 node_name = 'un_list_%s' % plug

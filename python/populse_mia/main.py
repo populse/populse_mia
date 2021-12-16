@@ -483,6 +483,7 @@ def launch_mia():
     deleted_projects = _verify_saved_projects()
     project = Project(None, True)
     main_window = MainWindow(project, deleted_projects=deleted_projects)
+    main_window.setAttribute(Qt.WA_DeleteOnClose | Qt.WA_QuitOnClose)
     main_window.show()
 
     # make sure to instantiate the QtThreadCall singleton from the main thread

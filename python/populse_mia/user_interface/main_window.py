@@ -56,10 +56,51 @@ from populse_mia.user_interface.pop_ups import (PopUpDeleteProject,
                                                 PopUpSeeAllProjects)
 from populse_mia.user_interface.data_viewer.data_viewer_tab import (
     DataViewerTab)
+<<<<<<< HEAD
 from populse_mia.data_manager.export_bids import ExportToBIDS
+=======
+import threading
+import sys
+>>>>>>> 7d8de90b63e7b7fe50fc1d5c57e67880a3664873
 
 CLINICAL_TAGS = ["Site", "Spectro", "MR", "PatientRef", "Pathology", "Age",
                  "Sex", "Message"]
+
+
+console_shell_running = False
+_ipsubprocs_lock = threading.RLock()
+_ipsubprocs = []
+
+
+class _ProcDeleter(threading.Thread):
+    """ used by open_shell
+    """
+
+    def __init__(self, o):
+        threading.Thread.__init__(self)
+        self.o = o
+
+    def __del__(self):
+        try:
+            self.o.kill()
+        except Exception:
+            pass
+        if getattr(self, 'console', False):
+            global console_shell_running
+            console_shell_running = False
+
+    def run(self):
+        try:
+            self.o.communicate()
+        except Exception as e:
+            print('exception in ipython process:', e)
+        global _ipsubprocs
+        try:
+            with _ipsubprocs_lock:
+                _ipsubprocs.remove(self)
+        except Exception:
+            pass
+
 
 class MainWindow(QMainWindow):
 
@@ -186,6 +227,7 @@ class MainWindow(QMainWindow):
         self.action_project_properties = QAction('Project properties', self)
         self.action_software_preferences = QAction('MIA preferences', self)
         self.action_package_library = QAction('Package library manager', self)
+        self.action_open_shell = QAction('Open python shell', self)
         self.action_exit = QAction(QIcon(os.path.join(sources_images_dir,
                                                       'exit.png')), 'Exit',
                                    self)
@@ -209,6 +251,14 @@ class MainWindow(QMainWindow):
             size = self.config.get_mainwindow_size()
             if size:
                 self.resize(size[0], size[1])
+
+    @staticmethod
+    def last_window_closed():
+        # if the ipython console has been run, something prevents Qt from
+        # quitting after the window is closed. The cause is not known yet.
+        # so: force exit the event loop.
+        from soma.qt_gui.qt_backend import Qt
+        Qt.QTimer.singleShot(10, Qt.qApp.exit)
 
     def add_clinical_tags(self):
         """Add the clinical tags to the database and the data browser"""
@@ -278,8 +328,6 @@ class MainWindow(QMainWindow):
         if self.data_viewer:
             self.data_viewer.clear()
 
-        super().close()
-
     def create_view_actions(self):
         """Create the actions and their shortcuts in each menu"""
 
@@ -325,6 +373,7 @@ class MainWindow(QMainWindow):
         self.action_create.triggered.connect(self.create_project_pop_up)
         self.action_open.triggered.connect(self.open_project_pop_up)
         self.action_exit.triggered.connect(self.close)
+        self.action_open_shell.triggered.connect(self.open_shell)
         self.action_save.triggered.connect(self.save)
         self.action_save_as.triggered.connect(self.save_as)
         self.action_delete.triggered.connect(self.delete_project)
@@ -371,6 +420,8 @@ class MainWindow(QMainWindow):
         self.menu_file.addAction(self.action_software_preferences)
         self.menu_file.addAction(self.action_project_properties)
         self.menu_file.addAction(self.action_package_library)
+        self.menu_file.addSeparator()
+        self.menu_file.addAction(self.action_open_shell)
         self.menu_file.addSeparator()
         self.menu_file.addAction(self.action_exit)
         self.update_recent_projects_actions()
@@ -1085,6 +1136,105 @@ class MainWindow(QMainWindow):
             self.pipeline_manager.update_user_mode)
         # self.pop_up_preferences.signal_preferences_change.connect(
         #     self.update_package_library_action)
+
+    def open_shell(self):
+        """ Open a Qt console shell with an IPython kernel seing the program
+        internals
+        """
+        from soma.qt_gui import qt_backend
+        ipfunc = None
+        mode='qtconsole'
+        print('startShell')
+        try:
+            import qtconsole  # to check it is installed
+            import jupyter_core.application
+            ipfunc = 'from jupyter_core import application; ' \
+                'app = application.JupyterApp(); app.initialize(); app.start()'
+        except ImportError:
+            print('failed to run Qt console')
+            return
+
+        if ipfunc:
+            import soma.subprocess
+
+            ipConsole = self.run_ipconsole_kernel(mode)
+            if ipConsole:
+                global _ipsubprocs
+
+                qt_api = qt_backend.get_qt_backend()
+                qt_apis = {'PyQt4': 'pyqt', 'PyQt5': 'pyqt5',
+                           'PySide': 'pyside'}
+                qt_api_code = qt_apis.get(qt_api, 'pyq5t')
+                cmd = [sys.executable, '-c',
+                      'import os; os.environ["QT_API"] = "%s"; %s'
+                      % (qt_api_code, ipfunc),
+                      mode, '--existing',
+                      '--shell=%d' % ipConsole.shell_port,
+                      '--iopub=%d' % ipConsole.iopub_port,
+                      '--stdin=%d' % ipConsole.stdin_port,
+                      '--hb=%d' % ipConsole.hb_port]
+                sp = soma.subprocess.Popen(cmd)
+                pd = _ProcDeleter(sp)
+                with _ipsubprocs_lock:
+                    _ipsubprocs.append(pd)
+                pd.start()
+
+                # hack the lastWindowClosed event because it becomes inactive
+                # otherwise
+                QApplication.instance().lastWindowClosed.connect(
+                    self.last_window_closed)
+
+    @staticmethod
+    def run_ipconsole_kernel(mode='qtconsole'):
+        print('run_ipconsole_kernel:', mode)
+        import IPython
+        from IPython.lib import guisupport
+        from soma.qt_gui.qt_backend import Qt
+        qtapp = Qt.QApplication.instance()
+        qtapp._in_event_loop = True
+        guisupport.in_event_loop = True
+        ipversion = [int(x) for x in IPython.__version__.split('.')]
+
+        from ipykernel.kernelapp import IPKernelApp
+        app = IPKernelApp.instance()
+        if not app.initialized() or not app.kernel:
+            print('runing IP console kernel')
+            app.hb_port = 50042  # don't know why this is not set automatically
+            app.initialize([mode, '--gui=qt', # '--pylab=qt',
+                            "--KernelApp.parent_appname='ipython-%s'" % mode])
+            # in ipython >= 1.2, app.start() blocks until a ctrl-c is issued in
+            # the terminal. Seems to block in tornado.ioloop.PollIOLoop.start()
+            #
+            # So, don't call app.start because it would begin a zmq/tornado loop
+            # instead we must just initialize its callback.
+            # if app.poller is not None:
+                # app.poller.start()
+            app.kernel.start()
+
+            from zmq.eventloop import ioloop
+            # IP 2 allows just calling the current callbacks.
+            # For IP 1 it is not sufficient.
+            import tornado
+            if tornado.version_info >= (4, 5):
+                # tornado 5 is using a decque for _callbacks, not a
+                # list + explicit locking
+                def my_start_ioloop_callbacks(self):
+                    if hasattr(self, '_callbacks'):
+                        ncallbacks = len(self._callbacks)
+                        for i in range(ncallbacks):
+                            self._run_callback(self._callbacks.popleft())
+            else:
+                def my_start_ioloop_callbacks(self):
+                    with self._callback_lock:
+                        callbacks = self._callbacks
+                        self._callbacks = []
+                    for callback in callbacks:
+                        self._run_callback(callback)
+
+            my_start_ioloop_callbacks(ioloop.IOLoop.instance())
+        return app
+
+
 
     def switch_project(self, file_path, name):
         """Check if it's possible to open the selected project

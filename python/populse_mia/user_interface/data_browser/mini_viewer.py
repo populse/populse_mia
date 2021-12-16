@@ -84,6 +84,8 @@ class MiniViewer(QWidget):
           display it correctly
         - indexImage: update the sliders values depending on the size of
           the selected image
+        - mem_release: reset all object lists to zero in order to
+          preserve memory
         - navigImage: display the 2D image for the selected index
         - openTagsPopUp: opens a pop-up to select the legend of the thumbnails
         - setThumbnail: set the thumbnail tag value under the image frame
@@ -516,6 +518,23 @@ class MiniViewer(QWidget):
             self.slider_4D[idx].setMaximum(self.img[idx].shape[3] - 1)
             self.slider_5D[idx].setMaximum(self.img[idx].shape[4] - 1)
 
+    def mem_release(self):
+        """Reset all object lists to zero in order to preserve memory"""
+
+        del self.im_2D[:]
+        del self.slider_3D[:]
+        del self.slider_4D[:]
+        del self.slider_5D[:]
+        del self.txt_slider_3D[:]
+        del self.txt_slider_4D[:]
+        del self.txt_slider_5D[:]
+        del self.label3D[:]
+        del self.label4D[:]
+        del self.label5D[:]
+        del self.imageLabel[:]
+        del self.img[:]
+        del self.label_description[:]
+
     def navigImage(self, idx):
         """Display the 2D image for the selected index.
 
@@ -843,8 +862,7 @@ class MiniViewer(QWidget):
         """
         # Updating the config
         self.config = Config()
-
-        self.img = []
+        self.mem_release()
 
         if len(file_paths) > 1:
             self.config.setShowAllSlices(False)

@@ -40,6 +40,7 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
 from soma.controller import trait_ids
 
 # capsul imports
+from capsul.pipeline.pipeline_nodes import PipelineNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.qt_gui.widgets.attributed_process_widget import (
                                                         AttributedProcessWidget)
@@ -585,6 +586,7 @@ class CapsulNodeController(QWidget):
 
         else:
             self.pipeline.rename_node(old_node_name, new_node_name)
+            self.rename_subprocesses(self.pipeline.nodes[new_node_name], new_node_name)
 
             # Updating the node_name attribute
             self.node_name = new_node_name
@@ -616,6 +618,23 @@ class CapsulNodeController(QWidget):
             self.main_window.statusBar().showMessage(
                 'Node name "{0}" has been changed to "{1}".'.format(
                     old_node_name, new_node_name))
+
+    def rename_subprocesses(self, node, parent_node_name):
+        if node.process.context_name.split('.')[0] == 'Pipeline':
+            if len(node.process.context_name.split('.')) >= 3:
+                node.process.context_name = 'Pipeline.' + parent_node_name + '.' + '.'.join(
+                    node.process.context_name.split('.')[2:])
+            else:
+                node.process.context_name = 'Pipeline.' + parent_node_name
+        else:
+            node.process.context_name = parent_node_name
+
+        if isinstance(node, PipelineNode):
+            for name, subnode in node.process.nodes.items():
+                if name == '':
+                    continue
+                else:
+                    self.rename_subprocesses(subnode, parent_node_name)
 
     def filter_attributes(self):
         """Display a filter widget."""
@@ -1182,6 +1201,8 @@ class NodeController(QWidget):
 
         else:
             self.pipeline.rename_node(old_node_name, new_node_name)
+            self.rename_subprocesses(self.pipeline.nodes[new_node_name], new_node_name)
+
             # Updating the node_name attribute
             self.node_name = new_node_name
 
@@ -1193,6 +1214,23 @@ class NodeController(QWidget):
             self.main_window.statusBar().showMessage(
                 'Node name "{0}" has been changed to "{1}".'.format(
                     old_node_name, new_node_name))
+
+    def rename_subprocesses(self, node, parent_node_name):
+        if node.process.context_name.split('.')[0] == 'Pipeline':
+            if len(node.process.context_name.split('.')) >= 3:
+                node.process.context_name = 'Pipeline.' + parent_node_name + '.' + '.'.join(
+                    node.process.context_name.split('.')[2:])
+            else:
+                node.process.context_name = 'Pipeline.' + parent_node_name
+        else:
+            node.process.context_name = parent_node_name
+
+        if isinstance(node, PipelineNode):
+            for name, subnode in node.process.nodes.items():
+                if name == '':
+                    continue
+                else:
+                    self.rename_subprocesses(subnode, parent_node_name)
 
     def update_parameters(self, process=None):
         """Update the parameters values.
