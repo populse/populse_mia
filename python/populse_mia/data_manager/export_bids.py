@@ -4,20 +4,20 @@ import yaml
 import json
 import gzip
 import shutil
-from PyQt5.QtWidgets import QMainWindow, QProgressBar, QApplication, QFileDialog,\
-    QMessageBox
+import datetime
 import sys
 # import threading
 # from multiprocessing import Queue, Process
 # import time
 
-from populse_mia.data_manager.project import COLLECTION_CURRENT
+from PyQt5.QtWidgets import QMainWindow, QProgressBar, QApplication, QFileDialog,\
+    QMessageBox
 from PyQt5.QtCore import Qt
 
+from populse_mia.data_manager.project import COLLECTION_CURRENT
 
 # data_path =  '..../data/raw_data'
 # data_export = '.../Bids_export'
-
 
 class ProgressBar(QMainWindow):
 
@@ -35,6 +35,7 @@ class ProgressBar(QMainWindow):
 class ExportToBIDS():
 
     def __init__(self, project):
+        
         current_path = os.path.dirname(os.path.realpath(__file__))
         self.mod_Bids = os.path.join(current_path,'Modalities_BIDS.yml')
         self.project = project
@@ -87,7 +88,15 @@ class ExportToBIDS():
 
     def save_json(self, new_tags, dest_file):
         with open(dest_file, 'w') as f:
-            json.dump(new_tags, f)
+            json.dump(new_tags, f, default=self.outputJSON)
+            
+    def outputJSON(self, obj):
+        """Default JSON serializer."""
+        if isinstance(obj, datetime.datetime):
+            if obj.utcoffset() is not None:
+                obj = obj - obj.utcoffset()
+            return obj.strftime('%Y-%m-%d %H:%M:%S.%f')
+        return str(obj)
 
     def save_bvec_bval(self, bvec_bval, dest, ext):
         dir_name = os.path.dirname(dest)
@@ -96,13 +105,12 @@ class ExportToBIDS():
         base_name = os.path.splitext(base_name)[0]
         new_bvec_bval = os.path.join(dir_name, base_name + ext)
         shutil.copy(bvec_bval, new_bvec_bval)
+        
+    def strip_dict(self, dc):
+        return {key.replace(' ', ''): value for key, value in dc.items()}
 
     def startExport(self):
-        
-        error = False
 
-        list_nii, sub = [], {}
-        
         # print('export to BIDS (' + str(len(self.documents)) + ' files)')
         # list_tag = ['StudyName', 'ProtocolName', 'SequenceName']
         # for doc in self.documents:
@@ -113,6 +121,8 @@ class ExportToBIDS():
         #                                     doc,
         #                                     lst)))
 
+        error = False
+        list_nii, sub = [], {}
         data_path = self.project.folder
         
         for doc in self.documents:
@@ -143,6 +153,7 @@ class ExportToBIDS():
 
         n = len(list_nii)
         i = 0
+        no_acq = 1
         
         for doc in list_nii:
             QApplication.processEvents()
@@ -205,13 +216,14 @@ class ExportToBIDS():
                                                 'CreationDate')) + 1),
                     # 'run': 2,
                     # 'task': 'nback',
+                    'acq': 'lowres',
                     'datatype': suff_found[0],
                     'suffix': suff_found[1]
                 }
             path_nii = os.path.join(data_path, doc)
             path_nii_without_ext = os.path.splitext(path_nii)[0]
-            tags = {}
-            tags["Name"] = "populse"
+            tags_dict = self.project.session.get_document(COLLECTION_CURRENT, doc, fields=None, as_list=False)
+            tags_dict = self.strip_dict(dict(tags_dict._items()))
 
             try:
                 path_const = self.layout.build_path(entities, validate=True)
@@ -224,7 +236,7 @@ class ExportToBIDS():
                 path_json = os.path.join(dir_path, file_json + '.json')
 
                 self.save_nii_gz(path_nii, path_const)
-                self.save_json(tags, path_json)
+                self.save_json(tags_dict, path_json)
                 bval_path = path_nii_without_ext + '-bvals-MRtrix.txt'
                 bvec_path = path_nii_without_ext + '-bvecs-MRtrix.txt'
                 if os.path.exists(bval_path):
