@@ -6,6 +6,7 @@ Initialize the software appearance and defines interactions with the user.
 :Contains:
     :Class:
         - MainWindow
+        - _ProcDeleter
 
 """
 
@@ -70,8 +71,7 @@ _ipsubprocs = []
 
 
 class _ProcDeleter(threading.Thread):
-    """ used by open_shell
-    """
+    """Used by open_shell."""
 
     def __init__(self, o):
         threading.Thread.__init__(self)
@@ -109,6 +109,9 @@ class MainWindow(QMainWindow):
                              data browser
         - check_unsaved_modifications: check if there are differences
           between the current project and the database
+        - check_database: check if files in database have been modified or
+                          removed since they have been converted for the
+                          first time
         - closeEvent: override the closing event to check if there are
           unsaved modifications
         - create_view_actions: create the actions in each menu
@@ -286,6 +289,37 @@ class MainWindow(QMainWindow):
             return True
         else:
             return False
+
+    def check_database(self):
+        """Check if files in database have been modified since first import."""
+
+        if self.project is None:
+            return
+
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+
+        print('verify scans...')
+        t0 = time.time()
+        problem_list = data_loader.verify_scans(self.project)
+        print('check time:', time.time() - t0)
+
+        QApplication.restoreOverrideCursor()
+
+        # Message if invalid files
+        if problem_list:
+            str_msg = ""
+            for element in problem_list:
+                str_msg += element + "\n\n"
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText(
+                "These files have been modified or removed since "
+                "they have been converted for the first time:")
+            msg.setInformativeText(str_msg)
+            msg.setWindowTitle("Warning")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.buttonClicked.connect(msg.close)
+            msg.exec()
 
     def closeEvent(self, event):
         """Override the QWidget closing event to check if there are unsaved
@@ -1432,37 +1466,8 @@ class MainWindow(QMainWindow):
                 msg.exec()
                 return False
 
-    def check_database(self):
-        if self.project is None:
-            return
-
-        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-
-        print('verify scans...')
-        t0 = time.time()
-        problem_list = data_loader.verify_scans(self.project)
-        print('check time:', time.time() - t0)
-
-        QApplication.restoreOverrideCursor()
-
-        # Message if invalid files
-        if problem_list:
-            str_msg = ""
-            for element in problem_list:
-                str_msg += element + "\n\n"
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setText(
-                "These files have been modified or removed since "
-                "they have been converted for the first time:")
-            msg.setInformativeText(str_msg)
-            msg.setWindowTitle("Warning")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.buttonClicked.connect(msg.close)
-            msg.exec()
-
     def tab_changed(self):
-        """Update the window when the tab is changed"""
+        """Update the window when the tab is changed."""
 
         if self.tabs.tabText(
                 self.tabs.currentIndex()).replace("&",
