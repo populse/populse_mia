@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.data_manager package &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.data_manager package &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -67,15 +67,21 @@
 <dt>Contains:</dt>
 <dd><dl class="first last docutils">
 <dt>Class:</dt>
-<dd>-ImportProgress : Inherit from QProgressDialog and handle the
-progress bar
--ImportWorker : Inherit from QThread and manage the threads</dd>
+<dd><dl class="first docutils">
+<dt>-ImportProgress <span class="classifier-delimiter">:</span> <span class="classifier">Inherit from QProgressDialog and handle the</span></dt>
+<dd>progress bar</dd>
+</dl>
+<p class="last">-ImportWorker : Inherit from QThread and manage the threads</p>
+</dd>
 <dt>Methods:</dt>
-<dd>-read_log : Show the evolution of the progress bar and returns its
-feedback
--tags_from_file : Returns a list of [tag, value] contained in a Json
-file
--verify_scans : Check if the project’s scans have been modified</dd>
+<dd><dl class="first docutils">
+<dt>-read_log <span class="classifier-delimiter">:</span> <span class="classifier">Show the evolution of the progress bar and returns its</span></dt>
+<dd>feedback</dd>
+<dt>-tags_from_file <span class="classifier-delimiter">:</span> <span class="classifier">Returns a list of [tag, value] contained in a Json</span></dt>
+<dd>file</dd>
+</dl>
+<p class="last">-verify_scans : Check if the project’s scans have been modified</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -511,6 +517,20 @@ BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.data_manager.project.Project.del_clinical_tags">
+<code class="descname">del_clinical_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/project.html#Project.del_clinical_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.del_clinical_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove clinical tags to the project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of clinical tags that were removed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.data_manager.project.Project.files_in_project">
 <code class="descname">files_in_project</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/project.html#Project.files_in_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.files_in_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return values in files that are file / directory names within the
@@ -618,7 +638,7 @@ project, otherwise empty string</td>
 
 <dl class="method">
 <dt id="populse_mia.data_manager.project.Project.get_data_history">
-<code class="descname">get_data_history</code><span class="sig-paren">(</span><em>path</em>, <em>timepoint=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/project.html#Project.get_data_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.get_data_history" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_data_history</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/project.html#Project.get_data_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.get_data_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the processing history for the given data file.</p>
 <p>The history dict contains several elements:</p>
 <ul class="simple">
@@ -697,6 +717,17 @@ False otherwise</td>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>Actions that can be undone:</dt>
+<dd><ul class="first last simple">
+<li>add_tag</li>
+<li>remove_tags</li>
+<li>add_scans</li>
+<li>modified_values</li>
+<li>modified_visibilities</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -823,6 +854,17 @@ otherwise does nothing.</p>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>Actions that can be undone:</dt>
+<dd><ul class="first last simple">
+<li>add_tag</li>
+<li>remove_tags</li>
+<li>add_scans</li>
+<li>modified_values</li>
+<li>modified_visibilities</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -840,18 +882,13 @@ otherwise does nothing.</p>
 <dl class="method">
 <dt id="populse_mia.data_manager.project.Project.update_data_history">
 <code class="descname">update_data_history</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/project.html#Project.update_data_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.update_data_history" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cleanup earlier history of given data by removing in their bricks list
-those which correspond to obsolete runs (data has been re-written by
-more recent runs). This function only updates data status (bricks
+<dd><p>Cleanup earlier history of given data by removing from their bricks
+list those which correspond to obsolete runs (data has been re-written
+by more recent runs). This function only updates data status (bricks
 list), it does not remove obsolete bricks from the database.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a set of obsolete bricks thay may become orphan.</td>
-</tr>
-</tbody>
-</table>
+<p>a set of obsolete bricks that might become orphan: they are not used
+any longer in input data history, and were in the previous ones. But
+they still can be used in other data.</p>
 </dd></dl>
 
 </dd></dl>

@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface package &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.user_interface package &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -111,6 +111,7 @@ definition, as well as pop ups.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Class:</th><td class="field-body"><ul class="first last simple">
 <li>MainWindow</li>
+<li>_ProcDeleter</li>
 </ul>
 </td>
 </tr>
@@ -129,6 +130,12 @@ definition, as well as pop ups.</p>
 <dt id="populse_mia.user_interface.main_window.MainWindow.add_clinical_tags">
 <code class="descname">add_clinical_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.add_clinical_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.add_clinical_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the clinical tags to the database and the data browser</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.main_window.MainWindow.check_database">
+<code class="descname">check_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.check_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.check_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if files in database have been modified since first import.</p>
 </dd></dl>
 
 <dl class="method">
@@ -200,6 +207,12 @@ classes.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.main_window.MainWindow.del_clinical_tags">
+<code class="descname">del_clinical_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.del_clinical_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.del_clinical_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the clinical tags to the database and the data browser</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.main_window.MainWindow.delete_project">
 <code class="descname">delete_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.delete_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.delete_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a pop-up to open a project and updates the recent projects.</p>
@@ -209,6 +222,20 @@ classes.</p>
 <dt id="populse_mia.user_interface.main_window.MainWindow.documentation">
 <em class="property">static </em><code class="descname">documentation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.documentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.documentation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open the documentation in a web browser.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.main_window.MainWindow.get_controller_version">
+<code class="descname">get_controller_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.get_controller_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.get_controller_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the value of the controller_version_changed attribute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -232,6 +259,11 @@ files and loads them into the database.</p>
 </table>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="populse_mia.user_interface.main_window.MainWindow.last_window_closed">
+<em class="property">static </em><code class="descname">last_window_closed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.last_window_closed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.last_window_closed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="populse_mia.user_interface.main_window.MainWindow.open_project_pop_up">
 <code class="descname">open_project_pop_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.open_project_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.open_project_pop_up" title="Permalink to this definition">¶</a></dt>
@@ -242,6 +274,13 @@ files and loads them into the database.</p>
 <dt id="populse_mia.user_interface.main_window.MainWindow.open_recent_project">
 <code class="descname">open_recent_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.open_recent_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.open_recent_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a recent project.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.main_window.MainWindow.open_shell">
+<code class="descname">open_shell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.open_shell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.open_shell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a Qt console shell with an IPython kernel seing the program
+internals</p>
 </dd></dl>
 
 <dl class="method">
@@ -269,6 +308,11 @@ files and loads them into the database.</p>
 database connection. The project is not valid any longer after this
 call.</p>
 </dd></dl>
+
+<dl class="staticmethod">
+<dt id="populse_mia.user_interface.main_window.MainWindow.run_ipconsole_kernel">
+<em class="property">static </em><code class="descname">run_ipconsole_kernel</code><span class="sig-paren">(</span><em>mode='qtconsole'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.run_ipconsole_kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.run_ipconsole_kernel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.main_window.MainWindow.save">
@@ -302,6 +346,13 @@ name.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.main_window.MainWindow.set_controller_version">
+<code class="descname">set_controller_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.set_controller_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.set_controller_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverses the value of the controller_version_changed attribute.</p>
+<p>From False to True and vice versa</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.main_window.MainWindow.software_preferences_pop_up">
 <code class="descname">software_preferences_pop_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.software_preferences_pop_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.software_preferences_pop_up" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open the MIA preferences pop-up.</p>
@@ -332,7 +383,7 @@ and quit the current one.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.main_window.MainWindow.tab_changed">
 <code class="descname">tab_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/main_window.html#MainWindow.tab_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.main_window.MainWindow.tab_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the window when the tab is changed</p>
+<dd><p>Update the window when the tab is changed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -966,6 +1017,20 @@ values.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.control_checkbox_toggled">
+<code class="descname">control_checkbox_toggled</code><span class="sig-paren">(</span><em>main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences.control_checkbox_toggled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.control_checkbox_toggled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the user really wants to change the controller version.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>main_window</strong> – main window object of the software</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config">
 <code class="descname">edit_capsul_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences.edit_capsul_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>capsul engine edition</p>
@@ -983,6 +1048,11 @@ values.</p>
 <dd><p>Highlights characters in red when using the Find button’
 when editing configuration.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.not_use_clinical_mode_signal">
+<code class="descname">not_use_clinical_mode_signal</code><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.not_use_clinical_mode_signal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pop_ups.PopUpPreferences.ok_clicked">

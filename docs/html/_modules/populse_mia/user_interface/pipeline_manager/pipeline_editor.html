@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_editor</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -82,7 +82,7 @@
                         <span class="n">capsul_engine</span><span class="p">,</span> <span class="n">Node</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">ProcessNode</span>
 <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developper_view</span> <span class="kn">import</span> <span class="p">(</span>
-                                            <span class="n">NodeGWidget</span><span class="p">,</span> <span class="n">PipelineDevelopperView</span><span class="p">)</span>
+                                            <span class="n">NodeGWidget</span><span class="p">,</span> <span class="n">PipelineDeveloperView</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.xml</span> <span class="kn">import</span> <span class="n">save_xml_pipeline</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.python_export</span> <span class="kn">import</span> <span class="n">save_py_pipeline</span>
 
@@ -99,7 +99,7 @@
 <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
 
 
-<div class="viewcode-block" id="PipelineEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">[docs]</a><span class="k">class</span> <span class="nc">PipelineEditor</span><span class="p">(</span><span class="n">PipelineDevelopperView</span><span class="p">):</span>
+<div class="viewcode-block" id="PipelineEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">[docs]</a><span class="k">class</span> <span class="nc">PipelineEditor</span><span class="p">(</span><span class="n">PipelineDeveloperView</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;View to edit a pipeline graphically.</span>
 
 <span class="sd">    .. Methods:</span>
@@ -126,7 +126,7 @@
 
     <span class="n">pipeline_saved</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
     <span class="sd">&quot;&quot;&quot;The signal that will be emitted when the pipeline is saved.&quot;&quot;&quot;</span>
-    <span class="n">pipeline_modified</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="n">PipelineDevelopperView</span><span class="p">)</span>
+    <span class="n">pipeline_modified</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="n">PipelineDeveloperView</span><span class="p">)</span>
     <span class="sd">&quot;&quot;&quot;The signal that will be emitted when the pipeline is modified.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
@@ -136,7 +136,7 @@
 <span class="sd">        :param main_window: current main window</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">PipelineDevelopperView</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">PipelineDeveloperView</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                         <span class="n">allow_open_controller</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                         <span class="n">show_sub_pipelines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                         <span class="n">enable_edition</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -177,16 +177,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_link_def</span> <span class="o">=</span> <span class="p">(</span><span class="n">source_node</span><span class="p">,</span> <span class="n">source_plug</span><span class="p">,</span> <span class="n">dest_node</span><span class="p">,</span>
                                   <span class="n">dest_plug</span><span class="p">)</span>
         <span class="c1"># Calling the original method</span>
-        <span class="n">PipelineDevelopperView</span><span class="o">.</span><span class="n">_del_link</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">PipelineDeveloperView</span><span class="o">.</span><span class="n">_del_link</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;delete_link&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">source_node_name</span><span class="p">,</span> <span class="n">source_plug_name</span><span class="p">),</span>
                          <span class="p">(</span><span class="n">dest_node_name</span><span class="p">,</span> <span class="n">dest_plug_name</span><span class="p">),</span> <span class="n">active</span><span class="p">,</span> <span class="n">weak_link</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span>
-                                                 <span class="n">check_box_iterate</span><span class="p">)</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                                                                           <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Commented on January, 4th 2020</span>
+        <span class="c1"># if not (self.main_window.pipeline_manager.iterationTable.</span>
+        <span class="c1">#                                          check_box_iterate).isChecked():</span>
+        <span class="c1">#     self.main_window.pipeline_manager.run_pipeline_action.setDisabled(</span>
+        <span class="c1">#                                                                    True)</span>
+        <span class="c1"># End - commented on January, 4th 2020</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s1">&#39;Link </span><span class="si">{0}</span><span class="s1"> has been deleted.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">link</span><span class="p">))</span>
 
@@ -342,16 +345,18 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Calling the original method</span>
-        <span class="n">link</span> <span class="o">=</span> <span class="n">PipelineDevelopperView</span><span class="o">.</span><span class="n">_release_grab_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">ret</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">link</span> <span class="o">=</span> <span class="n">PipelineDeveloperView</span><span class="o">.</span><span class="n">_release_grab_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">ret</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;add_link&quot;</span><span class="p">,</span> <span class="n">link</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">from_redo</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span> \
-                <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                <span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Commented on January, 4th 2020</span>
+        <span class="c1"># if not self.main_window.pipeline_manager.iterationTable \</span>
+        <span class="c1">#         .check_box_iterate.isChecked():</span>
+        <span class="c1">#     self.main_window.pipeline_manager.run_pipeline_action.setDisabled(</span>
+        <span class="c1">#         True)</span>
+        <span class="c1"># End - commented on January, 4th 2020</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s1">&#39;Link </span><span class="si">{0}</span><span class="s1"> has been added.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">link</span><span class="p">))</span>
 
@@ -366,48 +371,63 @@
 <span class="sd">        :param from_export_plugs: True if this method is called from a</span>
 <span class="sd">           &quot;from_export_plugs&quot; undo or redo action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tot_plug_name</span> <span class="o">=</span><span class="p">[]</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_temp_plug_name</span><span class="p">:</span>
             <span class="n">_temp_plug_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_plug_name</span>
 
-        <span class="k">if</span> <span class="n">_temp_plug_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">):</span>
-            <span class="n">plug_name</span> <span class="o">=</span> <span class="n">_temp_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">plug</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline_node</span><span class="o">.</span><span class="n">plugs</span><span class="p">[</span><span class="n">plug_name</span><span class="p">]</span>
-            <span class="n">optional</span> <span class="o">=</span> <span class="n">plug</span><span class="o">.</span><span class="n">optional</span>
-            <span class="c1"># contains the plugs that are connected to the input or output plug</span>
-            <span class="n">new_temp_plugs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_temp_plug_name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">_temp_plug_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">_temp_plug_name</span><span class="p">]</span>
 
-            <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">plug</span><span class="o">.</span><span class="n">links_to</span><span class="p">:</span>
-                <span class="n">temp_plug</span> <span class="o">=</span> <span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">new_temp_plugs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_plug</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pip_plug_name</span> <span class="ow">in</span> <span class="n">_temp_plug_name</span><span class="p">:</span>
 
-            <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">:</span>
-                <span class="n">temp_plug</span> <span class="o">=</span> <span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">new_temp_plugs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_plug</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pip_plug_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">):</span>
+                <span class="n">plug_name</span> <span class="o">=</span> <span class="n">pip_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">plug</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline_node</span><span class="o">.</span><span class="n">plugs</span><span class="p">[</span><span class="n">plug_name</span><span class="p">]</span>
+                <span class="n">optional</span> <span class="o">=</span> <span class="n">plug</span><span class="o">.</span><span class="n">optional</span>
+                <span class="c1"># contains the plugs that are connected</span>
+                <span class="c1"># to the input or output plug</span>
+                <span class="n">new_temp_plugs</span> <span class="o">=</span> <span class="p">[]</span>
 
-            <span class="c1"># To avoid the &quot;_items&quot; bug: setting the has_items attribute</span>
-            <span class="c1"># of the trait&#39;s handler to False</span>
-            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
-            <span class="n">source_trait</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">source_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">has_items</span><span class="p">:</span>
-                <span class="n">source_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">has_items</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">plug</span><span class="o">.</span><span class="n">links_to</span><span class="p">:</span>
+                    <span class="n">temp_plug</span> <span class="o">=</span> <span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">new_temp_plugs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_plug</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">remove_trait</span><span class="p">(</span><span class="n">_temp_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update_pipeline</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">:</span>
+                    <span class="n">temp_plug</span> <span class="o">=</span> <span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">new_temp_plugs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_plug</span><span class="p">)</span>
 
-            <span class="c1"># if not from_undo and not from_redo:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">from_export_plugs</span><span class="p">:</span>
-                <span class="c1"># For history</span>
-                <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;remove_plug&quot;</span><span class="p">,</span> <span class="n">_temp_plug_name</span><span class="p">,</span>
-                                 <span class="n">new_temp_plugs</span><span class="p">,</span> <span class="n">optional</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span>\
-                    <span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                    <span class="kc">True</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-                    <span class="s2">&quot;Plug </span><span class="si">{0}</span><span class="s2"> has been removed.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_temp_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="c1"># To avoid the &quot;_items&quot; bug: setting the has_items attribute</span>
+                <span class="c1"># of the trait&#39;s handler to False</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+                <span class="n">source_trait</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">source_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">has_items</span><span class="p">:</span>
+                    <span class="n">source_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">has_items</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">remove_trait</span><span class="p">(</span><span class="n">pip_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update_pipeline</span><span class="p">()</span>
+                <span class="n">tot_plug_name</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pip_plug_name</span><span class="p">,</span> <span class="n">new_temp_plugs</span><span class="p">,</span> <span class="n">optional</span><span class="p">])</span>
+
+        <span class="c1"># if not from_undo and not from_redo:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">from_export_plugs</span> <span class="ow">and</span> <span class="n">tot_plug_name</span><span class="p">:</span>
+            <span class="c1"># For history</span>
+            <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;remove_plug&quot;</span><span class="p">,</span> <span class="n">tot_plug_name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span>
+                                          <span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">)(</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tot_plug_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; plug has been &quot;</span>
+                                                         <span class="s2">&quot;removed.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                        <span class="n">tot_plug_name</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> plugs has been &quot;</span>
+                                                         <span class="s2">&quot;removed.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                       <span class="nb">tuple</span><span class="p">((</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tot_plug_name</span><span class="p">))))</span>
 
 <div class="viewcode-block" id="PipelineEditor.add_link"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.add_link">[docs]</a>    <span class="k">def</span> <span class="nf">add_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">weak</span><span class="p">,</span>
-                 <span class="n">from_undo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">from_redo</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">from_undo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">from_redo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_export</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a link between two nodes.</span>
 
 <span class="sd">        :param source: tuple containing the node and plug source names</span>
@@ -419,24 +439,27 @@
 <span class="sd">        :param from_redo: boolean that is True if the action has been made</span>
 <span class="sd">           using a redo</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span>
+        <span class="c1">#self.scene.add_link(source, dest, active, weak,</span>
+                            <span class="c1">#allow_export=allow_export)</span>
 
         <span class="c1"># Writing a string to represent the link</span>
         <span class="n">source_parameters</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
         <span class="n">dest_parameters</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
         <span class="n">link</span> <span class="o">=</span> <span class="s2">&quot;-&gt;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">source_parameters</span><span class="p">,</span> <span class="n">dest_parameters</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">allow_export</span><span class="o">=</span><span class="n">allow_export</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update_pipeline</span><span class="p">()</span>
 
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;add_link&quot;</span><span class="p">,</span> <span class="n">link</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span>\
-                <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                <span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># commented on January, 4th 2020</span>
+        <span class="c1"># if not self.main_window.pipeline_manager.iterationTable\</span>
+        <span class="c1">#         .check_box_iterate.isChecked():</span>
+        <span class="c1">#     self.main_window.pipeline_manager.run_pipeline_action.setDisabled(</span>
+        <span class="c1">#         True)</span>
+        <span class="c1"># End - commented on January, 4th 2020</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s1">&#39;Link </span><span class="si">{0}</span><span class="s1"> has been added.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">link</span><span class="p">))</span></div>
 
@@ -491,10 +514,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span>
-                <span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">)():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                                                                           <span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Commented on January, 4th 2020</span>
+        <span class="c1"># if not (self.main_window.pipeline_manager.</span>
+        <span class="c1">#         iterationTable.check_box_iterate.isChecked)():</span>
+        <span class="c1">#     self.main_window.pipeline_manager.run_pipeline_action.setDisabled(</span>
+        <span class="c1">#                                                                    True)</span>
+        <span class="c1"># End - commented on January, 4th 2020</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;Node </span><span class="si">{0}</span><span class="s2"> has been &quot;</span>
                                                  <span class="s2">&quot;added.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span></div>
 
@@ -670,13 +696,18 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">node_name</span><span class="p">:</span>
             <span class="n">node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_node_name</span>
 
-        <span class="n">node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
+        <span class="n">invert_io</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline_node</span>
+            <span class="n">invert_io</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
 
         <span class="c1"># Collecting the links from the node that is being deleted</span>
         <span class="n">links</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
-            <span class="k">if</span> <span class="n">plug</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plug</span><span class="o">.</span><span class="n">output</span> <span class="ow">or</span> <span class="p">(</span><span class="n">invert_io</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">plug</span><span class="o">.</span><span class="n">output</span><span class="p">):</span>
 
                 <span class="k">for</span> <span class="n">link_to</span> <span class="ow">in</span> <span class="n">plug</span><span class="o">.</span><span class="n">links_to</span><span class="p">:</span>
                     <span class="p">(</span><span class="n">dest_node_name</span><span class="p">,</span> <span class="n">dest_parameter</span><span class="p">,</span>
@@ -723,7 +754,7 @@
                     <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link_to_add</span><span class="p">)</span>
 
         <span class="c1"># Calling the original method</span>
-        <span class="n">PipelineDevelopperView</span><span class="o">.</span><span class="n">del_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">del_node</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
 
         <span class="c1"># For history</span>
         <span class="n">process</span> <span class="o">=</span> <span class="n">node</span>
@@ -734,11 +765,14 @@
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;delete_process&quot;</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">links</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span>
-                <span class="o">.</span><span class="n">check_box_iterate</span><span class="p">)</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                                                                           <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Commented on January, 4th 2020</span>
+        <span class="c1"># if not (self.main_window.pipeline_manager.iterationTable</span>
+        <span class="c1">#         .check_box_iterate).isChecked():</span>
+        <span class="c1">#     self.main_window.pipeline_manager.run_pipeline_action.setDisabled(</span>
+        <span class="c1">#                                                                    True)</span>
+        <span class="c1"># End - commented on January, 4th 2020</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s2">&quot;Node </span><span class="si">{0}</span><span class="s2"> has been deleted.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span>
 
@@ -793,11 +827,14 @@
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;export_plugs&quot;</span><span class="p">,</span> <span class="n">parameter_list</span><span class="p">,</span> <span class="n">node_name</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span>
-                                                 <span class="n">check_box_iterate</span><span class="p">)</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-                                                                           <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Commented on January, 4th 2020</span>
+        <span class="c1"># if not (self.main_window.pipeline_manager.iterationTable.</span>
+        <span class="c1">#                                          check_box_iterate).isChecked():</span>
+        <span class="c1">#     self.main_window.pipeline_manager.run_pipeline_action.setDisabled(</span>
+        <span class="c1">#                                                                    True)</span>
+        <span class="c1"># End - commented on January, 4th 2020</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s2">&quot;Plugs </span><span class="si">{0}</span><span class="s2"> have been exported.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)))</span></div>
 
@@ -1015,9 +1052,10 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">undos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">history_maker</span><span class="p">)</span>
-            <span class="c1"># If the action does not come from an undo or a redo,</span>
+            <span class="c1"># If the action does not comes from an undo or a redo,</span>
             <span class="c1"># redos must be updated with care</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">from_redo</span><span class="p">:</span>
+                <span class="n">to_redo</span> <span class="o">=</span> <span class="kc">None</span>
 
                 <span class="k">if</span> <span class="n">history_maker</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;add_process&#39;</span><span class="p">:</span>
                     <span class="n">to_redo</span> <span class="o">=</span> <span class="s1">&#39;delete_process&#39;</span>
@@ -1025,7 +1063,8 @@
                 <span class="k">elif</span> <span class="n">history_maker</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;delete_process&#39;</span><span class="p">:</span>
                     <span class="n">to_redo</span> <span class="o">=</span> <span class="s1">&#39;add_process&#39;</span>
 
-                <span class="k">else</span><span class="p">:</span> <span class="n">to_redo</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">elif</span> <span class="n">history_maker</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;update_node_name&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">undos</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">redos</span><span class="p">):</span>
 
@@ -1110,11 +1149,13 @@
 <span class="sd">        :param from_redo: boolean, True if the action has been made using a</span>
 <span class="sd">                          redo</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">old_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_plug_value</span><span class="p">(</span>
             <span class="n">plug_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span>
             <span class="n">plug_name</span><span class="p">,</span> <span class="n">value_type</span><span class="p">(</span><span class="n">new_value</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">from_undo</span> <span class="ow">or</span> <span class="n">from_redo</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">undos</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;update_plug_value&quot;</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span>
@@ -1207,6 +1248,11 @@
         <span class="n">p_e</span><span class="o">.</span><span class="n">open_filter</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_filter</span><span class="p">)</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">export_to_db_scans</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_to_db_scans</span><span class="p">)</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">iterated</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">iterated_tag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">all_tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">all_tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">node_parameters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">node_parameters_tmp</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1298,6 +1344,10 @@
             <span class="n">p_e</span><span class="o">.</span><span class="n">open_filter</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_filter</span><span class="p">)</span>
             <span class="n">p_e</span><span class="o">.</span><span class="n">export_to_db_scans</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_to_db_scans</span><span class="p">)</span>
             <span class="n">p_e</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">p_e</span><span class="o">.</span><span class="n">iterated</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">p_e</span><span class="o">.</span><span class="n">iterated_tag</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">p_e</span><span class="o">.</span><span class="n">tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">p_e</span><span class="o">.</span><span class="n">all_tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">p_e</span><span class="o">.</span><span class="n">node_parameters</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">p_e</span><span class="o">.</span><span class="n">node_parameters_tmp</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1617,6 +1667,9 @@
         <span class="n">p_e</span><span class="o">.</span><span class="n">open_filter</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_filter</span><span class="p">)</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">export_to_db_scans</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_to_db_scans</span><span class="p">)</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">iterated</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">iterated_tag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">p_e</span><span class="o">.</span><span class="n">tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">node_parameters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">p_e</span><span class="o">.</span><span class="n">node_parameters_tmp</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1783,7 +1836,8 @@
 <div class="viewcode-block" id="PipelineEditorTabs.set_tab_index"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.set_tab_index">[docs]</a>    <span class="k">def</span> <span class="nf">set_tab_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the current tab index and disable the run pipeline action.&quot;&quot;&quot;</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># self.main_window.pipeline_manager.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previousIndex</span> <span class="o">=</span> <span class="n">index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_current_node</span><span class="p">()</span></div>
@@ -1793,13 +1847,17 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s1">&#39;nodes&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span> \
                 <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s1">&#39;iteration&#39;</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span> \
-                <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span> \
-                <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span></div>
-
+            <span class="n">has_iteration</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">sortedKeys</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;iterated_&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                    <span class="n">has_iteration</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">has_iteration</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span> \
+                    <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span> \
+                    <span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.update_current_node"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.update_current_node">[docs]</a>    <span class="k">def</span> <span class="nf">update_current_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the node parameters&quot;&quot;&quot;</span>
@@ -1808,6 +1866,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span>\
                     <span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">displayNodeParameters</span><span class="p">(</span>
@@ -1820,7 +1879,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span>\
                 <span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">update_iteration_checkbox</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_iteration_checkbox</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">update_iterated_tag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">iterated_tag</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PipelineEditorTabs.update_history"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.update_history">[docs]</a>    <span class="k">def</span> <span class="nf">update_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">editor</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update undo/redo history of an editor.</span>

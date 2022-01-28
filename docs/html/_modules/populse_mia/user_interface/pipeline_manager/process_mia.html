@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -62,11 +62,15 @@
 <span class="c1">##########################################################################</span>
 
 <span class="c1"># Capsul imports</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Pipeline</span>
 <span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ProcessCompletionEngine</span><span class="p">,</span>
                                                  <span class="n">ProcessCompletionEngineFactory</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine_factory</span> <span class="kn">import</span> <span class="p">(</span>
-                                          <span class="n">BuiltinProcessCompletionEngineFactory</span><span class="p">)</span>
+    <span class="n">BuiltinProcessCompletionEngineFactory</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">ProcessNode</span>
 <span class="kn">from</span> <span class="nn">capsul.process.process</span> <span class="kn">import</span> <span class="n">NipypeProcess</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
@@ -124,6 +128,8 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">MIAProcessCompletionEngine</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span> <span class="o">=</span> <span class="n">fallback_engine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_attributes_with_database"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_attributes_with_database">[docs]</a>    <span class="k">def</span> <span class="nf">complete_attributes_with_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -181,11 +187,11 @@
                     <span class="n">as_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">document</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">fvalue</span><span class="p">,</span> <span class="n">dvalue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fvalues</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
-                      <span class="n">fvalue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dvalue</span> <span class="k">if</span> <span class="n">dvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">fvalue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dvalue</span> <span class="k">if</span> <span class="n">dvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># ignore this input not in the database</span>
                     <span class="k">for</span> <span class="n">fvalue</span> <span class="ow">in</span> <span class="n">fvalues</span><span class="p">:</span>
-                      <span class="n">fvalue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                        <span class="n">fvalue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
             <span class="c1"># temporarily block attributes change notification in order to</span>
             <span class="c1"># avoid triggering another completion while we are already in this</span>
@@ -239,11 +245,11 @@
         <span class="k">if</span> <span class="n">project</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;use_project&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">use_project</span><span class="p">:</span>
-                <span class="n">process</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
 
             <span class="c1"># set output_directory</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s1">&#39;output_directory&#39;</span><span class="p">)</span> <span class="ow">and</span>
-                         <span class="n">process</span><span class="o">.</span><span class="n">output_directory</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)):</span>
+                    <span class="n">process</span><span class="o">.</span><span class="n">output_directory</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)):</span>
                 <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
                                                        <span class="s1">&#39;data&#39;</span><span class="p">,</span>
                                                        <span class="s1">&#39;derived_data&#39;</span><span class="p">))</span>
@@ -257,10 +263,10 @@
                 <span class="n">process</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">out_dir</span>
 
             <span class="k">if</span> <span class="p">((</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;_nipype_interface_name&#39;</span><span class="p">)</span> <span class="ow">and</span>
-                                     <span class="n">process</span><span class="o">.</span><span class="n">_nipype_interface_name</span> <span class="o">==</span> <span class="s1">&#39;spm&#39;</span><span class="p">)</span> <span class="ow">or</span>
+                 <span class="n">process</span><span class="o">.</span><span class="n">_nipype_interface_name</span> <span class="o">==</span> <span class="s1">&#39;spm&#39;</span><span class="p">)</span> <span class="ow">or</span>
                     <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;process&#39;</span><span class="p">)</span> <span class="ow">and</span>
                      <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;_nipype_interface_name&#39;</span><span class="p">)</span> <span class="ow">and</span>
-                              <span class="n">process</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_nipype_interface_name</span> <span class="o">==</span> <span class="s1">&#39;spm&#39;</span><span class="p">)):</span>
+                     <span class="n">process</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_nipype_interface_name</span> <span class="o">==</span> <span class="s1">&#39;spm&#39;</span><span class="p">)):</span>
                 <span class="n">tname</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">tmap</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;_nipype_trait_mapping&#39;</span><span class="p">,</span> <span class="p">{})</span>
                 <span class="n">tname</span> <span class="o">=</span> <span class="n">tmap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_spm_script_file&#39;</span><span class="p">,</span> <span class="s1">&#39;_spm_script_file&#39;</span><span class="p">)</span>
@@ -292,14 +298,14 @@
                                 <span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;scripts&#39;</span><span class="p">,</span> <span class="n">iscript</span><span class="p">)))</span>
 
                 <span class="n">process</span><span class="o">.</span><span class="n">mfile</span> <span class="o">=</span> <span class="kc">True</span></div>
-        
-<div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">complete_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="p">{}):</span>
+
+<div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">complete_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="p">{},</span> <span class="n">complete_iterations</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">completion_progress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span> \
             <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">completion_progress_total</span>
 
-        <span class="c1">#print(&#39;complete_parameters&#39;, self.process.name, &#39;, attributes:&#39;, self.fallback_engine.get_attribute_values().export_to_dict())</span>
+        <span class="c1"># print(&#39;complete_parameters&#39;, self.process.name, &#39;, attributes:&#39;, self.fallback_engine.get_attribute_values().export_to_dict())</span>
 
         <span class="c1"># handle database attributes and indexation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">complete_attributes_with_database</span><span class="p">(</span><span class="n">process_inputs</span><span class="p">)</span>
@@ -312,22 +318,8 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="p">(</span><span class="n">NipypeProcess</span><span class="p">,</span> <span class="n">ProcessMIA</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">complete_nipype_common</span><span class="p">(</span><span class="n">in_process</span><span class="p">)</span>
 
-        <span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_project</span><span class="p">(</span><span class="n">in_process</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">project</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># record completion order to perform 2nd pass tags recording and</span>
-            <span class="c1"># indexation</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="s1">&#39;process_order&#39;</span><span class="p">):</span>
-                <span class="n">project</span><span class="o">.</span><span class="n">process_order</span> <span class="o">=</span> <span class="p">[]</span>
-                
-            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span>
-            
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">pipeline_node</span>
-
-            <span class="n">project</span><span class="o">.</span><span class="n">process_order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="n">ProcessMIA</span><span class="p">):</span>
-            
+
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
 
                 <span class="k">if</span> <span class="n">in_process</span><span class="o">.</span><span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Pipeline&#39;</span><span class="p">:</span>
@@ -338,41 +330,64 @@
 
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="n">NipypeProcess</span><span class="p">):</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">. </span><span class="si">{0}</span><span class="s1"> (</span><span class="si">{1}</span><span class="s1">) nipype node ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                   <span class="n">node_name</span><span class="p">,</span>
-                   <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">in_process</span><span class="o">.</span><span class="n">_nipype_interface</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
-                             <span class="n">in_process</span><span class="o">.</span><span class="n">_nipype_interface</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))))</span>
+                        <span class="n">node_name</span><span class="p">,</span>
+                        <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">in_process</span><span class="o">.</span><span class="n">_nipype_interface</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
+                                  <span class="n">in_process</span><span class="o">.</span><span class="n">_nipype_interface</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))))</span>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">. </span><span class="si">{0}</span><span class="s1"> (</span><span class="si">{1}</span><span class="s1">) regular node ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">node_name</span><span class="p">,</span>
-                    <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">in_process</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
-                              <span class="n">in_process</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))))</span>
+                        <span class="n">node_name</span><span class="p">,</span>
+                        <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">in_process</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
+                                  <span class="n">in_process</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))))</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">complete_parameters</span><span class="p">(</span><span class="n">process_inputs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">complete_parameters</span><span class="p">(</span>
+                <span class="n">process_inputs</span><span class="p">,</span> <span class="n">complete_iterations</span><span class="o">=</span><span class="n">complete_iterations</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">completion_progress</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span>
-                                                      <span class="n">completion_progress_total</span><span class="p">)</span>
+                                              <span class="n">completion_progress_total</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># here the process is a ProcessMIA instance. Use the specific</span>
             <span class="c1"># method</span>
 
-            <span class="c1">#self.completion_progress = 0.</span>
-            <span class="c1">#self.completion_progress_total = 1.</span>
+            <span class="c1"># self.completion_progress = 0.</span>
+            <span class="c1"># self.completion_progress_total = 1.</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Pipeline&#39;</span><span class="p">:</span>
                 <span class="n">node_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">context_name</span>
-            
+
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">. </span><span class="si">{0}</span><span class="s1"> (</span><span class="si">{1}</span><span class="s1">) MIA node ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">node_name</span><span class="p">,</span>
                 <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
                           <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">complete_parameters_mia</span><span class="p">(</span><span class="n">process_inputs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span>
+
+            <span class="c1"># we must keep a copy of inheritance dict,</span>
+            <span class="c1"># since it changes at each iteration and is not included in workflow</span>
+            <span class="c1"># TODO: a better solution would be to save for each node the inheritance between plugs</span>
+            <span class="c1"># and not between filenames (that changes over iteration)</span>
+            <span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_project</span><span class="p">(</span><span class="n">in_process</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">project</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># record completion order to perform 2nd pass tags recording and</span>
+                <span class="c1"># indexation</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="s1">&#39;node_inheritance_history&#39;</span><span class="p">):</span>
+                    <span class="n">project</span><span class="o">.</span><span class="n">node_inheritance_history</span> <span class="o">=</span> <span class="p">{}</span>
+
+                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
+                    <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">pipeline_node</span>
+
+                <span class="c1"># Create a copy of current inheritance dict</span>
+                <span class="k">if</span> <span class="n">node_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">project</span><span class="o">.</span><span class="n">node_inheritance_history</span><span class="p">:</span>
+                    <span class="n">project</span><span class="o">.</span><span class="n">node_inheritance_history</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;inheritance_dict&#39;</span><span class="p">):</span>
+                    <span class="n">project</span><span class="o">.</span><span class="n">node_inheritance_history</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters_mia"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters_mia">[docs]</a>    <span class="k">def</span> <span class="nf">complete_parameters_mia</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -390,12 +405,13 @@
             <span class="n">process</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span>
 
             <span class="n">is_plugged</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span>
-                          <span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">plug</span><span class="o">.</span><span class="n">links_to</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">))</span>
+                              <span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">plug</span><span class="o">.</span><span class="n">links_to</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">))</span>
                           <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">is_plugged</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># we cannot get this info</span>
 
         <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># set inheritance dict to the node</span>
             <span class="n">initResult_dict</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">(</span><span class="n">is_plugged</span><span class="o">=</span><span class="n">is_plugged</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -405,12 +421,12 @@
             <span class="n">initResult_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">initResult_dict</span><span class="p">:</span>
-            <span class="k">return</span> <span class="c1"># the process is not really configured</span>
+            <span class="k">return</span>  <span class="c1"># the process is not really configured</span>
 
         <span class="n">outputs</span> <span class="o">=</span> <span class="n">initResult_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">outputs</span><span class="p">:</span>
-            <span class="k">return</span> <span class="c1"># the process is not really configured</span>
+            <span class="k">return</span>  <span class="c1"># the process is not really configured</span>
 
         <span class="k">for</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">parameter</span> <span class="o">==</span> <span class="s1">&#39;notInDb&#39;</span> \
@@ -421,7 +437,7 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exception:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param:&#39;</span><span class="p">,</span> <span class="n">pname</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param:&#39;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;value:&#39;</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
                     <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
 
@@ -483,17 +499,16 @@
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;get_study_config&#39;</span><span class="p">):</span>
             <span class="n">study_config</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_study_config</span><span class="p">()</span>
 
-
             <span class="n">engine</span> <span class="o">=</span> <span class="n">study_config</span><span class="o">.</span><span class="n">engine</span>
             <span class="k">if</span> <span class="s1">&#39;capsul.engine.module.attributes&#39;</span> <span class="ow">in</span> <span class="n">engine</span><span class="o">.</span><span class="n">_loaded_modules</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">former_factory</span> <span class="o">=</span> <span class="s1">&#39;builtin&#39;</span>  <span class="c1"># TODO how to store this ?</span>
                     <span class="n">engine_factory</span> \
                         <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">_modules_data</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span> \
-                            <span class="p">[</span><span class="s1">&#39;attributes_factory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                                <span class="s1">&#39;process_completion&#39;</span><span class="p">,</span> <span class="n">former_factory</span><span class="p">)</span>
+                        <span class="p">[</span><span class="s1">&#39;attributes_factory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="s1">&#39;process_completion&#39;</span><span class="p">,</span> <span class="n">former_factory</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                    <span class="k">pass</span> <span class="c1"># not found</span>
+                    <span class="k">pass</span>  <span class="c1"># not found</span>
         <span class="k">if</span> <span class="n">engine_factory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">engine_factory</span> <span class="o">=</span> <span class="n">BuiltinProcessCompletionEngineFactory</span><span class="p">()</span>
 
@@ -559,23 +574,23 @@
                                <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                            <span class="n">userlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="s1">&#39;paths&#39;</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;paths&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span>
                                <span class="n">InputMultiObject</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">Directory</span><span class="p">(),</span>
                                                 <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                 <span class="n">userlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="s1">&#39;matlab_cmd&#39;</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;matlab_cmd&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s2">&quot;matlab_cmd&quot;</span><span class="p">,</span>
                                <span class="n">traits_extension</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                     <span class="n">userlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="s1">&#39;mfile&#39;</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;mfile&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s2">&quot;mfile&quot;</span><span class="p">,</span>
                                <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                            <span class="n">userlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="s1">&#39;spm_script_file&#39;</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;spm_script_file&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
                 <span class="n">spm_script_file_desc</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;The location of the output SPM matlab &#39;</span>
                                         <span class="s1">&#39;script automatically generated at the &#39;</span>
                                         <span class="s1">&#39;run step time (a string representing &#39;</span>
@@ -612,15 +627,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="ProcessMIA.make_initResult"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.make_initResult">[docs]</a>    <span class="k">def</span> <span class="nf">make_initResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Make the initResult_dict from initialisation.&quot;&quot;&quot;</span>        
+        <span class="sd">&quot;&quot;&quot;Make the initResult_dict from initialisation.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
-            <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">)</span> <span class="ow">or</span>
-            <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">)):</span>
+                <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">)):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">During the </span><span class="si">{0}</span><span class="s1"> process initialisation, some possible &#39;</span>
-                   <span class="s1">&#39;problems were detected:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-             
+                  <span class="s1">&#39;problems were detected:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- requirement attribute was not found ...&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- requirement attribute was not found ...&#39;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- inheritance_dict attribute was not found ...&#39;</span><span class="p">)</span>
@@ -631,8 +646,8 @@
             <span class="nb">print</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="ow">and</span>
-                 <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                 <span class="s1">&#39;spm&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                <span class="s1">&#39;spm&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;notInDb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;spm_script_file&quot;</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;requirement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span>
@@ -659,7 +674,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;process&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;spm&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spm_script_file</span><span class="p">:</span>
@@ -675,7 +690,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">matlab_cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_cmd</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mfile</span><span class="p">:</span>
-                 <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">mfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mfile</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">mfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mfile</span></div></div>
 </pre></div>
 
       </div>
