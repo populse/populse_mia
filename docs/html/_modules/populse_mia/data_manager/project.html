@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.data_manager.project &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -117,6 +117,7 @@
 
 <span class="sd">    .. Methods:</span>
 <span class="sd">        - add_clinical_tags: add the clinical tags to the project</span>
+<span class="sd">        - del_clinical_tags: remove clinical tags to the project</span>
 <span class="sd">        - getDate: return the date of creation of the project</span>
 <span class="sd">        - getFilter: return a Filter object</span>
 <span class="sd">        - getFilterName: input box to get the name of the filter to save</span>
@@ -321,19 +322,25 @@
 <span class="sd">        :returns: list of clinical tags that were added</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">return_tags</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="k">for</span> <span class="n">clinical_tag</span> <span class="ow">in</span> <span class="n">CLINICAL_TAGS</span><span class="p">:</span>
+
             <span class="k">if</span> <span class="n">clinical_tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
-                    <span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
+                                                            <span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
+
                 <span class="k">if</span> <span class="n">clinical_tag</span> <span class="o">==</span> <span class="s2">&quot;Age&quot;</span><span class="p">:</span>
                     <span class="n">field_type</span> <span class="o">=</span> <span class="n">FIELD_TYPE_INTEGER</span>
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">field_type</span> <span class="o">=</span> <span class="n">FIELD_TYPE_STRING</span>
+
                 <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
                     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">clinical_tag</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span>
                     <span class="n">clinical_tag</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
                     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">clinical_tag</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span>
                     <span class="n">clinical_tag</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
                 <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_value</span><span class="p">(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">),</span>
@@ -341,9 +348,31 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_value</span><span class="p">(</span>
                         <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">),</span>
                         <span class="n">clinical_tag</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
                 <span class="n">return_tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clinical_tag</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-                
+
+        <span class="k">return</span> <span class="n">return_tags</span></div>
+
+<div class="viewcode-block" id="Project.del_clinical_tags"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.del_clinical_tags">[docs]</a>    <span class="k">def</span> <span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove clinical tags to the project.</span>
+
+<span class="sd">        :returns: list of clinical tags that were removed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">return_tags</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">clinical_tag</span> <span class="ow">in</span> <span class="n">CLINICAL_TAGS</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">clinical_tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
+                    <span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_field</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                                          <span class="n">clinical_tag</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_field</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
+                                                  <span class="n">clinical_tag</span><span class="p">)</span>
+
+                <span class="n">return_tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clinical_tag</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="n">return_tags</span></div>
 
 <div class="viewcode-block" id="Project.getDate"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.getDate">[docs]</a>    <span class="k">def</span> <span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -451,6 +480,13 @@
         <span class="sd">&quot;&quot;&quot;Redo the last action made by the user on the project.</span>
 
 <span class="sd">        :param table: table on which to apply the modifications</span>
+
+<span class="sd">        Actions that can be undone:</span>
+<span class="sd">            - add_tag</span>
+<span class="sd">            - remove_tags</span>
+<span class="sd">            - add_scans</span>
+<span class="sd">            - modified_values</span>
+<span class="sd">            - modified_visibilities</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># To avoid circular imports</span>
         <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
@@ -535,23 +571,23 @@
                 <span class="n">table</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
                     <span class="n">COLLECTION_CURRENT</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;remove_scans&quot;</span><span class="p">:</span>
-                <span class="c1"># To remove a scan, we only need the FileName of the scan</span>
-                <span class="c1"># The second element is the list of removed scans (Path class)</span>
-                <span class="n">scans_removed</span> <span class="o">=</span> <span class="n">to_redo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">scans_removed</span><span class="p">)):</span>
-                    <span class="c1"># We reput each scan, keeping the same values</span>
-                    <span class="n">scan_to_remove</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
-                        <span class="n">scans_removed</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">TAG_FILENAME</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span>
-                        <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_to_remove</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span>
-                        <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">scan_to_remove</span><span class="p">)</span>
-                    <span class="n">table</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">scan_to_remove</span><span class="p">)</span>
-                    <span class="n">table</span><span class="o">.</span><span class="n">removeRow</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan_to_remove</span><span class="p">))</span>
-                    <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-                    <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
-                    <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
+            <span class="c1"># if action == &quot;remove_scans&quot;:</span>
+            <span class="c1">#     # To remove a scan, we only need the FileName of the scan</span>
+            <span class="c1">#     # The second element is the list of removed scans (Path class)</span>
+            <span class="c1">#     scans_removed = to_redo[1]</span>
+            <span class="c1">#     for i in range(0, len(scans_removed)):</span>
+            <span class="c1">#         # We reput each scan, keeping the same values</span>
+            <span class="c1">#         scan_to_remove = getattr(</span>
+            <span class="c1">#             scans_removed[i], TAG_FILENAME)</span>
+            <span class="c1">#         self.session.remove_document(</span>
+            <span class="c1">#             COLLECTION_CURRENT, scan_to_remove)</span>
+            <span class="c1">#         self.session.remove_document(</span>
+            <span class="c1">#             COLLECTION_INITIAL, scan_to_remove)</span>
+            <span class="c1">#         table.scans_to_visualize.remove(scan_to_remove)</span>
+            <span class="c1">#         table.removeRow(table.get_scan_row(scan_to_remove))</span>
+            <span class="c1">#         table.itemChanged.disconnect()</span>
+            <span class="c1">#         table.update_colors()</span>
+            <span class="c1">#         table.itemChanged.connect(table.change_cell_color)</span>
 
             <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;modified_values&quot;</span><span class="p">:</span>  <span class="c1"># Not working</span>
                 <span class="c1"># To modify the values, we need the cells,</span>
@@ -746,6 +782,13 @@
         <span class="sd">&quot;&quot;&quot;Undo the last action made by the user on the project.</span>
 
 <span class="sd">        :param table: table on which to apply the modifications</span>
+
+<span class="sd">        Actions that can be undone:</span>
+<span class="sd">            - add_tag</span>
+<span class="sd">            - remove_tags</span>
+<span class="sd">            - add_scans</span>
+<span class="sd">            - modified_values</span>
+<span class="sd">            - modified_visibilities</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># To avoid circular imports</span>
@@ -817,28 +860,28 @@
                 <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
                 <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
                 <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;remove_scans&quot;</span><span class="p">:</span>
-                <span class="c1"># To reput a removed scan, we need the scans names,</span>
-                <span class="c1"># and all the values associated</span>
-                <span class="c1"># The second element is the list of removed scans (Scan class)</span>
-                <span class="n">scans_removed</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">scans_removed</span><span class="p">)):</span>
-                    <span class="c1"># We reput each scan, keeping the same values</span>
-                    <span class="n">scan_to_reput</span> <span class="o">=</span> <span class="n">scans_removed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span>
-                        <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span>
-                            <span class="n">scan_to_reput</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span>
-                        <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span>
-                            <span class="n">scan_to_reput</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">))</span>
-                    <span class="n">table</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span>
-                        <span class="n">scan_to_reput</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">))</span>
-
-                <span class="c1"># The third element is the list of removed values</span>
-                <span class="n">values_removed</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">reput_values</span><span class="p">(</span><span class="n">values_removed</span><span class="p">)</span>
-                <span class="n">table</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
-                    <span class="n">COLLECTION_CURRENT</span><span class="p">))</span>
+            <span class="c1"># if action == &quot;remove_scans&quot;:</span>
+            <span class="c1">#     # To reput a removed scan, we need the scans names,</span>
+            <span class="c1">#     # and all the values associated</span>
+            <span class="c1">#     # The second element is the list of removed scans (Scan class)</span>
+            <span class="c1">#     scans_removed = to_undo[1]</span>
+            <span class="c1">#     for i in range(0, len(scans_removed)):</span>
+            <span class="c1">#         # We reput each scan, keeping the same values</span>
+            <span class="c1">#         scan_to_reput = scans_removed[i]</span>
+            <span class="c1">#         self.session.add_document(</span>
+            <span class="c1">#             COLLECTION_CURRENT, getattr(</span>
+            <span class="c1">#                 scan_to_reput, TAG_FILENAME))</span>
+            <span class="c1">#         self.session.add_document(</span>
+            <span class="c1">#             COLLECTION_INITIAL, getattr(</span>
+            <span class="c1">#                 scan_to_reput, TAG_FILENAME))</span>
+            <span class="c1">#         table.scans_to_visualize.append(getattr(</span>
+            <span class="c1">#             scan_to_reput, TAG_FILENAME))</span>
+            <span class="c1">#</span>
+            <span class="c1">#     # The third element is the list of removed values</span>
+            <span class="c1">#     values_removed = to_undo[2]</span>
+            <span class="c1">#     self.reput_values(values_removed)</span>
+            <span class="c1">#     table.add_rows(self.session.get_documents_names(</span>
+            <span class="c1">#         COLLECTION_CURRENT))</span>
             <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;modified_values&quot;</span><span class="p">:</span>
                 <span class="c1"># To revert a value changed in the databrowser,</span>
                 <span class="c1"># we need two things:</span>
@@ -967,7 +1010,7 @@
 
         <span class="k">return</span> <span class="n">values</span></div>
 
-<div class="viewcode-block" id="Project.get_data_history"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_data_history">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">timepoint</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Project.get_data_history"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_data_history">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the processing history for the given data file.</span>
 
@@ -981,106 +1024,22 @@
 <span class="sd">        :return: history (dict)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">latest_before</span><span class="p">(</span><span class="n">datetimes</span><span class="p">,</span> <span class="n">timepoint</span><span class="p">):</span>
-            <span class="n">dbest</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">ibest</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datetimes</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">delta</span> <span class="o">=</span> <span class="n">timepoint</span> <span class="o">-</span> <span class="n">d</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">delta</span> <span class="o">&gt;=</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                        <span class="ow">and</span> <span class="p">(</span><span class="n">dbest</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">dbest</span><span class="p">)):</span>
-                        <span class="n">dbest</span> <span class="o">=</span> <span class="n">delta</span>
-                        <span class="n">ibest</span> <span class="o">=</span> <span class="n">i</span>
-            <span class="k">return</span> <span class="n">ibest</span>
+        <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data_history_inspect</span>
 
-        <span class="k">def</span> <span class="nf">latest_brick_before</span><span class="p">(</span><span class="n">bricks</span><span class="p">,</span> <span class="n">timepoint</span><span class="p">):</span>
-            <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bricks</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">latest_before</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">timepoint</span><span class="p">)</span>
-
-        <span class="n">parents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">procs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">pl</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">timepoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">timepoint</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-
-        <span class="n">my_path</span> <span class="o">=</span> <span class="n">path</span>
-        <span class="n">todo</span> <span class="o">=</span> <span class="p">[(</span><span class="n">path</span><span class="p">,</span> <span class="n">timepoint</span><span class="p">)]</span>
-        <span class="n">obsolete</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-        <span class="k">while</span> <span class="n">todo</span><span class="p">:</span>
-            <span class="n">path</span><span class="p">,</span> <span class="n">timepoint</span> <span class="o">=</span> <span class="n">todo</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">bricks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
-                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">TAG_BRICKS</span><span class="p">],</span> <span class="n">as_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">bricks</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">bricks</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="k">continue</span>
-
-            <span class="n">bricks</span> <span class="o">=</span> <span class="n">bricks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="c1"># print(&#39;bricks:&#39;, bricks)</span>
-            <span class="n">brick_docs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span>
-                <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">document_ids</span><span class="o">=</span><span class="n">bricks</span><span class="p">))</span>
-            <span class="n">best</span> <span class="o">=</span> <span class="n">latest_brick_before</span><span class="p">(</span><span class="n">brick_docs</span><span class="p">,</span> <span class="n">timepoint</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">best</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">continue</span>
-
-            <span class="n">brick</span> <span class="o">=</span> <span class="n">brick_docs</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
-            <span class="n">brid</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="n">my_path</span><span class="p">:</span>
-                <span class="n">obsolete</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">ID</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">brick_docs</span>
-                               <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">Exec</span> <span class="o">==</span> <span class="s1">&#39;Done&#39;</span><span class="p">)</span>
-            <span class="n">bid</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">ID</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">brick_docs</span><span class="p">)</span>
-            <span class="n">dropped</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bricks</span> <span class="k">if</span> <span class="n">b</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bid</span><span class="p">]</span>
-            <span class="n">obsolete</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dropped</span><span class="p">)</span>
-
-            <span class="c1">#for brid in reversed(bricks):  # process from newer to older</span>
-
-            <span class="k">if</span> <span class="n">brid</span> <span class="ow">in</span> <span class="n">procs</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">procs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">brid</span><span class="p">)</span>
-            <span class="c1">#brick = self.session.get_document(COLLECTION_BRICK, brid)</span>
-            <span class="k">if</span> <span class="n">brick</span><span class="o">.</span><span class="n">Exec</span> <span class="o">!=</span> <span class="s1">&#39;Done&#39;</span><span class="p">:</span>
-                <span class="c1"># not run, this brick has not produced outputs</span>
-                <span class="k">continue</span>
-            <span class="n">brick_timepoint</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
-
-            <span class="n">inputs</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_INPUTS</span><span class="p">]</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">tval</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-            <span class="k">while</span> <span class="n">tval</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">tval</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                    <span class="n">tval</span> <span class="o">+=</span> <span class="n">value</span>
-                    <span class="k">continue</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="k">continue</span>
-                <span class="n">aval</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">aval</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
-                    <span class="k">continue</span>
-
-                <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aval</span><span class="p">[</span><span class="n">pl</span><span class="p">:])</span>
-
-            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span>
-                      <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">]</span>
-            <span class="n">parents</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-            <span class="n">todo</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">v</span><span class="p">,</span> <span class="n">brick_timepoint</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
-
-        <span class="n">obsolete</span> <span class="o">=</span> <span class="n">obsolete</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;parent_files&#39;</span><span class="p">:</span> <span class="n">parents</span><span class="p">,</span>
-                <span class="s1">&#39;processes&#39;</span><span class="p">:</span> <span class="n">procs</span><span class="p">,</span>
-                <span class="s1">&#39;obsolete&#39;</span><span class="p">:</span> <span class="n">obsolete</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="n">data_history_inspect</span><span class="o">.</span><span class="n">get_data_history</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Project.update_data_history"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.update_data_history">[docs]</a>    <span class="k">def</span> <span class="nf">update_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Cleanup earlier history of given data by removing in their bricks list</span>
-<span class="sd">        those which correspond to obsolete runs (data has been re-written by</span>
-<span class="sd">        more recent runs). This function only updates data status (bricks</span>
+<span class="sd">        Cleanup earlier history of given data by removing from their bricks</span>
+<span class="sd">        list those which correspond to obsolete runs (data has been re-written</span>
+<span class="sd">        by more recent runs). This function only updates data status (bricks</span>
 <span class="sd">        list), it does not remove obsolete bricks from the database.</span>
 
-<span class="sd">        :return: a set of obsolete bricks thay may become orphan.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a set of obsolete bricks that might become orphan: they are not used</span>
+<span class="sd">        any longer in input data history, and were in the previous ones. But</span>
+<span class="sd">        they still can be used in other data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#</span>
         <span class="n">scan_bricks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span>
@@ -1090,19 +1049,23 @@
                        <span class="k">if</span> <span class="n">brick</span> <span class="ow">and</span> <span class="n">brick</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 
         <span class="n">obsolete</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">old_bricks</span> <span class="o">=</span> <span class="n">scan_bricks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
             <span class="n">o_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_history</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-            <span class="n">obsolete</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">o_hist</span><span class="p">[</span><span class="s1">&#39;obsolete&#39;</span><span class="p">])</span>
+            <span class="n">p_hist</span> <span class="o">=</span> <span class="n">o_hist</span><span class="p">[</span><span class="s1">&#39;processes&#39;</span><span class="p">]</span>
+            <span class="n">used</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">p_hist</span><span class="p">)</span>
+            <span class="n">old_bricks</span> <span class="o">=</span> <span class="n">scan_bricks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">old_bricks</span><span class="p">:</span>
                 <span class="n">new_bricks</span> <span class="o">=</span> <span class="p">[</span><span class="n">brid</span> <span class="k">for</span> <span class="n">brid</span> <span class="ow">in</span> <span class="n">old_bricks</span>
-                              <span class="k">if</span> <span class="n">brid</span> <span class="ow">in</span> <span class="n">o_hist</span><span class="p">[</span><span class="s1">&#39;processes&#39;</span><span class="p">]]</span>
+                              <span class="k">if</span> <span class="n">brid</span> <span class="ow">in</span> <span class="n">p_hist</span><span class="p">]</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bricks</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_bricks</span><span class="p">):</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;update file history for:&#39;</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">old_bricks</span><span class="p">,</span>
                           <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">new_bricks</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">new_bricks</span><span class="p">)</span>
 
+        <span class="k">for</span> <span class="n">bricks</span> <span class="ow">in</span> <span class="n">scan_bricks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">obsolete</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">brick</span> <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="n">bricks</span> <span class="k">if</span> <span class="n">brick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obsolete</span></div>
 
 

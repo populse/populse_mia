@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.test &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.test &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -341,6 +341,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">add_tag_action</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
         <span class="n">add_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">pop_up_add_tag</span>
         <span class="n">add_tag</span><span class="o">.</span><span class="n">text_edit_tag_name</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Test_list&quot;</span><span class="p">)</span>
+        
+        <span class="n">combo_box_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;String&quot;</span><span class="p">,</span> <span class="s2">&quot;Integer&quot;</span><span class="p">,</span> <span class="s2">&quot;Float&quot;</span><span class="p">,</span> <span class="s2">&quot;Boolean&quot;</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;Datetime&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;String List&quot;</span><span class="p">,</span> <span class="s2">&quot;Integer List&quot;</span><span class="p">,</span> <span class="s2">&quot;Float List&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;Boolean List&quot;</span><span class="p">,</span> <span class="s2">&quot;Date List&quot;</span><span class="p">,</span><span class="s2">&quot;Datetime List&quot;</span><span class="p">,</span> <span class="s2">&quot;Time List&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">data_type</span> <span class="ow">in</span> <span class="n">combo_box_types</span><span class="p">:</span>
+          <span class="n">add_tag</span><span class="o">.</span><span class="n">combo_box_type</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
+        
         <span class="n">add_tag</span><span class="o">.</span><span class="n">combo_box_type</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="s2">&quot;Integer List&quot;</span><span class="p">)</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">add_tag</span><span class="o">.</span><span class="n">text_edit_default_value</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span>
@@ -1673,12 +1680,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">remove_scan</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">action_undo</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)),</span> <span class="mi">9</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">)),</span> <span class="mi">9</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">action_redo</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="c1"># Since 8486fda commit, it is no longer possible to undo a document</span>
+        <span class="c1"># removal (the data is permanently deleted).</span>
+        <span class="c1">#self.main_window.action_undo.trigger()</span>
+        <span class="c1">#self.assertEqual(len(self.main_window.project.session.get_documents_names(COLLECTION_CURRENT)), 9)</span>
+        <span class="c1">#self.assertEqual(len(self.main_window.project.session.get_documents_names(COLLECTION_INITIAL)), 9)</span>
+        <span class="c1">#self.main_window.action_redo.trigger()</span>
+        <span class="c1">#self.assertEqual(len(self.main_window.project.session.get_documents_names(COLLECTION_CURRENT)), 8)</span>
+        <span class="c1">#self.assertEqual(len(self.main_window.project.session.get_documents_names(COLLECTION_INITIAL)), 8)</span>
 
         <span class="c1"># Testing add tag undo/redo</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">add_tag_action</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
@@ -2287,6 +2296,7 @@
         <span class="n">iteration_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span>
         <span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_QDialogAccept</span><span class="p">)</span>
         <span class="n">iteration_table</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">iteration_table</span><span class="o">.</span><span class="n">update_selected_tag</span><span class="p">(</span><span class="s2">&quot;BandWidth&quot;</span><span class="p">)</span>
         <span class="n">iteration_table</span><span class="o">.</span><span class="n">update_iterated_tag</span><span class="p">(</span><span class="s2">&quot;BandWidth&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">iteration_table</span><span class="o">.</span><span class="n">iterated_tag_label</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
                          <span class="s2">&quot;BandWidth:&quot;</span><span class="p">)</span>
