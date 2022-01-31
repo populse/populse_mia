@@ -11,10 +11,12 @@ import sys
 # import time
 
 from PyQt5.QtWidgets import QMainWindow, QProgressBar, QApplication, QFileDialog,\
-    QMessageBox
+    QMessageBox, QWidget, QTableWidget, QTableWidgetItem, QHeaderView,\
+    QVBoxLayout, QDialog, QPushButton, QHBoxLayout, QStyledItemDelegate
 from PyQt5.QtCore import Qt
 
 from populse_mia.data_manager.project import COLLECTION_CURRENT
+from PyQt5 import QtWidgets
 
 # data_path =  '..../data/raw_data'
 # data_export = '.../Bids_export'
@@ -32,6 +34,120 @@ class ProgressBar(QMainWindow):
         self.setGeometry(300,350,300,100)
 
 
+class TableBids(QDialog):
+    
+    def __init__(self, dataList, parent=None):
+        QDialog.__init__(self, None)
+
+#         print('dataList :', dataList)
+
+        self.dataList = dataList
+
+        self.setWindowModality(Qt.ApplicationModal)
+        self.title = 'BIDS - manager (in development)'
+        self.left = 0
+        self.top = 0
+        self.width = 800
+        self.height = 600
+
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.createTable()
+
+        buttonOk = QPushButton('Ok', self)
+        buttonReset = QPushButton('Reset to initial values', self)
+        buttonCancel = QPushButton('Cancel', self)
+
+        layoutH = QHBoxLayout()
+        layoutH.addWidget(buttonOk)
+        layoutH.addWidget(buttonReset)
+        layoutH.addWidget(buttonCancel)
+
+        layoutV = QVBoxLayout()
+        layoutV.addWidget(self.tableWidget)
+        layoutV.addLayout(layoutH)
+        self.setLayout(layoutV)
+
+        buttonOk.clicked.connect(self.ok)
+        buttonReset.clicked.connect(self.reset)
+        buttonCancel.clicked.connect(self.cancel)
+
+        self.answer = 'cancel'
+
+    #Create table
+    def createTable(self):
+        self.tableWidget = QTableWidget(len(self.dataList), 6)
+#         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
+        self.tableWidget.setHorizontalHeaderLabels(("Data", "Entity", "sub", "ses", "acq", "task"))
+        self.tableWidget.horizontalHeaderItem(4).setToolTip(self.acqInfo())
+        self.tableWidget.horizontalHeaderItem(5).setToolTip(self.taskInfo())
+
+        self.tableWidget.setColumnWidth(0, 500)
+        delegate = ReadOnlyDelegate(self)
+#         self.setItemDelegateForRow(1, delegate)
+        for i in range(3):
+            self.tableWidget.setItemDelegateForColumn(i, delegate)
+
+        for i in range(0, len(self.dataList)):
+            self.tableWidget.setItem(i,0, QTableWidgetItem(self.dataList[i][0]))
+            self.tableWidget.setItem(i,1, QTableWidgetItem(""))
+            self.tableWidget.setItem(i,2, QTableWidgetItem("sub-" + self.dataList[i][1]))
+            self.tableWidget.setItem(i,3, QTableWidgetItem("ses-" + str(i)))
+            for j in range(4, 6):
+                self.tableWidget.setItem(i,j, QTableWidgetItem(" "))
+                
+    def taskInfo(self):
+        text = ("Format: task-<label>\n"
+                "Required for functional imaging (with 'func' entity)\n\n"
+                "Definition: Each task has a unique label that MUST only "
+                "consist of letters and/or numbers (other characters, "
+                "including spaces and underscores, are not allowed). "
+                "Those labels MUST be consistent across subjects and sessions.")
+        return text
+    
+    def acqInfo(self):
+        text = ("Format: acq-<label>\n"
+                "Optional for all entities\n\n"
+                "Definition: The acq-<label> key/value pair corresponds to a "
+                "custom label the user MAY use to distinguish a different set "
+                "of parameters used for acquiring the same modality. "
+                "For example this should be used when a study includes "
+                "two T1w images - one full brain low resolution and and one "
+                "restricted field of view but high resolution. "
+                "In such case two files could have the following names: "
+                "sub-01_acq-highres_T1w.nii.gz and sub-01_acq-lowres_T1w.nii.gz, "
+                "however the user is free to choose any other label than highres "
+                "and lowres as long as they are consistent across subjects and sessions."
+                "In case different sequences are used to record the same modality "
+                "(for example, RARE and FLASH for T1w) this field can also be used "
+                "to make that distinction. At what level of detail to make the "
+                "distinction (for example, just between RARE and FLASH, or "
+                "between RARE, FLASH, and FLASHsubsampled) remains at "
+                "the discretion of the researcher.")
+        return text
+        
+    def ok(self):
+        self.answer = 'ok'
+        self.close()
+        
+    def reset(self):
+        """reset the table to initial values.
+        """
+        pass
+    
+    def cancel(self):
+        self.close()
+        
+    def getAnswer(self):
+        return self.answer
+
+
+class ReadOnlyDelegate(QStyledItemDelegate):
+    def createEditor(self, parent, option, index):
+        return 
+
+
 class ExportToBIDS():
 
     def __init__(self, project):
@@ -41,9 +157,13 @@ class ExportToBIDS():
         self.project = project
         self.documents = project.session.get_documents_names(
                                             COLLECTION_CURRENT)
+#         for doc in self.documents:
+#             tags_dict = self.project.session.get_document(COLLECTION_CURRENT, doc, fields=None, as_list=False)
+#             tags_dict = self.strip_dict(dict(tags_dict._items()))
         # tags = project.session.get_fields_names(
         #                                 COLLECTION_CURRENT)
-        # print('tags :', tags)
+#             print('doc :', doc)
+#             print('tags :', tags_dict)
         if self.documents:
             self.data_export = self.dialogbox_dir()
             if self.data_export:
@@ -111,18 +231,19 @@ class ExportToBIDS():
 
     def startExport(self):
 
-        # print('export to BIDS (' + str(len(self.documents)) + ' files)')
-        # list_tag = ['StudyName', 'ProtocolName', 'SequenceName']
-        # for doc in self.documents:
-        #     print('\n' + doc)
-        #     for lst in list_tag:
-        #         print("{0} = {1} ; ".format(lst,self.project.session.get_value(
-        #                                     COLLECTION_CURRENT,
-        #                                     doc,
-        #                                     lst)))
+#         print('export to BIDS (' + str(len(self.documents)) + ' files)')
+#         list_tag = ['StudyName', 'ProtocolName', 'SequenceName']
+#         for doc in self.documents:
+#             print('\n' + doc)
+#             for lst in list_tag:
+#                 print("{0} = {1} ; ".format(lst,self.project.session.get_value(
+#                                             COLLECTION_CURRENT,
+#                                             doc,
+#                                             lst)))
 
         error = False
         list_nii, sub = [], {}
+        BIDSdata = []
         data_path = self.project.folder
         
         for doc in self.documents:
@@ -147,7 +268,14 @@ class ExportToBIDS():
                     else:
                         tmp.append(ses_current)
                     sub[sub_current] = (sub_tmp[0], sorted(list(dict.fromkeys(tmp))))
+#                 print("sub : ", sub)
+            BIDSdata.append([doc, sub[sub_current][0]])
+
+        c = TableBids(BIDSdata)
+        c.exec_()
         
+        if c.getAnswer() == 'cancel': return
+
         with open(self.mod_Bids, 'r') as stream:
             modal_bids = yaml.load(stream, yaml.FullLoader)
 
