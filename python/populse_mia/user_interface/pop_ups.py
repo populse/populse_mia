@@ -2197,23 +2197,24 @@ class PopUpPreferences(QDialog):
 
         self.groupbox_fsl.setLayout(v_box_fsl)
 
-        # Commented on January 11th, 2021 - Do not display CAPSUL button as long as synchronisation between CAPSUL
-        # and MIA does not work properly
-        # Groupbox "CAPSUL" groupbox_capsul = Qt.QGroupBox("CAPSUL")
-        # capsul_config_button = Qt.QPushButton( "Edit CAPSUL config", default=False, autoDefault=False)
-        # capsul_config_button.clicked.connect(self.edit_capsul_config) h_box_capsul = Qt.QHBoxLayout()
-        # h_box_capsul.addWidget(capsul_config_button) h_box_capsul.addStretch(1) v_box_capsul = Qt.QVBoxLayout()
-        # v_box_capsul.addLayout(h_box_capsul)
-        #
-        # groupbox_capsul.setLayout(v_box_capsul)
-        # End - commented on January 11th, 2021
+        # Groupbox "CAPSUL"
+        groupbox_capsul = Qt.QGroupBox("CAPSUL")
+        capsul_config_button = Qt.QPushButton("Edit CAPSUL config", default=False, autoDefault=False)
+        capsul_config_button.clicked.connect(self.edit_capsul_config)
+        h_box_capsul = Qt.QHBoxLayout()
+        h_box_capsul.addWidget(capsul_config_button)
+        h_box_capsul.addStretch(1)
+        v_box_capsul = Qt.QVBoxLayout()
+        v_box_capsul.addLayout(h_box_capsul)
+
+        groupbox_capsul.setLayout(v_box_capsul)
 
         # general layout
         self.tab_pipeline_layout = QtWidgets.QVBoxLayout()
         self.tab_pipeline_layout.addWidget(self.groupbox_matlab)
         self.tab_pipeline_layout.addWidget(self.groupbox_spm)
         self.tab_pipeline_layout.addWidget(self.groupbox_fsl)
-        # self.tab_pipeline_layout.addWidget(groupbox_capsul) # Commented on January 11th, 2021
+        self.tab_pipeline_layout.addWidget(groupbox_capsul) # Commented on January 11th, 2021
         self.tab_pipeline_layout.addStretch(1)
         self.tab_pipeline.setLayout(self.tab_pipeline_layout)
 
