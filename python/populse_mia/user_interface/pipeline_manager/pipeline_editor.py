@@ -1802,7 +1802,10 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         self.set_tab_index(self.get_index_by_tab_name(tab_name))
 
     def set_tab_index(self, index):
-        """Set the current tab index and disable the run pipeline action."""
+        """Set the current tab index and disable the run pipeline action.
+
+        :param index: index of the editor
+        """
         
         # self.main_window.pipeline_manager.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020
         self.setCurrentIndex(index)
@@ -1827,7 +1830,10 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                     .check_box_iterate.setCheckState(Qt.Qt.Unchecked)
 
     def update_current_node(self, index):
-        """Update the node parameters"""
+        """Update the node parameters
+
+        :param index: index of the editor
+        """
 
         # Commented on January, 4th 2020
         # if self.get_current_editor():
