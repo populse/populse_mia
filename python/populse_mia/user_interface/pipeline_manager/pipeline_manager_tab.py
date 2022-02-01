@@ -1319,7 +1319,7 @@ class PipelineManagerTab(QWidget):
         # self.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020
         self.init_clicked = True
         self.pipelineEditorTabs.update_current_node(
-                                         self.pipelineEditorTabs.currentIndex()))
+                                         self.pipelineEditorTabs.currentIndex())
         (self.pipelineEditorTabs.
            get_current_editor()).node_parameters = copy.deepcopy(
                                                    (self.pipelineEditorTabs.
