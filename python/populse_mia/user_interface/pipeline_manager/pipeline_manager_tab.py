@@ -2728,7 +2728,7 @@ class PipelineManagerTab(QWidget):
         else:
             pipeline = self.pipelineEditorTabs.get_current_pipeline()
 
-        if len(pipeline.list_process_in_pipeline) == 0:
+        if pipeline is None or len(pipeline.list_process_in_pipeline) == 0:
             self.run_pipeline_action.setDisabled(True)
         else:
             self.run_pipeline_action.setDisabled(False)
