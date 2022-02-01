@@ -486,6 +486,8 @@ class PipelineEditor(PipelineDeveloperView):
         self.main_window.statusBar().showMessage("Node {0} has been "
                                                  "added.".format(node_name))
 
+        self.main_window.pipeline_manager.update_user_buttons_states()
+
     def check_modifications(self):
         """Check if the nodes of the pipeline have been modified."""
 
@@ -744,6 +746,8 @@ class PipelineEditor(PipelineDeveloperView):
                 process = node.process
             self.main_window.pipeline_manager.displayNodeParameters(node_name,
                                                                     process)
+
+        self.main_window.pipeline_manager.update_user_buttons_states()
 
     def export_node_plugs(self, node_name, inputs=True, outputs=True,
                           optional=False, from_undo=False, from_redo=False):
@@ -1801,10 +1805,9 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """Set the current tab index and disable the run pipeline action."""
         
         # self.main_window.pipeline_manager.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020
-
         self.setCurrentIndex(index)
         self.previousIndex = index
-        self.update_current_node()
+        self.update_current_node(index)
 
     def update_iteration_checkbox(self):
         pipeline = self.get_current_pipeline()
@@ -1823,7 +1826,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                 self.main_window.pipeline_manager.iterationTable \
                     .check_box_iterate.setCheckState(Qt.Qt.Unchecked)
 
-    def update_current_node(self):
+    def update_current_node(self, index):
         """Update the node parameters"""
 
         # Commented on January, 4th 2020
@@ -1832,7 +1835,6 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         #         self.main_window.pipeline_manager.run_pipeline_action\
         #             .setDisabled(False)
         # End - commented on January, 4th 2020
-
         try:
             for node_name, node in self.get_current_pipeline().nodes.items():
                 self.main_window.pipeline_manager.displayNodeParameters(
@@ -1846,6 +1848,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         #     self.main_window.pipeline_manager.run_pipeline_action\
         #         .setDisabled(False)
         # End - commented on January, 4th 2020
+        self.main_window.pipeline_manager.update_user_buttons_states()
 
         self.update_iteration_checkbox()
         if self.get_current_editor():
