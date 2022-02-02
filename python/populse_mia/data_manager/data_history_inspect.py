@@ -50,7 +50,7 @@ def data_history_pipeline(filename, project):
         pipeline = Pipeline()
         for proc in procs.values():
             if proc.used:
-                pproc = brick_to_process(proc.brick)
+                pproc = brick_to_process(proc.brick, project)
                 proc.process = pproc
                 name = pproc.name
                 if name in pipeline.nodes:
@@ -169,6 +169,7 @@ def get_data_history(filename, project):
 
     return history
 
+
 def get_data_history_processes(filename, project):
     '''
     Get the complete "useful" history of a file in the database.
@@ -218,7 +219,7 @@ def get_data_history_processes(filename, project):
             keep_procs = {uuid: proc}
         elif date == later_date:
             # ambiguity: keep all equivalent
-            keep_proc[uuid] = proc
+            keep_procs[uuid] = proc
         else:
             print('drop earlier run:', proc.brick[BRICK_NAME], uuid)
 
@@ -289,7 +290,7 @@ def get_data_history_processes(filename, project):
 def get_direct_proc_ancestors(filename, project, procs, before_exec_time=None,
                               only_latest=True, org_proc=None):
     '''
-    Retreive processing bricks which are referenced in the direct filename
+    Retrieve processing bricks which are referenced in the direct filename
     history. It can get the latest before a given execution time. As exec time
     is ambiguous (several processes may have finished at exactly the same
     time), several processes may be kept for a given exec time.
@@ -298,7 +299,7 @@ def get_direct_proc_ancestors(filename, project, procs, before_exec_time=None,
     (as we are looking for the one preceding it), but still included in the
     ancestors list.
 
-    This funtion manipulates processing bricks as :class:`ProtoProcess`
+    This function manipulates processing bricks as :class:`ProtoProcess`
     instances, a light wrapper for a brick database entry.
 
     Parameters
@@ -309,12 +310,12 @@ def get_direct_proc_ancestors(filename, project, procs, before_exec_time=None,
         used to access database
     procs: dict
         process dict, {uuid: ProtoProcess instance}, the dict is populated when
-        bricks are retreived from the database.
+        bricks are retrieved from the database.
     before_exec_time: datetime instance (optional)
         if it is specified, only processing bricks not newer than this time are
         used.
     only_latest: bool (optional, default: True)
-        if True, only the latest processes retreived from the history are kept.
+        if True, only the latest processes retrieved from the history are kept.
         If ``before_exec_time`` is also used, then it is the latest before this
         time.
     org_proc: ProtoProcess instance (optional)
@@ -621,7 +622,7 @@ def get_history_brick_process(brick_id, project, before_exec_time=None):
     return proc
 
 
-def brick_to_process(brick):
+def brick_to_process(brick, project):
     '''
     Converts a brick database entry (document) into a "fake process": a
     :class:`̀~capsul.process.process.Process` direct instance (not subclassed)
@@ -631,8 +632,9 @@ def brick_to_process(brick):
     '''
 
     if isinstance(brick, str):
-         # brick is an id
-         brick = session.get_document(COLLECTION_BRICK, brick)
+        # brick is an id
+        session = project.session
+        brick = session.get_document(COLLECTION_BRICK, brick)
     if brick is None:
         return None
 
