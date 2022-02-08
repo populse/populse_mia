@@ -1318,12 +1318,14 @@ class PipelineManagerTab(QWidget):
         # successful
         # self.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020
         self.init_clicked = True
-        self.pipelineEditorTabs.update_current_node()
-        self.pipelineEditorTabs.get_current_editor().node_parameters \
-            = copy.deepcopy(self.pipelineEditorTabs.get_current_editor(
-        ).node_parameters_tmp)
-        self.pipelineEditorTabs.update_current_node()
-
+        self.pipelineEditorTabs.update_current_node(
+                                         self.pipelineEditorTabs.currentIndex())
+        (self.pipelineEditorTabs.
+           get_current_editor()).node_parameters = copy.deepcopy(
+                                                   (self.pipelineEditorTabs.
+                                      get_current_editor()).node_parameters_tmp)
+        self.pipelineEditorTabs.update_current_node(
+                                         self.pipelineEditorTabs.currentIndex())
         QApplication.instance().restoreOverrideCursor()
 
     def init_pipeline(self, pipeline=None, pipeline_name=""):
@@ -2703,7 +2705,7 @@ class PipelineManagerTab(QWidget):
                 self.project.session.get_documents_names(COLLECTION_CURRENT)
         self.pipelineEditorTabs.update_scans_list()
 
-    def update_user_buttons_states(self):
+    def update_user_buttons_states(self, index=-1):
         """
         Update the visibility of initialize/run/save actions according to pipeline state
         """
@@ -2717,7 +2719,19 @@ class PipelineManagerTab(QWidget):
         #     self.run_pipeline_action.setDisabled(True)
         #
         # self.init_pipeline_action.setDisabled(False)
-        self.run_pipeline_action.setDisabled(False)
+        if index != -1:
+            editor = self.pipelineEditorTabs.get_editor_by_index(index)
+            if editor is None or editor.scene is None:
+                pipeline = None
+            else:
+                pipeline = editor.scene.pipeline
+        else:
+            pipeline = self.pipelineEditorTabs.get_current_pipeline()
+
+        if pipeline is None or len(pipeline.list_process_in_pipeline) == 0:
+            self.run_pipeline_action.setDisabled(True)
+        else:
+            self.run_pipeline_action.setDisabled(False)
         # End - Commented on January, 4th 2020
 
         if (hasattr(self.pipelineEditorTabs.get_current_editor(),

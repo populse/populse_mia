@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager package &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -175,6 +175,11 @@ iteration table.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_selected_tag">
+<code class="descname">update_selected_tag</code><span class="sig-paren">(</span><em>selected_tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.update_selected_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_selected_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_table">
 <code class="descname">update_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.update_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the iteration table.</p>
@@ -266,7 +271,7 @@ and layout organization.</p>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed">
-<code class="descname">parameters_changed</code><span class="sig-paren">(</span><em>param</em>, <em>value</em>, <em>old_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.parameters_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parameters_changed</code><span class="sig-paren">(</span><em>_</em>, <em>plug_name</em>, <em>old_value</em>, <em>new_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.parameters_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Emit the value_changed signal.</p>
 </dd></dl>
 
@@ -275,6 +280,11 @@ and layout organization.</p>
 <code class="descname">release_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.release_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove notification from process</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.rename_subprocesses">
+<code class="descname">rename_subprocesses</code><span class="sig-paren">(</span><em>node</em>, <em>parent_node_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.rename_subprocesses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.rename_subprocesses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.static_release">
@@ -290,7 +300,7 @@ and layout organization.</p>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">
-<code class="descname">update_node_name</code><span class="sig-paren">(</span><em>pipeline</em>, <em>new_node_name=None</em>, <em>old_node_name=None</em>, <em>from_undo=False</em>, <em>from_redo=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_node_name</code><span class="sig-paren">(</span><em>new_node_name=None</em>, <em>old_node_name=None</em>, <em>from_undo=False</em>, <em>from_redo=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.update_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the name of the selected node and updates the pipeline.</p>
 <p>Because the nodes are stored in a dictionary, we have to create
 a new node that has the same traits as the selected one and create
@@ -300,7 +310,6 @@ new links that are the same than the selected node.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pipeline</strong> – current pipeline</li>
 <li><strong>new_node_name</strong> – new node name (is None except when this method
 is called from an undo/redo)</li>
 <li><strong>old_node_name</strong> – old node name (is None except when this method
@@ -377,12 +386,6 @@ filtering is done, the filter is saved in the process.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.set_output_value">
-<code class="descname">set_output_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#FilterWidget.set_output_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.set_output_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the output of the filter to the output of the node.</p>
 </dd></dl>
 
 <dl class="method">
@@ -489,8 +492,13 @@ and layout organization.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.node_controller.NodeController.rename_subprocesses">
+<code class="descname">rename_subprocesses</code><span class="sig-paren">(</span><em>node</em>, <em>parent_node_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#NodeController.rename_subprocesses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.rename_subprocesses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name">
-<code class="descname">update_node_name</code><span class="sig-paren">(</span><em>pipeline</em>, <em>new_node_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#NodeController.update_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_node_name</code><span class="sig-paren">(</span><em>new_node_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#NodeController.update_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the name of the selected node and updates the pipeline.</p>
 <p>Because the nodes are stored in a dictionary, we have to create
 a new node that has the same traits as the selected one and create
@@ -499,12 +507,8 @@ new links that are the same than the selected node.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pipeline</strong> – current pipeline</li>
-<li><strong>new_node_name</strong> – new node name (is None except when this method
-is called from an undo/redo)</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_node_name</strong> – new node name (is None except when this method
+is called from an undo/redo)</td>
 </tr>
 </tbody>
 </table>
@@ -658,11 +662,11 @@ and allow to edit graphically a pipeline.</p>
 <dl class="class">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">
 <em class="property">class </em><code class="descclassname">populse_mia.user_interface.pipeline_manager.pipeline_editor.</code><code class="descname">PipelineEditor</code><span class="sig-paren">(</span><em>project</em>, <em>main_window</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">capsul.qt_gui.widgets.pipeline_developper_view.PipelineDevelopperView</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">capsul.qt_gui.widgets.pipeline_developer_view.PipelineDeveloperView</span></code></p>
 <p>View to edit a pipeline graphically.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.add_link">
-<code class="descname">add_link</code><span class="sig-paren">(</span><em>source</em>, <em>dest</em>, <em>active</em>, <em>weak</em>, <em>from_undo=False</em>, <em>from_redo=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditor.add_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.add_link" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_link</code><span class="sig-paren">(</span><em>source</em>, <em>dest</em>, <em>active</em>, <em>weak</em>, <em>from_undo=False</em>, <em>from_redo=False</em>, <em>allow_export=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditor.add_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.add_link" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a link between two nodes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1470,7 +1474,7 @@ nodes.</p>
 <p>Widget that handles the Pipeline Manager tab.</p>
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_plug_value_to_database">
-<code class="descname">add_plug_value_to_database</code><span class="sig-paren">(</span><em>p_value</em>, <em>brick_id</em>, <em>node_name</em>, <em>plug_name</em>, <em>full_name</em>, <em>node</em>, <em>trait</em>, <em>inputs</em>, <em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.add_plug_value_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_plug_value_to_database" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_plug_value_to_database</code><span class="sig-paren">(</span><em>p_value</em>, <em>brick_id</em>, <em>node_name</em>, <em>plug_name</em>, <em>full_name</em>, <em>job</em>, <em>trait</em>, <em>inputs</em>, <em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.add_plug_value_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_plug_value_to_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the plug value to the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1484,7 +1488,7 @@ nodes.</p>
 <li><strong>full_name</strong> – full name of the node, including parent
 brick(s) (str). If there is no parent brick,
 full_name = node_name.</li>
-<li><strong>node</strong> – node containing the plug (Node)</li>
+<li><strong>job</strong> – job containing the plug (Job)</li>
 <li><strong>trait</strong> – handler of the plug trait, or sub-trait if the plug is
 a list (Trait). It will be used to check the value type
 (file or not).</li>
@@ -1512,6 +1516,11 @@ connected to a database filter (input_filter node)</p>
 <dd><p>Build a new pipeline with an iteration node, iterating over the current
 pipeline</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.check_requirements">
+<code class="descname">check_requirements</code><span class="sig-paren">(</span><em>environment='global'</em>, <em>message_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.check_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.check_requirements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.cleanup_older_init">
@@ -1582,6 +1591,13 @@ cleans up the database.</p>
 <code class="descname">get_capsul_engine</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.get_capsul_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_capsul_engine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a CapsulEngine object from the edited pipeline, and set it up from
 MIA config object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_missing_mandatory_parameters">
+<code class="descname">get_missing_mandatory_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.get_missing_mandatory_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_missing_mandatory_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>check on missing parameters for
+each job</p>
 </dd></dl>
 
 <dl class="method">
@@ -1776,7 +1792,7 @@ going to be overwritten during saving operation</td>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_auto_inheritance">
-<code class="descname">update_auto_inheritance</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_auto_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_auto_inheritance" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_auto_inheritance</code><span class="sig-paren">(</span><em>job</em>, <em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_auto_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_auto_inheritance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Try (as best as possible) to assign output parameters to input ones,
 to get database tags for them.</p>
 <p>When a node has only one input with a value (filename) in the database,
@@ -1813,6 +1829,17 @@ should be avoided.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_inheritance">
+<code class="descname">update_inheritance</code><span class="sig-paren">(</span><em>job</em>, <em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_node_list">
+<code class="descname">update_node_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_node_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_node_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the list of nodes in workflow</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project">
 <code class="descname">update_project</code><span class="sig-paren">(</span><em>project</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the project attribute of several objects</p>
@@ -1838,6 +1865,12 @@ should be avoided.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_buttons_states">
+<code class="descname">update_user_buttons_states</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.update_user_buttons_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_buttons_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the visibility of initialize/run/save actions according to pipeline state</p>
 </dd></dl>
 
 <dl class="method">
@@ -2556,7 +2589,18 @@ are empty.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – recursive index to move between modules</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>index</strong> – recursive index to move between modules</li>
+<li><strong>to_delete</strong> – the brick (class) do delete (ex. test.Test)</li>
+<li><strong>remove</strong> – (boolean) if True, remove the brick(s) from the
+package tree</li>
+<li><strong>loop</strong> – (boolean) to loop silently (if True no confirmation
+is requested before deletion)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the list of deleted brick (class)</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -2931,7 +2975,7 @@ appropriate parameters.</p>
 
 <dl class="method">
 <dt id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">
-<code class="descname">complete_parameters</code><span class="sig-paren">(</span><em>process_inputs={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.complete_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="descname">complete_parameters</code><span class="sig-paren">(</span><em>process_inputs={}</em>, <em>complete_iterations=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.complete_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

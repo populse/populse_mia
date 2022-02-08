@@ -36,8 +36,9 @@ from packaging import version
 # PyQt5 imports
 from PyQt5.QtCore import QDir, QLockFile, Qt
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import (QApplication, QDialog, QPushButton, QLabel,
-                             QFileDialog, QVBoxLayout, QHBoxLayout, QLineEdit)
+from PyQt5.QtWidgets import (QApplication, QDialog, QFileDialog, QHBoxLayout,
+                             QLabel, QLineEdit, QMessageBox, QPushButton,
+                             QVBoxLayout)
 
 pypath = []
 
@@ -104,11 +105,18 @@ if not os.path.dirname(os.path.dirname(
         del capsul_dev_dir
 
     else:
-        import capsul
-        capsul_dir = os.path.dirname(os.path.dirname(capsul.__file__))
-        print('  . Using capsul package from {} ...'.format(capsul_dir))
-        del capsul_dir
-        del capsul
+
+        try:
+            import capsul
+            
+        except Exception:
+            pass
+
+        else:
+            capsul_dir = os.path.dirname(os.path.dirname(capsul.__file__))
+            print('  . Using capsul package from {} ...'.format(capsul_dir))
+            del capsul_dir
+            del capsul
 
      # Adding soma_base:
     if os.path.isdir(os.path.join(root_dev_dir, soma_bdir, 'soma-base')):
@@ -224,11 +232,77 @@ else:  # "user" mode
     DEV_MODE = False
     print('\n- Mia in "user" mode')
 
+# check if nipype and mia_processes are available on the station
+# if not available ask the user to install them
+pkg_error = []
+# pkg_error: a list containing nipype and/or mia_processes if not currently
+#            installed
+capsulVer = None # capsul version currently installed
+miaProcVer = None # mia_processes version currently installed
+nipypeVer = None # nipype version currently installed
+
+try:
+    from capsul import info as capsul_info
+    capsulVer = capsul_info.__version__
+
+except (ImportError, AttributeError) as e:
+    pkg_error.append('capsul')
+    print('\n' + '*' * 37)
+    print('MIA warning {0}: {1}'.format(e.__class__, e))
+    print('*' * 37 + '\n')
+
+
+try:
+    __import__('nipype')
+    nipypeVer = sys.modules['nipype'].__version__
+
+except (ImportError, AttributeError) as e:
+    pkg_error.append('nipype')
+    print('\n' + '*' * 37)
+    print('MIA warning {0}: {1}'.format(e.__class__, e))
+    print('*' * 37 + '\n')
+
+try:
+    __import__('mia_processes')
+    miaProcVer = sys.modules['mia_processes'].__version__
+
+except (ImportError, AttributeError) as e:
+    pkg_error.append('mia_processes')
+    print('\n' + '*' * 37)
+    print('MIA warning {0}: {1}'.format(e.__class__, e))
+    print('*' * 37 + '\n')
+
+if len(pkg_error) > 0:
+    app = QApplication(sys.argv)
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Warning)
+    msg.setWindowTitle("populse_mia -  warning: ImportError!")
+
+    if len(pkg_error) == 1:
+        msg.setText("{0} package not found !\nPlease install "
+                    "the package and "
+                    "start again mia ...".format(pkg_error[0]))
+
+    elif len(pkg_error) == 2:
+        msg.setText("{0} and {1} packages not found !\n"
+                    "Please install the packages and start again mia "
+                    "...".format(pkg_error[0], pkg_error[1]))
+
+    else:
+        msg.setText("{0}, {1} and {2} packages not found !\n"
+                    "Please install the packages and start again mia "
+                    "...".format(pkg_error[0], pkg_error[1], pkg_error[2]))
+
+    msg.setStandardButtons(QMessageBox.Ok)
+    msg.buttonClicked.connect(msg.close)
+    msg.exec()
+    del app
+    sys.exit(1)
+
 # capsul imports
 from capsul.api import get_process_instance
 
 # soma-base imports
-from soma.qt_gui.qt_backend.Qt import QMessageBox
 from soma.qt_gui.qtThread import QtThreadCall
 
 # populse_mia imports
@@ -286,8 +360,9 @@ in a recursive way.
         """
 
         # (filter out test modules)
-        if module_name and 'test' not in module_name.split('.') \
-                and 'tests' not in module_name.split('.'):
+        if (module_name and
+                'test' not in module_name.split('.') and
+                        'tests' not in module_name.split('.')):
 
             # reloading the package
             if module_name in sys.modules.keys():
@@ -844,18 +919,12 @@ def verify_processes():
             elif _deepCompDic(old_dic[str(key)], new_dic[str(key)]):
                 new_dic[str(key)] = old_dic[str(key)]
 
-    capsulVer = None # capsul version currently installed
-    miaProcVer = None # mia_processes version currently installed
-    nipypeVer = None # nipype version currently installed
     othPckg = None
     # othPckg: a list containing all packages, other than nipype, mia_processes
     #          and capsul, used during the previous launch of mia.
     pack2install = []
     # pack2install: a list containing the package (nipype and/or
     #               mia_processes and/or capsul) to install
-    pkg_error = []
-    # pkg_error: a list containing nipype and/or mia_processes if not currently
-    #            installed
     proc_content = None
     # proc_content: python dictionary object corresponding to the
     #               process_config.yml property file
@@ -866,52 +935,6 @@ def verify_processes():
 
     print('\nChecking the installed version for nipype, '
           'mia_processes and capsul ...')
-    # check if nipype and mia_processes are available on the station
-    # if not available ask the user to install them
-
-    try:
-        __import__('nipype')
-        nipypeVer = sys.modules['nipype'].__version__
-
-    except (ImportError, AttributeError) as e:
-        pkg_error.append('nipype')
-        print('\n' + '*' * 37)
-        print('MIA warning {0}: {1}'.format(e.__class__, e))
-        print('*' * 37 + '\n')
-
-    try:
-        __import__('mia_processes')
-        miaProcVer = sys.modules['mia_processes'].__version__
-
-    except (ImportError, AttributeError) as e:
-        pkg_error.append('mia_processes')
-        print('\n' + '*' * 37)
-        print('MIA warning {0}: {1}'.format(e.__class__, e))
-        print('*' * 37 + '\n')
-
-    if len(pkg_error) > 0:
-        app = QApplication(sys.argv)
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Warning)
-        msg.setWindowTitle("populse_mia -  warning: ImportError!")
-
-        if len(pkg_error) == 1:
-            msg.setText("{0} package not found !\nPlease install "
-                        "the package and "
-                        "start again mia ...".format(pkg_error[0]))
-        else:
-            msg.setText("{0} and {1} packages not found !\n"
-                        "Please install the packages and start again mia "
-                        "...".format(pkg_error[0], pkg_error[1]))
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.buttonClicked.connect(msg.close)
-        msg.exec()
-        del app
-        sys.exit(1)
-
-    # for capsul it's different, because mia can't run without capsul
-    from capsul import info as capsul_info
-    capsulVer = capsul_info.__version__
 
     if os.path.isfile(proc_config):
 

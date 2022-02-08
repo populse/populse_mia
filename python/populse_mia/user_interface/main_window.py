@@ -6,6 +6,7 @@ Initialize the software appearance and defines interactions with the user.
 :Contains:
     :Class:
         - MainWindow
+        - _ProcDeleter
 
 """
 
@@ -70,8 +71,7 @@ _ipsubprocs = []
 
 
 class _ProcDeleter(threading.Thread):
-    """ used by open_shell
-    """
+    """Used by open_shell."""
 
     def __init__(self, o):
         threading.Thread.__init__(self)
@@ -109,6 +109,9 @@ class MainWindow(QMainWindow):
                              data browser
         - check_unsaved_modifications: check if there are differences
           between the current project and the database
+        - check_database: check if files in database have been modified or
+                          removed since they have been converted for the
+                          first time
         - closeEvent: override the closing event to check if there are
           unsaved modifications
         - create_view_actions: create the actions in each menu
@@ -120,6 +123,7 @@ class MainWindow(QMainWindow):
         - del_clinical_tags: Remove the clinical tags to the database and the
                              data browser
         - documentation: open the documentation in a web browser
+        - get_controller_version: returns controller_version_changed attribute
         - import_data: call the import software (MRI File Manager)
         - install_processes_pop_up: open the install processes pop-up
         - open_project_pop_up: open a pop-up to open a project and updates
@@ -136,6 +140,7 @@ class MainWindow(QMainWindow):
         - save_project_as: open a pop-up to save the current project as
         - saveChoice: checks if the project needs to be saved as or just saved
         - see_all_projects: open a pop-up to show the recent projects
+        - set_controller_version: Reverses controller_version_changed attribute
         - software_preferences_pop_up: open the MIA2 preferences pop-up
         - switch_project: switches project if it's possible
         - tab_changed: method called when the tab is changed
@@ -285,6 +290,37 @@ class MainWindow(QMainWindow):
         else:
             return False
 
+    def check_database(self):
+        """Check if files in database have been modified since first import."""
+
+        if self.project is None:
+            return
+
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+
+        print('verify scans...')
+        t0 = time.time()
+        problem_list = data_loader.verify_scans(self.project)
+        print('check time:', time.time() - t0)
+
+        QApplication.restoreOverrideCursor()
+
+        # Message if invalid files
+        if problem_list:
+            str_msg = ""
+            for element in problem_list:
+                str_msg += element + "\n\n"
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText(
+                "These files have been modified or removed since "
+                "they have been converted for the first time:")
+            msg.setInformativeText(str_msg)
+            msg.setWindowTitle("Warning")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.buttonClicked.connect(msg.close)
+            msg.exec()
+
     def closeEvent(self, event):
         """Override the QWidget closing event to check if there are unsaved
         modifications
@@ -314,15 +350,19 @@ class MainWindow(QMainWindow):
             config.set_opened_projects(opened_projects)
 
             # Change controller version if needed
-            if self.controller_version_changed:
+            if self.controller_version_changed:                
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Warning)
                 self.msg.setText("Controller version change")
                 self.msg.setInformativeText(
-                    "A change of controller version is planned for next start-up."
-                    "Do you confirm that you would like to perform this change?")
+                    "A change of controller version, from {0} to {1}, "
+                    "is planned for next start-up. Do you confirm that "
+                    "you would like to perform this "
+                    "change?".format("V1" if config.isControlV1() else "V2",
+                                     "V2" if config.isControlV1() else "V1"))
                 self.msg.setWindowTitle("Warning")
-                self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
+                self.msg.setStandardButtons(QMessageBox.Yes |
+                                            QMessageBox.Cancel)
                 return_value = self.msg.exec()
 
                 if return_value == QMessageBox.Yes:
@@ -341,12 +381,6 @@ class MainWindow(QMainWindow):
 
         if self.data_viewer:
             self.data_viewer.clear()
-
-    def set_controller_version(self):
-        self.controller_version_changed = not self.controller_version_changed
-
-    def get_controller_version(self):
-        return self.controller_version_changed
 
     def create_view_actions(self):
         """Create the actions and their shortcuts in each menu"""
@@ -608,6 +642,13 @@ class MainWindow(QMainWindow):
         """Open the documentation in a web browser."""
         webbrowser.open(
             'https://populse.github.io/populse_mia/html/index.html')
+
+    def get_controller_version(self):
+        """ Gives the value of the controller_version_changed attribute.
+
+        :return: Boolean
+        """
+        return self.controller_version_changed
 
     def install_processes_pop_up(self, folder=False):
         """Open the install processes pop-up.
@@ -1154,6 +1195,13 @@ class MainWindow(QMainWindow):
                                                                       file_path)
             self.update_recent_projects_actions()
 
+    def set_controller_version(self):
+        """ Reverses the value of the controller_version_changed attribute.
+
+        From False to True and vice versa
+        """
+        self.controller_version_changed = not self.controller_version_changed
+
     def software_preferences_pop_up(self):
         """Open the MIA preferences pop-up."""
 
@@ -1418,37 +1466,8 @@ class MainWindow(QMainWindow):
                 msg.exec()
                 return False
 
-    def check_database(self):
-        if self.project is None:
-            return
-
-        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-
-        print('verify scans...')
-        t0 = time.time()
-        problem_list = data_loader.verify_scans(self.project)
-        print('check time:', time.time() - t0)
-
-        QApplication.restoreOverrideCursor()
-
-        # Message if invalid files
-        if problem_list:
-            str_msg = ""
-            for element in problem_list:
-                str_msg += element + "\n\n"
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setText(
-                "These files have been modified or removed since "
-                "they have been converted for the first time:")
-            msg.setInformativeText(str_msg)
-            msg.setWindowTitle("Warning")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.buttonClicked.connect(msg.close)
-            msg.exec()
-
     def tab_changed(self):
-        """Update the window when the tab is changed"""
+        """Update the window when the tab is changed."""
 
         if self.tabs.tabText(
                 self.tabs.currentIndex()).replace("&",

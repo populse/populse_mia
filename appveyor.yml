@@ -44,6 +44,8 @@ install:
 
   - pip install codecov
   - pip install --upgrade --force-reinstall pyparsing==2.4.7
+# This is a patch to avoid the "AttributeError: 'PathMetadata' object has no attribute 'isdir'" observed since pip-22.0.2 (see for example UT for commit 50187200b6):
+  - pip install capsul soma-workflow
   - python setup.py install
   - git lfs install
   - git lfs pull

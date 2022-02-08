@@ -299,6 +299,13 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.data_browser.add_tag_action.trigger()
         add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Test_list")
+        
+        combo_box_types = ["String", "Integer", "Float", "Boolean", "Date", 
+          "Datetime", "Time", "String List", "Integer List", "Float List", 
+          "Boolean List", "Date List","Datetime List", "Time List"]
+        for data_type in combo_box_types:
+          add_tag.combo_box_type.setCurrentText(data_type)
+        
         add_tag.combo_box_type.setCurrentText("Integer List")
         QTest.mouseClick(add_tag.text_edit_default_value, Qt.LeftButton)
         QTest.mouseClick(

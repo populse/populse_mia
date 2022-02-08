@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.main_window &#8212; populse_mia 2.0.0-dev+93bc52b1 documentation</title>
+    <title>populse_mia.user_interface.main_window &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0-dev+93bc52b1',
+        VERSION:     '2.0.0-dev+35761189',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+93bc52b1 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.main_window</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -48,6 +48,7 @@
 <span class="sd">:Contains:</span>
 <span class="sd">    :Class:</span>
 <span class="sd">        - MainWindow</span>
+<span class="sd">        - _ProcDeleter</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -71,8 +72,8 @@
 
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QCursor</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QWidget</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span>
                              <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span>
                              <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">)</span>
@@ -98,6 +99,47 @@
                                                 <span class="n">PopUpSeeAllProjects</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.data_viewer_tab</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DataViewerTab</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">CLINICAL_TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Site&quot;</span><span class="p">,</span> <span class="s2">&quot;Spectro&quot;</span><span class="p">,</span> <span class="s2">&quot;MR&quot;</span><span class="p">,</span> <span class="s2">&quot;PatientRef&quot;</span><span class="p">,</span> <span class="s2">&quot;Pathology&quot;</span><span class="p">,</span> <span class="s2">&quot;Age&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;Sex&quot;</span><span class="p">,</span> <span class="s2">&quot;Message&quot;</span><span class="p">]</span>
+
+
+<span class="n">console_shell_running</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">_ipsubprocs_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+<span class="n">_ipsubprocs</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">class</span> <span class="nc">_ProcDeleter</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used by open_shell.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">o</span> <span class="o">=</span> <span class="n">o</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">o</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;console&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">global</span> <span class="n">console_shell_running</span>
+            <span class="n">console_shell_running</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">o</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;exception in ipython process:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">global</span> <span class="n">_ipsubprocs</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">_ipsubprocs_lock</span><span class="p">:</span>
+                <span class="n">_ipsubprocs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
 
 <div class="viewcode-block" id="MainWindow"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow">[docs]</a><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
 
@@ -106,9 +148,12 @@
 <span class="sd">    .. Methods:</span>
 <span class="sd">        - __init__ : initialise the object MainWindow</span>
 <span class="sd">        - add_clinical_tags: add the clinical tags to the database and the</span>
-<span class="sd">          data browser</span>
+<span class="sd">                             data browser</span>
 <span class="sd">        - check_unsaved_modifications: check if there are differences</span>
 <span class="sd">          between the current project and the database</span>
+<span class="sd">        - check_database: check if files in database have been modified or</span>
+<span class="sd">                          removed since they have been converted for the</span>
+<span class="sd">                          first time</span>
 <span class="sd">        - closeEvent: override the closing event to check if there are</span>
 <span class="sd">          unsaved modifications</span>
 <span class="sd">        - create_view_actions: create the actions in each menu</span>
@@ -116,7 +161,11 @@
 <span class="sd">        - create_view_window: create the main window view</span>
 <span class="sd">        - create_project_pop_up: create a new project</span>
 <span class="sd">        - create_tabs: create the tabs</span>
+<span class="sd">        - credits: open the credits in a web browser</span>
+<span class="sd">        - del_clinical_tags: Remove the clinical tags to the database and the</span>
+<span class="sd">                             data browser</span>
 <span class="sd">        - documentation: open the documentation in a web browser</span>
+<span class="sd">        - get_controller_version: returns controller_version_changed attribute</span>
 <span class="sd">        - import_data: call the import software (MRI File Manager)</span>
 <span class="sd">        - install_processes_pop_up: open the install processes pop-up</span>
 <span class="sd">        - open_project_pop_up: open a pop-up to open a project and updates</span>
@@ -133,6 +182,7 @@
 <span class="sd">        - save_project_as: open a pop-up to save the current project as</span>
 <span class="sd">        - saveChoice: checks if the project needs to be saved as or just saved</span>
 <span class="sd">        - see_all_projects: open a pop-up to show the recent projects</span>
+<span class="sd">        - set_controller_version: Reverses controller_version_changed attribute</span>
 <span class="sd">        - software_preferences_pop_up: open the MIA2 preferences pop-up</span>
 <span class="sd">        - switch_project: switches project if it&#39;s possible</span>
 <span class="sd">        - tab_changed: method called when the tab is changed</span>
@@ -181,6 +231,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">saved_projects_actions</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller_version_changed</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="c1"># Define main window view</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_view_window</span><span class="p">()</span>
 
@@ -214,10 +266,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">action_import</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sources_images_dir</span><span class="p">,</span>
                                                         <span class="s1">&#39;Blue.png&#39;</span><span class="p">)),</span>
                                      <span class="s1">&#39;Import&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_check_database</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Check the wole database&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_see_all_projects</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;See all projects&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_project_properties</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Project properties&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_software_preferences</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;MIA preferences&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_package_library</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Package library manager&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_open_shell</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Open python shell&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_exit</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sources_images_dir</span><span class="p">,</span>
                                                       <span class="s1">&#39;exit.png&#39;</span><span class="p">)),</span> <span class="s1">&#39;Exit&#39;</span><span class="p">,</span>
                                    <span class="bp">self</span><span class="p">)</span>
@@ -242,14 +296,23 @@
             <span class="k">if</span> <span class="n">size</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
+<div class="viewcode-block" id="MainWindow.last_window_closed"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.last_window_closed">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">last_window_closed</span><span class="p">():</span>
+        <span class="c1"># if the ipython console has been run, something prevents Qt from</span>
+        <span class="c1"># quitting after the window is closed. The cause is not known yet.</span>
+        <span class="c1"># so: force exit the event loop.</span>
+        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+        <span class="n">Qt</span><span class="o">.</span><span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">qApp</span><span class="o">.</span><span class="n">exit</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="MainWindow.add_clinical_tags"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.add_clinical_tags">[docs]</a>    <span class="k">def</span> <span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add the clinical tags to the database and the data browser&quot;&quot;&quot;</span>
 
         <span class="n">added_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">add_clinical_tags</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">added_tags</span><span class="p">:</span>
             <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">get_index_insertion</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">unsavedModifications</span> <span class="o">=</span> <span class="kc">True</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span></div>
+            <span class="c1">#self.project.unsavedModifications = True</span>
 
 <div class="viewcode-block" id="MainWindow.check_unsaved_modifications"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.check_unsaved_modifications">[docs]</a>    <span class="k">def</span> <span class="nf">check_unsaved_modifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if there are differences between the current project and the</span>
@@ -268,6 +331,37 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="MainWindow.check_database"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.check_database">[docs]</a>    <span class="k">def</span> <span class="nf">check_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if files in database have been modified since first import.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">QApplication</span><span class="o">.</span><span class="n">setOverrideCursor</span><span class="p">(</span><span class="n">QCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WaitCursor</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;verify scans...&#39;</span><span class="p">)</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">problem_list</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">verify_scans</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;check time:&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+
+        <span class="n">QApplication</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
+
+        <span class="c1"># Message if invalid files</span>
+        <span class="k">if</span> <span class="n">problem_list</span><span class="p">:</span>
+            <span class="n">str_msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">problem_list</span><span class="p">:</span>
+                <span class="n">str_msg</span> <span class="o">+=</span> <span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+                <span class="s2">&quot;These files have been modified or removed since &quot;</span>
+                <span class="s2">&quot;they have been converted for the first time:&quot;</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span><span class="n">str_msg</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MainWindow.closeEvent"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.closeEvent">[docs]</a>    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override the QWidget closing event to check if there are unsaved</span>
@@ -296,6 +390,27 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span> <span class="ow">in</span> <span class="n">opened_projects</span><span class="p">:</span>
                 <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
+
+            <span class="c1"># Change controller version if needed</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_version_changed</span><span class="p">:</span>                
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Controller version change&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span>
+                    <span class="s2">&quot;A change of controller version, from </span><span class="si">{0}</span><span class="s2"> to </span><span class="si">{1}</span><span class="s2">, &quot;</span>
+                    <span class="s2">&quot;is planned for next start-up. Do you confirm that &quot;</span>
+                    <span class="s2">&quot;you would like to perform this &quot;</span>
+                    <span class="s2">&quot;change?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;V1&quot;</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;V2&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;V2&quot;</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;V1&quot;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span>
+                                            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Cancel</span><span class="p">)</span>
+                <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">return_value</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">setControlV1</span><span class="p">(</span><span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
             <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_raw_files_useless</span><span class="p">()</span>
 
@@ -307,9 +422,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MainWindow.create_view_actions"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.create_view_actions">[docs]</a>    <span class="k">def</span> <span class="nf">create_view_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create the actions and their shortcuts in each menu&quot;&quot;&quot;</span>
@@ -355,6 +468,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">action_create</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_project_pop_up</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_open</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_project_pop_up</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_exit</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_check_database</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_database</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_open_shell</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_shell</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_save</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_save_as</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_delete</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delete_project</span><span class="p">)</span>
@@ -383,6 +498,7 @@
         <span class="c1"># Actions in the &quot;File&quot; menu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_create</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_open</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_check_database</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">action_save_project</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saveChoice</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_save_project_as</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_project_as</span><span class="p">)</span>
@@ -399,6 +515,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_software_preferences</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_project_properties</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_package_library</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addSeparator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_open_shell</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addSeparator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_exit</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_recent_projects_actions</span><span class="p">()</span>
@@ -522,6 +640,16 @@
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
             <span class="s1">&#39;https://github.com/populse/populse_mia/graphs/contributors&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="MainWindow.del_clinical_tags"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.del_clinical_tags">[docs]</a>    <span class="k">def</span> <span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove the clinical tags to the database and the data browser&quot;&quot;&quot;</span>
+        
+        <span class="n">removed_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">del_clinical_tags</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">removed_tags</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">removeColumn</span><span class="p">(</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span></div>
+            <span class="c1">#self.project.unsavedModifications = True</span>
+
 <div class="viewcode-block" id="MainWindow.delete_project"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.delete_project">[docs]</a>    <span class="k">def</span> <span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open a pop-up to open a project and updates the recent projects.&quot;&quot;&quot;</span>
 
@@ -557,6 +685,13 @@
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
             <span class="s1">&#39;https://populse.github.io/populse_mia/html/index.html&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="MainWindow.get_controller_version"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.get_controller_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_controller_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gives the value of the controller_version_changed attribute.</span>
+
+<span class="sd">        :return: Boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_version_changed</span></div>
+
 <div class="viewcode-block" id="MainWindow.install_processes_pop_up"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.install_processes_pop_up">[docs]</a>    <span class="k">def</span> <span class="nf">install_processes_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open the install processes pop-up.</span>
 
@@ -578,22 +713,41 @@
         <span class="c1"># Opens the conversion software to convert the MRI files in Nifti/Json</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">home</span> <span class="o">=</span> <span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
-        <span class="n">code_exit</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;java&#39;</span><span class="p">,</span> <span class="s1">&#39;-Xmx4096M&#39;</span><span class="p">,</span> <span class="s1">&#39;-jar&#39;</span><span class="p">,</span>
-                                      <span class="n">config</span><span class="o">.</span><span class="n">get_mri_conv_path</span><span class="p">(),</span>
-                                     <span class="s1">&#39;[ProjectsDir] &#39;</span><span class="o">+</span> <span class="n">home</span><span class="p">,</span>
-                                     <span class="s1">&#39;[ExportNifti] &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;raw_data&#39;</span><span class="p">),</span>
-                                     <span class="s1">&#39;[ExportToMIA] PatientName-StudyName-&#39;</span>
-                                     <span class="s1">&#39;CreationDate-SeqNumber-Protocol-&#39;</span>
-                                     <span class="s1">&#39;SequenceName-AcquisitionTime&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;CloseAfterExport&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;[ExportOptions] 00013&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">mri_conv opening ...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">code_exit</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;java&#39;</span><span class="p">,</span> <span class="s1">&#39;-Xmx4096M&#39;</span><span class="p">,</span> <span class="s1">&#39;-jar&#39;</span><span class="p">,</span>
+                                         <span class="n">config</span><span class="o">.</span><span class="n">get_mri_conv_path</span><span class="p">(),</span>
+                                         <span class="s1">&#39;[ProjectsDir] &#39;</span><span class="o">+</span> <span class="n">home</span><span class="p">,</span>
+                                         <span class="s1">&#39;[ExportNifti] &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;raw_data&#39;</span><span class="p">),</span>
+                                         <span class="s1">&#39;[ExportToMIA] PatientName-StudyName-&#39;</span>
+                                         <span class="s1">&#39;CreationDate-SeqNumber-Protocol-&#39;</span>
+                                         <span class="s1">&#39;SequenceName-AcquisitionTime&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;CloseAfterExport&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;[ExportOptions] 00013&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">code_exit</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">code_exit</span> <span class="o">!=</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mri_conv did not run properly!&#39;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Trial with a lower maximum heap size ...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">code_exit</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;java&#39;</span><span class="p">,</span> <span class="s1">&#39;-Xmx1024M&#39;</span><span class="p">,</span> <span class="s1">&#39;-jar&#39;</span><span class="p">,</span>
+                                         <span class="n">config</span><span class="o">.</span><span class="n">get_mri_conv_path</span><span class="p">(),</span>
+                                         <span class="s1">&#39;[ProjectsDir] &#39;</span><span class="o">+</span> <span class="n">home</span><span class="p">,</span>
+                                         <span class="s1">&#39;[ExportNifti] &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;raw_data&#39;</span><span class="p">),</span>
+                                         <span class="s1">&#39;[ExportToMIA] PatientName-StudyName-&#39;</span>
+                                         <span class="s1">&#39;CreationDate-SeqNumber-Protocol-&#39;</span>
+                                         <span class="s1">&#39;SequenceName-AcquisitionTime&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;CloseAfterExport&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;[ExportOptions] 00013&#39;</span><span class="p">])</span>
 
         <span class="c1"># &#39;NoLogExport&#39;if we don&#39;t want log export</span>
 
         <span class="k">if</span> <span class="n">code_exit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-
             <span class="c1"># Database filled</span>
             <span class="n">new_scans</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">read_log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
@@ -693,8 +847,16 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
                     <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">relative_path</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">data_sent</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
                     <span class="c1"># We switch the project</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">field_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
+                                                             <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">ele</span> <span class="ow">in</span> <span class="n">field_names</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">CLINICAL_TAGS</span><span class="p">):</span>
+                        <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MainWindow.open_recent_project"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.open_recent_project">[docs]</a>    <span class="k">def</span> <span class="nf">open_recent_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open a recent project.&quot;&quot;&quot;</span>
@@ -721,9 +883,17 @@
                 <span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">relative_path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
                 <span class="c1"># We switch the project</span>
+                <span class="n">field_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
+                                                             <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
                 <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
-                    <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">)</span></div>
+                                                             <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_viewer</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">ele</span> <span class="ow">in</span> <span class="n">field_names</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">CLINICAL_TAGS</span><span class="p">):</span>
+                    <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">set_clinical_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MainWindow.package_library_pop_up"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.package_library_pop_up">[docs]</a>    <span class="k">def</span> <span class="nf">package_library_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open the package library pop-up&quot;&quot;&quot;</span>
@@ -1067,6 +1237,13 @@
                                                                       <span class="n">file_path</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_recent_projects_actions</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="MainWindow.set_controller_version"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.set_controller_version">[docs]</a>    <span class="k">def</span> <span class="nf">set_controller_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reverses the value of the controller_version_changed attribute.</span>
+
+<span class="sd">        From False to True and vice versa</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller_version_changed</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_version_changed</span></div>
+
 <div class="viewcode-block" id="MainWindow.software_preferences_pop_up"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.software_preferences_pop_up">[docs]</a>    <span class="k">def</span> <span class="nf">software_preferences_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Open the MIA preferences pop-up.&quot;&quot;&quot;</span>
 
@@ -1075,6 +1252,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_clinical_mode_signal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_clinical_tags</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">not_use_clinical_mode_signal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">del_clinical_tags</span><span class="p">)</span>
 
         <span class="c1"># Modifying the options in the Pipeline Manager</span>
         <span class="c1"># (verify if user mode)</span>
@@ -1082,6 +1261,105 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">)</span></div>
         <span class="c1"># self.pop_up_preferences.signal_preferences_change.connect(</span>
         <span class="c1">#     self.update_package_library_action)</span>
+
+<div class="viewcode-block" id="MainWindow.open_shell"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.open_shell">[docs]</a>    <span class="k">def</span> <span class="nf">open_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Open a Qt console shell with an IPython kernel seing the program</span>
+<span class="sd">        internals</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soma.qt_gui</span> <span class="kn">import</span> <span class="n">qt_backend</span>
+        <span class="n">ipfunc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;qtconsole&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;startShell&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">qtconsole</span>  <span class="c1"># to check it is installed</span>
+            <span class="kn">import</span> <span class="nn">jupyter_core.application</span>
+            <span class="n">ipfunc</span> <span class="o">=</span> <span class="s1">&#39;from jupyter_core import application; &#39;</span> \
+                <span class="s1">&#39;app = application.JupyterApp(); app.initialize(); app.start()&#39;</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;failed to run Qt console&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">ipfunc</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">soma.subprocess</span>
+
+            <span class="n">ipConsole</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_ipconsole_kernel</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ipConsole</span><span class="p">:</span>
+                <span class="k">global</span> <span class="n">_ipsubprocs</span>
+
+                <span class="n">qt_api</span> <span class="o">=</span> <span class="n">qt_backend</span><span class="o">.</span><span class="n">get_qt_backend</span><span class="p">()</span>
+                <span class="n">qt_apis</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;PyQt4&#39;</span><span class="p">:</span> <span class="s1">&#39;pyqt&#39;</span><span class="p">,</span> <span class="s1">&#39;PyQt5&#39;</span><span class="p">:</span> <span class="s1">&#39;pyqt5&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;PySide&#39;</span><span class="p">:</span> <span class="s1">&#39;pyside&#39;</span><span class="p">}</span>
+                <span class="n">qt_api_code</span> <span class="o">=</span> <span class="n">qt_apis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">qt_api</span><span class="p">,</span> <span class="s1">&#39;pyq5t&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;import os; os.environ[&quot;QT_API&quot;] = &quot;</span><span class="si">%s</span><span class="s1">&quot;; </span><span class="si">%s</span><span class="s1">&#39;</span>
+                      <span class="o">%</span> <span class="p">(</span><span class="n">qt_api_code</span><span class="p">,</span> <span class="n">ipfunc</span><span class="p">),</span>
+                      <span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;--existing&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;--shell=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ipConsole</span><span class="o">.</span><span class="n">shell_port</span><span class="p">,</span>
+                      <span class="s1">&#39;--iopub=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ipConsole</span><span class="o">.</span><span class="n">iopub_port</span><span class="p">,</span>
+                      <span class="s1">&#39;--stdin=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ipConsole</span><span class="o">.</span><span class="n">stdin_port</span><span class="p">,</span>
+                      <span class="s1">&#39;--hb=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ipConsole</span><span class="o">.</span><span class="n">hb_port</span><span class="p">]</span>
+                <span class="n">sp</span> <span class="o">=</span> <span class="n">soma</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="n">pd</span> <span class="o">=</span> <span class="n">_ProcDeleter</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">_ipsubprocs_lock</span><span class="p">:</span>
+                    <span class="n">_ipsubprocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+                <span class="c1"># hack the lastWindowClosed event because it becomes inactive</span>
+                <span class="c1"># otherwise</span>
+                <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">lastWindowClosed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">last_window_closed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MainWindow.run_ipconsole_kernel"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.run_ipconsole_kernel">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">run_ipconsole_kernel</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;qtconsole&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;run_ipconsole_kernel:&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">IPython</span>
+        <span class="kn">from</span> <span class="nn">IPython.lib</span> <span class="kn">import</span> <span class="n">guisupport</span>
+        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+        <span class="n">qtapp</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+        <span class="n">qtapp</span><span class="o">.</span><span class="n">_in_event_loop</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">guisupport</span><span class="o">.</span><span class="n">in_event_loop</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">ipversion</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">IPython</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span>
+
+        <span class="kn">from</span> <span class="nn">ipykernel.kernelapp</span> <span class="kn">import</span> <span class="n">IPKernelApp</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">IPKernelApp</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">app</span><span class="o">.</span><span class="n">initialized</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">app</span><span class="o">.</span><span class="n">kernel</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;runing IP console kernel&#39;</span><span class="p">)</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">hb_port</span> <span class="o">=</span> <span class="mi">50042</span>  <span class="c1"># don&#39;t know why this is not set automatically</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">initialize</span><span class="p">([</span><span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;--gui=qt&#39;</span><span class="p">,</span> <span class="c1"># &#39;--pylab=qt&#39;,</span>
+                            <span class="s2">&quot;--KernelApp.parent_appname=&#39;ipython-</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">mode</span><span class="p">])</span>
+            <span class="c1"># in ipython &gt;= 1.2, app.start() blocks until a ctrl-c is issued in</span>
+            <span class="c1"># the terminal. Seems to block in tornado.ioloop.PollIOLoop.start()</span>
+            <span class="c1">#</span>
+            <span class="c1"># So, don&#39;t call app.start because it would begin a zmq/tornado loop</span>
+            <span class="c1"># instead we must just initialize its callback.</span>
+            <span class="c1"># if app.poller is not None:</span>
+                <span class="c1"># app.poller.start()</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+            <span class="kn">from</span> <span class="nn">zmq.eventloop</span> <span class="kn">import</span> <span class="n">ioloop</span>
+            <span class="c1"># IP 2 allows just calling the current callbacks.</span>
+            <span class="c1"># For IP 1 it is not sufficient.</span>
+            <span class="kn">import</span> <span class="nn">tornado</span>
+            <span class="k">if</span> <span class="n">tornado</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="c1"># tornado 5 is using a decque for _callbacks, not a</span>
+                <span class="c1"># list + explicit locking</span>
+                <span class="k">def</span> <span class="nf">my_start_ioloop_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_callbacks&#39;</span><span class="p">):</span>
+                        <span class="n">ncallbacks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncallbacks</span><span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_run_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">def</span> <span class="nf">my_start_ioloop_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_lock</span><span class="p">:</span>
+                        <span class="n">callbacks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_run_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+
+            <span class="n">my_start_ioloop_callbacks</span><span class="p">(</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">app</span></div>
+
+
 
 <div class="viewcode-block" id="MainWindow.switch_project"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.switch_project">[docs]</a>    <span class="k">def</span> <span class="nf">switch_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if it&#39;s possible to open the selected project</span>
@@ -1181,24 +1459,6 @@
 
                         <span class="k">return</span> <span class="kc">False</span>
 
-                    <span class="n">problem_list</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">verify_scans</span><span class="p">(</span><span class="n">temp_database</span><span class="p">)</span>
-
-                    <span class="c1"># Message if invalid files</span>
-                    <span class="k">if</span> <span class="n">problem_list</span><span class="p">:</span>
-                        <span class="n">str_msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">problem_list</span><span class="p">:</span>
-                            <span class="n">str_msg</span> <span class="o">+=</span> <span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
-                            <span class="s2">&quot;These files have been modified or removed since &quot;</span>
-                            <span class="s2">&quot;they have been converted for the first time:&quot;</span><span class="p">)</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span><span class="n">str_msg</span><span class="p">)</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
-
                     <span class="c1"># project removed from the opened projects list</span>
                     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
                     <span class="n">opened_projects</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()</span>
@@ -1249,7 +1509,7 @@
                 <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="MainWindow.tab_changed"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.tab_changed">[docs]</a>    <span class="k">def</span> <span class="nf">tab_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Update the window when the tab is changed&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update the window when the tab is changed.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">tabText</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span>
@@ -1305,8 +1565,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="n">scans</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="n">scans</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">update_scans_list</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">iterated_tag</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">update_iterated_tag</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">update_user_buttons_states</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">iterated_tag</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">update_iterated_tag</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">iterated_tag</span><span class="p">)</span>
 
             <span class="c1"># Pipeline Manager</span>
             <span class="c1"># The pending modifications must be saved before</span>

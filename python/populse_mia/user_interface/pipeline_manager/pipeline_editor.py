@@ -285,11 +285,13 @@ class PipelineEditor(PipelineDeveloperView):
                                      plug_name,
                                      temp_plug_name[0]]                
                     self.update_history(history_maker, from_undo, from_redo)
-                
-                    if not (self.main_window.pipeline_manager.
-                                  iterationTable.check_box_iterate).isChecked():
-                        (self.main_window.pipeline_manager.
-                         run_pipeline_action).setDisabled(True)
+
+                    # Commented on January, 4th 2020
+                    # if not (self.main_window.pipeline_manager.
+                    #               iterationTable.check_box_iterate).isChecked():
+                    #     (self.main_window.pipeline_manager.
+                    #      run_pipeline_action).setDisabled(True)
+                    # End - commented on January, 4th 2020
 
                     self.main_window.statusBar().showMessage(
                         "Plug {0} has been exported.".format(plug_name))
@@ -372,8 +374,10 @@ class PipelineEditor(PipelineDeveloperView):
             # For history
             history_maker = ["remove_plug", tot_plug_name]
             self.update_history(history_maker, from_undo, from_redo)
-            (self.main_window.pipeline_manager.
-                                          run_pipeline_action.setDisabled)(True)
+            # Commented on January, 4th 2020
+            # (self.main_window.pipeline_manager.
+            #                               run_pipeline_action.setDisabled)(True)
+            # End - commented on January, 4th 2020
 
             if len(tot_plug_name) == 1:
                 self.main_window.statusBar().showMessage("'{0}' plug has been "
@@ -481,6 +485,8 @@ class PipelineEditor(PipelineDeveloperView):
 
         self.main_window.statusBar().showMessage("Node {0} has been "
                                                  "added.".format(node_name))
+
+        self.main_window.pipeline_manager.update_user_buttons_states()
 
     def check_modifications(self):
         """Check if the nodes of the pipeline have been modified."""
@@ -740,6 +746,8 @@ class PipelineEditor(PipelineDeveloperView):
                 process = node.process
             self.main_window.pipeline_manager.displayNodeParameters(node_name,
                                                                     process)
+
+        self.main_window.pipeline_manager.update_user_buttons_states()
 
     def export_node_plugs(self, node_name, inputs=True, outputs=True,
                           optional=False, from_undo=False, from_redo=False):
@@ -1247,8 +1255,10 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         
         try:
             if current_index != self.previousIndex:
-                self.main_window.pipeline_manager.run_pipeline_action \
-                    .setDisabled(True)
+                # Commented on January, 4th 2020
+                # self.main_window.pipeline_manager.run_pipeline_action \
+                #     .setDisabled(True)
+                # End - commented on January, 4th 2020
                 self.previousIndex = current_index
             self.widget(current_index).check_modifications()
         except AttributeError:
@@ -1792,13 +1802,15 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         self.set_tab_index(self.get_index_by_tab_name(tab_name))
 
     def set_tab_index(self, index):
-        """Set the current tab index and disable the run pipeline action."""
+        """Set the current tab index and disable the run pipeline action.
+
+        :param index: index of the editor
+        """
         
         # self.main_window.pipeline_manager.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020
-
         self.setCurrentIndex(index)
         self.previousIndex = index
-        self.update_current_node()
+        self.update_current_node(index)
 
     def update_iteration_checkbox(self):
         pipeline = self.get_current_pipeline()
@@ -1817,14 +1829,18 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                 self.main_window.pipeline_manager.iterationTable \
                     .check_box_iterate.setCheckState(Qt.Qt.Unchecked)
 
-    def update_current_node(self):
-        """Update the node parameters"""
-        
-        if self.get_current_editor():
-            if self.get_current_editor().initialized:
-                self.main_window.pipeline_manager.run_pipeline_action\
-                    .setDisabled(False)
+    def update_current_node(self, index):
+        """Update the node parameters
 
+        :param index: index of the editor
+        """
+
+        # Commented on January, 4th 2020
+        # if self.get_current_editor():
+        #     if self.get_current_editor().initialized:
+        #         self.main_window.pipeline_manager.run_pipeline_action\
+        #             .setDisabled(False)
+        # End - commented on January, 4th 2020
         try:
             for node_name, node in self.get_current_pipeline().nodes.items():
                 self.main_window.pipeline_manager.displayNodeParameters(
@@ -1832,10 +1848,13 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         except AttributeError:
             pass
 
-        if self.main_window.pipeline_manager.iterationTable\
-                .check_box_iterate.isChecked():
-            self.main_window.pipeline_manager.run_pipeline_action\
-                .setDisabled(False)
+        # Commented on January, 4th 2020
+        # if self.main_window.pipeline_manager.iterationTable\
+        #         .check_box_iterate.isChecked():
+        #     self.main_window.pipeline_manager.run_pipeline_action\
+        #         .setDisabled(False)
+        # End - commented on January, 4th 2020
+        self.main_window.pipeline_manager.update_user_buttons_states()
 
         self.update_iteration_checkbox()
         if self.get_current_editor():
