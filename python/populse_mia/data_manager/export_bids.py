@@ -36,18 +36,23 @@ class ProgressBar(QMainWindow):
 
 class TableBids(QDialog):
     
-    def __init__(self, dataList, parent=None):
+    def __init__(self, parent=None):
         QDialog.__init__(self, None)
 
 #         print('dataList :', dataList)
 
-        self.dataList = dataList
+        self.dataList = []
+
+        current_path = os.path.dirname(os.path.realpath(__file__))
+        self.desc_Bids = os.path.join(current_path,'Modalities_BIDS.yml')
+        with open(self.desc_Bids, 'r') as stream:
+            self.desc_bids = yaml.load(stream, yaml.FullLoader)
 
         self.setWindowModality(Qt.ApplicationModal)
         self.title = 'BIDS - manager (in development)'
         self.left = 0
         self.top = 0
-        self.width = 800
+        self.width = 1000
         self.height = 600
 
         self.setWindowTitle(self.title)
@@ -77,81 +82,77 @@ class TableBids(QDialog):
 
     #Create table
     def createTable(self):
-        self.tableWidget = QTableWidget(len(self.dataList), 6)
+        self.tableWidget = QTableWidget(0, 8)
 #         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
-        self.tableWidget.setHorizontalHeaderLabels(("Data", "Entity", "sub", "ses", "acq", "task"))
-        self.tableWidget.horizontalHeaderItem(4).setToolTip(self.acqInfo())
-        self.tableWidget.horizontalHeaderItem(5).setToolTip(self.taskInfo())
+        self.tableWidget.setHorizontalHeaderLabels(("data", "DataType", "sub", "ses", "acq", "task", "run", "suffix"))
+        self.tableWidget.horizontalHeaderItem(4).setToolTip(self.desc_bids['description']['acq'])
+        self.tableWidget.horizontalHeaderItem(5).setToolTip(self.desc_bids['description']['task'])
 
         self.tableWidget.setColumnWidth(0, 500)
-        delegate = ReadOnlyDelegate(self)
-#         self.setItemDelegateForRow(1, delegate)
-        for i in range(3):
-            self.tableWidget.setItemDelegateForColumn(i, delegate)
 
-        for i in range(0, len(self.dataList)):
-            self.tableWidget.setItem(i,0, QTableWidgetItem(self.dataList[i][0]))
-            self.tableWidget.setItem(i,1, QTableWidgetItem(""))
-            self.tableWidget.setItem(i,2, QTableWidgetItem("sub-" + self.dataList[i][1]))
-            self.tableWidget.setItem(i,3, QTableWidgetItem("ses-" + str(i)))
-            for j in range(4, 6):
-                self.tableWidget.setItem(i,j, QTableWidgetItem(" "))
-                
-    def taskInfo(self):
-        text = ("Format: task-<label>\n"
-                "Required for functional imaging (with 'func' entity)\n\n"
-                "Definition: Each task has a unique label that MUST only "
-                "consist of letters and/or numbers (other characters, "
-                "including spaces and underscores, are not allowed). "
-                "Those labels MUST be consistent across subjects and sessions.")
-        return text
-    
-    def acqInfo(self):
-        text = ("Format: acq-<label>\n"
-                "Optional for all entities\n\n"
-                "Definition: The acq-<label> key/value pair corresponds to a "
-                "custom label the user MAY use to distinguish a different set "
-                "of parameters used for acquiring the same modality. "
-                "For example this should be used when a study includes "
-                "two T1w images - one full brain low resolution and and one "
-                "restricted field of view but high resolution. "
-                "In such case two files could have the following names: "
-                "sub-01_acq-highres_T1w.nii.gz and sub-01_acq-lowres_T1w.nii.gz, "
-                "however the user is free to choose any other label than highres "
-                "and lowres as long as they are consistent across subjects and sessions."
-                "In case different sequences are used to record the same modality "
-                "(for example, RARE and FLASH for T1w) this field can also be used "
-                "to make that distinction. At what level of detail to make the "
-                "distinction (for example, just between RARE and FLASH, or "
-                "between RARE, FLASH, and FLASHsubsampled) remains at "
-                "the discretion of the researcher.")
-        return text
-        
+        delegate = ReadOnlyDelegate(self)
+        delegate2 = AlignDelegate(self)
+        delegate3 = ReadOnlyAlignDelegate(self)
+
+        self.tableWidget.setItemDelegateForColumn(0, delegate)
+        for i in range(1, 4):
+            self.tableWidget.setItemDelegateForColumn(i, delegate3)
+        for i in range(4, 7):
+            self.tableWidget.setItemDelegateForColumn(i, delegate2)
+        self.tableWidget.setItemDelegateForColumn(7, delegate3)
+
+    def addRow(self, list_data):
+        self.dataList.append(list_data)
+        row = self.tableWidget.rowCount()
+        self.tableWidget.insertRow(row)
+        for i, col in enumerate(list_data):
+            self.tableWidget.setItem(row, i, QTableWidgetItem(col))
+
+    def getRow(self, idx):
+        list_fields = []
+        for column in range(self.tableWidget.columnCount()):
+            list_fields.append(self.tableWidget.item(idx, column).text())
+        return list_fields
+
     def ok(self):
         self.answer = 'ok'
         self.close()
-        
+
     def reset(self):
-        """reset the table to initial values.
-        """
-        pass
-    
+        for row, rawdata in enumerate(self.dataList):
+            for i, col in enumerate(rawdata):
+                self.tableWidget.setItem(row, i, QTableWidgetItem(col))
+
     def cancel(self):
         self.close()
-        
+
     def getAnswer(self):
         return self.answer
 
 
+class ReadOnlyAlignDelegate(QStyledItemDelegate):
+    def createEditor(self, parent, option, index):
+        return
+    
+    def initStyleOption(self, option, index):
+        super(ReadOnlyAlignDelegate, self).initStyleOption(option, index)
+        option.displayAlignment = Qt.AlignCenter
+
+
 class ReadOnlyDelegate(QStyledItemDelegate):
     def createEditor(self, parent, option, index):
-        return 
+        return
+
+class AlignDelegate(QStyledItemDelegate):
+    def initStyleOption(self, option, index):
+        super(AlignDelegate, self).initStyleOption(option, index)
+        option.displayAlignment = Qt.AlignCenter
 
 
 class ExportToBIDS():
 
     def __init__(self, project):
-        
+
         current_path = os.path.dirname(os.path.realpath(__file__))
         self.mod_Bids = os.path.join(current_path,'Modalities_BIDS.yml')
         self.project = project
@@ -180,7 +181,6 @@ class ExportToBIDS():
 
                 self.layout = BIDSLayout(self.data_export)
                 self.p = ProgressBar()
-                self.p.show()
                 self.p.pbar.setValue(0)
                 QApplication.processEvents()
                 self.startExport()
@@ -242,10 +242,13 @@ class ExportToBIDS():
 #                                             lst)))
 
         error = False
-        list_nii, sub = [], {}
+        list_nii = []
+        sub = {}
         BIDSdata = []
         data_path = self.project.folder
-        
+
+        c = TableBids()
+
         for doc in self.documents:
             if doc.endswith('.nii') and 'raw_data' in doc:
                 list_nii.append(doc)
@@ -271,10 +274,9 @@ class ExportToBIDS():
 #                 print("sub : ", sub)
             BIDSdata.append([doc, sub[sub_current][0]])
 
-        c = TableBids(BIDSdata)
-        c.exec_()
-        
-        if c.getAnswer() == 'cancel': return
+        # c = TableBids()
+        # c.exec_()
+        # if c.getAnswer() == 'cancel': return
 
         with open(self.mod_Bids, 'r') as stream:
             modal_bids = yaml.load(stream, yaml.FullLoader)
@@ -282,10 +284,12 @@ class ExportToBIDS():
         n = len(list_nii)
         i = 0
         no_acq = 1
-        
+
         for doc in list_nii:
-            QApplication.processEvents()
-            self.p.pbar.setValue(i)
+            # QApplication.processEvents()
+            # self.p.pbar.setValue(i)
+            list_data = []
+            list_data.append(doc)
             tmp = sub[self.project.session.get_value(
                                             COLLECTION_CURRENT,
                                             doc,
@@ -299,16 +303,18 @@ class ExportToBIDS():
                                             COLLECTION_CURRENT,
                                             doc,
                                             'ProtocolName')
-            suff_found = ''
+            list_fields = {}
             for val in self.find(modal_bids['listProtocols'], seq_name):
-                suff_found = val
-            if not suff_found:
+                list_fields['datatype'] = val[0]
+                list_fields['suffix'] = val[1]
+            if not list_fields:
                 seq_name = self.project.session.get_value(
                                             COLLECTION_CURRENT,
                                             doc,
                                             'ProtocolName')
                 for val in self.find(modal_bids['listProtocols'], seq_name):
-                    suff_found = val
+                    list_fields['datatype'] = val[0]
+                    list_fields['suffix'] = val[1]
 
             # pattern = "sub-{subject}[_
                          # ses-{session}]_
@@ -317,42 +323,99 @@ class ExportToBIDS():
                          # rec-{reconstruction}][_
                          # run-{run}][_echo-{echo}]_{suffix}.nii.gz"
 
-            if not suff_found:
-                suff_found = ('', '')
+            if not list_fields:
+                list_fields['datatype'] = ''
+                list_fields['suffix'] = ''
                 
-            if suff_found[1] == 'fieldmap':
-                suff_found = (suff_found[0], 'magnitude1')
-        
-            if suff_found[1] in ['magnitude1', 'bold']:
-                entities = {
-                    'subject': tmp[0],
-                    'session': '0' + str(tmp[1].index(self.project.session.get_value(
+            list_data.append(list_fields['datatype'])
+            list_data.append(tmp[0])
+            list_data.append('0' + str(tmp[1].index(self.project.session.get_value(
                                                 COLLECTION_CURRENT,
                                                 doc,
-                                                'CreationDate')) + 1),
-                    # 'run': "1",
-                    'task': '01',
-                    'datatype': suff_found[0],
-                    'suffix': suff_found[1]
-                }
-            else:
-                entities = {
-                    'subject': tmp[0],
-                    'session': '0' + str(tmp[1].index(self.project.session.get_value(
-                                                COLLECTION_CURRENT,
-                                                doc,
-                                                'CreationDate')) + 1),
-                    # 'run': 2,
-                    # 'task': 'nback',
-                    'acq': 'lowres',
-                    'datatype': suff_found[0],
-                    'suffix': suff_found[1]
-                }
-            path_nii = os.path.join(data_path, doc)
-            path_nii_without_ext = os.path.splitext(path_nii)[0]
-            tags_dict = self.project.session.get_document(COLLECTION_CURRENT, doc, fields=None, as_list=False)
-            tags_dict = self.strip_dict(dict(tags_dict._items()))
+                                                'CreationDate')) + 1))
+            list_data.extend(["", "", "", list_fields['suffix']])
 
+            c.addRow(list_data)
+                 
+            # if list_fields['suffix'] == 'fieldmap':
+            #     list_fields['suffix'] = 'magnitude1'
+            #
+            # if list_fields['suffix'] in ['magnitude1', 'bold']:
+            #     entities = {
+            #         'subject': tmp[0],
+            #         'session': '0' + str(tmp[1].index(self.project.session.get_value(
+            #                                     COLLECTION_CURRENT,
+            #                                     doc,
+            #                                     'CreationDate')) + 1),
+            #         # 'run': "1",
+            #         'task': '01',
+            #         'datatype': list_fields['datatype'],
+            #         'suffix': list_fields['suffix']
+            #     }
+            # else:
+            #     entities = {
+            #         'subject': tmp[0],
+            #         'session': '0' + str(tmp[1].index(self.project.session.get_value(
+            #                                     COLLECTION_CURRENT,
+            #                                     doc,
+            #                                     'CreationDate')) + 1),
+            #         # 'run': 2,
+            #         # 'task': 'nback',
+            #         'acq': 'lowres',
+            #         'datatype': list_fields['datatype'],
+            #         'suffix': list_fields['suffix']
+            #     }
+            # path_nii = os.path.join(data_path, doc)
+            # path_nii_without_ext = os.path.splitext(path_nii)[0]
+            # tags_dict = self.project.session.get_document(COLLECTION_CURRENT, doc, fields=None, as_list=False)
+            # tags_dict = self.strip_dict(dict(tags_dict._items()))
+            #
+            # try:
+            #     path_const = self.layout.build_path(entities, validate=True)
+            #     dir_path = os.path.dirname(path_const)
+            #     if not os.path.exists(dir_path):
+            #         os.makedirs(dir_path, 0o777)
+            #     base_path = os.path.basename(path_const)
+            #     file_json = os.path.splitext(base_path)[0]
+            #     file_json = os.path.splitext(file_json)[0]
+            #     path_json = os.path.join(dir_path, file_json + '.json')
+            #
+            #     self.save_nii_gz(path_nii, path_const)
+            #     self.save_json(tags_dict, path_json)
+            #     bval_path = path_nii_without_ext + '-bvals-MRtrix.txt'
+            #     bvec_path = path_nii_without_ext + '-bvecs-MRtrix.txt'
+            #     if os.path.exists(bval_path):
+            #         self.save_bvec_bval(bval_path, path_const, '.bval')
+            #     if os.path.exists(bvec_path):
+            #         self.save_bvec_bval(bvec_path, path_const, '.bvec')
+            #
+            #     # print(' ' * 10, 'exported to ', path_const)
+            # except Exception as e:
+            #     error = True
+            #     print(path_nii)
+            #     print("can't build this data : ", e)
+
+            i += round(100 / n)
+            
+        c.exec_()
+        if c.getAnswer() == 'cancel': return
+
+        list_entities = ["dataType", "subject", "session", "acquisition", "task", "run", "suffix"] 
+        
+        self.p.show()
+        for i in range(c.tableWidget.rowCount()):
+            QApplication.processEvents()
+            self.p.pbar.setValue(i)
+            data_p= c.getRow(i)[0]
+            entities = {}
+            for j in range(0, len(list_entities)):
+                current_field = c.getRow(i)[j + 1]
+                if current_field:
+                    entities[list_entities[j]] = current_field
+            path_nii = os.path.join(data_path, data_p)
+            path_nii_without_ext = os.path.splitext(path_nii)[0]
+            tags_dict = self.project.session.get_document(COLLECTION_CURRENT, data_p, fields=None, as_list=False)
+            tags_dict = self.strip_dict(dict(tags_dict._items()))
             try:
                 path_const = self.layout.build_path(entities, validate=True)
                 dir_path = os.path.dirname(path_const)
@@ -362,7 +425,7 @@ class ExportToBIDS():
                 file_json = os.path.splitext(base_path)[0]
                 file_json = os.path.splitext(file_json)[0]
                 path_json = os.path.join(dir_path, file_json + '.json')
-
+            
                 self.save_nii_gz(path_nii, path_const)
                 self.save_json(tags_dict, path_json)
                 bval_path = path_nii_without_ext + '-bvals-MRtrix.txt'
@@ -371,14 +434,12 @@ class ExportToBIDS():
                     self.save_bvec_bval(bval_path, path_const, '.bval')
                 if os.path.exists(bvec_path):
                     self.save_bvec_bval(bvec_path, path_const, '.bvec')
-
+            
                 # print(' ' * 10, 'exported to ', path_const)
             except Exception as e:
                 error = True
                 print(path_nii)
-                print("can't build this data : ", e)
-
-            i += round(100 / n)
+                print("can't build this data : ", e)            
 
         self.p.close()
         

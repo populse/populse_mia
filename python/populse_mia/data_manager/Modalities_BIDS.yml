@@ -111,3 +111,31 @@ listProtocols:
          Dicom : []
          Nifti : []
 
+
+description:
+
+  task: " Format: task-<label>\n
+         Required for functional imaging (with 'func' entity)\n\n
+         Definition: Each task has a unique label that MUST only\n
+         consist of letters and/or numbers (other characters,\n
+         including spaces and underscores, are not allowed).\n 
+         Those labels MUST be consistent across subjects and sessions."
+         
+  acq: " Format: acq-<label>\n
+        Optional for all entities\n\n
+        Definition: The acq-<label> key/value pair corresponds to a\n
+        custom label the user MAY use to distinguish a different set\n
+        of parameters used for acquiring the same modality.\n
+        For example this should be used when a study includes\n
+        two T1w images - one full brain low resolution and and one\n
+        restricted field of view but high resolution.\n
+        In such case two files could have the following names:\n
+        sub-01_acq-highres_T1w.nii.gz and sub-01_acq-lowres_T1w.nii.gz,\n
+        however the user is free to choose any other label than highres\n
+        and lowres as long as they are consistent across subjects and sessions.\n
+        In case different sequences are used to record the same modality\n
+        (for example, RARE and FLASH for T1w) this field can also be used\n
+        to make that distinction. At what level of detail to make the\n
+        distinction (for example, just between RARE and FLASH, or\n
+        between RARE, FLASH, and FLASHsubsampled) remains at\n
+        the discretion of the researcher."
