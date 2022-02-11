@@ -850,6 +850,7 @@ class Config:
         else:
             capsul_config = capsul_config_dict.get('study_config', {})
 
+        # matlab
         matlab_path = capsul_config.get('matlab_exec')
         use_matlab = capsul_config.get('use_matlab', None)
         if use_matlab and matlab_path:
@@ -858,6 +859,7 @@ class Config:
         elif use_matlab is False:
             self.set_use_matlab(False)
 
+        # spm
         if capsul_config.get('use_spm', False):
             spm_dir = capsul_config.get('spm_directory')
             spm_standalone = capsul_config.get('spm_standalone')
@@ -880,6 +882,17 @@ class Config:
         else:
             self.set_use_spm(False)
             self.set_use_spm_standalone(False)
+
+        # fsl
+        use_fsl = capsul_config.get('use_fsl', False)
+        fsl_conf_path = capsul_config.get('fsl_config')
+
+        if use_fsl and fsl_conf_path:
+            self.set_fsl_config(matlab_path)
+            self.set_use_fsl(True)
+
+        elif use_fsl is False:
+            self.set_use_fsl(False)
 
     def setChainCursors(self, chain_cursors):
         """Set the value of the checkbox 'chain cursor' in the miniviewer.

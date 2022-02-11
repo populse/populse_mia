@@ -2202,7 +2202,9 @@ class PopUpPreferences(QDialog):
 
         # Groupbox "CAPSUL"
         groupbox_capsul = Qt.QGroupBox("CAPSUL")
-        capsul_config_button = Qt.QPushButton("Edit CAPSUL config", default=False, autoDefault=False)
+        capsul_config_button = Qt.QPushButton("Edit CAPSUL config",
+                                              default=False,
+                                              autoDefault=False)
         capsul_config_button.clicked.connect(self.edit_capsul_config)
         h_box_capsul = Qt.QHBoxLayout()
         h_box_capsul.addWidget(capsul_config_button)
@@ -2644,7 +2646,9 @@ class PopUpPreferences(QDialog):
                 del capsul_config['study_config']
             config.set_capsul_config(capsul_config)
 
-            # update matlab/SPM GUI which might have changed
+            # update Mia preferences GUI which might have changed
+
+            # matlab
             use_matlab = config.get_use_matlab()
             use_matlab = Qt.Qt.Checked if use_matlab else Qt.Qt.Unchecked
             self.use_matlab_checkbox.setCheckState(use_matlab)
@@ -2654,6 +2658,8 @@ class PopUpPreferences(QDialog):
             self.use_matlab_standalone_checkbox.setCheckState(use_matlab_sa)
             self.matlab_standalone_choice.setText(
                 config.get_matlab_standalone_path())
+
+            # spm
             use_spm = config.get_use_spm()
             use_spm = Qt.Qt.Checked if use_spm else Qt.Qt.Unchecked
             self.use_spm_checkbox.setCheckState(use_spm)
@@ -2663,6 +2669,9 @@ class PopUpPreferences(QDialog):
             self.use_spm_standalone_checkbox.setCheckState(use_spm_sa)
             self.spm_standalone_choice.setText(
                 config.get_spm_standalone_path())
+
+            # fsl
+
 
         del dialog
         del engine
