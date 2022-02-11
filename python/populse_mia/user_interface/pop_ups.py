@@ -2175,7 +2175,8 @@ class PopUpPreferences(QDialog):
         self.use_fsl_label = QLabel("Use FSL")
         self.use_fsl_checkbox = QCheckBox('', self)
 
-        self.fsl_label = QLabel("FSL config file:")
+        self.fsl_label = QLabel("FSL config file (e.g.: "
+                                "/fsl_dir/etc/fslconf/fsl.sh)")
         self.fsl_choice = QLineEdit(config.get_fsl_config())
         self.fsl_browse = QPushButton("Browse")
         self.fsl_browse.clicked.connect(self.browse_fsl)
