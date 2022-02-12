@@ -888,7 +888,7 @@ class Config:
         fsl_conf_path = capsul_config.get('fsl_config')
 
         if use_fsl and fsl_conf_path:
-            self.set_fsl_config(matlab_path)
+            self.set_fsl_config(fsl_conf_path)
             self.set_use_fsl(True)
 
         elif use_fsl is False:

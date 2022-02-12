@@ -2671,7 +2671,10 @@ class PopUpPreferences(QDialog):
                 config.get_spm_standalone_path())
 
             # fsl
-
+            use_fsl = config.get_use_fsl()
+            use_fsl = Qt.Qt.Checked if use_fsl else Qt.Qt.Unchecked
+            self.use_fsl_checkbox.setCheckState(use_fsl)
+            self.fsl_choice.setText(config.get_fsl_config())
 
         del dialog
         del engine
