@@ -2000,7 +2000,9 @@ class PopUpPreferences(QDialog):
             "POPULSE third party preference")
 
         #### MRI File Manager folder label/line edit
-        self.mri_conv_path_label = QLabel("Absolute path to MRIManager.jar:")
+        self.mri_conv_path_label = QLabel("Absolute path to MRIManager.jar "
+                                          "file (e.g., mri_conv_dir/"
+                                          "MRIFileManager/MRIManager.jar):")
         self.mri_conv_path_line_edit = QLineEdit(config.get_mri_conv_path())
         self.mri_conv_path_browse = QPushButton("Browse")
         self.mri_conv_path_browse.clicked.connect(self.browse_mri_conv_path)
@@ -2066,14 +2068,16 @@ class PopUpPreferences(QDialog):
         self.use_matlab_label = QLabel("Use Matlab")
         self.use_matlab_checkbox = QCheckBox('', self)
 
-        self.matlab_label = QLabel("Matlab path:")
+        self.matlab_label = QLabel("Matlab path (e.g., matlab_dir/"
+                                   "bin/matlab):")
         self.matlab_choice = QLineEdit(config.get_matlab_path())
         self.matlab_browse = QPushButton("Browse")
         self.matlab_browse.clicked.connect(self.browse_matlab)
 
         self.use_matlab_standalone_label = QLabel("Use Matlab standalone")
         self.use_matlab_standalone_checkbox = QCheckBox('', self)
-        self.matlab_standalone_label = QLabel("Matlab standalone path:")
+        self.matlab_standalone_label = QLabel("Matlab standalone path (e.g., "
+                                              "MCR_dir/v95):")
         self.matlab_standalone_choice = QLineEdit(
             config.get_matlab_standalone_path())
         self.matlab_standalone_browse = QPushButton("Browse")
@@ -2121,7 +2125,7 @@ class PopUpPreferences(QDialog):
         self.use_spm_label = QLabel("Use SPM")
         self.use_spm_checkbox = QCheckBox('', self)
 
-        self.spm_label = QLabel("SPM path:")
+        self.spm_label = QLabel("SPM path (e.g., spm_dir/spm12):")
         self.spm_choice = QLineEdit(config.get_spm_path())
         self.spm_browse = QPushButton("Browse")
         self.spm_browse.clicked.connect(self.browse_spm)
@@ -2142,7 +2146,8 @@ class PopUpPreferences(QDialog):
         self.use_spm_standalone_label = QLabel("Use SPM standalone")
         self.use_spm_standalone_checkbox = QCheckBox('', self)
 
-        self.spm_standalone_label = QLabel("SPM standalone path:")
+        self.spm_standalone_label = QLabel("SPM standalone path (e.g., "
+                                           "spm_standalone_dir/spm12):")
         self.spm_standalone_choice = QLineEdit(
             config.get_spm_standalone_path())
         self.spm_standalone_browse = QPushButton("Browse")
@@ -2175,8 +2180,8 @@ class PopUpPreferences(QDialog):
         self.use_fsl_label = QLabel("Use FSL")
         self.use_fsl_checkbox = QCheckBox('', self)
 
-        self.fsl_label = QLabel("FSL config file (e.g.: "
-                                "/fsl_dir/etc/fslconf/fsl.sh)")
+        self.fsl_label = QLabel("FSL config file (e.g., "
+                                "/fsl_dir/etc/fslconf/fsl.sh):")
         self.fsl_choice = QLineEdit(config.get_fsl_config())
         self.fsl_browse = QPushButton("Browse")
         self.fsl_browse.clicked.connect(self.browse_fsl)
