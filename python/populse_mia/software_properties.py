@@ -105,6 +105,8 @@ class Config:
           operations in MIA application
         - getChainCursors: returns if the "chain cursors" checkbox of the
           mini viewer is activated
+        - get_afni_path: returns the path of AFNI
+        - get_ants_path: returns the path of ANTS
         - get_config_path: returns the configuration file directory
         - get_fsl_config: returns the path of the FSL config file
         - get_mainwindow_maximized: get the maximized (fullscreen) flag
@@ -137,6 +139,10 @@ class Config:
           version)
         - getTextColor: return the text color
         - getThumbnailTag: returns the tag that is displayed in the mini viewer
+        - get_use_afni: returns the value of "use afni" checkbox in the
+          preferences
+        - get_use_ants: returns the value of "use ants" checkbox in the
+          preferences
         - get_use_clinical: returns the value of "clinical mode" checkbox in the
           preferences
         - get_use_fsl: returns the value of "use fsl" checkbox in the
@@ -171,6 +177,8 @@ class Config:
         - set_clinical_mode: set the value of "clinical mode" in
                              the preferences
         - setControlV1: Set controller display mode (True if V1)
+        - set_afni_path: set the path of the AFNI
+        - set_ants_path: set the path of the ANTS
         - set_fsl_config: set the path of the FSL config file
         - set_mainwindow_maximized: set the maximized (fullscreen) flag
         - set_mainwindow_size: set main window size
@@ -198,6 +206,8 @@ class Config:
         - setTextColor: set the text color
         - setThumbnailTag: set the tag that is displayed in the mini viewer
 
+        - set_use_afni: set the value of "use afni" checkbox in the preferences
+        - set_use_ants: set the value of "use ants" checkbox in the preferences
         - set_use_fsl: set the value of "use fsl" checkbox in the preferences
         - set_use_matlab: set the value of "use matlab" checkbox in the
                           preferences
@@ -263,7 +273,7 @@ class Config:
         capsul_config = self.config.setdefault("capsul_config", {})
         capsul_config.setdefault(
             "engine_modules",
-            ['nipype', 'fsl', 'freesurfer', 'matlab', 'spm', 'fom', 'python'])
+            ['nipype', 'fsl', 'freesurfer', 'matlab', 'spm', 'fom', 'python', 'afni', 'ants'])
         sconf = capsul_config.setdefault("study_config", {})
         sconf.update(
             {'attributes_schema_paths':
@@ -287,6 +297,12 @@ class Config:
         use_fsl = self.get_use_fsl()
         fsl_config = self.get_fsl_config()
 
+        use_afni = self.get_use_afni()
+        afni_path = self.get_afni_path()
+
+        use_ants = self.get_use_ants()
+        ants_path = self.get_ants_path()
+
         # FSL
         if use_fsl and os.path.exists(fsl_config):
             sconf.update(dict(use_fsl=True,
@@ -295,6 +311,24 @@ class Config:
         else:
             sconf.update(dict(use_fsl=False))
             sconf.pop('fsl_config', None)
+
+        # AFNI
+        if use_afni and os.path.exists(afni_path):
+            sconf.update(dict(use_afni=True,
+                              afni_path=afni_path))
+
+        else:
+            sconf.update(dict(use_afni=False))
+            sconf.pop('afni_path', None)
+
+        # ANTS
+        if use_ants and os.path.exists(ants_path):
+            sconf.update(dict(use_ants=True,
+                              ants_path=ants_path))
+
+        else:
+            sconf.update(dict(use_ants=False))
+            sconf.pop('ants_path', None)
 
         # SPM standalone / MATLAB Runtime
         if (use_spm_standalone and
@@ -378,6 +412,20 @@ class Config:
         :returns: boolean
         """
         return self.config.get("chain_cursors", False)
+
+    def get_afni_path(self):
+        """Get the AFNI path
+
+        :returns: string of path to AFNI
+        """
+        return self.config.get("afni", "")
+
+    def get_ants_path(self):
+        """Get the ANTS path
+
+        :returns: string of path to ANTS
+        """
+        return self.config.get("ants", "")
 
     def get_config_path(self):
         """Get the MIA config path (including "properties" directory)
@@ -665,6 +713,20 @@ class Config:
         """
         return self.config.get("thumbnail_tag", "SequenceName")
 
+    def get_use_afni(self):
+        """Get the value of "use afni" checkbox in the preferences.
+
+        :returns: boolean
+        """
+        return self.config.get("use_afni", False)
+
+    def get_use_ants(self):
+        """Get the value of "use ants" checkbox in the preferences.
+
+        :returns: boolean
+        """
+        return self.config.get("use_ants", False)
+
     def get_use_clinical(self):
         """ Get the clinical mode in the preferences.
 
@@ -908,6 +970,24 @@ class Config:
         # Then save the modification
         self.saveConfig()
 
+    def set_afni_path(self, path):
+        """Set the AFNI path
+
+        :param path: string of AFNI path
+        """
+        self.config["afni"] = path
+        # Then save the modification
+        self.saveConfig()
+
+    def set_ants_path(self, path):
+        """Set the ANTS path
+
+        :param path: string of ANTS path
+        """
+        self.config["ants"] = path
+        # Then save the modification
+        self.saveConfig()
+
     def set_fsl_config(self, path):
         """Set  the FSL config file
 
@@ -1108,6 +1188,24 @@ class Config:
         # Then save the modification
         self.saveConfig()
 
+    def set_use_afni(self, use_afni):
+        """Set the value of "use_afni" checkbox in the preferences.
+
+        :param use_afni: boolean
+        """
+        self.config["use_afni"] = use_afni
+        # Then save the modification
+        self.saveConfig()
+
+    def set_use_ants(self, use_ants):
+        """Set the value of "use_ants" checkbox in the preferences.
+
+        :param use_ants: boolean
+        """
+        self.config["use_ants"] = use_ants
+        # Then save the modification
+        self.saveConfig()
+
     def set_use_fsl(self, use_fsl):
         """Set the value of "use_fsl" checkbox in the preferences.
 
@@ -1205,7 +1303,9 @@ class Config:
                                                                  'python',
                                                                  'fsl',
                                                                  'freesurfer',
-                                                                 'axon']:
+                                                                 'axon',
+                                                                 'afni',
+                                                                 'ants']:
             engine.load_module(module)
 
         study_config = engine.study_config

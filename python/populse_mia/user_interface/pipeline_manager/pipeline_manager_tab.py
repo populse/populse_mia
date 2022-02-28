@@ -1418,7 +1418,7 @@ class PipelineManagerTab(QWidget):
             # FSL:
             try:
                 if requirements['capsul_engine']['uses'].get('capsul.engine.module.'
-                                                    'fsl') is None:
+                                                             'fsl') is None:
                     raise KeyError
 
             except KeyError:
@@ -1429,8 +1429,8 @@ class PipelineManagerTab(QWidget):
                 if 'capsul.engine.module.fsl' in requirements:
 
                     if not requirements['capsul.engine.module.'
-                               'fsl'].get('directory',
-                                          False):
+                                        'fsl'].get('directory',
+                                                   False):
                         init_result = False
                         init_messages.append('The pipeline requires FSL '
                                              'but it seems FSL is not '
@@ -1441,6 +1441,62 @@ class PipelineManagerTab(QWidget):
                     init_result = False
                     init_messages.append('The pipeline requires FSL but it '
                                          'seems FSL is not configured in '
+                                         'mia preferences.')
+
+            # AFNI:
+            try:
+                if requirements['capsul_engine']['uses'].get('capsul.engine.module.'
+                                                             'afni') is None:
+                    raise KeyError
+
+            except KeyError:
+                # The process don't need AFNI
+                pass
+
+            else:
+                if 'capsul.engine.module.afni' in requirements:
+
+                    if not requirements['capsul.engine.module.'
+                                        'afni'].get('directory',
+                                                   False):
+                        init_result = False
+                        init_messages.append('The pipeline requires AFNI '
+                                             'but it seems AFNI is not '
+                                             'configured in mia '
+                                             'preferences.')
+
+                else:
+                    init_result = False
+                    init_messages.append('The pipeline requires AFNI but it '
+                                         'seems AFNI is not configured in '
+                                         'mia preferences.')
+
+            # ANTS:
+            try:
+                if requirements['capsul_engine']['uses'].get('capsul.engine.module.'
+                                                             'ants') is None:
+                    raise KeyError
+
+            except KeyError:
+                # The process don't need ANTS
+                pass
+
+            else:
+                if 'capsul.engine.module.ants' in requirements:
+
+                    if not requirements['capsul.engine.module.'
+                                        'ants'].get('directory',
+                                                    False):
+                        init_result = False
+                        init_messages.append('The pipeline requires ANTS '
+                                             'but it seems ANTS is not '
+                                             'configured in mia '
+                                             'preferences.')
+
+                else:
+                    init_result = False
+                    init_messages.append('The pipeline requires ANTS but it '
+                                         'seems ANTS is not configured in '
                                          'mia preferences.')
 
             # Matlab:
