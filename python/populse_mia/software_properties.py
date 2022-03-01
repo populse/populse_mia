@@ -770,7 +770,7 @@ class Config:
 
         :returns: boolean
         """
-        return self.config.get("user_mode", False)
+        return self.config.get("user_mode", True)
 
     def get_use_spm(self):
         """Get the value of "use spm" checkbox in the preferences.
