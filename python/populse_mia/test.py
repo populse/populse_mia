@@ -759,7 +759,7 @@ class TestMIADataBrowser(unittest.TestCase):
         properties.save_checkbox.setChecked(True)
         QTest.mouseClick(properties.push_button_cancel, Qt.LeftButton)
         config = Config(config_path=self.config_path)
-        # clear config
+        # clear config -> user_mode become True !
         config.config = {}
         auto_save = config.isAutoSave()
         self.assertEqual(auto_save, False)
@@ -774,10 +774,9 @@ class TestMIADataBrowser(unittest.TestCase):
                                 "properties/config.yml")
         self.assertEqual(os.path.exists(mia_path), True)
 
-        self.assertEqual(config.get_user_mode(), False)
-        config.set_user_mode(True)
         self.assertEqual(config.get_user_mode(), True)
         config.set_user_mode(False)
+        self.assertEqual(config.get_user_mode(), False)
 
         self.assertEqual(config.get_mri_conv_path(), "")
 
