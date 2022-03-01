@@ -1770,6 +1770,8 @@ class PopUpPreferences(QDialog):
     """Is called when the user wants to change the software preferences.
 
     .. Methods:
+        - browse_afni: called when afni browse button is clicked
+        - browse_ants: called when ants browse button is clicked
         - browse_fsl: called when fsl browse button is clicked
         - browse_matlab: called when matlab browse button is clicked
         - browse_matlab_standalone: called when matlab browse button is clicked
@@ -1788,6 +1790,8 @@ class PopUpPreferences(QDialog):
         - findChar: highlights characters in red when using the Find button
             when editing configuration
         - ok_clicked: saves the modifications to the config file and apply them
+        - use_afni_changed: called when the use_afni checkbox is changed
+        - use_ants_changed: called when the use_ants checkbox is changed
         - use_fsl_changed: called when the use_fsl checkbox is changed
         - use_matlab_changed: called when the use_matlab checkbox is changed
         - use_matlab_standalone_changed: called when the use_matlab_standalone
@@ -2205,6 +2209,66 @@ class PopUpPreferences(QDialog):
 
         self.groupbox_fsl.setLayout(v_box_fsl)
 
+        # Groupbox "AFNI"
+        self.groupbox_afni = QtWidgets.QGroupBox("AFNI")
+
+        self.use_afni_label = QLabel("Use AFNI")
+        self.use_afni_checkbox = QCheckBox('', self)
+
+        self.afni_label = QLabel("AFNI path:")
+        self.afni_choice = QLineEdit(config.get_afni_path())
+        self.afni_browse = QPushButton("Browse")
+        self.afni_browse.clicked.connect(self.browse_afni)
+
+        h_box_use_afni = QtWidgets.QHBoxLayout()
+        h_box_use_afni.addWidget(self.use_afni_checkbox)
+        h_box_use_afni.addWidget(self.use_afni_label)
+        h_box_use_afni.addStretch(1)
+
+        h_box_afni_path = QtWidgets.QHBoxLayout()
+        h_box_afni_path.addWidget(self.afni_choice)
+        h_box_afni_path.addWidget(self.afni_browse)
+
+        v_box_afni_path = QtWidgets.QVBoxLayout()
+        v_box_afni_path.addWidget(self.afni_label)
+        v_box_afni_path.addLayout(h_box_afni_path)
+
+        v_box_afni = QtWidgets.QVBoxLayout()
+        v_box_afni.addLayout(h_box_use_afni)
+        v_box_afni.addLayout(v_box_afni_path)
+
+        self.groupbox_afni.setLayout(v_box_afni)
+
+        # Groupbox "ANTS"
+        self.groupbox_ants = QtWidgets.QGroupBox("ANTS")
+
+        self.use_ants_label = QLabel("Use ANTS")
+        self.use_ants_checkbox = QCheckBox('', self)
+
+        self.ants_label = QLabel("ANTS path:")
+        self.ants_choice = QLineEdit(config.get_ants_path())
+        self.ants_browse = QPushButton("Browse")
+        self.ants_browse.clicked.connect(self.browse_ants)
+
+        h_box_use_ants = QtWidgets.QHBoxLayout()
+        h_box_use_ants.addWidget(self.use_ants_checkbox)
+        h_box_use_ants.addWidget(self.use_ants_label)
+        h_box_use_ants.addStretch(1)
+
+        h_box_ants_path = QtWidgets.QHBoxLayout()
+        h_box_ants_path.addWidget(self.ants_choice)
+        h_box_ants_path.addWidget(self.ants_browse)
+
+        v_box_ants_path = QtWidgets.QVBoxLayout()
+        v_box_ants_path.addWidget(self.ants_label)
+        v_box_ants_path.addLayout(h_box_ants_path)
+
+        v_box_ants = QtWidgets.QVBoxLayout()
+        v_box_ants.addLayout(h_box_use_ants)
+        v_box_ants.addLayout(v_box_ants_path)
+
+        self.groupbox_ants.setLayout(v_box_ants)
+
         # Groupbox "CAPSUL"
         groupbox_capsul = Qt.QGroupBox("CAPSUL")
         capsul_config_button = Qt.QPushButton("Edit CAPSUL config",
@@ -2224,7 +2288,10 @@ class PopUpPreferences(QDialog):
         self.tab_pipeline_layout.addWidget(self.groupbox_matlab)
         self.tab_pipeline_layout.addWidget(self.groupbox_spm)
         self.tab_pipeline_layout.addWidget(self.groupbox_fsl)
-        self.tab_pipeline_layout.addWidget(groupbox_capsul) # Commented on January 11th, 2021
+        self.tab_pipeline_layout.addWidget(self.groupbox_afni)
+        self.tab_pipeline_layout.addWidget(self.groupbox_ants)
+        self.tab_pipeline_layout.addWidget(groupbox_capsul)
+
         self.tab_pipeline_layout.addStretch(1)
         self.tab_pipeline.setLayout(self.tab_pipeline_layout)
 
@@ -2249,6 +2316,12 @@ class PopUpPreferences(QDialog):
 
         if config.get_use_fsl():
             self.use_fsl_checkbox.setChecked(True)
+
+        if config.get_use_afni():
+            self.use_afni_checkbox.setChecked(True)
+
+        if config.get_use_ants():
+            self.use_ants_checkbox.setChecked(True)
 
         # The 'Appearance' tab
         self.tab_appearance = QtWidgets.QWidget()
@@ -2325,6 +2398,8 @@ class PopUpPreferences(QDialog):
         self.use_matlab_standalone_changed()
         self.use_spm_standalone_changed()
         self.use_fsl_changed()
+        self.use_afni_changed()
+        self.use_ants_changed()
 
         # Signals
         self.use_matlab_checkbox.stateChanged.connect(self.use_matlab_changed)
@@ -2335,6 +2410,10 @@ class PopUpPreferences(QDialog):
             self.use_spm_standalone_changed)
         self.use_fsl_checkbox.stateChanged.connect(
             self.use_fsl_changed)
+        self.use_afni_checkbox.stateChanged.connect(
+            self.use_afni_changed)
+        self.use_ants_checkbox.stateChanged.connect(
+            self.use_ants_changed)
 
     def browse_fsl(self):
         """Called when fsl browse button is clicked."""
@@ -2344,6 +2423,24 @@ class PopUpPreferences(QDialog):
                                             os.path.expanduser('~'))[0]
         if fname:
             self.fsl_choice.setText(fname)
+
+    def browse_afni(self):
+        """Called when afni browse button is clicked."""
+
+        fname = QFileDialog.getExistingDirectory(self,
+                                                 'Choose AFNI directory',
+                                                 os.path.expanduser('~'))
+        if fname:
+            self.afni_choice.setText(fname)
+
+    def browse_ants(self):
+        """Called when ants browse button is clicked."""
+
+        fname = QFileDialog.getExistingDirectory(self,
+                                            'Choose ANTS directory',
+                                            os.path.expanduser('~'))
+        if fname:
+            self.ants_choice.setText(fname)
 
     def browse_matlab(self):
         """Called when matlab browse button is clicked."""
@@ -2614,12 +2711,56 @@ class PopUpPreferences(QDialog):
             except KeyError:
                 pass
 
+        if not config.get_use_afni():
+
+            try:
+               del capsul_config['engine']['global'][
+                                        'capsul.engine.module.afni']['directory']
+
+            except KeyError:
+                pass
+
+            try:
+               del capsul_config['engine']['global'][
+                                        'capsul.engine.module.afni']['config']
+
+            except KeyError:
+                pass
+
+            try:
+                del capsul_config['study_config']['afni']
+
+            except KeyError:
+                pass
+
+        if not config.get_use_ants():
+
+            try:
+               del capsul_config['engine']['global'][
+                                        'capsul.engine.module.ants']['directory']
+
+            except KeyError:
+                pass
+
+            try:
+               del capsul_config['engine']['global'][
+                                        'capsul.engine.module.ants']['config']
+
+            except KeyError:
+                pass
+
+            try:
+                del capsul_config['study_config']['ants']
+
+            except KeyError:
+                pass
+
         sc_dict = capsul_config.get('study_config', {})
 
         # build a temporary new engine (because it may not be validated)
         engine = capsul_engine()
         for module in modules + ['fom', 'axon', 'python', 'fsl', 'freesurfer',
-                                 'nipype']:
+                                 'nipype', 'afni', 'ants']:
             engine.load_module(module)
         engine.study_config.import_from_dict(sc_dict)
         envs = capsul_config.get('engine', {})
@@ -2775,6 +2916,20 @@ class PopUpPreferences(QDialog):
         max_projects = min(max(self.max_projects_box.value(), 1), 20)
         config.set_max_projects(max_projects)
 
+        # Use AFNI
+        if self.use_afni_checkbox.isChecked():
+            config.set_use_afni(True)
+
+        else:
+            config.set_use_afni(False)
+
+        # Use ANTS
+        if self.use_ants_checkbox.isChecked():
+            config.set_use_ants(True)
+
+        else:
+            config.set_use_ants(False)
+
         # Use FSL
         if self.use_fsl_checkbox.isChecked():
             config.set_use_fsl(True)
@@ -2830,7 +2985,77 @@ class PopUpPreferences(QDialog):
         main_window.windowName += " - "
         main_window.setWindowTitle(main_window.windowName +
                                    main_window.projectName)
-        
+
+        # AFNI config test
+        afni_dir = self.afni_choice.text()
+
+        if self.use_afni_checkbox.isChecked():
+
+            afni_cmd = '3dSkullStrip'
+
+            if os.path.isdir(afni_dir):
+                afni_cmd = os.path.join(afni_dir, afni_cmd)
+            else:
+                self.wrong_path(afni_dir, "AFNI")
+                return
+
+            try:
+                p = subprocess.Popen(
+                    [afni_cmd, '-version'],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
+                output, err = p.communicate()
+
+                if err == b'':
+                    config.set_afni_path(afni_dir)
+                    config.set_use_afni(True)
+
+                else:
+                    self.wrong_path(afni_dir, "AFNI")
+                    return
+
+            except:
+                self.wrong_path(afni_dir, "AFNI")
+                return
+        else:
+            config.set_use_afni(False)
+
+        # ANTS config test
+        ants_dir = self.ants_choice.text()
+
+        if self.use_ants_checkbox.isChecked():
+
+            ants_cmd = 'SmoothImage'
+
+            if os.path.isdir(ants_dir):
+                ants_cmd = os.path.join(ants_dir, ants_cmd)
+            else:
+                self.wrong_path(ants_dir, "ANTS")
+                return
+
+            try:
+                p = subprocess.Popen(
+                    [ants_cmd, '-version'],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
+                output, err = p.communicate()
+
+                if err == b'':
+                    config.set_ants_path(ants_dir)
+                    config.set_use_ants(True)
+
+                else:
+                    self.wrong_path(ants_dir, "ANTS")
+                    return
+
+            except:
+                self.wrong_path(ants_dir, "ANTS")
+                return
+        else:
+            config.set_use_ants(False)
+
         # FSL config test
         fsl_conf = self.fsl_choice.text()
 
@@ -3155,23 +3380,65 @@ class PopUpPreferences(QDialog):
                         settings.remove_config('fsl', 'global',
                                                getattr(configfsl, cif))
 
-                #TODO: We could use a generic method to deal with c_c?
+                # TODO: We could use a generic method to deal with c_c?
                 try:
                     del c_c['engine']['global'][
-                                        'capsul.engine.module.fsl']['directory']
+                        'capsul.engine.module.fsl']['directory']
 
                 except KeyError:
                     pass
 
                 try:
                     del c_c['engine']['global'][
-                                          'capsul.engine.module.fsl']['config']
+                        'capsul.engine.module.fsl']['config']
 
                 except KeyError:
                     pass
 
                 try:
                     del c_c['study_config']['fsl_config']
+
+                except KeyError:
+                    pass
+
+            # AFNI CapsulConfig
+            if not config.get_use_afni():
+
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configafni = settings.config('afni', 'global')
+
+                    if configafni:
+                        settings.remove_config('afni', 'global',
+                                               getattr(configafni, cif))
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.afni']['directory']
+
+                except KeyError:
+                    pass
+
+            # ANTS CapsulConfig
+            if not config.get_use_ants():
+
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configants = settings.config('ants', 'global')
+
+                    if configants:
+                        settings.remove_config('ants', 'global',
+                                               getattr(configants, cif))
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.ants']['directory']
 
                 except KeyError:
                     pass
@@ -3334,6 +3601,28 @@ class PopUpPreferences(QDialog):
         config.saveConfig()
         self.accept()
         self.close()
+
+    def use_afni_changed(self):
+        """Called when the use_afni checkbox is changed."""
+
+        if not self.use_afni_checkbox.isChecked():
+            self.afni_choice.setDisabled(True)
+            self.afni_label.setDisabled(True)
+
+        else:
+            self.afni_choice.setDisabled(False)
+            self.afni_label.setDisabled(False)
+
+    def use_ants_changed(self):
+        """Called when the use_ants checkbox is changed."""
+
+        if not self.use_ants_checkbox.isChecked():
+            self.ants_choice.setDisabled(True)
+            self.ants_label.setDisabled(True)
+
+        else:
+            self.ants_choice.setDisabled(False)
+            self.ants_label.setDisabled(False)
 
     def use_fsl_changed(self):
         """Called when the use_fsl checkbox is changed."""
