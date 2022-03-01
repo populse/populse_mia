@@ -1368,6 +1368,7 @@ class PipelineManagerTab(QWidget):
         try:
 
             print('Completion / workflow...')
+            print('pipeline:', pipeline)
             self.workflow = workflow_from_pipeline(pipeline,
                                                    complete_parameters=True)
             print('\nWorkflow done.\n')

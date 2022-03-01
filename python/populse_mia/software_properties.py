@@ -375,6 +375,12 @@ class Config:
             sconf.pop('spm_directory', None)
             sconf.pop('matlab_exec', None)
 
+        if matlab_standalone_path:
+            econf = capsul_config.setdefault('engine', {})
+            eeconf = econf.setdefault('global', {})
+            eeconf.setdefault('capsul.engine.module.matlab',
+                              {})['mcr_directory'] = matlab_standalone_path
+
         if sync_from_engine and self.capsul_engine:
             econf = capsul_config.setdefault('engine', {})
             for environment in (self.capsul_engine.settings.
@@ -899,7 +905,6 @@ class Config:
                                             'engine_modules': [...]}
         """
         self.config['capsul_config'] = capsul_config_dict
-        self.update_capsul_config()  # store into capsul engine
 
         # update MIA values
         engine_config = capsul_config_dict.get('engine')
@@ -915,6 +920,10 @@ class Config:
         # matlab
         matlab_path = capsul_config.get('matlab_exec')
         use_matlab = capsul_config.get('use_matlab', None)
+        mcr_dir = engine_config.get(
+            'global', {}).get('capsul.engine.module.matlab',
+                              {}).get('mcr_directory')
+        self.set_matlab_standalone_path(mcr_dir)
         if use_matlab and matlab_path:
             self.set_matlab_path(matlab_path)
             self.set_use_matlab(True)
@@ -927,10 +936,11 @@ class Config:
             spm_standalone = capsul_config.get('spm_standalone')
             #TODO: I thing the following is wrong
             if spm_standalone:
-                mcr = os.path.join(spm_dir, 'mcr', 'v713')
-                if os.path.isdir(mcr) and os.path.isdir(spm_dir):
+                if not mcr_dir:
+                    mcr_dir = os.path.join(spm_dir, 'mcr', 'v713')
+                    self.set_matlab_standalone_path(mcr_dir)
+                if os.path.isdir(mcr_dir) and os.path.isdir(spm_dir):
                     self.set_spm_standalone_path(spm_dir)
-                    self.set_matlab_standalone_path(mcr)
                     self.set_use_spm_standalone(True)
                     self.set_use_matlab_standalone(True)
                     self.set_use_matlab(False)
@@ -955,6 +965,8 @@ class Config:
 
         elif use_fsl is False:
             self.set_use_fsl(False)
+
+        self.update_capsul_config()  # store into capsul engine
 
     def setChainCursors(self, chain_cursors):
         """Set the value of the checkbox 'chain cursor' in the miniviewer.
