@@ -2687,8 +2687,41 @@ class PopUpPreferences(QDialog):
         modules = capsul_config.get('engine_modules', [])
 
         # TODO1: Currently, this is only done for the global environment:
-        # TODO2: Currently, quick and dirty, only done for FSL. May be necessary
-        #        to do the same for other softs as SPM, MATLAB, etc?:
+
+        # sync capsul config from mia config, if module is not used
+
+        # MATLAB / SPM
+        if not config.get_use_matlab():
+
+            try:
+               del capsul_config['engine']['global'][
+                   'capsul.engine.module.matlab']['executable']
+
+            except KeyError:
+                pass
+
+            try:
+                del capsul_config['study_config']['matlab_exec']
+
+            except KeyError:
+                pass
+
+        if not config.get_use_matlab_standalone():
+
+            try:
+                del capsul_config['engine']['global'][
+                    'capsul.engine.module.matlab']['mcr_directory']
+
+            except KeyError:
+                pass
+
+        if not config.get_use_spm():
+            print('pas de spm dans la config mia')
+
+        if not config.get_use_spm_standalone():
+            print('pas de spm_standalone dans la config mia')
+
+        # FSL
         if not config.get_use_fsl():
 
             try:
@@ -2711,6 +2744,7 @@ class PopUpPreferences(QDialog):
             except KeyError:
                 pass
 
+        # AFNI
         if not config.get_use_afni():
 
             try:
@@ -2733,6 +2767,7 @@ class PopUpPreferences(QDialog):
             except KeyError:
                 pass
 
+        # ANTS
         if not config.get_use_ants():
 
             try:

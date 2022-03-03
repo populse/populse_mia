@@ -923,7 +923,7 @@ class Config:
         mcr_dir = engine_config.get(
             'global', {}).get('capsul.engine.module.matlab',
                               {}).get('mcr_directory')
-        self.set_matlab_standalone_path(mcr_dir)
+        # self.set_matlab_standalone_path(mcr_dir)
         if use_matlab and matlab_path:
             self.set_matlab_path(matlab_path)
             self.set_use_matlab(True)
