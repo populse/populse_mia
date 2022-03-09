@@ -274,12 +274,6 @@ class Config:
         capsul_config.setdefault(
             "engine_modules",
             ['nipype', 'fsl', 'freesurfer', 'matlab', 'spm', 'fom', 'python', 'afni', 'ants'])
-        #sconf = capsul_config.setdefault("study_config", {})
-        #sconf.update(
-            #{'attributes_schema_paths':
-                #['capsul.attributes.completion_engine_factory',
-                 #'populse_mia.user_interface.pipeline_manager.process_mia'],
-            #'process_completion': 'mia_completion'})
 
         econf = capsul_config.setdefault('engine', {})
         eeconf = econf.setdefault('global', {})
@@ -305,78 +299,6 @@ class Config:
 
         use_ants = self.get_use_ants()
         ants_path = self.get_ants_path()
-
-        ## FSL
-        #if use_fsl and os.path.exists(fsl_config):
-            #sconf.update(dict(use_fsl=True,
-                              #fsl_config=fsl_config))
-
-        #else:
-            #sconf.update(dict(use_fsl=False))
-            #sconf.pop('fsl_config', None)
-
-        ## AFNI
-        #if use_afni and os.path.exists(afni_path):
-            #sconf.update(dict(use_afni=True,
-                              #afni_path=afni_path))
-
-        #else:
-            #sconf.update(dict(use_afni=False))
-            #sconf.pop('afni_path', None)
-
-        ## ANTS
-        #if use_ants and os.path.exists(ants_path):
-            #sconf.update(dict(use_ants=True,
-                              #ants_path=ants_path))
-
-        #else:
-            #sconf.update(dict(use_ants=False))
-            #sconf.pop('ants_path', None)
-
-        ## SPM standalone / MATLAB Runtime
-        #if (use_spm_standalone and
-                #spm_standalone_path and
-                #use_matlab_standalone and
-                #matlab_standalone_path and
-                #os.path.exists(spm_standalone_path) and
-                #os.path.exists(matlab_standalone_path)):
-            ## TODO: This is only true for linux
-            #spm_exec = glob.glob(os.path.join(spm_standalone_path,
-                                              #'run_spm*.sh'))
-
-            #if spm_exec:
-                #spm_exec = spm_exec[0]
-
-            #else:
-               #spm_exec = None
-
-            #sconf.update(dict(use_spm=True, spm_directory=spm_standalone_path,
-                              #spm_standalone=True, spm_exec=spm_exec,
-                              #use_matlab=False))
-            #sconf.pop('matlab_exec', None)
-
-        ## SPM / MATLAB
-        #elif (use_spm and spm_path and
-                #use_matlab and matlab_path and
-                #os.path.exists(spm_path) and os.path.exists(matlab_path)):
-            #sconf.update(dict(use_spm=True, spm_standalone=False,
-                              #spm_directory=spm_path, use_matlab=True,
-                              #matlab_exec=matlab_path))
-            #sconf.pop('spm_exec', None)
-
-        ## MATLAB alone
-        #elif use_matlab and matlab_path and os.path.exists(matlab_path):
-            #sconf.update(dict(use_spm=False, spm_standalone=False,
-                              #use_matlab=True, matlab_exec=matlab_path))
-            #sconf.pop('spm_exec', None)
-            #sconf.pop('spm_directory', None)
-
-        #else:
-            #sconf.update(dict(use_spm=False, spm_standalone=False,
-                             #use_matlab=False))
-            #sconf.pop('spm_exec', None)
-            #sconf.pop('spm_directory', None)
-            #sconf.pop('matlab_exec', None)
 
         # SPM
         if use_spm_standalone:
@@ -988,8 +910,8 @@ class Config:
             self.set_matlab_standalone_path(mcr_dir)
             use_matlab_standalone = bool(mcr_dir)
             self.set_use_matlab_standalone(use_matlab_standalone)
+            self.set_matlab_path(matlab_path)
             if use_matlab and matlab_path:
-                self.set_matlab_path(matlab_path)
                 self.set_use_matlab(True)
         if use_matlab is False:
             self.set_use_matlab(False)
@@ -1423,37 +1345,26 @@ class Config:
                                                                  'ants']:
             engine.load_module(module)
 
-        study_config = engine.study_config
+        engine_config = capsul_config.get('engine')
 
-        try:
-            study_config.import_from_dict(capsul_config.get('study_config', {}))
+        if engine_config:
 
-        except Exception as exc:
-            print("\nAn issue is detected in the Mia's configuration"
-                  ":\n{}\nPlease check the settings in File > Mia "
-                  "Preferences > Pipeline ...".format(exc))
+            for environment, config in engine_config.items():
+                c = dict(config)
 
-        else:
-            engine_config = capsul_config.get('engine')
+                if ('capsul_engine' not in c or
+                                          'uses' not in c['capsul_engine']):
+                    c['capsul_engine'] = {
+                    'uses': {engine.settings.module_name(m): 'ALL'
+                              for m in config.keys()}}
 
-            if engine_config:
+                try:
+                    engine.import_configs(environment, c)
 
-                for environment, config in engine_config.items():
-                    c = dict(config)
-
-                    if ('capsul_engine' not in c or
-                                              'uses' not in c['capsul_engine']):
-                        c['capsul_engine'] = {
-                        'uses': {engine.settings.module_name(m): 'ALL'
-                                  for m in config.keys()}}
-
-                    try:
-                        engine.import_configs(environment, c)
-
-                    except Exception as exc:
-                        print("\nAn issue is detected in the Mia's "
-                              "configuration:\n{}\nPlease check the settings "
-                              "in File > Mia Preferences > Pipeline "
-                              "...".format(exc))
+                except Exception as exc:
+                    print("\nAn issue is detected in the Mia's "
+                          "configuration:\n{}\nPlease check the settings "
+                          "in File > Mia Preferences > Pipeline "
+                          "...".format(exc))
 
         return engine
