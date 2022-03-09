@@ -1819,6 +1819,7 @@ class PopUpPreferences(QDialog):
 
         super().__init__()
         self.setModal(True)
+        self.main_window = main_window
 
         _translate = QtCore.QCoreApplication.translate
 
@@ -2040,8 +2041,7 @@ class PopUpPreferences(QDialog):
         # The 'OK' push button
         self.push_button_ok = QtWidgets.QPushButton("OK")
         self.push_button_ok.setObjectName("pushButton_ok")
-        self.push_button_ok.clicked.connect(
-            partial(self.ok_clicked, main_window))
+        self.push_button_ok.clicked.connect(self.ok_clicked)
 
         # The 'Cancel' push button
         self.push_button_cancel = QtWidgets.QPushButton("Cancel")
@@ -2682,6 +2682,10 @@ class PopUpPreferences(QDialog):
         from capsul.api import capsul_engine
         from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
+        # validate the current MIA config first
+        if not self.validate_and_save():
+            return
+
         config = Config()
         capsul_config = config.get_capsul_config()
         modules = capsul_config.get('engine_modules', [])
@@ -2696,12 +2700,6 @@ class PopUpPreferences(QDialog):
             try:
                del capsul_config['engine']['global'][
                    'capsul.engine.module.matlab']['executable']
-
-            except KeyError:
-                pass
-
-            try:
-                del capsul_config['study_config']['matlab_exec']
 
             except KeyError:
                 pass
@@ -2738,12 +2736,6 @@ class PopUpPreferences(QDialog):
             except KeyError:
                 pass
 
-            try:
-                del capsul_config['study_config']['fsl_config']
-
-            except KeyError:
-                pass
-
         # AFNI
         if not config.get_use_afni():
 
@@ -2757,12 +2749,6 @@ class PopUpPreferences(QDialog):
             try:
                del capsul_config['engine']['global'][
                                         'capsul.engine.module.afni']['config']
-
-            except KeyError:
-                pass
-
-            try:
-                del capsul_config['study_config']['afni']
 
             except KeyError:
                 pass
@@ -2784,20 +2770,11 @@ class PopUpPreferences(QDialog):
             except KeyError:
                 pass
 
-            try:
-                del capsul_config['study_config']['ants']
-
-            except KeyError:
-                pass
-
-        sc_dict = capsul_config.get('study_config', {})
-
         # build a temporary new engine (because it may not be validated)
         engine = capsul_engine()
         for module in modules + ['fom', 'axon', 'python', 'fsl', 'freesurfer',
                                  'nipype', 'afni', 'ants']:
             engine.load_module(module)
-        engine.study_config.import_from_dict(sc_dict)
         envs = capsul_config.get('engine', {})
         for env, conf in envs.items():
             c = dict(conf)
@@ -2812,16 +2789,17 @@ class PopUpPreferences(QDialog):
             engine.settings.import_configs(env, c)
 
         dialog = SettingsEditor(engine)
-        result = dialog.exec()
+        try:
+            result = dialog.exec()
+        except Exception as e:
+            print(e)
+            return
 
         if result:
             settings = engine.settings.export_config_dict()
 
             capsul_config['engine'] = settings
             capsul_config['engine_modules'] = list(engine._loaded_modules)
-
-            if 'study_config' in capsul_config:
-                del capsul_config['study_config']
             config.set_capsul_config(capsul_config)
 
             # update Mia preferences GUI which might have changed
@@ -2869,11 +2847,8 @@ class PopUpPreferences(QDialog):
         del dialog
         del engine
 
-    def ok_clicked(self, main_window):
+    def validate_and_save(self):
         """Saves the modifications to the config file and apply them.
-
-        :param main_window: main window of the software
-
         """
 
         config = Config()
@@ -2922,7 +2897,7 @@ class PopUpPreferences(QDialog):
             self.msg.buttonClicked.connect(self.msg.close)
             self.msg.show()
             QApplication.restoreOverrideCursor()
-            return
+            return False
 
         # MRIFileManager.jar path
         mri_conv_path = self.mri_conv_path_line_edit.text()
@@ -2954,7 +2929,7 @@ class PopUpPreferences(QDialog):
             self.msg.buttonClicked.connect(self.msg.close)
             self.msg.show()
             QApplication.restoreOverrideCursor()
-            return
+            return False
 
         # Max projects in "Saved projects"
         max_projects = min(max(self.max_projects_box.value(), 1), 20)
@@ -3009,6 +2984,7 @@ class PopUpPreferences(QDialog):
         else:
             config.set_use_spm_standalone(False)
 
+        main_window = self.main_window
         # User / Admin mode
         main_window.windowName = "MIA - Multiparametric Image Analysis"
         if self.admin_mode_checkbox.isChecked():
@@ -3041,7 +3017,7 @@ class PopUpPreferences(QDialog):
                 afni_cmd = os.path.join(afni_dir, afni_cmd)
             else:
                 self.wrong_path(afni_dir, "AFNI")
-                return
+                return False
 
             try:
                 p = subprocess.Popen(
@@ -3057,11 +3033,11 @@ class PopUpPreferences(QDialog):
 
                 else:
                     self.wrong_path(afni_dir, "AFNI")
-                    return
+                    return False
 
             except:
                 self.wrong_path(afni_dir, "AFNI")
-                return
+                return False
         else:
             config.set_use_afni(False)
 
@@ -3076,7 +3052,7 @@ class PopUpPreferences(QDialog):
                 ants_cmd = os.path.join(ants_dir, ants_cmd)
             else:
                 self.wrong_path(ants_dir, "ANTS")
-                return
+                return False
 
             try:
                 p = subprocess.Popen(
@@ -3092,11 +3068,11 @@ class PopUpPreferences(QDialog):
 
                 else:
                     self.wrong_path(ants_dir, "ANTS")
-                    return
+                    return False
 
             except:
                 self.wrong_path(ants_dir, "ANTS")
-                return
+                return False
         else:
             config.set_use_ants(False)
 
@@ -3133,11 +3109,11 @@ class PopUpPreferences(QDialog):
 
                 else:
                     self.wrong_path(fsl_conf, "FSL", "config file")
-                    return
+                    return False
                         
             except:
                 self.wrong_path(fsl_conf, "FSL", "config file")
-                return
+                return False
 
         else:
             config.set_use_fsl(False)
@@ -3152,7 +3128,7 @@ class PopUpPreferences(QDialog):
 
             if not os.path.isfile(matlab_input):
                 self.wrong_path(matlab_input, "Matlab")
-                return
+                return False
 
             if (matlab_input == config.get_matlab_path() and
                                        spm_input == config.get_spm_path()):
@@ -3190,19 +3166,19 @@ class PopUpPreferences(QDialog):
 
                     elif "spm" in str(err):
                         self.wrong_path(spm_input, "SPM")
-                        return
+                        return False
 
                     else:
                         self.wrong_path(matlab_input, "Matlab")
-                        return
+                        return False
 
                 except:
                     self.wrong_path(matlab_input, "Matlab")
-                    return
+                    return False
 
             else:
                 self.wrong_path(spm_input, "SPM")
-                return
+                return False
             
         # Matlab alone config test
         if matlab_input != "" or self.use_matlab_checkbox.isChecked():
@@ -3227,13 +3203,13 @@ class PopUpPreferences(QDialog):
                             config.set_use_matlab_standalone(False)
                     else:
                         self.wrong_path(matlab_input, "Matlab")
-                        return
+                        return False
                 except:
                     self.wrong_path(matlab_input, "Matlab")
-                    return
+                    return False
             else:
                 self.wrong_path(matlab_input, "Matlab")
-                return
+                return False
             
         # SPM (standalone) & Matlab (MCR) config test
         spm_input = self.spm_standalone_choice.text()
@@ -3246,7 +3222,7 @@ class PopUpPreferences(QDialog):
             if ((not os.path.isdir(matlab_input)) and 
                     (not 'Windows' in archi[1])):
                 self.wrong_path(matlab_input, "Matlab standalone")
-                return
+                return False
 
             if ((matlab_input == config.get_matlab_standalone_path()) and
                     (spm_input == config.get_spm_standalone_path())):
@@ -3276,7 +3252,7 @@ class PopUpPreferences(QDialog):
 
                     if pos == -1:
                         self.wrong_path(spm_input, "SPM standalone")
-                        return
+                        return False
 
                 elif os.path.isdir(matlab_input):
                     mcr = glob.glob(os.path.join(spm_input, 'run_spm*.sh'))
@@ -3340,26 +3316,26 @@ class PopUpPreferences(QDialog):
                             if "shared libraries" in str(err):
                                 self.wrong_path(matlab_input,
                                                 "Matlab standalone")
-                                return
+                                return False
 
                             else:
                                 self.wrong_path(spm_input, "SPM standalone")
-                                return
+                                return False
 
                         else:
                             self.wrong_path(spm_input, "SPM standalone")
-                            return
+                            return False
 
                     except Exception as e:
                         self.wrong_path(spm_input, "SPM standalone")
-                        return
+                        return False
 
                 else:
                     self.wrong_path(spm_input, "SPM standalone")
-                    return
+                    return False
             else:
                 self.wrong_path(spm_input, "SPM standalone")
-                return
+                return False
 
         # Matlab (MCR) alone config test
         if (matlab_input != "" or
@@ -3380,7 +3356,7 @@ class PopUpPreferences(QDialog):
 
             else:
                 self.wrong_path(matlab_input, "Matlab standalone")
-                return
+                return False
 
         # Colors
         background_color = self.background_color_combo.currentText()
@@ -3435,12 +3411,6 @@ class PopUpPreferences(QDialog):
                 try:
                     del c_c['engine']['global'][
                         'capsul.engine.module.fsl']['config']
-
-                except KeyError:
-                    pass
-
-                try:
-                    del c_c['study_config']['fsl_config']
 
                 except KeyError:
                     pass
@@ -3589,12 +3559,6 @@ class PopUpPreferences(QDialog):
                 except KeyError:
                     pass
 
-                try:
-                    del c_c['study_config']['spm_directory']
-
-                except KeyError:
-                    pass
-
             # no MATLAB at all
             if (not config.get_use_matlab() and
                                   not config.get_use_matlab_standalone()):
@@ -3643,8 +3607,13 @@ class PopUpPreferences(QDialog):
 
         config.get_capsul_config()
         config.saveConfig()
-        self.accept()
-        self.close()
+        return True
+
+
+    def ok_clicked(self):
+        if self.validate_and_save():
+            self.accept()
+            self.close()
 
     def use_afni_changed(self):
         """Called when the use_afni checkbox is changed."""
