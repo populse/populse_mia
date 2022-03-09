@@ -274,12 +274,15 @@ class Config:
         capsul_config.setdefault(
             "engine_modules",
             ['nipype', 'fsl', 'freesurfer', 'matlab', 'spm', 'fom', 'python', 'afni', 'ants'])
-        sconf = capsul_config.setdefault("study_config", {})
-        sconf.update(
-            {'attributes_schema_paths':
-                ['capsul.attributes.completion_engine_factory',
-                 'populse_mia.user_interface.pipeline_manager.process_mia'],
-            'process_completion': 'mia_completion'})
+        #sconf = capsul_config.setdefault("study_config", {})
+        #sconf.update(
+            #{'attributes_schema_paths':
+                #['capsul.attributes.completion_engine_factory',
+                 #'populse_mia.user_interface.pipeline_manager.process_mia'],
+            #'process_completion': 'mia_completion'})
+
+        econf = capsul_config.setdefault('engine', {})
+        eeconf = econf.setdefault('global', {})
 
         # update study config from mia config values
         use_spm = self.get_use_spm()
@@ -303,93 +306,150 @@ class Config:
         use_ants = self.get_use_ants()
         ants_path = self.get_ants_path()
 
-        # FSL
-        if use_fsl and os.path.exists(fsl_config):
-            sconf.update(dict(use_fsl=True,
-                              fsl_config=fsl_config))
+        ## FSL
+        #if use_fsl and os.path.exists(fsl_config):
+            #sconf.update(dict(use_fsl=True,
+                              #fsl_config=fsl_config))
 
-        else:
-            sconf.update(dict(use_fsl=False))
-            sconf.pop('fsl_config', None)
+        #else:
+            #sconf.update(dict(use_fsl=False))
+            #sconf.pop('fsl_config', None)
+
+        ## AFNI
+        #if use_afni and os.path.exists(afni_path):
+            #sconf.update(dict(use_afni=True,
+                              #afni_path=afni_path))
+
+        #else:
+            #sconf.update(dict(use_afni=False))
+            #sconf.pop('afni_path', None)
+
+        ## ANTS
+        #if use_ants and os.path.exists(ants_path):
+            #sconf.update(dict(use_ants=True,
+                              #ants_path=ants_path))
+
+        #else:
+            #sconf.update(dict(use_ants=False))
+            #sconf.pop('ants_path', None)
+
+        ## SPM standalone / MATLAB Runtime
+        #if (use_spm_standalone and
+                #spm_standalone_path and
+                #use_matlab_standalone and
+                #matlab_standalone_path and
+                #os.path.exists(spm_standalone_path) and
+                #os.path.exists(matlab_standalone_path)):
+            ## TODO: This is only true for linux
+            #spm_exec = glob.glob(os.path.join(spm_standalone_path,
+                                              #'run_spm*.sh'))
+
+            #if spm_exec:
+                #spm_exec = spm_exec[0]
+
+            #else:
+               #spm_exec = None
+
+            #sconf.update(dict(use_spm=True, spm_directory=spm_standalone_path,
+                              #spm_standalone=True, spm_exec=spm_exec,
+                              #use_matlab=False))
+            #sconf.pop('matlab_exec', None)
+
+        ## SPM / MATLAB
+        #elif (use_spm and spm_path and
+                #use_matlab and matlab_path and
+                #os.path.exists(spm_path) and os.path.exists(matlab_path)):
+            #sconf.update(dict(use_spm=True, spm_standalone=False,
+                              #spm_directory=spm_path, use_matlab=True,
+                              #matlab_exec=matlab_path))
+            #sconf.pop('spm_exec', None)
+
+        ## MATLAB alone
+        #elif use_matlab and matlab_path and os.path.exists(matlab_path):
+            #sconf.update(dict(use_spm=False, spm_standalone=False,
+                              #use_matlab=True, matlab_exec=matlab_path))
+            #sconf.pop('spm_exec', None)
+            #sconf.pop('spm_directory', None)
+
+        #else:
+            #sconf.update(dict(use_spm=False, spm_standalone=False,
+                             #use_matlab=False))
+            #sconf.pop('spm_exec', None)
+            #sconf.pop('spm_directory', None)
+            #sconf.pop('matlab_exec', None)
+
+        # SPM
+        if use_spm_standalone:
+            m = eeconf.setdefault('capsul.engine.module.spm',
+                              {}).setdefault('spm12-standalone', {})
+            m.update({'config_id': 'spm12-standalone',
+                      'config_environment': 'global',
+                      'directory': spm_standalone_path, 'standalone': True})
+
+        if use_spm:
+            m = eeconf.setdefault('capsul.engine.module.spm',
+                              {}).setdefault(spmconf['config_id'], {})
+            m.update({'config_id': 'spm',
+                      'config_environment': 'global',
+                      'directory': spm_path, 'standalone': False})
+
+        # MATLAB
+        if matlab_standalone_path:
+            m = eeconf.setdefault('capsul.engine.module.matlab',
+                              {}).setdefault('matlab', {})
+            m['mcr_directory'] = matlab_standalone_path
+            m['config_id'] = 'matlab'
+            m['config_environment'] = 'global'
+        if use_matlab:
+            m = eeconf.setdefault('capsul.engine.module.matlab',
+                              {}).setdefault('matlab', {})
+            m['executable'] = matlab_path
+            m['config_id'] = 'matlab'
+            m['config_environment'] = 'global'
+
+        # FSL
+        if use_fsl:
+            m = eeconf.setdefault('capsul.engine.module.fsl',
+                                  {}).setdefault('fsl', {})
+            m['config_id'] = 'fsl'
+            m['config_environment'] = 'global'
+            m['config'] = fsl_config
+            m['directory'] = os.path.dirname(fsl_config)
 
         # AFNI
-        if use_afni and os.path.exists(afni_path):
-            sconf.update(dict(use_afni=True,
-                              afni_path=afni_path))
-
-        else:
-            sconf.update(dict(use_afni=False))
-            sconf.pop('afni_path', None)
+        if use_afni:
+            m = eeconf.setdefault('capsul.engine.module.afni',
+                                  {}).setdefault('afni', {})
+            m['config_id'] = 'afni'
+            m['config_environment'] = 'global'
+            m['directory'] = afni_path
 
         # ANTS
-        if use_ants and os.path.exists(ants_path):
-            sconf.update(dict(use_ants=True,
-                              ants_path=ants_path))
+        if use_ants:
+            m = eeconf.setdefault('capsul.engine.module.ants',
+                                  {}).setdefault('ants', {})
+            m['config_id'] = 'ants'
+            m['config_environment'] = 'global'
+            m['directory'] = ants_path
 
-        else:
-            sconf.update(dict(use_ants=False))
-            sconf.pop('ants_path', None)
-
-        # SPM standalone / MATLAB Runtime
-        if (use_spm_standalone and
-                spm_standalone_path and
-                use_matlab_standalone and
-                matlab_standalone_path and
-                os.path.exists(spm_standalone_path) and
-                os.path.exists(matlab_standalone_path)):
-            # TODO: This is only true for linux
-            spm_exec = glob.glob(os.path.join(spm_standalone_path,
-                                              'run_spm*.sh'))
-
-            if spm_exec:
-                spm_exec = spm_exec[0]
-
-            else:
-               spm_exec = None
-
-            sconf.update(dict(use_spm=True, spm_directory=spm_standalone_path,
-                              spm_standalone=True, spm_exec=spm_exec,
-                              use_matlab=False))
-            sconf.pop('matlab_exec', None)
-
-        # SPM / MATLAB
-        elif (use_spm and spm_path and
-                use_matlab and matlab_path and
-                os.path.exists(spm_path) and os.path.exists(matlab_path)):
-            sconf.update(dict(use_spm=True, spm_standalone=False,
-                              spm_directory=spm_path, use_matlab=True,
-                              matlab_exec=matlab_path))
-            sconf.pop('spm_exec', None)
-
-        # MATLAB alone
-        elif use_matlab and matlab_path and os.path.exists(matlab_path):
-            sconf.update(dict(use_spm=False, spm_standalone=False,
-                              use_matlab=True, matlab_exec=matlab_path))
-            sconf.pop('spm_exec', None)
-            sconf.pop('spm_directory', None)
-
-        else:
-            sconf.update(dict(use_spm=False, spm_standalone=False,
-                             use_matlab=False))
-            sconf.pop('spm_exec', None)
-            sconf.pop('spm_directory', None)
-            sconf.pop('matlab_exec', None)
-
-        if matlab_standalone_path:
-            econf = capsul_config.setdefault('engine', {})
-            eeconf = econf.setdefault('global', {})
-            eeconf.setdefault('capsul.engine.module.matlab',
-                              {})['mcr_directory'] = matlab_standalone_path
+        # attributes completion
+        m = eeconf.setdefault('capsul.engine.module.attributes',
+                              {}).setdefault('attributes', {})
+        m['config_id'] = 'attributes'
+        m['config_environment'] = 'global'
+        m['attributes_schema_paths'] = [
+            'capsul.attributes.completion_engine_factory',
+            'populse_mia.user_interface.pipeline_manager.process_mia']
+        m['process_completion'] = 'mia_completion'
 
         if sync_from_engine and self.capsul_engine:
-            econf = capsul_config.setdefault('engine', {})
             for environment in (self.capsul_engine.settings.
                                 get_all_environments)():
                 eeconf = econf.setdefault(environment, {})
                 # would need a better merging system
                 eeconf.update(
-                    self.capsul_engine.settings.select_configurations(
-                        environment))
+                    self.capsul_engine.settings.export_config_dict(
+                        environment)[environment])
 
         return capsul_config
 
@@ -908,63 +968,93 @@ class Config:
 
         # update MIA values
         engine_config = capsul_config_dict.get('engine')
-        if engine_config:
-            from capsul.api import capsul_engine
-            new_engine = capsul_engine()
-            for environment, config in engine_config.items():
-                new_engine.import_configs(environment, config)
-            capsul_config = new_engine.study_config.export_to_dict()
-        else:
-            capsul_config = capsul_config_dict.get('study_config', {})
+        from capsul.api import capsul_engine
+        new_engine = capsul_engine()
+        for environment, config in engine_config.items():
+            if environment == 'capsul_engine':
+                continue
+            new_engine.import_configs(environment, config)
+        engine_config = new_engine.settings.export_config_dict('global')
 
         # matlab
-        matlab_path = capsul_config.get('matlab_exec')
-        use_matlab = capsul_config.get('use_matlab', None)
-        mcr_dir = engine_config.get(
-            'global', {}).get('capsul.engine.module.matlab',
-                              {}).get('mcr_directory')
-        # self.set_matlab_standalone_path(mcr_dir)
-        if use_matlab and matlab_path:
-            self.set_matlab_path(matlab_path)
-            self.set_use_matlab(True)
-        elif use_matlab is False:
+        matlab = engine_config.get(
+            'global', {}).get('capsul.engine.module.matlab')
+        use_matlab = False
+        if matlab:
+            matlab = next(iter(matlab.values()))
+            matlab_path = matlab.get('executable')
+            use_matlab = bool(matlab_path)
+            mcr_dir = matlab.get('mcr_directory')
+            self.set_matlab_standalone_path(mcr_dir)
+            use_matlab_standalone = bool(mcr_dir)
+            self.set_use_matlab_standalone(use_matlab_standalone)
+            if use_matlab and matlab_path:
+                self.set_matlab_path(matlab_path)
+                self.set_use_matlab(True)
+        if use_matlab is False:
             self.set_use_matlab(False)
 
         # spm
-        if capsul_config.get('use_spm', False):
-            spm_dir = capsul_config.get('spm_directory')
-            spm_standalone = capsul_config.get('spm_standalone')
-            #TODO: I thing the following is wrong
-            if spm_standalone:
-                if not mcr_dir:
-                    mcr_dir = os.path.join(spm_dir, 'mcr', 'v713')
-                    self.set_matlab_standalone_path(mcr_dir)
-                if os.path.isdir(mcr_dir) and os.path.isdir(spm_dir):
-                    self.set_spm_standalone_path(spm_dir)
-                    self.set_use_spm_standalone(True)
-                    self.set_use_matlab_standalone(True)
-                    self.set_use_matlab(False)
-            else:
-                self.set_use_spm_standalone(False)
-                if self.get_use_matlab():
+        spm = engine_config.get('global', {}).get('capsul.engine.module.spm')
+        if spm:
+            has_standalone = False
+            for spm_conf in spm.values():
+                spm_dir = spm_conf.get('directory')
+                spm_standalone = spm_conf.get(
+                    'standalone', False)
+                if spm_standalone:
+                    if not mcr_dir:
+                        mcr_dir = os.path.join(spm_dir, 'mcr', 'v713')
+                        self.set_matlab_standalone_path(mcr_dir)
+                        self.set_use_matlab_standalone(use_matlab_standalone)
+                    if os.path.isdir(mcr_dir) and os.path.isdir(spm_dir):
+                        self.set_spm_standalone_path(spm_dir)
+                        self.set_use_spm_standalone(True)
+                        self.set_use_matlab_standalone(True)
+                        self.set_use_matlab(False)
+                        has_standalone = True
+                elif spm_dir:
                     self.set_spm_path(spm_dir)
                     self.set_use_spm(True)
                 else:
                     self.set_use_spm(False)
+            if not has_standalone:
+                self.set_use_spm_standalone(False)
         else:
             self.set_use_spm(False)
             self.set_use_spm_standalone(False)
 
         # fsl
-        use_fsl = capsul_config.get('use_fsl', False)
-        fsl_conf_path = capsul_config.get('fsl_config')
+        fsl = engine_config.get('global', {}).get('capsul.engine.module.fsl')
+        use_fsl = False
+        if fsl:
+            fsl = next(iter(fsl.values()))
+            fsl_conf_path = fsl.get('config')
+            if fsl_conf_path:
+                use_fsl = True
+                self.set_fsl_config(fsl_conf_path)
+                self.set_use_fsl(True)
 
-        if use_fsl and fsl_conf_path:
-            self.set_fsl_config(fsl_conf_path)
-            self.set_use_fsl(True)
-
-        elif use_fsl is False:
+        if use_fsl is False:
             self.set_use_fsl(False)
+
+        # afni
+        afni = engine_config.get('global', {}).get('capsul.engine.module.afni')
+        if afni:
+            afni = next(iter(afni.values()))
+            afni_path = afni.get('directory')
+            use_afni = bool(afni_path)
+            self.set_afni_path(afni_path)
+            self.set_use_afni(use_afni)
+
+        # ants
+        ants = engine_config.get('global', {}).get('capsul.engine.module.ants')
+        if ants:
+            ants = next(iter(ants.values()))
+            ants_path = ants.get('directory')
+            use_ants = bool(ants_path)
+            self.set_ants_path(ants_path)
+            self.set_use_ants(use_ants)
 
         self.update_capsul_config()  # store into capsul engine
 
@@ -1356,11 +1446,6 @@ class Config:
                         c['capsul_engine'] = {
                         'uses': {engine.settings.module_name(m): 'ALL'
                                   for m in config.keys()}}
-
-                    for mod, val in config.items():
-
-                        if 'config_id' not in val:
-                            val['config_id'] = mod.split('.')[-1]
 
                     try:
                         engine.import_configs(environment, c)

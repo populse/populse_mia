@@ -2806,19 +2806,16 @@ class PopUpPreferences(QDialog):
                 c['capsul_engine'] = {
                     'uses': {engine.settings.module_name(m): 'ALL'
                                 for m in conf.keys()}}
-            for mod, val in conf.items():
-                if 'config_id' not in val:
-                    val['config_id'] = mod.split('.')[-1]
+            #for mod, val in conf.items():
+                #if 'config_id' not in val:
+                    #val['config_id'] = mod.split('.')[-1]
             engine.settings.import_configs(env, c)
 
         dialog = SettingsEditor(engine)
         result = dialog.exec()
 
         if result:
-            envs = engine.settings.get_all_environments()
-            settings = {}
-            for env in envs:
-                settings[env] = engine.settings.select_configurations(env)
+            settings = engine.settings.export_config_dict()
 
             capsul_config['engine'] = settings
             capsul_config['engine_modules'] = list(engine._loaded_modules)
@@ -2856,6 +2853,18 @@ class PopUpPreferences(QDialog):
             use_fsl = Qt.Qt.Checked if use_fsl else Qt.Qt.Unchecked
             self.use_fsl_checkbox.setCheckState(use_fsl)
             self.fsl_choice.setText(config.get_fsl_config())
+
+            # afni
+            use_afni = config.get_use_afni()
+            use_afni = Qt.Qt.Checked if use_afni else Qt.Qt.Unchecked
+            self.use_afni_checkbox.setCheckState(use_afni)
+            self.afni_choice.setText(config.get_afni_path())
+
+            # ants
+            use_ants = config.get_use_ants()
+            use_ants = Qt.Qt.Checked if use_ants else Qt.Qt.Unchecked
+            self.use_ants_checkbox.setCheckState(use_ants)
+            self.ants_choice.setText(config.get_ants_path())
 
         del dialog
         del engine
