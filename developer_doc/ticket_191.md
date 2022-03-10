@@ -11,4 +11,5 @@ _________________________________
 - \_\_init__.py is cleaned (10/03/2022)
 - test.json file is deleted (10/03/2022)
 - \_\_main__.py is cleaned (10/03/2022)
+- #install_mia.py' is kept as it is (framework to perhaps make a future automatic mia installer)
 
