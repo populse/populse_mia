@@ -8,4 +8,6 @@ _________________________________
   is deleted (08/03/2022)
 
 - '#install_processes.py' file is deleted (10/03/2022)
+- \_\_init__.py is cleaned (10/03/2022)
+- test.json file is deleted (10/03/2022)
 
