@@ -21,10 +21,10 @@ Module that contains multiple functions used across the software.
 ##########################################################################
 
 import ast
-import os
-import re
-from datetime import datetime, date, time
 import dateutil.parser
+import os
+import sys
+from datetime import datetime, date, time
 
 # PyQt5 imports
 from PyQt5.QtCore import Qt, QVariant, QDateTime, QTime, QDate
@@ -38,17 +38,24 @@ from populse_db.database import (
     FIELD_TYPE_LIST_DATE, FIELD_TYPE_LIST_FLOAT,
     FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_STRING)
 
+# Populse_mia imports
 from populse_mia.software_properties import Config
+
+
+def check_python_version():
+    if sys.version_info[:2] < (3, 5):
+        raise AssertionError("The populse_mia is ensured to work with Python "
+                             ">= 3.5")
 
 
 def check_value_type(value, value_type, is_subvalue=False):
     """
-    Checks the type of a new value
+    Checks the type of new value
 
     :param value: Value of the cell
     :param value_type: Type expected
     :param is_subvalue: To know if the value is a subvalue of a list
-    :return: True if the value is valid to replace the old one, False otherwise
+    :returns: True if the value is valid to replace the old one, False otherwise
     """
     if (value_type == FIELD_TYPE_INTEGER or
             value_type == FIELD_TYPE_LIST_INTEGER and is_subvalue):
