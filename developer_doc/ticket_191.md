@@ -13,3 +13,4 @@ _________________________________
 - \_\_main__.py is cleaned (10/03/2022)
 - #install_mia.py' is kept as it is (framework to perhaps make a future automatic mia installer)
 - info.py is cleaned (11/03/2022)
+- main.py is cleaned (11/03/2022)
