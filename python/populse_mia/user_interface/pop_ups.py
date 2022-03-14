@@ -2971,7 +2971,7 @@ class PopUpPreferences(QDialog):
 
         if self.use_afni_checkbox.isChecked():
 
-            afni_cmd = '3dSkullStrip'
+            afni_cmd = 'afni'
 
             if os.path.isdir(afni_dir):
                 afni_cmd = os.path.join(afni_dir, afni_cmd)
@@ -3006,7 +3006,7 @@ class PopUpPreferences(QDialog):
 
         if self.use_ants_checkbox.isChecked():
 
-            ants_cmd = 'SmoothImage'
+            ants_cmd = 'ANTS'
 
             if os.path.isdir(ants_dir):
                 ants_cmd = os.path.join(ants_dir, ants_cmd)
@@ -3016,7 +3016,7 @@ class PopUpPreferences(QDialog):
 
             try:
                 p = subprocess.Popen(
-                    [ants_cmd, '-version'],
+                    [ants_cmd, '-h'],
                     stdin=subprocess.PIPE,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE)
