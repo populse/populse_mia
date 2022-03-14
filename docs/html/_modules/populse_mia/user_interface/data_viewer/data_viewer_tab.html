@@ -1,32 +1,22 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
+    <meta charset="utf-8" />
+    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 2.0.0-dev+a571528e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0-dev+35761189',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
-  </head>
-  <body>
+  </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+a571528e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -36,7 +26,7 @@
         </p>
 
       </div>
-      <div class="content">
+      <div class="content" role="main">
         
         
   <h1>Source code for populse_mia.user_interface.data_viewer.data_viewer_tab</h1><div class="highlight"><pre>
@@ -50,7 +40,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="k">import</span> <span class="n">Qt</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
@@ -65,7 +55,7 @@
 <span class="sd">    A new viewer can be added simply by placing it in the data_viewer directory.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<div class="viewcode-block" id="DataViewerTab.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The constructor ...</span>
 
 <span class="sd">        :param main_window: an instance of the MainWindow class</span>
@@ -94,7 +84,7 @@
         <span class="n">hlay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="p">)</span>
         <span class="n">hlay</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_viewer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_viewer</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataViewerTab.activate_viewer"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer">[docs]</a>    <span class="k">def</span> <span class="nf">activate_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Activates viewer viewer_name which was selected</span>
@@ -212,7 +202,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

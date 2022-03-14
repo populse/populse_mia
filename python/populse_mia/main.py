@@ -348,14 +348,14 @@ in a recursive way.
 
     def add_package(self, module_name, class_name=None):
         """Provide recursive representation of a package and its
-           subpackages/modules, to construct the mia's pipeline library.
+subpackages/modules, to construct the mia's pipeline library.
 
         :param module_name: name of the module to add in the pipeline library
         :param class_name: only this pipeline will be added to the pipeline
                            library (optional)
         :return: dictionary of dictionaries containing
-                  package/subpackages/pipelines status.
-                  ex: {package: {subpackage: {pipeline: 'process_enabled'}}}
+                 package/subpackages/pipelines status.
+                 ex: {package: {subpackage: {pipeline: 'process_enabled'}}}
         """
 
         # (filter out test modules)
@@ -473,9 +473,10 @@ def launch_mia():
     Instantiates a 'project' object that handles projects and their
     associated database and finally launch of the Mia's GUI.
 
-    Contains private function:
-        - _my_excepthook: log all uncaught exceptions in non-interactive mode.
-        - _verify_saved_projects: checks if the projects are still existing
+    :Contains:
+        :Private function:
+            - _my_excepthook: log all uncaught exceptions in non-interactive mode
+            - _verify_saved_projects: checks if the projects are still existing
     """
 
     def _my_excepthook(etype, evalue, tback):
@@ -491,8 +492,10 @@ def launch_mia():
         :param evalue: exception instance
         :param tback: traceback object
 
-        Contains private function:
-            - _clean_up(): cleans up the mia software during "normal" closing.
+        :Contains:
+            :Private function:
+                - _clean_up(): cleans up the mia software during "normal" 
+closing.
         """
 
         def _clean_up():
@@ -595,9 +598,10 @@ def main():
           valid mia_path path is requested from the user, in order
           to try to fix a corruption of this file.
 
-    Contains private function:
-        - _browse_mia_path: the user define the mia_path parameter
-        - _verify_miaConfig: check the config and try to fix if necessary
+    :Contains:
+        :Private function:
+            - _browse_mia_path: the user define the mia_path parameter
+            - _verify_miaConfig: check the config and try to fix if necessary
     """
 
     def _browse_mia_path(dialog):
@@ -843,8 +847,10 @@ def verify_processes():
     remains so and vice versa). However, if a new pipeline is available in
     the new version it is automatically marked as visible in the library.
 
-    Contains private function:
-        - _deepCompDic: keep the previous config existing before packages update
+    :Contains:
+        :Private function:
+            - _deepCompDic: keep the previous config existing before packages
+                            update
     """
 
     def _deepCompDic(old_dic, new_dic):

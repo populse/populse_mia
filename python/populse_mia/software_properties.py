@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*- #
 """Module that handle the configuration of the software
 
 Load and save the parameters from the miniviewer and the MIA preferences
@@ -37,8 +36,8 @@ def verCmp(first_ver, sec_ver, comp):
     first argument (first_ver) is equal to, less or equal to, or greater or
     equal to its second argument (sec_ver), as follows:
 
-      - if third argument (comp) is 'eq': when the first argument is equal to the
-        second argument, return True (False if not).
+      - if third argument (comp) is 'eq': when the first argument is equal to
+        the second argument, return True (False if not).
       - if third argument (comp) is 'sup': when the first argument is greater
         than the second argument, return True (False if not).
       - if third argument (comp) is 'inf': when the first argument is less than
@@ -48,7 +47,7 @@ def verCmp(first_ver, sec_ver, comp):
     :param sec_ver: the version of a package (a string; ex. '0.13.0')
     :param comp: comparator argument (accepted values: 'sup', 'inf' and 'eq' )
 
-    :returns: False or True
+    :return: False or True
 
     :Contains:
       Private function:

@@ -1,32 +1,22 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
+    <meta charset="utf-8" />
+    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+a571528e documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+35761189',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-  </head>
-  <body>
+  </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+a571528e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -36,12 +26,11 @@
         </p>
 
       </div>
-      <div class="content">
+      <div class="content" role="main">
         
         
   <h1>Source code for populse_mia.software_properties</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*- #</span>
-<span class="sd">&quot;&quot;&quot;Module that handle the configuration of the software</span>
+<span></span><span class="sd">&quot;&quot;&quot;Module that handle the configuration of the software</span>
 
 <span class="sd">Load and save the parameters from the miniviewer and the MIA preferences</span>
 <span class="sd">pop-up in the config.yml file.</span>
@@ -67,7 +56,7 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="kn">import</span> <span class="n">Fernet</span>
+<span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="k">import</span> <span class="n">Fernet</span>
 
 <span class="n">CONFIG</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc=&#39;</span>
 
@@ -79,8 +68,8 @@
 <span class="sd">    first argument (first_ver) is equal to, less or equal to, or greater or</span>
 <span class="sd">    equal to its second argument (sec_ver), as follows:</span>
 
-<span class="sd">      - if third argument (comp) is &#39;eq&#39;: when the first argument is equal to the</span>
-<span class="sd">        second argument, return True (False if not).</span>
+<span class="sd">      - if third argument (comp) is &#39;eq&#39;: when the first argument is equal to</span>
+<span class="sd">        the second argument, return True (False if not).</span>
 <span class="sd">      - if third argument (comp) is &#39;sup&#39;: when the first argument is greater</span>
 <span class="sd">        than the second argument, return True (False if not).</span>
 <span class="sd">      - if third argument (comp) is &#39;inf&#39;: when the first argument is less than</span>
@@ -90,7 +79,7 @@
 <span class="sd">    :param sec_ver: the version of a package (a string; ex. &#39;0.13.0&#39;)</span>
 <span class="sd">    :param comp: comparator argument (accepted values: &#39;sup&#39;, &#39;inf&#39; and &#39;eq&#39; )</span>
 
-<span class="sd">    :returns: False or True</span>
+<span class="sd">    :return: False or True</span>
 
 <span class="sd">    :Contains:</span>
 <span class="sd">      Private function:</span>
@@ -147,6 +136,8 @@
 <span class="sd">          operations in MIA application</span>
 <span class="sd">        - getChainCursors: returns if the &quot;chain cursors&quot; checkbox of the</span>
 <span class="sd">          mini viewer is activated</span>
+<span class="sd">        - get_afni_path: returns the path of AFNI</span>
+<span class="sd">        - get_ants_path: returns the path of ANTS</span>
 <span class="sd">        - get_config_path: returns the configuration file directory</span>
 <span class="sd">        - get_fsl_config: returns the path of the FSL config file</span>
 <span class="sd">        - get_mainwindow_maximized: get the maximized (fullscreen) flag</span>
@@ -179,6 +170,10 @@
 <span class="sd">          version)</span>
 <span class="sd">        - getTextColor: return the text color</span>
 <span class="sd">        - getThumbnailTag: returns the tag that is displayed in the mini viewer</span>
+<span class="sd">        - get_use_afni: returns the value of &quot;use afni&quot; checkbox in the</span>
+<span class="sd">          preferences</span>
+<span class="sd">        - get_use_ants: returns the value of &quot;use ants&quot; checkbox in the</span>
+<span class="sd">          preferences</span>
 <span class="sd">        - get_use_clinical: returns the value of &quot;clinical mode&quot; checkbox in the</span>
 <span class="sd">          preferences</span>
 <span class="sd">        - get_use_fsl: returns the value of &quot;use fsl&quot; checkbox in the</span>
@@ -213,6 +208,8 @@
 <span class="sd">        - set_clinical_mode: set the value of &quot;clinical mode&quot; in</span>
 <span class="sd">                             the preferences</span>
 <span class="sd">        - setControlV1: Set controller display mode (True if V1)</span>
+<span class="sd">        - set_afni_path: set the path of the AFNI</span>
+<span class="sd">        - set_ants_path: set the path of the ANTS</span>
 <span class="sd">        - set_fsl_config: set the path of the FSL config file</span>
 <span class="sd">        - set_mainwindow_maximized: set the maximized (fullscreen) flag</span>
 <span class="sd">        - set_mainwindow_size: set main window size</span>
@@ -240,6 +237,8 @@
 <span class="sd">        - setTextColor: set the text color</span>
 <span class="sd">        - setThumbnailTag: set the tag that is displayed in the mini viewer</span>
 
+<span class="sd">        - set_use_afni: set the value of &quot;use afni&quot; checkbox in the preferences</span>
+<span class="sd">        - set_use_ants: set the value of &quot;use ants&quot; checkbox in the preferences</span>
 <span class="sd">        - set_use_fsl: set the value of &quot;use fsl&quot; checkbox in the preferences</span>
 <span class="sd">        - set_use_matlab: set the value of &quot;use matlab&quot; checkbox in the</span>
 <span class="sd">                          preferences</span>
@@ -259,7 +258,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">capsul_engine</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Config.__init__"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the Config class</span>
 
 <span class="sd">        :Parameters:</span>
@@ -276,7 +275,7 @@
 
         <span class="k">if</span> <span class="s2">&quot;mia_user_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Config.get_admin_hash"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_admin_hash">[docs]</a>    <span class="k">def</span> <span class="nf">get_admin_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the value of the hash of the admin password.</span>
@@ -305,7 +304,7 @@
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
             <span class="s2">&quot;engine_modules&quot;</span><span class="p">,</span>
-            <span class="p">[</span><span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">])</span>
+            <span class="p">[</span><span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="s1">&#39;ants&#39;</span><span class="p">])</span>
         <span class="n">sconf</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;study_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span><span class="s1">&#39;attributes_schema_paths&#39;</span><span class="p">:</span>
@@ -329,6 +328,12 @@
         <span class="n">use_fsl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_fsl</span><span class="p">()</span>
         <span class="n">fsl_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fsl_config</span><span class="p">()</span>
 
+        <span class="n">use_afni</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_afni</span><span class="p">()</span>
+        <span class="n">afni_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_afni_path</span><span class="p">()</span>
+
+        <span class="n">use_ants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_ants</span><span class="p">()</span>
+        <span class="n">ants_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ants_path</span><span class="p">()</span>
+
         <span class="c1"># FSL</span>
         <span class="k">if</span> <span class="n">use_fsl</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fsl_config</span><span class="p">):</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_fsl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -337,6 +342,24 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_fsl</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fsl_config&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># AFNI</span>
+        <span class="k">if</span> <span class="n">use_afni</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">afni_path</span><span class="p">):</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_afni</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">afni_path</span><span class="o">=</span><span class="n">afni_path</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_afni</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;afni_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># ANTS</span>
+        <span class="k">if</span> <span class="n">use_ants</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ants_path</span><span class="p">):</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_ants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">ants_path</span><span class="o">=</span><span class="n">ants_path</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_ants</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+            <span class="n">sconf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ants_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># SPM standalone / MATLAB Runtime</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">use_spm_standalone</span> <span class="ow">and</span>
@@ -403,7 +426,7 @@
 
 <span class="sd">        :returns: Config.capsul_engine: capsul.engine.CapsulEngine object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
+        <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
@@ -420,6 +443,20 @@
 <span class="sd">        :returns: boolean</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chain_cursors&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_afni_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_afni_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the AFNI path</span>
+
+<span class="sd">        :returns: string of path to AFNI</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;afni&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_ants_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_ants_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_ants_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the ANTS path</span>
+
+<span class="sd">        :returns: string of path to ANTS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ants&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.get_config_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_config_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_config_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the MIA config path (including &quot;properties&quot; directory)</span>
@@ -707,6 +744,20 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thumbnail_tag&quot;</span><span class="p">,</span> <span class="s2">&quot;SequenceName&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Config.get_use_afni"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_use_afni">[docs]</a>    <span class="k">def</span> <span class="nf">get_use_afni</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the value of &quot;use afni&quot; checkbox in the preferences.</span>
+
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_afni&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_use_ants"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_use_ants">[docs]</a>    <span class="k">def</span> <span class="nf">get_use_ants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the value of &quot;use ants&quot; checkbox in the preferences.</span>
+
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_ants&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Config.get_use_clinical"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_use_clinical">[docs]</a>    <span class="k">def</span> <span class="nf">get_use_clinical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get the clinical mode in the preferences.</span>
 
@@ -750,7 +801,7 @@
 
 <span class="sd">        :returns: boolean</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_mode&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_mode&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.get_use_spm"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_use_spm">[docs]</a>    <span class="k">def</span> <span class="nf">get_use_spm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the value of &quot;use spm&quot; checkbox in the preferences.</span>
@@ -884,7 +935,7 @@
         <span class="c1"># update MIA values</span>
         <span class="n">engine_config</span> <span class="o">=</span> <span class="n">capsul_config_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">engine_config</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
+            <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">capsul_engine</span>
             <span class="n">new_engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">environment</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">engine_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">new_engine</span><span class="o">.</span><span class="n">import_configs</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
@@ -947,6 +998,24 @@
 <span class="sd">        :param controlV1: boolean</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;control_V1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">controlV1</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.set_afni_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_afni_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the AFNI path</span>
+
+<span class="sd">        :param path: string of AFNI path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;afni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.set_ants_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_ants_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_ants_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the ANTS path</span>
+
+<span class="sd">        :param path: string of ANTS path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;ants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
@@ -1150,6 +1219,24 @@
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Config.set_use_afni"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_use_afni">[docs]</a>    <span class="k">def</span> <span class="nf">set_use_afni</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_afni</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the value of &quot;use_afni&quot; checkbox in the preferences.</span>
+
+<span class="sd">        :param use_afni: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_afni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">use_afni</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.set_use_ants"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_use_ants">[docs]</a>    <span class="k">def</span> <span class="nf">set_use_ants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_ants</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the value of &quot;use_ants&quot; checkbox in the preferences.</span>
+
+<span class="sd">        :param use_ants: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_ants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">use_ants</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Config.set_use_fsl"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_use_fsl">[docs]</a>    <span class="k">def</span> <span class="nf">set_use_fsl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_fsl</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the value of &quot;use_fsl&quot; checkbox in the preferences.</span>
 
@@ -1247,7 +1334,9 @@
                                                                  <span class="s1">&#39;python&#39;</span><span class="p">,</span>
                                                                  <span class="s1">&#39;fsl&#39;</span><span class="p">,</span>
                                                                  <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span>
-                                                                 <span class="s1">&#39;axon&#39;</span><span class="p">]:</span>
+                                                                 <span class="s1">&#39;axon&#39;</span><span class="p">,</span>
+                                                                 <span class="s1">&#39;afni&#39;</span><span class="p">,</span>
+                                                                 <span class="s1">&#39;ants&#39;</span><span class="p">]:</span>
             <span class="n">engine</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
 
         <span class="n">study_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span>
@@ -1302,7 +1391,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>
