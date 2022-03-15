@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Populse_MIA’s Data Browser &#8212; populse_mia 2.0.0-dev+a571528e documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Populse_MIA’s Data Browser &#8212; populse_mia 2.0.0-dev+afa9ce1e documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.0-dev+afa9ce1e',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.0.0-dev+a571528e documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+afa9ce1e documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Data Browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,23 +36,23 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <div class="toctree-wrapper compound">
 </div>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 14%" />
-<col style="width: 24%" />
-<col style="width: 31%" />
-<col style="width: 31%" />
+<col width="14%" />
+<col width="24%" />
+<col width="31%" />
+<col width="31%" />
 </colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
-<td><p><a class="reference external" href="./documentation.html">Documentation</a></p></td>
-<td><p><a class="reference external" href="../installation/installation.html">Installation</a></p></td>
-<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference external" href="../index.html">Home</a></td>
+<td><a class="reference external" href="./documentation.html">Documentation</a></td>
+<td><a class="reference external" href="../installation/installation.html">Installation</a></td>
+<td><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></td>
 </tr>
 </tbody>
 </table>
@@ -51,11 +61,12 @@
 <p>This page is a user guide for Populse_MIA’s Data Browser, a tool to communicate with the current project’s database.</p>
 <div class="section" id="tab-presentation">
 <h2>Tab presentation<a class="headerlink" href="#tab-presentation" title="Permalink to this headline">¶</a></h2>
-<dl class="simple">
-<dt>The Data Browser tab is composed of three main elements:</dt><dd><ul class="simple">
-<li><p>A toolbar on the top which contains tools to interact with the database</p></li>
-<li><p>A table which displays the content of the database</p></li>
-<li><p>An image viewer which displays the files contained in the database</p></li>
+<dl class="docutils">
+<dt>The Data Browser tab is composed of three main elements:</dt>
+<dd><ul class="first last simple">
+<li>A toolbar on the top which contains tools to interact with the database</li>
+<li>A table which displays the content of the database</li>
+<li>An image viewer which displays the files contained in the database</li>
 </ul>
 </dd>
 </dl>
@@ -114,116 +125,116 @@ a red cross depending on if there is at least a scan that has all the tags value
 <p>Assume that the current project has scans for two patients (P1 and P2) and three time points (T1,
 T2 and T3). For each (patient, time point), several sequences have been made (two RARE, one MDEFT
 and one FLASH). Selecting [PatientName, TimePoint, SequenceName] as tags, the table will be:</p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 30%" />
-<col style="width: 25%" />
-<col style="width: 14%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
+<col width="30%" />
+<col width="25%" />
+<col width="14%" />
+<col width="16%" />
+<col width="16%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>PatientName</p></th>
-<th class="head"><p>TimePoint</p></th>
-<th class="head"><p>RARE</p></th>
-<th class="head"><p>MDEFT</p></th>
-<th class="head"><p>FLASH</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PatientName</th>
+<th class="head">TimePoint</th>
+<th class="head">RARE</th>
+<th class="head">MDEFT</th>
+<th class="head">FLASH</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>P1</p></td>
-<td><p>T1</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>P1</td>
+<td>T1</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-odd"><td><p>P1</p></td>
-<td><p>T2</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-odd"><td>P1</td>
+<td>T2</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-even"><td><p>P1</p></td>
-<td><p>T3</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-even"><td>P1</td>
+<td>T3</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-odd"><td><p>P2</p></td>
-<td><p>T1</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-odd"><td>P2</td>
+<td>T1</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-even"><td><p>P2</p></td>
-<td><p>T2</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-even"><td>P2</td>
+<td>T2</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-odd"><td><p>P2</p></td>
-<td><p>T3</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-odd"><td>P2</td>
+<td>T3</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
 </tbody>
 </table>
 <p>with v(n) meaning that n scans corresponds of the selected values for (PatientName, TimePoint,
 SequenceName).</p>
 <p>If no scans corresponds for a triplet value, a red cross will be displayed. For example, if you forget to import one RARE for P1 at T2 and one FLASH for P2 at T3. The table will be:</p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 30%" />
-<col style="width: 25%" />
-<col style="width: 14%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
+<col width="30%" />
+<col width="25%" />
+<col width="14%" />
+<col width="16%" />
+<col width="16%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>PatientName</p></th>
-<th class="head"><p>TimePoint</p></th>
-<th class="head"><p>RARE</p></th>
-<th class="head"><p>MDEFT</p></th>
-<th class="head"><p>FLASH</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PatientName</th>
+<th class="head">TimePoint</th>
+<th class="head">RARE</th>
+<th class="head">MDEFT</th>
+<th class="head">FLASH</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>P1</p></td>
-<td><p>T1</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>P1</td>
+<td>T1</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-odd"><td><p>P1</p></td>
-<td><p>T2</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-odd"><td>P1</td>
+<td>T2</td>
+<td>v(1)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-even"><td><p>P1</p></td>
-<td><p>T3</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-even"><td>P1</td>
+<td>T3</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-odd"><td><p>P2</p></td>
-<td><p>T1</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-odd"><td>P2</td>
+<td>T1</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-even"><td><p>P2</p></td>
-<td><p>T2</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>v(1)</p></td>
+<tr class="row-even"><td>P2</td>
+<td>T2</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>v(1)</td>
 </tr>
-<tr class="row-odd"><td><p>P2</p></td>
-<td><p>T3</p></td>
-<td><p>v(2)</p></td>
-<td><p>v(1)</p></td>
-<td><p>x</p></td>
+<tr class="row-odd"><td>P2</td>
+<td>T3</td>
+<td>v(2)</td>
+<td>v(1)</td>
+<td>x</td>
 </tr>
 </tbody>
 </table>
@@ -239,12 +250,13 @@ SequenceName).</p>
 <div class="section" id="advanced-search">
 <h3>Advanced search<a class="headerlink" href="#advanced-search" title="Permalink to this headline">¶</a></h3>
 <p>Create a complex filter to extract the information in the table.</p>
-<dl class="simple">
-<dt>The advanced search creates a complex query to the database and is a combination of several “query lines” which are linked with AND or OR and all composed of:</dt><dd><ul class="simple">
-<li><p>A negation or not</p></li>
-<li><p>A tag name or all visible tags</p></li>
-<li><p>A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN)</p></li>
-<li><p>A value</p></li>
+<dl class="docutils">
+<dt>The advanced search creates a complex query to the database and is a combination of several “query lines” which are linked with AND or OR and all composed of:</dt>
+<dd><ul class="first last simple">
+<li>A negation or not</li>
+<li>A tag name or all visible tags</li>
+<li>A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN)</li>
+<li>A value</li>
 </ul>
 </dd>
 </dl>
@@ -257,12 +269,12 @@ SequenceName).</p>
 <p>The table displays the documents contained in the database and their associated tags. Some information about it:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Any cell can be selected and modified (except the FileName column).</p></li>
-<li><p>To select several cells, drag onto them or use Ctrl or Shift.</p></li>
-<li><p>A red cell means that the tag is a cloned or a user tag.</p></li>
-<li><p>A blue cell means that the original value of the tag has been modified.</p></li>
-<li><p>To sort the table depending a column, click one time on its header.</p></li>
-<li><p>To select an entire column, double click on its header.</p></li>
+<li>Any cell can be selected and modified (except the FileName column).</li>
+<li>To select several cells, drag onto them or use Ctrl or Shift.</li>
+<li>A red cell means that the tag is a cloned or a user tag.</li>
+<li>A blue cell means that the original value of the tag has been modified.</li>
+<li>To sort the table depending a column, click one time on its header.</li>
+<li>To select an entire column, double click on its header.</li>
 </ul>
 </div></blockquote>
 <p>By right clicking in the table, a sub-menu is displayed and contains action to apply on the selected cells. These actions are listed below.</p>
@@ -327,9 +339,9 @@ SequenceName).</p>
 <p>Display slices of a selected file (work with only one document) depending on the dimension of the image. The number of displayed slices can be modified.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>3D: display all the slices.</p></li>
-<li><p>4D: display the middle slice of the third dimension for each time of the fourth dimension.</p></li>
-<li><p>5D: display the middle slice of the third dimension for the first time of the fourth dimension for each time of the fifth dimension.</p></li>
+<li>3D: display all the slices.</li>
+<li>4D: display the middle slice of the third dimension for each time of the fourth dimension.</li>
+<li>5D: display the middle slice of the third dimension for the first time of the fourth dimension for each time of the fifth dimension.</li>
 </ul>
 </div></blockquote>
 <img alt="../_images/show_all_slices.png" class="align-center" id="show-all-slices-example" src="../_images/show_all_slices.png" />
@@ -356,7 +368,7 @@ SequenceName).</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>
