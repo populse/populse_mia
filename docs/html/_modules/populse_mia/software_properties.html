@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+11119eaf documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+888b718d documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+11119eaf',
+        VERSION:     '2.0.0-dev+888b718d',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+11119eaf documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+888b718d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -120,7 +120,7 @@
     <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">&#39;sup&#39;</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">normalise</span><span class="p">(</span><span class="n">first_ver</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">normalise</span><span class="p">(</span><span class="n">sec_ver</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
-        <span class="n">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="s1">&#39;eq&#39;</span><span class="p">)):</span>
+                <span class="n">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="s1">&#39;eq&#39;</span><span class="p">)):</span>
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -129,7 +129,7 @@
     <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">normalise</span><span class="p">(</span><span class="n">first_ver</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">normalise</span><span class="p">(</span><span class="n">sec_ver</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
-        <span class="n">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="s1">&#39;eq&#39;</span><span class="p">)):</span>
+                <span class="n">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="s1">&#39;eq&#39;</span><span class="p">)):</span>
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -153,7 +153,7 @@
 <span class="sd">              mini viewer is activated</span>
 <span class="sd">            - get_config_path: returns the configuration file directory</span>
 <span class="sd">            - get_fsl_config: returns the path of the FSL config file</span>
-<span class="sd">            - get_mainwindow_maximized: get the maximized (fullscreen) flag</span>
+<span class="sd">            - get_mainwindow_maximized: get the maximized (full-screen) flag</span>
 <span class="sd">            - get_mainwindow_size: get the main window size</span>
 <span class="sd">            - get_matlab_command: returns Matlab command</span>
 <span class="sd">            - get_matlab_path: returns the path of Matlab&#39;s executable</span>
@@ -280,8 +280,8 @@
 
 <span class="sd">        :Parameters:</span>
 <span class="sd">            - :config_path: str (optional). If provided, the configuration file</span>
-<span class="sd">               will be loaded/saved from the given directory. Otherwise the</span>
-<span class="sd">               regular eutristics will be used to determine the config path.</span>
+<span class="sd">               will be loaded/saved from the given directory. Otherwise, the</span>
+<span class="sd">               regular heuristics will be used to determine the config path.</span>
 <span class="sd">               This option allows to use an alternative config directory (for</span>
 <span class="sd">               tests for instance).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -332,7 +332,7 @@
 <span class="sd">                                 with CAPSUL engine (Bool)</span>
 
 <span class="sd">        :return: capsul_config: the CAPSUL configuration saved into</span>
-<span class="sd">                                Mia config (dict)</span>
+<span class="sd">                                Mia config (Dict)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
@@ -342,9 +342,9 @@
         <span class="n">sconf</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;study_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span><span class="s1">&#39;attributes_schema_paths&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;capsul.attributes.completion_engine_factory&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;populse_mia.user_interface.pipeline_manager.process_mia&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;process_completion&#39;</span><span class="p">:</span> <span class="s1">&#39;mia_completion&#39;</span><span class="p">})</span>
+                 <span class="p">[</span><span class="s1">&#39;capsul.attributes.completion_engine_factory&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;populse_mia.user_interface.pipeline_manager.process_mia&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;process_completion&#39;</span><span class="p">:</span> <span class="s1">&#39;mia_completion&#39;</span><span class="p">})</span>
 
         <span class="c1"># update study config from mia config values</span>
         <span class="n">use_spm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">()</span>
@@ -410,7 +410,7 @@
                 <span class="n">spm_exec</span> <span class="o">=</span> <span class="n">spm_exec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">else</span><span class="p">:</span>
-               <span class="n">spm_exec</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">spm_exec</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_standalone_path</span><span class="p">,</span>
                               <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spm_exec</span><span class="o">=</span><span class="n">spm_exec</span><span class="p">,</span>
@@ -419,8 +419,8 @@
 
         <span class="c1"># SPM / MATLAB</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">use_spm</span> <span class="ow">and</span> <span class="n">spm_path</span> <span class="ow">and</span>
-                <span class="n">use_matlab</span> <span class="ow">and</span> <span class="n">matlab_path</span> <span class="ow">and</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">spm_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">matlab_path</span><span class="p">)):</span>
+              <span class="n">use_matlab</span> <span class="ow">and</span> <span class="n">matlab_path</span> <span class="ow">and</span>
+              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">spm_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">matlab_path</span><span class="p">)):</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_spm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                               <span class="n">spm_directory</span><span class="o">=</span><span class="n">spm_path</span><span class="p">,</span> <span class="n">use_matlab</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                               <span class="n">matlab_exec</span><span class="o">=</span><span class="n">matlab_path</span><span class="p">))</span>
@@ -435,7 +435,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">use_spm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">spm_standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                             <span class="n">use_matlab</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+                              <span class="n">use_matlab</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;spm_exec&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;spm_directory&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">sconf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;matlab_exec&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -443,7 +443,7 @@
         <span class="k">if</span> <span class="n">sync_from_engine</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">capsul_engine</span><span class="p">:</span>
             <span class="n">econf</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">,</span> <span class="p">{})</span>
             <span class="k">for</span> <span class="n">environment</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capsul_engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span>
-                                <span class="n">get_all_environments</span><span class="p">)():</span>
+                                                        <span class="n">get_all_environments</span><span class="p">)():</span>
                 <span class="n">eeconf</span> <span class="o">=</span> <span class="n">econf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="p">{})</span>
                 <span class="c1"># would need a better merging system</span>
                 <span class="n">eeconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
@@ -461,9 +461,6 @@
 <span class="sd">        :returns: Config.capsul_engine: capsul.engine.CapsulEngine object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
-
-        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">Config</span><span class="o">.</span><span class="n">capsul_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">Config</span><span class="o">.</span><span class="n">capsul_engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
@@ -484,7 +481,7 @@
 <span class="sd">        :returns: string of directory path to the config.yml file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;config_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">config_path</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">config_path</span>
 
@@ -521,12 +518,12 @@
             <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
             <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="n">spm_script</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
-                               <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">],</span>
-                                            <span class="s1">&#39;spm*_win&#39;</span> <span class="o">+</span> <span class="n">archi</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.exe&#39;</span><span class="p">))</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">],</span>
+                                 <span class="s1">&#39;spm*_win&#39;</span> <span class="o">+</span> <span class="n">archi</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.exe&#39;</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">spm_script</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
-                               <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">],</span>
-                                            <span class="s1">&#39;run_spm*.sh&#39;</span><span class="p">))</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">],</span>
+                                 <span class="s1">&#39;run_spm*.sh&#39;</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">spm_script</span><span class="p">:</span>
                 <span class="n">spm_script</span> <span class="o">=</span> <span class="n">spm_script</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> script&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -559,7 +556,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_projects&quot;</span><span class="p">])</span>
 
-        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">5</span></div>
 
 <div class="viewcode-block" id="Config.get_max_thumbnails"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_max_thumbnails">[docs]</a>    <span class="k">def</span> <span class="nf">get_max_thumbnails</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -570,7 +567,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_thumbnails&quot;</span><span class="p">])</span>
 
-        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">5</span></div>
 
 <div class="viewcode-block" id="Config.get_mia_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_mia_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_mia_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -606,7 +603,7 @@
                         <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;user_mode&quot;</span> <span class="ow">in</span> <span class="n">mia_home_config</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span>
-                        <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;user_mode&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>
+                            <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;user_mode&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>
                         <span class="c1"># Only for admin mode</span>
                         <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span>
                             <span class="vm">__file__</span><span class="p">))</span>
@@ -621,7 +618,7 @@
                     <span class="c1"># mia_path is obsolete. Use mia_user_path instead</span>
                     <span class="k">if</span> <span class="s2">&quot;mia_path&quot;</span> <span class="ow">in</span> <span class="n">mia_home_config</span><span class="p">:</span>
                         <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mia_home_config</span><span class="p">[</span>
-                                                                     <span class="s2">&quot;mia_path&quot;</span><span class="p">]</span>
+                            <span class="s2">&quot;mia_path&quot;</span><span class="p">]</span>
                         <span class="k">del</span> <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;mia_path&quot;</span><span class="p">]</span>
 
                         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span>
@@ -690,10 +687,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;projects_save_path&quot;</span><span class="p">]</span>
+
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
-                                              <span class="s1">&#39;projects&#39;</span><span class="p">)):</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;projects&#39;</span><span class="p">)):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;projects&#39;</span><span class="p">))</span>
+
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;projects&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.get_referential"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_referential">[docs]</a>    <span class="k">def</span> <span class="nf">get_referential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -709,7 +708,7 @@
 
 <span class="sd">        :returns: boolean</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1">#Used in MiniViewer</span>
+        <span class="c1"># Used in MiniViewer</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_all_slices&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.getSourceImageDir"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.getSourceImageDir">[docs]</a>    <span class="k">def</span> <span class="nf">getSourceImageDir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -797,7 +796,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s2">&quot;engine&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-              <span class="s1">&#39;capsul.engine.module.axon&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_level&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+            <span class="s1">&#39;capsul.engine.module.axon&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_level&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.get_user_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_user_mode">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get if user mode is disabled or enabled in the preferences.</span>
@@ -851,7 +850,7 @@
 <div class="viewcode-block" id="Config.isRadioView"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.isRadioView">[docs]</a>    <span class="k">def</span> <span class="nf">isRadioView</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get if the display in miniviewer is in radiological orientation.</span>
 
-<span class="sd">        - True for radiolological</span>
+<span class="sd">        - True for radiological</span>
 <span class="sd">        - False for neurological</span>
 
 <span class="sd">        :returns: boolean</span>
@@ -865,12 +864,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">Fernet</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">)</span>
         <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_config_path</span><span class="p">(),</span> <span class="s1">&#39;config.yml&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">{}</span>
+
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">stream</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
                 <span class="n">decrypted</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+
                 <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s1">&#39;5.1&#39;</span><span class="p">,</span> <span class="s1">&#39;sup&#39;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">decrypted</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
 
@@ -880,8 +883,7 @@
             <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error loading YAML file: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">config_file</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
-                <span class="c1">#import traceback</span>
-                <span class="c1">#traceback.print_stack()</span>
+
         <span class="c1"># in case of problem, return an empty config</span>
         <span class="k">return</span> <span class="p">{}</span></div>
 
@@ -889,21 +891,23 @@
         <span class="sd">&quot;&quot;&quot;Save the current parameters in the config.yml file.&quot;&quot;&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">Fernet</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">)</span>
         <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_config_path</span><span class="p">(),</span> <span class="s1">&#39;config.yml&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_file</span><span class="p">)):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
             <span class="n">stream</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                      <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                               <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">configfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_capsul_config</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Config.set_admin_hash"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_admin_hash">[docs]</a>    <span class="k">def</span> <span class="nf">set_admin_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">hash</span><span class="p">):</span>
+<div class="viewcode-block" id="Config.set_admin_hash"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_admin_hash">[docs]</a>    <span class="k">def</span> <span class="nf">set_admin_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">admin_hash</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the password hash.</span>
 
-<span class="sd">        :param path: string of hash</span>
+<span class="sd">        :param admin_hash: string of hash</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;admin_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;admin_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">admin_hash</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
@@ -975,7 +979,7 @@
         <span class="k">if</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_spm&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">spm_dir</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spm_directory&#39;</span><span class="p">)</span>
             <span class="n">spm_standalone</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spm_standalone&#39;</span><span class="p">)</span>
-            <span class="c1">#TODO: I thing the following is wrong</span>
+            <span class="c1"># TODO: I thing the following is wrong</span>
             <span class="k">if</span> <span class="n">spm_standalone</span><span class="p">:</span>
                 <span class="n">mcr</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_dir</span><span class="p">,</span> <span class="s1">&#39;mcr&#39;</span><span class="p">,</span> <span class="s1">&#39;v713&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">mcr</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_dir</span><span class="p">):</span>
@@ -996,7 +1000,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.setChainCursors"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setChainCursors">[docs]</a>    <span class="k">def</span> <span class="nf">setChainCursors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_cursors</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the value of the checkbox &#39;chain cursor&#39; in the miniviewer.</span>
+        <span class="sd">&quot;&quot;&quot;Set the value of the checkbox &#39;chain cursor&#39; in the mini viewer.</span>
 
 <span class="sd">        :param chain_cursors: Boolean</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1032,7 +1036,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Config.set_mainwindow_maximized"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_mainwindow_maximized">[docs]</a>    <span class="k">def</span> <span class="nf">set_mainwindow_maximized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the maximized (fullscreen) flag</span>
+        <span class="sd">&quot;&quot;&quot;Set the maximized (full-screen) flag</span>
 
 <span class="sd">        :param enabled: boolean</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1094,18 +1098,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Config.setNbAllSlicesMax"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setNbAllSlicesMax">[docs]</a>    <span class="k">def</span> <span class="nf">setNbAllSlicesMax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_slices_max</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the number of slices to display in the miniviewer.</span>
+        <span class="sd">&quot;&quot;&quot;Set the number of slices to display in the mini viewer.</span>
 
-<span class="sd">        :param nb_slices_max: Int</span>
+<span class="sd">        :param nb_slices_max: maximum number of slices to display (Int)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;nb_slices_max&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nb_slices_max</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
-        
+
 <div class="viewcode-block" id="Config.set_opened_projects"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_opened_projects">[docs]</a>    <span class="k">def</span> <span class="nf">set_opened_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_projects</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the list of opened projects and saves the modification.</span>
 
-<span class="sd">        :param new_projects: List of path</span>
+<span class="sd">        :param new_projects: list of path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;opened_projects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_projects</span>
         <span class="c1"># Then save the modification</span>
@@ -1121,7 +1125,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Config.set_radioView"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_radioView">[docs]</a>    <span class="k">def</span> <span class="nf">set_radioView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radio_view</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the radiological/neurological orientation in miniviewer.</span>
+        <span class="sd">&quot;&quot;&quot;Set the radiological/neurological orientation in mini viewer.</span>
 
 <span class="sd">        - True for radiological</span>
 <span class="sd">        - False for neurological</span>
@@ -1161,7 +1165,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Config.set_spm_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_spm_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_spm_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the path of SPM12 (license version).</span>
+        <span class="sd">&quot;&quot;&quot;Set the path of SPM (license version).</span>
 
 <span class="sd">        :param path: string of path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1170,7 +1174,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Config.set_spm_standalone_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_spm_standalone_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_spm_standalone_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the path of SPM12 (standalone version).</span>
+        <span class="sd">&quot;&quot;&quot;Set the path of SPM (standalone version).</span>
 
 <span class="sd">        :param path: string of path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1191,7 +1195,7 @@
 <div class="viewcode-block" id="Config.setThumbnailTag"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setThumbnailTag">[docs]</a>    <span class="k">def</span> <span class="nf">setThumbnailTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thumbnail_tag</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the tag that is displayed in the mini viewer.</span>
 
-<span class="sd">        :param thumbnail_tag: String</span>
+<span class="sd">        :param thumbnail_tag: string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;thumbnail_tag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thumbnail_tag</span>
         <span class="c1"># Then save the modification</span>
@@ -1242,7 +1246,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_matlab_standalone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">use_matlab_standalone</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
- 
+
 <div class="viewcode-block" id="Config.set_user_mode"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_user_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_mode</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Enable of disable user mode.</span>
 
@@ -1297,7 +1301,7 @@
 <span class="sd">        application. The engine is created once when needed, and updated</span>
 <span class="sd">        each time the config is saved.</span>
 
-<span class="sd">        :returns: Config.capsul_engine: capsul.engine.CapsulEngine object</span>
+<span class="sd">        :returns: capsul.engine.CapsulEngine object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capsul_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># don&#39;t do anything until the config is really created: this</span>
@@ -1320,7 +1324,8 @@
         <span class="n">study_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+            <span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span>
+                <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{}))</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">An issue is detected in the Mia&#39;s configuration&quot;</span>
@@ -1336,10 +1341,10 @@
                     <span class="n">c</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;capsul_engine&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span> <span class="ow">or</span>
-                                              <span class="s1">&#39;uses&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]):</span>
+                            <span class="s1">&#39;uses&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]):</span>
                         <span class="n">c</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                        <span class="s1">&#39;uses&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">module_name</span><span class="p">(</span><span class="n">m</span><span class="p">):</span> <span class="s1">&#39;ALL&#39;</span>
-                                  <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">()}}</span>
+                            <span class="s1">&#39;uses&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">module_name</span><span class="p">(</span><span class="n">m</span><span class="p">):</span> <span class="s1">&#39;ALL&#39;</span>
+                                     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">()}}</span>
 
                     <span class="k">for</span> <span class="n">mod</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 

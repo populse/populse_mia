@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+11119eaf documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+888b718d documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+11119eaf',
+        VERSION:     '2.0.0-dev+888b718d',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+11119eaf documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+888b718d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -456,7 +456,7 @@ operations in MIA application</li>
 mini viewer is activated</li>
 <li>get_config_path: returns the configuration file directory</li>
 <li>get_fsl_config: returns the path of the FSL config file</li>
-<li>get_mainwindow_maximized: get the maximized (fullscreen) flag</li>
+<li>get_mainwindow_maximized: get the maximized (full-screen) flag</li>
 <li>get_mainwindow_size: get the main window size</li>
 <li>get_matlab_command: returns Matlab command</li>
 <li>get_matlab_path: returns the path of Matlab’s executable</li>
@@ -784,7 +784,7 @@ or not in the miniviewer.</p>
 with CAPSUL engine (Bool)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">capsul_config: the CAPSUL configuration saved into
-Mia config (dict)</td>
+Mia config (Dict)</td>
 </tr>
 </tbody>
 </table>
@@ -1211,7 +1211,7 @@ preferences.</p>
 <code class="descname">isRadioView</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.isRadioView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.isRadioView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get if the display in miniviewer is in radiological orientation.</p>
 <ul class="simple">
-<li>True for radiolological</li>
+<li>True for radiological</li>
 <li>False for neurological</li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1276,7 +1276,7 @@ preferences.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.setChainCursors">
 <code class="descname">setChainCursors</code><span class="sig-paren">(</span><em>chain_cursors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setChainCursors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setChainCursors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the value of the checkbox ‘chain cursor’ in the miniviewer.</p>
+<dd><p>Set the value of the checkbox ‘chain cursor’ in the mini viewer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1304,12 +1304,12 @@ preferences.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.setNbAllSlicesMax">
 <code class="descname">setNbAllSlicesMax</code><span class="sig-paren">(</span><em>nb_slices_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setNbAllSlicesMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setNbAllSlicesMax" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the number of slices to display in the miniviewer.</p>
+<dd><p>Set the number of slices to display in the mini viewer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nb_slices_max</strong> – Int</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nb_slices_max</strong> – maximum number of slices to display (Int)</td>
 </tr>
 </tbody>
 </table>
@@ -1366,7 +1366,7 @@ preferences.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thumbnail_tag</strong> – String</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thumbnail_tag</strong> – string</td>
 </tr>
 </tbody>
 </table>
@@ -1406,13 +1406,13 @@ preferences.</p>
 
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_admin_hash">
-<code class="descname">set_admin_hash</code><span class="sig-paren">(</span><em>hash</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_admin_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_admin_hash" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_admin_hash</code><span class="sig-paren">(</span><em>admin_hash</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_admin_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_admin_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the password hash.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of hash</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>admin_hash</strong> – string of hash</td>
 </tr>
 </tbody>
 </table>
@@ -1492,7 +1492,7 @@ preferences.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_mainwindow_maximized">
 <code class="descname">set_mainwindow_maximized</code><span class="sig-paren">(</span><em>enabled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_maximized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_maximized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the maximized (fullscreen) flag</p>
+<dd><p>Set the maximized (full-screen) flag</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1596,7 +1596,7 @@ the “Saved projects” menu.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_projects</strong> – List of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_projects</strong> – list of path</td>
 </tr>
 </tbody>
 </table>
@@ -1619,7 +1619,7 @@ the “Saved projects” menu.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_radioView">
 <code class="descname">set_radioView</code><span class="sig-paren">(</span><em>radio_view</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_radioView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_radioView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the radiological/neurological orientation in miniviewer.</p>
+<dd><p>Set the radiological/neurological orientation in mini viewer.</p>
 <ul class="simple">
 <li>True for radiological</li>
 <li>False for neurological</li>
@@ -1652,7 +1652,7 @@ data viewer</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_spm_path">
 <code class="descname">set_spm_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_spm_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_spm_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the path of SPM12 (license version).</p>
+<dd><p>Set the path of SPM (license version).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1666,7 +1666,7 @@ data viewer</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_spm_standalone_path">
 <code class="descname">set_spm_standalone_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_spm_standalone_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_spm_standalone_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the path of SPM12 (standalone version).</p>
+<dd><p>Set the path of SPM (standalone version).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1800,7 +1800,7 @@ each time the config is saved.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Config.capsul_engine: capsul.engine.CapsulEngine object</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">capsul.engine.CapsulEngine object</td>
 </tr>
 </tbody>
 </table>
