@@ -310,7 +310,7 @@ class Config:
 
         if use_spm:
             m = eeconf.setdefault('capsul.engine.module.spm',
-                              {}).setdefault(spmconf['config_id'], {})
+                                  {}).setdefault('spm', {})
             m.update({'config_id': 'spm',
                       'config_environment': 'global',
                       'directory': spm_path, 'standalone': False})
