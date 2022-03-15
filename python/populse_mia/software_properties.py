@@ -229,8 +229,8 @@ class Config:
               running time images
             - update_capsul_config: update a global CapsulEngine object used
               for all operations in MIA application
-
     """
+
     capsul_engine = None
 
     def __init__(self, config_path=None):
@@ -243,6 +243,7 @@ class Config:
                This option allows to use an alternative config directory (for
                tests for instance).
         """
+
         if config_path is not None:
             self.config_path = config_path
 
@@ -257,6 +258,7 @@ class Config:
 
         :returns: string
         """
+
         try:
             return self.config["admin_hash"]
         except KeyError:
@@ -267,6 +269,7 @@ class Config:
 
         :returns: string of path to AFNI
         """
+
         return self.config.get("afni", "")
 
     def get_ants_path(self):
@@ -274,6 +277,7 @@ class Config:
 
         :returns: string of path to ANTS
         """
+
         return self.config.get("ants", "")
 
     def getBackgroundColor(self):
@@ -281,6 +285,7 @@ class Config:
 
         :returns: string of the background color
         """
+
         return self.config.get("background_color", "")
 
     def get_capsul_config(self, sync_from_engine=True):
@@ -292,6 +297,7 @@ class Config:
         :return: capsul_config: the CAPSUL configuration saved into
                                 Mia config (Dict)
         """
+
         capsul_config = self.config.setdefault("capsul_config", {})
         capsul_config.setdefault(
             "engine_modules",
@@ -418,7 +424,11 @@ class Config:
 
         :returns: Config.capsul_engine: capsul.engine.CapsulEngine object
         """
+
         from capsul.api import capsul_engine
+
+        config = Config()
+        config.get_capsul_config()
 
         if Config.capsul_engine is None:
             Config.capsul_engine = capsul_engine()
@@ -431,6 +441,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("chain_cursors", False)
 
     def get_config_path(self):
@@ -438,6 +449,7 @@ class Config:
 
         :returns: string of directory path to the config.yml file
         """
+
         config_path = getattr(self, 'config_path', None)
 
         if config_path:
@@ -451,6 +463,7 @@ class Config:
 
         :returns: string of path to the fsl/etc/fslconf/fsl.sh file
         """
+
         return self.config.get("fsl_config", "")
 
     def get_mainwindow_maximized(self):
@@ -458,6 +471,7 @@ class Config:
 
         :returns:  boolean
         """
+
         return self.config.get('mainwindow_maximized', True)
 
     def get_mainwindow_size(self):
@@ -465,6 +479,7 @@ class Config:
 
         :returns:  list or None
         """
+
         return self.config.get('mainwindow_size', None)
 
     def get_matlab_command(self):
@@ -472,6 +487,7 @@ class Config:
 
         :returns: matlab executable path or nothing if matlab path not specified
         """
+
         if self.config.get("use_spm_standalone"):
             archi = platform.architecture()
             if 'Windows' in archi[1]:
@@ -496,6 +512,7 @@ class Config:
 
         :returns: String of path
         """
+
         return self.config.get("matlab", None)
 
     def get_matlab_standalone_path(self):
@@ -503,6 +520,7 @@ class Config:
 
         :returns: string of path
         """
+
         return self.config.get("matlab_standalone", "")
 
     def get_max_projects(self):
@@ -511,6 +529,7 @@ class Config:
 
         :returns: Integer
         """
+
         try:
             return int(self.config["max_projects"])
 
@@ -522,6 +541,7 @@ class Config:
 
         :returns: Integer
         """
+
         try:
             return int(self.config["max_thumbnails"])
 
@@ -541,6 +561,7 @@ class Config:
 
         :returns: string of path to mia folder
         """
+
         mia_path = getattr(self, 'mia_path', None)
 
         if mia_path:
@@ -614,6 +635,7 @@ class Config:
 
         :returns: string of the pathto the MRIManager.jar
         """
+
         return self.config.get("mri_conv_path", "")
 
     def getNbAllSlicesMax(self):
@@ -622,6 +644,7 @@ class Config:
 
         :returns: Integer
         """
+
         return int(self.config.get("nb_slices_max", "10"))
 
     def get_opened_projects(self):
@@ -629,6 +652,7 @@ class Config:
 
         :returns: list of opened projects
         """
+
         return self.config.get("opened_projects", [])
 
     def getPathToProjectsFolder(self):
@@ -636,6 +660,7 @@ class Config:
 
         :returns: string of the path
         """
+
         return self.config.get("projects_save_path", "")
 
     def get_projects_save_path(self):
@@ -643,6 +668,7 @@ class Config:
 
         :returns: string of path
         """
+
         try:
             return self.config["projects_save_path"]
 
@@ -658,6 +684,7 @@ class Config:
 
         :returns: 0 for World Coordinates, 1 for Image ref
         """
+
         return self.config.get("ref", "0")
 
     def getShowAllSlices(self):
@@ -666,6 +693,7 @@ class Config:
 
         :returns: boolean
         """
+
         # Used in MiniViewer
         return self.config.get("show_all_slices", False)
 
@@ -674,6 +702,7 @@ class Config:
 
         :returns: string of the path
         """
+
         return self.config.get("source_image_dir", "")
 
     def get_spm_path(self):
@@ -681,6 +710,7 @@ class Config:
 
         :returns: string of path
         """
+
         return self.config.get("spm", "")
 
     def get_spm_standalone_path(self):
@@ -688,6 +718,7 @@ class Config:
 
         :returns: String of path
         """
+
         return self.config.get("spm_standalone", "")
 
     def getTextColor(self):
@@ -695,6 +726,7 @@ class Config:
 
         :returns: string
         """
+
         return self.config.get("text_color", "")
 
     def getThumbnailTag(self):
@@ -702,6 +734,7 @@ class Config:
 
         :returns: string
         """
+
         return self.config.get("thumbnail_tag", "SequenceName")
 
     def get_use_afni(self):
@@ -709,6 +742,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_afni", False)
 
     def get_use_ants(self):
@@ -716,6 +750,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_ants", False)
 
     def get_use_clinical(self):
@@ -723,6 +758,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("clinical_mode", False)
 
     def get_use_fsl(self):
@@ -730,6 +766,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_fsl", False)
 
     def get_use_matlab(self):
@@ -737,6 +774,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_matlab", False)
 
     def get_use_matlab_standalone(self):
@@ -745,6 +783,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_matlab_standalone", False)
 
     def get_user_level(self):
@@ -752,6 +791,7 @@ class Config:
 
         :returns: integer
         """
+
         return self.config.get("capsul_config", {}).get(
             "engine", {}).get("global", {}).get(
             'capsul.engine.module.axon', {}).get('user_level', 0)
@@ -761,6 +801,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("user_mode", True)
 
     def get_use_spm(self):
@@ -768,6 +809,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_spm", False)
 
     def get_use_spm_standalone(self):
@@ -775,6 +817,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_spm_standalone", False)
 
     def getViewerConfig(self):
@@ -782,6 +825,7 @@ class Config:
 
         :returns: String
         """
+
         return self.config.get("config_NeuRad", "neuro")
 
     def getViewerFramerate(self):
@@ -789,6 +833,7 @@ class Config:
 
         :returns: integer
         """
+
         return self.config.get("im_sec", "5")
 
     def isAutoSave(self):
@@ -796,6 +841,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("auto_save", False)
 
     def isControlV1(self):
@@ -803,6 +849,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("control_V1", False)
 
     def isRadioView(self):
@@ -813,6 +860,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("radio_view", True)
 
     def loadConfig(self):
@@ -820,6 +868,7 @@ class Config:
 
         :returns: Returns a dictionary of the contents of config.yml
         """
+
         f = Fernet(CONFIG)
         config_file = os.path.join(self.get_config_path(), 'config.yml')
 
@@ -847,6 +896,7 @@ class Config:
 
     def saveConfig(self):
         """Save the current parameters in the config.yml file."""
+
         f = Fernet(CONFIG)
         config_file = os.path.join(self.get_config_path(), 'config.yml')
 
@@ -865,6 +915,7 @@ class Config:
 
         :param admin_hash: string of hash
         """
+
         self.config["admin_hash"] = admin_hash
         # Then save the modification
         self.saveConfig()
@@ -874,6 +925,7 @@ class Config:
 
         :param path: string of AFNI path
         """
+
         self.config["afni"] = path
         # Then save the modification
         self.saveConfig()
@@ -883,6 +935,7 @@ class Config:
 
         :param path: string of ANTS path
         """
+
         self.config["ants"] = path
         # Then save the modification
         self.saveConfig()
@@ -892,6 +945,7 @@ class Config:
 
         :param save: boolean
         """
+
         self.config["auto_save"] = save
         # Then save the modification
         self.saveConfig()
@@ -902,6 +956,7 @@ class Config:
         :param color: Color string ('Black', 'Blue', 'Green', 'Grey',
                                     'Orange', 'Red', 'Yellow', 'White')
         """
+
         self.config["background_color"] = color
         # Then save the modification
         self.saveConfig()
@@ -912,6 +967,7 @@ class Config:
         :param capsul_config_dict: a dict; {'engine': {...},
                                             'engine_modules': [...]}
         """
+
         self.config['capsul_config'] = capsul_config_dict
         self.update_capsul_config()  # store into capsul engine
 
@@ -962,6 +1018,7 @@ class Config:
 
         :param chain_cursors: Boolean
         """
+
         self.config["chain_cursors"] = chain_cursors
         # Then save the modification
         self.saveConfig()
@@ -971,6 +1028,7 @@ class Config:
 
         :param clinical_mode: boolean
         """
+
         self.config["clinical_mode"] = clinical_mode
         # Then save the modification
         self.saveConfig()
@@ -980,6 +1038,7 @@ class Config:
 
         :param controlV1: boolean
         """
+
         self.config["control_V1"] = controlV1
         # Then save the modification
         self.saveConfig()
@@ -989,6 +1048,7 @@ class Config:
 
         :param path: string of path to fsl/etc/fslconf/fsl.sh
         """
+
         self.config["fsl_config"] = path
         # Then save the modification
         self.saveConfig()
@@ -998,6 +1058,7 @@ class Config:
 
         :param enabled: boolean
         """
+
         self.config['mainwindow_maximized'] = enabled
         self.saveConfig()
 
@@ -1006,6 +1067,7 @@ class Config:
 
         :param size: list
         """
+
         self.config['mainwindow_size'] = list(size)
         self.saveConfig()
 
@@ -1014,6 +1076,7 @@ class Config:
 
         :param path: string of path
         """
+
         self.config["matlab"] = path
         # Then save the modification
         self.saveConfig()
@@ -1023,6 +1086,7 @@ class Config:
 
         :param path: string of path
         """
+
         self.config["matlab_standalone"] = path
         # Then save the modification
         self.saveConfig()
@@ -1033,6 +1097,7 @@ class Config:
 
         :param nb_max_projects: Integer
         """
+
         self.config["max_projects"] = nb_max_projects
         # Then save the modification
         self.saveConfig()
@@ -1042,6 +1107,7 @@ class Config:
 
         :param nb_max_thumbnails: Integer
         """
+
         self.config["max_thumbnails"] = nb_max_thumbnails
         # Then save the modification
         self.saveConfig()
@@ -1051,6 +1117,7 @@ class Config:
 
         :param path: string of the path
         """
+
         self.config["mri_conv_path"] = path
         # Then save the modification
         self.saveConfig()
@@ -1060,6 +1127,7 @@ class Config:
 
         :param nb_slices_max: maximum number of slices to display (Int)
         """
+
         self.config["nb_slices_max"] = nb_slices_max
         # Then save the modification
         self.saveConfig()
@@ -1069,6 +1137,7 @@ class Config:
 
         :param new_projects: list of path
         """
+
         self.config["opened_projects"] = new_projects
         # Then save the modification
         self.saveConfig()
@@ -1078,6 +1147,7 @@ class Config:
 
         :param path: string of path
         """
+
         self.config["projects_save_path"] = path
         # Then save the modification
         self.saveConfig()
@@ -1090,6 +1160,7 @@ class Config:
 
         :param radio_view: boolean
         """
+
         self.config["radio_view"] = radio_view
         # Then save the modification
         self.saveConfig()
@@ -1100,6 +1171,7 @@ class Config:
 
         :param ref: str; 0 for World Coordinates, 1 for Image ref
         """
+
         self.config["ref"] = ref
         # Then save the modification
         self.saveConfig()
@@ -1109,6 +1181,7 @@ class Config:
 
         :param show_all_slices: Boolean
         """
+
         self.config["show_all_slices"] = show_all_slices
         # Then save the modification
         self.saveConfig()
@@ -1118,6 +1191,7 @@ class Config:
 
         :param source_image_dir: String of path
         """
+
         self.config["source_image_dir"] = source_image_dir
         # Then save the modification
         self.saveConfig()
@@ -1127,6 +1201,7 @@ class Config:
 
         :param path: string of path
         """
+
         self.config["spm"] = path
         # Then save the modification
         self.saveConfig()
@@ -1136,6 +1211,7 @@ class Config:
 
         :param path: string of path
         """
+
         self.config["spm_standalone"] = path
         # Then save the modification
         self.saveConfig()
@@ -1146,6 +1222,7 @@ class Config:
         :param color: Color string ('Black', 'Blue', 'Green', 'Grey',
                                     'Orange', 'Red', 'Yellow', 'White')
         """
+
         self.config["text_color"] = color
         # Then save the modification
         self.saveConfig()
@@ -1155,6 +1232,7 @@ class Config:
 
         :param thumbnail_tag: string
         """
+
         self.config["thumbnail_tag"] = thumbnail_tag
         # Then save the modification
         self.saveConfig()
@@ -1164,6 +1242,7 @@ class Config:
 
         :param use_afni: boolean
         """
+
         self.config["use_afni"] = use_afni
         # Then save the modification
         self.saveConfig()
@@ -1173,6 +1252,7 @@ class Config:
 
         :param use_ants: boolean
         """
+
         self.config["use_ants"] = use_ants
         # Then save the modification
         self.saveConfig()
@@ -1182,6 +1262,7 @@ class Config:
 
         :param use_fsl: boolean
         """
+
         self.config["use_fsl"] = use_fsl
         # Then save the modification
         self.saveConfig()
@@ -1191,6 +1272,7 @@ class Config:
 
         :param use_matlab: boolean
         """
+
         self.config["use_matlab"] = use_matlab
         # Then save the modification
         self.saveConfig()
@@ -1201,6 +1283,7 @@ class Config:
 
         :param use_matlab: boolean
         """
+
         self.config["use_matlab_standalone"] = use_matlab_standalone
         # Then save the modification
         self.saveConfig()
@@ -1210,6 +1293,7 @@ class Config:
 
         :param user_mode: boolean
         """
+
         self.config["user_mode"] = user_mode
         # Then save the modification
         self.saveConfig()
@@ -1219,6 +1303,7 @@ class Config:
 
         :param use_spm: boolean
         """
+
         self.config["use_spm"] = use_spm
         # Then save the modification
         self.saveConfig()
@@ -1228,6 +1313,7 @@ class Config:
 
         :param use_spm_standalone: boolean
         """
+
         self.config["use_spm_standalone"] = use_spm_standalone
         # Then save the modification
         self.saveConfig()
@@ -1240,6 +1326,7 @@ class Config:
 
         :param config_NeuRad: string
         """
+
         self.config["config_NeuRad"] = config_NeuRad
         # Then save the modification
         self.saveConfig()
@@ -1249,6 +1336,7 @@ class Config:
 
         :param im_sec: int
         """
+
         self.config["im_sec"] = im_sec
         # Then save the modification
         self.saveConfig()
@@ -1261,6 +1349,7 @@ class Config:
 
         :returns: capsul.engine.CapsulEngine object
         """
+
         if self.capsul_engine is None:
             # don't do anything until the config is really created: this
             # avoids unneeded updates before it is actually used.
