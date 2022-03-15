@@ -6,6 +6,7 @@ pop-up in the config.yml file.
 :Contains:
     :Class:
         - Config
+
     :Function:
         - verCmp
 
@@ -19,11 +20,11 @@ pop-up in the config.yml file.
 # for details.
 ##########################################################################
 
+import glob
 import os
 import platform
-import yaml
 import re
-import glob
+import yaml
 from cryptography.fernet import Fernet
 
 CONFIG = b'5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc='
@@ -50,8 +51,9 @@ def verCmp(first_ver, sec_ver, comp):
     :return: False or True
 
     :Contains:
-      Private function:
-        - normalise
+        :Private function:
+            - normalise: transform a version of a package to a corresponding
+              list of integer
      """
 
     def normalise(v):
@@ -59,9 +61,9 @@ def verCmp(first_ver, sec_ver, comp):
 
         :param v: version of a package (ex. 5.4.1)
 
-        :returns: a list of integer (ex. [0, 13, 0])
-
+        :return: a list of integer (ex. [0, 13, 0])
         """
+
         v = re.sub("[^0-9\.]", "", v)
         return [int(x) for x in re.sub(r'(\.0+)*$', '', v).split(".")]
 
@@ -96,132 +98,137 @@ class Config:
     """
     Object that handles the configuration of the software
 
-    .. Methods:
-        - get_admin_hash: get the value of the hash of the admin password
-        - getBackgroundColor: get background color
-        - get_capsul_config: get CAPSUL config dictionary
-        - get_capsul_engine: get a global CapsulEngine object used for all
-          operations in MIA application
-        - getChainCursors: returns if the "chain cursors" checkbox of the
-          mini viewer is activated
-        - get_afni_path: returns the path of AFNI
-        - get_ants_path: returns the path of ANTS
-        - get_config_path: returns the configuration file directory
-        - get_fsl_config: returns the path of the FSL config file
-        - get_mainwindow_maximized: get the maximized (fullscreen) flag
-        - get_mainwindow_size: get the main window size
-        - get_matlab_command: returns Matlab command
-        - get_matlab_path: returns the path of Matlab's executable
-        - get_matlab_standalone_path: returns the path of Matlab Compiler
-          Runtime
-        - get_max_projects: returns the maximum number of projects displayed in
-          the "Saved projects" menu
-        - get_max_thumbnails:  get max thumbnails number at the data browser
-          bottom
-        - get_mia_path: returns the software's install path
-        - get_mri_conv_path: returns the MRIManager.jar path
-        - getNbAllSlicesMax: returns the maximum number of slices to display in
-          the mini viewer
-        - get_opened_projects: returns the opened projects
-        - getPathData: returns the data's path (currently commented)
-        - getPathToProjectsDBFile: returns the already-saved projects's path
-          (currently commented)
-        - getPathToProjectsFolder: returns the project's path
-        - get_projects_save_path: returns the folder where the projects are
-          saved
-        - get_referential: returns boolean to indicate DataViewer referential
-        - getShowAllSlices: returns if the "show all slices" checkbox of the
-          mini viewer is activated
-        - getSourceImageDir: get the source directory for project images
-        - get_spm_path: returns the path of SPM12 (license version)
-        - get_spm_standalone_path: returns the path of SPM12 (standalone
-          version)
-        - getTextColor: return the text color
-        - getThumbnailTag: returns the tag that is displayed in the mini viewer
-        - get_use_afni: returns the value of "use afni" checkbox in the
-          preferences
-        - get_use_ants: returns the value of "use ants" checkbox in the
-          preferences
-        - get_use_clinical: returns the value of "clinical mode" checkbox in the
-          preferences
-        - get_use_fsl: returns the value of "use fsl" checkbox in the
-          preferences
-        - get_use_matlab: returns the value of "use matlab" checkbox in the
-          preferences
-        - get_use_matlab_standalone: returns the value of "use matlab
-          standalone" checkbox in the preferences
-        - get_user_level: get the user level in the Capsul config
-        - get_user_mode: returns the value of "user mode" checkbox
-          in the preferences
-        - get_use_spm: returns the value of "use spm" checkbox in the
-          preferences
-        - get_use_spm_standalone: returns the value of "use spm standalone"
-          checkbox in the preferences
-        - getViewerConfig: returns the DataViewer configuration (neuro or
-                           radio), by default neuro
-        - getViewerFramerate: returns the DataViewer framerate for automatic
-                              time running images
-        - isAutoSave: checks if auto-save mode is activated
-        - isControlV1: checks if the selected display of the controller is of
-                       V1 type
-        - isRadioView: checks if miniviewer in radiological orientation (if
-                       not, then it is in neurological orientation)
-        - loadConfig: reads the config in the config.yml file
-        - saveConfig: saves the config to the config.yml file
-        - set_admin_hash: set the password hash
-        - setAutoSave: sets the auto-save mode
-        - setBackgroundColor: sets the background color
-        - set_capsul_config: set CAPSUL configuration dict into MIA config
-        - setChainCursors: set the "chain cursors" checkbox of the mini viewer
-        - set_clinical_mode: set the value of "clinical mode" in
-                             the preferences
-        - setControlV1: Set controller display mode (True if V1)
-        - set_afni_path: set the path of the AFNI
-        - set_ants_path: set the path of the ANTS
-        - set_fsl_config: set the path of the FSL config file
-        - set_mainwindow_maximized: set the maximized (fullscreen) flag
-        - set_mainwindow_size: set main window size
-        - set_matlab_path: set the path of Matlab's executable
-        - set_matlab_standalone_path: set the path of Matlab Compiler Runtime
-        - set_max_projects: set the maximum number of projects displayed in
-          the "Saved projects" menu
-        - set_max_thumbnails: set max thumbnails number at the data browser
-                              bottom
-        - set_mia_path: set the software's install path (currently commented)
-        - set_mri_conv_path: set the MRIManager.jar path
-        - setNbAllSlicesMax: set the maximum number of slices to display in
-                             the mini viewer
-        - set_opened_projects: set the opened projects
-        - setPathToData: set the data's path (currently commented)
-        - set_projects_save_path: set the folder where the projects are saved
-        - set_radioView: set the orientation in miniviewer (True for
-                         radiological, False for neurological orientation)
-        - set_referential: sets the DataViewer referential 
-        - setShowAllSlices: set the "show all slices" checkbox of the mini
-          viewer
-        - setSourceImageDir: set the source directory for project images
-        - set_spm_path: set the path of SPM12 (license version)
-        - set_spm_standalone_path: set the path of SPM12 (standalone version)
-        - setTextColor: set the text color
-        - setThumbnailTag: set the tag that is displayed in the mini viewer
-
-        - set_use_afni: set the value of "use afni" checkbox in the preferences
-        - set_use_ants: set the value of "use ants" checkbox in the preferences
-        - set_use_fsl: set the value of "use fsl" checkbox in the preferences
-        - set_use_matlab: set the value of "use matlab" checkbox in the
-                          preferences
-        - set_use_matlab_standalone: set the value of "use matlab standalone"
-                                     checkbox in the preferences
-        - set_user_mode: set the value of "user mode" checkbox in
-                         the preferences
-        - set_use_spm: set the value of "use spm" checkbox in the preferences
-        - set_use_spm_standalone: set the value of "use spm standalone"
-                                  checkbox in the preferences
-        - setViewerConfig: set the Viewer configuration neuro or radio
-        - setViewerFramerate: set the Viewer frame rate for automatic running
-                              time images
-        - update_capsul_config: update a global CapsulEngine object used for
-                                all operations in MIA application
+    :Contains:
+        :Methods:
+            - get_admin_hash: get the value of the hash of the admin password
+            - get_afni_path: returns the path of AFNI
+            - get_ants_path: returns the path of ANTS
+            - getBackgroundColor: get background color
+            - get_capsul_config: get CAPSUL config dictionary
+            - get_capsul_engine: get a global CapsulEngine object used for all
+              operations in MIA application
+            - getChainCursors: returns if the "chain cursors" checkbox of the
+              mini viewer is activated
+            - get_config_path: returns the configuration file directory
+            - get_fsl_config: returns the path of the FSL config file
+            - get_mainwindow_maximized: get the maximized (fullscreen) flag
+            - get_mainwindow_size: get the main window size
+            - get_matlab_command: returns Matlab command
+            - get_matlab_path: returns the path of Matlab's executable
+            - get_matlab_standalone_path: returns the path of Matlab Compiler
+              Runtime
+            - get_max_projects: returns the maximum number of projects
+              displayed in the "Saved projects" menu
+            - get_max_thumbnails:  get max thumbnails number at the data browser
+              bottom
+            - get_mia_path: returns the software's install path
+            - get_mri_conv_path: returns the MRIManager.jar path
+            - getNbAllSlicesMax: returns the maximum number of slices to
+              display in the mini viewer
+            - get_opened_projects: returns the opened projects
+            - getPathToProjectsFolder: returns the project's path
+            - get_projects_save_path: returns the folder where the projects are
+              saved
+            - get_referential: returns boolean to indicate DataViewer
+              referential
+            - getShowAllSlices: returns if the "show all slices" checkbox of the
+              mini viewer is activated
+            - getSourceImageDir: get the source directory for project images
+            - get_spm_path: returns the path of SPM12 (license version)
+            - get_spm_standalone_path: returns the path of SPM12 (standalone
+              version)
+            - getTextColor: return the text color
+            - getThumbnailTag: returns the tag that is displayed in the mini
+              viewer
+            - get_use_afni: returns the value of "use afni" checkbox in the
+              preferences
+            - get_use_ants: returns the value of "use ants" checkbox in the
+              preferences
+            - get_use_clinical: returns the value of "clinical mode" checkbox
+              in the preferences
+            - get_use_fsl: returns the value of "use fsl" checkbox in the
+              preferences
+            - get_use_matlab: returns the value of "use matlab" checkbox in the
+              preferences
+            - get_use_matlab_standalone: returns the value of "use matlab
+              standalone" checkbox in the preferences
+            - get_user_level: get the user level in the Capsul config
+            - get_user_mode: returns the value of "user mode" checkbox
+              in the preferences
+            - get_use_spm: returns the value of "use spm" checkbox in the
+              preferences
+            - get_use_spm_standalone: returns the value of "use spm standalone"
+              checkbox in the preferences
+            - getViewerConfig: returns the DataViewer configuration (neuro or
+              radio), by default neuro
+            - getViewerFramerate: returns the DataViewer framerate for automatic
+              time running images
+            - isAutoSave: checks if auto-save mode is activated
+            - isControlV1: checks if the selected display of the controller is
+              of V1 type
+            - isRadioView: checks if miniviewer in radiological orientation (if
+              not, then it is in neurological orientation)
+            - loadConfig: reads the config in the config.yml file
+            - saveConfig: saves the config to the config.yml file
+            - set_admin_hash: set the password hash
+            - set_afni_path: set the path of the AFNI
+            - set_ants_path: set the path of the ANTS
+            - setAutoSave: sets the auto-save mode
+            - setBackgroundColor: sets the background color
+            - set_capsul_config: set CAPSUL configuration dict into MIA config
+            - setChainCursors: set the "chain cursors" checkbox of the mini
+              viewer
+            - set_clinical_mode: set the value of "clinical mode" in
+              the preferences
+            - setControlV1: Set controller display mode (True if V1)
+            - set_fsl_config: set the path of the FSL config file
+            - set_mainwindow_maximized: set the maximized (fullscreen) flag
+            - set_mainwindow_size: set main window size
+            - set_matlab_path: set the path of Matlab's executable
+            - set_matlab_standalone_path: set the path of Matlab Compiler
+              Runtime
+            - set_max_projects: set the maximum number of projects displayed in
+              the "Saved projects" menu
+            - set_max_thumbnails: set max thumbnails number at the data browser
+              bottom
+            - set_mri_conv_path: set the MRIManager.jar path
+            - setNbAllSlicesMax: set the maximum number of slices to display in
+              the mini viewer
+            - set_opened_projects: set the opened projects
+            - set_projects_save_path: set the folder where the projects are
+              saved
+            - set_radioView: set the orientation in miniviewer (True for
+              radiological, False for neurological orientation)
+            - set_referential: sets the DataViewer referential 
+            - setShowAllSlices: set the "show all slices" checkbox of the mini
+              viewer
+            - setSourceImageDir: set the source directory for project images
+            - set_spm_path: set the path of SPM12 (license version)
+            - set_spm_standalone_path: set the path of SPM12 (standalone
+              version)
+            - setTextColor: set the text color
+            - setThumbnailTag: set the tag that is displayed in the mini viewer
+            - set_use_afni: set the value of "use afni" checkbox in the
+              preferences
+            - set_use_ants: set the value of "use ants" checkbox in the
+              preferences
+            - set_use_fsl: set the value of "use fsl" checkbox in the
+              preferences
+            - set_use_matlab: set the value of "use matlab" checkbox in the
+              preferences
+            - set_use_matlab_standalone: set the value of "use matlab
+              standalone" checkbox in the preferences
+            - set_user_mode: set the value of "user mode" checkbox in
+              the preferences
+            - set_use_spm: set the value of "use spm" checkbox in the
+              preferences
+            - set_use_spm_standalone: set the value of "use spm standalone"
+              checkbox in the preferences
+            - setViewerConfig: set the Viewer configuration neuro or radio
+            - setViewerFramerate: set the Viewer frame rate for automatic
+              running time images
+            - update_capsul_config: update a global CapsulEngine object used
+              for all operations in MIA application
 
     """
     capsul_engine = None
@@ -255,6 +262,20 @@ class Config:
         except KeyError:
             return False
 
+    def get_afni_path(self):
+        """Get the AFNI path
+
+        :returns: string of path to AFNI
+        """
+        return self.config.get("afni", "")
+
+    def get_ants_path(self):
+        """Get the ANTS path
+
+        :returns: string of path to ANTS
+        """
+        return self.config.get("ants", "")
+
     def getBackgroundColor(self):
         """Get background color.
 
@@ -265,14 +286,17 @@ class Config:
     def get_capsul_config(self, sync_from_engine=True):
         """Get CAPSUL config dictionary.
 
-        :param sync_from_engine: boolean
+        :param sync_from_engine: if True, perform a synchronisation
+                                 with CAPSUL engine (Bool)
 
-        :returns: capsul_config: dict
+        :return: capsul_config: the CAPSUL configuration saved into
+                                Mia config (Dict)
         """
         capsul_config = self.config.setdefault("capsul_config", {})
         capsul_config.setdefault(
             "engine_modules",
-            ['nipype', 'fsl', 'freesurfer', 'matlab', 'spm', 'fom', 'python', 'afni', 'ants'])
+            ['nipype', 'fsl', 'freesurfer', 'matlab', 'spm', 'fom',
+             'python', 'afni', 'ants'])
         sconf = capsul_config.setdefault("study_config", {})
         sconf.update(
             {'attributes_schema_paths':
@@ -411,20 +435,6 @@ class Config:
         :returns: boolean
         """
         return self.config.get("chain_cursors", False)
-
-    def get_afni_path(self):
-        """Get the AFNI path
-
-        :returns: string of path to AFNI
-        """
-        return self.config.get("afni", "")
-
-    def get_ants_path(self):
-        """Get the ANTS path
-
-        :returns: string of path to ANTS
-        """
-        return self.config.get("ants", "")
 
     def get_config_path(self):
         """Get the MIA config path (including "properties" directory)
@@ -623,23 +633,6 @@ class Config:
         :returns: list of opened projects
         """
         return self.config.get("opened_projects", [])
-
-    # def getPathData(self):
-    #     """
-    #     Get the path tp the data directory
-    #     :return: returns the path to the data directory
-    #
-    #     """
-    #     return self.config["paths"]["data"]
-
-    # def getPathToProjectsDBFile(self):
-    #     """
-    #
-    #     :return:
-    #
-    #     """
-    #     folder = self.getPathToProjectsFolder()
-    #     return os.path.join(folder, 'projects.json')
 
     def getPathToProjectsFolder(self):
         """Get the project's path.
@@ -872,6 +865,24 @@ class Config:
         # Then save the modification
         self.saveConfig()
 
+    def set_afni_path(self, path):
+        """Set the AFNI path
+
+        :param path: string of AFNI path
+        """
+        self.config["afni"] = path
+        # Then save the modification
+        self.saveConfig()
+
+    def set_ants_path(self, path):
+        """Set the ANTS path
+
+        :param path: string of ANTS path
+        """
+        self.config["ants"] = path
+        # Then save the modification
+        self.saveConfig()
+
     def setAutoSave(self, save):
         """Set auto-save mode.
 
@@ -969,24 +980,6 @@ class Config:
         # Then save the modification
         self.saveConfig()
 
-    def set_afni_path(self, path):
-        """Set the AFNI path
-
-        :param path: string of AFNI path
-        """
-        self.config["afni"] = path
-        # Then save the modification
-        self.saveConfig()
-
-    def set_ants_path(self, path):
-        """Set the ANTS path
-
-        :param path: string of ANTS path
-        """
-        self.config["ants"] = path
-        # Then save the modification
-        self.saveConfig()
-
     def set_fsl_config(self, path):
         """Set  the FSL config file
 
@@ -1049,18 +1042,6 @@ class Config:
         # Then save the modification
         self.saveConfig()
 
-    # def set_mia_path(self, path):
-    #     """
-    #
-    #     :param:#         path:
-    #
-    #     :return:
-    #
-    #     """
-    #     self.config["mia_user_path"] = path
-    #     # Then save the modification
-    #     self.saveConfig()
-
     def set_mri_conv_path(self, path):
         """Set the MRIManager.jar path.
 
@@ -1087,19 +1068,6 @@ class Config:
         self.config["opened_projects"] = new_projects
         # Then save the modification
         self.saveConfig()
-
-    # def setPathToData(self,path):
-    #     """
-    #
-    #     :param:#         path:
-    #
-    #     :return:
-    #
-    #     """
-    #     if path is not None and path != '':
-    #         self.config["paths"]["data"] = path
-    #         # Then save the modification
-    #         self.saveConfig()
 
     def set_projects_save_path(self, path):
         """Set the folder where the projects are saved.

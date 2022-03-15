@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+afa9ce1e documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+11119eaf documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+afa9ce1e',
+        VERSION:     '2.0.0-dev+11119eaf',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+afa9ce1e documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+11119eaf documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -148,6 +148,25 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <div class="section" id="module-populse_mia.info">
 <span id="populse-mia-info-module"></span><h2>populse_mia.info module<a class="headerlink" href="#module-populse_mia.info" title="Permalink to this headline">¶</a></h2>
 <p>Define software version, description and requirements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Function:</th><td class="field-body"><ul class="first last simple">
+<li>get_populse_mia_gitversion</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="populse_mia.info.get_populse_mia_gitversion">
 <code class="descclassname">populse_mia.info.</code><code class="descname">get_populse_mia_gitversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/info.html#get_populse_mia_gitversion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.info.get_populse_mia_gitversion" title="Permalink to this definition">¶</a></dt>
@@ -417,6 +436,153 @@ pop-up in the config.yml file.</p>
 <em class="property">class </em><code class="descclassname">populse_mia.software_properties.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Object that handles the configuration of the software</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Methods:</th><td class="field-body"><ul class="first last simple">
+<li>get_admin_hash: get the value of the hash of the admin password</li>
+<li>get_afni_path: returns the path of AFNI</li>
+<li>get_ants_path: returns the path of ANTS</li>
+<li>getBackgroundColor: get background color</li>
+<li>get_capsul_config: get CAPSUL config dictionary</li>
+<li>get_capsul_engine: get a global CapsulEngine object used for all
+operations in MIA application</li>
+<li>getChainCursors: returns if the “chain cursors” checkbox of the
+mini viewer is activated</li>
+<li>get_config_path: returns the configuration file directory</li>
+<li>get_fsl_config: returns the path of the FSL config file</li>
+<li>get_mainwindow_maximized: get the maximized (fullscreen) flag</li>
+<li>get_mainwindow_size: get the main window size</li>
+<li>get_matlab_command: returns Matlab command</li>
+<li>get_matlab_path: returns the path of Matlab’s executable</li>
+<li>get_matlab_standalone_path: returns the path of Matlab Compiler
+Runtime</li>
+<li>get_max_projects: returns the maximum number of projects
+displayed in the “Saved projects” menu</li>
+<li>get_max_thumbnails:  get max thumbnails number at the data browser
+bottom</li>
+<li>get_mia_path: returns the software’s install path</li>
+<li>get_mri_conv_path: returns the MRIManager.jar path</li>
+<li>getNbAllSlicesMax: returns the maximum number of slices to
+display in the mini viewer</li>
+<li>get_opened_projects: returns the opened projects</li>
+<li>getPathToProjectsFolder: returns the project’s path</li>
+<li>get_projects_save_path: returns the folder where the projects are
+saved</li>
+<li>get_referential: returns boolean to indicate DataViewer
+referential</li>
+<li>getShowAllSlices: returns if the “show all slices” checkbox of the
+mini viewer is activated</li>
+<li>getSourceImageDir: get the source directory for project images</li>
+<li>get_spm_path: returns the path of SPM12 (license version)</li>
+<li>get_spm_standalone_path: returns the path of SPM12 (standalone
+version)</li>
+<li>getTextColor: return the text color</li>
+<li>getThumbnailTag: returns the tag that is displayed in the mini
+viewer</li>
+<li>get_use_afni: returns the value of “use afni” checkbox in the
+preferences</li>
+<li>get_use_ants: returns the value of “use ants” checkbox in the
+preferences</li>
+<li>get_use_clinical: returns the value of “clinical mode” checkbox
+in the preferences</li>
+<li>get_use_fsl: returns the value of “use fsl” checkbox in the
+preferences</li>
+<li>get_use_matlab: returns the value of “use matlab” checkbox in the
+preferences</li>
+<li>get_use_matlab_standalone: returns the value of “use matlab
+standalone” checkbox in the preferences</li>
+<li>get_user_level: get the user level in the Capsul config</li>
+<li>get_user_mode: returns the value of “user mode” checkbox
+in the preferences</li>
+<li>get_use_spm: returns the value of “use spm” checkbox in the
+preferences</li>
+<li>get_use_spm_standalone: returns the value of “use spm standalone”
+checkbox in the preferences</li>
+<li>getViewerConfig: returns the DataViewer configuration (neuro or
+radio), by default neuro</li>
+<li>getViewerFramerate: returns the DataViewer framerate for automatic
+time running images</li>
+<li>isAutoSave: checks if auto-save mode is activated</li>
+<li>isControlV1: checks if the selected display of the controller is
+of V1 type</li>
+<li>isRadioView: checks if miniviewer in radiological orientation (if
+not, then it is in neurological orientation)</li>
+<li>loadConfig: reads the config in the config.yml file</li>
+<li>saveConfig: saves the config to the config.yml file</li>
+<li>set_admin_hash: set the password hash</li>
+<li>set_afni_path: set the path of the AFNI</li>
+<li>set_ants_path: set the path of the ANTS</li>
+<li>setAutoSave: sets the auto-save mode</li>
+<li>setBackgroundColor: sets the background color</li>
+<li>set_capsul_config: set CAPSUL configuration dict into MIA config</li>
+<li>setChainCursors: set the “chain cursors” checkbox of the mini
+viewer</li>
+<li>set_clinical_mode: set the value of “clinical mode” in
+the preferences</li>
+<li>setControlV1: Set controller display mode (True if V1)</li>
+<li>set_fsl_config: set the path of the FSL config file</li>
+<li>set_mainwindow_maximized: set the maximized (fullscreen) flag</li>
+<li>set_mainwindow_size: set main window size</li>
+<li>set_matlab_path: set the path of Matlab’s executable</li>
+<li>set_matlab_standalone_path: set the path of Matlab Compiler
+Runtime</li>
+<li>set_max_projects: set the maximum number of projects displayed in
+the “Saved projects” menu</li>
+<li>set_max_thumbnails: set max thumbnails number at the data browser
+bottom</li>
+<li>set_mri_conv_path: set the MRIManager.jar path</li>
+<li>setNbAllSlicesMax: set the maximum number of slices to display in
+the mini viewer</li>
+<li>set_opened_projects: set the opened projects</li>
+<li>set_projects_save_path: set the folder where the projects are
+saved</li>
+<li>set_radioView: set the orientation in miniviewer (True for
+radiological, False for neurological orientation)</li>
+<li>set_referential: sets the DataViewer referential</li>
+<li>setShowAllSlices: set the “show all slices” checkbox of the mini
+viewer</li>
+<li>setSourceImageDir: set the source directory for project images</li>
+<li>set_spm_path: set the path of SPM12 (license version)</li>
+<li>set_spm_standalone_path: set the path of SPM12 (standalone
+version)</li>
+<li>setTextColor: set the text color</li>
+<li>setThumbnailTag: set the tag that is displayed in the mini viewer</li>
+<li>set_use_afni: set the value of “use afni” checkbox in the
+preferences</li>
+<li>set_use_ants: set the value of “use ants” checkbox in the
+preferences</li>
+<li>set_use_fsl: set the value of “use fsl” checkbox in the
+preferences</li>
+<li>set_use_matlab: set the value of “use matlab” checkbox in the
+preferences</li>
+<li>set_use_matlab_standalone: set the value of “use matlab
+standalone” checkbox in the preferences</li>
+<li>set_user_mode: set the value of “user mode” checkbox in
+the preferences</li>
+<li>set_use_spm: set the value of “use spm” checkbox in the
+preferences</li>
+<li>set_use_spm_standalone: set the value of “use spm standalone”
+checkbox in the preferences</li>
+<li>setViewerConfig: set the Viewer configuration neuro or radio</li>
+<li>setViewerFramerate: set the Viewer frame rate for automatic
+running time images</li>
+<li>update_capsul_config: update a global CapsulEngine object used
+for all operations in MIA application</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="populse_mia.software_properties.Config.capsul_engine">
 <code class="descname">capsul_engine</code><em class="property"> = None</em><a class="headerlink" href="#populse_mia.software_properties.Config.capsul_engine" title="Permalink to this definition">¶</a></dt>
@@ -614,9 +780,11 @@ or not in the miniviewer.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sync_from_engine</strong> – boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sync_from_engine</strong> – if True, perform a synchronisation
+with CAPSUL engine (Bool)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">capsul_config: dict</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">capsul_config: the CAPSUL configuration saved into
+Mia config (dict)</td>
 </tr>
 </tbody>
 </table>
@@ -1671,13 +1839,19 @@ the second argument, return True (False if not).</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">False or True</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><dl class="first last docutils">
-<dt>Private function:</dt>
-<dd><ul class="first last simple">
-<li>normalise</li>
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Private function:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li>normalise: transform a version of a package to a corresponding
+list of integer</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </td>
 </tr>
 </tbody>

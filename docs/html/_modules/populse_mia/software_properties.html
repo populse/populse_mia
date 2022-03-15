@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+afa9ce1e documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 2.0.0-dev+11119eaf documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0-dev+afa9ce1e',
+        VERSION:     '2.0.0-dev+11119eaf',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+afa9ce1e documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+11119eaf documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -48,6 +48,7 @@
 <span class="sd">:Contains:</span>
 <span class="sd">    :Class:</span>
 <span class="sd">        - Config</span>
+
 <span class="sd">    :Function:</span>
 <span class="sd">        - verCmp</span>
 
@@ -61,11 +62,11 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
+<span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="kn">import</span> <span class="n">Fernet</span>
 
 <span class="n">CONFIG</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc=&#39;</span>
@@ -92,8 +93,9 @@
 <span class="sd">    :return: False or True</span>
 
 <span class="sd">    :Contains:</span>
-<span class="sd">      Private function:</span>
-<span class="sd">        - normalise</span>
+<span class="sd">        :Private function:</span>
+<span class="sd">            - normalise: transform a version of a package to a corresponding</span>
+<span class="sd">              list of integer</span>
 <span class="sd">     &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
@@ -101,9 +103,9 @@
 
 <span class="sd">        :param v: version of a package (ex. 5.4.1)</span>
 
-<span class="sd">        :returns: a list of integer (ex. [0, 13, 0])</span>
-
+<span class="sd">        :return: a list of integer (ex. [0, 13, 0])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">v</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[^0-9\.]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\.0+)*$&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)]</span>
 
@@ -138,132 +140,137 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Object that handles the configuration of the software</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - get_admin_hash: get the value of the hash of the admin password</span>
-<span class="sd">        - getBackgroundColor: get background color</span>
-<span class="sd">        - get_capsul_config: get CAPSUL config dictionary</span>
-<span class="sd">        - get_capsul_engine: get a global CapsulEngine object used for all</span>
-<span class="sd">          operations in MIA application</span>
-<span class="sd">        - getChainCursors: returns if the &quot;chain cursors&quot; checkbox of the</span>
-<span class="sd">          mini viewer is activated</span>
-<span class="sd">        - get_afni_path: returns the path of AFNI</span>
-<span class="sd">        - get_ants_path: returns the path of ANTS</span>
-<span class="sd">        - get_config_path: returns the configuration file directory</span>
-<span class="sd">        - get_fsl_config: returns the path of the FSL config file</span>
-<span class="sd">        - get_mainwindow_maximized: get the maximized (fullscreen) flag</span>
-<span class="sd">        - get_mainwindow_size: get the main window size</span>
-<span class="sd">        - get_matlab_command: returns Matlab command</span>
-<span class="sd">        - get_matlab_path: returns the path of Matlab&#39;s executable</span>
-<span class="sd">        - get_matlab_standalone_path: returns the path of Matlab Compiler</span>
-<span class="sd">          Runtime</span>
-<span class="sd">        - get_max_projects: returns the maximum number of projects displayed in</span>
-<span class="sd">          the &quot;Saved projects&quot; menu</span>
-<span class="sd">        - get_max_thumbnails:  get max thumbnails number at the data browser</span>
-<span class="sd">          bottom</span>
-<span class="sd">        - get_mia_path: returns the software&#39;s install path</span>
-<span class="sd">        - get_mri_conv_path: returns the MRIManager.jar path</span>
-<span class="sd">        - getNbAllSlicesMax: returns the maximum number of slices to display in</span>
-<span class="sd">          the mini viewer</span>
-<span class="sd">        - get_opened_projects: returns the opened projects</span>
-<span class="sd">        - getPathData: returns the data&#39;s path (currently commented)</span>
-<span class="sd">        - getPathToProjectsDBFile: returns the already-saved projects&#39;s path</span>
-<span class="sd">          (currently commented)</span>
-<span class="sd">        - getPathToProjectsFolder: returns the project&#39;s path</span>
-<span class="sd">        - get_projects_save_path: returns the folder where the projects are</span>
-<span class="sd">          saved</span>
-<span class="sd">        - get_referential: returns boolean to indicate DataViewer referential</span>
-<span class="sd">        - getShowAllSlices: returns if the &quot;show all slices&quot; checkbox of the</span>
-<span class="sd">          mini viewer is activated</span>
-<span class="sd">        - getSourceImageDir: get the source directory for project images</span>
-<span class="sd">        - get_spm_path: returns the path of SPM12 (license version)</span>
-<span class="sd">        - get_spm_standalone_path: returns the path of SPM12 (standalone</span>
-<span class="sd">          version)</span>
-<span class="sd">        - getTextColor: return the text color</span>
-<span class="sd">        - getThumbnailTag: returns the tag that is displayed in the mini viewer</span>
-<span class="sd">        - get_use_afni: returns the value of &quot;use afni&quot; checkbox in the</span>
-<span class="sd">          preferences</span>
-<span class="sd">        - get_use_ants: returns the value of &quot;use ants&quot; checkbox in the</span>
-<span class="sd">          preferences</span>
-<span class="sd">        - get_use_clinical: returns the value of &quot;clinical mode&quot; checkbox in the</span>
-<span class="sd">          preferences</span>
-<span class="sd">        - get_use_fsl: returns the value of &quot;use fsl&quot; checkbox in the</span>
-<span class="sd">          preferences</span>
-<span class="sd">        - get_use_matlab: returns the value of &quot;use matlab&quot; checkbox in the</span>
-<span class="sd">          preferences</span>
-<span class="sd">        - get_use_matlab_standalone: returns the value of &quot;use matlab</span>
-<span class="sd">          standalone&quot; checkbox in the preferences</span>
-<span class="sd">        - get_user_level: get the user level in the Capsul config</span>
-<span class="sd">        - get_user_mode: returns the value of &quot;user mode&quot; checkbox</span>
-<span class="sd">          in the preferences</span>
-<span class="sd">        - get_use_spm: returns the value of &quot;use spm&quot; checkbox in the</span>
-<span class="sd">          preferences</span>
-<span class="sd">        - get_use_spm_standalone: returns the value of &quot;use spm standalone&quot;</span>
-<span class="sd">          checkbox in the preferences</span>
-<span class="sd">        - getViewerConfig: returns the DataViewer configuration (neuro or</span>
-<span class="sd">                           radio), by default neuro</span>
-<span class="sd">        - getViewerFramerate: returns the DataViewer framerate for automatic</span>
-<span class="sd">                              time running images</span>
-<span class="sd">        - isAutoSave: checks if auto-save mode is activated</span>
-<span class="sd">        - isControlV1: checks if the selected display of the controller is of</span>
-<span class="sd">                       V1 type</span>
-<span class="sd">        - isRadioView: checks if miniviewer in radiological orientation (if</span>
-<span class="sd">                       not, then it is in neurological orientation)</span>
-<span class="sd">        - loadConfig: reads the config in the config.yml file</span>
-<span class="sd">        - saveConfig: saves the config to the config.yml file</span>
-<span class="sd">        - set_admin_hash: set the password hash</span>
-<span class="sd">        - setAutoSave: sets the auto-save mode</span>
-<span class="sd">        - setBackgroundColor: sets the background color</span>
-<span class="sd">        - set_capsul_config: set CAPSUL configuration dict into MIA config</span>
-<span class="sd">        - setChainCursors: set the &quot;chain cursors&quot; checkbox of the mini viewer</span>
-<span class="sd">        - set_clinical_mode: set the value of &quot;clinical mode&quot; in</span>
-<span class="sd">                             the preferences</span>
-<span class="sd">        - setControlV1: Set controller display mode (True if V1)</span>
-<span class="sd">        - set_afni_path: set the path of the AFNI</span>
-<span class="sd">        - set_ants_path: set the path of the ANTS</span>
-<span class="sd">        - set_fsl_config: set the path of the FSL config file</span>
-<span class="sd">        - set_mainwindow_maximized: set the maximized (fullscreen) flag</span>
-<span class="sd">        - set_mainwindow_size: set main window size</span>
-<span class="sd">        - set_matlab_path: set the path of Matlab&#39;s executable</span>
-<span class="sd">        - set_matlab_standalone_path: set the path of Matlab Compiler Runtime</span>
-<span class="sd">        - set_max_projects: set the maximum number of projects displayed in</span>
-<span class="sd">          the &quot;Saved projects&quot; menu</span>
-<span class="sd">        - set_max_thumbnails: set max thumbnails number at the data browser</span>
-<span class="sd">                              bottom</span>
-<span class="sd">        - set_mia_path: set the software&#39;s install path (currently commented)</span>
-<span class="sd">        - set_mri_conv_path: set the MRIManager.jar path</span>
-<span class="sd">        - setNbAllSlicesMax: set the maximum number of slices to display in</span>
-<span class="sd">                             the mini viewer</span>
-<span class="sd">        - set_opened_projects: set the opened projects</span>
-<span class="sd">        - setPathToData: set the data&#39;s path (currently commented)</span>
-<span class="sd">        - set_projects_save_path: set the folder where the projects are saved</span>
-<span class="sd">        - set_radioView: set the orientation in miniviewer (True for</span>
-<span class="sd">                         radiological, False for neurological orientation)</span>
-<span class="sd">        - set_referential: sets the DataViewer referential </span>
-<span class="sd">        - setShowAllSlices: set the &quot;show all slices&quot; checkbox of the mini</span>
-<span class="sd">          viewer</span>
-<span class="sd">        - setSourceImageDir: set the source directory for project images</span>
-<span class="sd">        - set_spm_path: set the path of SPM12 (license version)</span>
-<span class="sd">        - set_spm_standalone_path: set the path of SPM12 (standalone version)</span>
-<span class="sd">        - setTextColor: set the text color</span>
-<span class="sd">        - setThumbnailTag: set the tag that is displayed in the mini viewer</span>
-
-<span class="sd">        - set_use_afni: set the value of &quot;use afni&quot; checkbox in the preferences</span>
-<span class="sd">        - set_use_ants: set the value of &quot;use ants&quot; checkbox in the preferences</span>
-<span class="sd">        - set_use_fsl: set the value of &quot;use fsl&quot; checkbox in the preferences</span>
-<span class="sd">        - set_use_matlab: set the value of &quot;use matlab&quot; checkbox in the</span>
-<span class="sd">                          preferences</span>
-<span class="sd">        - set_use_matlab_standalone: set the value of &quot;use matlab standalone&quot;</span>
-<span class="sd">                                     checkbox in the preferences</span>
-<span class="sd">        - set_user_mode: set the value of &quot;user mode&quot; checkbox in</span>
-<span class="sd">                         the preferences</span>
-<span class="sd">        - set_use_spm: set the value of &quot;use spm&quot; checkbox in the preferences</span>
-<span class="sd">        - set_use_spm_standalone: set the value of &quot;use spm standalone&quot;</span>
-<span class="sd">                                  checkbox in the preferences</span>
-<span class="sd">        - setViewerConfig: set the Viewer configuration neuro or radio</span>
-<span class="sd">        - setViewerFramerate: set the Viewer frame rate for automatic running</span>
-<span class="sd">                              time images</span>
-<span class="sd">        - update_capsul_config: update a global CapsulEngine object used for</span>
-<span class="sd">                                all operations in MIA application</span>
+<span class="sd">    :Contains:</span>
+<span class="sd">        :Methods:</span>
+<span class="sd">            - get_admin_hash: get the value of the hash of the admin password</span>
+<span class="sd">            - get_afni_path: returns the path of AFNI</span>
+<span class="sd">            - get_ants_path: returns the path of ANTS</span>
+<span class="sd">            - getBackgroundColor: get background color</span>
+<span class="sd">            - get_capsul_config: get CAPSUL config dictionary</span>
+<span class="sd">            - get_capsul_engine: get a global CapsulEngine object used for all</span>
+<span class="sd">              operations in MIA application</span>
+<span class="sd">            - getChainCursors: returns if the &quot;chain cursors&quot; checkbox of the</span>
+<span class="sd">              mini viewer is activated</span>
+<span class="sd">            - get_config_path: returns the configuration file directory</span>
+<span class="sd">            - get_fsl_config: returns the path of the FSL config file</span>
+<span class="sd">            - get_mainwindow_maximized: get the maximized (fullscreen) flag</span>
+<span class="sd">            - get_mainwindow_size: get the main window size</span>
+<span class="sd">            - get_matlab_command: returns Matlab command</span>
+<span class="sd">            - get_matlab_path: returns the path of Matlab&#39;s executable</span>
+<span class="sd">            - get_matlab_standalone_path: returns the path of Matlab Compiler</span>
+<span class="sd">              Runtime</span>
+<span class="sd">            - get_max_projects: returns the maximum number of projects</span>
+<span class="sd">              displayed in the &quot;Saved projects&quot; menu</span>
+<span class="sd">            - get_max_thumbnails:  get max thumbnails number at the data browser</span>
+<span class="sd">              bottom</span>
+<span class="sd">            - get_mia_path: returns the software&#39;s install path</span>
+<span class="sd">            - get_mri_conv_path: returns the MRIManager.jar path</span>
+<span class="sd">            - getNbAllSlicesMax: returns the maximum number of slices to</span>
+<span class="sd">              display in the mini viewer</span>
+<span class="sd">            - get_opened_projects: returns the opened projects</span>
+<span class="sd">            - getPathToProjectsFolder: returns the project&#39;s path</span>
+<span class="sd">            - get_projects_save_path: returns the folder where the projects are</span>
+<span class="sd">              saved</span>
+<span class="sd">            - get_referential: returns boolean to indicate DataViewer</span>
+<span class="sd">              referential</span>
+<span class="sd">            - getShowAllSlices: returns if the &quot;show all slices&quot; checkbox of the</span>
+<span class="sd">              mini viewer is activated</span>
+<span class="sd">            - getSourceImageDir: get the source directory for project images</span>
+<span class="sd">            - get_spm_path: returns the path of SPM12 (license version)</span>
+<span class="sd">            - get_spm_standalone_path: returns the path of SPM12 (standalone</span>
+<span class="sd">              version)</span>
+<span class="sd">            - getTextColor: return the text color</span>
+<span class="sd">            - getThumbnailTag: returns the tag that is displayed in the mini</span>
+<span class="sd">              viewer</span>
+<span class="sd">            - get_use_afni: returns the value of &quot;use afni&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - get_use_ants: returns the value of &quot;use ants&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - get_use_clinical: returns the value of &quot;clinical mode&quot; checkbox</span>
+<span class="sd">              in the preferences</span>
+<span class="sd">            - get_use_fsl: returns the value of &quot;use fsl&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - get_use_matlab: returns the value of &quot;use matlab&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - get_use_matlab_standalone: returns the value of &quot;use matlab</span>
+<span class="sd">              standalone&quot; checkbox in the preferences</span>
+<span class="sd">            - get_user_level: get the user level in the Capsul config</span>
+<span class="sd">            - get_user_mode: returns the value of &quot;user mode&quot; checkbox</span>
+<span class="sd">              in the preferences</span>
+<span class="sd">            - get_use_spm: returns the value of &quot;use spm&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - get_use_spm_standalone: returns the value of &quot;use spm standalone&quot;</span>
+<span class="sd">              checkbox in the preferences</span>
+<span class="sd">            - getViewerConfig: returns the DataViewer configuration (neuro or</span>
+<span class="sd">              radio), by default neuro</span>
+<span class="sd">            - getViewerFramerate: returns the DataViewer framerate for automatic</span>
+<span class="sd">              time running images</span>
+<span class="sd">            - isAutoSave: checks if auto-save mode is activated</span>
+<span class="sd">            - isControlV1: checks if the selected display of the controller is</span>
+<span class="sd">              of V1 type</span>
+<span class="sd">            - isRadioView: checks if miniviewer in radiological orientation (if</span>
+<span class="sd">              not, then it is in neurological orientation)</span>
+<span class="sd">            - loadConfig: reads the config in the config.yml file</span>
+<span class="sd">            - saveConfig: saves the config to the config.yml file</span>
+<span class="sd">            - set_admin_hash: set the password hash</span>
+<span class="sd">            - set_afni_path: set the path of the AFNI</span>
+<span class="sd">            - set_ants_path: set the path of the ANTS</span>
+<span class="sd">            - setAutoSave: sets the auto-save mode</span>
+<span class="sd">            - setBackgroundColor: sets the background color</span>
+<span class="sd">            - set_capsul_config: set CAPSUL configuration dict into MIA config</span>
+<span class="sd">            - setChainCursors: set the &quot;chain cursors&quot; checkbox of the mini</span>
+<span class="sd">              viewer</span>
+<span class="sd">            - set_clinical_mode: set the value of &quot;clinical mode&quot; in</span>
+<span class="sd">              the preferences</span>
+<span class="sd">            - setControlV1: Set controller display mode (True if V1)</span>
+<span class="sd">            - set_fsl_config: set the path of the FSL config file</span>
+<span class="sd">            - set_mainwindow_maximized: set the maximized (fullscreen) flag</span>
+<span class="sd">            - set_mainwindow_size: set main window size</span>
+<span class="sd">            - set_matlab_path: set the path of Matlab&#39;s executable</span>
+<span class="sd">            - set_matlab_standalone_path: set the path of Matlab Compiler</span>
+<span class="sd">              Runtime</span>
+<span class="sd">            - set_max_projects: set the maximum number of projects displayed in</span>
+<span class="sd">              the &quot;Saved projects&quot; menu</span>
+<span class="sd">            - set_max_thumbnails: set max thumbnails number at the data browser</span>
+<span class="sd">              bottom</span>
+<span class="sd">            - set_mri_conv_path: set the MRIManager.jar path</span>
+<span class="sd">            - setNbAllSlicesMax: set the maximum number of slices to display in</span>
+<span class="sd">              the mini viewer</span>
+<span class="sd">            - set_opened_projects: set the opened projects</span>
+<span class="sd">            - set_projects_save_path: set the folder where the projects are</span>
+<span class="sd">              saved</span>
+<span class="sd">            - set_radioView: set the orientation in miniviewer (True for</span>
+<span class="sd">              radiological, False for neurological orientation)</span>
+<span class="sd">            - set_referential: sets the DataViewer referential </span>
+<span class="sd">            - setShowAllSlices: set the &quot;show all slices&quot; checkbox of the mini</span>
+<span class="sd">              viewer</span>
+<span class="sd">            - setSourceImageDir: set the source directory for project images</span>
+<span class="sd">            - set_spm_path: set the path of SPM12 (license version)</span>
+<span class="sd">            - set_spm_standalone_path: set the path of SPM12 (standalone</span>
+<span class="sd">              version)</span>
+<span class="sd">            - setTextColor: set the text color</span>
+<span class="sd">            - setThumbnailTag: set the tag that is displayed in the mini viewer</span>
+<span class="sd">            - set_use_afni: set the value of &quot;use afni&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - set_use_ants: set the value of &quot;use ants&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - set_use_fsl: set the value of &quot;use fsl&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - set_use_matlab: set the value of &quot;use matlab&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - set_use_matlab_standalone: set the value of &quot;use matlab</span>
+<span class="sd">              standalone&quot; checkbox in the preferences</span>
+<span class="sd">            - set_user_mode: set the value of &quot;user mode&quot; checkbox in</span>
+<span class="sd">              the preferences</span>
+<span class="sd">            - set_use_spm: set the value of &quot;use spm&quot; checkbox in the</span>
+<span class="sd">              preferences</span>
+<span class="sd">            - set_use_spm_standalone: set the value of &quot;use spm standalone&quot;</span>
+<span class="sd">              checkbox in the preferences</span>
+<span class="sd">            - setViewerConfig: set the Viewer configuration neuro or radio</span>
+<span class="sd">            - setViewerFramerate: set the Viewer frame rate for automatic</span>
+<span class="sd">              running time images</span>
+<span class="sd">            - update_capsul_config: update a global CapsulEngine object used</span>
+<span class="sd">              for all operations in MIA application</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">capsul_engine</span> <span class="o">=</span> <span class="kc">None</span>
@@ -297,6 +304,20 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
+<div class="viewcode-block" id="Config.get_afni_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_afni_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the AFNI path</span>
+
+<span class="sd">        :returns: string of path to AFNI</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;afni&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_ants_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_ants_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_ants_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the ANTS path</span>
+
+<span class="sd">        :returns: string of path to ANTS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ants&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Config.getBackgroundColor"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.getBackgroundColor">[docs]</a>    <span class="k">def</span> <span class="nf">getBackgroundColor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get background color.</span>
 
@@ -307,14 +328,17 @@
 <div class="viewcode-block" id="Config.get_capsul_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_capsul_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_capsul_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_from_engine</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get CAPSUL config dictionary.</span>
 
-<span class="sd">        :param sync_from_engine: boolean</span>
+<span class="sd">        :param sync_from_engine: if True, perform a synchronisation</span>
+<span class="sd">                                 with CAPSUL engine (Bool)</span>
 
-<span class="sd">        :returns: capsul_config: dict</span>
+<span class="sd">        :return: capsul_config: the CAPSUL configuration saved into</span>
+<span class="sd">                                Mia config (dict)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">capsul_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;capsul_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
             <span class="s2">&quot;engine_modules&quot;</span><span class="p">,</span>
-            <span class="p">[</span><span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="s1">&#39;ants&#39;</span><span class="p">])</span>
+            <span class="p">[</span><span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;spm&#39;</span><span class="p">,</span> <span class="s1">&#39;fom&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="s1">&#39;ants&#39;</span><span class="p">])</span>
         <span class="n">sconf</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;study_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">sconf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span><span class="s1">&#39;attributes_schema_paths&#39;</span><span class="p">:</span>
@@ -453,20 +477,6 @@
 <span class="sd">        :returns: boolean</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chain_cursors&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Config.get_afni_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_afni_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the AFNI path</span>
-
-<span class="sd">        :returns: string of path to AFNI</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;afni&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Config.get_ants_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_ants_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_ants_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the ANTS path</span>
-
-<span class="sd">        :returns: string of path to ANTS</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ants&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.get_config_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.get_config_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_config_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the MIA config path (including &quot;properties&quot; directory)</span>
@@ -665,23 +675,6 @@
 <span class="sd">        :returns: list of opened projects</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opened_projects&quot;</span><span class="p">,</span> <span class="p">[])</span></div>
-
-    <span class="c1"># def getPathData(self):</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     Get the path tp the data directory</span>
-    <span class="c1">#     :return: returns the path to the data directory</span>
-    <span class="c1">#</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     return self.config[&quot;paths&quot;][&quot;data&quot;]</span>
-
-    <span class="c1"># def getPathToProjectsDBFile(self):</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#</span>
-    <span class="c1">#     :return:</span>
-    <span class="c1">#</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     folder = self.getPathToProjectsFolder()</span>
-    <span class="c1">#     return os.path.join(folder, &#39;projects.json&#39;)</span>
 
 <div class="viewcode-block" id="Config.getPathToProjectsFolder"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.getPathToProjectsFolder">[docs]</a>    <span class="k">def</span> <span class="nf">getPathToProjectsFolder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the project&#39;s path.</span>
@@ -914,6 +907,24 @@
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Config.set_afni_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_afni_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the AFNI path</span>
+
+<span class="sd">        :param path: string of AFNI path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;afni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Config.set_ants_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_ants_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_ants_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the ANTS path</span>
+
+<span class="sd">        :param path: string of ANTS path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;ants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="c1"># Then save the modification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Config.setAutoSave"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.setAutoSave">[docs]</a>    <span class="k">def</span> <span class="nf">setAutoSave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set auto-save mode.</span>
 
@@ -1011,24 +1022,6 @@
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Config.set_afni_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_afni_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the AFNI path</span>
-
-<span class="sd">        :param path: string of AFNI path</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;afni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
-        <span class="c1"># Then save the modification</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Config.set_ants_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_ants_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_ants_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the ANTS path</span>
-
-<span class="sd">        :param path: string of ANTS path</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;ants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
-        <span class="c1"># Then save the modification</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
-
 <div class="viewcode-block" id="Config.set_fsl_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_fsl_config">[docs]</a>    <span class="k">def</span> <span class="nf">set_fsl_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set  the FSL config file</span>
 
@@ -1091,18 +1084,6 @@
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 
-    <span class="c1"># def set_mia_path(self, path):</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#</span>
-    <span class="c1">#     :param:#         path:</span>
-    <span class="c1">#</span>
-    <span class="c1">#     :return:</span>
-    <span class="c1">#</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     self.config[&quot;mia_user_path&quot;] = path</span>
-    <span class="c1">#     # Then save the modification</span>
-    <span class="c1">#     self.saveConfig()</span>
-
 <div class="viewcode-block" id="Config.set_mri_conv_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_mri_conv_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_mri_conv_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the MRIManager.jar path.</span>
 
@@ -1129,19 +1110,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;opened_projects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_projects</span>
         <span class="c1"># Then save the modification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
-
-    <span class="c1"># def setPathToData(self,path):</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#</span>
-    <span class="c1">#     :param:#         path:</span>
-    <span class="c1">#</span>
-    <span class="c1">#     :return:</span>
-    <span class="c1">#</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     if path is not None and path != &#39;&#39;:</span>
-    <span class="c1">#         self.config[&quot;paths&quot;][&quot;data&quot;] = path</span>
-    <span class="c1">#         # Then save the modification</span>
-    <span class="c1">#         self.saveConfig()</span>
 
 <div class="viewcode-block" id="Config.set_projects_save_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.software_properties.Config.set_projects_save_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_projects_save_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the folder where the projects are saved.</span>
