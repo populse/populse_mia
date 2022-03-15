@@ -78,7 +78,7 @@ def verCmp(first_ver, sec_ver, comp):
     elif comp == 'sup':
 
         if (normalise(first_ver) > normalise(sec_ver)) or (
-        verCmp(first_ver, sec_ver, 'eq')):
+                verCmp(first_ver, sec_ver, 'eq')):
             return True
 
         else:
@@ -87,7 +87,7 @@ def verCmp(first_ver, sec_ver, comp):
     elif comp == 'inf':
 
         if (normalise(first_ver) < normalise(sec_ver)) or (
-        verCmp(first_ver, sec_ver, 'eq')):
+                verCmp(first_ver, sec_ver, 'eq')):
             return True
 
         else:
@@ -111,7 +111,7 @@ class Config:
               mini viewer is activated
             - get_config_path: returns the configuration file directory
             - get_fsl_config: returns the path of the FSL config file
-            - get_mainwindow_maximized: get the maximized (fullscreen) flag
+            - get_mainwindow_maximized: get the maximized (full-screen) flag
             - get_mainwindow_size: get the main window size
             - get_matlab_command: returns Matlab command
             - get_matlab_path: returns the path of Matlab's executable
@@ -238,8 +238,8 @@ class Config:
 
         :Parameters:
             - :config_path: str (optional). If provided, the configuration file
-               will be loaded/saved from the given directory. Otherwise the
-               regular eutristics will be used to determine the config path.
+               will be loaded/saved from the given directory. Otherwise, the
+               regular heuristics will be used to determine the config path.
                This option allows to use an alternative config directory (for
                tests for instance).
         """
@@ -300,9 +300,9 @@ class Config:
         sconf = capsul_config.setdefault("study_config", {})
         sconf.update(
             {'attributes_schema_paths':
-                ['capsul.attributes.completion_engine_factory',
-                 'populse_mia.user_interface.pipeline_manager.process_mia'],
-            'process_completion': 'mia_completion'})
+                 ['capsul.attributes.completion_engine_factory',
+                  'populse_mia.user_interface.pipeline_manager.process_mia'],
+             'process_completion': 'mia_completion'})
 
         # update study config from mia config values
         use_spm = self.get_use_spm()
@@ -368,7 +368,7 @@ class Config:
                 spm_exec = spm_exec[0]
 
             else:
-               spm_exec = None
+                spm_exec = None
 
             sconf.update(dict(use_spm=True, spm_directory=spm_standalone_path,
                               spm_standalone=True, spm_exec=spm_exec,
@@ -377,8 +377,8 @@ class Config:
 
         # SPM / MATLAB
         elif (use_spm and spm_path and
-                use_matlab and matlab_path and
-                os.path.exists(spm_path) and os.path.exists(matlab_path)):
+              use_matlab and matlab_path and
+              os.path.exists(spm_path) and os.path.exists(matlab_path)):
             sconf.update(dict(use_spm=True, spm_standalone=False,
                               spm_directory=spm_path, use_matlab=True,
                               matlab_exec=matlab_path))
@@ -393,7 +393,7 @@ class Config:
 
         else:
             sconf.update(dict(use_spm=False, spm_standalone=False,
-                             use_matlab=False))
+                              use_matlab=False))
             sconf.pop('spm_exec', None)
             sconf.pop('spm_directory', None)
             sconf.pop('matlab_exec', None)
@@ -401,7 +401,7 @@ class Config:
         if sync_from_engine and self.capsul_engine:
             econf = capsul_config.setdefault('engine', {})
             for environment in (self.capsul_engine.settings.
-                                get_all_environments)():
+                                                        get_all_environments)():
                 eeconf = econf.setdefault(environment, {})
                 # would need a better merging system
                 eeconf.update(
@@ -419,9 +419,6 @@ class Config:
         :returns: Config.capsul_engine: capsul.engine.CapsulEngine object
         """
         from capsul.api import capsul_engine
-
-        config = Config()
-        capsul_config = config.get_capsul_config()
 
         if Config.capsul_engine is None:
             Config.capsul_engine = capsul_engine()
@@ -442,7 +439,7 @@ class Config:
         :returns: string of directory path to the config.yml file
         """
         config_path = getattr(self, 'config_path', None)
-        
+
         if config_path:
             return config_path
 
@@ -479,12 +476,12 @@ class Config:
             archi = platform.architecture()
             if 'Windows' in archi[1]:
                 spm_script = glob.glob(
-                               os.path.join(self.config["spm_standalone"],
-                                            'spm*_win' + archi[0][:2] + '.exe'))
+                    os.path.join(self.config["spm_standalone"],
+                                 'spm*_win' + archi[0][:2] + '.exe'))
             else:
                 spm_script = glob.glob(
-                               os.path.join(self.config["spm_standalone"],
-                                            'run_spm*.sh'))
+                    os.path.join(self.config["spm_standalone"],
+                                 'run_spm*.sh'))
             if spm_script:
                 spm_script = spm_script[0]
                 return '{0} {1} script'.format(
@@ -517,7 +514,7 @@ class Config:
         try:
             return int(self.config["max_projects"])
 
-        except KeyError as e:
+        except KeyError:
             return 5
 
     def get_max_thumbnails(self):
@@ -528,7 +525,7 @@ class Config:
         try:
             return int(self.config["max_thumbnails"])
 
-        except KeyError as e:
+        except KeyError:
             return 5
 
     def get_mia_path(self):
@@ -564,7 +561,7 @@ class Config:
                         mia_home_config = yaml.load(stream)
 
                     if ("user_mode" in mia_home_config.keys() and
-                        mia_home_config["user_mode"] is False):
+                            mia_home_config["user_mode"] is False):
                         # Only for admin mode
                         config_path = os.path.dirname(os.path.realpath(
                             __file__))
@@ -579,7 +576,7 @@ class Config:
                     # mia_path is obsolete. Use mia_user_path instead
                     if "mia_path" in mia_home_config:
                         mia_home_config["mia_user_path"] = mia_home_config[
-                                                                     "mia_path"]
+                            "mia_path"]
                         del mia_home_config["mia_path"]
 
                         with open(dot_mia_config,
@@ -648,10 +645,12 @@ class Config:
         """
         try:
             return self.config["projects_save_path"]
+
         except KeyError:
-            if not os.path.isdir(os.path.join(self.get_mia_path(),
-                                              'projects')):
+
+            if not os.path.isdir(os.path.join(self.get_mia_path(), 'projects')):
                 os.mkdir(os.path.join(self.get_mia_path(), 'projects'))
+
             return os.path.join(self.get_mia_path(), 'projects')
 
     def get_referential(self):
@@ -667,7 +666,7 @@ class Config:
 
         :returns: boolean
         """
-        #Used in MiniViewer
+        # Used in MiniViewer
         return self.config.get("show_all_slices", False)
 
     def getSourceImageDir(self):
@@ -755,7 +754,7 @@ class Config:
         """
         return self.config.get("capsul_config", {}).get(
             "engine", {}).get("global", {}).get(
-              'capsul.engine.module.axon', {}).get('user_level', 0)
+            'capsul.engine.module.axon', {}).get('user_level', 0)
 
     def get_user_mode(self):
         """Get if user mode is disabled or enabled in the preferences.
@@ -809,7 +808,7 @@ class Config:
     def isRadioView(self):
         """Get if the display in miniviewer is in radiological orientation.
 
-        - True for radiolological
+        - True for radiological
         - False for neurological
 
         :returns: boolean
@@ -823,12 +822,16 @@ class Config:
         """
         f = Fernet(CONFIG)
         config_file = os.path.join(self.get_config_path(), 'config.yml')
+
         if not os.path.exists(config_file):
             return {}
+
         with open(config_file, 'rb') as stream:
+
             try:
                 stream = b"".join(stream.readlines())
                 decrypted = f.decrypt(stream)
+
                 if verCmp(yaml.__version__, '5.1', 'sup'):
                     return yaml.load(decrypted, Loader=yaml.FullLoader)
 
@@ -838,8 +841,7 @@ class Config:
             except yaml.YAMLError as exc:
                 print('error loading YAML file: %s' % config_file)
                 print(exc)
-                #import traceback
-                #traceback.print_stack()
+
         # in case of problem, return an empty config
         return {}
 
@@ -847,21 +849,23 @@ class Config:
         """Save the current parameters in the config.yml file."""
         f = Fernet(CONFIG)
         config_file = os.path.join(self.get_config_path(), 'config.yml')
+
         if not os.path.exists(os.path.dirname(config_file)):
             os.makedirs(os.path.dirname(config_file))
+
         with open(config_file, 'wb') as configfile:
             stream = yaml.dump(self.config, default_flow_style=False,
-                      allow_unicode=True)
+                               allow_unicode=True)
             configfile.write(f.encrypt(stream.encode()))
 
         self.update_capsul_config()
 
-    def set_admin_hash(self, hash):
+    def set_admin_hash(self, admin_hash):
         """Set the password hash.
 
-        :param path: string of hash
+        :param admin_hash: string of hash
         """
-        self.config["admin_hash"] = hash
+        self.config["admin_hash"] = admin_hash
         # Then save the modification
         self.saveConfig()
 
@@ -933,7 +937,7 @@ class Config:
         if capsul_config.get('use_spm', False):
             spm_dir = capsul_config.get('spm_directory')
             spm_standalone = capsul_config.get('spm_standalone')
-            #TODO: I thing the following is wrong
+            # TODO: I thing the following is wrong
             if spm_standalone:
                 mcr = os.path.join(spm_dir, 'mcr', 'v713')
                 if os.path.isdir(mcr) and os.path.isdir(spm_dir):
@@ -954,7 +958,7 @@ class Config:
             self.set_use_spm_standalone(False)
 
     def setChainCursors(self, chain_cursors):
-        """Set the value of the checkbox 'chain cursor' in the miniviewer.
+        """Set the value of the checkbox 'chain cursor' in the mini viewer.
 
         :param chain_cursors: Boolean
         """
@@ -990,7 +994,7 @@ class Config:
         self.saveConfig()
 
     def set_mainwindow_maximized(self, enabled):
-        """Set the maximized (fullscreen) flag
+        """Set the maximized (full-screen) flag
 
         :param enabled: boolean
         """
@@ -1052,18 +1056,18 @@ class Config:
         self.saveConfig()
 
     def setNbAllSlicesMax(self, nb_slices_max):
-        """Set the number of slices to display in the miniviewer.
+        """Set the number of slices to display in the mini viewer.
 
-        :param nb_slices_max: Int
+        :param nb_slices_max: maximum number of slices to display (Int)
         """
         self.config["nb_slices_max"] = nb_slices_max
         # Then save the modification
         self.saveConfig()
-        
+
     def set_opened_projects(self, new_projects):
         """Set the list of opened projects and saves the modification.
 
-        :param new_projects: List of path
+        :param new_projects: list of path
         """
         self.config["opened_projects"] = new_projects
         # Then save the modification
@@ -1079,7 +1083,7 @@ class Config:
         self.saveConfig()
 
     def set_radioView(self, radio_view):
-        """Set the radiological/neurological orientation in miniviewer.
+        """Set the radiological/neurological orientation in mini viewer.
 
         - True for radiological
         - False for neurological
@@ -1119,7 +1123,7 @@ class Config:
         self.saveConfig()
 
     def set_spm_path(self, path):
-        """Set the path of SPM12 (license version).
+        """Set the path of SPM (license version).
 
         :param path: string of path
         """
@@ -1128,7 +1132,7 @@ class Config:
         self.saveConfig()
 
     def set_spm_standalone_path(self, path):
-        """Set the path of SPM12 (standalone version).
+        """Set the path of SPM (standalone version).
 
         :param path: string of path
         """
@@ -1149,7 +1153,7 @@ class Config:
     def setThumbnailTag(self, thumbnail_tag):
         """Set the tag that is displayed in the mini viewer.
 
-        :param thumbnail_tag: String
+        :param thumbnail_tag: string
         """
         self.config["thumbnail_tag"] = thumbnail_tag
         # Then save the modification
@@ -1200,7 +1204,7 @@ class Config:
         self.config["use_matlab_standalone"] = use_matlab_standalone
         # Then save the modification
         self.saveConfig()
- 
+
     def set_user_mode(self, user_mode):
         """Enable of disable user mode.
 
@@ -1255,7 +1259,7 @@ class Config:
         application. The engine is created once when needed, and updated
         each time the config is saved.
 
-        :returns: Config.capsul_engine: capsul.engine.CapsulEngine object
+        :returns: capsul.engine.CapsulEngine object
         """
         if self.capsul_engine is None:
             # don't do anything until the config is really created: this
@@ -1278,7 +1282,8 @@ class Config:
         study_config = engine.study_config
 
         try:
-            study_config.import_from_dict(capsul_config.get('study_config', {}))
+            study_config.import_from_dict(
+                capsul_config.get('study_config', {}))
 
         except Exception as exc:
             print("\nAn issue is detected in the Mia's configuration"
@@ -1294,10 +1299,10 @@ class Config:
                     c = dict(config)
 
                     if ('capsul_engine' not in c or
-                                              'uses' not in c['capsul_engine']):
+                            'uses' not in c['capsul_engine']):
                         c['capsul_engine'] = {
-                        'uses': {engine.settings.module_name(m): 'ALL'
-                                  for m in config.keys()}}
+                            'uses': {engine.settings.module_name(m): 'ALL'
+                                     for m in config.keys()}}
 
                     for mod, val in config.items():
 
