@@ -321,7 +321,7 @@ main_window = None
 
 class PackagesInstall:
     """Help to make available a pipeline package in the Mia pipeline library,
-in a recursive way.
+    in a recursive way.
 
     :Contains:
         :Method:
@@ -348,7 +348,7 @@ in a recursive way.
 
     def add_package(self, module_name, class_name=None):
         """Provide recursive representation of a package and its
-subpackages/modules, to construct the mia's pipeline library.
+        subpackages/modules, to construct the Mia's pipeline library.
 
         :param module_name: name of the module to add in the pipeline library
         :param class_name: only this pipeline will be added to the pipeline
@@ -475,7 +475,8 @@ def launch_mia():
 
     :Contains:
         :Private function:
-            - _my_excepthook: log all uncaught exceptions in non-interactive mode
+            - _my_excepthook: log all uncaught exceptions in non-interactive
+              mode
             - _verify_saved_projects: checks if the projects are still existing
     """
 
@@ -495,7 +496,7 @@ def launch_mia():
         :Contains:
             :Private function:
                 - _clean_up(): cleans up the mia software during "normal" 
-closing.
+                  closing.
         """
 
         def _clean_up():
@@ -533,6 +534,7 @@ closing.
 
         :return: the list of the deleted projects
         """
+
         saved_projects_object = SavedProjects()
         saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
         deleted_projects = []
@@ -825,7 +827,7 @@ def main():
 
 def verify_processes():
     """Install or update to the last version available on the station, for
-       nipype, capsul and mia_processes processes libraries.
+    nipype, capsul and mia_processes processes libraries.
 
     By default, Mia provides three process libraries in the pipeline library
     (available in Pipeline Manager tab). The nipype, given as it is because
@@ -850,12 +852,12 @@ def verify_processes():
     :Contains:
         :Private function:
             - _deepCompDic: keep the previous config existing before packages
-                            update
+              update
     """
 
     def _deepCompDic(old_dic, new_dic):
         """Try to keep the previous configuration existing before the
-           update of the packages.
+        update of the packages.
 
         Recursive comparison of the old_dic and new _dic dictionary. If
         all keys are recursively identical, the final value at the end

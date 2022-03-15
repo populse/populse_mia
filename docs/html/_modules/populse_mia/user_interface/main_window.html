@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>populse_mia.user_interface.main_window &#8212; populse_mia 2.0.0-dev+a571528e documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>populse_mia.user_interface.main_window &#8212; populse_mia 2.0.0-dev+afa9ce1e documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.0.0-dev+afa9ce1e',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+a571528e documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+afa9ce1e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.main_window</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,7 +36,7 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <h1>Source code for populse_mia.user_interface.main_window</h1><div class="highlight"><pre>
@@ -52,33 +62,33 @@
 
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">expanduser</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span>
 <span class="kn">import</span> <span class="nn">webbrowser</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">packaging</span> <span class="k">import</span> <span class="n">version</span>
+<span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
 
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QCursor</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QWidget</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QCursor</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QWidget</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span>
                              <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span>
                              <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">)</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project_properties</span> <span class="k">import</span> <span class="n">SavedProjects</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="k">import</span> <span class="n">DataBrowser</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project_properties</span> <span class="kn">import</span> <span class="n">SavedProjects</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="n">DataBrowser</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">PipelineManagerTab</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">InstallProcesses</span><span class="p">,</span> <span class="n">PackageLibraryDialog</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">populse_mia.data_manager.data_loader</span> <span class="k">as</span> <span class="nn">data_loader</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">COLLECTION_CURRENT</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span><span class="n">PopUpDeleteProject</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">COLLECTION_CURRENT</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PopUpDeleteProject</span><span class="p">,</span>
                                                 <span class="n">PopUpDeletedProject</span><span class="p">,</span>
                                                 <span class="n">PopUpNewProject</span><span class="p">,</span>
                                                 <span class="n">PopUpOpenProject</span><span class="p">,</span>
@@ -87,7 +97,7 @@
                                                 <span class="n">PopUpSaveProjectAs</span><span class="p">,</span>
                                                 <span class="n">PopUpQuit</span><span class="p">,</span>
                                                 <span class="n">PopUpSeeAllProjects</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.data_viewer_tab</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.data_viewer_tab</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DataViewerTab</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -105,11 +115,11 @@
 <span class="k">class</span> <span class="nc">_ProcDeleter</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Used by open_shell.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">o</span> <span class="o">=</span> <span class="n">o</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">o</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -185,7 +195,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="MainWindow.__init__"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Main window class, initializes the software appearance and defines</span>
 <span class="sd">        interactions with the user.</span>
 
@@ -284,14 +294,14 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_mainwindow_size</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">size</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
 <div class="viewcode-block" id="MainWindow.last_window_closed"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.last_window_closed">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">last_window_closed</span><span class="p">():</span>
         <span class="c1"># if the ipython console has been run, something prevents Qt from</span>
         <span class="c1"># quitting after the window is closed. The cause is not known yet.</span>
         <span class="c1"># so: force exit the event loop.</span>
-        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="k">import</span> <span class="n">Qt</span>
+        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
         <span class="n">Qt</span><span class="o">.</span><span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">qApp</span><span class="o">.</span><span class="n">exit</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MainWindow.add_clinical_tags"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.add_clinical_tags">[docs]</a>    <span class="k">def</span> <span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1256,7 +1266,7 @@
         <span class="sd">&quot;&quot;&quot; Open a Qt console shell with an IPython kernel seing the program</span>
 <span class="sd">        internals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soma.qt_gui</span> <span class="k">import</span> <span class="n">qt_backend</span>
+        <span class="kn">from</span> <span class="nn">soma.qt_gui</span> <span class="kn">import</span> <span class="n">qt_backend</span>
         <span class="n">ipfunc</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;qtconsole&#39;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;startShell&#39;</span><span class="p">)</span>
@@ -1303,14 +1313,14 @@
     <span class="k">def</span> <span class="nf">run_ipconsole_kernel</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;qtconsole&#39;</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;run_ipconsole_kernel:&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
         <span class="kn">import</span> <span class="nn">IPython</span>
-        <span class="kn">from</span> <span class="nn">IPython.lib</span> <span class="k">import</span> <span class="n">guisupport</span>
-        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="k">import</span> <span class="n">Qt</span>
+        <span class="kn">from</span> <span class="nn">IPython.lib</span> <span class="kn">import</span> <span class="n">guisupport</span>
+        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
         <span class="n">qtapp</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
         <span class="n">qtapp</span><span class="o">.</span><span class="n">_in_event_loop</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">guisupport</span><span class="o">.</span><span class="n">in_event_loop</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">ipversion</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">IPython</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span>
 
-        <span class="kn">from</span> <span class="nn">ipykernel.kernelapp</span> <span class="k">import</span> <span class="n">IPKernelApp</span>
+        <span class="kn">from</span> <span class="nn">ipykernel.kernelapp</span> <span class="kn">import</span> <span class="n">IPKernelApp</span>
         <span class="n">app</span> <span class="o">=</span> <span class="n">IPKernelApp</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">app</span><span class="o">.</span><span class="n">initialized</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">app</span><span class="o">.</span><span class="n">kernel</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;runing IP console kernel&#39;</span><span class="p">)</span>
@@ -1326,7 +1336,7 @@
                 <span class="c1"># app.poller.start()</span>
             <span class="n">app</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-            <span class="kn">from</span> <span class="nn">zmq.eventloop</span> <span class="k">import</span> <span class="n">ioloop</span>
+            <span class="kn">from</span> <span class="nn">zmq.eventloop</span> <span class="kn">import</span> <span class="n">ioloop</span>
             <span class="c1"># IP 2 allows just calling the current callbacks.</span>
             <span class="c1"># For IP 1 it is not sufficient.</span>
             <span class="kn">import</span> <span class="nn">tornado</span>
@@ -1660,7 +1670,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

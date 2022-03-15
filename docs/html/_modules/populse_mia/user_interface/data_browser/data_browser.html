@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.0.0-dev+a571528e documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.0.0-dev+afa9ce1e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.0.0-dev+afa9ce1e',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+a571528e documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+afa9ce1e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,7 +36,7 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <h1>Source code for populse_mia.user_interface.data_browser.data_browser</h1><div class="highlight"><pre>
@@ -58,10 +68,10 @@
 <span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QTableWidgetItem</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span> <span class="n">QToolBar</span><span class="p">,</span> <span class="n">QToolButton</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QProgressDialog</span><span class="p">,</span> <span class="n">QDoubleSpinBox</span><span class="p">,</span>
     <span class="n">QDateTimeEdit</span><span class="p">,</span> <span class="n">QDateEdit</span><span class="p">,</span> <span class="n">QTimeEdit</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span>
@@ -69,35 +79,35 @@
     <span class="n">QAbstractItemView</span><span class="p">)</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="k">import</span> <span class="n">RapidSearch</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AdvancedSearch</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.count_table</span> <span class="k">import</span> <span class="n">CountTable</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="k">import</span> <span class="n">ModifyTable</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.mini_viewer</span> <span class="k">import</span> <span class="n">MiniViewer</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.count_table</span> <span class="kn">import</span> <span class="n">CountTable</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="kn">import</span> <span class="n">ModifyTable</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.mini_viewer</span> <span class="kn">import</span> <span class="n">MiniViewer</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">PopUpMultipleSort</span><span class="p">,</span> <span class="n">PopUpProperties</span><span class="p">,</span> <span class="n">PopUpShowBrick</span><span class="p">,</span> <span class="n">PopUpAddPath</span><span class="p">,</span>
     <span class="n">PopUpAddTag</span><span class="p">,</span> <span class="n">PopUpCloneTag</span><span class="p">,</span> <span class="n">PopUpRemoveTag</span><span class="p">,</span> <span class="n">PopUpSelectFilter</span><span class="p">,</span>
     <span class="n">PopUpRemoveScan</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">PopUpDataBrowserCurrentSelection</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.tools</span> <span class="k">import</span> <span class="n">ClickableLabel</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.tools</span> <span class="kn">import</span> <span class="n">ClickableLabel</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_value_type</span><span class="p">,</span> <span class="n">set_item_data</span><span class="p">,</span> <span class="n">table_to_database</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">TAG_CHECKSUM</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="n">TAG_ORIGIN_USER</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 
 <span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
 <span class="c1"># Variable shown everywhere when no value for the tag</span>
 <span class="n">not_defined_value</span> <span class="o">=</span> <span class="s2">&quot;*Not Defined*&quot;</span>
@@ -136,7 +146,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DataBrowser.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the data_browser class</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -189,7 +199,7 @@
         <span class="c1"># Image viewer updated</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connect_toolbar</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connect_actions</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connect_mini_viewer</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect_mini_viewer</span><span class="p">()</span>
 
 <div class="viewcode-block" id="DataBrowser.add_tag_infos"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.add_tag_infos">[docs]</a>    <span class="k">def</span> <span class="nf">add_tag_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_tag_name</span><span class="p">,</span> <span class="n">new_default_value</span><span class="p">,</span> <span class="n">tag_type</span><span class="p">,</span>
                       <span class="n">new_tag_description</span><span class="p">,</span> <span class="n">new_tag_unit</span><span class="p">):</span>
@@ -665,8 +675,8 @@
 
 <div class="viewcode-block" id="DateFormatDelegate"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate">[docs]</a><span class="k">class</span> <span class="nc">DateFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delegate that is used to handle dates in the TableDataBrowser.&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="DateFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DateFormatDelegate.createEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.createEditor">[docs]</a>    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override of the createEditor method, called to generate the widget.</span>
@@ -678,8 +688,8 @@
 
 <div class="viewcode-block" id="DateTimeFormatDelegate"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate">[docs]</a><span class="k">class</span> <span class="nc">DateTimeFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delegate that is used to handle date &amp; time in the TableDataBrowser.&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="DateTimeFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DateTimeFormatDelegate.createEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.createEditor">[docs]</a>    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override of the createEditor method, called to generate the widget.</span>
@@ -691,8 +701,8 @@
 
 <div class="viewcode-block" id="NumberFormatDelegate"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate">[docs]</a><span class="k">class</span> <span class="nc">NumberFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delegate that is used to handle numbers in the TableDataBrowser.&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="NumberFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NumberFormatDelegate.createEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.createEditor">[docs]</a>    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override of the createEditor method, called to generate the widget.</span>
@@ -753,7 +763,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TableDataBrowser.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">data_browser</span><span class="p">,</span> <span class="n">tags_to_display</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">data_browser</span><span class="p">,</span> <span class="n">tags_to_display</span><span class="p">,</span>
                  <span class="n">update_values</span><span class="p">,</span> <span class="n">activate_selection</span><span class="p">,</span> <span class="n">link_viewer</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the class</span>
 
@@ -804,7 +814,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_table</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_values</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setEditTriggers</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">NoEditTriggers</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setEditTriggers</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">NoEditTriggers</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TableDataBrowser.add_column"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_column">[docs]</a>    <span class="k">def</span> <span class="nf">add_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a column to the table</span>
@@ -1447,7 +1457,7 @@
         <span class="k">try</span><span class="p">:</span>
             
             <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">main_window</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                <span class="kn">from</span> <span class="nn">PyQt5.QtTest</span> <span class="k">import</span> <span class="n">QTest</span>
+                <span class="kn">from</span> <span class="nn">PyQt5.QtTest</span> <span class="kn">import</span> <span class="n">QTest</span>
                 <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -2211,7 +2221,7 @@
 <div class="viewcode-block" id="TableDataBrowser.show_data_history"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.show_data_history">[docs]</a>    <span class="k">def</span> <span class="nf">show_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Show data history in a separate window.&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;show_data_history:&#39;</span><span class="p">,</span> <span class="n">scan</span><span class="p">)</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="k">import</span> <span class="n">data_history_inspect</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="n">data_history_inspect</span>
         <span class="n">pipeline</span> <span class="o">=</span> <span class="n">data_history_inspect</span><span class="o">.</span><span class="n">data_history_pipeline</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span>
                                                               <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2514,12 +2524,12 @@
     <span class="sd">&quot;&quot;&quot;Delegate that is used to handle times in the TableDataBrowser.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="TimeFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the class</span>
 
 <span class="sd">        :param parent: QWidget parent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
+        <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TimeFormatDelegate.createEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.createEditor">[docs]</a>    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override of the createEditor method, called to generate the widget.</span>
@@ -2545,7 +2555,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

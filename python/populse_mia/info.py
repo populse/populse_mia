@@ -1,4 +1,10 @@
-"""Define software version, description and requirements"""
+"""Define software version, description and requirements
+
+:Contains:
+    :Function:
+        - get_populse_mia_gitversion
+
+"""
 
 ###############################################################################
 # Populse_mia - Copyright (C) IRMaGe/CEA, 2018
