@@ -1359,16 +1359,12 @@ class Config:
                               for m in config.keys()}}
 
                 try:
-                    engine.import_configs(environment, c)
+                    engine.import_configs(environment, c, cont_on_error=True)
 
                 except Exception as exc:
                     print("\nAn issue is detected in the Mia's "
                           "configuration:\n{}\nPlease check the settings "
                           "in File > Mia Preferences > Pipeline "
                           "...".format(exc))
-                    import traceback
-                    traceback.print_exc()
-                    print('updating capsul env:', environment)
-                    print('values:', c)
 
         return engine
