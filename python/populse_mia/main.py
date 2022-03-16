@@ -812,8 +812,11 @@ def main():
         config.get_capsul_engine()
         c = config.get_capsul_config()
         pc = c.setdefault('engine', {}).setdefault(
-            'global', {}).setdefault('capsul.engine.module.python', {})
+            'global', {}).setdefault(
+                'capsul.engine.module.python', {}).setdefault('python', {})
         pc['executable'] = sys.executable
+        pc['config_id'] = 'python'
+        pc['config_environment'] = 'global'
 
         if 'path' in pc:
             matches=[os.path.join('populse_mia', 'python'),

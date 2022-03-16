@@ -924,7 +924,7 @@ class Config:
                 spm_dir = spm_conf.get('directory')
                 spm_standalone = spm_conf.get(
                     'standalone', False)
-                if spm_standalone:
+                if spm_standalone and spm_dir:
                     if not mcr_dir:
                         mcr_dir = os.path.join(spm_dir, 'mcr', 'v713')
                         self.set_matlab_standalone_path(mcr_dir)
@@ -1366,5 +1366,9 @@ class Config:
                           "configuration:\n{}\nPlease check the settings "
                           "in File > Mia Preferences > Pipeline "
                           "...".format(exc))
+                    import traceback
+                    traceback.print_exc()
+                    print('updating capsul env:', environment)
+                    print('values:', c)
 
         return engine
