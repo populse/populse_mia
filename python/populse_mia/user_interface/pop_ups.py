@@ -2847,8 +2847,16 @@ class PopUpPreferences(QDialog):
         del dialog
         del engine
 
-    def validate_and_save(self):
+    def validate_and_save(self, OK_clicked=False):
         """Saves the modifications to the config file and apply them.
+
+        :param OK_clicked: a boolean. If False, only make a minimal backup of
+                           the settings to allow synchronisation with
+                           capsul config. If True, should only correspond to
+                           the moment when we finally exit the Mia config, all
+                           parameters are saved and tested.
+
+        :return: True if all is fine, False if a problem has been encountered
         """
 
         config = Config()
@@ -2856,762 +2864,809 @@ class PopUpPreferences(QDialog):
         self.status_label.setText("Testing configuration ...")
         QCoreApplication.processEvents()
 
-        # Auto-save
-        if self.save_checkbox.isChecked():
-            config.setAutoSave(True)
+        # Minimum configuration backup:
+        if not OK_clicked:
 
-        else:
-            config.setAutoSave(False)
+            # Use AFNI
+            if self.use_afni_checkbox.isChecked():
+                afni_dir = self.afni_choice.text()
+                config.set_afni_path(afni_dir)
+                config.set_use_afni(True)
 
-        # RadioView in miniviewer (databrowser)
-        if self.radioView_checkbox.isChecked():
-            config.set_radioView(True)
-
-        else:
-            config.set_radioView(False)
-
-        # Version 1 controller
-        if self.control_checkbox.isChecked():
-            config.setControlV1(True)
-
-        else:
-            config.setControlV1(False)
-
-        # Max thumbnails number at the data browser bottom
-        max_thumbnails = min(max(self.max_thumbnails_box.value(), 1), 15)
-        config.set_max_thumbnails(max_thumbnails)
-
-        # Projects folder
-        projects_folder = self.projects_save_path_line_edit.text()
-        if os.path.isdir(projects_folder):
-            config.set_projects_save_path(projects_folder)
-        else:
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("Invalid projects folder path")
-            self.msg.setInformativeText(
-                "The projects folder path entered {0} is invalid.".format(
-                    projects_folder))
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
-            QApplication.restoreOverrideCursor()
-            return False
-
-        # MRIFileManager.jar path
-        mri_conv_path = self.mri_conv_path_line_edit.text()
-        if mri_conv_path == "":
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Warning)
-            self.msg.setText("Empty MRIFileManager.jar path")
-            self.msg.setInformativeText(
-                "No path has been entered for MRIFileManager.jar.".format(
-                    mri_conv_path))
-            self.msg.setWindowTitle("Warning")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
-            config.set_mri_conv_path(mri_conv_path)
-
-        elif os.path.isfile(mri_conv_path):
-            config.set_mri_conv_path(mri_conv_path)
-
-        else:
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("Invalid MRIFileManager.jar path")
-            self.msg.setInformativeText(
-                "The MRIFileManager.jar path entered {0} is invalid.".format(
-                    mri_conv_path))
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
-            QApplication.restoreOverrideCursor()
-            return False
-
-        # Max projects in "Saved projects"
-        max_projects = min(max(self.max_projects_box.value(), 1), 20)
-        config.set_max_projects(max_projects)
-
-        # Use AFNI
-        if self.use_afni_checkbox.isChecked():
-            config.set_use_afni(True)
-
-        else:
-            config.set_use_afni(False)
-
-        # Use ANTS
-        if self.use_ants_checkbox.isChecked():
-            config.set_use_ants(True)
-
-        else:
-            config.set_use_ants(False)
-
-        # Use FSL
-        if self.use_fsl_checkbox.isChecked():
-            config.set_use_fsl(True)
-
-        else:
-            config.set_use_fsl(False)
-            
-        # Use Matlab
-        if self.use_matlab_checkbox.isChecked():
-            config.set_use_matlab(True)
-
-        else:
-            config.set_use_matlab(False)
-
-        # Use Matlab Runtime:
-        if self.use_matlab_standalone_checkbox.isChecked():
-            config.set_use_matlab_standalone(True)
-
-        else:
-            config.set_use_matlab_standalone(False)
-
-        # Use SPM
-        if self.use_spm_checkbox.isChecked():
-            config.set_use_spm(True)
-
-        else:
-            config.set_use_spm(False)
-
-        # Use SPM standalone
-        if self.use_spm_standalone_checkbox.isChecked():
-            config.set_use_spm_standalone(True)
-
-        else:
-            config.set_use_spm_standalone(False)
-
-        main_window = self.main_window
-        # User / Admin mode
-        main_window.windowName = "MIA - Multiparametric Image Analysis"
-        if self.admin_mode_checkbox.isChecked():
-            config.set_user_mode(False)
-            main_window.windowName += " (Admin mode)"
-        else:
-            config.set_user_mode(True)
-            #self.use_user_mode_signal.emit()
-
-        if self.clinical_mode_checkbox.isChecked():
-            config.set_clinical_mode(True)
-            self.use_clinical_mode_signal.emit()
-
-        else:
-            config.set_clinical_mode(False)
-            self.not_use_clinical_mode_signal.emit()
-
-        main_window.windowName += " - "
-        main_window.setWindowTitle(main_window.windowName +
-                                   main_window.projectName)
-
-        # AFNI config test
-        afni_dir = self.afni_choice.text()
-
-        if self.use_afni_checkbox.isChecked():
-
-            afni_cmd = '3dSkullStrip'
-
-            if os.path.isdir(afni_dir):
-                afni_cmd = os.path.join(afni_dir, afni_cmd)
             else:
-                self.wrong_path(afni_dir, "AFNI")
+                config.set_use_afni(False)
+
+            # Use ANTS
+            if self.use_ants_checkbox.isChecked():
+                config.set_use_ants(True)
+
+            else:
+                config.set_use_ants(False)
+
+            # Use FSL
+            if self.use_fsl_checkbox.isChecked():
+                config.set_use_fsl(True)
+
+            else:
+                config.set_use_fsl(False)
+
+            # Use Matlab
+            if self.use_matlab_checkbox.isChecked():
+                config.set_use_matlab(True)
+
+            else:
+                config.set_use_matlab(False)
+
+            # Use Matlab Runtime:
+            if self.use_matlab_standalone_checkbox.isChecked():
+                config.set_use_matlab_standalone(True)
+
+            else:
+                config.set_use_matlab_standalone(False)
+
+            # Use SPM
+            if self.use_spm_checkbox.isChecked():
+                config.set_use_spm(True)
+
+            else:
+                config.set_use_spm(False)
+
+            # Use SPM standalone
+            if self.use_spm_standalone_checkbox.isChecked():
+                config.set_use_spm_standalone(True)
+
+            else:
+                config.set_use_spm_standalone(False)
+
+            QApplication.restoreOverrideCursor()
+            return True
+
+        # complete backup and testing
+        else:
+
+            # Auto-save
+            if self.save_checkbox.isChecked():
+                config.setAutoSave(True)
+
+            else:
+                config.setAutoSave(False)
+
+            # RadioView in miniviewer (databrowser)
+            if self.radioView_checkbox.isChecked():
+                config.set_radioView(True)
+
+            else:
+                config.set_radioView(False)
+
+            # Version 1 controller
+            if self.control_checkbox.isChecked():
+                config.setControlV1(True)
+
+            else:
+                config.setControlV1(False)
+
+            # Max thumbnails number at the data browser bottom
+            max_thumbnails = min(max(self.max_thumbnails_box.value(), 1), 15)
+            config.set_max_thumbnails(max_thumbnails)
+
+            # Projects folder
+            projects_folder = self.projects_save_path_line_edit.text()
+
+            if os.path.isdir(projects_folder):
+                config.set_projects_save_path(projects_folder)
+
+            else:
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Critical)
+                self.msg.setText("Invalid projects folder path")
+                self.msg.setInformativeText("The projects folder path entered "
+                                            "{0} is "
+                                            "invalid.".format(projects_folder))
+                self.msg.setWindowTitle("Error")
+                self.msg.setStandardButtons(QMessageBox.Ok)
+                self.msg.buttonClicked.connect(self.msg.close)
+                self.msg.show()
+                QApplication.restoreOverrideCursor()
                 return False
 
-            try:
-                p = subprocess.Popen(
-                    [afni_cmd, '-version'],
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE)
-                output, err = p.communicate()
+            # MRIFileManager.jar path
+            mri_conv_path = self.mri_conv_path_line_edit.text()
 
-                if err == b'':
-                    config.set_afni_path(afni_dir)
-                    config.set_use_afni(True)
+            if mri_conv_path == "":
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Warning)
+                self.msg.setText("Empty MRIFileManager.jar path")
+                self.msg.setInformativeText("No path has been entered for "
+                                            "MRIFileManager.jar.".format(
+                                                                mri_conv_path))
+                self.msg.setWindowTitle("Warning")
+                self.msg.setStandardButtons(QMessageBox.Ok)
+                self.msg.buttonClicked.connect(self.msg.close)
+                self.msg.show()
+                config.set_mri_conv_path(mri_conv_path)
+
+            elif os.path.isfile(mri_conv_path):
+                config.set_mri_conv_path(mri_conv_path)
+
+            else:
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Critical)
+                self.msg.setText("Invalid MRIFileManager.jar path")
+                self.msg.setInformativeText("The MRIFileManager.jar path "
+                                            "entered {0} "
+                                            "is invalid.".format(mri_conv_path))
+                self.msg.setWindowTitle("Error")
+                self.msg.setStandardButtons(QMessageBox.Ok)
+                self.msg.buttonClicked.connect(self.msg.close)
+                self.msg.show()
+                QApplication.restoreOverrideCursor()
+                return False
+
+            # Max projects in "Saved projects"
+            max_projects = min(max(self.max_projects_box.value(), 1), 20)
+            config.set_max_projects(max_projects)
+
+            # User / Admin mode
+            main_window = self.main_window
+            main_window.windowName = "MIA - Multiparametric Image Analysis"
+
+            if self.admin_mode_checkbox.isChecked():
+                config.set_user_mode(False)
+                main_window.windowName += " (Admin mode)"
+            else:
+                config.set_user_mode(True)
+                #self.use_user_mode_signal.emit()
+
+            if self.clinical_mode_checkbox.isChecked():
+                config.set_clinical_mode(True)
+                self.use_clinical_mode_signal.emit()
+
+            else:
+                config.set_clinical_mode(False)
+                self.not_use_clinical_mode_signal.emit()
+
+            main_window.windowName += " - "
+            main_window.setWindowTitle(main_window.windowName +
+                                       main_window.projectName)
+
+            # AFNI config test
+            if self.use_afni_checkbox.isChecked():
+                afni_dir = self.afni_choice.text()
+                afni_cmd = '3dSkullStrip'
+
+                if os.path.isdir(afni_dir):
+                    afni_cmd = os.path.join(afni_dir, afni_cmd)
 
                 else:
                     self.wrong_path(afni_dir, "AFNI")
+                    QApplication.restoreOverrideCursor()
                     return False
-
-            except:
-                self.wrong_path(afni_dir, "AFNI")
-                return False
-        else:
-            config.set_use_afni(False)
-
-        # ANTS config test
-        ants_dir = self.ants_choice.text()
-
-        if self.use_ants_checkbox.isChecked():
-
-            ants_cmd = 'SmoothImage'
-
-            if os.path.isdir(ants_dir):
-                ants_cmd = os.path.join(ants_dir, ants_cmd)
-            else:
-                self.wrong_path(ants_dir, "ANTS")
-                return False
-
-            try:
-                p = subprocess.Popen(
-                    [ants_cmd, '-version'],
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE)
-                output, err = p.communicate()
-
-                if err == b'':
-                    config.set_ants_path(ants_dir)
-                    config.set_use_ants(True)
-
-                else:
-                    self.wrong_path(ants_dir, "ANTS")
-                    return False
-
-            except:
-                self.wrong_path(ants_dir, "ANTS")
-                return False
-        else:
-            config.set_use_ants(False)
-
-        # FSL config test
-        fsl_conf = self.fsl_choice.text()
-
-        if self.use_fsl_checkbox.isChecked():
-
-            if fsl_conf == "":
-                fsl_cmd = 'flirt'
-
-            else:
-                fsl_dir = os.path.dirname(fsl_conf)
-
-                if fsl_dir.endswith(os.path.join('etc', 'fslconf')):
-                    fsl_dir = os.path.dirname(os.path.dirname(fsl_dir))
-
-                elif fsl_dir.endswith('etc'):
-                    fsl_dir = os.path.dirname(fsl_dir)
-
-                fsl_cmd = os.path.join(fsl_dir, 'bin', 'flirt')
-
-            try:
-                p = subprocess.Popen(
-                    [fsl_cmd, '-version'],
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE)
-                output, err = p.communicate()
-
-                if err == b'':
-                    config.set_fsl_config(fsl_conf)
-                    config.set_use_fsl(True)
-
-                else:
-                    self.wrong_path(fsl_conf, "FSL", "config file")
-                    return False
-                        
-            except:
-                self.wrong_path(fsl_conf, "FSL", "config file")
-                return False
-
-        else:
-            config.set_use_fsl(False)
-
-        # SPM & Matlab (license) config test
-
-        matlab_input = self.matlab_choice.text()
-        spm_input = self.spm_choice.text()
-        
-        if (matlab_input != "" and
-            spm_input != "") or self.use_spm_checkbox.isChecked():
-
-            if not os.path.isfile(matlab_input):
-                self.wrong_path(matlab_input, "Matlab")
-                return False
-
-            if (matlab_input == config.get_matlab_path() and
-                                       spm_input == config.get_spm_path()):
-
-                if self.use_spm_checkbox.isChecked():
-                    config.set_use_spm(True)
-                    config.set_use_matlab(True)
-                    config.set_use_matlab_standalone(False)
-
-            elif os.path.isdir(spm_input):
 
                 try:
-                    matlab_cmd = ("restoredefaultpath; "
-                                  "addpath('" + spm_input + "'); "
-                                  "[name, ~]=spm('Ver'); "
-                                  "exit")
-                    p = subprocess.Popen([matlab_input, '-nodisplay',
-                                          '-nodesktop', '-nosplash',
-                                          '-singleCompThread', '-r',
-                                          matlab_cmd],
+                    p = subprocess.Popen([afni_cmd, '-version'],
                                          stdin=subprocess.PIPE,
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)
                     output, err = p.communicate()
 
                     if err == b'':
-                        config.set_matlab_path(matlab_input)
-
-                        if self.use_spm_checkbox.isChecked():
-                            config.set_use_matlab(True)
-                            config.set_use_matlab_standalone(False)
-                            config.set_use_spm(True)
-
-                        config.set_spm_path(spm_input)
-
-                    elif "spm" in str(err):
-                        self.wrong_path(spm_input, "SPM")
-                        return False
+                        config.set_afni_path(afni_dir)
+                        config.set_use_afni(True)
 
                     else:
-                        self.wrong_path(matlab_input, "Matlab")
+                        self.wrong_path(afni_dir, "AFNI")
+                        QApplication.restoreOverrideCursor()
                         return False
 
-                except:
-                    self.wrong_path(matlab_input, "Matlab")
+                except Exception:
+                    self.wrong_path(afni_dir, "AFNI")
+                    QApplication.restoreOverrideCursor()
                     return False
 
             else:
-                self.wrong_path(spm_input, "SPM")
-                return False
-            
-        # Matlab alone config test
-        if matlab_input != "" or self.use_matlab_checkbox.isChecked():
-            if matlab_input == config.get_matlab_path():
-                if self.use_matlab_checkbox.isChecked():
-                    config.set_use_matlab(True)
-                    config.set_use_matlab_standalone(False)
-            elif os.path.isfile(matlab_input):
+                config.set_use_afni(False)
+
+            # ANTS config test
+            ants_dir = self.ants_choice.text()
+
+            if self.use_ants_checkbox.isChecked():
+                ants_cmd = 'SmoothImage'
+
+                if os.path.isdir(ants_dir):
+                    ants_cmd = os.path.join(ants_dir, ants_cmd)
+
+                else:
+                    self.wrong_path(ants_dir, "ANTS")
+                    QApplication.restoreOverrideCursor()
+                    return False
+
                 try:
-                    matlab_cmd = 'ver; exit'
-                    p = subprocess.Popen(
-                        [matlab_input, '-nodisplay', '-nodesktop',
-                         '-nosplash', '-singleCompThread',
-                         '-r', matlab_cmd], stdin=subprocess.PIPE,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE)
+                    p = subprocess.Popen([ants_cmd, '-version'],
+                                         stdin=subprocess.PIPE,
+                                         stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)
                     output, err = p.communicate()
+
                     if err == b'':
-                        config.set_matlab_path(matlab_input)
-                        if self.use_matlab_checkbox.isChecked():
-                            config.set_use_matlab(True)
-                            config.set_use_matlab_standalone(False)
+                        config.set_ants_path(ants_dir)
+                        config.set_use_ants(True)
+
                     else:
-                        self.wrong_path(matlab_input, "Matlab")
+                        self.wrong_path(ants_dir, "ANTS")
+                        QApplication.restoreOverrideCursor()
                         return False
-                except:
-                    self.wrong_path(matlab_input, "Matlab")
+
+                except Exception:
+                    self.wrong_path(ants_dir, "ANTS")
+                    QApplication.restoreOverrideCursor()
                     return False
             else:
-                self.wrong_path(matlab_input, "Matlab")
-                return False
-            
-        # SPM (standalone) & Matlab (MCR) config test
-        spm_input = self.spm_standalone_choice.text()
-        matlab_input = self.matlab_standalone_choice.text()
-        archi = platform.architecture()
+                config.set_use_ants(False)
 
-        if ((matlab_input != "" and spm_input != "") or
-                self.use_spm_standalone_checkbox.isChecked()):
+            # FSL config test
+            fsl_conf = self.fsl_choice.text()
 
-            if ((not os.path.isdir(matlab_input)) and 
-                    (not 'Windows' in archi[1])):
-                self.wrong_path(matlab_input, "Matlab standalone")
-                return False
+            if self.use_fsl_checkbox.isChecked():
 
-            if ((matlab_input == config.get_matlab_standalone_path()) and
-                    (spm_input == config.get_spm_standalone_path())):
+                if fsl_conf == "":
+                    fsl_cmd = 'flirt'
 
-                if self.use_spm_standalone_checkbox.isChecked():
-                    config.set_use_spm_standalone(True)
+                else:
+                    fsl_dir = os.path.dirname(fsl_conf)
 
-                    if 'Windows' in archi[1]:
+                    if fsl_dir.endswith(os.path.join('etc', 'fslconf')):
+                        fsl_dir = os.path.dirname(os.path.dirname(fsl_dir))
+
+                    elif fsl_dir.endswith('etc'):
+                        fsl_dir = os.path.dirname(fsl_dir)
+
+                    fsl_cmd = os.path.join(fsl_dir, 'bin', 'flirt')
+
+                try:
+                    p = subprocess.Popen([fsl_cmd, '-version'],
+                                         stdin=subprocess.PIPE,
+                                         stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)
+                    output, err = p.communicate()
+
+                    if err == b'':
+                        config.set_fsl_config(fsl_conf)
+                        config.set_use_fsl(True)
+
+                    else:
+                        self.wrong_path(fsl_conf, "FSL", "config file")
+                        QApplication.restoreOverrideCursor()
+                        return False
+                        
+                except Exception:
+                    self.wrong_path(fsl_conf, "FSL", "config file")
+                    QApplication.restoreOverrideCursor()
+                    return False
+
+            else:
+                config.set_use_fsl(False)
+
+            # SPM & Matlab (license) config test
+            matlab_input = self.matlab_choice.text()
+            spm_input = self.spm_choice.text()
+        
+            if ((matlab_input != "" and spm_input != "") or
+                                            self.use_spm_checkbox.isChecked()):
+
+                if not os.path.isfile(matlab_input):
+                    self.wrong_path(matlab_input, "Matlab")
+                    QApplication.restoreOverrideCursor()
+                    return False
+
+                if (matlab_input == config.get_matlab_path() and
+                                           spm_input == config.get_spm_path()):
+
+                    if self.use_spm_checkbox.isChecked():
+                        config.set_use_spm(True)
                         config.set_use_matlab(True)
                         config.set_use_matlab_standalone(False)
 
-                    else:
-                        config.set_use_matlab_standalone(True)
-
-            elif os.path.isdir(spm_input):
-
-                if 'Windows' in archi[1]:
-                    mcr = glob.glob(os.path.join(spm_input, 'spm*_win*.exe'))
-                    pos = -1
-                    nb_bit_sys = archi[0]
-
-                    for i in range(len(mcr)):
-                        spm_path, spm_file_name = os.path.split(mcr[i])
-
-                        if nb_bit_sys[:2] in spm_file_name:
-                            pos = i
-
-                    if pos == -1:
-                        self.wrong_path(spm_input, "SPM standalone")
-                        return False
-
-                elif os.path.isdir(matlab_input):
-                    mcr = glob.glob(os.path.join(spm_input, 'run_spm*.sh'))
-
-                if mcr:
+                elif os.path.isdir(spm_input):
 
                     try:
-
-                        if 'Windows' in archi[1]:
-                            p = subprocess.Popen([mcr[pos],
-                                                '--version'],
-                                                stdin=subprocess.PIPE,
-                                                stdout=subprocess.PIPE,
-                                                stderr=subprocess.PIPE)
-
-                        else:
-                            p = subprocess.Popen([mcr[0],
-                                                  matlab_input,
-                                                  '--version'],
-                                                 stdin=subprocess.PIPE,
-                                                 stdout=subprocess.PIPE,
-                                                 stderr=subprocess.PIPE)
-
+                        matlab_cmd = ("restoredefaultpath; "
+                                      "addpath('" + spm_input + "'); "
+                                      "[name, ~]=spm('Ver'); "
+                                      "exit")
+                        p = subprocess.Popen([matlab_input, '-nodisplay',
+                                              '-nodesktop', '-nosplash',
+                                              '-singleCompThread', '-r',
+                                              matlab_cmd],
+                                             stdin=subprocess.PIPE,
+                                             stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE)
                         output, err = p.communicate()
 
-                        if ((err == b'' and output != b'')
-                                or output.startswith(b'SPM8 ')):
-                            # spm8 standalone doesn't accept --version argument
-                            # but prints a message that we can interpret as
-                            # saying that SPM8 is working anyway.
+                        if err == b'':
+                            config.set_matlab_path(matlab_input)
 
-                            if self.use_spm_standalone_checkbox.isChecked():
-                                config.set_use_spm_standalone(True)
-                                config.set_use_matlab_standalone(True)
+                            if self.use_spm_checkbox.isChecked():
+                                config.set_use_matlab(True)
+                                config.set_use_matlab_standalone(False)
+                                config.set_use_spm(True)
 
-                            config.set_spm_standalone_path(spm_input)
-                            config.set_matlab_standalone_path(matlab_input)
+                            config.set_spm_path(spm_input)
 
-                        elif ((err != b'') and
-                              (b'version' in output.split()[2:]) and
-                              (b'(standalone)' in output.split()[2:])):
+                        elif "spm" in str(err):
+                            self.wrong_path(spm_input, "SPM")
+                            QApplication.restoreOverrideCursor()
+                            return False
 
-                            if self.use_spm_standalone_checkbox.isChecked():
-                                config.set_use_spm_standalone(True)
-                                config.set_use_matlab_standalone(True)
-                            config.set_spm_standalone_path(spm_input)
-                            config.set_matlab_standalone_path(matlab_input)
+                        else:
+                            self.wrong_path(matlab_input, "Matlab")
+                            QApplication.restoreOverrideCursor()
+                            return False
 
-                            if isinstance(err, bytes):
-                                err = err.decode('utf-8')
+                    except Exception:
+                        self.wrong_path(matlab_input, "Matlab")
+                        QApplication.restoreOverrideCursor()
+                        return False
 
-                            print("\nWarning: The configuration for Matlab MCR "
-                                  "and SPM standalone as defined in Mia's "
-                                  "preferences seems to be valid but the "
-                                  "following issue has been detected:\n{}\n"
-                                  "Please fix this problem to avoid a "
-                                  "malfunction ...".format(err))
+                else:
+                    self.wrong_path(spm_input, "SPM")
+                    QApplication.restoreOverrideCursor()
+                    return False
+            
+            # Matlab alone config test
+            if matlab_input != "" or self.use_matlab_checkbox.isChecked():
+
+                if matlab_input == config.get_matlab_path():
+
+                    if self.use_matlab_checkbox.isChecked():
+                        config.set_use_matlab(True)
+                        config.set_use_matlab_standalone(False)
+
+                elif os.path.isfile(matlab_input):
+
+                    try:
+                        matlab_cmd = 'ver; exit'
+                        p = subprocess.Popen([matlab_input, '-nodisplay',
+                                              '-nodesktop', '-nosplash',
+                                              '-singleCompThread', '-r',
+                                              matlab_cmd],
+                                             stdin=subprocess.PIPE,
+                                             stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE)
+                        output, err = p.communicate()
+
+                        if err == b'':
+                            config.set_matlab_path(matlab_input)
+
+                            if self.use_matlab_checkbox.isChecked():
+                                config.set_use_matlab(True)
+                                config.set_use_matlab_standalone(False)
+
+                        else:
+                            self.wrong_path(matlab_input, "Matlab")
+                            QApplication.restoreOverrideCursor()
+                            return False
+
+                    except Exception:
+                        self.wrong_path(matlab_input, "Matlab")
+                        QApplication.restoreOverrideCursor()
+                        return False
+                else:
+                    self.wrong_path(matlab_input, "Matlab")
+                    QApplication.restoreOverrideCursor()
+                    return False
+            
+            # SPM (standalone) & Matlab (MCR) config test
+            spm_input = self.spm_standalone_choice.text()
+            matlab_input = self.matlab_standalone_choice.text()
+            archi = platform.architecture()
+
+            if ((matlab_input != "" and spm_input != "") or
+                                 self.use_spm_standalone_checkbox.isChecked()):
+
+                if ((not os.path.isdir(matlab_input)) and
+                                                  (not 'Windows' in archi[1])):
+                    self.wrong_path(matlab_input, "Matlab standalone")
+                    QApplication.restoreOverrideCursor()
+                    return False
+
+                if ((matlab_input == config.get_matlab_standalone_path()) and
+                              (spm_input == config.get_spm_standalone_path())):
+
+                    if self.use_spm_standalone_checkbox.isChecked():
+                        config.set_use_spm_standalone(True)
+
+                        if 'Windows' in archi[1]:
+                            config.set_use_matlab(True)
+                            config.set_use_matlab_standalone(False)
+
+                        else:
+                            config.set_use_matlab_standalone(True)
+
+                elif os.path.isdir(spm_input):
+
+                    if 'Windows' in archi[1]:
+                        mcr = glob.glob(os.path.join(spm_input,
+                                                     'spm*_win*.exe'))
+                        pos = -1
+                        nb_bit_sys = archi[0]
+
+                        for i in range(len(mcr)):
+                            spm_path, spm_file_name = os.path.split(mcr[i])
+
+                            if nb_bit_sys[:2] in spm_file_name:
+                                pos = i
+
+                        if pos == -1:
+                            self.wrong_path(spm_input, "SPM standalone")
+                            QApplication.restoreOverrideCursor()
+                            return False
+
+                    elif os.path.isdir(matlab_input):
+                        mcr = glob.glob(os.path.join(spm_input, 'run_spm*.sh'))
+
+                    if mcr:
+
+                        try:
+
+                            if 'Windows' in archi[1]:
+                                p = subprocess.Popen([mcr[pos], '--version'],
+                                                     stdin=subprocess.PIPE,
+                                                     stdout=subprocess.PIPE,
+                                                     stderr=subprocess.PIPE)
+
+                            else:
+                                p = subprocess.Popen([mcr[0], matlab_input,
+                                                      '--version'],
+                                                     stdin=subprocess.PIPE,
+                                                     stdout=subprocess.PIPE,
+                                                     stderr=subprocess.PIPE)
+
+                            output, err = p.communicate()
+
+                            if ((err == b'' and output != b'') or
+                                                  output.startswith(b'SPM8 ')):
+                                # spm8 standalone doesn't accept --version
+                                # argument but prints a message that we can
+                                # interpret as saying that SPM8 is working
+                                # anyway.
+
+                                if self.use_spm_standalone_checkbox.isChecked():
+                                    config.set_use_spm_standalone(True)
+                                    config.set_use_matlab_standalone(True)
+
+                                config.set_spm_standalone_path(spm_input)
+                                config.set_matlab_standalone_path(matlab_input)
+
+                            elif ((err != b'') and
+                                    (b'version' in output.split()[2:]) and
+                                       (b'(standalone)' in output.split()[2:])):
+
+                                if self.use_spm_standalone_checkbox.isChecked():
+                                    config.set_use_spm_standalone(True)
+                                    config.set_use_matlab_standalone(True)
+                                config.set_spm_standalone_path(spm_input)
+                                config.set_matlab_standalone_path(matlab_input)
+
+                                if isinstance(err, bytes):
+                                    err = err.decode('utf-8')
+
+                                print("\nWarning: The configuration for Matlab"
+                                      "MCR and SPM standalone as defined in"
+                                      "Mia's preferences seems to be valid but "
+                                      "the following issue has been detected:\n"
+                                      "{}\nPlease fix this problem to avoid a "
+                                      "malfunction ...".format(err))
                             
-                        elif err != b'':
+                            elif err != b'':
 
-                            if "shared libraries" in str(err):
-                                self.wrong_path(matlab_input,
-                                                "Matlab standalone")
-                                return False
+                                if "shared libraries" in str(err):
+                                    self.wrong_path(matlab_input,
+                                                    "Matlab standalone")
+                                    QApplication.restoreOverrideCursor()
+                                    return False
+
+                                else:
+                                    self.wrong_path(spm_input, "SPM standalone")
+                                    QApplication.restoreOverrideCursor()
+                                    return False
 
                             else:
                                 self.wrong_path(spm_input, "SPM standalone")
+                                QApplication.restoreOverrideCursor()
                                 return False
 
-                        else:
+                        except Exception as e:
                             self.wrong_path(spm_input, "SPM standalone")
+                            QApplication.restoreOverrideCursor()
                             return False
 
-                    except Exception as e:
+                    else:
                         self.wrong_path(spm_input, "SPM standalone")
+                        QApplication.restoreOverrideCursor()
                         return False
 
                 else:
                     self.wrong_path(spm_input, "SPM standalone")
+                    QApplication.restoreOverrideCursor()
                     return False
-            else:
-                self.wrong_path(spm_input, "SPM standalone")
-                return False
 
-        # Matlab (MCR) alone config test
-        if (matlab_input != "" or
-                     self.use_matlab_standalone_checkbox.isChecked()):
+            # Matlab (MCR) alone config test
+            if (matlab_input != "" or
+                              self.use_matlab_standalone_checkbox.isChecked()):
 
-            if 'Windows' in archi[1]:
-                print('WARNING : Matlab Standalone Path enter, this',
-                        'is unnecessary to use SPM12.')
-                config.set_use_matlab(True)
-                config.set_use_matlab_standalone(False)
-                config.set_matlab_standalone_path(matlab_input)
-
-            elif os.path.isdir(matlab_input):
-
-                if self.use_matlab_standalone_checkbox.isChecked():
-                    config.set_use_matlab_standalone(True)
+                if 'Windows' in archi[1]:
+                    print('WARNING: Matlab Standalone Path enter, this '
+                          'is unnecessary to use SPM12.')
+                    config.set_use_matlab(True)
+                    config.set_use_matlab_standalone(False)
                     config.set_matlab_standalone_path(matlab_input)
 
+                elif os.path.isdir(matlab_input):
+
+                    if self.use_matlab_standalone_checkbox.isChecked():
+                        config.set_use_matlab_standalone(True)
+                        config.set_matlab_standalone_path(matlab_input)
+
+                else:
+                    self.wrong_path(matlab_input, "Matlab standalone")
+                    QApplication.restoreOverrideCursor()
+                    return False
+
+            # Colors
+            background_color = self.background_color_combo.currentText()
+            text_color = self.text_color_combo.currentText()
+            config.setBackgroundColor(background_color)
+            config.setTextColor(text_color)
+            main_window.setStyleSheet("background-color:" +
+                                      background_color +
+                                      ";color:" +
+                                      text_color +
+                                      ";")
+
+            # main window setup
+            fullscreen = self.fullscreen_cbox.isChecked()
+            config.set_mainwindow_maximized(fullscreen)
+            w = self.mainwindow_size_x_spinbox.value()
+            h = self.mainwindow_size_y_spinbox.value()
+            config.set_mainwindow_size([w, h])
+
+            if fullscreen:
+                main_window.showMaximized()
+
             else:
-                self.wrong_path(matlab_input, "Matlab standalone")
-                return False
+                main_window.showNormal()
 
-        # Colors
-        background_color = self.background_color_combo.currentText()
-        text_color = self.text_color_combo.currentText()
-        config.setBackgroundColor(background_color)
-        config.setTextColor(text_color)
-        main_window.setStyleSheet(
-            "background-color:" + background_color + ";color:" +
-            text_color + ";")
+            self.signal_preferences_change.emit()
 
-        # main window setup
-        fullscreen = self.fullscreen_cbox.isChecked()
-        config.set_mainwindow_maximized(fullscreen)
-        w = self.mainwindow_size_x_spinbox.value()
-        h = self.mainwindow_size_y_spinbox.value()
-        config.set_mainwindow_size([w, h])
+            ##########################
+            c_c = config.config.setdefault('capsul_config', {})
+            c_e = config.get_capsul_engine()
 
-        if fullscreen:
-            main_window.showMaximized()
+            if c_c and c_e:
 
-        else:
-            main_window.showNormal()
+                # FSL CapsulConfig
+                if not config.get_use_fsl():
+                    # TODO: We only deal here with the global environment
+                    cif = c_e.settings.config_id_field
 
-        self.signal_preferences_change.emit()
-        QApplication.restoreOverrideCursor()
-        c_c = config.config.setdefault('capsul_config', {})
-        c_e = config.get_capsul_engine()
+                    with c_e.settings as settings:
+                        configfsl = settings.config('fsl', 'global')
 
-        if c_c and c_e:
+                        if configfsl:
+                            settings.remove_config('fsl', 'global',
+                                                   getattr(configfsl, cif))
 
-            # FSL CapsulConfig
-            if not config.get_use_fsl():
+                    # TODO: We could use a generic method to deal with c_c?
+                    try:
+                        del c_c['engine']['global'][
+                            'capsul.engine.module.fsl']['directory']
 
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
+                    except KeyError:
+                        pass
 
-                with c_e.settings as settings:
-                    configfsl = settings.config('fsl', 'global')
+                    try:
+                        del c_c['engine']['global'][
+                            'capsul.engine.module.fsl']['config']
 
-                    if configfsl:
-                        settings.remove_config('fsl', 'global',
-                                               getattr(configfsl, cif))
+                    except KeyError:
+                        pass
 
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.fsl']['directory']
+                # AFNI CapsulConfig
+                if not config.get_use_afni():
 
-                except KeyError:
-                    pass
+                    # TODO: We only deal here with the global environment
+                    cif = c_e.settings.config_id_field
 
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.fsl']['config']
+                    with c_e.settings as settings:
+                        configafni = settings.config('afni', 'global')
 
-                except KeyError:
-                    pass
+                        if configafni:
+                            settings.remove_config('afni', 'global',
+                                                   getattr(configafni, cif))
 
-            # AFNI CapsulConfig
-            if not config.get_use_afni():
+                    # TODO: We could use a generic method to deal with c_c?
+                    try:
+                        del c_c['engine']['global'][
+                            'capsul.engine.module.afni']['directory']
 
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
+                    except KeyError:
+                        pass
 
-                with c_e.settings as settings:
-                    configafni = settings.config('afni', 'global')
+                # ANTS CapsulConfig
+                if not config.get_use_ants():
 
-                    if configafni:
-                        settings.remove_config('afni', 'global',
-                                               getattr(configafni, cif))
+                    # TODO: We only deal here with the global environment
+                    cif = c_e.settings.config_id_field
 
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.afni']['directory']
+                    with c_e.settings as settings:
+                        configants = settings.config('ants', 'global')
 
-                except KeyError:
-                    pass
+                        if configants:
+                            settings.remove_config('ants', 'global',
+                                                   getattr(configants, cif))
 
-            # ANTS CapsulConfig
-            if not config.get_use_ants():
+                    # TODO: We could use a generic method to deal with c_c?
+                    try:
+                        del c_c['engine']['global'][
+                            'capsul.engine.module.ants']['directory']
 
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
+                    except KeyError:
+                        pass
 
-                with c_e.settings as settings:
-                    configants = settings.config('ants', 'global')
+                # SPM standalone CapsulConfig
+                if config.get_use_spm_standalone():
 
-                    if configants:
-                        settings.remove_config('ants', 'global',
-                                               getattr(configants, cif))
+                    try:
+                        c_c['engine']['global'][
+                            'capsul.engine.module.spm'][
+                                'directory'] = config.get_spm_standalone_path()
 
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.ants']['directory']
+                    except KeyError:
+                        pass
 
-                except KeyError:
-                    pass
+                    try:
+                        c_c['engine']['global'][
+                            'capsul.engine.module.spm'][
+                                'standalone'] = True
 
-            # SPM standalone CapsulConfig
-            if config.get_use_spm_standalone():
+                    except KeyError:
+                        pass
 
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'directory'] = config.get_spm_standalone_path()
+                    cif = c_e.settings.config_id_field
 
-                except KeyError:
-                    pass
+                    with c_e.settings as settings:
 
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'standalone'] = True
+                        for c in settings.configs('spm', 'global'):
+                            settings.remove_config('spm', 'global',
+                                                   getattr(c, cif))
 
-                except KeyError:
-                    pass
-
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
-
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
-
-                    settings.new_config('spm', 'global',
+                        settings.new_config('spm', 'global',
                                 {'config_id': 'spm',
                                  'standalone': True,
                                  'directory': config.get_spm_standalone_path()})
 
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
+                        for c in settings.configs('matlab', 'global'):
+                            settings.remove_config('matlab', 'global',
+                                                   getattr(c, cif))
 
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable']
+                    try:
+                        del c_c['engine']['global'][
+                            'capsul.engine.module.matlab'][
+                                'executable']
 
-                except KeyError:
-                    pass
+                    except KeyError:
+                        pass
 
-            # SPM
-            elif config.get_use_spm():
+                # SPM
+                elif config.get_use_spm():
 
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'directory'] = config.get_spm_path()
+                    try:
+                        c_c['engine']['global'][
+                            'capsul.engine.module.spm'][
+                                'directory'] = config.get_spm_path()
 
-                except KeyError:
-                    pass
+                    except KeyError:
+                        pass
 
-                cif = c_e.settings.config_id_field
+                    cif = c_e.settings.config_id_field
 
-                with c_e.settings as settings:
+                    with c_e.settings as settings:
 
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
+                        for c in settings.configs('spm', 'global'):
+                            settings.remove_config('spm', 'global',
+                                                   getattr(c, cif))
 
-                    settings.new_config('spm', 'global',
+                        settings.new_config('spm', 'global',
                                        {'config_id': 'spm',
                                         'directory': config.get_spm_path(),
                                         'standalone': False})
 
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
+                        for c in settings.configs('matlab', 'global'):
+                            settings.remove_config('matlab', 'global',
+                                                   getattr(c, cif))
 
-                    settings.new_config('matlab', 'global',
+                        settings.new_config('matlab', 'global',
                                        {'config_id': 'matlab',
                                         'executable': config.get_matlab_path()})
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable'] = config.get_matlab_path()
+                    try:
+                        c_c['engine']['global'][
+                            'capsul.engine.module.matlab'][
+                                'executable'] = config.get_matlab_path()
 
-                except KeyError:
-                    pass
+                    except KeyError:
+                        pass
 
-            # no SPM at all
-            else:
+                # no SPM at all
+                else:
+                    cif = c_e.settings.config_id_field
 
-                cif = c_e.settings.config_id_field
+                    with c_e.settings as settings:
 
-                with c_e.settings as settings:
+                        for c in settings.configs('spm', 'global'):
+                            settings.remove_config('spm', 'global',
+                                                   getattr(c, cif))
 
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
+                    try:
+                        del c_c['engine']['global'][
+                            'capsul.engine.module.spm'][
+                                'directory']
 
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'directory']
+                    except KeyError:
+                        pass
 
-                except KeyError:
-                    pass
+                # no MATLAB at all
+                if (not config.get_use_matlab() and
+                                       not config.get_use_matlab_standalone()):
+                    cif = c_e.settings.config_id_field
 
-            # no MATLAB at all
-            if (not config.get_use_matlab() and
-                                  not config.get_use_matlab_standalone()):
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
+                    with c_e.settings as settings:
             
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
+                        for c in settings.configs('matlab', 'global'):
+                            settings.remove_config('matlab', 'global',
+                                                   getattr(c, cif))
 
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable']
+                    try:
+                        del c_c['engine']['global'][
+                            'capsul.engine.module.matlab'][
+                                'executable']
 
-                except KeyError:
-                    pass
+                    except KeyError:
+                        pass
 
-            # only MATLAB
-            if config.get_use_matlab() and not config.get_use_spm():
+                # only MATLAB
+                if config.get_use_matlab() and not config.get_use_spm():
 
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable'] = config.get_matlab_path()
+                    try:
+                        c_c['engine']['global'][
+                            'capsul.engine.module.matlab'][
+                                'executable'] = config.get_matlab_path()
 
-                except KeyError:
-                    pass
+                    except KeyError:
+                        pass
 
-                cif = c_e.settings.config_id_field
+                    cif = c_e.settings.config_id_field
 
-                with c_e.settings as settings:
+                    with c_e.settings as settings:
 
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
+                        for c in settings.configs('matlab', 'global'):
+                            settings.remove_config('matlab', 'global',
+                                                   getattr(c, cif))
 
-                    settings.new_config('matlab', 'global',
+                        settings.new_config('matlab', 'global',
                                        {'config_id': 'matlab',
                                         'executable': config.get_matlab_path()})
 
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
+                        for c in settings.configs('spm', 'global'):
+                            settings.remove_config('spm', 'global',
+                                                   getattr(c, cif))
 
-        config.get_capsul_config()
-        config.saveConfig()
-        return True
-
+            config.get_capsul_config()
+            config.saveConfig()
+            QApplication.restoreOverrideCursor()
+            return True
 
     def ok_clicked(self):
-        if self.validate_and_save():
+        if self.validate_and_save(OK_clicked=True):
             self.accept()
             self.close()
 
