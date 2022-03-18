@@ -2774,9 +2774,12 @@ class PopUpPreferences(QDialog):
 
             # fsl
             use_fsl = config.get_use_fsl()
+
+            if use_fsl:
+                self.fsl_choice.setText(config.get_fsl_config())
+
             use_fsl = Qt.Qt.Checked if use_fsl else Qt.Qt.Unchecked
             self.use_fsl_checkbox.setCheckState(use_fsl)
-            self.fsl_choice.setText(config.get_fsl_config())
 
             # afni
             use_afni = config.get_use_afni()

@@ -949,12 +949,22 @@ class Config:
         # fsl
         fsl = engine_config.get('global', {}).get('capsul.engine.module.fsl')
         use_fsl = False
+
         if fsl:
             fsl = next(iter(fsl.values()))
             fsl_conf_path = fsl.get('config')
+            fsl_dir_path = fsl.get('directory')
+
             if fsl_conf_path:
                 use_fsl = True
                 self.set_fsl_config(fsl_conf_path)
+                self.set_use_fsl(True)
+
+            # if only the directory parameter has been set, let's try using
+            # the config parameter = directory/fsl.sh:
+            elif fsl_dir_path:
+                use_fsl = True
+                self.set_fsl_config(os.path.join(fsl_dir_path, 'fsl.sh'))
                 self.set_use_fsl(True)
 
         if use_fsl is False:
