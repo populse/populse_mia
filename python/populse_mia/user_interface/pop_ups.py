@@ -2736,23 +2736,6 @@ class PopUpPreferences(QDialog):
             except KeyError:
                 pass
 
-        # AFNI
-        if not config.get_use_afni():
-
-            try:
-               del capsul_config['engine']['global'][
-                                        'capsul.engine.module.afni']['directory']
-
-            except KeyError:
-                pass
-
-            try:
-               del capsul_config['engine']['global'][
-                                        'capsul.engine.module.afni']['config']
-
-            except KeyError:
-                pass
-
         # ANTS
         if not config.get_use_ants():
 
@@ -2834,9 +2817,12 @@ class PopUpPreferences(QDialog):
 
             # afni
             use_afni = config.get_use_afni()
+
+            if use_afni:
+                self.afni_choice.setText(config.get_afni_path())
+
             use_afni = Qt.Qt.Checked if use_afni else Qt.Qt.Unchecked
             self.use_afni_checkbox.setCheckState(use_afni)
-            self.afni_choice.setText(config.get_afni_path())
 
             # ants
             use_ants = config.get_use_ants()
@@ -2860,69 +2846,66 @@ class PopUpPreferences(QDialog):
         """
 
         config = Config()
-        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-        self.status_label.setText("Testing configuration ...")
-        QCoreApplication.processEvents()
 
-        # Minimum configuration backup:
-        if not OK_clicked:
+        # Minimum configuration backup (for Edit CAPSUL config synchronisation):
 
-            # Use AFNI
-            if self.use_afni_checkbox.isChecked():
-                afni_dir = self.afni_choice.text()
-                config.set_afni_path(afni_dir)
-                config.set_use_afni(True)
+        # Use AFNI
+        afni_dir = self.afni_choice.text()
+        config.set_afni_path(afni_dir)
 
-            else:
-                config.set_use_afni(False)
+        if self.use_afni_checkbox.isChecked():
+            config.set_use_afni(True)
 
-            # Use ANTS
-            if self.use_ants_checkbox.isChecked():
-                config.set_use_ants(True)
+        else:
+            config.set_use_afni(False)
 
-            else:
-                config.set_use_ants(False)
+        # Use ANTS
+        if self.use_ants_checkbox.isChecked():
+            config.set_use_ants(True)
 
-            # Use FSL
-            if self.use_fsl_checkbox.isChecked():
-                config.set_use_fsl(True)
+        else:
+            config.set_use_ants(False)
 
-            else:
-                config.set_use_fsl(False)
+        # Use FSL
+        if self.use_fsl_checkbox.isChecked():
+            config.set_use_fsl(True)
 
-            # Use Matlab
-            if self.use_matlab_checkbox.isChecked():
-                config.set_use_matlab(True)
+        else:
+            config.set_use_fsl(False)
 
-            else:
-                config.set_use_matlab(False)
+        # Use Matlab
+        if self.use_matlab_checkbox.isChecked():
+            config.set_use_matlab(True)
 
-            # Use Matlab Runtime:
-            if self.use_matlab_standalone_checkbox.isChecked():
-                config.set_use_matlab_standalone(True)
+        else:
+            config.set_use_matlab(False)
 
-            else:
-                config.set_use_matlab_standalone(False)
+        # Use Matlab Runtime:
+        if self.use_matlab_standalone_checkbox.isChecked():
+            config.set_use_matlab_standalone(True)
 
-            # Use SPM
-            if self.use_spm_checkbox.isChecked():
-                config.set_use_spm(True)
+        else:
+            config.set_use_matlab_standalone(False)
 
-            else:
-                config.set_use_spm(False)
+        # Use SPM
+        if self.use_spm_checkbox.isChecked():
+            config.set_use_spm(True)
 
-            # Use SPM standalone
-            if self.use_spm_standalone_checkbox.isChecked():
-                config.set_use_spm_standalone(True)
+        else:
+            config.set_use_spm(False)
 
-            else:
-                config.set_use_spm_standalone(False)
+        # Use SPM standalone
+        if self.use_spm_standalone_checkbox.isChecked():
+            config.set_use_spm_standalone(True)
 
-            QApplication.restoreOverrideCursor()
-            return True
+        else:
+            config.set_use_spm_standalone(False)
 
         # complete backup and testing
-        else:
+        if OK_clicked:
+            QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+            self.status_label.setText("Testing configuration ...")
+            QCoreApplication.processEvents()
 
             # Auto-save
             if self.save_checkbox.isChecked():
@@ -2948,59 +2931,6 @@ class PopUpPreferences(QDialog):
             # Max thumbnails number at the data browser bottom
             max_thumbnails = min(max(self.max_thumbnails_box.value(), 1), 15)
             config.set_max_thumbnails(max_thumbnails)
-
-            # Projects folder
-            projects_folder = self.projects_save_path_line_edit.text()
-
-            if os.path.isdir(projects_folder):
-                config.set_projects_save_path(projects_folder)
-
-            else:
-                self.msg = QMessageBox()
-                self.msg.setIcon(QMessageBox.Critical)
-                self.msg.setText("Invalid projects folder path")
-                self.msg.setInformativeText("The projects folder path entered "
-                                            "{0} is "
-                                            "invalid.".format(projects_folder))
-                self.msg.setWindowTitle("Error")
-                self.msg.setStandardButtons(QMessageBox.Ok)
-                self.msg.buttonClicked.connect(self.msg.close)
-                self.msg.show()
-                QApplication.restoreOverrideCursor()
-                return False
-
-            # MRIFileManager.jar path
-            mri_conv_path = self.mri_conv_path_line_edit.text()
-
-            if mri_conv_path == "":
-                self.msg = QMessageBox()
-                self.msg.setIcon(QMessageBox.Warning)
-                self.msg.setText("Empty MRIFileManager.jar path")
-                self.msg.setInformativeText("No path has been entered for "
-                                            "MRIFileManager.jar.".format(
-                                                                mri_conv_path))
-                self.msg.setWindowTitle("Warning")
-                self.msg.setStandardButtons(QMessageBox.Ok)
-                self.msg.buttonClicked.connect(self.msg.close)
-                self.msg.show()
-                config.set_mri_conv_path(mri_conv_path)
-
-            elif os.path.isfile(mri_conv_path):
-                config.set_mri_conv_path(mri_conv_path)
-
-            else:
-                self.msg = QMessageBox()
-                self.msg.setIcon(QMessageBox.Critical)
-                self.msg.setText("Invalid MRIFileManager.jar path")
-                self.msg.setInformativeText("The MRIFileManager.jar path "
-                                            "entered {0} "
-                                            "is invalid.".format(mri_conv_path))
-                self.msg.setWindowTitle("Error")
-                self.msg.setStandardButtons(QMessageBox.Ok)
-                self.msg.buttonClicked.connect(self.msg.close)
-                self.msg.show()
-                QApplication.restoreOverrideCursor()
-                return False
 
             # Max projects in "Saved projects"
             max_projects = min(max(self.max_projects_box.value(), 1), 20)
@@ -3436,234 +3366,288 @@ class PopUpPreferences(QDialog):
             else:
                 main_window.showNormal()
 
+            # Projects folder
+            projects_folder = self.projects_save_path_line_edit.text()
+
+            if os.path.isdir(projects_folder):
+                config.set_projects_save_path(projects_folder)
+
+            else:
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Critical)
+                self.msg.setText("Invalid projects folder path")
+                self.msg.setInformativeText("The projects folder path entered "
+                                            "{0} is "
+                                            "invalid.".format(projects_folder))
+                self.msg.setWindowTitle("Error")
+                self.msg.setStandardButtons(QMessageBox.Ok)
+                self.msg.buttonClicked.connect(self.msg.close)
+                self.msg.show()
+                QApplication.restoreOverrideCursor()
+                return False
+
+            # MRIFileManager.jar path
+            mri_conv_path = self.mri_conv_path_line_edit.text()
+
+            if mri_conv_path == "":
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Warning)
+                self.msg.setText("Empty MRIFileManager.jar path")
+                self.msg.setInformativeText("No path has been entered for "
+                                            "MRIFileManager.jar.".format(
+                                                                mri_conv_path))
+                self.msg.setWindowTitle("Warning")
+                self.msg.setStandardButtons(QMessageBox.Ok)
+                self.msg.buttonClicked.connect(self.msg.close)
+                self.msg.show()
+                config.set_mri_conv_path(mri_conv_path)
+
+            elif os.path.isfile(mri_conv_path):
+                config.set_mri_conv_path(mri_conv_path)
+
+            else:
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Critical)
+                self.msg.setText("Invalid MRIFileManager.jar path")
+                self.msg.setInformativeText("The MRIFileManager.jar path "
+                                            "entered {0} "
+                                            "is invalid.".format(mri_conv_path))
+                self.msg.setWindowTitle("Error")
+                self.msg.setStandardButtons(QMessageBox.Ok)
+                self.msg.buttonClicked.connect(self.msg.close)
+                self.msg.show()
+                QApplication.restoreOverrideCursor()
+                return False
+
             self.signal_preferences_change.emit()
-
-            ##########################
-            c_c = config.config.setdefault('capsul_config', {})
-            c_e = config.get_capsul_engine()
-
-            if c_c and c_e:
-
-                # FSL CapsulConfig
-                if not config.get_use_fsl():
-                    # TODO: We only deal here with the global environment
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-                        configfsl = settings.config('fsl', 'global')
-
-                        if configfsl:
-                            settings.remove_config('fsl', 'global',
-                                                   getattr(configfsl, cif))
-
-                    # TODO: We could use a generic method to deal with c_c?
-                    try:
-                        del c_c['engine']['global'][
-                            'capsul.engine.module.fsl']['directory']
-
-                    except KeyError:
-                        pass
-
-                    try:
-                        del c_c['engine']['global'][
-                            'capsul.engine.module.fsl']['config']
-
-                    except KeyError:
-                        pass
-
-                # AFNI CapsulConfig
-                if not config.get_use_afni():
-
-                    # TODO: We only deal here with the global environment
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-                        configafni = settings.config('afni', 'global')
-
-                        if configafni:
-                            settings.remove_config('afni', 'global',
-                                                   getattr(configafni, cif))
-
-                    # TODO: We could use a generic method to deal with c_c?
-                    try:
-                        del c_c['engine']['global'][
-                            'capsul.engine.module.afni']['directory']
-
-                    except KeyError:
-                        pass
-
-                # ANTS CapsulConfig
-                if not config.get_use_ants():
-
-                    # TODO: We only deal here with the global environment
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-                        configants = settings.config('ants', 'global')
-
-                        if configants:
-                            settings.remove_config('ants', 'global',
-                                                   getattr(configants, cif))
-
-                    # TODO: We could use a generic method to deal with c_c?
-                    try:
-                        del c_c['engine']['global'][
-                            'capsul.engine.module.ants']['directory']
-
-                    except KeyError:
-                        pass
-
-                # SPM standalone CapsulConfig
-                if config.get_use_spm_standalone():
-
-                    try:
-                        c_c['engine']['global'][
-                            'capsul.engine.module.spm'][
-                                'directory'] = config.get_spm_standalone_path()
-
-                    except KeyError:
-                        pass
-
-                    try:
-                        c_c['engine']['global'][
-                            'capsul.engine.module.spm'][
-                                'standalone'] = True
-
-                    except KeyError:
-                        pass
-
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-
-                        for c in settings.configs('spm', 'global'):
-                            settings.remove_config('spm', 'global',
-                                                   getattr(c, cif))
-
-                        settings.new_config('spm', 'global',
-                                {'config_id': 'spm',
-                                 'standalone': True,
-                                 'directory': config.get_spm_standalone_path()})
-
-                        for c in settings.configs('matlab', 'global'):
-                            settings.remove_config('matlab', 'global',
-                                                   getattr(c, cif))
-
-                    try:
-                        del c_c['engine']['global'][
-                            'capsul.engine.module.matlab'][
-                                'executable']
-
-                    except KeyError:
-                        pass
-
-                # SPM
-                elif config.get_use_spm():
-
-                    try:
-                        c_c['engine']['global'][
-                            'capsul.engine.module.spm'][
-                                'directory'] = config.get_spm_path()
-
-                    except KeyError:
-                        pass
-
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-
-                        for c in settings.configs('spm', 'global'):
-                            settings.remove_config('spm', 'global',
-                                                   getattr(c, cif))
-
-                        settings.new_config('spm', 'global',
-                                       {'config_id': 'spm',
-                                        'directory': config.get_spm_path(),
-                                        'standalone': False})
-
-                        for c in settings.configs('matlab', 'global'):
-                            settings.remove_config('matlab', 'global',
-                                                   getattr(c, cif))
-
-                        settings.new_config('matlab', 'global',
-                                       {'config_id': 'matlab',
-                                        'executable': config.get_matlab_path()})
-                    try:
-                        c_c['engine']['global'][
-                            'capsul.engine.module.matlab'][
-                                'executable'] = config.get_matlab_path()
-
-                    except KeyError:
-                        pass
-
-                # no SPM at all
-                else:
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-
-                        for c in settings.configs('spm', 'global'):
-                            settings.remove_config('spm', 'global',
-                                                   getattr(c, cif))
-
-                    try:
-                        del c_c['engine']['global'][
-                            'capsul.engine.module.spm'][
-                                'directory']
-
-                    except KeyError:
-                        pass
-
-                # no MATLAB at all
-                if (not config.get_use_matlab() and
-                                       not config.get_use_matlab_standalone()):
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-            
-                        for c in settings.configs('matlab', 'global'):
-                            settings.remove_config('matlab', 'global',
-                                                   getattr(c, cif))
-
-                    try:
-                        del c_c['engine']['global'][
-                            'capsul.engine.module.matlab'][
-                                'executable']
-
-                    except KeyError:
-                        pass
-
-                # only MATLAB
-                if config.get_use_matlab() and not config.get_use_spm():
-
-                    try:
-                        c_c['engine']['global'][
-                            'capsul.engine.module.matlab'][
-                                'executable'] = config.get_matlab_path()
-
-                    except KeyError:
-                        pass
-
-                    cif = c_e.settings.config_id_field
-
-                    with c_e.settings as settings:
-
-                        for c in settings.configs('matlab', 'global'):
-                            settings.remove_config('matlab', 'global',
-                                                   getattr(c, cif))
-
-                        settings.new_config('matlab', 'global',
-                                       {'config_id': 'matlab',
-                                        'executable': config.get_matlab_path()})
-
-                        for c in settings.configs('spm', 'global'):
-                            settings.remove_config('spm', 'global',
-                                                   getattr(c, cif))
-
-            config.get_capsul_config()
-            config.saveConfig()
             QApplication.restoreOverrideCursor()
-            return True
+
+        ##########################
+        c_c = config.config.setdefault('capsul_config', {})
+        c_e = config.get_capsul_engine()
+
+        if c_c and c_e:
+
+            # AFNI CapsulConfig
+            if not config.get_use_afni():
+
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configafni = settings.config('afni', 'global')
+
+                    if configafni:
+                        settings.remove_config('afni', 'global',
+                                               getattr(configafni, cif))
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.afni']['afni']['directory']
+
+                except KeyError:
+                    pass
+
+            # FSL CapsulConfig
+            if not config.get_use_fsl():
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configfsl = settings.config('fsl', 'global')
+
+                    if configfsl:
+                        settings.remove_config('fsl', 'global',
+                                               getattr(configfsl, cif))
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.fsl']['directory']
+
+                except KeyError:
+                    pass
+
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.fsl']['config']
+
+                except KeyError:
+                    pass
+
+
+            # ANTS CapsulConfig
+            if not config.get_use_ants():
+
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configants = settings.config('ants', 'global')
+
+                    if configants:
+                        settings.remove_config('ants', 'global',
+                                               getattr(configants, cif))
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.ants']['directory']
+
+                except KeyError:
+                    pass
+
+            # SPM standalone CapsulConfig
+            if config.get_use_spm_standalone():
+
+                try:
+                    c_c['engine']['global'][
+                        'capsul.engine.module.spm'][
+                            'directory'] = config.get_spm_standalone_path()
+
+                except KeyError:
+                    pass
+
+                try:
+                    c_c['engine']['global'][
+                        'capsul.engine.module.spm'][
+                            'standalone'] = True
+
+                except KeyError:
+                    pass
+
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+
+                    for c in settings.configs('spm', 'global'):
+                        settings.remove_config('spm', 'global',
+                                               getattr(c, cif))
+
+                    settings.new_config('spm', 'global',
+                            {'config_id': 'spm',
+                             'standalone': True,
+                             'directory': config.get_spm_standalone_path()})
+
+                    for c in settings.configs('matlab', 'global'):
+                        settings.remove_config('matlab', 'global',
+                                               getattr(c, cif))
+
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.matlab'][
+                            'executable']
+
+                except KeyError:
+                    pass
+
+            # SPM
+            elif config.get_use_spm():
+
+                try:
+                    c_c['engine']['global'][
+                        'capsul.engine.module.spm'][
+                            'directory'] = config.get_spm_path()
+
+                except KeyError:
+                    pass
+
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+
+                    for c in settings.configs('spm', 'global'):
+                        settings.remove_config('spm', 'global',
+                                               getattr(c, cif))
+
+                    settings.new_config('spm', 'global',
+                                   {'config_id': 'spm',
+                                    'directory': config.get_spm_path(),
+                                    'standalone': False})
+
+                    for c in settings.configs('matlab', 'global'):
+                        settings.remove_config('matlab', 'global',
+                                               getattr(c, cif))
+
+                    settings.new_config('matlab', 'global',
+                                   {'config_id': 'matlab',
+                                    'executable': config.get_matlab_path()})
+                try:
+                    c_c['engine']['global'][
+                        'capsul.engine.module.matlab'][
+                            'executable'] = config.get_matlab_path()
+
+                except KeyError:
+                    pass
+
+            # no SPM at all
+            else:
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+
+                    for c in settings.configs('spm', 'global'):
+                        settings.remove_config('spm', 'global',
+                                               getattr(c, cif))
+
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.spm'][
+                            'directory']
+
+                except KeyError:
+                    pass
+
+            # no MATLAB at all
+            if (not config.get_use_matlab() and
+                                   not config.get_use_matlab_standalone()):
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+
+                    for c in settings.configs('matlab', 'global'):
+                        settings.remove_config('matlab', 'global',
+                                               getattr(c, cif))
+
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.matlab'][
+                            'executable']
+
+                except KeyError:
+                    pass
+
+            # only MATLAB
+            if config.get_use_matlab() and not config.get_use_spm():
+
+                try:
+                    c_c['engine']['global'][
+                        'capsul.engine.module.matlab'][
+                            'executable'] = config.get_matlab_path()
+
+                except KeyError:
+                    pass
+
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+
+                    for c in settings.configs('matlab', 'global'):
+                        settings.remove_config('matlab', 'global',
+                                               getattr(c, cif))
+
+                    settings.new_config('matlab', 'global',
+                                   {'config_id': 'matlab',
+                                    'executable': config.get_matlab_path()})
+
+                    for c in settings.configs('spm', 'global'):
+                        settings.remove_config('spm', 'global',
+                                               getattr(c, cif))
+
+        config.get_capsul_config()
+        config.saveConfig()
+        return True
 
     def ok_clicked(self):
         if self.validate_and_save(OK_clicked=True):
