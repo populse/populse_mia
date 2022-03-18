@@ -2736,23 +2736,6 @@ class PopUpPreferences(QDialog):
             except KeyError:
                 pass
 
-        # ANTS
-        if not config.get_use_ants():
-
-            try:
-               del capsul_config['engine']['global'][
-                                        'capsul.engine.module.ants']['directory']
-
-            except KeyError:
-                pass
-
-            try:
-               del capsul_config['engine']['global'][
-                                        'capsul.engine.module.ants']['config']
-
-            except KeyError:
-                pass
-
         # build a temporary new engine (because it may not be validated)
         engine = capsul_engine()
         for module in modules + ['fom', 'axon', 'python', 'fsl', 'freesurfer',
@@ -2826,9 +2809,12 @@ class PopUpPreferences(QDialog):
 
             # ants
             use_ants = config.get_use_ants()
+
+            if use_ants:
+                self.ants_choice.setText(config.get_ants_path())
+
             use_ants = Qt.Qt.Checked if use_ants else Qt.Qt.Unchecked
             self.use_ants_checkbox.setCheckState(use_ants)
-            self.ants_choice.setText(config.get_ants_path())
 
         del dialog
         del engine
@@ -2860,6 +2846,9 @@ class PopUpPreferences(QDialog):
             config.set_use_afni(False)
 
         # Use ANTS
+        ants_dir = self.ants_choice.text()
+        config.set_ants_path(ants_dir)
+
         if self.use_ants_checkbox.isChecked():
             config.set_use_ants(True)
 
@@ -2997,9 +2986,8 @@ class PopUpPreferences(QDialog):
                 config.set_use_afni(False)
 
             # ANTS config test
-            ants_dir = self.ants_choice.text()
-
             if self.use_ants_checkbox.isChecked():
+                ants_dir = self.ants_choice.text()
                 ants_cmd = 'SmoothImage'
 
                 if os.path.isdir(ants_dir):
@@ -3449,6 +3437,27 @@ class PopUpPreferences(QDialog):
                 except KeyError:
                     pass
 
+            # ANTS CapsulConfig
+            if not config.get_use_ants():
+
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configants = settings.config('ants', 'global')
+
+                    if configants:
+                        settings.remove_config('ants', 'global',
+                                               getattr(configants, cif))
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c['engine']['global'][
+                        'capsul.engine.module.ants']['directory']
+
+                except KeyError:
+                    pass
+
             # FSL CapsulConfig
             if not config.get_use_fsl():
                 # TODO: We only deal here with the global environment
@@ -3472,28 +3481,6 @@ class PopUpPreferences(QDialog):
                 try:
                     del c_c['engine']['global'][
                         'capsul.engine.module.fsl']['config']
-
-                except KeyError:
-                    pass
-
-
-            # ANTS CapsulConfig
-            if not config.get_use_ants():
-
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
-                    configants = settings.config('ants', 'global')
-
-                    if configants:
-                        settings.remove_config('ants', 'global',
-                                               getattr(configants, cif))
-
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.ants']['directory']
 
                 except KeyError:
                     pass
