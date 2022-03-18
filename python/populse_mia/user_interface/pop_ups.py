@@ -2691,9 +2691,6 @@ class PopUpPreferences(QDialog):
         modules = capsul_config.get('engine_modules', [])
 
         # TODO1: Currently, this is only done for the global environment:
-
-        # sync capsul config from mia config, if module is not used
-
         # MATLAB / SPM
         if not config.get_use_matlab():
 
@@ -2718,23 +2715,6 @@ class PopUpPreferences(QDialog):
 
         if not config.get_use_spm_standalone():
             print('pas de spm_standalone dans la config mia')
-
-        # FSL
-        if not config.get_use_fsl():
-
-            try:
-               del capsul_config['engine']['global'][
-                                        'capsul.engine.module.fsl']['directory']
-
-            except KeyError:
-                pass
-
-            try:
-               del capsul_config['engine']['global'][
-                                        'capsul.engine.module.fsl']['config']
-
-            except KeyError:
-                pass
 
         # build a temporary new engine (because it may not be validated)
         engine = capsul_engine()
@@ -2856,6 +2836,9 @@ class PopUpPreferences(QDialog):
             config.set_use_ants(False)
 
         # Use FSL
+        fsl_conf = self.fsl_choice.text()
+        config.set_fsl_config(fsl_conf)
+
         if self.use_fsl_checkbox.isChecked():
             config.set_use_fsl(True)
 
@@ -3022,9 +3005,8 @@ class PopUpPreferences(QDialog):
                 config.set_use_ants(False)
 
             # FSL config test
-            fsl_conf = self.fsl_choice.text()
-
             if self.use_fsl_checkbox.isChecked():
+                fsl_conf = self.fsl_choice.text()
 
                 if fsl_conf == "":
                     fsl_cmd = 'flirt'
@@ -3416,6 +3398,7 @@ class PopUpPreferences(QDialog):
 
         if c_c and c_e:
 
+            # sync capsul config from mia config, if module is not used
             # AFNI CapsulConfig
             if not config.get_use_afni():
 
@@ -3473,14 +3456,14 @@ class PopUpPreferences(QDialog):
                 # TODO: We could use a generic method to deal with c_c?
                 try:
                     del c_c['engine']['global'][
-                        'capsul.engine.module.fsl']['directory']
+                        'capsul.engine.module.fsl']['fsl']['directory']
 
                 except KeyError:
                     pass
 
                 try:
                     del c_c['engine']['global'][
-                        'capsul.engine.module.fsl']['config']
+                        'capsul.engine.module.fsl']['fsl']['config']
 
                 except KeyError:
                     pass
