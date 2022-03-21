@@ -316,12 +316,13 @@ class Config:
                       'directory': spm_path, 'standalone': False})
 
         # MATLAB
-        if matlab_standalone_path:
+        if use_matlab_standalone:
             m = eeconf.setdefault('capsul.engine.module.matlab',
                               {}).setdefault('matlab', {})
             m['mcr_directory'] = matlab_standalone_path
             m['config_id'] = 'matlab'
             m['config_environment'] = 'global'
+
         if use_matlab:
             m = eeconf.setdefault('capsul.engine.module.matlab',
                               {}).setdefault('matlab', {})

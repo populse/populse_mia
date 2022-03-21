@@ -2815,8 +2815,7 @@ class PopUpPreferences(QDialog):
         """
 
         config = Config()
-
-        # Minimum configuration backup (for Edit CAPSUL config synchronisation):
+        # Minimum config backup (for Edit CAPSUL config synchronisation):
 
         # Use AFNI
         afni_dir = self.afni_choice.text()
@@ -2849,6 +2848,9 @@ class PopUpPreferences(QDialog):
             config.set_use_fsl(False)
 
         # Use Matlab
+        matlab_input = self.matlab_choice.text()
+        config.set_matlab_path(matlab_input)
+
         if self.use_matlab_checkbox.isChecked():
             config.set_use_matlab(True)
 
@@ -2856,6 +2858,9 @@ class PopUpPreferences(QDialog):
             config.set_use_matlab(False)
 
         # Use Matlab Runtime:
+        matlab_input = self.matlab_standalone_choice.text()
+        config.set_matlab_standalone_path(matlab_input)
+
         if self.use_matlab_standalone_checkbox.isChecked():
             config.set_use_matlab_standalone(True)
 
@@ -2863,6 +2868,9 @@ class PopUpPreferences(QDialog):
             config.set_use_matlab_standalone(False)
 
         # Use SPM
+        spm_input = self.spm_choice.text()
+        config.set_spm_path(spm_input)
+
         if self.use_spm_checkbox.isChecked():
             config.set_use_spm(True)
 
@@ -2870,6 +2878,9 @@ class PopUpPreferences(QDialog):
             config.set_use_spm(False)
 
         # Use SPM standalone
+        spm_input = self.spm_standalone_choice.text()
+        config.set_spm_standalone_path(spm_input)
+
         if self.use_spm_standalone_checkbox.isChecked():
             config.set_use_spm_standalone(True)
 
@@ -2878,9 +2889,6 @@ class PopUpPreferences(QDialog):
 
         # complete backup and testing
         if OK_clicked:
-            QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-            self.status_label.setText("Testing configuration ...")
-            QCoreApplication.processEvents()
 
             # Auto-save
             if self.save_checkbox.isChecked():
@@ -2933,6 +2941,9 @@ class PopUpPreferences(QDialog):
             main_window.windowName += " - "
             main_window.setWindowTitle(main_window.windowName +
                                        main_window.projectName)
+            QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+            self.status_label.setText("Testing configuration ...")
+            QCoreApplication.processEvents()
 
             # AFNI config test
             if self.use_afni_checkbox.isChecked():
@@ -3471,154 +3482,212 @@ class PopUpPreferences(QDialog):
                 except KeyError:
                     pass
 
-            # SPM standalone CapsulConfig
-            if config.get_use_spm_standalone():
+            # # SPM standalone CapsulConfig ############################
+
+            if not config.get_use_spm_standalone():
 
                 try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'directory'] = config.get_spm_standalone_path()
+                    keys = c_c['engine']['global']['capsul.engine.module.spm'].keys()
 
                 except KeyError:
                     pass
 
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
+
+                    for i in keys:
+
+                        if 'standalone' in c_c['engine']['global']['capsul.engine.module.spm'][i]:
+
+                            if c_c['engine']['global']['capsul.engine.module.spm'][i]['standalone'] is True:
+                                dict4clean[i] = True
+
+                        else:
+                            #TODO: What we do if standalone is not a key ?
+                            pass
+
+                    for i in dict4clean:
+
+                        if dict4clean[i]:
+                            del c_c['engine']['global']['capsul.engine.module.spm'][i]
+
+            if not config.get_use_spm():
+
                 try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'standalone'] = True
+                    keys = c_c['engine']['global']['capsul.engine.module.spm'].keys()
 
                 except KeyError:
                     pass
 
-                cif = c_e.settings.config_id_field
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
 
-                with c_e.settings as settings:
+                    for i in keys:
 
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
+                        if 'standalone' in c_c['engine']['global']['capsul.engine.module.spm'][i]:
 
-                    settings.new_config('spm', 'global',
-                            {'config_id': 'spm',
-                             'standalone': True,
-                             'directory': config.get_spm_standalone_path()})
+                            if c_c['engine']['global']['capsul.engine.module.spm'][i]['standalone'] is False:
+                                dict4clean[i] = True
 
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
+                    for i in dict4clean:
 
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable']
+                        if dict4clean[i]:
+                            del c_c['engine']['global']['capsul.engine.module.spm'][i]
 
-                except KeyError:
-                    pass
+            try:
+                if not c_c['engine']['global']['capsul.engine.module.spm']:
+                    del c_c['engine']['global']['capsul.engine.module.spm']
 
-            # SPM
-            elif config.get_use_spm():
+            except KeyError:
+                pass
 
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'directory'] = config.get_spm_path()
+            # if not config.get_use_spm_standalone():
+            #
+            #     try:
+            #         del c_c['engine']['global'][
+            #             'capsul.engine.module.spm'][
+            #                                    'spm12-standalone']
+            #
+            #     except KeyError:
+            #         pass
+            #
+            #     # try:
+            #     #     del c_c['engine']['global'][
+            #     #         'capsul.engine.module.spm'][
+            #     #                             'spm12-standalone']['standalone']
+            #     #
+            #     # except KeyError:
+            #     #     pass
+            #
+            #     cif = c_e.settings.config_id_field
+            #
+            #     with c_e.settings as settings:
+            #
+            #         for c in settings.configs('spm', 'global'):
+            #             settings.remove_config('spm', 'global',
+            #                                    getattr(c, cif))
+            #
+            #         # settings.new_config('spm', 'global',
+            #         #         {'config_id': 'spm',
+            #         #          'standalone': False,
+            #         #          'directory': config.get_spm_standalone_path()})
+            #
+            #         # for c in settings.configs('matlab', 'global'):
+            #         #     settings.remove_config('matlab', 'global',
+            #         #                            getattr(c, cif))
+            #
+            #     # try:
+            #     #     del c_c['engine']['global'][
+            #     #         'capsul.engine.module.matlab'][
+            #     #             'executable']
+            #     #
+            #     # except KeyError:
+            #     #     pass
+            #
+            # # SPM
+            # elif not config.get_use_spm():
+            #
+            #     try:
+            #         c_c['engine']['global'][
+            #             'capsul.engine.module.spm']['spm'[
+            #                 'directory'] = config.get_spm_path()
+            #
+            #     except KeyError:
+            #         pass
+            #
+            #     cif = c_e.settings.config_id_field
+            #
+            #     with c_e.settings as settings:
+            #
+            #         for c in settings.configs('spm', 'global'):
+            #             settings.remove_config('spm', 'global',
+            #                                    getattr(c, cif))
+            #
+            #         # settings.new_config('spm', 'global',
+            #         #                {'config_id': 'spm',
+            #         #                 'directory': config.get_spm_path(),
+            #         #                 'standalone': False})
+            #
+            #         # for c in settings.configs('matlab', 'global'):
+            #         #     settings.remove_config('matlab', 'global',
+            #         #                            getattr(c, cif))
+            #         #
+            #         # settings.new_config('matlab', 'global',
+            #         #                {'config_id': 'matlab',
+            #         #                 'executable': config.get_matlab_path()})
+            #     # try:
+            #     #     c_c['engine']['global'][
+            #     #         'capsul.engine.module.matlab'][
+            #     #             'executable'] = config.get_matlab_path()
+            #     #
+            #     # except KeyError:
+            #     #     pass
+            #
+            # # no SPM at all
+            # else:
+            #     cif = c_e.settings.config_id_field
+            #
+            #     with c_e.settings as settings:
+            #
+            #         for c in settings.configs('spm', 'global'):
+            #             settings.remove_config('spm', 'global',
+            #                                    getattr(c, cif))
+            #
+            #     try:
+            #         del c_c['engine']['global'][
+            #             'capsul.engine.module.spm'][
+            #                 'directory']
+            #
+            #     except KeyError:
+            #         pass
+            #
+            # # no MATLAB at all
+            # if (not config.get_use_matlab() and
+            #                        not config.get_use_matlab_standalone()):
+            #     cif = c_e.settings.config_id_field
+            #
+            #     with c_e.settings as settings:
+            #
+            #         for c in settings.configs('matlab', 'global'):
+            #             settings.remove_config('matlab', 'global',
+            #                                    getattr(c, cif))
+            #
+            #     try:
+            #         del c_c['engine']['global'][
+            #             'capsul.engine.module.matlab'][
+            #                 'executable']
+            #
+            #     except KeyError:
+            #         pass
+            #
+            # # only MATLAB
+            # if config.get_use_matlab() and not config.get_use_spm():
+            #
+            #     try:
+            #         c_c['engine']['global'][
+            #             'capsul.engine.module.matlab'][
+            #                 'executable'] = config.get_matlab_path()
+            #
+            #     except KeyError:
+            #         pass
+            #
+            #     cif = c_e.settings.config_id_field
+            #
+            #     with c_e.settings as settings:
+            #
+            #         for c in settings.configs('matlab', 'global'):
+            #             settings.remove_config('matlab', 'global',
+            #                                    getattr(c, cif))
+            #
+            #         settings.new_config('matlab', 'global',
+            #                        {'config_id': 'matlab',
+            #                         'executable': config.get_matlab_path()})
+            #
+            #         for c in settings.configs('spm', 'global'):
+            #             settings.remove_config('spm', 'global',
+            #                                    getattr(c, cif))
 
-                except KeyError:
-                    pass
-
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
-
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
-
-                    settings.new_config('spm', 'global',
-                                   {'config_id': 'spm',
-                                    'directory': config.get_spm_path(),
-                                    'standalone': False})
-
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
-
-                    settings.new_config('matlab', 'global',
-                                   {'config_id': 'matlab',
-                                    'executable': config.get_matlab_path()})
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable'] = config.get_matlab_path()
-
-                except KeyError:
-                    pass
-
-            # no SPM at all
-            else:
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
-
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
-
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.spm'][
-                            'directory']
-
-                except KeyError:
-                    pass
-
-            # no MATLAB at all
-            if (not config.get_use_matlab() and
-                                   not config.get_use_matlab_standalone()):
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
-
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
-
-                try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable']
-
-                except KeyError:
-                    pass
-
-            # only MATLAB
-            if config.get_use_matlab() and not config.get_use_spm():
-
-                try:
-                    c_c['engine']['global'][
-                        'capsul.engine.module.matlab'][
-                            'executable'] = config.get_matlab_path()
-
-                except KeyError:
-                    pass
-
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
-
-                    for c in settings.configs('matlab', 'global'):
-                        settings.remove_config('matlab', 'global',
-                                               getattr(c, cif))
-
-                    settings.new_config('matlab', 'global',
-                                   {'config_id': 'matlab',
-                                    'executable': config.get_matlab_path()})
-
-                    for c in settings.configs('spm', 'global'):
-                        settings.remove_config('spm', 'global',
-                                               getattr(c, cif))
-
-        config.get_capsul_config()
+        config.get_capsul_config(sync_from_engine=False)
         config.saveConfig()
         return True
 
