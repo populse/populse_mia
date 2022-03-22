@@ -303,8 +303,8 @@ class Config:
         # SPM
         if use_spm_standalone:
             m = eeconf.setdefault('capsul.engine.module.spm',
-                              {}).setdefault('spm12-standalone', {})
-            m.update({'config_id': 'spm12-standalone',
+                              {}).setdefault('spm-standalone', {})
+            m.update({'config_id': 'spm-standalone',
                       'config_environment': 'global',
                       'directory': spm_standalone_path, 'standalone': True})
 
@@ -902,20 +902,34 @@ class Config:
         # matlab
         matlab = engine_config.get(
             'global', {}).get('capsul.engine.module.matlab')
-        use_matlab = False
+        #use_matlab = False
+
         if matlab:
             matlab = next(iter(matlab.values()))
             matlab_path = matlab.get('executable')
             use_matlab = bool(matlab_path)
+
+            if matlab_path:
+                self.set_matlab_path(matlab_path)
+
             mcr_dir = matlab.get('mcr_directory')
-            self.set_matlab_standalone_path(mcr_dir)
             use_matlab_standalone = bool(mcr_dir)
-            self.set_use_matlab_standalone(use_matlab_standalone)
-            self.set_matlab_path(matlab_path)
+
+            if mcr_dir:
+                self.set_matlab_standalone_path(mcr_dir)
+
+
+            #self.set_use_matlab_standalone(use_matlab_standalone)
+
             if use_matlab and matlab_path:
                 self.set_use_matlab(True)
-        if use_matlab is False:
-            self.set_use_matlab(False)
+
+            else:
+                self.set_use_matlab(False)
+
+
+        # if use_matlab is False:
+        #     self.set_use_matlab(False)
 
         # spm
         spm = engine_config.get('global', {}).get('capsul.engine.module.spm')

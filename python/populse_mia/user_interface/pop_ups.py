@@ -2687,34 +2687,28 @@ class PopUpPreferences(QDialog):
             return
 
         config = Config()
-        capsul_config = config.get_capsul_config()
+        capsul_config = config.get_capsul_config(sync_from_engine=False)
         modules = capsul_config.get('engine_modules', [])
 
         # TODO1: Currently, this is only done for the global environment:
         # MATLAB / SPM
-        if not config.get_use_matlab():
-
-            try:
-               del capsul_config['engine']['global'][
-                   'capsul.engine.module.matlab']['executable']
-
-            except KeyError:
-                pass
-
-        if not config.get_use_matlab_standalone():
-
-            try:
-                del capsul_config['engine']['global'][
-                    'capsul.engine.module.matlab']['mcr_directory']
-
-            except KeyError:
-                pass
-
-        if not config.get_use_spm():
-            print('pas de spm dans la config mia')
-
-        if not config.get_use_spm_standalone():
-            print('pas de spm_standalone dans la config mia')
+        # if not config.get_use_matlab():
+        #
+        #     try:
+        #        del capsul_config['engine']['global'][
+        #            'capsul.engine.module.matlab']['executable']
+        #
+        #     except KeyError:
+        #         pass
+        #
+        # if not config.get_use_matlab_standalone():
+        #
+        #     try:
+        #         del capsul_config['engine']['global'][
+        #             'capsul.engine.module.matlab']['mcr_directory']
+        #
+        #     except KeyError:
+        #         pass
 
         # build a temporary new engine (because it may not be validated)
         engine = capsul_engine()
@@ -2746,7 +2740,13 @@ class PopUpPreferences(QDialog):
 
             capsul_config['engine'] = settings
             capsul_config['engine_modules'] = list(engine._loaded_modules)
-            config.set_capsul_config(capsul_config)
+
+            try:
+                config.set_capsul_config(capsul_config)
+
+            except Exception as e:
+                print(e)
+                return
 
             # update Mia preferences GUI which might have changed
 
@@ -3537,6 +3537,37 @@ class PopUpPreferences(QDialog):
             try:
                 if not c_c['engine']['global']['capsul.engine.module.spm']:
                     del c_c['engine']['global']['capsul.engine.module.spm']
+
+            except KeyError:
+                pass
+
+            if not config.get_use_matlab():
+
+                try:
+                    keys = c_c['engine']['global']['capsul.engine.module.matlab'].keys()
+
+                except KeyError:
+                    pass
+
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
+
+                    for i in keys:
+
+                        if 'executable' in c_c['engine']['global']['capsul.engine.module.matlab'][i]:
+                                dict4clean[i] = True
+
+                    for i in dict4clean:
+
+                        if dict4clean[i]:
+                            del c_c['engine']['global']['capsul.engine.module.matlab'][i]
+
+            if not config.get_use_matlab_standalone():
+                pass
+
+            try:
+                if not c_c['engine']['global']['capsul.engine.module.matlab']:
+                    del c_c['engine']['global']['capsul.engine.module.matlab']
 
             except KeyError:
                 pass
