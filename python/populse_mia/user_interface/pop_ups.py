@@ -2677,7 +2677,11 @@ class PopUpPreferences(QDialog):
             index = regex.indexIn(self.editConf.txt.toPlainText(), pos)
 
     def edit_capsul_config(self):
-        """capsul engine edition"""
+        """Capsul engine edition
+
+        This method is used when user hit the Edit CAPSUL config button (File >
+        MIA preferences, Pipeline tab).
+        """
         
         from capsul.api import capsul_engine
         from capsul.qt_gui.widgets.settings_editor import SettingsEditor
@@ -3560,10 +3564,28 @@ class PopUpPreferences(QDialog):
                     for i in dict4clean:
 
                         if dict4clean[i]:
-                            del c_c['engine']['global']['capsul.engine.module.matlab'][i]
+                            del c_c['engine']['global']['capsul.engine.module.matlab'][i]['executable']
 
             if not config.get_use_matlab_standalone():
-                pass
+
+                try:
+                    keys = c_c['engine']['global']['capsul.engine.module.matlab'].keys()
+
+                except KeyError:
+                    pass
+
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
+
+                    for i in keys:
+
+                        if 'mcr_directory' in c_c['engine']['global']['capsul.engine.module.matlab'][i]:
+                                dict4clean[i] = True
+
+                    for i in dict4clean:
+
+                        if dict4clean[i]:
+                            del c_c['engine']['global']['capsul.engine.module.matlab'][i]['mcr_directory']
 
             try:
                 if not c_c['engine']['global']['capsul.engine.module.matlab']:

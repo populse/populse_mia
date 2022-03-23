@@ -882,7 +882,11 @@ class Config:
         self.saveConfig()
 
     def set_capsul_config(self, capsul_config_dict):
-        """Set CAPSUL configuration dict into MIA config
+        """Set CAPSUL configuration dict into MIA config.
+
+        This method is used just (and only) after editing capsul config
+        (in File > Mia preferences, Pipeline tab, Edit CAPSUL config button),
+        in order to synchronise the new Capsul config with the Mia preferences.
 
         :param capsul_config_dict: a dict; {'engine': {...},
                                             'engine_modules': [...]}
