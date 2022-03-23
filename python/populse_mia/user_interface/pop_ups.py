@@ -3454,7 +3454,7 @@ class PopUpPreferences(QDialog):
                 # TODO: We could use a generic method to deal with c_c?
                 try:
                     del c_c['engine']['global'][
-                        'capsul.engine.module.ants']['directory']
+                        'capsul.engine.module.ants']['ants']['directory']
 
                 except KeyError:
                     pass
