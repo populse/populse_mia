@@ -2686,33 +2686,13 @@ class PopUpPreferences(QDialog):
         from capsul.api import capsul_engine
         from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
-        # validate the current MIA config first
+        # validate the current Mia config first
         if not self.validate_and_save():
             return
 
         config = Config()
         capsul_config = config.get_capsul_config(sync_from_engine=False)
         modules = capsul_config.get('engine_modules', [])
-
-        # TODO1: Currently, this is only done for the global environment:
-        # MATLAB / SPM
-        # if not config.get_use_matlab():
-        #
-        #     try:
-        #        del capsul_config['engine']['global'][
-        #            'capsul.engine.module.matlab']['executable']
-        #
-        #     except KeyError:
-        #         pass
-        #
-        # if not config.get_use_matlab_standalone():
-        #
-        #     try:
-        #         del capsul_config['engine']['global'][
-        #             'capsul.engine.module.matlab']['mcr_directory']
-        #
-        #     except KeyError:
-        #         pass
 
         # build a temporary new engine (because it may not be validated)
         engine = capsul_engine()
@@ -2754,6 +2734,33 @@ class PopUpPreferences(QDialog):
 
             # update Mia preferences GUI which might have changed
 
+            # afni
+            use_afni = config.get_use_afni()
+
+            if use_afni:
+                self.afni_choice.setText(config.get_afni_path())
+
+            use_afni = Qt.Qt.Checked if use_afni else Qt.Qt.Unchecked
+            self.use_afni_checkbox.setCheckState(use_afni)
+
+            # ants
+            use_ants = config.get_use_ants()
+
+            if use_ants:
+                self.ants_choice.setText(config.get_ants_path())
+
+            use_ants = Qt.Qt.Checked if use_ants else Qt.Qt.Unchecked
+            self.use_ants_checkbox.setCheckState(use_ants)
+
+            # fsl
+            use_fsl = config.get_use_fsl()
+
+            if use_fsl:
+                self.fsl_choice.setText(config.get_fsl_config())
+
+            use_fsl = Qt.Qt.Checked if use_fsl else Qt.Qt.Unchecked
+            self.use_fsl_checkbox.setCheckState(use_fsl)
+
             # matlab
             use_matlab = config.get_use_matlab()
             use_matlab = Qt.Qt.Checked if use_matlab else Qt.Qt.Unchecked
@@ -2775,33 +2782,6 @@ class PopUpPreferences(QDialog):
             self.use_spm_standalone_checkbox.setCheckState(use_spm_sa)
             self.spm_standalone_choice.setText(
                 config.get_spm_standalone_path())
-
-            # fsl
-            use_fsl = config.get_use_fsl()
-
-            if use_fsl:
-                self.fsl_choice.setText(config.get_fsl_config())
-
-            use_fsl = Qt.Qt.Checked if use_fsl else Qt.Qt.Unchecked
-            self.use_fsl_checkbox.setCheckState(use_fsl)
-
-            # afni
-            use_afni = config.get_use_afni()
-
-            if use_afni:
-                self.afni_choice.setText(config.get_afni_path())
-
-            use_afni = Qt.Qt.Checked if use_afni else Qt.Qt.Unchecked
-            self.use_afni_checkbox.setCheckState(use_afni)
-
-            # ants
-            use_ants = config.get_use_ants()
-
-            if use_ants:
-                self.ants_choice.setText(config.get_ants_path())
-
-            use_ants = Qt.Qt.Checked if use_ants else Qt.Qt.Unchecked
-            self.use_ants_checkbox.setCheckState(use_ants)
 
         del dialog
         del engine
@@ -3410,13 +3390,13 @@ class PopUpPreferences(QDialog):
             self.signal_preferences_change.emit()
             QApplication.restoreOverrideCursor()
 
-        ##########################
         c_c = config.config.setdefault('capsul_config', {})
         c_e = config.get_capsul_engine()
 
         if c_c and c_e:
 
-            # sync capsul config from mia config, if module is not used
+            # sync capsul config from mia config, if module is not used:
+
             # AFNI CapsulConfig
             if not config.get_use_afni():
 
@@ -3432,8 +3412,8 @@ class PopUpPreferences(QDialog):
 
                 # TODO: We could use a generic method to deal with c_c?
                 try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.afni']['afni']['directory']
+                    del c_c['engine']['global']['capsul.engine.module.afni'][
+                                                'afni']['directory']
 
                 except KeyError:
                     pass
@@ -3453,8 +3433,8 @@ class PopUpPreferences(QDialog):
 
                 # TODO: We could use a generic method to deal with c_c?
                 try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.ants']['ants']['directory']
+                    del c_c['engine']['global']['capsul.engine.module.ants'][
+                                                'ants']['directory']
 
                 except KeyError:
                     pass
@@ -3473,25 +3453,25 @@ class PopUpPreferences(QDialog):
 
                 # TODO: We could use a generic method to deal with c_c?
                 try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.fsl']['fsl']['directory']
+                    del c_c['engine']['global']['capsul.engine.module.fsl'][
+                                                'fsl']['directory']
 
                 except KeyError:
                     pass
 
                 try:
-                    del c_c['engine']['global'][
-                        'capsul.engine.module.fsl']['fsl']['config']
+                    del c_c['engine']['global']['capsul.engine.module.fsl'][
+                                                'fsl']['config']
 
                 except KeyError:
                     pass
 
-            # # SPM standalone CapsulConfig ############################
-
+            # SPM standalone CapsulConfig
             if not config.get_use_spm_standalone():
 
                 try:
-                    keys = c_c['engine']['global']['capsul.engine.module.spm'].keys()
+                    keys = c_c['engine']['global'][
+                               'capsul.engine.module.spm'].keys()
 
                 except KeyError:
                     pass
@@ -3501,9 +3481,13 @@ class PopUpPreferences(QDialog):
 
                     for i in keys:
 
-                        if 'standalone' in c_c['engine']['global']['capsul.engine.module.spm'][i]:
+                        if ('standalone' in
+                                c_c['engine']['global'][
+                                    'capsul.engine.module.spm'][i]):
 
-                            if c_c['engine']['global']['capsul.engine.module.spm'][i]['standalone'] is True:
+                            if c_c['engine']['global'][
+                                   'capsul.engine.module.spm'][i][
+                                   'standalone'] is True:
                                 dict4clean[i] = True
 
                         else:
@@ -3513,12 +3497,14 @@ class PopUpPreferences(QDialog):
                     for i in dict4clean:
 
                         if dict4clean[i]:
-                            del c_c['engine']['global']['capsul.engine.module.spm'][i]
+                            del c_c['engine']['global'][
+                                    'capsul.engine.module.spm'][i]
 
             if not config.get_use_spm():
 
                 try:
-                    keys = c_c['engine']['global']['capsul.engine.module.spm'].keys()
+                    keys = c_c['engine']['global'][
+                               'capsul.engine.module.spm'].keys()
 
                 except KeyError:
                     pass
@@ -3528,15 +3514,20 @@ class PopUpPreferences(QDialog):
 
                     for i in keys:
 
-                        if 'standalone' in c_c['engine']['global']['capsul.engine.module.spm'][i]:
+                        if ('standalone' in
+                                c_c['engine']['global'][
+                                    'capsul.engine.module.spm'][i]):
 
-                            if c_c['engine']['global']['capsul.engine.module.spm'][i]['standalone'] is False:
+                            if c_c['engine']['global'][
+                                   'capsul.engine.module.spm'][i][
+                                   'standalone'] is False:
                                 dict4clean[i] = True
 
                     for i in dict4clean:
 
                         if dict4clean[i]:
-                            del c_c['engine']['global']['capsul.engine.module.spm'][i]
+                            del c_c['engine']['global'][
+                                    'capsul.engine.module.spm'][i]
 
             try:
                 if not c_c['engine']['global']['capsul.engine.module.spm']:
@@ -3548,7 +3539,8 @@ class PopUpPreferences(QDialog):
             if not config.get_use_matlab():
 
                 try:
-                    keys = c_c['engine']['global']['capsul.engine.module.matlab'].keys()
+                    keys = c_c['engine']['global'][
+                               'capsul.engine.module.matlab'].keys()
 
                 except KeyError:
                     pass
@@ -3558,18 +3550,23 @@ class PopUpPreferences(QDialog):
 
                     for i in keys:
 
-                        if 'executable' in c_c['engine']['global']['capsul.engine.module.matlab'][i]:
+                        if ('executable' in
+                                c_c['engine']['global'][
+                                    'capsul.engine.module.matlab'][i]):
                                 dict4clean[i] = True
 
                     for i in dict4clean:
 
                         if dict4clean[i]:
-                            del c_c['engine']['global']['capsul.engine.module.matlab'][i]['executable']
+                            del c_c['engine']['global'][
+                                    'capsul.engine.module.matlab'][i][
+                                    'executable']
 
             if not config.get_use_matlab_standalone():
 
                 try:
-                    keys = c_c['engine']['global']['capsul.engine.module.matlab'].keys()
+                    keys = c_c['engine']['global'][
+                               'capsul.engine.module.matlab'].keys()
 
                 except KeyError:
                     pass
@@ -3579,13 +3576,17 @@ class PopUpPreferences(QDialog):
 
                     for i in keys:
 
-                        if 'mcr_directory' in c_c['engine']['global']['capsul.engine.module.matlab'][i]:
+                        if ('mcr_directory' in
+                                c_c['engine']['global'][
+                                    'capsul.engine.module.matlab'][i]):
                                 dict4clean[i] = True
 
                     for i in dict4clean:
 
                         if dict4clean[i]:
-                            del c_c['engine']['global']['capsul.engine.module.matlab'][i]['mcr_directory']
+                            del c_c['engine']['global'][
+                                    'capsul.engine.module.matlab'][i][
+                                    'mcr_directory']
 
             try:
                 if not c_c['engine']['global']['capsul.engine.module.matlab']:

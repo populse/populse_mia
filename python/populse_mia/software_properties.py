@@ -27,6 +27,8 @@ import re
 import glob
 from cryptography.fernet import Fernet
 
+from capsul.api import capsul_engine
+
 CONFIG = b'5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc='
 
 
@@ -384,7 +386,7 @@ class Config:
 
         :returns: Config.capsul_engine: capsul.engine.CapsulEngine object
         """
-        from capsul.api import capsul_engine
+        #from capsul.api import capsul_engine
 
         config = Config()
         capsul_config = config.get_capsul_config()
@@ -891,22 +893,75 @@ class Config:
         :param capsul_config_dict: a dict; {'engine': {...},
                                             'engine_modules': [...]}
         """
+
         self.config['capsul_config'] = capsul_config_dict
 
         # update MIA values
         engine_config = capsul_config_dict.get('engine')
-        from capsul.api import capsul_engine
         new_engine = capsul_engine()
+
         for environment, config in engine_config.items():
+
             if environment == 'capsul_engine':
                 continue
+
             new_engine.import_configs(environment, config)
+
         engine_config = new_engine.settings.export_config_dict('global')
 
+        # afni
+        afni = engine_config.get('global', {}).get('capsul.engine.module.afni')
+
+        if afni:
+            afni = next(iter(afni.values()))
+            afni_path = afni.get('directory')
+            use_afni = bool(afni_path)
+
+            if afni_path:
+                self.set_afni_path(afni_path)
+
+            self.set_use_afni(use_afni)
+
+        # ants
+        ants = engine_config.get('global', {}).get('capsul.engine.module.ants')
+
+        if ants:
+            ants = next(iter(ants.values()))
+            ants_path = ants.get('directory')
+            use_ants = bool(ants_path)
+
+            if ants_path:
+                self.set_ants_path(ants_path)
+
+            self.set_use_ants(use_ants)
+
+        # fsl
+        fsl = engine_config.get('global', {}).get('capsul.engine.module.fsl')
+        use_fsl = False
+
+        if fsl:
+            fsl = next(iter(fsl.values()))
+            fsl_conf_path = fsl.get('config')
+            fsl_dir_path = fsl.get('directory')
+
+            if fsl_conf_path:
+                use_fsl = True
+                self.set_fsl_config(fsl_conf_path)
+                self.set_use_fsl(True)
+
+            # if only the directory parameter has been set, let's try using
+            # the config parameter = directory/fsl.sh:
+            elif fsl_dir_path:
+                use_fsl = True
+                self.set_fsl_config(os.path.join(fsl_dir_path, 'fsl.sh'))
+                self.set_use_fsl(True)
+
+        if use_fsl is False:
+            self.set_use_fsl(False)
+
         # matlab
-        matlab = engine_config.get(
-            'global', {}).get('capsul.engine.module.matlab')
-        #use_matlab = False
+        matlab = engine_config.get('global',
+                                   {}).get('capsul.engine.module.matlab')
 
         if matlab:
             matlab = next(iter(matlab.values()))
@@ -964,48 +1019,6 @@ class Config:
         else:
             self.set_use_spm(False)
             self.set_use_spm_standalone(False)
-
-        # fsl
-        fsl = engine_config.get('global', {}).get('capsul.engine.module.fsl')
-        use_fsl = False
-
-        if fsl:
-            fsl = next(iter(fsl.values()))
-            fsl_conf_path = fsl.get('config')
-            fsl_dir_path = fsl.get('directory')
-
-            if fsl_conf_path:
-                use_fsl = True
-                self.set_fsl_config(fsl_conf_path)
-                self.set_use_fsl(True)
-
-            # if only the directory parameter has been set, let's try using
-            # the config parameter = directory/fsl.sh:
-            elif fsl_dir_path:
-                use_fsl = True
-                self.set_fsl_config(os.path.join(fsl_dir_path, 'fsl.sh'))
-                self.set_use_fsl(True)
-
-        if use_fsl is False:
-            self.set_use_fsl(False)
-
-        # afni
-        afni = engine_config.get('global', {}).get('capsul.engine.module.afni')
-        if afni:
-            afni = next(iter(afni.values()))
-            afni_path = afni.get('directory')
-            use_afni = bool(afni_path)
-            self.set_afni_path(afni_path)
-            self.set_use_afni(use_afni)
-
-        # ants
-        ants = engine_config.get('global', {}).get('capsul.engine.module.ants')
-        if ants:
-            ants = next(iter(ants.values()))
-            ants_path = ants.get('directory')
-            use_ants = bool(ants_path)
-            self.set_ants_path(ants_path)
-            self.set_use_ants(use_ants)
 
         self.update_capsul_config()  # store into capsul engine
 
