@@ -977,18 +977,22 @@ class Config:
             if mcr_dir:
                 self.set_matlab_standalone_path(mcr_dir)
 
-
-            #self.set_use_matlab_standalone(use_matlab_standalone)
+            # Because there are two parameters for matlab (executable and
+            # mcr_directory) if the user defines both, we don't know which
+            # one to choose! ! ! Here we choose to favour matlab in front
+            # of MCR if both are chosen:
 
             if use_matlab and matlab_path:
                 self.set_use_matlab(True)
+                self.set_use_matlab_standalone(False)
+
+            elif mcr_dir and use_matlab_standalone:
+                self.set_use_matlab_standalone(True)
+                elf.set_use_matlab(False)
 
             else:
                 self.set_use_matlab(False)
-
-
-        # if use_matlab is False:
-        #     self.set_use_matlab(False)
+                self.set_use_matlab_standalone(False)
 
         # spm
         spm = engine_config.get('global', {}).get('capsul.engine.module.spm')

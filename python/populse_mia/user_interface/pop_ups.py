@@ -66,6 +66,10 @@ from PyQt5.QtWidgets import (
     QTableWidget, QTableWidgetItem, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
     QWidget)
 
+# Capsul imports
+from capsul.api import capsul_engine
+from capsul.qt_gui.widgets.settings_editor import SettingsEditor
+
 # Populse_db imports
 from populse_db.database import (
     FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE, FIELD_TYPE_DATETIME, FIELD_TYPE_FLOAT,
@@ -2683,8 +2687,8 @@ class PopUpPreferences(QDialog):
         MIA preferences, Pipeline tab).
         """
         
-        from capsul.api import capsul_engine
-        from capsul.qt_gui.widgets.settings_editor import SettingsEditor
+        #from capsul.api import capsul_engine
+        #from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
         # validate the current Mia config first
         if not self.validate_and_save():
