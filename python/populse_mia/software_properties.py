@@ -962,67 +962,98 @@ class Config:
         # matlab
         matlab = engine_config.get('global',
                                    {}).get('capsul.engine.module.matlab')
+        use_matlab = False
+        use_mcr = False
 
         if matlab:
             matlab = next(iter(matlab.values()))
             matlab_path = matlab.get('executable')
-            use_matlab = bool(matlab_path)
 
-            if matlab_path:
-                self.set_matlab_path(matlab_path)
+            if bool(matlab_path) and os.path.isfile(matlab_path):
+                use_matlab = True
 
             mcr_dir = matlab.get('mcr_directory')
-            use_matlab_standalone = bool(mcr_dir)
 
-            if mcr_dir:
-                self.set_matlab_standalone_path(mcr_dir)
-
-            # Because there are two parameters for matlab (executable and
-            # mcr_directory) if the user defines both, we don't know which
-            # one to choose! ! ! Here we choose to favour matlab in front
-            # of MCR if both are chosen:
-
-            if use_matlab and matlab_path:
-                self.set_use_matlab(True)
-                self.set_use_matlab_standalone(False)
-
-            elif mcr_dir and use_matlab_standalone:
-                self.set_use_matlab_standalone(True)
-                elf.set_use_matlab(False)
-
-            else:
-                self.set_use_matlab(False)
-                self.set_use_matlab_standalone(False)
+            if bool(mcr_dir) and os.path.isdir(mcr_dir):
+                use_mcr = True
 
         # spm
         spm = engine_config.get('global', {}).get('capsul.engine.module.spm')
+        use_spm_standalone = False
+        use_spm = False
+
         if spm:
-            has_standalone = False
-            for spm_conf in spm.values():
-                spm_dir = spm_conf.get('directory')
-                spm_standalone = spm_conf.get(
-                    'standalone', False)
-                if spm_standalone and spm_dir:
-                    if not mcr_dir:
-                        mcr_dir = os.path.join(spm_dir, 'mcr', 'v713')
-                        self.set_matlab_standalone_path(mcr_dir)
-                        self.set_use_matlab_standalone(use_matlab_standalone)
-                    if os.path.isdir(mcr_dir) and os.path.isdir(spm_dir):
-                        self.set_spm_standalone_path(spm_dir)
-                        self.set_use_spm_standalone(True)
-                        self.set_use_matlab_standalone(True)
-                        self.set_use_matlab(False)
-                        has_standalone = True
-                elif spm_dir:
-                    self.set_spm_path(spm_dir)
-                    self.set_use_spm(True)
-                else:
-                    self.set_use_spm(False)
-            if not has_standalone:
-                self.set_use_spm_standalone(False)
-        else:
+            # TODO: we only take the first element of the dictionary (the one
+            #       that is normally edited in the Capsul config GUI). There is
+            #       actually a problem because this means that there may be
+            #       hidden config(s) ... This can produce bugs and at least
+            #       unpredictable results for the user ...
+
+            spm = next(iter(spm.values()))
+            spm_dir = spm.get('directory', False)
+            use_spm_standalone = spm.get('standalone', False)
+
+            if use_spm_standalone and os.path.isdir(spm_dir) and use_mcr:
+                pass
+
+            else:
+                use_spm_standalone = False
+
+            if (use_spm_standalone is False and os.path.isdir(spm_dir) and
+                                                                    use_matlab):
+                use_spm = True
+
+            else:
+                use_spm = False
+
+        if use_spm:
+            self.set_spm_path(spm_dir)
+            self.set_use_spm(True)
+            self.set_use_spm_standalone(False)
+            self.set_matlab_path(matlab_path)
+            self.set_use_matlab(True)
+            self.set_use_matlab_standalone(False)
+
+        elif use_spm_standalone:
+            self.set_spm_standalone_path(spm_dir)
+            self.set_use_spm_standalone(True)
+            self.set_use_spm(False)
+            self.set_matlab_standalone_path(mcr_dir)
+            self.set_use_matlab_standalone(True)
+            self.set_use_matlab(False)
+
+        # TODO: Because there are two parameters for matlab (executable and
+        #  mcr_directory) in Capsul config, if the user defines both, we don't
+        #  know which on to choose! Here we choose to favour matlab in front
+        #  of MCR if both are chosen, is it desirable?
+        elif use_matlab:
+            self.set_matlab_path(matlab_path)
+            self.set_use_matlab(True)
+            self.set_use_matlab_standalone(False)
             self.set_use_spm(False)
             self.set_use_spm_standalone(False)
+
+        elif use_mcr:
+            self.set_matlab_standalone_path(mcr_dir)
+            self.set_use_matlab_standalone(True)
+            self.set_use_matlab(False)
+            self.set_use_spm(False)
+            self.set_use_spm_standalone(False)
+
+        else:
+            self.set_use_matlab(False)
+            self.set_use_matlab_standalone(False)
+            self.set_use_spm(False)
+            self.set_use_spm_standalone(False)
+
+        if (use_matlab and
+                    use_mcr and
+                    use_spm is False and
+                    use_spm_standalone is False):
+            print('\n The Matlab executable and the mcr_directory parameters '
+                  'have been set concomitantly in the Capsul configuration. '
+                  'This leads to an indetermination. By default, Matlab is '
+                  'retained at the expense of MCR.')
 
         self.update_capsul_config()  # store into capsul engine
 
