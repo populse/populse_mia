@@ -20,6 +20,14 @@ if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os
     print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../python')))
     sys.path.insert(0, os.path.abspath('../../python'))
 
+    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'populse_db')):
+        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../populse_db/python')))
+        sys.path.insert(1, os.path.abspath('../../../populse_db/python'))
+
+    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'mia_processes')):
+        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../mia_processes/python')))
+        sys.path.insert(1, os.path.abspath('../../../mia_processes/python'))
+
     if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'capsul')):
         print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../capsul')))
         sys.path.insert(1, os.path.abspath('../../../capsul'))
@@ -28,9 +36,9 @@ if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os
         print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../soma-base/python')))
         sys.path.insert(1, os.path.abspath('../../../soma-base/python'))
 
-    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'populse_db')):
-        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../populse_db/python')))
-        sys.path.insert(1, os.path.abspath('../../../populse_db/python'))
+    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'soma-workflow')):
+        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../soma-workflow/python')))
+        sys.path.insert(1, os.path.abspath('../../../soma-workflow/python'))
 
 import populse_mia
 

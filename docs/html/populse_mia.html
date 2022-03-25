@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.0.0-dev+888b718d documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0.0-dev+35761189',
+        VERSION:     '2.0.0-dev+888b718d',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+888b718d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -53,7 +53,7 @@ process may become error-prone, cumbersome and difficult to reproduce. Data
 processing pipelines exist in separate heterogeneous toolboxes, developed
 in-house or by other researchers in the field. This heterogeneity adds to
 the complexity of the modules are to be invoked manually.</p>
-<p>Populse_MIA aims to provide easy tools to perform complex data processing
+<p>MIA (populse_mia) aims to provide easy tools to perform complex data processing
 based on a definition of the inputs and outputs of the individual pipelines
 on a conceptual level, and implies identifying data with respect to their
 role in an analysis project: “the scan type”, “the subject being scanned”,
@@ -61,15 +61,21 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <dl class="docutils">
 <dt>Contains:</dt>
 <dd><dl class="first last docutils">
-<dt>Module:</dt>
+<dt>Packages:</dt>
 <dd><ul class="first last simple">
-<li>data_manager</li>
-<li>user_interface</li>
-<li>utils</li>
-<li>info</li>
-<li>main</li>
-<li>software_properties</li>
-<li>test</li>
+<li>data_manager: handles the projects and their database</li>
+<li>sources_images: a collection of images used in Mia</li>
+<li>user_interface: mainly intended for the graphic interface of Mia</li>
+<li>utils: various utilities for the Mia operation</li>
+</ul>
+</dd>
+<dt>Modules:</dt>
+<dd><ul class="first last simple">
+<li>info.py: define software version, description and requirements</li>
+<li>main.py: the first module used at the runtime of mia</li>
+<li>__main__.py: make populse_mia accessible as a module</li>
+<li>software_properties.py: handles the configuration of the software</li>
+<li>test.py: unitary tests</li>
 </ul>
 </dd>
 </dl>
@@ -142,17 +148,43 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <div class="section" id="module-populse_mia.info">
 <span id="populse-mia-info-module"></span><h2>populse_mia.info module<a class="headerlink" href="#module-populse_mia.info" title="Permalink to this headline">¶</a></h2>
 <p>Define software version, description and requirements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Function:</th><td class="field-body"><ul class="first last simple">
+<li>get_populse_mia_gitversion</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="populse_mia.info.get_populse_mia_gitversion">
 <code class="descclassname">populse_mia.info.</code><code class="descname">get_populse_mia_gitversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/info.html#get_populse_mia_gitversion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.info.get_populse_mia_gitversion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mia version as reported by the last commit in git
-Returns the version or None if nothing was found</p>
+<dd><p>Mia version as reported by the last commit in git</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the version or None if nothing was found</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-populse_mia.main">
 <span id="populse-mia-main-module"></span><h2>populse_mia.main module<a class="headerlink" href="#module-populse_mia.main" title="Permalink to this headline">¶</a></h2>
-<p>The first module used at the runtime of mia.</p>
+<p>The first module used at the mia runtime.</p>
 <p>Basically, this module is dedicated to the initialisation of the basic
 parameters and the various checks necessary for a successful launch of the
 mia’s GUI.</p>
@@ -186,10 +218,9 @@ mia’s GUI.</p>
 <dt id="populse_mia.main.PackagesInstall">
 <em class="property">class </em><code class="descclassname">populse_mia.main.</code><code class="descname">PackagesInstall</code><a class="reference internal" href="_modules/populse_mia/main.html#PackagesInstall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.PackagesInstall" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Help to make available a pipeline package in the mia pipeline library,
+<p>Help to make available a pipeline package in the Mia pipeline library,
 in a recursive way.</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -198,8 +229,8 @@ in a recursive way.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Method:</th><td class="field-body"><ul class="first last simple">
-<li>__init__</li>
-<li>add_package</li>
+<li>__init__: constructor</li>
+<li>add_package: provide recursive representation of a package</li>
 </ul>
 </td>
 </tr>
@@ -209,39 +240,19 @@ in a recursive way.</p>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 <dl class="method">
 <dt id="populse_mia.main.PackagesInstall.add_package">
 <code class="descname">add_package</code><span class="sig-paren">(</span><em>module_name</em>, <em>class_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#PackagesInstall.add_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.PackagesInstall.add_package" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Provide recursive representation of a package and its</dt>
-<dd>subpackages/modules, to construct the mia’s pipeline library.</dd>
-</dl>
+<dd><p>Provide recursive representation of a package and its
+subpackages/modules, to construct the Mia’s pipeline library.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><table class="first docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">module_name:</th><td class="field-body">name of the module to add in the pipeline
-library</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li><table class="first docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">class_name:</th><td class="field-body">only this pipeline will be add to the pipeline
-library (optional)</td>
-</tr>
-</tbody>
-</table>
-</li>
+<li><strong>module_name</strong> – name of the module to add in the pipeline library</li>
+<li><strong>class_name</strong> – only this pipeline will be added to the pipeline
+library (optional)</li>
 </ul>
 </td>
 </tr>
@@ -257,115 +268,47 @@ ex: {package: {subpackage: {pipeline: ‘process_enabled’}}}</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="populse_mia.main.check_python_version">
-<code class="descclassname">populse_mia.main.</code><code class="descname">check_python_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#check_python_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.check_python_version" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="populse_mia.main.launch_mia">
 <code class="descclassname">populse_mia.main.</code><code class="descname">launch_mia</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#launch_mia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.launch_mia" title="Permalink to this definition">¶</a></dt>
-<dd><p>Actual launch of the mia software.</p>
+<dd><p>Actual launch of the Mia software.</p>
 <p>Overload the sys.excepthook handler with the _my_excepthook private
 function. Check if the software is already opened in another instance.
 If not, the list of opened projects is cleared. Checks if saved projects
-known in the mia software still exist, and updates if necessary.
+known in the Mia software still exist, and updates if necessary.
 Instantiates a ‘project’ object that handles projects and their
-associated database anf finally launch of the mia’s GUI.</p>
-<dl class="docutils">
-<dt><strong>Contains: Private function:</strong></dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt><em>_my_excepthook(etype, evalue, tback)</em></dt>
-<dd><p class="first">Log all uncaught exceptions in non-interactive mode.</p>
-<p>All python exceptions are handled by function, stored in
-sys.excepthook. By overloading the sys.excepthook handler with
-_my_excepthook function, this last function is called whenever
-there is a unhandled exception (so one that exits the interpreter).
-We take advantage of it to clean up mia software before closing.</p>
-<blockquote class="last">
-<div><table class="docutils field-list" frame="void" rules="none">
+associated database and finally launch of the Mia’s GUI.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><table class="first docutils field-list" frame="void" rules="none">
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">etype:</th><td class="field-body">exception class</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li><table class="first docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">evalue:</th><td class="field-body">exception instance</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li><table class="first docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">tback:</th><td class="field-body">traceback object</td>
-</tr>
-</tbody>
-</table>
-</li>
+<tr class="field-odd field"><th class="field-name" colspan="2">Private function:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li>_my_excepthook: log all uncaught exceptions in non-interactive
+mode</li>
+<li>_verify_saved_projects: checks if the projects are still existing</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<dl class="docutils">
-<dt><strong>Contains: Private function:</strong></dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt><em>_clean_up()</em></dt>
-<dd><p class="first">Cleans up the mia software during “normal” closing.</p>
-<p class="last">Make a clean up of the opened projects just before exiting
-mia.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</div></blockquote>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><em>_verify_saved_projects()</em></dt>
-<dd><p class="first">Verify if the projects saved in saved_projects.yml are still
-on the disk.</p>
-<table class="last docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of the deleted projects</td>
+</td>
 </tr>
 </tbody>
 </table>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="populse_mia.main.main">
 <code class="descclassname">populse_mia.main.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make basic configuration check then actual launch of mia.</p>
-<p>Checks if MIA is called from the site/dist packages (user mode) or from a
+<p>Checks if Mia is called from the site/dist packages (user mode) or from a
 cloned git repository (developer mode). Launches the verify_processes()
-function, then the launch_mia() function (mia’s real launch !!). When
-mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the
+function, then the launch_mia() function (Mia’s real launch !!). When
+Mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the
 dev_mode parameter to False.</p>
 <ul class="simple">
 <li><dl class="first docutils">
@@ -397,59 +340,9 @@ to try to fix a corruption of this file.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Private function:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last">
-<li><dl class="first docutils">
-<dt><em>_browse_mia_path()</em></dt>
-<dd><p class="first">The user define the mia_path parameter.</p>
-<p>This method, used only if the mia configuration parameters are
-not accessible, goes with the _verify_miaConfig function,
-which will use the value of the mia_path parameter,
-defined here.</p>
-<table class="last docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Parameters dialog:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">QtWidgets.QDialog object (‘msg’ in the main
-function)</td>
-</tr>
-</tbody>
-</table>
-</dd>
-</dl>
-</li>
-<li><p class="first"><em>_verify_miaConfig()</em></p>
-<blockquote>
-<div><p>The purpose of this method is twofold. First, it allows to
-update the obsolete values for some parameters of the
-mia_user_path/properties/config.yml file. Secondly, it allows
-to correct the value of the mia_user_path parameter in the
-~/.populse_mia/configuration.yml file, (in the case of a user
-mode launch, because the developer mode launch does not need
-this parameter).</p>
-<p>In the case of a launch in user mode, this method goes with the
-_browse_mia_path() function, the latter having allowed the
-definition of the mia_user_path parameter, the objective here
-is to check if the value of this parameter is valid. The
-mia_path parameters are saved in the
-~/.populse_mia/configuration.yml file (the mia_user_path
-parameter is mandatory in the user mode). Then the data in the
-mia_path/properties/config.yml file are checked. If an
-exception is raised during the _verify_miaConfig function, the
-“MIA path selection” window is not closed and the user is
-prompted again to set the mia_user_path parameter.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Parameters dialog:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">QtWidgets.QDialog object (‘msg’ in the main
-function)</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-</li>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li>_browse_mia_path: the user define the mia_path parameter</li>
+<li>_verify_miaConfig: check the config and try to fix if necessary</li>
 </ul>
 </td>
 </tr>
@@ -464,24 +357,22 @@ function)</td>
 <dl class="function">
 <dt id="populse_mia.main.verify_processes">
 <code class="descclassname">populse_mia.main.</code><code class="descname">verify_processes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#verify_processes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.main.verify_processes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Install or update to the last version available on the station, of the</dt>
-<dd>nipype and the mia_processes processes libraries.</dd>
-</dl>
-<p>By default, mia provides two process libraries in the pipeline library
+<dd><p>Install or update to the last version available on the station, for
+nipype, capsul and mia_processes processes libraries.</p>
+<p>By default, Mia provides three process libraries in the pipeline library
 (available in Pipeline Manager tab). The nipype, given as it is because
 it is developed by another team (<a class="reference external" href="https://github.com/nipy/nipype">https://github.com/nipy/nipype</a>), and
-mia_processes which is developed under the umbrella of populse
-(<a class="reference external" href="https://github.com/populse/mia_processes">https://github.com/populse/mia_processes</a>). When installing mia in
-user mode, these two libraries are automatically installed on the
+mia_processes, capsul which are developed under the umbrella of populse
+(<a class="reference external" href="https://github.com/populse/mia_processes">https://github.com/populse/mia_processes</a>). When installing Mia in
+user mode, these three libraries are automatically installed on the
 station. The idea is to use the versioning available with pypi
 (<a class="reference external" href="https://pypi.org/">https://pypi.org/</a>). Thus, it is sufficient for the user to change the
 version of the library installed on the station (pip install…) to
-also change the version available in mia. Indeed, when starting mia, the
+also change the version available in Mia. Indeed, when starting Mia, the
 verify_processes function will install or update nipype and
-mia_processes libraries in the pipeline library. Currently it is
-mandatory to have nipype and may_processes installed in the station.
-All these informations, as well as the installed versions and package
+mia_processes libraries in the pipeline library. Currently, it is
+mandatory to have nipype, capsul and mia_processes installed in the station.
+All this information, as well as the installed versions and package
 paths are saved in the  mia_path/properties/process_config.yml file.
 When an upgrade or downgrade is performed for a package, the last
 configuration used by the user is kept (if a pipeline was visible, it
@@ -496,37 +387,9 @@ the new version it is automatically marked as visible in the library.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Private function:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last">
-<li><p class="first"><em>_deepCompDic()</em></p>
-<blockquote>
-<div><p>Try to keep the previous configuration existing before the
-update of the packages.</p>
-<p>Recursive comparison of the old_dic and new _dic dictionary. If
-all keys are recursively identical, the final value at the end
-of the whole tree in old_dic is kept in the new _dic. To sum
-up, this function is used to keep up the user display
-preferences in the processes library of the Pipeline Manager
-Editor.</p>
-<dl class="docutils">
-<dt><strong>param old_dic</strong>: the dic representation of the previous</dt>
-<dd><p class="first last">package configuration</p>
-</dd>
-<dt><strong>param new_dic</strong>: the dic representation of the new package</dt>
-<dd><p class="first last">configuration</p>
-</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">True if the current level is a pipeline that existed
-in the old configuration, False if the
-package/subpackage/pipeline did not exist</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-</li>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li>_deepCompDic: keep the previous config existing before packages
+update</li>
 </ul>
 </td>
 </tr>
@@ -573,6 +436,153 @@ pop-up in the config.yml file.</p>
 <em class="property">class </em><code class="descclassname">populse_mia.software_properties.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Object that handles the configuration of the software</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Methods:</th><td class="field-body"><ul class="first last simple">
+<li>get_admin_hash: get the value of the hash of the admin password</li>
+<li>get_afni_path: returns the path of AFNI</li>
+<li>get_ants_path: returns the path of ANTS</li>
+<li>getBackgroundColor: get background color</li>
+<li>get_capsul_config: get CAPSUL config dictionary</li>
+<li>get_capsul_engine: get a global CapsulEngine object used for all
+operations in MIA application</li>
+<li>getChainCursors: returns if the “chain cursors” checkbox of the
+mini viewer is activated</li>
+<li>get_config_path: returns the configuration file directory</li>
+<li>get_fsl_config: returns the path of the FSL config file</li>
+<li>get_mainwindow_maximized: get the maximized (full-screen) flag</li>
+<li>get_mainwindow_size: get the main window size</li>
+<li>get_matlab_command: returns Matlab command</li>
+<li>get_matlab_path: returns the path of Matlab’s executable</li>
+<li>get_matlab_standalone_path: returns the path of Matlab Compiler
+Runtime</li>
+<li>get_max_projects: returns the maximum number of projects
+displayed in the “Saved projects” menu</li>
+<li>get_max_thumbnails:  get max thumbnails number at the data browser
+bottom</li>
+<li>get_mia_path: returns the software’s install path</li>
+<li>get_mri_conv_path: returns the MRIManager.jar path</li>
+<li>getNbAllSlicesMax: returns the maximum number of slices to
+display in the mini viewer</li>
+<li>get_opened_projects: returns the opened projects</li>
+<li>getPathToProjectsFolder: returns the project’s path</li>
+<li>get_projects_save_path: returns the folder where the projects are
+saved</li>
+<li>get_referential: returns boolean to indicate DataViewer
+referential</li>
+<li>getShowAllSlices: returns if the “show all slices” checkbox of the
+mini viewer is activated</li>
+<li>getSourceImageDir: get the source directory for project images</li>
+<li>get_spm_path: returns the path of SPM12 (license version)</li>
+<li>get_spm_standalone_path: returns the path of SPM12 (standalone
+version)</li>
+<li>getTextColor: return the text color</li>
+<li>getThumbnailTag: returns the tag that is displayed in the mini
+viewer</li>
+<li>get_use_afni: returns the value of “use afni” checkbox in the
+preferences</li>
+<li>get_use_ants: returns the value of “use ants” checkbox in the
+preferences</li>
+<li>get_use_clinical: returns the value of “clinical mode” checkbox
+in the preferences</li>
+<li>get_use_fsl: returns the value of “use fsl” checkbox in the
+preferences</li>
+<li>get_use_matlab: returns the value of “use matlab” checkbox in the
+preferences</li>
+<li>get_use_matlab_standalone: returns the value of “use matlab
+standalone” checkbox in the preferences</li>
+<li>get_user_level: get the user level in the Capsul config</li>
+<li>get_user_mode: returns the value of “user mode” checkbox
+in the preferences</li>
+<li>get_use_spm: returns the value of “use spm” checkbox in the
+preferences</li>
+<li>get_use_spm_standalone: returns the value of “use spm standalone”
+checkbox in the preferences</li>
+<li>getViewerConfig: returns the DataViewer configuration (neuro or
+radio), by default neuro</li>
+<li>getViewerFramerate: returns the DataViewer framerate for automatic
+time running images</li>
+<li>isAutoSave: checks if auto-save mode is activated</li>
+<li>isControlV1: checks if the selected display of the controller is
+of V1 type</li>
+<li>isRadioView: checks if miniviewer in radiological orientation (if
+not, then it is in neurological orientation)</li>
+<li>loadConfig: reads the config in the config.yml file</li>
+<li>saveConfig: saves the config to the config.yml file</li>
+<li>set_admin_hash: set the password hash</li>
+<li>set_afni_path: set the path of the AFNI</li>
+<li>set_ants_path: set the path of the ANTS</li>
+<li>setAutoSave: sets the auto-save mode</li>
+<li>setBackgroundColor: sets the background color</li>
+<li>set_capsul_config: set CAPSUL configuration dict into MIA config</li>
+<li>setChainCursors: set the “chain cursors” checkbox of the mini
+viewer</li>
+<li>set_clinical_mode: set the value of “clinical mode” in
+the preferences</li>
+<li>setControlV1: Set controller display mode (True if V1)</li>
+<li>set_fsl_config: set the path of the FSL config file</li>
+<li>set_mainwindow_maximized: set the maximized (fullscreen) flag</li>
+<li>set_mainwindow_size: set main window size</li>
+<li>set_matlab_path: set the path of Matlab’s executable</li>
+<li>set_matlab_standalone_path: set the path of Matlab Compiler
+Runtime</li>
+<li>set_max_projects: set the maximum number of projects displayed in
+the “Saved projects” menu</li>
+<li>set_max_thumbnails: set max thumbnails number at the data browser
+bottom</li>
+<li>set_mri_conv_path: set the MRIManager.jar path</li>
+<li>setNbAllSlicesMax: set the maximum number of slices to display in
+the mini viewer</li>
+<li>set_opened_projects: set the opened projects</li>
+<li>set_projects_save_path: set the folder where the projects are
+saved</li>
+<li>set_radioView: set the orientation in miniviewer (True for
+radiological, False for neurological orientation)</li>
+<li>set_referential: sets the DataViewer referential</li>
+<li>setShowAllSlices: set the “show all slices” checkbox of the mini
+viewer</li>
+<li>setSourceImageDir: set the source directory for project images</li>
+<li>set_spm_path: set the path of SPM12 (license version)</li>
+<li>set_spm_standalone_path: set the path of SPM12 (standalone
+version)</li>
+<li>setTextColor: set the text color</li>
+<li>setThumbnailTag: set the tag that is displayed in the mini viewer</li>
+<li>set_use_afni: set the value of “use afni” checkbox in the
+preferences</li>
+<li>set_use_ants: set the value of “use ants” checkbox in the
+preferences</li>
+<li>set_use_fsl: set the value of “use fsl” checkbox in the
+preferences</li>
+<li>set_use_matlab: set the value of “use matlab” checkbox in the
+preferences</li>
+<li>set_use_matlab_standalone: set the value of “use matlab
+standalone” checkbox in the preferences</li>
+<li>set_user_mode: set the value of “user mode” checkbox in
+the preferences</li>
+<li>set_use_spm: set the value of “use spm” checkbox in the
+preferences</li>
+<li>set_use_spm_standalone: set the value of “use spm standalone”
+checkbox in the preferences</li>
+<li>setViewerConfig: set the Viewer configuration neuro or radio</li>
+<li>setViewerFramerate: set the Viewer frame rate for automatic
+running time images</li>
+<li>update_capsul_config: update a global CapsulEngine object used
+for all operations in MIA application</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="populse_mia.software_properties.Config.capsul_engine">
 <code class="descname">capsul_engine</code><em class="property"> = None</em><a class="headerlink" href="#populse_mia.software_properties.Config.capsul_engine" title="Permalink to this definition">¶</a></dt>
@@ -735,6 +745,34 @@ or not in the miniviewer.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.software_properties.Config.get_afni_path">
+<code class="descname">get_afni_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_afni_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_afni_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the AFNI path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of path to AFNI</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.get_ants_path">
+<code class="descname">get_ants_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_ants_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_ants_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ANTS path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string of path to ANTS</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.software_properties.Config.get_capsul_config">
 <code class="descname">get_capsul_config</code><span class="sig-paren">(</span><em>sync_from_engine=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_capsul_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_capsul_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get CAPSUL config dictionary.</p>
@@ -742,9 +780,11 @@ or not in the miniviewer.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sync_from_engine</strong> – boolean</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sync_from_engine</strong> – if True, perform a synchronisation
+with CAPSUL engine (Bool)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">capsul_config: dict</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">capsul_config: the CAPSUL configuration saved into
+Mia config (Dict)</td>
 </tr>
 </tbody>
 </table>
@@ -998,6 +1038,34 @@ parameter of the configuration.yml</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="populse_mia.software_properties.Config.get_use_afni">
+<code class="descname">get_use_afni</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_afni"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_afni" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of “use afni” checkbox in the preferences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.get_use_ants">
+<code class="descname">get_use_ants</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_ants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_ants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of “use ants” checkbox in the preferences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="populse_mia.software_properties.Config.get_use_clinical">
 <code class="descname">get_use_clinical</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_clinical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_clinical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the clinical mode in the preferences.</p>
@@ -1143,7 +1211,7 @@ preferences.</p>
 <code class="descname">isRadioView</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.isRadioView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.isRadioView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get if the display in miniviewer is in radiological orientation.</p>
 <ul class="simple">
-<li>True for radiolological</li>
+<li>True for radiological</li>
 <li>False for neurological</li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1208,7 +1276,7 @@ preferences.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.setChainCursors">
 <code class="descname">setChainCursors</code><span class="sig-paren">(</span><em>chain_cursors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setChainCursors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setChainCursors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the value of the checkbox ‘chain cursor’ in the miniviewer.</p>
+<dd><p>Set the value of the checkbox ‘chain cursor’ in the mini viewer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1236,12 +1304,12 @@ preferences.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.setNbAllSlicesMax">
 <code class="descname">setNbAllSlicesMax</code><span class="sig-paren">(</span><em>nb_slices_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setNbAllSlicesMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setNbAllSlicesMax" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the number of slices to display in the miniviewer.</p>
+<dd><p>Set the number of slices to display in the mini viewer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nb_slices_max</strong> – Int</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nb_slices_max</strong> – maximum number of slices to display (Int)</td>
 </tr>
 </tbody>
 </table>
@@ -1298,7 +1366,7 @@ preferences.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thumbnail_tag</strong> – String</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thumbnail_tag</strong> – string</td>
 </tr>
 </tbody>
 </table>
@@ -1338,13 +1406,41 @@ preferences.</p>
 
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_admin_hash">
-<code class="descname">set_admin_hash</code><span class="sig-paren">(</span><em>hash</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_admin_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_admin_hash" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_admin_hash</code><span class="sig-paren">(</span><em>admin_hash</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_admin_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_admin_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the password hash.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of hash</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>admin_hash</strong> – string of hash</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.set_afni_path">
+<code class="descname">set_afni_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_afni_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_afni_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the AFNI path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of AFNI path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.set_ants_path">
+<code class="descname">set_ants_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_ants_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_ants_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the ANTS path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of ANTS path</td>
 </tr>
 </tbody>
 </table>
@@ -1396,7 +1492,7 @@ preferences.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_mainwindow_maximized">
 <code class="descname">set_mainwindow_maximized</code><span class="sig-paren">(</span><em>enabled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_maximized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_maximized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the maximized (fullscreen) flag</p>
+<dd><p>Set the maximized (full-screen) flag</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1500,7 +1596,7 @@ the “Saved projects” menu.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_projects</strong> – List of path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_projects</strong> – list of path</td>
 </tr>
 </tbody>
 </table>
@@ -1523,7 +1619,7 @@ the “Saved projects” menu.</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_radioView">
 <code class="descname">set_radioView</code><span class="sig-paren">(</span><em>radio_view</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_radioView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_radioView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the radiological/neurological orientation in miniviewer.</p>
+<dd><p>Set the radiological/neurological orientation in mini viewer.</p>
 <ul class="simple">
 <li>True for radiological</li>
 <li>False for neurological</li>
@@ -1556,7 +1652,7 @@ data viewer</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_spm_path">
 <code class="descname">set_spm_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_spm_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_spm_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the path of SPM12 (license version).</p>
+<dd><p>Set the path of SPM (license version).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1570,12 +1666,40 @@ data viewer</p>
 <dl class="method">
 <dt id="populse_mia.software_properties.Config.set_spm_standalone_path">
 <code class="descname">set_spm_standalone_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_spm_standalone_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_spm_standalone_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the path of SPM12 (standalone version).</p>
+<dd><p>Set the path of SPM (standalone version).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – string of path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.set_use_afni">
+<code class="descname">set_use_afni</code><span class="sig-paren">(</span><em>use_afni</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_use_afni"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_afni" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of “use_afni” checkbox in the preferences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>use_afni</strong> – boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="populse_mia.software_properties.Config.set_use_ants">
+<code class="descname">set_use_ants</code><span class="sig-paren">(</span><em>use_ants</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_use_ants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_ants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of “use_ants” checkbox in the preferences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>use_ants</strong> – boolean</td>
 </tr>
 </tbody>
 </table>
@@ -1676,7 +1800,7 @@ each time the config is saved.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Config.capsul_engine: capsul.engine.CapsulEngine object</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">capsul.engine.CapsulEngine object</td>
 </tr>
 </tbody>
 </table>
@@ -1693,8 +1817,8 @@ first argument (first_ver) is equal to, less or equal to, or greater or
 equal to its second argument (sec_ver), as follows:</p>
 <blockquote>
 <div><ul class="simple">
-<li>if third argument (comp) is ‘eq’: when the first argument is equal to the
-second argument, return True (False if not).</li>
+<li>if third argument (comp) is ‘eq’: when the first argument is equal to
+the second argument, return True (False if not).</li>
 <li>if third argument (comp) is ‘sup’: when the first argument is greater
 than the second argument, return True (False if not).</li>
 <li>if third argument (comp) is ‘inf’: when the first argument is less than
@@ -1715,13 +1839,19 @@ the second argument, return True (False if not).</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">False or True</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><dl class="first last docutils">
-<dt>Private function:</dt>
-<dd><ul class="first last simple">
-<li>normalise</li>
+<tr class="field-odd field"><th class="field-name">Contains:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Private function:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li>normalise: transform a version of a package to a corresponding
+list of integer</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </td>
 </tr>
 </tbody>

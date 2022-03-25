@@ -2914,10 +2914,11 @@ class PopUpPreferences(QDialog):
             if self.admin_mode_checkbox.isChecked():
                 config.set_user_mode(False)
                 main_window.windowName += " (Admin mode)"
+
             else:
                 config.set_user_mode(True)
-                #self.use_user_mode_signal.emit()
 
+            # Clinical mode
             if self.clinical_mode_checkbox.isChecked():
                 config.set_clinical_mode(True)
                 self.use_clinical_mode_signal.emit()
@@ -2926,9 +2927,12 @@ class PopUpPreferences(QDialog):
                 config.set_clinical_mode(False)
                 self.not_use_clinical_mode_signal.emit()
 
+            # Window name
             main_window.windowName += " - "
             main_window.setWindowTitle(main_window.windowName +
                                        main_window.projectName)
+
+            # Configuration test
             QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
             self.status_label.setText("Testing configuration ...")
             QCoreApplication.processEvents()

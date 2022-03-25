@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.0.0-dev+35761189 documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.0.0-dev+888b718d documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0-dev+35761189',
+        VERSION:     '2.0.0-dev+888b718d',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
   </head>
   <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+35761189 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+888b718d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1812,6 +1812,8 @@
     <span class="sd">&quot;&quot;&quot;Is called when the user wants to change the software preferences.</span>
 
 <span class="sd">    .. Methods:</span>
+<span class="sd">        - browse_afni: called when afni browse button is clicked</span>
+<span class="sd">        - browse_ants: called when ants browse button is clicked</span>
 <span class="sd">        - browse_fsl: called when fsl browse button is clicked</span>
 <span class="sd">        - browse_matlab: called when matlab browse button is clicked</span>
 <span class="sd">        - browse_matlab_standalone: called when matlab browse button is clicked</span>
@@ -1830,6 +1832,8 @@
 <span class="sd">        - findChar: highlights characters in red when using the Find button</span>
 <span class="sd">            when editing configuration</span>
 <span class="sd">        - ok_clicked: saves the modifications to the config file and apply them</span>
+<span class="sd">        - use_afni_changed: called when the use_afni checkbox is changed</span>
+<span class="sd">        - use_ants_changed: called when the use_ants checkbox is changed</span>
 <span class="sd">        - use_fsl_changed: called when the use_fsl checkbox is changed</span>
 <span class="sd">        - use_matlab_changed: called when the use_matlab checkbox is changed</span>
 <span class="sd">        - use_matlab_standalone_changed: called when the use_matlab_standalone</span>
@@ -2241,6 +2245,66 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_fsl</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_fsl</span><span class="p">)</span>
 
+        <span class="c1"># Groupbox &quot;AFNI&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_afni</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;AFNI&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Use AFNI&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">afni_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;AFNI path:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afni_choice</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_afni_path</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afni_browse</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afni_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browse_afni</span><span class="p">)</span>
+
+        <span class="n">h_box_use_afni</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_use_afni</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="p">)</span>
+        <span class="n">h_box_use_afni</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_afni_label</span><span class="p">)</span>
+        <span class="n">h_box_use_afni</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">h_box_afni_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_afni_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afni_choice</span><span class="p">)</span>
+        <span class="n">h_box_afni_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afni_browse</span><span class="p">)</span>
+
+        <span class="n">v_box_afni_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">v_box_afni_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afni_label</span><span class="p">)</span>
+        <span class="n">v_box_afni_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_afni_path</span><span class="p">)</span>
+
+        <span class="n">v_box_afni</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">v_box_afni</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_use_afni</span><span class="p">)</span>
+        <span class="n">v_box_afni</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_afni_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_afni</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_afni</span><span class="p">)</span>
+
+        <span class="c1"># Groupbox &quot;ANTS&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_ants</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;ANTS&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Use ANTS&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ants_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;ANTS path:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ants_choice</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_ants_path</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ants_browse</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ants_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browse_ants</span><span class="p">)</span>
+
+        <span class="n">h_box_use_ants</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_use_ants</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_ants_checkbox</span><span class="p">)</span>
+        <span class="n">h_box_use_ants</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_ants_label</span><span class="p">)</span>
+        <span class="n">h_box_use_ants</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">h_box_ants_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">h_box_ants_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ants_choice</span><span class="p">)</span>
+        <span class="n">h_box_ants_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ants_browse</span><span class="p">)</span>
+
+        <span class="n">v_box_ants_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">v_box_ants_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ants_label</span><span class="p">)</span>
+        <span class="n">v_box_ants_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_ants_path</span><span class="p">)</span>
+
+        <span class="n">v_box_ants</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">v_box_ants</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_use_ants</span><span class="p">)</span>
+        <span class="n">v_box_ants</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_ants_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_ants</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_ants</span><span class="p">)</span>
+
         <span class="c1"># Commented on January 11th, 2021 - Do not display CAPSUL button as long as synchronisation between CAPSUL</span>
         <span class="c1"># and MIA does not work properly</span>
         <span class="c1"># Groupbox &quot;CAPSUL&quot; groupbox_capsul = Qt.QGroupBox(&quot;CAPSUL&quot;)</span>
@@ -2257,6 +2321,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_matlab</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_spm</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_fsl</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_afni</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_ants</span><span class="p">)</span>
         <span class="c1"># self.tab_pipeline_layout.addWidget(groupbox_capsul) # Commented on January 11th, 2021</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline_layout</span><span class="p">)</span>
@@ -2282,6 +2348,12 @@
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_fsl</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_afni</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_ants</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># The &#39;Appearance&#39; tab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_appearance</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">()</span>
@@ -2358,6 +2430,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_changed</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_changed</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_changed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_changed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_changed</span><span class="p">()</span>
 
         <span class="c1"># Signals</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_changed</span><span class="p">)</span>
@@ -2368,6 +2442,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_changed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_changed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_changed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_changed</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PopUpPreferences.browse_fsl"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_fsl">[docs]</a>    <span class="k">def</span> <span class="nf">browse_fsl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called when fsl browse button is clicked.&quot;&quot;&quot;</span>
@@ -2377,6 +2455,24 @@
                                             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fsl_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PopUpPreferences.browse_afni"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_afni">[docs]</a>    <span class="k">def</span> <span class="nf">browse_afni</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when afni browse button is clicked.&quot;&quot;&quot;</span>
+
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                                 <span class="s1">&#39;Choose AFNI directory&#39;</span><span class="p">,</span>
+                                                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afni_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PopUpPreferences.browse_ants"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_ants">[docs]</a>    <span class="k">def</span> <span class="nf">browse_ants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when ants browse button is clicked.&quot;&quot;&quot;</span>
+
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                            <span class="s1">&#39;Choose ANTS directory&#39;</span><span class="p">,</span>
+                                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ants_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PopUpPreferences.browse_matlab"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_matlab">[docs]</a>    <span class="k">def</span> <span class="nf">browse_matlab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called when matlab browse button is clicked.&quot;&quot;&quot;</span>
@@ -2647,12 +2743,56 @@
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                 <span class="k">pass</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_afni</span><span class="p">():</span>
+
+            <span class="k">try</span><span class="p">:</span>
+               <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                                        <span class="s1">&#39;capsul.engine.module.afni&#39;</span><span class="p">][</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+               <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                                        <span class="s1">&#39;capsul.engine.module.afni&#39;</span><span class="p">][</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">][</span><span class="s1">&#39;afni&#39;</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_ants</span><span class="p">():</span>
+
+            <span class="k">try</span><span class="p">:</span>
+               <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                                        <span class="s1">&#39;capsul.engine.module.ants&#39;</span><span class="p">][</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+               <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                                        <span class="s1">&#39;capsul.engine.module.ants&#39;</span><span class="p">][</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">capsul_config</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">][</span><span class="s1">&#39;ants&#39;</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
         <span class="n">sc_dict</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;study_config&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="c1"># build a temporary new engine (because it may not be validated)</span>
         <span class="n">engine</span> <span class="o">=</span> <span class="n">capsul_engine</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;fom&#39;</span><span class="p">,</span> <span class="s1">&#39;axon&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;freesurfer&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;nipype&#39;</span><span class="p">]:</span>
+                                 <span class="s1">&#39;nipype&#39;</span><span class="p">,</span> <span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="s1">&#39;ants&#39;</span><span class="p">]:</span>
             <span class="n">engine</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
         <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">import_from_dict</span><span class="p">(</span><span class="n">sc_dict</span><span class="p">)</span>
         <span class="n">envs</span> <span class="o">=</span> <span class="n">capsul_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;engine&#39;</span><span class="p">,</span> <span class="p">{})</span>
@@ -2798,6 +2938,20 @@
         <span class="n">max_projects</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_projects_box</span><span class="o">.</span><span class="n">value</span><span class="p">(),</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">20</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_max_projects</span><span class="p">(</span><span class="n">max_projects</span><span class="p">)</span>
 
+        <span class="c1"># Use AFNI</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_afni</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_afni</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Use ANTS</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_ants</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_ants</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="c1"># Use FSL</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_fsl_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_fsl</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2853,7 +3007,77 @@
         <span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+=</span> <span class="s2">&quot; - &quot;</span>
         <span class="n">main_window</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">+</span>
                                    <span class="n">main_window</span><span class="o">.</span><span class="n">projectName</span><span class="p">)</span>
-        
+
+        <span class="c1"># AFNI config test</span>
+        <span class="n">afni_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">afni_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+
+            <span class="n">afni_cmd</span> <span class="o">=</span> <span class="s1">&#39;afni&#39;</span>
+
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">afni_dir</span><span class="p">):</span>
+                <span class="n">afni_cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">afni_dir</span><span class="p">,</span> <span class="n">afni_cmd</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">afni_dir</span><span class="p">,</span> <span class="s2">&quot;AFNI&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">afni_cmd</span><span class="p">,</span> <span class="s1">&#39;-version&#39;</span><span class="p">],</span>
+                    <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+                <span class="n">output</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set_afni_path</span><span class="p">(</span><span class="n">afni_dir</span><span class="p">)</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set_use_afni</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">afni_dir</span><span class="p">,</span> <span class="s2">&quot;AFNI&quot;</span><span class="p">)</span>
+                    <span class="k">return</span>
+
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">afni_dir</span><span class="p">,</span> <span class="s2">&quot;AFNI&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_afni</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># ANTS config test</span>
+        <span class="n">ants_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ants_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+
+            <span class="n">ants_cmd</span> <span class="o">=</span> <span class="s1">&#39;ANTS&#39;</span>
+
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">ants_dir</span><span class="p">):</span>
+                <span class="n">ants_cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ants_dir</span><span class="p">,</span> <span class="n">ants_cmd</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">ants_dir</span><span class="p">,</span> <span class="s2">&quot;ANTS&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">ants_cmd</span><span class="p">,</span> <span class="s1">&#39;-h&#39;</span><span class="p">],</span>
+                    <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+                <span class="n">output</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set_ants_path</span><span class="p">(</span><span class="n">ants_dir</span><span class="p">)</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set_use_ants</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">ants_dir</span><span class="p">,</span> <span class="s2">&quot;ANTS&quot;</span><span class="p">)</span>
+                    <span class="k">return</span>
+
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">ants_dir</span><span class="p">,</span> <span class="s2">&quot;ANTS&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_use_ants</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="c1"># FSL config test</span>
         <span class="n">fsl_conf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fsl_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
@@ -3178,23 +3402,65 @@
                         <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
                                                <span class="nb">getattr</span><span class="p">(</span><span class="n">configfsl</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
 
-                <span class="c1">#TODO: We could use a generic method to deal with c_c?</span>
+                <span class="c1"># TODO: We could use a generic method to deal with c_c?</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
-                                        <span class="s1">&#39;capsul.engine.module.fsl&#39;</span><span class="p">][</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span>
+                        <span class="s1">&#39;capsul.engine.module.fsl&#39;</span><span class="p">][</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span>
 
                 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                     <span class="k">pass</span>
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
-                                          <span class="s1">&#39;capsul.engine.module.fsl&#39;</span><span class="p">][</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
+                        <span class="s1">&#39;capsul.engine.module.fsl&#39;</span><span class="p">][</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
 
                 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                     <span class="k">pass</span>
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;study_config&#39;</span><span class="p">][</span><span class="s1">&#39;fsl_config&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># AFNI CapsulConfig</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_afni</span><span class="p">():</span>
+
+                <span class="c1"># TODO: We only deal here with the global environment</span>
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+                    <span class="n">configafni</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">configafni</span><span class="p">:</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">configafni</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                <span class="c1"># TODO: We could use a generic method to deal with c_c?</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.afni&#39;</span><span class="p">][</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># ANTS CapsulConfig</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_ants</span><span class="p">():</span>
+
+                <span class="c1"># TODO: We only deal here with the global environment</span>
+                <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
+
+                <span class="k">with</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span> <span class="k">as</span> <span class="n">settings</span><span class="p">:</span>
+                    <span class="n">configants</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;ants&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">configants</span><span class="p">:</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">remove_config</span><span class="p">(</span><span class="s1">&#39;ants&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">,</span>
+                                               <span class="nb">getattr</span><span class="p">(</span><span class="n">configants</span><span class="p">,</span> <span class="n">cif</span><span class="p">))</span>
+
+                <span class="c1"># TODO: We could use a generic method to deal with c_c?</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">][</span><span class="s1">&#39;global&#39;</span><span class="p">][</span>
+                        <span class="s1">&#39;capsul.engine.module.ants&#39;</span><span class="p">][</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span>
 
                 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                     <span class="k">pass</span>
@@ -3357,6 +3623,28 @@
         <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PopUpPreferences.use_afni_changed"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_afni_changed">[docs]</a>    <span class="k">def</span> <span class="nf">use_afni_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when the use_afni checkbox is changed.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afni_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afni_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afni_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afni_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PopUpPreferences.use_ants_changed"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_ants_changed">[docs]</a>    <span class="k">def</span> <span class="nf">use_ants_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when the use_ants checkbox is changed.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ants_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ants_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ants_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ants_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ants_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PopUpPreferences.use_fsl_changed"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_fsl_changed">[docs]</a>    <span class="k">def</span> <span class="nf">use_fsl_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called when the use_fsl checkbox is changed.&quot;&quot;&quot;</span>

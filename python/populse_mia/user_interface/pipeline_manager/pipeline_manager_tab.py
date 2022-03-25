@@ -2791,14 +2791,16 @@ class PipelineManagerTab(QWidget):
             self.run_pipeline_action.setDisabled(False)
         # End - Commented on January, 4th 2020
 
-        if (hasattr(self.pipelineEditorTabs.get_current_editor(),
-                    'iterated') and
-                self.pipelineEditorTabs.get_current_editor().iterated):
-            self.save_pipeline_as_action.setDisabled(True)
-            self.save_pipeline_action.setDisabled(True)
-        else:
-            self.save_pipeline_as_action.setDisabled(False)
-            self.save_pipeline_action.setDisabled(False)
+        ### Uncomment below to not allow to save an iterated pipeline: ## 
+        #if (hasattr(self.pipelineEditorTabs.get_current_editor(),
+        #            'iterated') and
+        #        self.pipelineEditorTabs.get_current_editor().iterated):
+        #    self.save_pipeline_as_action.setDisabled(True)
+        #    self.save_pipeline_action.setDisabled(True)
+        #else:
+        #    self.save_pipeline_as_action.setDisabled(False)
+        #    self.save_pipeline_action.setDisabled(False)
+        ### End Comment ###
 
     def update_user_mode(self):
         """

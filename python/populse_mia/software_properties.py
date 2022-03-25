@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*- #
 """Module that handle the configuration of the software
 
 Load and save the parameters from the miniviewer and the MIA preferences
@@ -7,6 +6,7 @@ pop-up in the config.yml file.
 :Contains:
     :Class:
         - Config
+
     :Function:
         - verCmp
 
@@ -20,13 +20,14 @@ pop-up in the config.yml file.
 # for details.
 ##########################################################################
 
+import glob
 import os
 import platform
-import yaml
 import re
-import glob
+import yaml
 from cryptography.fernet import Fernet
 
+# Capsul import
 from capsul.api import capsul_engine
 
 CONFIG = b'5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc='
@@ -39,8 +40,8 @@ def verCmp(first_ver, sec_ver, comp):
     first argument (first_ver) is equal to, less or equal to, or greater or
     equal to its second argument (sec_ver), as follows:
 
-      - if third argument (comp) is 'eq': when the first argument is equal to the
-        second argument, return True (False if not).
+      - if third argument (comp) is 'eq': when the first argument is equal to
+        the second argument, return True (False if not).
       - if third argument (comp) is 'sup': when the first argument is greater
         than the second argument, return True (False if not).
       - if third argument (comp) is 'inf': when the first argument is less than
@@ -50,11 +51,12 @@ def verCmp(first_ver, sec_ver, comp):
     :param sec_ver: the version of a package (a string; ex. '0.13.0')
     :param comp: comparator argument (accepted values: 'sup', 'inf' and 'eq' )
 
-    :returns: False or True
+    :return: False or True
 
     :Contains:
-      Private function:
-        - normalise
+        :Private function:
+            - normalise: transform a version of a package to a corresponding
+              list of integer
      """
 
     def normalise(v):
@@ -62,9 +64,9 @@ def verCmp(first_ver, sec_ver, comp):
 
         :param v: version of a package (ex. 5.4.1)
 
-        :returns: a list of integer (ex. [0, 13, 0])
-
+        :return: a list of integer (ex. [0, 13, 0])
         """
+
         v = re.sub("[^0-9\.]", "", v)
         return [int(x) for x in re.sub(r'(\.0+)*$', '', v).split(".")]
 
@@ -79,7 +81,7 @@ def verCmp(first_ver, sec_ver, comp):
     elif comp == 'sup':
 
         if (normalise(first_ver) > normalise(sec_ver)) or (
-        verCmp(first_ver, sec_ver, 'eq')):
+                verCmp(first_ver, sec_ver, 'eq')):
             return True
 
         else:
@@ -88,7 +90,7 @@ def verCmp(first_ver, sec_ver, comp):
     elif comp == 'inf':
 
         if (normalise(first_ver) < normalise(sec_ver)) or (
-        verCmp(first_ver, sec_ver, 'eq')):
+                verCmp(first_ver, sec_ver, 'eq')):
             return True
 
         else:
@@ -99,134 +101,139 @@ class Config:
     """
     Object that handles the configuration of the software
 
-    .. Methods:
-        - get_admin_hash: get the value of the hash of the admin password
-        - getBackgroundColor: get background color
-        - get_capsul_config: get CAPSUL config dictionary
-        - get_capsul_engine: get a global CapsulEngine object used for all
-          operations in MIA application
-        - getChainCursors: returns if the "chain cursors" checkbox of the
-          mini viewer is activated
-        - get_afni_path: returns the path of AFNI
-        - get_ants_path: returns the path of ANTS
-        - get_config_path: returns the configuration file directory
-        - get_fsl_config: returns the path of the FSL config file
-        - get_mainwindow_maximized: get the maximized (fullscreen) flag
-        - get_mainwindow_size: get the main window size
-        - get_matlab_command: returns Matlab command
-        - get_matlab_path: returns the path of Matlab's executable
-        - get_matlab_standalone_path: returns the path of Matlab Compiler
-          Runtime
-        - get_max_projects: returns the maximum number of projects displayed in
-          the "Saved projects" menu
-        - get_max_thumbnails:  get max thumbnails number at the data browser
-          bottom
-        - get_mia_path: returns the software's install path
-        - get_mri_conv_path: returns the MRIManager.jar path
-        - getNbAllSlicesMax: returns the maximum number of slices to display in
-          the mini viewer
-        - get_opened_projects: returns the opened projects
-        - getPathData: returns the data's path (currently commented)
-        - getPathToProjectsDBFile: returns the already-saved projects's path
-          (currently commented)
-        - getPathToProjectsFolder: returns the project's path
-        - get_projects_save_path: returns the folder where the projects are
-          saved
-        - get_referential: returns boolean to indicate DataViewer referential
-        - getShowAllSlices: returns if the "show all slices" checkbox of the
-          mini viewer is activated
-        - getSourceImageDir: get the source directory for project images
-        - get_spm_path: returns the path of SPM12 (license version)
-        - get_spm_standalone_path: returns the path of SPM12 (standalone
-          version)
-        - getTextColor: return the text color
-        - getThumbnailTag: returns the tag that is displayed in the mini viewer
-        - get_use_afni: returns the value of "use afni" checkbox in the
-          preferences
-        - get_use_ants: returns the value of "use ants" checkbox in the
-          preferences
-        - get_use_clinical: returns the value of "clinical mode" checkbox in the
-          preferences
-        - get_use_fsl: returns the value of "use fsl" checkbox in the
-          preferences
-        - get_use_matlab: returns the value of "use matlab" checkbox in the
-          preferences
-        - get_use_matlab_standalone: returns the value of "use matlab
-          standalone" checkbox in the preferences
-        - get_user_level: get the user level in the Capsul config
-        - get_user_mode: returns the value of "user mode" checkbox
-          in the preferences
-        - get_use_spm: returns the value of "use spm" checkbox in the
-          preferences
-        - get_use_spm_standalone: returns the value of "use spm standalone"
-          checkbox in the preferences
-        - getViewerConfig: returns the DataViewer configuration (neuro or
-                           radio), by default neuro
-        - getViewerFramerate: returns the DataViewer framerate for automatic
-                              time running images
-        - isAutoSave: checks if auto-save mode is activated
-        - isControlV1: checks if the selected display of the controller is of
-                       V1 type
-        - isRadioView: checks if miniviewer in radiological orientation (if
-                       not, then it is in neurological orientation)
-        - loadConfig: reads the config in the config.yml file
-        - saveConfig: saves the config to the config.yml file
-        - set_admin_hash: set the password hash
-        - setAutoSave: sets the auto-save mode
-        - setBackgroundColor: sets the background color
-        - set_capsul_config: set CAPSUL configuration dict into MIA config
-        - setChainCursors: set the "chain cursors" checkbox of the mini viewer
-        - set_clinical_mode: set the value of "clinical mode" in
-                             the preferences
-        - setControlV1: Set controller display mode (True if V1)
-        - set_afni_path: set the path of the AFNI
-        - set_ants_path: set the path of the ANTS
-        - set_fsl_config: set the path of the FSL config file
-        - set_mainwindow_maximized: set the maximized (fullscreen) flag
-        - set_mainwindow_size: set main window size
-        - set_matlab_path: set the path of Matlab's executable
-        - set_matlab_standalone_path: set the path of Matlab Compiler Runtime
-        - set_max_projects: set the maximum number of projects displayed in
-          the "Saved projects" menu
-        - set_max_thumbnails: set max thumbnails number at the data browser
-                              bottom
-        - set_mia_path: set the software's install path (currently commented)
-        - set_mri_conv_path: set the MRIManager.jar path
-        - setNbAllSlicesMax: set the maximum number of slices to display in
-                             the mini viewer
-        - set_opened_projects: set the opened projects
-        - setPathToData: set the data's path (currently commented)
-        - set_projects_save_path: set the folder where the projects are saved
-        - set_radioView: set the orientation in miniviewer (True for
-                         radiological, False for neurological orientation)
-        - set_referential: sets the DataViewer referential 
-        - setShowAllSlices: set the "show all slices" checkbox of the mini
-          viewer
-        - setSourceImageDir: set the source directory for project images
-        - set_spm_path: set the path of SPM12 (license version)
-        - set_spm_standalone_path: set the path of SPM12 (standalone version)
-        - setTextColor: set the text color
-        - setThumbnailTag: set the tag that is displayed in the mini viewer
-
-        - set_use_afni: set the value of "use afni" checkbox in the preferences
-        - set_use_ants: set the value of "use ants" checkbox in the preferences
-        - set_use_fsl: set the value of "use fsl" checkbox in the preferences
-        - set_use_matlab: set the value of "use matlab" checkbox in the
-                          preferences
-        - set_use_matlab_standalone: set the value of "use matlab standalone"
-                                     checkbox in the preferences
-        - set_user_mode: set the value of "user mode" checkbox in
-                         the preferences
-        - set_use_spm: set the value of "use spm" checkbox in the preferences
-        - set_use_spm_standalone: set the value of "use spm standalone"
-                                  checkbox in the preferences
-        - setViewerConfig: set the Viewer configuration neuro or radio
-        - setViewerFramerate: set the Viewer frame rate for automatic running
-                              time images
-        - update_capsul_config: update a global CapsulEngine object used for
-                                all operations in MIA application
-
+    :Contains:
+        :Methods:
+            - get_admin_hash: get the value of the hash of the admin password
+            - get_afni_path: returns the path of AFNI
+            - get_ants_path: returns the path of ANTS
+            - getBackgroundColor: get background color
+            - get_capsul_config: get CAPSUL config dictionary
+            - get_capsul_engine: get a global CapsulEngine object used for all
+              operations in MIA application
+            - getChainCursors: returns if the "chain cursors" checkbox of the
+              mini viewer is activated
+            - get_config_path: returns the configuration file directory
+            - get_fsl_config: returns the path of the FSL config file
+            - get_mainwindow_maximized: get the maximized (full-screen) flag
+            - get_mainwindow_size: get the main window size
+            - get_matlab_command: returns Matlab command
+            - get_matlab_path: returns the path of Matlab's executable
+            - get_matlab_standalone_path: returns the path of Matlab Compiler
+              Runtime
+            - get_max_projects: returns the maximum number of projects
+              displayed in the "Saved projects" menu
+            - get_max_thumbnails:  get max thumbnails number at the data browser
+              bottom
+            - get_mia_path: returns the software's install path
+            - get_mri_conv_path: returns the MRIManager.jar path
+            - getNbAllSlicesMax: returns the maximum number of slices to
+              display in the mini viewer
+            - get_opened_projects: returns the opened projects
+            - getPathToProjectsFolder: returns the project's path
+            - get_projects_save_path: returns the folder where the projects are
+              saved
+            - get_referential: returns boolean to indicate DataViewer
+              referential
+            - getShowAllSlices: returns if the "show all slices" checkbox of the
+              mini viewer is activated
+            - getSourceImageDir: get the source directory for project images
+            - get_spm_path: returns the path of SPM12 (license version)
+            - get_spm_standalone_path: returns the path of SPM12 (standalone
+              version)
+            - getTextColor: return the text color
+            - getThumbnailTag: returns the tag that is displayed in the mini
+              viewer
+            - get_use_afni: returns the value of "use afni" checkbox in the
+              preferences
+            - get_use_ants: returns the value of "use ants" checkbox in the
+              preferences
+            - get_use_clinical: returns the value of "clinical mode" checkbox
+              in the preferences
+            - get_use_fsl: returns the value of "use fsl" checkbox in the
+              preferences
+            - get_use_matlab: returns the value of "use matlab" checkbox in the
+              preferences
+            - get_use_matlab_standalone: returns the value of "use matlab
+              standalone" checkbox in the preferences
+            - get_user_level: get the user level in the Capsul config
+            - get_user_mode: returns the value of "user mode" checkbox
+              in the preferences
+            - get_use_spm: returns the value of "use spm" checkbox in the
+              preferences
+            - get_use_spm_standalone: returns the value of "use spm standalone"
+              checkbox in the preferences
+            - getViewerConfig: returns the DataViewer configuration (neuro or
+              radio), by default neuro
+            - getViewerFramerate: returns the DataViewer framerate for automatic
+              time running images
+            - isAutoSave: checks if auto-save mode is activated
+            - isControlV1: checks if the selected display of the controller is
+              of V1 type
+            - isRadioView: checks if miniviewer in radiological orientation (if
+              not, then it is in neurological orientation)
+            - loadConfig: reads the config in the config.yml file
+            - saveConfig: saves the config to the config.yml file
+            - set_admin_hash: set the password hash
+            - set_afni_path: set the path of the AFNI
+            - set_ants_path: set the path of the ANTS
+            - setAutoSave: sets the auto-save mode
+            - setBackgroundColor: sets the background color
+            - set_capsul_config: set CAPSUL configuration dict into MIA config
+            - setChainCursors: set the "chain cursors" checkbox of the mini
+              viewer
+            - set_clinical_mode: set the value of "clinical mode" in
+              the preferences
+            - setControlV1: Set controller display mode (True if V1)
+            - set_fsl_config: set the path of the FSL config file
+            - set_mainwindow_maximized: set the maximized (fullscreen) flag
+            - set_mainwindow_size: set main window size
+            - set_matlab_path: set the path of Matlab's executable
+            - set_matlab_standalone_path: set the path of Matlab Compiler
+              Runtime
+            - set_max_projects: set the maximum number of projects displayed in
+              the "Saved projects" menu
+            - set_max_thumbnails: set max thumbnails number at the data browser
+              bottom
+            - set_mri_conv_path: set the MRIManager.jar path
+            - setNbAllSlicesMax: set the maximum number of slices to display in
+              the mini viewer
+            - set_opened_projects: set the opened projects
+            - set_projects_save_path: set the folder where the projects are
+              saved
+            - set_radioView: set the orientation in miniviewer (True for
+              radiological, False for neurological orientation)
+            - set_referential: sets the DataViewer referential 
+            - setShowAllSlices: set the "show all slices" checkbox of the mini
+              viewer
+            - setSourceImageDir: set the source directory for project images
+            - set_spm_path: set the path of SPM12 (license version)
+            - set_spm_standalone_path: set the path of SPM12 (standalone
+              version)
+            - setTextColor: set the text color
+            - setThumbnailTag: set the tag that is displayed in the mini viewer
+            - set_use_afni: set the value of "use afni" checkbox in the
+              preferences
+            - set_use_ants: set the value of "use ants" checkbox in the
+              preferences
+            - set_use_fsl: set the value of "use fsl" checkbox in the
+              preferences
+            - set_use_matlab: set the value of "use matlab" checkbox in the
+              preferences
+            - set_use_matlab_standalone: set the value of "use matlab
+              standalone" checkbox in the preferences
+            - set_user_mode: set the value of "user mode" checkbox in
+              the preferences
+            - set_use_spm: set the value of "use spm" checkbox in the
+              preferences
+            - set_use_spm_standalone: set the value of "use spm standalone"
+              checkbox in the preferences
+            - setViewerConfig: set the Viewer configuration neuro or radio
+            - setViewerFramerate: set the Viewer frame rate for automatic
+              running time images
+            - update_capsul_config: update a global CapsulEngine object used
+              for all operations in MIA application
     """
+
     capsul_engine = None
 
     def __init__(self, config_path=None):
@@ -234,11 +241,12 @@ class Config:
 
         :Parameters:
             - :config_path: str (optional). If provided, the configuration file
-               will be loaded/saved from the given directory. Otherwise the
-               regular eutristics will be used to determine the config path.
+               will be loaded/saved from the given directory. Otherwise, the
+               regular heuristics will be used to determine the config path.
                This option allows to use an alternative config directory (for
                tests for instance).
         """
+
         if config_path is not None:
             self.config_path = config_path
 
@@ -253,34 +261,55 @@ class Config:
 
         :returns: string
         """
+
         try:
             return self.config["admin_hash"]
         except KeyError:
             return False
+
+    def get_afni_path(self):
+        """Get the AFNI path
+
+        :returns: string of path to AFNI
+        """
+
+        return self.config.get("afni", "")
+
+    def get_ants_path(self):
+        """Get the ANTS path
+
+        :returns: string of path to ANTS
+        """
+
+        return self.config.get("ants", "")
 
     def getBackgroundColor(self):
         """Get background color.
 
         :returns: string of the background color
         """
+
         return self.config.get("background_color", "")
 
     def get_capsul_config(self, sync_from_engine=True):
         """Get CAPSUL config dictionary.
 
-        :param sync_from_engine: boolean
+        :param sync_from_engine: if True, perform a synchronisation
+                                 with CAPSUL engine (Bool)
 
-        :returns: capsul_config: dict
+        :return: capsul_config: the CAPSUL configuration saved into
+                                Mia config (Dict)
         """
-        capsul_config = self.config.setdefault("capsul_config", {})
-        capsul_config.setdefault(
-            "engine_modules",
-            ['nipype', 'fsl', 'freesurfer', 'matlab', 'spm', 'fom', 'python', 'afni', 'ants'])
 
+        capsul_config = self.config.setdefault("capsul_config", {})
+        capsul_config.setdefault("engine_modules", ['nipype', 'fsl',
+                                                    'freesurfer', 'matlab',
+                                                    'spm', 'fom', 'python',
+                                                    'afni', 'ants'])
         econf = capsul_config.setdefault('engine', {})
         eeconf = econf.setdefault('global', {})
 
-        # update study config from mia config values
+        # Take mia pref parameters
         use_spm = self.get_use_spm()
         spm_path = self.get_spm_path()
 
@@ -301,6 +330,11 @@ class Config:
 
         use_ants = self.get_use_ants()
         ants_path = self.get_ants_path()
+
+        # Make synchronisation from Mia pref to Capsul config:
+
+        # TODO: We do not deal with the version parameter. This can produce
+        # hidden configurations (spm and spm12 and spm8 ...)!
 
         # SPM
         if use_spm_standalone:
@@ -367,9 +401,10 @@ class Config:
             'populse_mia.user_interface.pipeline_manager.process_mia']
         m['process_completion'] = 'mia_completion'
 
+        # Synchronise from engine, or not
         if sync_from_engine and self.capsul_engine:
             for environment in (self.capsul_engine.settings.
-                                get_all_environments)():
+                                                        get_all_environments)():
                 eeconf = econf.setdefault(environment, {})
                 # would need a better merging system
                 eeconf.update(
@@ -386,10 +421,9 @@ class Config:
 
         :returns: Config.capsul_engine: capsul.engine.CapsulEngine object
         """
-        #from capsul.api import capsul_engine
 
         config = Config()
-        capsul_config = config.get_capsul_config()
+        config.get_capsul_config()
 
         if Config.capsul_engine is None:
             Config.capsul_engine = capsul_engine()
@@ -402,29 +436,17 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("chain_cursors", False)
-
-    def get_afni_path(self):
-        """Get the AFNI path
-
-        :returns: string of path to AFNI
-        """
-        return self.config.get("afni", "")
-
-    def get_ants_path(self):
-        """Get the ANTS path
-
-        :returns: string of path to ANTS
-        """
-        return self.config.get("ants", "")
 
     def get_config_path(self):
         """Get the MIA config path (including "properties" directory)
 
         :returns: string of directory path to the config.yml file
         """
+
         config_path = getattr(self, 'config_path', None)
-        
+
         if config_path:
             return config_path
 
@@ -436,6 +458,7 @@ class Config:
 
         :returns: string of path to the fsl/etc/fslconf/fsl.sh file
         """
+
         return self.config.get("fsl_config", "")
 
     def get_mainwindow_maximized(self):
@@ -443,6 +466,7 @@ class Config:
 
         :returns:  boolean
         """
+
         return self.config.get('mainwindow_maximized', True)
 
     def get_mainwindow_size(self):
@@ -450,6 +474,7 @@ class Config:
 
         :returns:  list or None
         """
+
         return self.config.get('mainwindow_size', None)
 
     def get_matlab_command(self):
@@ -457,16 +482,17 @@ class Config:
 
         :returns: matlab executable path or nothing if matlab path not specified
         """
+
         if self.config.get("use_spm_standalone"):
             archi = platform.architecture()
             if 'Windows' in archi[1]:
                 spm_script = glob.glob(
-                               os.path.join(self.config["spm_standalone"],
-                                            'spm*_win' + archi[0][:2] + '.exe'))
+                    os.path.join(self.config["spm_standalone"],
+                                 'spm*_win' + archi[0][:2] + '.exe'))
             else:
                 spm_script = glob.glob(
-                               os.path.join(self.config["spm_standalone"],
-                                            'run_spm*.sh'))
+                    os.path.join(self.config["spm_standalone"],
+                                 'run_spm*.sh'))
             if spm_script:
                 spm_script = spm_script[0]
                 return '{0} {1} script'.format(
@@ -481,6 +507,7 @@ class Config:
 
         :returns: String of path
         """
+
         return self.config.get("matlab", None)
 
     def get_matlab_standalone_path(self):
@@ -488,6 +515,7 @@ class Config:
 
         :returns: string of path
         """
+
         return self.config.get("matlab_standalone", "")
 
     def get_max_projects(self):
@@ -496,10 +524,11 @@ class Config:
 
         :returns: Integer
         """
+
         try:
             return int(self.config["max_projects"])
 
-        except KeyError as e:
+        except KeyError:
             return 5
 
     def get_max_thumbnails(self):
@@ -507,10 +536,11 @@ class Config:
 
         :returns: Integer
         """
+
         try:
             return int(self.config["max_thumbnails"])
 
-        except KeyError as e:
+        except KeyError:
             return 5
 
     def get_mia_path(self):
@@ -526,6 +556,7 @@ class Config:
 
         :returns: string of path to mia folder
         """
+
         mia_path = getattr(self, 'mia_path', None)
 
         if mia_path:
@@ -546,7 +577,7 @@ class Config:
                         mia_home_config = yaml.load(stream)
 
                     if ("user_mode" in mia_home_config.keys() and
-                        mia_home_config["user_mode"] is False):
+                            mia_home_config["user_mode"] is False):
                         # Only for admin mode
                         config_path = os.path.dirname(os.path.realpath(
                             __file__))
@@ -561,7 +592,7 @@ class Config:
                     # mia_path is obsolete. Use mia_user_path instead
                     if "mia_path" in mia_home_config:
                         mia_home_config["mia_user_path"] = mia_home_config[
-                                                                     "mia_path"]
+                            "mia_path"]
                         del mia_home_config["mia_path"]
 
                         with open(dot_mia_config,
@@ -599,6 +630,7 @@ class Config:
 
         :returns: string of the pathto the MRIManager.jar
         """
+
         return self.config.get("mri_conv_path", "")
 
     def getNbAllSlicesMax(self):
@@ -607,6 +639,7 @@ class Config:
 
         :returns: Integer
         """
+
         return int(self.config.get("nb_slices_max", "10"))
 
     def get_opened_projects(self):
@@ -614,30 +647,15 @@ class Config:
 
         :returns: list of opened projects
         """
+
         return self.config.get("opened_projects", [])
-
-    # def getPathData(self):
-    #     """
-    #     Get the path tp the data directory
-    #     :return: returns the path to the data directory
-    #
-    #     """
-    #     return self.config["paths"]["data"]
-
-    # def getPathToProjectsDBFile(self):
-    #     """
-    #
-    #     :return:
-    #
-    #     """
-    #     folder = self.getPathToProjectsFolder()
-    #     return os.path.join(folder, 'projects.json')
 
     def getPathToProjectsFolder(self):
         """Get the project's path.
 
         :returns: string of the path
         """
+
         return self.config.get("projects_save_path", "")
 
     def get_projects_save_path(self):
@@ -645,12 +663,15 @@ class Config:
 
         :returns: string of path
         """
+
         try:
             return self.config["projects_save_path"]
+
         except KeyError:
-            if not os.path.isdir(os.path.join(self.get_mia_path(),
-                                              'projects')):
+
+            if not os.path.isdir(os.path.join(self.get_mia_path(), 'projects')):
                 os.mkdir(os.path.join(self.get_mia_path(), 'projects'))
+
             return os.path.join(self.get_mia_path(), 'projects')
 
     def get_referential(self):
@@ -658,6 +679,7 @@ class Config:
 
         :returns: 0 for World Coordinates, 1 for Image ref
         """
+
         return self.config.get("ref", "0")
 
     def getShowAllSlices(self):
@@ -666,7 +688,8 @@ class Config:
 
         :returns: boolean
         """
-        #Used in MiniViewer
+
+        # Used in MiniViewer
         return self.config.get("show_all_slices", False)
 
     def getSourceImageDir(self):
@@ -674,6 +697,7 @@ class Config:
 
         :returns: string of the path
         """
+
         return self.config.get("source_image_dir", "")
 
     def get_spm_path(self):
@@ -681,6 +705,7 @@ class Config:
 
         :returns: string of path
         """
+
         return self.config.get("spm", "")
 
     def get_spm_standalone_path(self):
@@ -688,6 +713,7 @@ class Config:
 
         :returns: String of path
         """
+
         return self.config.get("spm_standalone", "")
 
     def getTextColor(self):
@@ -695,6 +721,7 @@ class Config:
 
         :returns: string
         """
+
         return self.config.get("text_color", "")
 
     def getThumbnailTag(self):
@@ -702,6 +729,7 @@ class Config:
 
         :returns: string
         """
+
         return self.config.get("thumbnail_tag", "SequenceName")
 
     def get_use_afni(self):
@@ -709,6 +737,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_afni", False)
 
     def get_use_ants(self):
@@ -716,6 +745,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_ants", False)
 
     def get_use_clinical(self):
@@ -723,6 +753,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("clinical_mode", False)
 
     def get_use_fsl(self):
@@ -730,6 +761,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_fsl", False)
 
     def get_use_matlab(self):
@@ -737,6 +769,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_matlab", False)
 
     def get_use_matlab_standalone(self):
@@ -745,6 +778,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_matlab_standalone", False)
 
     def get_user_level(self):
@@ -752,15 +786,17 @@ class Config:
 
         :returns: integer
         """
+
         return self.config.get("capsul_config", {}).get(
             "engine", {}).get("global", {}).get(
-              'capsul.engine.module.axon', {}).get('user_level', 0)
+            'capsul.engine.module.axon', {}).get('user_level', 0)
 
     def get_user_mode(self):
         """Get if user mode is disabled or enabled in the preferences.
 
         :returns: boolean
         """
+
         return self.config.get("user_mode", True)
 
     def get_use_spm(self):
@@ -768,6 +804,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_spm", False)
 
     def get_use_spm_standalone(self):
@@ -775,6 +812,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("use_spm_standalone", False)
 
     def getViewerConfig(self):
@@ -782,6 +820,7 @@ class Config:
 
         :returns: String
         """
+
         return self.config.get("config_NeuRad", "neuro")
 
     def getViewerFramerate(self):
@@ -789,6 +828,7 @@ class Config:
 
         :returns: integer
         """
+
         return self.config.get("im_sec", "5")
 
     def isAutoSave(self):
@@ -796,6 +836,7 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("auto_save", False)
 
     def isControlV1(self):
@@ -803,16 +844,18 @@ class Config:
 
         :returns: boolean
         """
+
         return self.config.get("control_V1", False)
 
     def isRadioView(self):
         """Get if the display in miniviewer is in radiological orientation.
 
-        - True for radiolological
+        - True for radiological
         - False for neurological
 
         :returns: boolean
         """
+
         return self.config.get("radio_view", True)
 
     def loadConfig(self):
@@ -820,14 +863,19 @@ class Config:
 
         :returns: Returns a dictionary of the contents of config.yml
         """
+
         f = Fernet(CONFIG)
         config_file = os.path.join(self.get_config_path(), 'config.yml')
+
         if not os.path.exists(config_file):
             return {}
+
         with open(config_file, 'rb') as stream:
+
             try:
                 stream = b"".join(stream.readlines())
                 decrypted = f.decrypt(stream)
+
                 if verCmp(yaml.__version__, '5.1', 'sup'):
                     return yaml.load(decrypted, Loader=yaml.FullLoader)
 
@@ -837,30 +885,53 @@ class Config:
             except yaml.YAMLError as exc:
                 print('error loading YAML file: %s' % config_file)
                 print(exc)
-                #import traceback
-                #traceback.print_stack()
+
         # in case of problem, return an empty config
         return {}
 
     def saveConfig(self):
         """Save the current parameters in the config.yml file."""
+
         f = Fernet(CONFIG)
         config_file = os.path.join(self.get_config_path(), 'config.yml')
+
         if not os.path.exists(os.path.dirname(config_file)):
             os.makedirs(os.path.dirname(config_file))
+
         with open(config_file, 'wb') as configfile:
             stream = yaml.dump(self.config, default_flow_style=False,
-                      allow_unicode=True)
+                               allow_unicode=True)
             configfile.write(f.encrypt(stream.encode()))
 
         self.update_capsul_config()
 
-    def set_admin_hash(self, hash):
+    def set_admin_hash(self, admin_hash):
         """Set the password hash.
 
-        :param path: string of hash
+        :param admin_hash: string of hash
         """
-        self.config["admin_hash"] = hash
+
+        self.config["admin_hash"] = admin_hash
+        # Then save the modification
+        self.saveConfig()
+
+    def set_afni_path(self, path):
+        """Set the AFNI path
+
+        :param path: string of AFNI path
+        """
+
+        self.config["afni"] = path
+        # Then save the modification
+        self.saveConfig()
+
+    def set_ants_path(self, path):
+        """Set the ANTS path
+
+        :param path: string of ANTS path
+        """
+
+        self.config["ants"] = path
         # Then save the modification
         self.saveConfig()
 
@@ -869,6 +940,7 @@ class Config:
 
         :param save: boolean
         """
+
         self.config["auto_save"] = save
         # Then save the modification
         self.saveConfig()
@@ -879,6 +951,7 @@ class Config:
         :param color: Color string ('Black', 'Blue', 'Green', 'Grey',
                                     'Orange', 'Red', 'Yellow', 'White')
         """
+
         self.config["background_color"] = color
         # Then save the modification
         self.saveConfig()
@@ -1058,10 +1131,11 @@ class Config:
         self.update_capsul_config()  # store into capsul engine
 
     def setChainCursors(self, chain_cursors):
-        """Set the value of the checkbox 'chain cursor' in the miniviewer.
+        """Set the value of the checkbox 'chain cursor' in the mini viewer.
 
         :param chain_cursors: Boolean
         """
+
         self.config["chain_cursors"] = chain_cursors
         # Then save the modification
         self.saveConfig()
@@ -1071,6 +1145,7 @@ class Config:
 
         :param clinical_mode: boolean
         """
+
         self.config["clinical_mode"] = clinical_mode
         # Then save the modification
         self.saveConfig()
@@ -1080,25 +1155,8 @@ class Config:
 
         :param controlV1: boolean
         """
+
         self.config["control_V1"] = controlV1
-        # Then save the modification
-        self.saveConfig()
-
-    def set_afni_path(self, path):
-        """Set the AFNI path
-
-        :param path: string of AFNI path
-        """
-        self.config["afni"] = path
-        # Then save the modification
-        self.saveConfig()
-
-    def set_ants_path(self, path):
-        """Set the ANTS path
-
-        :param path: string of ANTS path
-        """
-        self.config["ants"] = path
         # Then save the modification
         self.saveConfig()
 
@@ -1107,15 +1165,17 @@ class Config:
 
         :param path: string of path to fsl/etc/fslconf/fsl.sh
         """
+
         self.config["fsl_config"] = path
         # Then save the modification
         self.saveConfig()
 
     def set_mainwindow_maximized(self, enabled):
-        """Set the maximized (fullscreen) flag
+        """Set the maximized (full-screen) flag
 
         :param enabled: boolean
         """
+
         self.config['mainwindow_maximized'] = enabled
         self.saveConfig()
 
@@ -1124,6 +1184,7 @@ class Config:
 
         :param size: list
         """
+
         self.config['mainwindow_size'] = list(size)
         self.saveConfig()
 
@@ -1132,6 +1193,7 @@ class Config:
 
         :param path: string of path
         """
+
         self.config["matlab"] = path
         # Then save the modification
         self.saveConfig()
@@ -1141,6 +1203,7 @@ class Config:
 
         :param path: string of path
         """
+
         self.config["matlab_standalone"] = path
         # Then save the modification
         self.saveConfig()
@@ -1151,6 +1214,7 @@ class Config:
 
         :param nb_max_projects: Integer
         """
+
         self.config["max_projects"] = nb_max_projects
         # Then save the modification
         self.saveConfig()
@@ -1160,79 +1224,60 @@ class Config:
 
         :param nb_max_thumbnails: Integer
         """
+
         self.config["max_thumbnails"] = nb_max_thumbnails
         # Then save the modification
         self.saveConfig()
-
-    # def set_mia_path(self, path):
-    #     """
-    #
-    #     :param:#         path:
-    #
-    #     :return:
-    #
-    #     """
-    #     self.config["mia_user_path"] = path
-    #     # Then save the modification
-    #     self.saveConfig()
 
     def set_mri_conv_path(self, path):
         """Set the MRIManager.jar path.
 
         :param path: string of the path
         """
+
         self.config["mri_conv_path"] = path
         # Then save the modification
         self.saveConfig()
 
     def setNbAllSlicesMax(self, nb_slices_max):
-        """Set the number of slices to display in the miniviewer.
+        """Set the number of slices to display in the mini viewer.
 
-        :param nb_slices_max: Int
+        :param nb_slices_max: maximum number of slices to display (Int)
         """
+
         self.config["nb_slices_max"] = nb_slices_max
         # Then save the modification
         self.saveConfig()
-        
+
     def set_opened_projects(self, new_projects):
         """Set the list of opened projects and saves the modification.
 
-        :param new_projects: List of path
+        :param new_projects: list of path
         """
+
         self.config["opened_projects"] = new_projects
         # Then save the modification
         self.saveConfig()
-
-    # def setPathToData(self,path):
-    #     """
-    #
-    #     :param:#         path:
-    #
-    #     :return:
-    #
-    #     """
-    #     if path is not None and path != '':
-    #         self.config["paths"]["data"] = path
-    #         # Then save the modification
-    #         self.saveConfig()
 
     def set_projects_save_path(self, path):
         """Set the folder where the projects are saved.
 
         :param path: string of path
         """
+
         self.config["projects_save_path"] = path
         # Then save the modification
         self.saveConfig()
 
     def set_radioView(self, radio_view):
-        """Set the radiological/neurological orientation in miniviewer.
+        """Set the radiological/neurological orientation in mini viewer.
 
         - True for radiological
         - False for neurological
 
         :param radio_view: boolean
         """
+
         self.config["radio_view"] = radio_view
         # Then save the modification
         self.saveConfig()
@@ -1243,6 +1288,7 @@ class Config:
 
         :param ref: str; 0 for World Coordinates, 1 for Image ref
         """
+
         self.config["ref"] = ref
         # Then save the modification
         self.saveConfig()
@@ -1252,6 +1298,7 @@ class Config:
 
         :param show_all_slices: Boolean
         """
+
         self.config["show_all_slices"] = show_all_slices
         # Then save the modification
         self.saveConfig()
@@ -1261,24 +1308,27 @@ class Config:
 
         :param source_image_dir: String of path
         """
+
         self.config["source_image_dir"] = source_image_dir
         # Then save the modification
         self.saveConfig()
 
     def set_spm_path(self, path):
-        """Set the path of SPM12 (license version).
+        """Set the path of SPM (license version).
 
         :param path: string of path
         """
+
         self.config["spm"] = path
         # Then save the modification
         self.saveConfig()
 
     def set_spm_standalone_path(self, path):
-        """Set the path of SPM12 (standalone version).
+        """Set the path of SPM (standalone version).
 
         :param path: string of path
         """
+
         self.config["spm_standalone"] = path
         # Then save the modification
         self.saveConfig()
@@ -1289,6 +1339,7 @@ class Config:
         :param color: Color string ('Black', 'Blue', 'Green', 'Grey',
                                     'Orange', 'Red', 'Yellow', 'White')
         """
+
         self.config["text_color"] = color
         # Then save the modification
         self.saveConfig()
@@ -1296,8 +1347,9 @@ class Config:
     def setThumbnailTag(self, thumbnail_tag):
         """Set the tag that is displayed in the mini viewer.
 
-        :param thumbnail_tag: String
+        :param thumbnail_tag: string
         """
+
         self.config["thumbnail_tag"] = thumbnail_tag
         # Then save the modification
         self.saveConfig()
@@ -1307,6 +1359,7 @@ class Config:
 
         :param use_afni: boolean
         """
+
         self.config["use_afni"] = use_afni
         # Then save the modification
         self.saveConfig()
@@ -1316,6 +1369,7 @@ class Config:
 
         :param use_ants: boolean
         """
+
         self.config["use_ants"] = use_ants
         # Then save the modification
         self.saveConfig()
@@ -1325,6 +1379,7 @@ class Config:
 
         :param use_fsl: boolean
         """
+
         self.config["use_fsl"] = use_fsl
         # Then save the modification
         self.saveConfig()
@@ -1334,6 +1389,7 @@ class Config:
 
         :param use_matlab: boolean
         """
+
         self.config["use_matlab"] = use_matlab
         # Then save the modification
         self.saveConfig()
@@ -1344,15 +1400,17 @@ class Config:
 
         :param use_matlab: boolean
         """
+
         self.config["use_matlab_standalone"] = use_matlab_standalone
         # Then save the modification
         self.saveConfig()
- 
+
     def set_user_mode(self, user_mode):
         """Enable of disable user mode.
 
         :param user_mode: boolean
         """
+
         self.config["user_mode"] = user_mode
         # Then save the modification
         self.saveConfig()
@@ -1362,6 +1420,7 @@ class Config:
 
         :param use_spm: boolean
         """
+
         self.config["use_spm"] = use_spm
         # Then save the modification
         self.saveConfig()
@@ -1371,6 +1430,7 @@ class Config:
 
         :param use_spm_standalone: boolean
         """
+
         self.config["use_spm_standalone"] = use_spm_standalone
         # Then save the modification
         self.saveConfig()
@@ -1383,6 +1443,7 @@ class Config:
 
         :param config_NeuRad: string
         """
+
         self.config["config_NeuRad"] = config_NeuRad
         # Then save the modification
         self.saveConfig()
@@ -1392,6 +1453,7 @@ class Config:
 
         :param im_sec: int
         """
+
         self.config["im_sec"] = im_sec
         # Then save the modification
         self.saveConfig()
@@ -1402,8 +1464,9 @@ class Config:
         application. The engine is created once when needed, and updated
         each time the config is saved.
 
-        :returns: Config.capsul_engine: capsul.engine.CapsulEngine object
+        :returns: capsul.engine.CapsulEngine object
         """
+
         if self.capsul_engine is None:
             # don't do anything until the config is really created: this
             # avoids unneeded updates before it is actually used.
@@ -1431,9 +1494,9 @@ class Config:
 
                 if ('capsul_engine' not in c or
                                           'uses' not in c['capsul_engine']):
-                    c['capsul_engine'] = {
-                    'uses': {engine.settings.module_name(m): 'ALL'
-                              for m in config.keys()}}
+                    c['capsul_engine'] = {'uses':
+                                          {engine.settings.module_name(m):
+                                           'ALL' for m in config.keys()}}
 
                 try:
                     engine.import_configs(environment, c, cont_on_error=True)
