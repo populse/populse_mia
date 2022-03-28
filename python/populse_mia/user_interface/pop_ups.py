@@ -2965,7 +2965,7 @@ class PopUpPreferences(QDialog):
             # AFNI config test
             if self.use_afni_checkbox.isChecked():
                 afni_dir = self.afni_choice.text()
-                afni_cmd = '3dSkullStrip'
+                afni_cmd = 'afni'
 
                 if os.path.isdir(afni_dir):
                     afni_cmd = os.path.join(afni_dir, afni_cmd)
