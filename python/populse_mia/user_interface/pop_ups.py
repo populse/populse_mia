@@ -2301,22 +2301,47 @@ class PopUpPreferences(QDialog):
 
         if config.get_use_spm_standalone():
             archi = platform.architecture()
+
             if 'Windows' in archi[1]:
                 self.use_matlab_standalone_checkbox.setChecked(False)
+
             else:
                 self.use_matlab_standalone_checkbox.setChecked(True)
+
             self.use_spm_standalone_checkbox.setChecked(True)
+            self.use_matlab_checkbox.setChecked(False)
+            self.use_spm_checkbox.setChecked(False)
+
+
         elif config.get_use_spm():
             self.use_matlab_checkbox.setChecked(True)
             self.use_spm_checkbox.setChecked(True)
-        elif config.get_use_matlab():
-            if config.get_use_matlab_standalone():
-                self.use_matlab_standalone_checkbox.setChecked(True)
-            else:
-                self.use_matlab_checkbox.setChecked(True)
-        else:
-            self.use_matlab_checkbox.setChecked(False)
             self.use_matlab_standalone_checkbox.setChecked(False)
+            self.use_spm_standalone_checkbox.setChecked(False)
+
+        elif config.get_use_matlab():
+            self.use_matlab_checkbox.setChecked(True)
+            self.use_matlab_standalone_checkbox.setChecked(False)
+            self.use_spm_standalone_checkbox.setChecked(False)
+            self.use_spm_checkbox.setChecked(False)
+
+        elif config.get_use_matlab_standalone():
+            self.use_matlab_standalone_checkbox.setChecked(True)
+            self.use_matlab_checkbox.setChecked(False)
+            self.use_spm_standalone_checkbox.setChecked(False)
+            self.use_spm_checkbox.setChecked(False)
+
+        # elif config.get_use_matlab():
+        #
+        #     if config.get_use_matlab_standalone():
+        #         self.use_matlab_standalone_checkbox.setChecked(True)
+        #
+        #     else:
+        #         self.use_matlab_checkbox.setChecked(True)
+        #
+        # else:
+        #     self.use_matlab_checkbox.setChecked(False)
+        #     self.use_matlab_standalone_checkbox.setChecked(False)
 
         if config.get_use_fsl():
             self.use_fsl_checkbox.setChecked(True)
