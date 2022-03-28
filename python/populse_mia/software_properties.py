@@ -337,17 +337,33 @@ class Config:
         # hidden configurations (spm and spm12 and spm8 ...)!
 
         # SPM
+        spm_configs = eeconf.setdefault('capsul.engine.module.spm', {})
         if use_spm_standalone:
-            m = eeconf.setdefault('capsul.engine.module.spm',
-                              {}).setdefault('spm-standalone', {})
-            m.update({'config_id': 'spm-standalone',
+            m = {}
+            for config_id, m in spm_configs.items():
+                if m.get('standalone') \
+                        and m.get('directory') == spm_standalone_path:
+                    break
+            if m:
+                config_id = m['config_id']
+            else:
+                config_id = 'spm-standalone'
+            m = spm_configs.setdefault(config_id, {})
+            m.update({'config_id': config_id,
                       'config_environment': 'global',
                       'directory': spm_standalone_path, 'standalone': True})
 
         if use_spm:
-            m = eeconf.setdefault('capsul.engine.module.spm',
-                                  {}).setdefault('spm', {})
-            m.update({'config_id': 'spm',
+            m = {}
+            for config_id, m in spm_configs.items():
+                if not m.get('standalone') and m.get('directory') == spm_path:
+                    break
+            if m:
+                config_id = m['config_id']
+            else:
+                config_id = 'spm'
+            m = spm_configs.setdefault(config_id, {})
+            m.update({'config_id': config_id,
                       'config_environment': 'global',
                       'directory': spm_path, 'standalone': False})
 
