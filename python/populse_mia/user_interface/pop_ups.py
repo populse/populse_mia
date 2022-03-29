@@ -2219,7 +2219,7 @@ class PopUpPreferences(QDialog):
         self.use_afni_label = QLabel("Use AFNI")
         self.use_afni_checkbox = QCheckBox('', self)
 
-        self.afni_label = QLabel("AFNI path:")
+        self.afni_label = QLabel("AFNI path (e.g. /afni_dir/abin):")
         self.afni_choice = QLineEdit(config.get_afni_path())
         self.afni_browse = QPushButton("Browse")
         self.afni_browse.clicked.connect(self.browse_afni)
