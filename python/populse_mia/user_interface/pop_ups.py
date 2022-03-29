@@ -30,7 +30,7 @@
         - PopUpTagSelection  (must precede PopUpSelectTag)
         - PopUpSelectTag
         - PopUpSelectTagCountTable
-        - PopUpShowBrick
+        - PopUpShowHistory
         - PopUpVisualizedTags
         - QLabel_clickable
 
@@ -4922,8 +4922,8 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
         self.close()
 
 
-class PopUpShowBrick(QDialog):
-    """Class to display the brick history of a document.
+class PopUpShowHistory(QDialog):
+    """Class to display the history of a document.
 
     .. Methods:
         - io_value_is_scan: checks if the I/O value is a scan
@@ -4931,10 +4931,11 @@ class PopUpShowBrick(QDialog):
 
     """
 
-    def __init__(self, project, brick_uuid, databrowser, main_window):
+    def __init__(self, project, brick_uuid, scan, databrowser, main_window):
         """Prepares the brick history popup.
 
         :param project: current project in the software
+        :param scan: filename of the scan
         :param databrowser; data browser instance of the software
         :param main_window: main window of the software
 
@@ -4948,10 +4949,20 @@ class PopUpShowBrick(QDialog):
         self.main_window = main_window
         self.project = project
         brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
-        self.setWindowTitle("Brick " + getattr(brick_row, BRICK_NAME) +
-                                                                     " history")
+        self.setWindowTitle("History of " + scan)
 
         layout = QVBoxLayout()
+
+        from populse_mia.data_manager import data_history_inspect
+        # TODO: deserialize pipeline from COLLECTION_HISTORY (xml field)
+        pipeline = data_history_inspect.data_history_pipeline(scan,
+                                                              self.project)
+        if pipeline is not None:
+            from capsul.qt_gui.widgets.pipeline_developer_view \
+                import PipelineDeveloperView
+            self.pipeline_view = PipelineDeveloperView(pipeline, allow_open_controller=True)
+            self.pipeline_view.auto_dot_node_positions()
+            layout.addWidget(self.pipeline_view)
 
         self.table = QTableWidget()
         self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)

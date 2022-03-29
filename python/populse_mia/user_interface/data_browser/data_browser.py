@@ -44,7 +44,7 @@ from populse_mia.user_interface.data_browser.count_table import CountTable
 from populse_mia.user_interface.data_browser.modify_table import ModifyTable
 from populse_mia.user_interface.data_browser.mini_viewer import MiniViewer
 from populse_mia.user_interface.pop_ups import (
-    PopUpMultipleSort, PopUpProperties, PopUpShowBrick, PopUpAddPath,
+    PopUpMultipleSort, PopUpProperties, PopUpShowHistory, PopUpAddPath,
     PopUpAddTag, PopUpCloneTag, PopUpRemoveTag, PopUpSelectFilter,
     PopUpRemoveScan)
 from populse_mia.user_interface.pop_ups import (
@@ -1002,23 +1002,21 @@ class TableDataBrowser(QTableWidget):
                                 widget.moveToThread(QApplication.instance(
                                 ).thread())
                                 layout = QVBoxLayout()
-                                for brick_number in range(0, len(cur_value)):
-                                    brick_uuid = cur_value[brick_number]
-                                    brick_name = self.project.session.get_value(
-                                                               COLLECTION_BRICK,
-                                                               brick_uuid,
-                                                               BRICK_NAME)
-                                    brick_name_button = QPushButton(brick_name)
-                                    brick_name_button.moveToThread(
-                                        QApplication.instance().thread())
-                                    self.bricks[brick_name_button] = brick_uuid
+
+                                brick_uuid = cur_value[-1]
+                                brick_name = self.project.session.get_value(
+                                                           COLLECTION_BRICK,
+                                                           brick_uuid,
+                                                           BRICK_NAME)
+                                brick_name_button = QPushButton(brick_name)
+                                brick_name_button.moveToThread(
+                                    QApplication.instance().thread())
+                                self.bricks[brick_name_button] = brick_uuid
+                                if 'FileName' in scan:
                                     brick_name_button.clicked.connect(
-                                        self.show_brick_history)
-                                    if 'FileName' in scan:
-                                        brick_name_button.clicked.connect(
-                                            partial(self.show_data_history,
-                                                    scan['FileName']))
-                                    layout.addWidget(brick_name_button)
+                                        partial(self.show_brick_history,
+                                                scan['FileName']))
+                                layout.addWidget(brick_name_button)
                                 widget.setLayout(layout)
                                 self.setCellWidget(rowCount, column, widget)
 
@@ -1477,22 +1475,20 @@ class TableDataBrowser(QTableWidget):
                             widget.moveToThread(
                                 QApplication.instance().thread())
                             layout = QVBoxLayout()
-                            for brick_number in range(0, len(current_value)):
-                                brick_uuid = current_value[brick_number]
 
-                                brick_name = self.project.session.get_value(
-                                    COLLECTION_BRICK, brick_uuid, BRICK_NAME)
-                                if brick_name:
-                                    brick_name_button = QPushButton(brick_name)
-                                    brick_name_button.moveToThread(
-                                        QApplication.instance().thread())
-                                    self.bricks[brick_name_button] = brick_uuid
-                                    brick_name_button.clicked.connect(
-                                        self.show_brick_history)
-                                    brick_name_button.clicked.connect(
-                                        partial(self.show_data_history,
-                                                scan['FileName']))
-                                    layout.addWidget(brick_name_button)
+                            brick_uuid = current_value[-1]
+
+                            brick_name = self.project.session.get_value(
+                                COLLECTION_BRICK, brick_uuid, BRICK_NAME)
+                            if brick_name:
+                                brick_name_button = QPushButton(brick_name)
+                                brick_name_button.moveToThread(
+                                    QApplication.instance().thread())
+                                self.bricks[brick_name_button] = brick_uuid
+                                brick_name_button.clicked.connect(
+                                    partial(self.show_brick_history,
+                                            scan['FileName']))
+                                layout.addWidget(brick_name_button)
                             widget.setLayout(layout)
                             self.setCellWidget(row, column, widget)
 
@@ -2167,28 +2163,14 @@ class TableDataBrowser(QTableWidget):
         if self.link_viewer:
             self.data_browser.connect_mini_viewer()
 
-    def show_brick_history(self):
+    def show_brick_history(self, scan):
         """Show brick history pop-up."""
 
         brick_uuid = self.bricks[self.sender()]
-        self.show_brick_popup = PopUpShowBrick(
-            self.project, brick_uuid, self.data_browser,
+        self.show_brick_popup = PopUpShowHistory(
+            self.project, brick_uuid, scan, self.data_browser,
             self.data_browser.parent)
         self.show_brick_popup.show()
-
-    def show_data_history(self, scan):
-        """Show data history in a separate window."""
-        print('show_data_history:', scan)
-        from populse_mia.data_manager import data_history_inspect
-        pipeline = data_history_inspect.data_history_pipeline(scan,
-                                                              self.project)
-        if pipeline is not None:
-            from capsul.qt_gui.widgets.pipeline_developer_view \
-                import PipelineDeveloperView
-            win = PipelineDeveloperView(pipeline, allow_open_controller=True)
-            win.auto_dot_node_positions()
-            win.show()
-            self._data_histopry_view = win
 
     def sort_column(self, order):
         """Sort the current column.
