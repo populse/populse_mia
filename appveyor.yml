@@ -30,7 +30,6 @@ install:
   - python --version
   - python -m pip install pip --upgrade
   - pip -V
-#  - pip install setuptools==60.10.0 --upgrade
   - pip install setuptools --upgrade
   - pip install cython --upgrade
   - pip install numpy
