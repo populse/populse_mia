@@ -20,18 +20,20 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 “the group of this subject is part of”, etc.
 
 
-Contains:
-    Packages:
+:Contains:
+    :Packages:
       - data_manager: handles the projects and their database
       - sources_images: a collection of images used in Mia
       - user_interface: mainly intended for the graphic interface of Mia
       - utils: various utilities for the Mia operation
-    Modules:
+
+    :Modules:
       - info.py: define software version, description and requirements
       - main.py: the first module used at the runtime of mia
       - __main__.py: make populse_mia accessible as a module
       - software_properties.py: handles the configuration of the software
       - test.py: unitary tests
+
 """
 
 ###############################################################################
