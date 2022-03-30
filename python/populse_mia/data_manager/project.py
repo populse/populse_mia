@@ -43,6 +43,7 @@ from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
 COLLECTION_CURRENT = "current"
 COLLECTION_INITIAL = "initial"
 COLLECTION_BRICK = "brick"
+COLLECTION_HISTORY = "history"
 
 # MIA tags
 TAG_CHECKSUM = "Checksum"
@@ -50,6 +51,7 @@ TAG_TYPE = "Type"
 TAG_EXP_TYPE = "Exp Type"
 TAG_FILENAME = "FileName"
 TAG_BRICKS = "Bricks"
+TAG_HISTORY = "History"
 CLINICAL_TAGS = ["Site", "Spectro", "MR", "PatientRef", "Pathology", "Age",
                  "Sex", "Message"]
 BRICK_ID = "ID"
@@ -60,6 +62,11 @@ BRICK_INIT = "Init"
 BRICK_EXEC = "Exec"
 BRICK_INIT_TIME = "Init Time"
 BRICK_EXEC_TIME = "Exec Time"
+
+HISTORY_ID = "ID"
+HISTORY_PIPELINE = "Name"
+HISTORY_BRICKS = "Bricks uuid"
+
 
 TYPE_NII = "Scan"
 TYPE_MAT = "Matrix"
@@ -200,6 +207,9 @@ class Project():
             self.session.add_collection(
                 COLLECTION_BRICK, BRICK_ID, False,
                 TAG_ORIGIN_BUILTIN, None, None)
+            self.session.add_collection(
+                COLLECTION_HISTORY, HISTORY_ID, False,
+                TAG_ORIGIN_BUILTIN, None, None)
 
             # Tags manually added
             self.session.add_field(
@@ -250,6 +260,13 @@ class Project():
             self.session.add_field(COLLECTION_BRICK, BRICK_EXEC_TIME,
                                    FIELD_TYPE_DATETIME, "Brick exec time",
                                    False, TAG_ORIGIN_BUILTIN, None, None)
+
+            self.session.add_field(COLLECTION_HISTORY, HISTORY_PIPELINE,
+                                   FIELD_TYPE_STRING, "Pipeline XML", False,
+                                   TAG_ORIGIN_BUILTIN, None, None)
+            self.session.add_field(COLLECTION_HISTORY, HISTORY_BRICKS,
+                                   FIELD_TYPE_LIST_STRING, "Bricks list", False,
+                                   TAG_ORIGIN_BUILTIN, None, None)
 
             # Adding default tags for the clinical mode
             if config.get_use_clinical() is True:
@@ -1025,7 +1042,6 @@ class Project():
         for bricks in scan_bricks.values():
             obsolete.update(brick for brick in bricks if brick not in used)
         return obsolete
-
 
     def finished_bricks(self, engine, pipeline=None, include_done=False):
         """
