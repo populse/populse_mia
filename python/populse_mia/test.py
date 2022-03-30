@@ -139,7 +139,7 @@ class TestMIADataBrowser(unittest.TestCase):
             - setUpClass: called before tests in the individual class
             - tearDownClass: called after tests in the individual class
             - get_new_test_project: create a temporary project that can be
-                                    safely modified
+              safely modified
             - test_add_path: tests the popup to add a path
             - test_add_tag: tests the pop up adding a tag
             - test_advanced_search: tests the advanced search widget
@@ -154,28 +154,27 @@ class TestMIADataBrowser(unittest.TestCase):
             - test_open_project_filter: tests project filter opening
             - test_project_properties: tests saved projects addition and removal
             - test_proj_remov_from_cur_proj: tests that the projects are
-                                             removed from the list of current
-                                             projects
+              removed from the list of current projects
             - test_rapid_search: tests the rapid search bar
             - test_remove_scan: tests scans removal in the DataBrowser
             - test_remove_tag: tests the popup removing user tags
             - test_reset_cell: tests the method resetting the selected cells
             - test_reset_column: tests the method resetting the columns
-                                 selected
+              selected
             - test_reset_row: test row reset
             - test_save_project: test opening & saving of a project
             - test_send_doc_to_pip: tests the popup sending the documents
-                                    to the pipeline manager
+              to the pipeline manager
             - test_set_value: tests the values modifications
-            - test_sort: tests the sorting in the databrowser
+            - test_sort: tests the sorting in the DataBrowser
             - test_tab_change: tests the tab change from data browser to
-                               pipeline manager
+              pipeline manager
             - test_undo_redo_databrowser: tests the DataBrowser undo/redo
             - test_unnamed_proj_soft_open: tests unnamed project creation at
-                                           software opening
+              software opening
             - test_utils: test the utils functions
             - test_visualized_tags: tests the popup modifying the visualized
-                                    tags
+              tags
     """
 
     def setUp(self):
@@ -2271,25 +2270,24 @@ class TestMIAPipelineManager(unittest.TestCase):
             - setUpClass: called before tests in the individual class
             - tearDownClass: called after tests in the individual class
             - get_new_test_project: create a temporary project that can be
-                                    safely modified
+              safely modified
             - test_add_tab: adds tabs to the PipelineEditorTabs
             - test_close_tab: closes a tab in the PipelineEditorTabs
             - test_delete_processes: deletes a process and makes the undo/redo
             - test_display_filter: displays node parameters and a plug filter
             - test_drop_process: adds a Nipype SPM Smooth process to the
-                                  pipeline editor
+              pipeline editor
             - test_iteration_table: plays with the iteration table
             - test_process_library: install the brick_test and then remove it
             - test_save_pipeline: saves a simple pipeline
             - test_undo_redo: tests the undo/redo
             - test_update_node_name: displays node parameters and updates
-                                     its name
+              its name
             - test_update_plug_value: displays node parameters and updates
-                                      a plug value
-
+              a plug value
             - test_z_get_editor: gets the instance of an editor
             - test_z_get_filename: gets the relative path to a previously
-                                   saved pipeline file
+              saved pipeline file
             - test_z_get_index: gets the index of an editor
             - test_z_get_tab_name: gets the tab name of the editor
             - test_z_init_pipeline: initializes the pipeline
@@ -2297,10 +2295,9 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_z_open_sub_pipeline: opens a sub_pipeline
             - test_z_set_current_editor: sets the current editor
             - test_zz_check_modif: opens a pipeline, opens it as a process in
-                                   another tab, modifies it and check the
-                                   modifications
+              another tab, modifies it and check the modifications
             - execute_QMessageBox_clickYes: press a Yes button in the
-                                            test_zz_check_modif method
+              test_zz_check_modif method
             - execute_QDialogAccept: accept (close) a QDialog window
     """
 
