@@ -50,7 +50,7 @@ from capsul.api import (get_process_instance, NipypeProcess, Pipeline,
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import WorkflowExecutionError
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-from capsul.pipeline.xml import save_xml_pipeline
+from capsul.pipeline import pipeline_tools
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -87,6 +87,7 @@ from traits.trait_errors import TraitError
 import traits.api as traits
 import functools
 import json
+import io
 
 
 class PipelineManagerTab(QWidget):
@@ -308,7 +309,7 @@ class PipelineManagerTab(QWidget):
         self.nodeController.value_changed.connect(
             self.controller_value_changed)
 
-    def _register_node_io_in_database(self, job, node, pipeline_name=''):
+    def _register_node_io_in_database(self, job, node, pipeline_name='', history_id=''):
         """bla bla bla"""
 
         def _serialize_tmp(item):
@@ -415,6 +416,7 @@ class PipelineManagerTab(QWidget):
                     trait = process.trait(plug_name)
                     self.add_plug_value_to_database(plug_value,
                                                     job.uuid,
+                                                    history_id,
                                                     node_name,
                                                     plug_name,
                                                     full_name,
@@ -444,13 +446,14 @@ class PipelineManagerTab(QWidget):
     #    self.previewBlock.centerOn(0, 0)
     #    self.find_process(name_item)
 
-    def add_plug_value_to_database(self, p_value, brick_id, node_name,
-                                   plug_name, full_name, job, trait, inputs,
-                                   attributes):
+    def add_plug_value_to_database(self, p_value, brick_id, history_id,
+                                   node_name, plug_name, full_name, job,
+                                   trait, inputs, attributes):
         """Add the plug value to the database.
 
         :param p_value: plug value, a file name or a list of file names (any)
-        :param brick_id: brick id in the database (str)
+        :param brick_id: brick uuid in the database (str)
+        :param history_id: history uuid in the database (str)
         :param node_name: name of the node (str)
         :param plug_name: name of the plug (str)
         :param full_name: full name of the node, including parent
@@ -477,8 +480,9 @@ class PipelineManagerTab(QWidget):
                             new_attributes[k] = v[-1]
                     else:
                         new_attributes[k] = v
-                self.add_plug_value_to_database(elt, brick_id, node_name,
-                                                plug_name, full_name, job,
+                self.add_plug_value_to_database(elt, brick_id, history_id,
+                                                node_name, plug_name,
+                                                full_name, job,
                                                 inner_trait, inputs,
                                                 new_attributes)
             return
@@ -690,9 +694,11 @@ class PipelineManagerTab(QWidget):
                         all_ivalues = {pop_up.key: all_ivalues[pop_up.key]}
 
         cvalues = {TAG_TYPE: ptype,
-                   TAG_BRICKS: bricks}
+                   TAG_BRICKS: bricks,
+                   TAG_HISTORY: history_id}
         ivalues = {TAG_TYPE: ptype,
-                   TAG_BRICKS: bricks}
+                   TAG_BRICKS: bricks,
+                   TAG_HISTORY: history_id}
 
         # from here if we still have several tags sets, we do not assign them
         # at all. Otherwise, set them.
@@ -1612,9 +1618,9 @@ class PipelineManagerTab(QWidget):
                                               history_id)
 
             # serialize pipeline
-            # TODO: replace with new capsul function (@denis)
-            # pipeline_xml = save_xml_pipeline(pipeline)
-            pipeline_xml = ''
+            buffer = io.BytesIO()
+            pipeline_tools.save_pipeline(pipeline, buffer, format='xml')
+            pipeline_xml = buffer.getvalue()
             self.project.session.set_values(
                 COLLECTION_HISTORY, history_id,
                 {HISTORY_PIPELINE: pipeline_xml})
@@ -1676,7 +1682,7 @@ class PipelineManagerTab(QWidget):
                                 BRICK_INIT: "Not Done",
                                 BRICK_EXEC: "Not Done"})
 
-                            self._register_node_io_in_database(job, node, pipeline_name)
+                            self._register_node_io_in_database(job, node, pipeline_name, history_id)
 
             # add bricklist into history collection
             self.project.session.set_values(

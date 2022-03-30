@@ -85,6 +85,7 @@ from populse_mia.data_manager.database_mia import (
 from populse_mia.data_manager.project import (
     BRICK_EXEC, BRICK_EXEC_TIME, BRICK_INIT, BRICK_INIT_TIME,
     BRICK_INPUTS, BRICK_NAME, BRICK_OUTPUTS, COLLECTION_BRICK,
+    HISTORY_PIPELINE, HISTORY_BRICKS, COLLECTION_HISTORY,
     COLLECTION_CURRENT, COLLECTION_INITIAL, Project, TAG_CHECKSUM, TAG_FILENAME,
     TAG_HISTORY, TAG_TYPE, TYPE_MAT, TYPE_NII, TYPE_TXT, TYPE_UNKNOWN)
 from populse_mia.software_properties import Config, verCmp
@@ -4955,8 +4956,11 @@ class PopUpShowHistory(QDialog):
 
         layout = QVBoxLayout()
 
-        # pipeline_xml = self.project.session.get_value(
-        #     COLLECTION_CURRENT, scan, TAG_HISTORY)
+        history_uuid = self.project.session.get_value(
+            COLLECTION_CURRENT, scan, TAG_HISTORY)
+        if history_uuid is not None:
+            pipeline_xml = self.project.session.get_value(
+                COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
         # if pipeline_xml is not None:
         #     from capsul.pipeline.xml import create_xml_pipeline
         #     # TODO: replace with new capsul function (@denis)
