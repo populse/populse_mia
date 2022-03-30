@@ -88,6 +88,7 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QLineEdit,
 
 # populse_mia import
 from populse_mia.data_manager.project import (COLLECTION_BRICK,
+                                              COLLECTION_HISTORY,
                                               COLLECTION_CURRENT,
                                               COLLECTION_INITIAL, Project,
                                               TAG_BRICKS, TAG_CHECKSUM,
@@ -1691,10 +1692,11 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(self.main_window.project.session.get_documents_names(COLLECTION_CURRENT), [])
         self.assertEqual(self.main_window.project.session.get_documents_names(COLLECTION_INITIAL), [])
         collections = self.main_window.project.session.get_collections_names()
-        self.assertEqual(len(collections), 4)
+        self.assertEqual(len(collections), 5)
         self.assertTrue(COLLECTION_INITIAL in collections)
         self.assertTrue(COLLECTION_CURRENT in collections)
         self.assertTrue(COLLECTION_BRICK in collections)
+        self.assertTrue(COLLECTION_HISTORY in collections)
         self.assertEqual(self.main_window.windowTitle(),
                          "MIA - Multiparametric Image Analysis (Admin mode) - Unnamed project")
 
