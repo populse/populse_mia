@@ -15,3 +15,4 @@ _________________________________
 - info.py is cleaned (11/03/2022)
 - main.py is cleaned (11/03/2022)
 - software_properties.py is cleaned (15/03/2022)
+- test.py is cleaned (30/03/2022)
