@@ -53,8 +53,8 @@ from populse_mia.utils.tools import ClickableLabel
 from populse_mia.utils.utils import (
     check_value_type, set_item_data, table_to_database)
 from populse_mia.data_manager.project import (
-    COLLECTION_CURRENT, COLLECTION_INITIAL, COLLECTION_BRICK, TAG_CHECKSUM,
-    TAG_FILENAME, TAG_BRICKS, BRICK_NAME)
+    COLLECTION_CURRENT, COLLECTION_INITIAL, COLLECTION_BRICK, TAG_HISTORY,
+    TAG_CHECKSUM, TAG_FILENAME, TAG_BRICKS, BRICK_NAME)
 from populse_mia.data_manager.database_mia import (
     TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER)
 from populse_mia.software_properties import Config
@@ -843,6 +843,7 @@ class TableDataBrowser(QTableWidget):
         tags = self.project.session.get_fields_names(COLLECTION_CURRENT)
         tags.remove(TAG_CHECKSUM)
         tags.remove(TAG_FILENAME)
+        tags.remove(TAG_HISTORY)
         tags = sorted(tags)
         tags.insert(0, TAG_FILENAME)
 
@@ -1035,7 +1036,6 @@ class TableDataBrowser(QTableWidget):
                                     item.flags() & ~Qt.ItemIsEditable)
                     self.setItem(rowCount, column, item)
 
-
         # Crash if self.setSortingEnabled(True) because it calls sortByColumn()
         # self.setSortingEnabled(False)
 
@@ -1046,7 +1046,6 @@ class TableDataBrowser(QTableWidget):
         self.update_selection()
 
         self.update_colors()
-
 
         self.itemSelectionChanged.connect(self.selection_changed)
 
@@ -1344,7 +1343,7 @@ class TableDataBrowser(QTableWidget):
 
             for output in outputs:
                 if ((output != "") and
-                    (output not in inputs)):
+                   (output not in inputs)):
 
                     doc_delete = os.path.relpath(value,
                                                  self.project.folder)
@@ -1444,7 +1443,6 @@ class TableDataBrowser(QTableWidget):
 
         for scan in scans:
             for column, current_tag in enumerate(tags):
-
                 idx += 1
                 self.progress.setValue(idx)
                 QApplication.processEvents()
@@ -1511,8 +1509,6 @@ class TableDataBrowser(QTableWidget):
 
                 self.setItem(row, column, item)
 
-
-
             row += 1
 
         # We apply the saved sort when the project is opened or after the
@@ -1549,6 +1545,7 @@ class TableDataBrowser(QTableWidget):
         tags = self.project.session.get_fields_names(COLLECTION_CURRENT)
         tags.remove(TAG_CHECKSUM)
         tags.remove(TAG_FILENAME)
+        tags.remove(TAG_HISTORY)
         tags = sorted(tags)
         tags.insert(0, TAG_FILENAME)
 

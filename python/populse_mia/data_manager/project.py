@@ -50,8 +50,8 @@ TAG_CHECKSUM = "Checksum"
 TAG_TYPE = "Type"
 TAG_EXP_TYPE = "Exp Type"
 TAG_FILENAME = "FileName"
-TAG_BRICKS = "Bricks"
-TAG_HISTORY = "History"
+TAG_BRICKS = "History"
+TAG_HISTORY = "Full history"
 CLINICAL_TAGS = ["Site", "Spectro", "MR", "PatientRef", "Pathology", "Age",
                  "Sex", "Message"]
 BRICK_ID = "ID"
@@ -64,7 +64,7 @@ BRICK_INIT_TIME = "Init Time"
 BRICK_EXEC_TIME = "Exec Time"
 
 HISTORY_ID = "ID"
-HISTORY_PIPELINE = "Name"
+HISTORY_PIPELINE = "Pipeline xml"
 HISTORY_BRICKS = "Bricks uuid"
 
 

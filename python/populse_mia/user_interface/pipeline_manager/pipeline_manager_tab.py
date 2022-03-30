@@ -23,10 +23,12 @@ Contains:
 from populse_mia.data_manager.project import (BRICK_EXEC, BRICK_EXEC_TIME,
                                               BRICK_INIT, BRICK_INIT_TIME,
                                               BRICK_INPUTS, BRICK_NAME,
-                                              BRICK_OUTPUTS, COLLECTION_BRICK,
+                                              BRICK_OUTPUTS, HISTORY_PIPELINE,
+                                              HISTORY_BRICKS, COLLECTION_BRICK,
                                               COLLECTION_CURRENT,
+                                              COLLECTION_HISTORY,
                                               COLLECTION_INITIAL, TAG_BRICKS,
-                                              TAG_CHECKSUM, TAG_EXP_TYPE,
+                                              TAG_CHECKSUM, TAG_HISTORY,
                                               TAG_FILENAME, TAG_TYPE, TYPE_MAT,
                                               TYPE_NII, TYPE_TXT, TYPE_UNKNOWN)
 from populse_mia.software_properties import Config
@@ -48,10 +50,7 @@ from capsul.api import (get_process_instance, NipypeProcess, Pipeline,
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import WorkflowExecutionError
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-from capsul.pipeline import pipeline_tools
-from capsul.qt_gui.widgets.pipeline_developper_view import (
-    PipelineDeveloperView)
-
+from capsul.pipeline.xml import save_xml_pipeline
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -517,12 +516,8 @@ class PipelineManagerTab(QWidget):
             self.project.session.add_document(COLLECTION_INITIAL, p_value)
 
         # Adding the new brick to the output files
-        bricks = self.project.session.get_value(
-            COLLECTION_CURRENT, p_value, TAG_BRICKS)
-        if bricks is None:
-            bricks = []
-        if brick_id not in bricks:
-            bricks.append(brick_id)
+        bricks = [brick_id]
+
         # Type tag
         filename, file_extension = os.path.splitext(p_value)
         if file_extension == '.gz':
@@ -597,7 +592,8 @@ class PipelineManagerTab(QWidget):
                 #banished_tags = set([TAG_TYPE, TAG_EXP_TYPE, TAG_BRICKS,
                 #                TAG_CHECKSUM, TAG_FILENAME])
                 banished_tags = set([TAG_TYPE, TAG_BRICKS,
-                                TAG_CHECKSUM, TAG_FILENAME])
+                                     TAG_CHECKSUM, TAG_FILENAME,
+                                     TAG_HISTORY])
                 cvalues = {field: getattr(scan, field)
                            for field in field_names
                            if field not in banished_tags}
@@ -1101,7 +1097,7 @@ class PipelineManagerTab(QWidget):
         # self.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020
 
         # Cause a segmentation fault
-        # from capsul.qt_gui.widgets.pipeline_developper_view import NodeGWidget
+        # from capsul.qt_gui.widgets.pipeline_developer_view import NodeGWidget
         # for item in self.pipelineEditorTabs.get_current_editor().scene.items():
         #     if isinstance(item, NodeGWidget):
         #         self.pipelineEditorTabs.get_current_editor(
@@ -1610,6 +1606,19 @@ class PipelineManagerTab(QWidget):
                                              '"{0}" brick.'.format(node_name))
 
         if init_result:
+            # add pipeline to the history collection
+            history_id = str(uuid.uuid4())
+            self.project.session.add_document(COLLECTION_HISTORY,
+                                              history_id)
+
+            # serialize pipeline
+            # TODO: replace with new capsul function (@denis)
+            # pipeline_xml = save_xml_pipeline(pipeline)
+            pipeline_xml = ''
+            self.project.session.set_values(
+                COLLECTION_HISTORY, history_id,
+                {HISTORY_PIPELINE: pipeline_xml})
+
             # add process characteristics in the database
             # if init is otherwise OK
             for job in self.workflow.jobs:
@@ -1668,6 +1677,11 @@ class PipelineManagerTab(QWidget):
                                 BRICK_EXEC: "Not Done"})
 
                             self._register_node_io_in_database(job, node, pipeline_name)
+
+            # add bricklist into history collection
+            self.project.session.set_values(
+                COLLECTION_HISTORY, history_id,
+                {HISTORY_BRICKS: self.brick_list})
 
         self.register_completion_attributes(pipeline)
         print('init time:', time.time() - t0)

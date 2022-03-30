@@ -86,7 +86,7 @@ from populse_mia.data_manager.project import (
     BRICK_EXEC, BRICK_EXEC_TIME, BRICK_INIT, BRICK_INIT_TIME,
     BRICK_INPUTS, BRICK_NAME, BRICK_OUTPUTS, COLLECTION_BRICK,
     COLLECTION_CURRENT, COLLECTION_INITIAL, Project, TAG_CHECKSUM, TAG_FILENAME,
-    TAG_TYPE, TYPE_MAT, TYPE_NII, TYPE_TXT, TYPE_UNKNOWN)
+    TAG_HISTORY, TAG_TYPE, TYPE_MAT, TYPE_NII, TYPE_TXT, TYPE_UNKNOWN)
 from populse_mia.software_properties import Config, verCmp
 from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.utils import utils
@@ -861,6 +861,7 @@ class PopUpCloneTag(QDialog):
 
         tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
+        tags_lists.remove(TAG_HISTORY)
         for tag in tags_lists:
             item = QtWidgets.QListWidgetItem()
             self.list_widget_tags.addItem(item)
@@ -932,6 +933,7 @@ class PopUpCloneTag(QDialog):
         return_list = []
         tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
+        tags_lists.remove(TAG_HISTORY)
         if str_search != "":
             for tag in tags_lists:
                 if str_search.upper() in tag.upper():
@@ -4812,13 +4814,13 @@ class PopUpTagSelection(QDialog):
         if str_search != "":
             for tag in self.project.session.get_fields_names(
                     COLLECTION_CURRENT):
-                if tag != TAG_CHECKSUM:
+                if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                     if str_search.upper() in tag.upper():
                         return_list.append(tag)
         else:
             for tag in self.project.session.get_fields_names(
                     COLLECTION_CURRENT):
-                if tag != TAG_CHECKSUM:
+                if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                     return_list.append(tag)
 
         for idx in range(self.list_widget_tags.count()):
@@ -4851,7 +4853,7 @@ class PopUpSelectTag(PopUpTagSelection):
 
         # Filling the list and checking the thumbnail tag
         for tag in self.project.session.get_fields_names(COLLECTION_CURRENT):
-            if tag != TAG_CHECKSUM:
+            if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                 if tag == self.config.getThumbnailTag():
@@ -4898,7 +4900,7 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
 
         self.selected_tag = None
         for tag in tags_to_display:
-            if tag != TAG_CHECKSUM:
+            if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                 if tag == tag_name_checked:
@@ -4953,8 +4955,14 @@ class PopUpShowHistory(QDialog):
 
         layout = QVBoxLayout()
 
+        # pipeline_xml = self.project.session.get_value(
+        #     COLLECTION_CURRENT, scan, TAG_HISTORY)
+        # if pipeline_xml is not None:
+        #     from capsul.pipeline.xml import create_xml_pipeline
+        #     # TODO: replace with new capsul function (@denis)
+        #     pipeline = create_xml_pipeline(pipeline_xml)
+
         from populse_mia.data_manager import data_history_inspect
-        # TODO: deserialize pipeline from COLLECTION_HISTORY (xml field)
         pipeline = data_history_inspect.data_history_pipeline(scan,
                                                               self.project)
         if pipeline is not None:
@@ -5229,7 +5237,7 @@ class PopUpVisualizedTags(QWidget):
                              # the tags on the left (invisible tags)
 
         for tag in project.session.get_fields_names(COLLECTION_CURRENT):
-            if tag != TAG_CHECKSUM and tag != TAG_FILENAME:
+            if tag != TAG_CHECKSUM and tag != TAG_FILENAME and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 if tag not in self.visualized_tags:
                     # Tag not visible: left side
