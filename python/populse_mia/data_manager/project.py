@@ -239,10 +239,10 @@ class Project():
                                    FIELD_TYPE_LIST_STRING, "Path bricks", True,
                                    TAG_ORIGIN_BUILTIN, None, None)
             self.session.add_field(COLLECTION_CURRENT, TAG_HISTORY,
-                                   FIELD_TYPE_STRING, "History uuid", True,
+                                   FIELD_TYPE_STRING, "History uuid", False,
                                    TAG_ORIGIN_BUILTIN, None, None)
             self.session.add_field(COLLECTION_INITIAL, TAG_HISTORY,
-                                   FIELD_TYPE_STRING, "History uuid", True,
+                                   FIELD_TYPE_STRING, "History uuid", False,
                                    TAG_ORIGIN_BUILTIN, None, None)
 
             self.session.add_field(COLLECTION_BRICK, BRICK_NAME,

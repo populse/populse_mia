@@ -93,7 +93,8 @@ from populse_mia.data_manager.project import (COLLECTION_BRICK,
                                               COLLECTION_INITIAL, Project,
                                               TAG_BRICKS, TAG_CHECKSUM,
                                               TAG_EXP_TYPE, TAG_FILENAME,
-                                              TAG_ORIGIN_USER, TAG_TYPE)
+                                              TAG_ORIGIN_USER, TAG_TYPE,
+                                              TAG_HISTORY)
 from populse_mia.data_manager.project_properties import SavedProjects
 from populse_mia.software_properties import Config, verCmp
 from populse_mia.user_interface.data_browser.modify_table import ModifyTable
@@ -1689,6 +1690,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue(TAG_TYPE in tags)
         self.assertTrue(TAG_EXP_TYPE in tags)
         self.assertTrue(TAG_BRICKS in tags)
+        self.assertTrue(TAG_HISTORY in tags)
         self.assertEqual(self.main_window.project.session.get_documents_names(COLLECTION_CURRENT), [])
         self.assertEqual(self.main_window.project.session.get_documents_names(COLLECTION_INITIAL), [])
         collections = self.main_window.project.session.get_collections_names()
@@ -1762,6 +1764,10 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Testing that checksum tag isn't displayed
         settings.tab_tags.search_bar.setText(TAG_CHECKSUM)
+        self.assertEqual(settings.tab_tags.list_widget_tags.count(), 0)
+
+        # Testing that history uuid tag isn't displayed
+        settings.tab_tags.search_bar.setText(TAG_HISTORY)
         self.assertEqual(settings.tab_tags.list_widget_tags.count(), 0)
 
         # Testing that FileName is not displayed in the list of visible tags
