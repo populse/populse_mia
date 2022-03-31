@@ -41,11 +41,12 @@ from populse_mia.data_manager.project_properties import SavedProjects
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.data_browser import DataBrowser
 from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import (
-    PipelineManagerTab)
+                                                           PipelineManagerTab)
 from populse_mia.user_interface.pipeline_manager.process_library import (
-    InstallProcesses, PackageLibraryDialog)
+                                  InstallProcesses, PackageLibraryDialog)
 import populse_mia.data_manager.data_loader as data_loader
-from populse_mia.data_manager.project import Project, COLLECTION_CURRENT
+from populse_mia.data_manager.project import (Project, COLLECTION_CURRENT,
+                                              TAG_HISTORY)
 from populse_mia.user_interface.pop_ups import (PopUpDeleteProject,
                                                 PopUpDeletedProject,
                                                 PopUpNewProject,
@@ -1395,8 +1396,11 @@ class MainWindow(QMainWindow):
                         return False
 
                     # We check for valid version of the project
-                    if not (temp_database.
-                            session).get_fields_names(COLLECTION_CURRENT):
+
+                    if ((not temp_database.session.
+                                        get_fields_names)(COLLECTION_CURRENT) or
+                        (TAG_HISTORY not in (temp_database.session.
+                                        get_fields_names)(COLLECTION_CURRENT))):
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
                         msg.setText(
