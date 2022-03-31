@@ -1397,7 +1397,7 @@ class MainWindow(QMainWindow):
 
                     # We check for valid version of the project
 
-                    if ((not temp_database.session.
+                    if (not (temp_database.session.
                                         get_fields_names)(COLLECTION_CURRENT) or
                         (TAG_HISTORY not in (temp_database.session.
                                         get_fields_names)(COLLECTION_CURRENT))):
