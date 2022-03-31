@@ -1623,7 +1623,7 @@ class PipelineManagerTab(QWidget):
             pipeline_xml = buffer.getvalue()
             self.project.session.set_values(
                 COLLECTION_HISTORY, history_id,
-                {HISTORY_PIPELINE: pipeline_xml})
+                {HISTORY_PIPELINE: pipeline_xml.decode("utf-8")})
 
             # add process characteristics in the database
             # if init is otherwise OK
