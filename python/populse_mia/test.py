@@ -503,10 +503,10 @@ class TestMIADataBrowser(unittest.TestCase):
                                                        get_tag_column("History"))
 
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(
-                                                                  8,
+                                                                  0,
                                                                   bricks_column)
         smooth_button = bricks_widget.layout().itemAt(0).widget()
-        self.assertEqual(smooth_button.text(), "smooth1")
+        self.assertEqual(smooth_button.text(), "smooth_1")
         QTest.mouseClick(smooth_button, Qt.LeftButton)
         brick_history = (self.main_window.data_browser.table_data.
                                                                show_brick_popup)
@@ -514,44 +514,44 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(brick_table.horizontalHeaderItem(0).text(), "Name")
         self.assertEqual(brick_table.horizontalHeaderItem(1).text(), "Init")
         self.assertEqual(brick_table.horizontalHeaderItem(2).text(),
-                         "Init Time")
+                                                                    "Init Time")
         self.assertEqual(brick_table.horizontalHeaderItem(3).text(), "Exec")
         self.assertEqual(brick_table.horizontalHeaderItem(4).text(),
-                         "Exec Time")
+                                                                    "Exec Time")
         self.assertEqual(brick_table.horizontalHeaderItem(5).text(),
-                         "data_type")
+                                                                    "data_type")
         self.assertEqual(brick_table.horizontalHeaderItem(6).text(), "fwhm")
         self.assertEqual(brick_table.horizontalHeaderItem(7).text(),
-                         "implicit_masking")
+                                                             "implicit_masking")
         self.assertEqual(brick_table.horizontalHeaderItem(8).text(), "in_files")
         self.assertEqual(brick_table.horizontalHeaderItem(9).text(),
-                         "out_prefix")
-        self.assertEqual(brick_table.horizontalHeaderItem(10).text(),
-                         "smoothed_files")
-        self.assertEqual(brick_table.item(0, 0).text(), "smooth1")
+                                                                   "matlab_cmd")
+        self.assertEqual(brick_table.horizontalHeaderItem(10).text(), "mfile")
+        self.assertEqual(brick_table.item(0, 0).text(), "smooth_1")
         self.assertEqual(brick_table.item(0, 1).text(), "Done")
         self.assertEqual(brick_table.item(0, 2).text(),
-                         "2018-08-08 18:22:25.554610")
+                         "2022-03-31 16:02:45.129722")
         self.assertEqual(brick_table.item(0, 3).text(), "Done")
         self.assertEqual(brick_table.item(0, 4).text(),
-                         "2018-08-08 18:22:32.371745")
+                         "2022-03-31 16:03:24")
         self.assertEqual(brick_table.item(0, 5).text(), "0")
-        self.assertEqual(brick_table.item(0, 6).text(), "6, 6, 6")
+        self.assertEqual(brick_table.item(0, 6).text(), "6.0, 6.0, 6.0")
         self.assertEqual(brick_table.item(0, 7).text(), "False")
         self.assertEqual(brick_table.cellWidget(0, 8).children()[1].text(),
                          "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
                          "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
                          "pvm-000220_000.nii")
-        self.assertEqual(brick_table.item(0, 9).text(), "s")
-        self.assertEqual(brick_table.cellWidget(0, 10).children()[1].text(),
-                         "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                         "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                         "pvm-000220_000.nii")
+        self.assertEqual(brick_table.item(0, 9).text(),
+                         "/home/econdami/SPM/SPM12standalone/SPM12_r7487_Linux"
+                         "_R2018b/spm12/run_spm12.sh /home/econdami/MATLAB/"
+                         "MATLAB_Runtime/v95 script")
+        self.assertEqual(brick_table.item(0, 10).text(), "True")
 
     def test_clear_cell(self):
         """
         Tests the method clearing cells
         """
+
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
         project_8_path = self.get_new_test_project()
@@ -562,14 +562,14 @@ class TestMIADataBrowser(unittest.TestCase):
                                                                     "BandWidth")
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         bw_item.setSelected(True)
-        self.assertEqual(int(bw_item.text()[1:-1]), 50000)
+        self.assertEqual(float(bw_item.text()[1:-1]), 50000.0)
         self.assertEqual(self.main_window.project.session.get_value(
-                                  COLLECTION_CURRENT,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"),
-                         50000)
+                            COLLECTION_CURRENT,
+                            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                            "pvm-000220_000.nii",
+                            "BandWidth"),
+                         [50000.0])
 
         # Clearing the cell
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
@@ -583,11 +583,11 @@ class TestMIADataBrowser(unittest.TestCase):
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         self.assertEqual(bw_item.text(), "*Not Defined*")
         self.assertIsNone(self.main_window.project.session.get_value(
-                                   COLLECTION_CURRENT,
-                                   "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                   "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                   "pvm-000220_000.nii",
-                                   "BandWidth"))
+                            COLLECTION_CURRENT,
+                            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                            "pvm-000220_000.nii",
+                            "BandWidth"))
 
     def test_clone_tag(self):
         """
@@ -704,7 +704,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(count_table.table.horizontalHeaderItem(1).text()[1:-1], "75.0")
         self.assertAlmostEqual(
             float(count_table.table.horizontalHeaderItem(2).text()[1:-1]), 5.8239923)
-        self.assertEqual(count_table.table.horizontalHeaderItem(3).text()[1:-1], "5")
+        self.assertEqual(count_table.table.horizontalHeaderItem(3).text()[1:-1], "5.0")
         self.assertEqual(count_table.table.verticalHeaderItem(3).text(),
                          "Total")
         self.assertEqual(count_table.table.item(0, 0).text()[1:-1], "50000.0")
@@ -860,18 +860,15 @@ class TestMIADataBrowser(unittest.TestCase):
         mia_path = config.get_mia_path()
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
-
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.multiple_sort_pop_up()
         self.main_window.data_browser.table_data.itemChanged.connect(self.main_window.data_browser.table_data.change_cell_color)
-
         multiple_sort = self.main_window.data_browser.table_data.pop_up
         multiple_sort.push_buttons[0].setText("BandWidth")
         multiple_sort.fill_values(0)
         multiple_sort.push_buttons[1].setText("Type")
         multiple_sort.fill_values(1)
         QTest.mouseClick(multiple_sort.push_button_sort, Qt.LeftButton)
-
         scan = self.main_window.data_browser.table_data.item(0, 0).text()
         self.assertEqual(scan, "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii")
         scan = self.main_window.data_browser.table_data.item(1, 0).text()
