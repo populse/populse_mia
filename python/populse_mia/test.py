@@ -946,6 +946,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
+
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.multiple_sort_pop_up()
         self.main_window.data_browser.table_data.itemChanged.connect(
@@ -957,6 +958,7 @@ class TestMIADataBrowser(unittest.TestCase):
         multiple_sort.push_buttons[1].setText("Type")
         multiple_sort.fill_values(1)
         QTest.mouseClick(multiple_sort.push_button_sort, Qt.LeftButton)
+
         scan = self.main_window.data_browser.table_data.item(0, 0).text()
         self.assertEqual(scan,
                          "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
@@ -1155,7 +1157,7 @@ class TestMIADataBrowser(unittest.TestCase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # Checking that the 8 scans are shown in the DataBrowser
+        # Checking that the 9 scans are shown in the DataBrowser
         self.assertEqual(self.main_window.data_browser.table_data.rowCount(),
                          9)
         scans_displayed = []
@@ -1220,7 +1222,6 @@ class TestMIADataBrowser(unittest.TestCase):
         # Testing that all the scans are back when clicking on the cross
         QTest.mouseClick(self.main_window.data_browser.button_cross,
                          Qt.LeftButton)
-
         scans_displayed = []
 
         for row in range(0,
@@ -1361,7 +1362,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
                         "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
                         "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
                         "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
                         "-000220_000.nii" in scans_displayed)
 
@@ -1414,42 +1415,42 @@ class TestMIADataBrowser(unittest.TestCase):
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
+
         bandwidth_column = (self.main_window.data_browser.
                                          table_data.get_tag_column)("BandWidth")
         value = float(self.main_window.project.session.get_value(
-                                  COLLECTION_CURRENT,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                             COLLECTION_CURRENT,
+                             "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                             "pvm-000220_000.nii",
+                             "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                  COLLECTION_INITIAL,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                             COLLECTION_INITIAL,
+                             "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                             "pvm-000220_000.nii",
+                             "BandWidth")[0])
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
-        databrowser = float(item.text())
+        databrowser = float(item.text()[1:-1])
         self.assertEqual(value, float(50000))
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
         item.setSelected(True)
 
         item.setText("25000")
-
         value = float(self.main_window.project.session.get_value(
-                                  COLLECTION_CURRENT,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                             COLLECTION_CURRENT,
+                             "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                             "pvm-000220_000.nii",
+                             "BandWidth"))
         value_initial = float(self.main_window.project.session.get_value(
-                                  COLLECTION_INITIAL,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                            COLLECTION_INITIAL,
+                            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                            "pvm-000220_000.nii",
+                            "BandWidth"))
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
         databrowser = float(item.text())
@@ -1463,17 +1464,17 @@ class TestMIADataBrowser(unittest.TestCase):
                      self.main_window.data_browser.table_data.change_cell_color)
 
         value = float(self.main_window.project.session.get_value(
-                                  COLLECTION_CURRENT,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                             COLLECTION_CURRENT,
+                             "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                             "pvm-000220_000.nii",
+                             "BandWidth"))
         value_initial = float(self.main_window.project.session.get_value(
-                                  COLLECTION_INITIAL,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                             COLLECTION_INITIAL,
+                             "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                             "pvm-000220_000.nii",
+                             "BandWidth"))
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
         databrowser = float(item.text())
@@ -1949,9 +1950,10 @@ class TestMIADataBrowser(unittest.TestCase):
                                                     get_tag_column)("BandWidth")
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         bw_old = bw_item.text()
-        self.assertEqual(float(bw_old), 50000)
+        self.assertEqual(float(bw_old[1:-1]), 50000)
         bw_item.setSelected(True)
-        bw_item.setText("0")
+        # bw_item.setText("0")
+        bw_item.setText("[0.0]")
         self.assertEqual(self.main_window.project.undos,
                          [["modified_values",
                            [["data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
@@ -2787,9 +2789,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         iteration_table.push_buttons[2].setText("AcquisitionTime")
         iteration_table.fill_values(2)
         iteration_table.update_table()
-        self.assertTrue(iteration_table.combo_box.currentText() in ["65789.48",
-                                                                    "25000.0",
-                                                                    "50000.0"])
+        self.assertTrue(iteration_table.combo_box.currentText()[1:-1] in [
+                                                                     "65789.48",
+                                                                     "25000.0",
+                                                                     "50000.0"])
 
     '''def test_open_filter(self):
         """
