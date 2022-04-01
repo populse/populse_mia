@@ -334,7 +334,7 @@ class Config:
         # Make synchronisation from Mia pref to Capsul config:
 
         # TODO: We do not deal with the version parameter. This can produce
-        # hidden configurations (spm and spm12 and spm8 ...)!
+        #       hidden configurations (spm and spm12 and spm8 ...)!
 
         # SPM
         spm_configs = eeconf.setdefault('capsul.engine.module.spm', {})
@@ -370,14 +370,14 @@ class Config:
         # MATLAB
         if use_matlab_standalone:
             m = eeconf.setdefault('capsul.engine.module.matlab',
-                              {}).setdefault('matlab', {})
+                                  {}).setdefault('matlab', {})
             m['mcr_directory'] = matlab_standalone_path
             m['config_id'] = 'matlab'
             m['config_environment'] = 'global'
 
         if use_matlab:
             m = eeconf.setdefault('capsul.engine.module.matlab',
-                              {}).setdefault('matlab', {})
+                                  {}).setdefault('matlab', {})
             m['executable'] = matlab_path
             m['config_id'] = 'matlab'
             m['config_environment'] = 'global'
@@ -420,7 +420,7 @@ class Config:
         # Synchronise from engine, or not
         if sync_from_engine and self.capsul_engine:
             for environment in (self.capsul_engine.settings.
-                                                        get_all_environments)():
+                    get_all_environments)():
                 eeconf = econf.setdefault(environment, {})
                 # would need a better merging system
                 eeconf.update(
@@ -685,7 +685,8 @@ class Config:
 
         except KeyError:
 
-            if not os.path.isdir(os.path.join(self.get_mia_path(), 'projects')):
+            if not os.path.isdir(
+                    os.path.join(self.get_mia_path(), 'projects')):
                 os.mkdir(os.path.join(self.get_mia_path(), 'projects'))
 
             return os.path.join(self.get_mia_path(), 'projects')
@@ -1089,7 +1090,7 @@ class Config:
                 use_spm_standalone = False
 
             if (use_spm_standalone is False and os.path.isdir(spm_dir) and
-                                                                    use_matlab):
+                    use_matlab):
                 use_spm = True
 
             else:
@@ -1136,12 +1137,12 @@ class Config:
             self.set_use_spm_standalone(False)
 
         if (use_matlab and
-                    use_mcr and
-                    use_spm is False and
-                    use_spm_standalone is False):
+                use_mcr and
+                use_spm is False and
+                use_spm_standalone is False):
             print('\n The Matlab executable and the mcr_directory parameters '
                   'have been set concomitantly in the Capsul configuration. '
-                  'This leads to an indetermination. By default, Matlab is '
+                  'This leads to an indeterminacy. By default, Matlab is '
                   'retained at the expense of MCR.')
 
         self.update_capsul_config()  # store into capsul engine
@@ -1509,10 +1510,11 @@ class Config:
                 c = dict(config)
 
                 if ('capsul_engine' not in c or
-                                          'uses' not in c['capsul_engine']):
+                        'uses' not in c['capsul_engine']):
                     c['capsul_engine'] = {'uses':
-                                          {engine.settings.module_name(m):
-                                           'ALL' for m in config.keys()}}
+                                              {engine.settings.module_name(m):
+                                                   'ALL' for m in
+                                               config.keys()}}
 
                 try:
                     engine.import_configs(environment, c, cont_on_error=True)
