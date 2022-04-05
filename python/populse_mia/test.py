@@ -1424,7 +1424,7 @@ class TestMIADataBrowser(unittest.TestCase):
         if not self.main_window.data_browser.table_data.isRowHidden(0):
             scans_displayed.append(scan_name)
 
-        # Test for a list:
+        ### Test for a list:
         # values in the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
@@ -1470,6 +1470,8 @@ class TestMIADataBrowser(unittest.TestCase):
                                                              COLLECTION_INITIAL,
                                                              scan_name,
                                                              "BandWidth")[0])
+        # TODO: would be better to test data_browser.table_data.item rather
+        #       than mod.table.item !!!:
         databrowser = float(mod.table.item(0, 0).text())
         self.assertEqual(value, float(25000))
         self.assertEqual(value, databrowser)
@@ -1485,7 +1487,7 @@ class TestMIADataBrowser(unittest.TestCase):
                      self.main_window.data_browser.table_data.change_cell_color)
 
         # we test whether the data has been reset
-        # TODO: this test is not perfect. We do not reset the object item ...
+        # TODO: this test is not perfect. We do not reset the item object ...
         #       We mostly test that the reset was done for the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
@@ -1495,15 +1497,15 @@ class TestMIADataBrowser(unittest.TestCase):
                                                              COLLECTION_INITIAL,
                                                              scan_name,
                                                              "BandWidth")[0])
-
+        # TODO: would be better to test the new item object !!!:
         databrowser = float(item.text()[1:-1])
         self.assertEqual(value, float(50000))
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
         item.setSelected(False)
 
-        # Test for a string:
-       # values in the db
+        ### Test for a string:
+        # values in the db
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
                                                            scan_name,
                                                            "Type")
@@ -1515,8 +1517,7 @@ class TestMIADataBrowser(unittest.TestCase):
         # value in the DataBrowser
         type_column = (self.main_window.data_browser.
                                               table_data.get_tag_column)("Type")
-        item = self.main_window.data_browser.table_data.item(0,
-                                                             type_column)
+        item = self.main_window.data_browser.table_data.item(0, type_column)
         databrowser = item.text()
 
         # we test equality between DataBrowser and db
@@ -1527,6 +1528,7 @@ class TestMIADataBrowser(unittest.TestCase):
         # we change the value
         item.setSelected(True)
         item.setText("Test")
+        item.setSelected(False)
 
         # we test again the equality between DataBrowser and db
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
@@ -1544,69 +1546,28 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(value, databrowser)
         self.assertEqual(value_initial, "Scan")
 
+        # we reset the current value to the initial value
+        item = self.main_window.data_browser.table_data.item(0, type_column)
+        item.setSelected(True)
+        self.main_window.data_browser.table_data.itemChanged.disconnect()
+        self.main_window.data_browser.table_data.reset_cell()
+        self.main_window.data_browser.table_data.itemChanged.connect(
+            self.main_window.data_browser.table_data.change_cell_color)
+        item.setSelected(False)
 
-
-
-
-
-        #item.setSelected(True)
-
-
-
-
-
-
-
-
-
-
-
-
-        # item.setSelected(True)
-        # item.setText("25000")
-        # value = float(self.main_window.project.session.get_value(
-        #                      COLLECTION_CURRENT,
-        #                      "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-        #                      "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-        #                      "pvm-000220_000.nii",
-        #                      "BandWidth"))
-        #
-        # value_initial = float(self.main_window.project.session.get_value(
-        #                     COLLECTION_INITIAL,
-        #                     "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-        #                     "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-        #                     "pvm-000220_000.nii",
-        #                     "BandWidth"))
-        # item = self.main_window.data_browser.table_data.item(0,
-        #                                                      bandwidth_column)
-        # databrowser = float(item.text()[1:-1])
-        # self.assertEqual(value, float(25000))
-        # self.assertEqual(value, databrowser)
-        # self.assertEqual(value_initial, float(50000))
-        #
-        # self.main_window.data_browser.table_data.itemChanged.disconnect()
-        # self.main_window.data_browser.table_data.reset_cell()
-        # self.main_window.data_browser.table_data.itemChanged.connect(
-        #              self.main_window.data_browser.table_data.change_cell_color)
-        #
-        # value = float(self.main_window.project.session.get_value(
-        #                      COLLECTION_CURRENT,
-        #                      "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-        #                      "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-        #                      "pvm-000220_000.nii",
-        #                      "BandWidth"))
-        # value_initial = float(self.main_window.project.session.get_value(
-        #                      COLLECTION_INITIAL,
-        #                      "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-        #                      "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-        #                      "pvm-000220_000.nii",
-        #                      "BandWidth"))
-        # item = self.main_window.data_browser.table_data.item(0,
-        #                                                      bandwidth_column)
-        # databrowser = float(item.text())
-        # self.assertEqual(value, float(50000))
-        # self.assertEqual(value, databrowser)
-        # self.assertEqual(value, value_initial)
+        # we test whether the data has been reset
+        value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
+                                                           scan_name,
+                                                           "Type")
+        value_initial = self.main_window.project.session.get_value(
+                                                             COLLECTION_INITIAL,
+                                                             scan_name,
+                                                             "Type")
+        item = self.main_window.data_browser.table_data.item(0, type_column)
+        databrowser = item.text()
+        self.assertEqual(value, "Scan")
+        self.assertEqual(value, databrowser)
+        self.assertEqual(value, value_initial)
 
     def test_reset_column(self):
         """
