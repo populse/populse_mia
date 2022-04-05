@@ -4934,7 +4934,7 @@ class PopUpShowHistory(QDialog):
 
     """
 
-    def __init__(self, project, brick_uuid, scan, databrowser, main_window):
+    def __init__(self, project, brick_uuid, scan, databrowser, main_window, parent=None):
         """Prepares the brick history popup.
 
         :param project: current project in the software
@@ -4944,9 +4944,9 @@ class PopUpShowHistory(QDialog):
 
         """
 
-        super().__init__()
+        super().__init__(parent=parent)
 
-        self.setModal(True)
+        # self.setModal(True)
 
         self.databrowser = databrowser
         self.main_window = main_window
@@ -4958,23 +4958,20 @@ class PopUpShowHistory(QDialog):
 
         history_uuid = self.project.session.get_value(
             COLLECTION_CURRENT, scan, TAG_HISTORY)
+
         if history_uuid is not None:
             pipeline_xml = self.project.session.get_value(
                 COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
-        # if pipeline_xml is not None:
-        #     from capsul.pipeline.xml import create_xml_pipeline
-        #     # TODO: replace with new capsul function (@denis)
-        #     pipeline = create_xml_pipeline(pipeline_xml)
+            if pipeline_xml is not None:
+                engine = capsul_engine()
+                pipeline = engine.get_process_instance(pipeline_xml)
 
-        from populse_mia.data_manager import data_history_inspect
-        pipeline = data_history_inspect.data_history_pipeline(scan,
-                                                              self.project)
-        if pipeline is not None:
-            from capsul.qt_gui.widgets.pipeline_developer_view \
-                import PipelineDeveloperView
-            self.pipeline_view = PipelineDeveloperView(pipeline, allow_open_controller=True)
-            self.pipeline_view.auto_dot_node_positions()
-            layout.addWidget(self.pipeline_view)
+                if pipeline is not None:
+                    from capsul.qt_gui.widgets.pipeline_developer_view \
+                        import PipelineDeveloperView
+                    self.pipeline_view = PipelineDeveloperView(pipeline, allow_open_controller=True)
+                    self.pipeline_view.auto_dot_node_positions()
+                    layout.addWidget(self.pipeline_view)
 
         self.table = QTableWidget()
         self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
