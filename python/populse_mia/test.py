@@ -1751,30 +1751,40 @@ class TestMIADataBrowser(unittest.TestCase):
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
-        bw_column = self.main_window.data_browser.table_data.get_tag_column(
-                                                                    "BandWidth")
-        bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
-        old_bw = bw_item.text()
-        self.assertEqual(int(old_bw), 50000)
 
-        bw_item.setSelected(True)
-        bw_item.setText("25000")
-        set_item = self.main_window.data_browser.table_data.item(0, bw_column)
-        set_bw = set_item.text()
-        self.assertEqual(int(set_bw), 25000)
+        # value in DataBrowser for the second document
+        type_column = (self.main_window.data_browser.
+                                              table_data.get_tag_column)("Type")
+        type_item = self.main_window.data_browser.table_data.item(1,
+                                                                  type_column)
+        old_type = type_item.text()
 
+        # we test value in DataBrowser for the second document
+        self.assertEqual(old_type, "Scan")
+
+        # we change the value
+        type_item.setSelected(True)
+        type_item.setText("Test")
+
+        # we test if value in DataBrowser as been changed
+        set_item = self.main_window.data_browser.table_data.item(1, type_column)
+        set_type = set_item.text()
+        self.assertEqual(set_type, "Test")
+
+        # we reset row for second document
         self.main_window.data_browser.table_data.clearSelection()
-
-        item = self.main_window.data_browser.table_data.item(0, 0)
+        item = self.main_window.data_browser.table_data.item(1, 0)
         item.setSelected(True)
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_row()
         self.main_window.data_browser.table_data.itemChanged.connect(
                      self.main_window.data_browser.table_data.change_cell_color)
 
-        bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
-        new_bw = bw_item.text()
-        self.assertEqual(int(new_bw), 50000)
+        # we test if value in DataBrowser as been reset
+        type_item = self.main_window.data_browser.table_data.item(1,
+                                                                  type_column)
+        new_type = type_item.text()
+        self.assertEqual(new_type, "Scan")
 
     def test_save_project(self):
         """
