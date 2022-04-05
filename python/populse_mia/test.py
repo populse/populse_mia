@@ -1944,51 +1944,118 @@ class TestMIADataBrowser(unittest.TestCase):
     def test_set_value(self):
         """
         Tests the values modifications
+
+        This test is redundant with the first part of test_reset_cell.
         """
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
+
+        # scan name
+        scans_displayed = []
+        item = self.main_window.data_browser.table_data.item(1, 0)
+        scan_name = item.text()
+
+        if not self.main_window.data_browser.table_data.isRowHidden(0):
+            scans_displayed.append(scan_name)
+
+        ### Test for a list:
+        # values in the db
         value = float(self.main_window.project.session.get_value(
                                   COLLECTION_CURRENT,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                                  scan_name,
+                                  "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
                                   COLLECTION_INITIAL,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
-        bandwidth_column  = (self.main_window.data_browser.
+                                  scan_name,
+                                  "BandWidth")[0])
+
+        # value in the DataBrowser
+        bandwidth_column = (self.main_window.data_browser.
                                          table_data.get_tag_column)("BandWidth")
-        item = self.main_window.data_browser.table_data.item(0,
+        item = self.main_window.data_browser.table_data.item(1,
                                                              bandwidth_column)
-        G1_bandwidth_databrowser = float(item.text())
+        G1_bandwidth_databrowser = float(item.text()[1:-1])
         self.assertEqual(value, float(50000))
         self.assertEqual(value, G1_bandwidth_databrowser)
         self.assertEqual(value, value_initial)
 
+        # we change the value
+        new_value = [25000]
+        tag_name = ["BandWidth"]
+        tag_object = self.main_window.project.session.get_field(
+                                                             COLLECTION_CURRENT,
+                                                             tag_name[0])
         item.setSelected(True)
-        item.setText("25000")
+        mod = ModifyTable(self.main_window.project,
+                          new_value,
+                          [tag_object.field_type],
+                          scans_displayed,
+                          tag_name)
+        mod.update_table_values(True)
+        item.setSelected(False)
+
+        # we test if value was changed in db
         value = float(self.main_window.project.session.get_value(
-                                  COLLECTION_CURRENT,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
+                                                             COLLECTION_CURRENT,
+                                                             scan_name,
+                                                             "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                  COLLECTION_INITIAL,
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii",
-                                  "BandWidth"))
-        item = self.main_window.data_browser.table_data.item(0,
-                                                             bandwidth_column)
-        G1_bandwidth_databrowser = float(item.text())
+                                                             COLLECTION_INITIAL,
+                                                             scan_name,
+                                                             "BandWidth")[0])
+
+        # TODO: as for test_reset_cell and test_reset_column the item value is
+        #       not updated in the DataBrowser. This test is not perfect. We
+        #       mostly test that the change was done for the db
+        # item = self.main_window.data_browser.table_data.item(1,
+        #                                                      bandwidth_column)
+        # G1_bandwidth_databrowser = float(item.text()[1:-1])
+        G1_bandwidth_databrowser = float(mod.table.item(0, 0).text())
         self.assertEqual(value, float(25000))
         self.assertEqual(value, G1_bandwidth_databrowser)
         self.assertEqual(value_initial, float(50000))
+
+        ### Test for a string:
+        # values in the db
+        value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
+                                                           scan_name,
+                                                           "Type")
+        value_initial = self.main_window.project.session.get_value(
+                                                             COLLECTION_INITIAL,
+                                                             scan_name,
+                                                             "Type")
+
+        # value in the DataBrowser
+        type_column = (self.main_window.data_browser.
+                                              table_data.get_tag_column)("Type")
+        item = self.main_window.data_browser.table_data.item(1, type_column)
+        databrowser = item.text()
+
+        # we test equality between DataBrowser and db
+        self.assertEqual(value, "Scan")
+        self.assertEqual(value, databrowser)
+        self.assertEqual(value, value_initial)
+
+        # we change the value
+        item.setSelected(True)
+        item.setText("Test")
+        item.setSelected(False)
+
+        # we test if value in DataBrowser and db as been changed
+        value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
+                                                           scan_name,
+                                                           "Type")
+        value_initial = self.main_window.project.session.get_value(
+                                                             COLLECTION_INITIAL,
+                                                             scan_name,
+                                                             "Type")
+        item = self.main_window.data_browser.table_data.item(1, type_column)
+        databrowser = item.text()
+
+        self.assertEqual(value, "Test")
+        self.assertEqual(value, databrowser)
+        self.assertEqual(value_initial, "Scan")
 
     def test_sort(self):
         """
