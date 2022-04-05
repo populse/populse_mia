@@ -1618,12 +1618,12 @@ class PipelineManagerTab(QWidget):
                                               history_id)
 
             # serialize pipeline
-            buffer = io.BytesIO()
+            buffer = io.StringIO()
             pipeline_tools.save_pipeline(pipeline, buffer, format='xml')
             pipeline_xml = buffer.getvalue()
             self.project.session.set_values(
                 COLLECTION_HISTORY, history_id,
-                {HISTORY_PIPELINE: pipeline_xml.decode("utf-8")})
+                {HISTORY_PIPELINE: pipeline_xml})
 
             # add process characteristics in the database
             # if init is otherwise OK
