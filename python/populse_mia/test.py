@@ -956,20 +956,20 @@ class TestMIADataBrowser(unittest.TestCase):
 
         multiple_sort.push_buttons[0].setText("BandWidth")
         multiple_sort.fill_values(0)
-        multiple_sort.push_buttons[1].setText("Type")
+        multiple_sort.push_buttons[1].setText("Exp Type")
         multiple_sort.fill_values(1)
         QTest.mouseClick(multiple_sort.push_button_sort, Qt.LeftButton)
 
         scan = self.main_window.data_browser.table_data.item(0, 0).text()
         self.assertEqual(scan,
-                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                         "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm"
-                         "-000940_800.nii")
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014"
+                         "-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm-000940"
+                         "_800.nii")
         scan = self.main_window.data_browser.table_data.item(1, 0).text()
         self.assertEqual(scan,
-                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                         "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm"
-                         "-000940_800.nii")
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014"
+                         "-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940"
+                         "_800.nii")
         scan = self.main_window.data_browser.table_data.item(2, 0).text()
         self.assertEqual(scan,
                          "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
@@ -981,24 +981,29 @@ class TestMIADataBrowser(unittest.TestCase):
                          "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
                          "-000220_000.nii")
         scan = self.main_window.data_browser.table_data.item(4, 0).text()
-        self.assertEqual(scan, "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        self.assertEqual(scan,
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
                          "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
                          "-000142_400.nii")
         scan = self.main_window.data_browser.table_data.item(5, 0).text()
-        self.assertEqual(scan, "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                         "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
+        self.assertEqual(scan,
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                         "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
                          "-000142_400.nii")
         scan = self.main_window.data_browser.table_data.item(6, 0).text()
-        self.assertEqual(scan, "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                         "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
-                         "-000142_400.nii")
-        scan = self.main_window.data_browser.table_data.item(7, 0).text()
-        self.assertEqual(scan, "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        self.assertEqual(scan,
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
                          "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RAREpvm"
                          "-000142_400.nii")
+        scan = self.main_window.data_browser.table_data.item(7, 0).text()
+        self.assertEqual(scan,
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                         "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
+                         "-000142_400.nii")
         scan = self.main_window.data_browser.table_data.item(8, 0).text()
-        self.assertEqual(scan, "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                         "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
+        self.assertEqual(scan,
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                         "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
                          "-000142_400.nii")
 
     def test_open_project(self):

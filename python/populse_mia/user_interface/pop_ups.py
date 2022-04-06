@@ -1664,8 +1664,9 @@ class PopUpMultipleSort(QDialog):
         """
 
         pop_up = PopUpSelectTagCountTable(
-            self.project, self.project.session.get_shown_tags(),
-            self.push_buttons[idx].text())
+                            self.project, self.project.session.get_shown_tags(),
+                            self.push_buttons[idx].text())
+
         if pop_up.exec_():
             self.push_buttons[idx].setText(pop_up.selected_tag)
             self.fill_values(idx)
@@ -1674,8 +1675,13 @@ class PopUpMultipleSort(QDialog):
         """Collects the information and send them to the data browser."""
 
         self.order = self.combo_box.itemText(self.combo_box.currentIndex())
+
         for push_button in self.push_buttons:
-            self.list_tags.append(push_button.text())
+
+            if push_button.text() in self.project.session.get_fields_names(
+                                                            COLLECTION_CURRENT):
+                self.list_tags.append(push_button.text())
+
         self.accept()
         self.table_data_browser.multiple_sort_infos(self.list_tags, self.order)
 
