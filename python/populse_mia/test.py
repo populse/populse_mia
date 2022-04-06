@@ -2154,12 +2154,33 @@ class TestMIADataBrowser(unittest.TestCase):
         # Testing modified value undo/redo
         bw_column = (self.main_window.data_browser.table_data.
                                                     get_tag_column)("BandWidth")
-        bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
+        bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
         bw_old = bw_item.text()
         self.assertEqual(float(bw_old[1:-1]), 50000)
-        bw_item.setSelected(True)
+        #bw_item.setSelected(True)
         # bw_item.setText("0")
-        bw_item.setText("[0.0]")
+        #bw_item.setText("[0.0]")
+        new_value = [0.0]
+        tag_name = ["BandWidth"]
+        scans_displayed = []
+        item = self.main_window.data_browser.table_data.item(1, 0)
+        scan_name = item.text()
+
+        if not self.main_window.data_browser.table_data.isRowHidden(0):
+            scans_displayed.append(scan_name)
+
+        tag_object = self.main_window.project.session.get_field(
+                                                             COLLECTION_CURRENT,
+                                                             tag_name[0])
+        bw_item.setSelected(True)
+        mod = ModifyTable(self.main_window.project,
+                          new_value,
+                          [tag_object.field_type],
+                          scans_displayed,
+                          tag_name)
+        mod.update_table_values(True)
+        bw_item.setSelected(False)
+
         self.assertEqual(self.main_window.project.undos,
                          [["modified_values",
                            [["data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
