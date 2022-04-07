@@ -97,7 +97,7 @@ class ModifyTable(QDialog):
         self.table.setRowCount(1)
 
         # Values filled
-        for i in range (0, self.table.columnCount()):
+        for i in range(0, self.table.columnCount()):
             column_elem = self.value[i]
             item = QTableWidgetItem()
             item.setText(str(column_elem))
