@@ -2870,9 +2870,10 @@ class TestMIAPipelineManager(unittest.TestCase):
             self.assertEqual(2,
                              pipeline.nodes["threshold_1"].get_plug_value(
                                                                  "synchronize"))
-        # TODO1: currently we do not enter in the last if statement (controller v2).
-        #        Implement the switch to V1 controller to enable the last if
-        # TODO2: open a project and modify the filter pop-up
+        # TODO 1: currently we do not enter in the last if statement (controller
+        #         v2). Implement the switch to V1 controller to enable the
+        #         last if
+        # TODO 2: open a project and modify the filter pop-up
 
     def test_drop_process(self):
         """
