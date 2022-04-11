@@ -2835,78 +2835,79 @@ class PopUpPreferences(QDialog):
         config = Config()
         # Minimum config backup (for Edit CAPSUL config synchronisation):
 
-        # Use AFNI
-        afni_dir = self.afni_choice.text()
-        config.set_afni_path(afni_dir)
+        if not OK_clicked:
+            # Use AFNI
+            afni_dir = self.afni_choice.text()
+            config.set_afni_path(afni_dir)
 
-        if self.use_afni_checkbox.isChecked():
-            config.set_use_afni(True)
+            if self.use_afni_checkbox.isChecked():
+                config.set_use_afni(True)
 
-        else:
-            config.set_use_afni(False)
+            else:
+                config.set_use_afni(False)
 
-        # Use ANTS
-        ants_dir = self.ants_choice.text()
-        config.set_ants_path(ants_dir)
+            # Use ANTS
+            ants_dir = self.ants_choice.text()
+            config.set_ants_path(ants_dir)
 
-        if self.use_ants_checkbox.isChecked():
-            config.set_use_ants(True)
+            if self.use_ants_checkbox.isChecked():
+                config.set_use_ants(True)
 
-        else:
-            config.set_use_ants(False)
+            else:
+                config.set_use_ants(False)
 
-        # Use FSL
-        fsl_conf = self.fsl_choice.text()
-        config.set_fsl_config(fsl_conf)
+            # Use FSL
+            fsl_conf = self.fsl_choice.text()
+            config.set_fsl_config(fsl_conf)
 
-        if self.use_fsl_checkbox.isChecked():
-            config.set_use_fsl(True)
+            if self.use_fsl_checkbox.isChecked():
+                config.set_use_fsl(True)
 
-        else:
-            config.set_use_fsl(False)
+            else:
+                config.set_use_fsl(False)
 
-        # Use Matlab
-        matlab_input = self.matlab_choice.text()
-        config.set_matlab_path(matlab_input)
+            # Use Matlab
+            matlab_input = self.matlab_choice.text()
+            config.set_matlab_path(matlab_input)
 
-        if self.use_matlab_checkbox.isChecked():
-            config.set_use_matlab(True)
+            if self.use_matlab_checkbox.isChecked():
+                config.set_use_matlab(True)
 
-        else:
-            config.set_use_matlab(False)
+            else:
+                config.set_use_matlab(False)
 
-        # Use Matlab Runtime:
-        matlab_input = self.matlab_standalone_choice.text()
-        config.set_matlab_standalone_path(matlab_input)
+            # Use Matlab Runtime:
+            matlab_input = self.matlab_standalone_choice.text()
+            config.set_matlab_standalone_path(matlab_input)
 
-        if self.use_matlab_standalone_checkbox.isChecked():
-            config.set_use_matlab_standalone(True)
+            if self.use_matlab_standalone_checkbox.isChecked():
+                config.set_use_matlab_standalone(True)
 
-        else:
-            config.set_use_matlab_standalone(False)
+            else:
+                config.set_use_matlab_standalone(False)
 
-        # Use SPM
-        spm_input = self.spm_choice.text()
-        config.set_spm_path(spm_input)
+            # Use SPM
+            spm_input = self.spm_choice.text()
+            config.set_spm_path(spm_input)
 
-        if self.use_spm_checkbox.isChecked():
-            config.set_use_spm(True)
+            if self.use_spm_checkbox.isChecked():
+                config.set_use_spm(True)
 
-        else:
-            config.set_use_spm(False)
+            else:
+                config.set_use_spm(False)
 
-        # Use SPM standalone
-        spm_input = self.spm_standalone_choice.text()
-        config.set_spm_standalone_path(spm_input)
+            # Use SPM standalone
+            spm_input = self.spm_standalone_choice.text()
+            config.set_spm_standalone_path(spm_input)
 
-        if self.use_spm_standalone_checkbox.isChecked():
-            config.set_use_spm_standalone(True)
+            if self.use_spm_standalone_checkbox.isChecked():
+                config.set_use_spm_standalone(True)
 
-        else:
-            config.set_use_spm_standalone(False)
+            else:
+                config.set_use_spm_standalone(False)
 
         # complete backup and testing
-        if OK_clicked:
+        else:
 
             # Auto-save
             if self.save_checkbox.isChecked():
