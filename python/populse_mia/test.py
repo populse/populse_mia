@@ -138,6 +138,8 @@ class TestMIADataBrowser(unittest.TestCase):
             - tearDown: cleans up after each test method
             - setUpClass: called before tests in the individual class
             - tearDownClass: called after tests in the individual class
+            - execute_QMessageBox_clickOk: press the Ok button of a QMessageBox
+              instance
             - get_new_test_project: create a temporary project that can be
               safely modified
             - test_add_path: tests the popup to add a path
@@ -225,6 +227,17 @@ class TestMIADataBrowser(unittest.TestCase):
 
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
+
+    def execute_QMessageBox_clickOk(self):
+        """
+        Press the Ok button of a QMessageBox instance
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Ok)
+            QTest.mouseClick(close_button, Qt.LeftButton)
 
     def get_new_test_project(self):
         """
@@ -817,9 +830,14 @@ class TestMIADataBrowser(unittest.TestCase):
         # Auto save activated
         self.main_window.action_software_preferences.trigger()
         properties = self.main_window.pop_up_preferences
+        properties.projects_save_path_line_edit.setText(
+                                               tempfile.mkdtemp(
+                                                       prefix='projects_tests'))
         properties.tab_widget.setCurrentIndex(1)
         properties.save_checkbox.setChecked(True)
         QTest.mouseClick(properties.push_button_ok, Qt.LeftButton)
+        QTest.qWait(500)
+        self.execute_QMessageBox_clickOk()
 
         config = Config(config_path=self.config_path)
         new_auto_save = config.isAutoSave()
@@ -831,6 +849,8 @@ class TestMIADataBrowser(unittest.TestCase):
         properties.tab_widget.setCurrentIndex(1)
         properties.save_checkbox.setChecked(False)
         QTest.mouseClick(properties.push_button_ok, Qt.LeftButton)
+        QTest.qWait(500)
+        self.execute_QMessageBox_clickOk()
         config = Config(config_path=self.config_path)
         reput_auto_save = config.isAutoSave()
         self.assertEqual(reput_auto_save, False)
@@ -841,6 +861,8 @@ class TestMIADataBrowser(unittest.TestCase):
         properties.tab_widget.setCurrentIndex(1)
         properties.save_checkbox.setChecked(True)
         QTest.mouseClick(properties.push_button_cancel, Qt.LeftButton)
+        QTest.qWait(500)
+        self.execute_QMessageBox_clickOk()
         config = Config(config_path=self.config_path)
         # clear config -> user_mode become True !
         config.config = {}
@@ -882,8 +904,8 @@ class TestMIADataBrowser(unittest.TestCase):
                          version.parse(yaml.__version__) > version.parse("9.1"))
         self.assertEqual(True,
                          version.parse(yaml.__version__) < version.parse("9.1"))
-        self.assertEqual(config.get_projects_save_path(),
-                         os.path.join(config.get_mia_path(), 'projects'))
+
+        self.assertEqual(config.get_projects_save_path(), '')
 
     def test_modify_table(self):
         """
@@ -1647,8 +1669,10 @@ class TestMIADataBrowser(unittest.TestCase):
         Test opening & saving of a project
         """
         config = Config(config_path=self.config_path)
+        projects_dir = tempfile.mkdtemp(prefix='projects_tests')
+        config.set_projects_save_path(projects_dir)
         mia_path = config.get_mia_path()
-        something_path = os.path.join(mia_path, 'projects', 'something')
+        something_path = os.path.join(projects_dir, 'something')
         project_8_path = self.get_new_test_project()
 
         self.main_window.saveChoice()  # Saves the project 'something'
@@ -2269,6 +2293,7 @@ class TestMIAPipelineManager(unittest.TestCase):
             - tearDown: cleans up after each test method
             - setUpClass: called before tests in the individual class
             - tearDownClass: called after tests in the individual class
+            - execute_QDialogAccept: accept (close) a QDialog window
             - get_new_test_project: create a temporary project that can be
               safely modified
             - test_add_tab: adds tabs to the PipelineEditorTabs
@@ -2296,9 +2321,6 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_z_set_current_editor: sets the current editor
             - test_zz_check_modif: opens a pipeline, opens it as a process in
               another tab, modifies it and check the modifications
-            - execute_QMessageBox_clickYes: press a Yes button in the
-              test_zz_check_modif method
-            - execute_QDialogAccept: accept (close) a QDialog window
     """
 
     def setUp(self):
@@ -2351,6 +2373,16 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
+
+    def execute_QDialogAccept(self):
+        """
+        Accept (close) a QDialog window
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.accept()
 
     def get_new_test_project(self):
         """
@@ -3615,7 +3647,6 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         pipeline_editor_tabs.get_current_editor(
                                   ).export_node_plugs("smooth_1", optional=True)
-        # threading.Timer(1, self.execute_QMessageBox_clickYes).start()
         self.main_window.pipeline_manager.savePipeline(uncheck=True)
 
         pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
@@ -3626,29 +3657,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("fwhm" in
                                  pipeline.nodes["test_pipeline_1"].plugs.keys())
-
-    def execute_QMessageBox_clickYes(self):
-        """
-        Is supposed to allow to press the Yes button if a pipeline is 
-        overwritten in the test_zz_check_modif method
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Yes)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def execute_QDialogAccept(self):
-        """
-        Is supposed to accept (close) a QDialog window
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.accept()
-
 
 if __name__ == '__main__':
     unittest.main()
