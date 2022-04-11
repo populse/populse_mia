@@ -684,13 +684,11 @@ class Config:
             return self.config["projects_save_path"]
 
         except KeyError:
-
             # if not os.path.isdir(
             #         os.path.join(self.get_mia_path(), 'projects')):
             #     os.mkdir(os.path.join(self.get_mia_path(), 'projects'))
             #
             # return os.path.join(self.get_mia_path(), 'projects')
-
             return ''
 
     def get_referential(self):
