@@ -685,11 +685,13 @@ class Config:
 
         except KeyError:
 
-            if not os.path.isdir(
-                    os.path.join(self.get_mia_path(), 'projects')):
-                os.mkdir(os.path.join(self.get_mia_path(), 'projects'))
+            # if not os.path.isdir(
+            #         os.path.join(self.get_mia_path(), 'projects')):
+            #     os.mkdir(os.path.join(self.get_mia_path(), 'projects'))
+            #
+            # return os.path.join(self.get_mia_path(), 'projects')
 
-            return os.path.join(self.get_mia_path(), 'projects')
+            return ''
 
     def get_referential(self):
         """Checks in anatomist_2 data viewer which referential has been chosen
