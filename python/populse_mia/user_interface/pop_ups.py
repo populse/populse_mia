@@ -69,6 +69,7 @@ from PyQt5.QtWidgets import (
 # Capsul imports
 from capsul.api import capsul_engine
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
+from capsul.pipeline.pipeline_nodes import PipelineNode
 
 # Populse_db imports
 from populse_db.database import (
@@ -4938,7 +4939,8 @@ class PopUpShowHistory(QDialog):
     .. Methods:
         - io_value_is_scan: checks if the I/O value is a scan
         - file_clicked: called when a file is clicked
-
+        - node_selected: called when a pipeline node is clicked
+        - update_table: update the brick row at the bottom
     """
 
     def __init__(self, project, brick_uuid, scan, databrowser, main_window, parent=None):
@@ -4967,11 +4969,18 @@ class PopUpShowHistory(QDialog):
             COLLECTION_CURRENT, scan, TAG_HISTORY)
 
         if history_uuid is not None:
-            pipeline_xml = self.project.session.get_value(
+            self.pipeline_xml = self.project.session.get_value(
                 COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
-            if pipeline_xml is not None:
-                engine = capsul_engine()
-                pipeline = engine.get_process_instance(pipeline_xml)
+            if self.pipeline_xml is not None:
+                engine = Config.get_capsul_engine()
+                pipeline = engine.get_process_instance(self.pipeline_xml)
+                self.brick_list = self.project.session.get_value(
+                    COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS)
+                if len(pipeline.nodes) == 2:
+                    for key in pipeline.nodes.keys():
+                        if key is not '':
+                            if isinstance(pipeline.nodes[key], PipelineNode):
+                                pipeline = pipeline.nodes[key].process
 
                 if pipeline is not None:
                     from capsul.qt_gui.widgets.pipeline_developer_view \
@@ -4979,10 +4988,72 @@ class PopUpShowHistory(QDialog):
                     self.pipeline_view = PipelineDeveloperView(pipeline, allow_open_controller=True)
                     self.pipeline_view.auto_dot_node_positions()
                     layout.addWidget(self.pipeline_view)
+                    self.pipeline_view.node_clicked.connect(self.node_selected)
+                    self.pipeline_view.process_clicked.connect(self.node_selected)
 
         self.table = QTableWidget()
         self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
 
+        self.update_table(brick_row)
+
+        self.table.verticalHeader().setMinimumSectionSize(30)
+        self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()
+        layout.addWidget(self.table)
+
+        self.setLayout(layout)
+
+        screen_resolution = QApplication.instance().desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        self.setMinimumHeight(round(0.5 * height))
+        self.setMinimumWidth(round(0.8 * width))
+
+    def io_value_is_scan(self, value):
+        """Checks if the I/O value is a scan.
+
+        :param value: I/O value
+        :return: The scan corresponding to the value if it exists,
+          None otherwise
+
+        """
+
+        value_scan = None
+
+        for scan in (self.project.session.
+                     get_documents_names(COLLECTION_CURRENT)):
+
+            if scan in str(value):
+                value_scan = scan
+
+        return value_scan
+
+    def file_clicked(self):
+        """Called when a file is clicked."""
+
+        file = self.sender().text()
+        self.databrowser.table_data.clearSelection()
+        row_to_select = self.databrowser.table_data.get_scan_row(file)
+        self.databrowser.table_data.selectRow(row_to_select)
+        item_to_scroll_to = self.databrowser.table_data.item(row_to_select, 0)
+        self.databrowser.table_data.scrollToItem(item_to_scroll_to)
+        self.close()
+
+    def node_selected(self, node_name, process):
+        """Emit a signal when a node is clicked.
+
+        :param node_name: node name
+        :param process: process of the corresponding node
+        """
+        brick_uuid = None
+        for uuid in self.brick_list:
+            brick_name = self.project.session.get_value(COLLECTION_BRICK, uuid, BRICK_NAME)
+            if brick_name.split('.')[-1] == node_name:
+                brick_uuid = uuid
+        if brick_uuid is not None:
+            brick_row = self.project.session.get_document(COLLECTION_BRICK, brick_uuid)
+            self.update_table(brick_row)
+
+    def update_table(self, brick_row):
         # Filling the table
         inputs = getattr(brick_row, BRICK_INPUTS)
         outputs = getattr(brick_row, BRICK_OUTPUTS)
@@ -5099,48 +5170,6 @@ class PopUpShowHistory(QDialog):
                     item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
                     self.table.setItem(0, column, item)
             column += 1
-
-        self.table.verticalHeader().setMinimumSectionSize(30)
-        self.table.resizeColumnsToContents()
-        self.table.resizeRowsToContents()
-        layout.addWidget(self.table)
-
-        self.setLayout(layout)
-
-        screen_resolution = QApplication.instance().desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
-        self.setMinimumHeight(round(0.5 * height))
-        self.setMinimumWidth(round(0.8 * width))
-
-    def io_value_is_scan(self, value):
-        """Checks if the I/O value is a scan.
-
-        :param value: I/O value
-        :return: The scan corresponding to the value if it exists,
-          None otherwise
-
-        """
-
-        value_scan = None
-
-        for scan in (self.project.session.
-                     get_documents_names(COLLECTION_CURRENT)):
-
-            if scan in str(value):
-                value_scan = scan
-
-        return value_scan
-
-    def file_clicked(self):
-        """Called when a file is clicked."""
-
-        file = self.sender().text()
-        self.databrowser.table_data.clearSelection()
-        row_to_select = self.databrowser.table_data.get_scan_row(file)
-        self.databrowser.table_data.selectRow(row_to_select)
-        item_to_scroll_to = self.databrowser.table_data.item(row_to_select, 0)
-        self.databrowser.table_data.scrollToItem(item_to_scroll_to)
-        self.close()
 
 
 class PopUpVisualizedTags(QWidget):
