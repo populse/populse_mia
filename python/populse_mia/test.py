@@ -1791,9 +1791,9 @@ class TestMIADataBrowser(unittest.TestCase):
         Test opening & saving of a project
         """
         config = Config(config_path=self.config_path)
-        projects_dir = tempfile.mkdtemp(prefix='projects_tests')
+        projects_dir = os.path.realpath(tempfile.mkdtemp(
+                                                       prefix='projects_tests'))
         config.set_projects_save_path(projects_dir)
-        mia_path = config.get_mia_path()
         something_path = os.path.join(projects_dir, 'something')
         project_8_path = self.get_new_test_project()
 

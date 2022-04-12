@@ -4978,7 +4978,7 @@ class PopUpShowHistory(QDialog):
                     COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS)
                 if len(pipeline.nodes) == 2:
                     for key in pipeline.nodes.keys():
-                        if key is not '':
+                        if key != b'':
                             if isinstance(pipeline.nodes[key], PipelineNode):
                                 pipeline = pipeline.nodes[key].process
 
