@@ -4970,7 +4970,7 @@ class PopUpShowHistory(QDialog):
             pipeline_xml = self.project.session.get_value(
                 COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
             if pipeline_xml is not None:
-                engine = capsul_engine()
+                engine = Config.get_capsul_engine()
                 pipeline = engine.get_process_instance(pipeline_xml)
 
                 if pipeline is not None:
