@@ -4943,7 +4943,7 @@ class PopUpShowHistory(QDialog):
         - update_table: update the brick row at the bottom
     """
 
-    def __init__(self, project, brick_uuid, scan, databrowser, main_window, parent=None):
+    def __init__(self, project, brick_uuid, scan, databrowser, main_window):
         """Prepares the brick history popup.
 
         :param project: current project in the software
@@ -4953,9 +4953,9 @@ class PopUpShowHistory(QDialog):
 
         """
 
-        super().__init__(parent=parent)
+        super().__init__()
 
-        # self.setModal(True)
+        self.setModal(False)
 
         self.databrowser = databrowser
         self.main_window = main_window
@@ -4964,7 +4964,6 @@ class PopUpShowHistory(QDialog):
 
         brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
         brick_name = project.session.get_value(COLLECTION_BRICK, brick_uuid, BRICK_NAME).split('.')[-1]
-
 
         layout = QVBoxLayout()
         self.splitter = QSplitter(Qt.Qt.Vertical)
@@ -5011,8 +5010,7 @@ class PopUpShowHistory(QDialog):
 
         screen_resolution = QApplication.instance().desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
-        self.setMinimumHeight(round(0.5 * height))
-        self.setMinimumWidth(round(0.8 * width))
+        self.setGeometry(300, 200, round(0.6 * width), round(0.4 * height))
 
     def io_value_is_scan(self, value):
         """Checks if the I/O value is a scan.

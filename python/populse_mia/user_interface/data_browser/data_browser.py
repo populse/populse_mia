@@ -2174,7 +2174,8 @@ class TableDataBrowser(QTableWidget):
         brick_uuid = self.bricks[self.sender()]
         self.brick_history_popup = PopUpShowHistory(
             self.project, brick_uuid, scan, self.data_browser,
-            self.data_browser.parent)
+            self.data_browser.main_window)
+
         self.brick_history_popup.show()
 
     def sort_column(self, order):
