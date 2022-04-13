@@ -4996,8 +4996,7 @@ class PopUpShowHistory(QDialog):
                     self.splitter.addWidget(self.pipeline_view)
                     self.pipeline_view.node_clicked.connect(self.node_selected)
                     self.pipeline_view.process_clicked.connect(self.node_selected)
-                    self.pipeline_view.scene.gnodes[brick_name].box.setPen(
-                        QtGui.QPen(QtGui.QColor(255, 0, 0), 3, QtCore.Qt.SolidLine))
+                    self.node_selected(brick_name, pipeline.nodes[brick_name])
         self.update_table(brick_row)
 
         self.table.verticalHeader().setMinimumSectionSize(30)
@@ -5052,11 +5051,10 @@ class PopUpShowHistory(QDialog):
         for uuid in self.brick_list:
             brick_name = self.project.session.get_value(COLLECTION_BRICK, uuid, BRICK_NAME).split('.')[-1]
             if brick_name == node_name:
-                self.pipeline_view.scene.gnodes[brick_name].box.setPen(
-                    QtGui.QPen(QtGui.QColor(255, 0, 0), 3, QtCore.Qt.SolidLine))
+                self.pipeline_view.scene.gnodes[brick_name].fonced_viewer(False)
                 brick_uuid = uuid
             else:
-                self.pipeline_view.scene.gnodes[brick_name].box.setPen(QtGui.QPen(QtCore.Qt.NoPen))
+                self.pipeline_view.scene.gnodes[brick_name].fonced_viewer(True)
         if brick_uuid is not None:
             brick_row = self.project.session.get_document(COLLECTION_BRICK, brick_uuid)
             self.update_table(brick_row)
