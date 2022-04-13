@@ -64,7 +64,7 @@ from PyQt5.QtWidgets import (
     QFormLayout, QHBoxLayout, QHeaderView, QInputDialog, QLabel, QLineEdit,
     QMessageBox, QPlainTextEdit, QPushButton, QRadioButton, QScrollArea,
     QTableWidget, QTableWidgetItem, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
-    QWidget)
+    QWidget, QSplitter)
 
 # Capsul imports
 from capsul.api import capsul_engine
@@ -4960,11 +4960,14 @@ class PopUpShowHistory(QDialog):
         self.databrowser = databrowser
         self.main_window = main_window
         self.project = project
-        brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
-        brick_name = project.session.get_value(COLLECTION_BRICK, brick_uuid, BRICK_NAME).split('.')[-1]
         self.setWindowTitle("History of " + scan)
 
+        brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
+        brick_name = project.session.get_value(COLLECTION_BRICK, brick_uuid, BRICK_NAME).split('.')[-1]
+
+
         layout = QVBoxLayout()
+        self.splitter = QSplitter(Qt.Qt.Vertical)
 
         self.table = QTableWidget()
         self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
@@ -4991,7 +4994,7 @@ class PopUpShowHistory(QDialog):
                         import PipelineDeveloperView
                     self.pipeline_view = PipelineDeveloperView(pipeline, allow_open_controller=True)
                     self.pipeline_view.auto_dot_node_positions()
-                    layout.addWidget(self.pipeline_view)
+                    self.splitter.addWidget(self.pipeline_view)
                     self.pipeline_view.node_clicked.connect(self.node_selected)
                     self.pipeline_view.process_clicked.connect(self.node_selected)
                     self.pipeline_view.scene.gnodes[brick_name].box.setPen(
@@ -5001,8 +5004,9 @@ class PopUpShowHistory(QDialog):
         self.table.verticalHeader().setMinimumSectionSize(30)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
-        layout.addWidget(self.table)
+        self.splitter.addWidget(self.table)
 
+        layout.addWidget(self.splitter)
         self.setLayout(layout)
 
         screen_resolution = QApplication.instance().desktop().screenGeometry()
