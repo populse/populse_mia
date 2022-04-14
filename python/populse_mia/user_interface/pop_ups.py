@@ -5159,9 +5159,9 @@ class PopUpShowHistory(QDialog):
         self.table.removeRow(0)
         self.table.setRowCount(1)
         nbColumn = 1
-        if init is not '':
+        if init != '':
             nbColumn += 2
-        if exec is not '':
+        if exec != '':
             nbColumn += 2
 
         self.table.setColumnCount(nbColumn + len(inputs) + len(outputs))
@@ -5178,7 +5178,7 @@ class PopUpShowHistory(QDialog):
         item_idx += 1
 
         # Brick init
-        if init is not '':
+        if init != '':
             item = QTableWidgetItem()
             item.setText(BRICK_INIT)
             self.table.setHorizontalHeaderItem(item_idx, item)
@@ -5200,7 +5200,7 @@ class PopUpShowHistory(QDialog):
             item_idx += 1
 
         # Brick execution
-        if init is not '':
+        if init !='':
             item = QTableWidgetItem()
             item.setText(BRICK_EXEC)
             self.table.setHorizontalHeaderItem(item_idx, item)
