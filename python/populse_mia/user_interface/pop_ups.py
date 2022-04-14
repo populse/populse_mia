@@ -5128,30 +5128,32 @@ class PopUpShowHistory(QDialog):
                 exec_time = getattr(brick_row, BRICK_INIT_TIME)
                 self.update_table(inputs, outputs, brick_name, init, init_time, exec, exec_time)
             else:
-                inputs_dict = {}
-                outputs_dict = {}
-                for plug_name, plug in process.plugs.items():
-                    if plug.activated:
-                        process_name, inner_plug_name = self.find_process_from_plug(plug)
-                        for uuid in brick_uuid:
-                            full_brick_name = self.project.session.get_value(
-                                COLLECTION_BRICK,
-                                uuid,
-                                BRICK_NAME)
-                            if full_brick_name == node_name + process_name:
-                                if plug.output:
-                                    plugs = self.project.session.get_value(
-                                        COLLECTION_BRICK,
-                                        uuid,
-                                        BRICK_OUTPUTS)
-                                    outputs_dict[plug_name] = plugs[inner_plug_name]
-                                else:
-                                    plugs = self.project.session.get_value(
-                                        COLLECTION_BRICK,
-                                        uuid,
-                                        BRICK_INPUTS)
-                                    inputs_dict[plug_name] = plugs[inner_plug_name]
-                self.update_table(inputs_dict, outputs_dict, node_name)
+                # subpipeline case
+                if isinstance(process, PipelineNode):
+                    inputs_dict = {}
+                    outputs_dict = {}
+                    for plug_name, plug in process.plugs.items():
+                        if plug.activated:
+                            process_name, inner_plug_name = self.find_process_from_plug(plug)
+                            for uuid in brick_uuid:
+                                full_brick_name = self.project.session.get_value(
+                                    COLLECTION_BRICK,
+                                    uuid,
+                                    BRICK_NAME)
+                                if full_brick_name == node_name + process_name:
+                                    if plug.output:
+                                        plugs = self.project.session.get_value(
+                                            COLLECTION_BRICK,
+                                            uuid,
+                                            BRICK_OUTPUTS)
+                                        outputs_dict[plug_name] = plugs[inner_plug_name]
+                                    else:
+                                        plugs = self.project.session.get_value(
+                                            COLLECTION_BRICK,
+                                            uuid,
+                                            BRICK_INPUTS)
+                                        inputs_dict[plug_name] = plugs[inner_plug_name]
+                    self.update_table(inputs_dict, outputs_dict, node_name)
 
         for name, gnode in self.pipeline_view.scene.gnodes.items():
             if name == node_name:

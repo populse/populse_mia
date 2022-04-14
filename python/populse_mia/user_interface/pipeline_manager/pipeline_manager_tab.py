@@ -51,6 +51,10 @@ from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import WorkflowExecutionError
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
 from capsul.pipeline import pipeline_tools
+from capsul.pipeline.process_iteration import ProcessIteration
+
+# MIA processes imports
+from mia_processes.bricks.tools.tools import Input_Filter
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -1619,7 +1623,15 @@ class PipelineManagerTab(QWidget):
 
             # serialize pipeline
             buffer = io.StringIO()
-            pipeline_tools.save_pipeline(pipeline, buffer, format='xml')
+            if pipeline.name == 'Iteration_pipeline':
+                for proc in pipeline.list_process_in_pipeline:
+                    if isinstance(proc, ProcessIteration):
+                        inner_pipeline = proc.process
+                        break
+                pipeline_tools.save_pipeline(inner_pipeline, buffer, format='xml')
+            else:
+                pipeline_tools.save_pipeline(pipeline, buffer, format='xml')
+
             pipeline_xml = buffer.getvalue()
             self.project.session.set_values(
                 COLLECTION_HISTORY, history_id,
