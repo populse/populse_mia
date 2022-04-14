@@ -4999,7 +4999,7 @@ class PopUpShowHistory(QDialog):
                                 self.unitary_pipeline = True
                 # handle case of named pipeline without being a single Pipeline node
                 # (e.g. a pipeline alone without exporting plugs)
-                if not self.unitary_pipeline and pipeline.name is not 'CustomPipeline':
+                if not self.unitary_pipeline and pipeline.name != 'CustomPipeline':
                     full_brick_name.pop(0)
                     self.unitary_pipeline = True
 
