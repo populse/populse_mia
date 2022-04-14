@@ -4984,29 +4984,34 @@ class PopUpShowHistory(QDialog):
             self.pipeline_xml = self.project.session.get_value(
                 COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
             if self.pipeline_xml is not None:
-                engine = Config.get_capsul_engine()
-                pipeline = engine.get_process_instance(self.pipeline_xml)
                 self.brick_list = self.project.session.get_value(
                     COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS)
-                # handle case of pipeline node alone --> exploded view
-                # (e.g. a pipeline alone and plug exported)
-                if len(pipeline.nodes) == 2:
-                    for key in pipeline.nodes.keys():
-                        if key != '':
-                            if isinstance(pipeline.nodes[key], PipelineNode):
-                                pipeline = pipeline.nodes[key].process
-                                full_brick_name.pop(0)
-                                self.unitary_pipeline = True
-                # handle case of named pipeline without being a single Pipeline node
-                # (e.g. a pipeline alone without exporting plugs)
-                if not self.unitary_pipeline and pipeline.name != 'CustomPipeline':
-                    full_brick_name.pop(0)
-                    self.unitary_pipeline = True
+
+                engine = Config.get_capsul_engine()
+                try:
+                    pipeline = engine.get_process_instance(self.pipeline_xml)
+                except Exception as e:
+                    pipeline = None
 
                 if pipeline is not None:
+                    # handle case of pipeline node alone --> exploded view
+                    # (e.g. a pipeline alone and plug exported)
+                    if len(pipeline.nodes) == 2:
+                        for key in pipeline.nodes.keys():
+                            if key != '':
+                                if isinstance(pipeline.nodes[key], PipelineNode):
+                                    pipeline = pipeline.nodes[key].process
+                                    full_brick_name.pop(0)
+                                    self.unitary_pipeline = True
+                    # handle case of named pipeline without being a single Pipeline node
+                    # (e.g. a pipeline alone without exporting plugs)
+                    if not self.unitary_pipeline and pipeline.name != 'CustomPipeline':
+                        full_brick_name.pop(0)
+                        self.unitary_pipeline = True
+
                     self.pipeline_view = PipelineDeveloperView(
                                                      pipeline,
-                                                     allow_open_controller=True)
+                                                     allow_open_controller=False)
                     self.pipeline_view.auto_dot_node_positions()
                     self.splitter.addWidget(self.pipeline_view)
                     self.pipeline_view.node_clicked.connect(self.node_selected)
