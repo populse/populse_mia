@@ -4966,9 +4966,9 @@ class PopUpShowHistory(QDialog):
         self.setWindowTitle("History of " + scan)
 
         brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
-        brick_name = project.session.get_value(COLLECTION_BRICK,
+        full_brick_name = project.session.get_value(COLLECTION_BRICK,
                                                brick_uuid,
-                                               BRICK_NAME).split('.')[-1]
+                                               BRICK_NAME).split('.')
 
         layout = QVBoxLayout()
         self.splitter = QSplitter(Qt.Qt.Vertical)
@@ -4979,6 +4979,7 @@ class PopUpShowHistory(QDialog):
         history_uuid = self.project.session.get_value(
             COLLECTION_CURRENT, scan, TAG_HISTORY)
 
+        self.unitary_pipeline = False
         if history_uuid is not None:
             self.pipeline_xml = self.project.session.get_value(
                 COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
@@ -4989,9 +4990,11 @@ class PopUpShowHistory(QDialog):
                     COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS)
                 if len(pipeline.nodes) == 2:
                     for key in pipeline.nodes.keys():
-                        if key != b'':
+                        if key != '':
                             if isinstance(pipeline.nodes[key], PipelineNode):
                                 pipeline = pipeline.nodes[key].process
+                                full_brick_name.pop(0)
+                                self.unitary_pipeline = True
 
                 if pipeline is not None:
                     self.pipeline_view = PipelineDeveloperView(
@@ -5002,7 +5005,8 @@ class PopUpShowHistory(QDialog):
                     self.pipeline_view.node_clicked.connect(self.node_selected)
                     (self.pipeline_view.process_clicked.
                                                     connect)(self.node_selected)
-                    self.node_selected(brick_name, pipeline.nodes[brick_name])
+                    self.node_selected(full_brick_name[0], pipeline.nodes[full_brick_name[0]])
+
         self.update_table(brick_row)
 
         self.table.verticalHeader().setMinimumSectionSize(30)
@@ -5053,21 +5057,30 @@ class PopUpShowHistory(QDialog):
         :param node_name: node name
         :param process: process of the corresponding node
         """
-        brick_uuid = None
+
+        brick_uuid = []
         for uuid in self.brick_list:
-            brick_name = self.project.session.get_value(
+            full_brick_name = self.project.session.get_value(
                                                       COLLECTION_BRICK,
                                                       uuid,
-                                                      BRICK_NAME).split('.')[-1]
-            if brick_name == node_name:
-                self.pipeline_view.scene.gnodes[brick_name].fonced_viewer(False)
-                brick_uuid = uuid
+                                                      BRICK_NAME).split('.')
+            if self.unitary_pipeline:
+                full_brick_name.pop(0)
+
+            if full_brick_name[0] == node_name:
+                brick_uuid.append(uuid)
+
+        if brick_uuid:
+            if len(brick_uuid) == 1:
+                brick_row = self.project.session.get_document(COLLECTION_BRICK,
+                                                              brick_uuid[0])
+                self.update_table(brick_row)
+
+        for name, gnode in self.pipeline_view.scene.gnodes.items():
+            if name == node_name:
+                gnode.fonced_viewer(False)
             else:
-                self.pipeline_view.scene.gnodes[brick_name].fonced_viewer(True)
-        if brick_uuid is not None:
-            brick_row = self.project.session.get_document(COLLECTION_BRICK,
-                                                          brick_uuid)
-            self.update_table(brick_row)
+                gnode.fonced_viewer(True)
 
     def update_table(self, brick_row):
         # Filling the table
