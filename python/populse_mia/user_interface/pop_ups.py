@@ -5200,7 +5200,7 @@ class PopUpShowHistory(QDialog):
             item_idx += 1
 
         # Brick execution
-        if init !='':
+        if init != '':
             item = QTableWidgetItem()
             item.setText(BRICK_EXEC)
             self.table.setHorizontalHeaderItem(item_idx, item)
