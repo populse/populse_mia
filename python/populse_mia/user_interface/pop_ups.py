@@ -5016,9 +5016,6 @@ class PopUpShowHistory(QDialog):
         exec_time = getattr(brick_row, BRICK_INIT_TIME)
         self.update_table(inputs, outputs, brick_name, init, init_time, exec, exec_time)
 
-        self.table.verticalHeader().setMinimumSectionSize(30)
-        self.table.resizeColumnsToContents()
-        self.table.resizeRowsToContents()
         self.splitter.addWidget(self.table)
 
         layout.addWidget(self.splitter)
@@ -5278,6 +5275,10 @@ class PopUpShowHistory(QDialog):
                     item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
                     self.table.setItem(0, item_idx, item)
             item_idx += 1
+
+        self.table.verticalHeader().setMinimumSectionSize(30)
+        self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()
 
 
 class PopUpVisualizedTags(QWidget):
