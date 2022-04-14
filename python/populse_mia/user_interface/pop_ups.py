@@ -4988,6 +4988,8 @@ class PopUpShowHistory(QDialog):
                 pipeline = engine.get_process_instance(self.pipeline_xml)
                 self.brick_list = self.project.session.get_value(
                     COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS)
+                # handle case of pipeline node alone --> exploded view
+                # (e.g. a pipeline alone and plug exported)
                 if len(pipeline.nodes) == 2:
                     for key in pipeline.nodes.keys():
                         if key != '':
@@ -4995,6 +4997,11 @@ class PopUpShowHistory(QDialog):
                                 pipeline = pipeline.nodes[key].process
                                 full_brick_name.pop(0)
                                 self.unitary_pipeline = True
+                # handle case of named pipeline without being a single Pipeline node
+                # (e.g. a pipeline alone without exporting plugs)
+                if not self.unitary_pipeline and pipeline.name is not 'CustomPipeline':
+                    full_brick_name.pop(0)
+                    self.unitary_pipeline = True
 
                 if pipeline is not None:
                     self.pipeline_view = PipelineDeveloperView(
