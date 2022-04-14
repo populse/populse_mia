@@ -5007,7 +5007,14 @@ class PopUpShowHistory(QDialog):
                                                     connect)(self.node_selected)
                     self.node_selected(full_brick_name[0], pipeline.nodes[full_brick_name[0]])
 
-        self.update_table(brick_row)
+        inputs = getattr(brick_row, BRICK_INPUTS)
+        outputs = getattr(brick_row, BRICK_OUTPUTS)
+        brick_name = getattr(brick_row, BRICK_NAME)
+        init = getattr(brick_row, BRICK_INIT)
+        init_time = getattr(brick_row, BRICK_INIT_TIME)
+        exec = getattr(brick_row, BRICK_INIT)
+        exec_time = getattr(brick_row, BRICK_INIT_TIME)
+        self.update_table(inputs, outputs, brick_name, init, init_time, exec, exec_time)
 
         self.table.verticalHeader().setMinimumSectionSize(30)
         self.table.resizeColumnsToContents()
@@ -5051,12 +5058,41 @@ class PopUpShowHistory(QDialog):
         self.databrowser.table_data.scrollToItem(item_to_scroll_to)
         self.close()
 
+    def find_process_from_plug(self, plug):
+        process_name = ''
+        plug_name = ''
+        if plug.output:
+            link_done = False
+            for link in plug.links_from:
+                if not link_done:
+                    link_done = True
+                    process_name += '.' + link[2].name
+                    plug_name = link[1]
+                    if isinstance(link[2], PipelineNode):
+                        sub_process_name, plug_name = \
+                            self.find_process_from_plug(link[2].plugs[link[1]])
+                        process_name += sub_process_name
+        else:
+            link_done = False
+            for link in plug.links_to:
+                if not link_done:
+                    link_done = True
+                    process_name += '.' + link[2].name
+                    plug_name = link[1]
+                    if isinstance(link[2], PipelineNode):
+                        sub_process_name, plug_name = \
+                            self.find_process_from_plug(link[2].plugs[link[1]])
+                        process_name += sub_process_name
+        return process_name, plug_name
+
     def node_selected(self, node_name, process):
         """Emit a signal when a node is clicked.
 
         :param node_name: node name
         :param process: process of the corresponding node
         """
+        if hasattr(process, 'pipeline_node'):
+            process = process.pipeline_node
 
         brick_uuid = []
         for uuid in self.brick_list:
@@ -5074,7 +5110,39 @@ class PopUpShowHistory(QDialog):
             if len(brick_uuid) == 1:
                 brick_row = self.project.session.get_document(COLLECTION_BRICK,
                                                               brick_uuid[0])
-                self.update_table(brick_row)
+                inputs = getattr(brick_row, BRICK_INPUTS)
+                outputs = getattr(brick_row, BRICK_OUTPUTS)
+                brick_name = getattr(brick_row, BRICK_NAME)
+                init = getattr(brick_row, BRICK_INIT)
+                init_time = getattr(brick_row, BRICK_INIT_TIME)
+                exec = getattr(brick_row, BRICK_INIT)
+                exec_time = getattr(brick_row, BRICK_INIT_TIME)
+                self.update_table(inputs, outputs, brick_name, init, init_time, exec, exec_time)
+            else:
+                inputs_dict = {}
+                outputs_dict = {}
+                for plug_name, plug in process.plugs.items():
+                    if plug.activated:
+                        process_name, inner_plug_name = self.find_process_from_plug(plug)
+                        for uuid in brick_uuid:
+                            full_brick_name = self.project.session.get_value(
+                                COLLECTION_BRICK,
+                                uuid,
+                                BRICK_NAME)
+                            if full_brick_name == node_name + process_name:
+                                if plug.output:
+                                    plugs = self.project.session.get_value(
+                                        COLLECTION_BRICK,
+                                        uuid,
+                                        BRICK_OUTPUTS)
+                                    outputs_dict[plug_name] = plugs[inner_plug_name]
+                                else:
+                                    plugs = self.project.session.get_value(
+                                        COLLECTION_BRICK,
+                                        uuid,
+                                        BRICK_INPUTS)
+                                    inputs_dict[plug_name] = plugs[inner_plug_name]
+                self.update_table(inputs_dict, outputs_dict, node_name)
 
         for name, gnode in self.pipeline_view.scene.gnodes.items():
             if name == node_name:
@@ -5082,67 +5150,78 @@ class PopUpShowHistory(QDialog):
             else:
                 gnode.fonced_viewer(True)
 
-    def update_table(self, brick_row):
+    def update_table(self, inputs, outputs, brick_name, init='', init_time=None, exec='', exec_time=None):
         # Filling the table
-        inputs = getattr(brick_row, BRICK_INPUTS)
-        outputs = getattr(brick_row, BRICK_OUTPUTS)
+        self.table.removeRow(0)
         self.table.setRowCount(1)
-        self.table.setColumnCount(5 + len(inputs) + len(outputs))
+        nbColumn = 1
+        if init is not '':
+            nbColumn += 2
+        if exec is not '':
+            nbColumn += 2
+
+        self.table.setColumnCount(nbColumn + len(inputs) + len(outputs))
 
         # Brick name
+        item_idx = 0
         item = QTableWidgetItem()
         item.setText(BRICK_NAME)
-        self.table.setHorizontalHeaderItem(0, item)
+        self.table.setHorizontalHeaderItem(item_idx, item)
         item = QTableWidgetItem()
-        item.setText(getattr(brick_row, BRICK_NAME))
+        item.setText(brick_name)
         item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        self.table.setItem(0, 0, item)
+        self.table.setItem(0, item_idx, item)
+        item_idx += 1
 
         # Brick init
-        item = QTableWidgetItem()
-        item.setText(BRICK_INIT)
-        self.table.setHorizontalHeaderItem(1, item)
-        item = QTableWidgetItem()
-        item.setText(getattr(brick_row, BRICK_INIT))
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        self.table.setItem(0, 1, item)
+        if init is not '':
+            item = QTableWidgetItem()
+            item.setText(BRICK_INIT)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setText(init)
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
 
-        # Brick init time
-        item = QTableWidgetItem()
-        item.setText(BRICK_INIT_TIME)
-        self.table.setHorizontalHeaderItem(2, item)
-        item = QTableWidgetItem()
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        if getattr(brick_row, BRICK_INIT_TIME) is not None:
-            item.setText(str(getattr(brick_row, BRICK_INIT_TIME)))
-            self.table.setItem(0, 2, item)
+            # Brick init time
+            item = QTableWidgetItem()
+            item.setText(BRICK_INIT_TIME)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            if init_time is not None:
+                item.setText(str(init_time))
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
 
         # Brick execution
-        item = QTableWidgetItem()
-        item.setText(BRICK_EXEC)
-        self.table.setHorizontalHeaderItem(3, item)
-        item = QTableWidgetItem()
-        item.setText(getattr(brick_row, BRICK_EXEC))
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        self.table.setItem(0, 3, item)
+        if init is not '':
+            item = QTableWidgetItem()
+            item.setText(BRICK_EXEC)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setText(exec)
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
 
-        # Brick execution time
-        item = QTableWidgetItem()
-        item.setText(BRICK_EXEC_TIME)
-        self.table.setHorizontalHeaderItem(4, item)
-        item = QTableWidgetItem()
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        if getattr(brick_row, BRICK_EXEC_TIME) is not None:
-            item.setText(str(getattr(brick_row, BRICK_EXEC_TIME)))
-        self.table.setItem(0, 4, item)
-
-        column = 5
+            # Brick execution time
+            item = QTableWidgetItem()
+            item.setText(BRICK_EXEC_TIME)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            if exec_time is not None:
+                item.setText(str(exec_time))
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
 
         # Inputs
         for key, value in sorted(inputs.items()):
             item = QTableWidgetItem()
             item.setText(key)
-            self.table.setHorizontalHeaderItem(column, item)
+            self.table.setHorizontalHeaderItem(item_idx, item)
             if isinstance(value, list):
                 value = str(value).strip('[]')
 
@@ -5154,20 +5233,20 @@ class PopUpShowHistory(QDialog):
                 button.clicked.connect(self.file_clicked)
                 output_layout.addWidget(button)
                 widget.setLayout(output_layout)
-                self.table.setCellWidget(0, column, widget)
+                self.table.setCellWidget(0, item_idx, widget)
             else:
                 item = QTableWidgetItem()
                 item.setText(str(value))
                 item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
-                self.table.setItem(0, column, item)
-            column += 1
+                self.table.setItem(0, item_idx, item)
+            item_idx += 1
 
         # Outputs
         for key, value in sorted(outputs.items()):
             item = QTableWidgetItem()
             item.setText(key)
-            self.table.setHorizontalHeaderItem(column, item)
+            self.table.setHorizontalHeaderItem(item_idx, item)
             value = outputs[key]
             if isinstance(value, list):
                 sub_widget = QWidget()
@@ -5182,7 +5261,7 @@ class PopUpShowHistory(QDialog):
                         label = QLabel(str(sub_value))
                         sub_layout.addWidget(label)
                 sub_widget.setLayout(sub_layout)
-                self.table.setCellWidget(0, column, sub_widget)
+                self.table.setCellWidget(0, item_idx, sub_widget)
             else:
                 value_scan = self.io_value_is_scan(value)
                 if value_scan is not None:
@@ -5192,13 +5271,13 @@ class PopUpShowHistory(QDialog):
                     button.clicked.connect(self.file_clicked)
                     output_layout.addWidget(button)
                     widget.setLayout(output_layout)
-                    self.table.setCellWidget(0, column, widget)
+                    self.table.setCellWidget(0, item_idx, widget)
                 else:
                     item = QTableWidgetItem()
                     item.setText(str(value))
                     item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-                    self.table.setItem(0, column, item)
-            column += 1
+                    self.table.setItem(0, item_idx, item)
+            item_idx += 1
 
 
 class PopUpVisualizedTags(QWidget):
