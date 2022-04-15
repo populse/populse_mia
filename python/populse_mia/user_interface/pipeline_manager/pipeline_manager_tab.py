@@ -1226,8 +1226,23 @@ class PipelineManagerTab(QWidget):
         """
 
         self.postprocess_pipeline_execution()
-        self.project.cleanup_orphan_bricks()
+
+        # 2022/04/13: FIX #236
+        # 1. Now that we reconstruct all history of a file through
+        # bricks, we cannot remove bricks on the only basis that they
+        # are not referenced in files of CURRENT_COLLECTION, they may
+        # be part of a history pipeline. Then, we use instead
+        # clean_up_orphan_history function that will delete history
+        # (and inner bricks) that are not referenced in any file
+        # 2. update_data_history seems to be useless since
+        # brick tag should now always contain one brick (history is
+        # kept in a separate collection)
+        # obsolete = self.project.update_data_history(outputs)
+        # self.project.cleanup_orphan_bricks()
         self.project.cleanup_orphan_nonexisting_files()
+        self.project.cleanup_orphan_history()
+        # 2022/04/13: FIX #236 - End
+
         self.main_window.data_browser.table_data.update_table()
         if (hasattr(self.pipelineEditorTabs.get_current_editor(),
                     'initialized') and
@@ -1918,16 +1933,13 @@ class PipelineManagerTab(QWidget):
                 {BRICK_EXEC: 'Done', BRICK_EXEC_TIME: exec_date})
 
         # now cleanup earlier history of data
-        obsolete = self.project.update_data_history(outputs)
-
+        # 2022/04/13: FIX #236
         # get obsolete bricks (done) referenced from current outputs
-        print('obsolete bricks:', obsolete)
-        self.project.cleanup_orphan_bricks(obsolete)
-        # temporarily disabled 2022/01/13 (Denis) to avoid breaking
-        # history graphs
-        #self.project.cleanup_orphan_bricks()  # modified on 4th January 2022
+        # print('obsolete bricks:', obsolete)
+        # self.project.cleanup_orphan_bricks(obsolete)
         self.project.cleanup_orphan_nonexisting_files()
-
+        self.project.cleanup_orphan_history()
+        # 2022/04/13: FIX #236 - End
         QtThreadCall().push(
             self.main_window.data_browser.table_data.update_table)
 
