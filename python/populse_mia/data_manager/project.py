@@ -1046,7 +1046,8 @@ class Project():
                         COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks)
 
         for bricks in scan_bricks.values():
-            obsolete.update(brick for brick in bricks if brick not in used)
+            if bricks:
+                obsolete.update(brick for brick in bricks if brick not in used)
         return obsolete
 
     def finished_bricks(self, engine, pipeline=None, include_done=False):
