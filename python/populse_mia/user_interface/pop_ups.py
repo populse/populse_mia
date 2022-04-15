@@ -5234,7 +5234,8 @@ class PopUpShowHistory(QDialog):
             item.setText(key)
             self.table.setHorizontalHeaderItem(item_idx, item)
             if isinstance(value, list):
-                value = str(value).strip('[]')
+                #value = str(value).strip('[]')
+                value = str(value)
 
             value_scan = self.io_value_is_scan(value)
             if value_scan is not None:
