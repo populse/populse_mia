@@ -51,6 +51,8 @@ import os
 import platform
 import shutil
 import subprocess
+
+import six
 import yaml
 from datetime import datetime
 from functools import partial
@@ -70,7 +72,7 @@ from PyQt5.QtWidgets import (
 from capsul.api import capsul_engine
 from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
-from capsul.pipeline.pipeline_nodes import PipelineNode
+from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
 
 # Populse_db imports
 from populse_db.database import (
@@ -4980,6 +4982,7 @@ class PopUpShowHistory(QDialog):
             COLLECTION_CURRENT, scan, TAG_HISTORY)
 
         self.unitary_pipeline = False
+        self.uuid_idx = 0
         if history_uuid is not None:
             self.pipeline_xml = self.project.session.get_value(
                 COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
@@ -5017,6 +5020,17 @@ class PopUpShowHistory(QDialog):
                     self.pipeline_view.node_clicked.connect(self.node_selected)
                     (self.pipeline_view.process_clicked.
                                                     connect)(self.node_selected)
+
+                    bricks = self.find_associated_bricks(full_brick_name[0])
+                    for bricks_uuids in bricks.values():
+                        for i in range(0,len(bricks_uuids)):
+                            if bricks_uuids[i] == brick_uuid:
+                                self.uuid_idx = i
+                                break
+                        else:
+                            continue
+                        break
+
                     self.node_selected(full_brick_name[0], pipeline.nodes[full_brick_name[0]])
 
         inputs = getattr(brick_row, BRICK_INPUTS)
@@ -5067,6 +5081,25 @@ class PopUpShowHistory(QDialog):
         self.databrowser.table_data.scrollToItem(item_to_scroll_to)
         self.close()
 
+    def find_associated_bricks(self, node_name):
+        bricks = {}
+        for uuid in self.brick_list:
+            full_brick_name = self.project.session.get_value(
+                COLLECTION_BRICK,
+                uuid,
+                BRICK_NAME)
+            list_full_brick_name = full_brick_name.split('.')
+
+            if self.unitary_pipeline:
+                list_full_brick_name.pop(0)
+
+            if list_full_brick_name[0] == node_name:
+                if full_brick_name not in bricks:
+                    bricks[full_brick_name] = [uuid]
+                else:
+                    bricks[full_brick_name].append(uuid)
+        return bricks
+
     def find_process_from_plug(self, plug):
         process_name = ''
         plug_name = ''
@@ -5100,25 +5133,16 @@ class PopUpShowHistory(QDialog):
         :param node_name: node name
         :param process: process of the corresponding node
         """
+
         if hasattr(process, 'pipeline_node'):
             process = process.pipeline_node
 
-        brick_uuid = []
-        for uuid in self.brick_list:
-            full_brick_name = self.project.session.get_value(
-                                                      COLLECTION_BRICK,
-                                                      uuid,
-                                                      BRICK_NAME).split('.')
-            if self.unitary_pipeline:
-                full_brick_name.pop(0)
+        bricks = self.find_associated_bricks(node_name)
 
-            if full_brick_name[0] == node_name:
-                brick_uuid.append(uuid)
-
-        if brick_uuid:
-            if len(brick_uuid) == 1:
+        if bricks:
+            if len(bricks) == 1:
                 brick_row = self.project.session.get_document(COLLECTION_BRICK,
-                                                              brick_uuid[0])
+                                                              next(iter(bricks.values()))[self.uuid_idx])
                 inputs = getattr(brick_row, BRICK_INPUTS)
                 outputs = getattr(brick_row, BRICK_OUTPUTS)
                 brick_name = getattr(brick_row, BRICK_NAME)
@@ -5129,37 +5153,38 @@ class PopUpShowHistory(QDialog):
                 self.update_table(inputs, outputs, brick_name, init, init_time, exec, exec_time)
             else:
                 # subpipeline case
+                inputs_dict = {}
+                outputs_dict = {}
                 if isinstance(process, PipelineNode):
-                    inputs_dict = {}
-                    outputs_dict = {}
                     for plug_name, plug in process.plugs.items():
                         if plug.activated:
                             process_name, inner_plug_name = self.find_process_from_plug(plug)
-                            for uuid in brick_uuid:
+                            for uuid in bricks.values():
                                 full_brick_name = self.project.session.get_value(
                                     COLLECTION_BRICK,
-                                    uuid,
+                                    uuid[0],
                                     BRICK_NAME)
                                 if full_brick_name == node_name + process_name:
                                     if plug.output:
                                         plugs = self.project.session.get_value(
                                             COLLECTION_BRICK,
-                                            uuid,
+                                            uuid[self.uuid_idx],
                                             BRICK_OUTPUTS)
                                         outputs_dict[plug_name] = plugs[inner_plug_name]
                                     else:
                                         plugs = self.project.session.get_value(
                                             COLLECTION_BRICK,
-                                            uuid,
+                                            uuid[self.uuid_idx],
                                             BRICK_INPUTS)
                                         inputs_dict[plug_name] = plugs[inner_plug_name]
-                    self.update_table(inputs_dict, outputs_dict, node_name)
 
-        for name, gnode in self.pipeline_view.scene.gnodes.items():
-            if name == node_name:
-                gnode.fonced_viewer(False)
-            else:
-                gnode.fonced_viewer(True)
+                self.update_table(inputs_dict, outputs_dict, node_name)
+
+            for name, gnode in self.pipeline_view.scene.gnodes.items():
+                if name == node_name:
+                    gnode.fonced_viewer(False)
+                else:
+                    gnode.fonced_viewer(True)
 
     def update_table(self, inputs, outputs, brick_name, init='', init_time=None, exec='', exec_time=None):
         # Filling the table
