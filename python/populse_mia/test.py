@@ -625,7 +625,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(brick_table.item(0, 4).text(),
                                                    "2022-04-05 14:22:30.298043")
         self.assertEqual(brick_table.item(0, 5).text(), "0")
-        self.assertEqual(brick_table.item(0, 6).text(), "6.0, 6.0, 6.0")
+        self.assertEqual(brick_table.item(0, 6).text(), "[6.0, 6.0, 6.0]")
         self.assertEqual(brick_table.item(0, 7).text(), "False")
         self.assertEqual(brick_table.cellWidget(0, 8).children()[1].text(),
                                   "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
