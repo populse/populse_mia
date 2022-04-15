@@ -313,13 +313,15 @@ class PipelineManagerTab(QWidget):
         self.nodeController.value_changed.connect(
             self.controller_value_changed)
 
-    def _register_node_io_in_database(self, job, node, pipeline_name='', history_id=''):
+    def _register_node_io_in_database(self, job, node, pipeline_name='',
+                                      history_id=''):
         """bla bla bla"""
 
         def _serialize_tmp(item):
             import soma_workflow.client as swc
             if item in (Undefined, [Undefined]):
-                return '<undefined'
+                #return '<undefined'
+                return '<undefined>'
             if isinstance(item, swc.TemporaryPath):
                 return '<temp>'
             raise TypeError
@@ -1676,7 +1678,7 @@ class PipelineManagerTab(QWidget):
                             except ValueError:
                                 # # id is not unique. It happens in iterations
                                 # # FIXME: we need a better way to handle UUIDs in
-                                # # iterated processes
+                                # #        iterated processes
                                 # brick_id = str(uuid.uuid4())
                                 # job.uuid = brick_id
                                 # self.brick_list[-1] = brick_id
