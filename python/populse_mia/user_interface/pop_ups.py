@@ -2656,7 +2656,7 @@ class PopUpPreferences(QDialog):
         self.findChar_line_edit = QLineEdit()
         findChar_button = QPushButton("Find")
         findChar_button.setDefault(True)
-        
+
         h_box_find = QtWidgets.QHBoxLayout()
         h_box_find.addWidget(self.findChar_line_edit)
         h_box_find.addWidget(findChar_button)
@@ -2724,7 +2724,7 @@ class PopUpPreferences(QDialog):
         This method is used when user hit the Edit CAPSUL config button (File >
         MIA preferences, Pipeline tab).
         """
-        
+
         #from capsul.api import capsul_engine
         #from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
@@ -3082,7 +3082,7 @@ class PopUpPreferences(QDialog):
                         self.wrong_path(fsl_conf, "FSL", "config file")
                         QApplication.restoreOverrideCursor()
                         return False
-                        
+
                 except Exception:
                     self.wrong_path(fsl_conf, "FSL", "config file")
                     QApplication.restoreOverrideCursor()
@@ -3094,7 +3094,7 @@ class PopUpPreferences(QDialog):
             # SPM & Matlab (license) config test
             matlab_input = self.matlab_choice.text()
             spm_input = self.spm_choice.text()
-        
+
             if ((matlab_input != "" and spm_input != "") or
                                             self.use_spm_checkbox.isChecked()):
 
@@ -3156,7 +3156,7 @@ class PopUpPreferences(QDialog):
                     self.wrong_path(spm_input, "SPM")
                     QApplication.restoreOverrideCursor()
                     return False
-            
+
             # Matlab alone config test
             if matlab_input != "" or self.use_matlab_checkbox.isChecked():
 
@@ -3199,7 +3199,7 @@ class PopUpPreferences(QDialog):
                     self.wrong_path(matlab_input, "Matlab")
                     QApplication.restoreOverrideCursor()
                     return False
-            
+
             # SPM (standalone) & Matlab (MCR) config test
             spm_input = self.spm_standalone_choice.text()
             matlab_input = self.matlab_standalone_choice.text()
@@ -3301,7 +3301,7 @@ class PopUpPreferences(QDialog):
                                       "the following issue has been detected:\n"
                                       "{}\nPlease fix this problem to avoid a "
                                       "malfunction ...".format(err))
-                            
+
                             elif err != b'':
 
                                 if "shared libraries" in str(err):
@@ -3829,7 +3829,7 @@ class PopUpPreferences(QDialog):
         else:
             self.fsl_choice.setDisabled(False)
             self.fsl_label.setDisabled(False)
-        
+
     def use_matlab_changed(self):
         """Called when the use_matlab checkbox is changed."""
 
@@ -4443,7 +4443,7 @@ class PopUpSaveProjectAs(QDialog):
                         utils.message_already_exists()
                         return
                     else:
-                        msgtext = ("Do you really want to overwrite the " 
+                        msgtext = ("Do you really want to overwrite the "
                                    + file_name + " project ?\nThis action "
                                    "delete all contents inside this folder!")
                         msg = QMessageBox()
@@ -5006,9 +5006,10 @@ class PopUpShowHistory(QDialog):
                                     pipeline = pipeline.nodes[key].process
                                     full_brick_name.pop(0)
                                     self.unitary_pipeline = True
-                    # handle case of named pipeline without being a single Pipeline node
+                    # handle cases of named pipeline/brick without being a single Pipeline node
                     # (e.g. a pipeline alone without exporting plugs)
-                    if not self.unitary_pipeline and pipeline.name != 'CustomPipeline':
+                    if (not self.unitary_pipeline and pipeline.name != 'CustomPipeline') or \
+                        (len(full_brick_name) == 2 and full_brick_name[1] == 'main'):
                         full_brick_name.pop(0)
                         self.unitary_pipeline = True
 
@@ -5023,7 +5024,7 @@ class PopUpShowHistory(QDialog):
 
                     bricks = self.find_associated_bricks(full_brick_name[0])
                     for bricks_uuids in bricks.values():
-                        for i in range(0,len(bricks_uuids)):
+                        for i in range(0, len(bricks_uuids)):
                             if bricks_uuids[i] == brick_uuid:
                                 self.uuid_idx = i
                                 break
@@ -5031,7 +5032,12 @@ class PopUpShowHistory(QDialog):
                             continue
                         break
 
-                    self.node_selected(full_brick_name[0], pipeline.nodes[full_brick_name[0]])
+                    selected_name = full_brick_name[0]
+                    try:
+                        self.node_selected(selected_name, pipeline.nodes[selected_name])
+                    except:
+                        print('\nerror in naming association brick\\pipeline, cannot select node')
+                        pass
 
         inputs = getattr(brick_row, BRICK_INPUTS)
         outputs = getattr(brick_row, BRICK_OUTPUTS)
