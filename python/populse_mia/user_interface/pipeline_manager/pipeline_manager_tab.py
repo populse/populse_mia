@@ -23,10 +23,12 @@ Contains:
 from populse_mia.data_manager.project import (BRICK_EXEC, BRICK_EXEC_TIME,
                                               BRICK_INIT, BRICK_INIT_TIME,
                                               BRICK_INPUTS, BRICK_NAME,
-                                              BRICK_OUTPUTS, COLLECTION_BRICK,
+                                              BRICK_OUTPUTS, HISTORY_PIPELINE,
+                                              HISTORY_BRICKS, COLLECTION_BRICK,
                                               COLLECTION_CURRENT,
+                                              COLLECTION_HISTORY,
                                               COLLECTION_INITIAL, TAG_BRICKS,
-                                              TAG_CHECKSUM, TAG_EXP_TYPE,
+                                              TAG_CHECKSUM, TAG_HISTORY,
                                               TAG_FILENAME, TAG_TYPE, TYPE_MAT,
                                               TYPE_NII, TYPE_TXT, TYPE_UNKNOWN)
 from populse_mia.software_properties import Config
@@ -49,9 +51,10 @@ from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import WorkflowExecutionError
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
 from capsul.pipeline import pipeline_tools
-from capsul.qt_gui.widgets.pipeline_developper_view import (
-    PipelineDeveloperView)
+from capsul.pipeline.process_iteration import ProcessIteration
 
+# MIA processes imports
+from mia_processes.bricks.tools.tools import Input_Filter
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -88,6 +91,7 @@ from traits.trait_errors import TraitError
 import traits.api as traits
 import functools
 import json
+import io
 
 
 class PipelineManagerTab(QWidget):
@@ -309,13 +313,15 @@ class PipelineManagerTab(QWidget):
         self.nodeController.value_changed.connect(
             self.controller_value_changed)
 
-    def _register_node_io_in_database(self, job, node, pipeline_name=''):
+    def _register_node_io_in_database(self, job, node, pipeline_name='',
+                                      history_id=''):
         """bla bla bla"""
 
         def _serialize_tmp(item):
             import soma_workflow.client as swc
             if item in (Undefined, [Undefined]):
-                return '<undefined'
+                #return '<undefined'
+                return '<undefined>'
             if isinstance(item, swc.TemporaryPath):
                 return '<temp>'
             raise TypeError
@@ -416,6 +422,7 @@ class PipelineManagerTab(QWidget):
                     trait = process.trait(plug_name)
                     self.add_plug_value_to_database(plug_value,
                                                     job.uuid,
+                                                    history_id,
                                                     node_name,
                                                     plug_name,
                                                     full_name,
@@ -445,13 +452,14 @@ class PipelineManagerTab(QWidget):
     #    self.previewBlock.centerOn(0, 0)
     #    self.find_process(name_item)
 
-    def add_plug_value_to_database(self, p_value, brick_id, node_name,
-                                   plug_name, full_name, job, trait, inputs,
-                                   attributes):
+    def add_plug_value_to_database(self, p_value, brick_id, history_id,
+                                   node_name, plug_name, full_name, job,
+                                   trait, inputs, attributes):
         """Add the plug value to the database.
 
         :param p_value: plug value, a file name or a list of file names (any)
-        :param brick_id: brick id in the database (str)
+        :param brick_id: brick uuid in the database (str)
+        :param history_id: history uuid in the database (str)
         :param node_name: name of the node (str)
         :param plug_name: name of the plug (str)
         :param full_name: full name of the node, including parent
@@ -478,8 +486,9 @@ class PipelineManagerTab(QWidget):
                             new_attributes[k] = v[-1]
                     else:
                         new_attributes[k] = v
-                self.add_plug_value_to_database(elt, brick_id, node_name,
-                                                plug_name, full_name, job,
+                self.add_plug_value_to_database(elt, brick_id, history_id,
+                                                node_name, plug_name,
+                                                full_name, job,
                                                 inner_trait, inputs,
                                                 new_attributes)
             return
@@ -517,12 +526,8 @@ class PipelineManagerTab(QWidget):
             self.project.session.add_document(COLLECTION_INITIAL, p_value)
 
         # Adding the new brick to the output files
-        bricks = self.project.session.get_value(
-            COLLECTION_CURRENT, p_value, TAG_BRICKS)
-        if bricks is None:
-            bricks = []
-        if brick_id not in bricks:
-            bricks.append(brick_id)
+        bricks = [brick_id]
+
         # Type tag
         filename, file_extension = os.path.splitext(p_value)
         if file_extension == '.gz':
@@ -597,7 +602,8 @@ class PipelineManagerTab(QWidget):
                 #banished_tags = set([TAG_TYPE, TAG_EXP_TYPE, TAG_BRICKS,
                 #                TAG_CHECKSUM, TAG_FILENAME])
                 banished_tags = set([TAG_TYPE, TAG_BRICKS,
-                                TAG_CHECKSUM, TAG_FILENAME])
+                                     TAG_CHECKSUM, TAG_FILENAME,
+                                     TAG_HISTORY])
                 cvalues = {field: getattr(scan, field)
                            for field in field_names
                            if field not in banished_tags}
@@ -694,9 +700,11 @@ class PipelineManagerTab(QWidget):
                         all_ivalues = {pop_up.key: all_ivalues[pop_up.key]}
 
         cvalues = {TAG_TYPE: ptype,
-                   TAG_BRICKS: bricks}
+                   TAG_BRICKS: bricks,
+                   TAG_HISTORY: history_id}
         ivalues = {TAG_TYPE: ptype,
-                   TAG_BRICKS: bricks}
+                   TAG_BRICKS: bricks,
+                   TAG_HISTORY: history_id}
 
         # from here if we still have several tags sets, we do not assign them
         # at all. Otherwise, set them.
@@ -1101,7 +1109,7 @@ class PipelineManagerTab(QWidget):
         # self.run_pipeline_action.setDisabled(True) # commented on January, 4th 2020
 
         # Cause a segmentation fault
-        # from capsul.qt_gui.widgets.pipeline_developper_view import NodeGWidget
+        # from capsul.qt_gui.widgets.pipeline_developer_view import NodeGWidget
         # for item in self.pipelineEditorTabs.get_current_editor().scene.items():
         #     if isinstance(item, NodeGWidget):
         #         self.pipelineEditorTabs.get_current_editor(
@@ -1218,8 +1226,23 @@ class PipelineManagerTab(QWidget):
         """
 
         self.postprocess_pipeline_execution()
-        self.project.cleanup_orphan_bricks()
+
+        # 2022/04/13: FIX #236
+        # 1. Now that we reconstruct all history of a file through
+        # bricks, we cannot remove bricks on the only basis that they
+        # are not referenced in files of CURRENT_COLLECTION, they may
+        # be part of a history pipeline. Then, we use instead
+        # clean_up_orphan_history function that will delete history
+        # (and inner bricks) that are not referenced in any file
+        # 2. update_data_history seems to be useless since
+        # brick tag should now always contain one brick (history is
+        # kept in a separate collection)
+        # obsolete = self.project.update_data_history(outputs)
+        # self.project.cleanup_orphan_bricks()
         self.project.cleanup_orphan_nonexisting_files()
+        self.project.cleanup_orphan_history()
+        # 2022/04/13: FIX #236 - End
+
         self.main_window.data_browser.table_data.update_table()
         if (hasattr(self.pipelineEditorTabs.get_current_editor(),
                     'initialized') and
@@ -1610,6 +1633,27 @@ class PipelineManagerTab(QWidget):
                                              '"{0}" brick.'.format(node_name))
 
         if init_result:
+            # add pipeline to the history collection
+            history_id = str(uuid.uuid4())
+            self.project.session.add_document(COLLECTION_HISTORY,
+                                              history_id)
+
+            # serialize pipeline
+            buffer = io.StringIO()
+            if pipeline.name == 'Iteration_pipeline':
+                for proc in pipeline.list_process_in_pipeline:
+                    if isinstance(proc, ProcessIteration):
+                        inner_pipeline = proc.process
+                        break
+                pipeline_tools.save_pipeline(inner_pipeline, buffer, format='xml')
+            else:
+                pipeline_tools.save_pipeline(pipeline, buffer, format='xml')
+
+            pipeline_xml = buffer.getvalue()
+            self.project.session.set_values(
+                COLLECTION_HISTORY, history_id,
+                {HISTORY_PIPELINE: pipeline_xml})
+
             # add process characteristics in the database
             # if init is otherwise OK
             for job in self.workflow.jobs:
@@ -1649,7 +1693,7 @@ class PipelineManagerTab(QWidget):
                             except ValueError:
                                 # # id is not unique. It happens in iterations
                                 # # FIXME: we need a better way to handle UUIDs in
-                                # # iterated processes
+                                # #        iterated processes
                                 # brick_id = str(uuid.uuid4())
                                 # job.uuid = brick_id
                                 # self.brick_list[-1] = brick_id
@@ -1667,7 +1711,12 @@ class PipelineManagerTab(QWidget):
                                 BRICK_INIT: "Not Done",
                                 BRICK_EXEC: "Not Done"})
 
-                            self._register_node_io_in_database(job, node, pipeline_name)
+                            self._register_node_io_in_database(job, node, pipeline_name, history_id)
+
+            # add bricklist into history collection
+            self.project.session.set_values(
+                COLLECTION_HISTORY, history_id,
+                {HISTORY_BRICKS: self.brick_list})
 
         self.register_completion_attributes(pipeline)
         print('init time:', time.time() - t0)
@@ -1884,16 +1933,13 @@ class PipelineManagerTab(QWidget):
                 {BRICK_EXEC: 'Done', BRICK_EXEC_TIME: exec_date})
 
         # now cleanup earlier history of data
-        obsolete = self.project.update_data_history(outputs)
-
+        # 2022/04/13: FIX #236
         # get obsolete bricks (done) referenced from current outputs
-        print('obsolete bricks:', obsolete)
-        self.project.cleanup_orphan_bricks(obsolete)
-        # temporarily disabled 2022/01/13 (Denis) to avoid breaking
-        # history graphs
-        #self.project.cleanup_orphan_bricks()  # modified on 4th January 2022
+        # print('obsolete bricks:', obsolete)
+        # self.project.cleanup_orphan_bricks(obsolete)
         self.project.cleanup_orphan_nonexisting_files()
-
+        self.project.cleanup_orphan_history()
+        # 2022/04/13: FIX #236 - End
         QtThreadCall().push(
             self.main_window.data_browser.table_data.update_table)
 

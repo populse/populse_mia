@@ -39,7 +39,7 @@ from PyQt5.QtWidgets import QInputDialog, QLineEdit, QMessageBox
 from capsul.api import (get_process_instance, Process, PipelineNode, Switch,
                         capsul_engine, Node)
 from capsul.pipeline.pipeline_nodes import ProcessNode
-from capsul.qt_gui.widgets.pipeline_developper_view import (
+from capsul.qt_gui.widgets.pipeline_developer_view import (
                                             NodeGWidget, PipelineDeveloperView)
 from capsul.pipeline.xml import save_xml_pipeline
 from capsul.pipeline.python_export import save_py_pipeline

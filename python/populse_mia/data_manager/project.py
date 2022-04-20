@@ -43,13 +43,15 @@ from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
 COLLECTION_CURRENT = "current"
 COLLECTION_INITIAL = "initial"
 COLLECTION_BRICK = "brick"
+COLLECTION_HISTORY = "history"
 
 # MIA tags
 TAG_CHECKSUM = "Checksum"
 TAG_TYPE = "Type"
 TAG_EXP_TYPE = "Exp Type"
 TAG_FILENAME = "FileName"
-TAG_BRICKS = "Bricks"
+TAG_BRICKS = "History"
+TAG_HISTORY = "Full history"
 CLINICAL_TAGS = ["Site", "Spectro", "MR", "PatientRef", "Pathology", "Age",
                  "Sex", "Message"]
 BRICK_ID = "ID"
@@ -60,6 +62,11 @@ BRICK_INIT = "Init"
 BRICK_EXEC = "Exec"
 BRICK_INIT_TIME = "Init Time"
 BRICK_EXEC_TIME = "Exec Time"
+
+HISTORY_ID = "ID"
+HISTORY_PIPELINE = "Pipeline xml"
+HISTORY_BRICKS = "Bricks uuid"
+
 
 TYPE_NII = "Scan"
 TYPE_MAT = "Matrix"
@@ -200,6 +207,9 @@ class Project():
             self.session.add_collection(
                 COLLECTION_BRICK, BRICK_ID, False,
                 TAG_ORIGIN_BUILTIN, None, None)
+            self.session.add_collection(
+                COLLECTION_HISTORY, HISTORY_ID, False,
+                TAG_ORIGIN_BUILTIN, None, None)
 
             # Tags manually added
             self.session.add_field(
@@ -228,6 +238,12 @@ class Project():
             self.session.add_field(COLLECTION_INITIAL, TAG_BRICKS,
                                    FIELD_TYPE_LIST_STRING, "Path bricks", True,
                                    TAG_ORIGIN_BUILTIN, None, None)
+            self.session.add_field(COLLECTION_CURRENT, TAG_HISTORY,
+                                   FIELD_TYPE_STRING, "History uuid", False,
+                                   TAG_ORIGIN_BUILTIN, None, None)
+            self.session.add_field(COLLECTION_INITIAL, TAG_HISTORY,
+                                   FIELD_TYPE_STRING, "History uuid", False,
+                                   TAG_ORIGIN_BUILTIN, None, None)
 
             self.session.add_field(COLLECTION_BRICK, BRICK_NAME,
                                    FIELD_TYPE_STRING, "Brick name", False,
@@ -250,6 +266,13 @@ class Project():
             self.session.add_field(COLLECTION_BRICK, BRICK_EXEC_TIME,
                                    FIELD_TYPE_DATETIME, "Brick exec time",
                                    False, TAG_ORIGIN_BUILTIN, None, None)
+
+            self.session.add_field(COLLECTION_HISTORY, HISTORY_PIPELINE,
+                                   FIELD_TYPE_STRING, "Pipeline XML", False,
+                                   TAG_ORIGIN_BUILTIN, None, None)
+            self.session.add_field(COLLECTION_HISTORY, HISTORY_BRICKS,
+                                   FIELD_TYPE_LIST_STRING, "Bricks list", False,
+                                   TAG_ORIGIN_BUILTIN, None, None)
 
             # Adding default tags for the clinical mode
             if config.get_use_clinical() is True:
@@ -1023,9 +1046,9 @@ class Project():
                         COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks)
 
         for bricks in scan_bricks.values():
-            obsolete.update(brick for brick in bricks if brick not in used)
+            if bricks:
+                obsolete.update(brick for brick in bricks if brick not in used)
         return obsolete
-
 
     def finished_bricks(self, engine, pipeline=None, include_done=False):
         """
@@ -1178,7 +1201,7 @@ class Project():
         if bricks is not None and not isinstance(bricks, list):
             bricks = list(bricks)
 
-        brick_docs = self.session.get_documents(
+        brick_docs = self.session.get_document(
             COLLECTION_BRICK, document_ids=bricks,
             fields=[BRICK_ID, BRICK_OUTPUTS], as_list=True)
 
@@ -1238,6 +1261,100 @@ class Project():
         obsolete, orphan_files = self.get_orphan_bricks(bricks)
         print('really orphan:', obsolete)
         for brick in obsolete:
+            print('remove obsolete brick:', brick)
+            try:
+                self.session.remove_document(COLLECTION_BRICK, brick)
+            except ValueError:
+                pass  # malformed database, the brick doesn't exist
+        for doc in orphan_files:
+            print('remove orphan file:', doc)
+            try:
+                self.session.remove_document(COLLECTION_CURRENT, doc)
+                self.session.remove_document(COLLECTION_INITIAL, doc)
+            except ValueError:
+                pass  # malformed database, the file doesn't exist
+            if os.path.exists(os.path.join(self.folder, doc)):
+                os.unlink(os.path.join(self.folder, doc))
+
+    def get_orphan_history(self):
+        """
+        """
+        orphan_hist = set()
+        orphan_bricks = set()
+        orphan_weak_files = set()
+        used_hist = set()
+
+        hist_docs = self.session.get_documents(
+            COLLECTION_HISTORY, fields=[HISTORY_ID, HISTORY_BRICKS],
+            as_list=True)
+
+        proj_dir = os.path.join(os.path.abspath(os.path.normpath(
+            self.folder)), '')
+        lp = len(proj_dir)
+
+        for hist in hist_docs:
+            hist_id = hist[0]
+            if hist_id is None:
+                continue
+            if hist[1] is None:
+                orphan_hist.add(hist_id)
+                continue
+
+            values = set()
+            for brid in hist[1]:
+                brick_doc = self.session.get_value(
+                    COLLECTION_BRICK, brid, BRICK_OUTPUTS)
+                todo = list(brick_doc.values())
+
+                while todo:
+                    value = todo.pop(0)
+                    if isinstance(value, (list, set, tuple)):
+                        todo += value
+                    elif isinstance(value, str):
+                        path = os.path.abspath(os.path.normpath(value))
+                        if path.startswith(proj_dir):
+                            value = path[lp:]
+                            values.add(value)
+
+            docs = self.session.get_documents(
+                COLLECTION_CURRENT, document_ids=list(values),
+                fields=[TAG_FILENAME, TAG_HISTORY], as_list=True)
+            used = False
+            orphan_files = set()
+            for doc in docs:
+                if doc[1] and hist_id == doc[1]:
+                    if (doc[0].startswith('scripts/')
+                        or not os.path.exists(os.path.join(self.folder,
+                                                           doc[0]))):
+                        # script files are "weak" and should not prevent
+                        # brick deletion.
+                        # non-existing files can be cleared too.
+                        orphan_files.add(doc[0])
+                        continue
+                    used = True
+                    used_hist.add(hist_id)
+                    break
+            if not used:
+                orphan_hist.add(hist_id)
+                orphan_bricks.update(hist[1])
+                orphan_weak_files.update(orphan_files)
+
+        return orphan_hist, orphan_bricks, orphan_weak_files
+
+    def cleanup_orphan_history(self):
+        """
+        Remove orphan bricks from the database
+        """
+        obs_hist, obs_bricks, orphan_files = self.get_orphan_history()
+        print('orphan histories:', obs_hist)
+        print('orphan bricks:', obs_bricks)
+        for hist in obs_hist:
+            print('remove obsolete history:', hist)
+            try:
+                self.session.remove_document(COLLECTION_HISTORY, hist)
+            except ValueError:
+                pass  # malformed database, the brick doesn't exist
+        for brick in obs_bricks:
             print('remove obsolete brick:', brick)
             try:
                 self.session.remove_document(COLLECTION_BRICK, brick)

@@ -51,6 +51,8 @@ import os
 import platform
 import shutil
 import subprocess
+
+import six
 import yaml
 from datetime import datetime
 from functools import partial
@@ -64,11 +66,13 @@ from PyQt5.QtWidgets import (
     QFormLayout, QHBoxLayout, QHeaderView, QInputDialog, QLabel, QLineEdit,
     QMessageBox, QPlainTextEdit, QPushButton, QRadioButton, QScrollArea,
     QTableWidget, QTableWidgetItem, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
-    QWidget)
+    QWidget, QSplitter)
 
 # Capsul imports
 from capsul.api import capsul_engine
+from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
+from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
 
 # Populse_db imports
 from populse_db.database import (
@@ -85,8 +89,9 @@ from populse_mia.data_manager.database_mia import (
 from populse_mia.data_manager.project import (
     BRICK_EXEC, BRICK_EXEC_TIME, BRICK_INIT, BRICK_INIT_TIME,
     BRICK_INPUTS, BRICK_NAME, BRICK_OUTPUTS, COLLECTION_BRICK,
+    HISTORY_PIPELINE, HISTORY_BRICKS, COLLECTION_HISTORY,
     COLLECTION_CURRENT, COLLECTION_INITIAL, Project, TAG_CHECKSUM, TAG_FILENAME,
-    TAG_TYPE, TYPE_MAT, TYPE_NII, TYPE_TXT, TYPE_UNKNOWN)
+    TAG_HISTORY, TAG_TYPE, TYPE_MAT, TYPE_NII, TYPE_TXT, TYPE_UNKNOWN)
 from populse_mia.software_properties import Config, verCmp
 from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.utils import utils
@@ -861,6 +866,7 @@ class PopUpCloneTag(QDialog):
 
         tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
+        tags_lists.remove(TAG_HISTORY)
         for tag in tags_lists:
             item = QtWidgets.QListWidgetItem()
             self.list_widget_tags.addItem(item)
@@ -932,6 +938,7 @@ class PopUpCloneTag(QDialog):
         return_list = []
         tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
+        tags_lists.remove(TAG_HISTORY)
         if str_search != "":
             for tag in tags_lists:
                 if str_search.upper() in tag.upper():
@@ -1661,8 +1668,9 @@ class PopUpMultipleSort(QDialog):
         """
 
         pop_up = PopUpSelectTagCountTable(
-            self.project, self.project.session.get_shown_tags(),
-            self.push_buttons[idx].text())
+                            self.project, self.project.session.get_shown_tags(),
+                            self.push_buttons[idx].text())
+
         if pop_up.exec_():
             self.push_buttons[idx].setText(pop_up.selected_tag)
             self.fill_values(idx)
@@ -2648,7 +2656,7 @@ class PopUpPreferences(QDialog):
         self.findChar_line_edit = QLineEdit()
         findChar_button = QPushButton("Find")
         findChar_button.setDefault(True)
-        
+
         h_box_find = QtWidgets.QHBoxLayout()
         h_box_find.addWidget(self.findChar_line_edit)
         h_box_find.addWidget(findChar_button)
@@ -2716,7 +2724,7 @@ class PopUpPreferences(QDialog):
         This method is used when user hit the Edit CAPSUL config button (File >
         MIA preferences, Pipeline tab).
         """
-        
+
         #from capsul.api import capsul_engine
         #from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
@@ -3074,7 +3082,7 @@ class PopUpPreferences(QDialog):
                         self.wrong_path(fsl_conf, "FSL", "config file")
                         QApplication.restoreOverrideCursor()
                         return False
-                        
+
                 except Exception:
                     self.wrong_path(fsl_conf, "FSL", "config file")
                     QApplication.restoreOverrideCursor()
@@ -3086,7 +3094,7 @@ class PopUpPreferences(QDialog):
             # SPM & Matlab (license) config test
             matlab_input = self.matlab_choice.text()
             spm_input = self.spm_choice.text()
-        
+
             if ((matlab_input != "" and spm_input != "") or
                                             self.use_spm_checkbox.isChecked()):
 
@@ -3148,7 +3156,7 @@ class PopUpPreferences(QDialog):
                     self.wrong_path(spm_input, "SPM")
                     QApplication.restoreOverrideCursor()
                     return False
-            
+
             # Matlab alone config test
             if matlab_input != "" or self.use_matlab_checkbox.isChecked():
 
@@ -3191,7 +3199,7 @@ class PopUpPreferences(QDialog):
                     self.wrong_path(matlab_input, "Matlab")
                     QApplication.restoreOverrideCursor()
                     return False
-            
+
             # SPM (standalone) & Matlab (MCR) config test
             spm_input = self.spm_standalone_choice.text()
             matlab_input = self.matlab_standalone_choice.text()
@@ -3293,7 +3301,7 @@ class PopUpPreferences(QDialog):
                                       "the following issue has been detected:\n"
                                       "{}\nPlease fix this problem to avoid a "
                                       "malfunction ...".format(err))
-                            
+
                             elif err != b'':
 
                                 if "shared libraries" in str(err):
@@ -3821,7 +3829,7 @@ class PopUpPreferences(QDialog):
         else:
             self.fsl_choice.setDisabled(False)
             self.fsl_label.setDisabled(False)
-        
+
     def use_matlab_changed(self):
         """Called when the use_matlab checkbox is changed."""
 
@@ -4435,7 +4443,7 @@ class PopUpSaveProjectAs(QDialog):
                         utils.message_already_exists()
                         return
                     else:
-                        msgtext = ("Do you really want to overwrite the " 
+                        msgtext = ("Do you really want to overwrite the "
                                    + file_name + " project ?\nThis action "
                                    "delete all contents inside this folder!")
                         msg = QMessageBox()
@@ -4818,13 +4826,13 @@ class PopUpTagSelection(QDialog):
         if str_search != "":
             for tag in self.project.session.get_fields_names(
                     COLLECTION_CURRENT):
-                if tag != TAG_CHECKSUM:
+                if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                     if str_search.upper() in tag.upper():
                         return_list.append(tag)
         else:
             for tag in self.project.session.get_fields_names(
                     COLLECTION_CURRENT):
-                if tag != TAG_CHECKSUM:
+                if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                     return_list.append(tag)
 
         for idx in range(self.list_widget_tags.count()):
@@ -4857,7 +4865,7 @@ class PopUpSelectTag(PopUpTagSelection):
 
         # Filling the list and checking the thumbnail tag
         for tag in self.project.session.get_fields_names(COLLECTION_CURRENT):
-            if tag != TAG_CHECKSUM:
+            if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                 if tag == self.config.getThumbnailTag():
@@ -4904,7 +4912,7 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
 
         self.selected_tag = None
         for tag in tags_to_display:
-            if tag != TAG_CHECKSUM:
+            if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                 if tag == tag_name_checked:
@@ -4934,7 +4942,8 @@ class PopUpShowHistory(QDialog):
     .. Methods:
         - io_value_is_scan: checks if the I/O value is a scan
         - file_clicked: called when a file is clicked
-
+        - node_selected: called when a pipeline node is clicked
+        - update_table: update the brick row at the bottom
     """
 
     def __init__(self, project, brick_uuid, scan, databrowser, main_window):
@@ -4949,158 +4958,104 @@ class PopUpShowHistory(QDialog):
 
         super().__init__()
 
-        self.setModal(True)
+        self.setModal(False)
+        self.setWindowFlags(self.windowFlags()
+                            & QtCore.Qt.WindowStaysOnBottomHint)
 
         self.databrowser = databrowser
         self.main_window = main_window
         self.project = project
-        brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
         self.setWindowTitle("History of " + scan)
 
-        layout = QVBoxLayout()
+        brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
+        full_brick_name = project.session.get_value(COLLECTION_BRICK,
+                                               brick_uuid,
+                                               BRICK_NAME).split('.')
 
-        from populse_mia.data_manager import data_history_inspect
-        # TODO: deserialize pipeline from COLLECTION_HISTORY (xml field)
-        pipeline = data_history_inspect.data_history_pipeline(scan,
-                                                              self.project)
-        if pipeline is not None:
-            from capsul.qt_gui.widgets.pipeline_developer_view \
-                import PipelineDeveloperView
-            self.pipeline_view = PipelineDeveloperView(pipeline, allow_open_controller=True)
-            self.pipeline_view.auto_dot_node_positions()
-            layout.addWidget(self.pipeline_view)
+        layout = QVBoxLayout()
+        self.splitter = QSplitter(Qt.Qt.Vertical)
 
         self.table = QTableWidget()
         self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
 
-        # Filling the table
+        history_uuid = self.project.session.get_value(
+            COLLECTION_CURRENT, scan, TAG_HISTORY)
+
+        self.unitary_pipeline = False
+        self.uuid_idx = 0
+        if history_uuid is not None:
+            self.pipeline_xml = self.project.session.get_value(
+                COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE)
+            if self.pipeline_xml is not None:
+                self.brick_list = self.project.session.get_value(
+                    COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS)
+
+                engine = Config.get_capsul_engine()
+                try:
+                    pipeline = engine.get_process_instance(self.pipeline_xml)
+                except Exception as e:
+                    pipeline = None
+
+                if pipeline is not None:
+                    # handle case of pipeline node alone --> exploded view
+                    # (e.g. a pipeline alone and plug exported)
+                    if len(pipeline.nodes) == 2:
+                        for key in pipeline.nodes.keys():
+                            if key != '':
+                                if isinstance(pipeline.nodes[key], PipelineNode):
+                                    pipeline = pipeline.nodes[key].process
+                                    full_brick_name.pop(0)
+                                    self.unitary_pipeline = True
+                    # handle cases of named pipeline/brick without being a single Pipeline node
+                    # (e.g. a pipeline alone without exporting plugs)
+                    if (not self.unitary_pipeline and pipeline.name != 'CustomPipeline') or \
+                        (len(full_brick_name) == 2 and full_brick_name[1] == 'main'):
+                        full_brick_name.pop(0)
+                        self.unitary_pipeline = True
+
+                    self.pipeline_view = PipelineDeveloperView(
+                                                     pipeline,
+                                                     allow_open_controller=False)
+                    self.pipeline_view.auto_dot_node_positions()
+                    self.splitter.addWidget(self.pipeline_view)
+                    self.pipeline_view.node_clicked.connect(self.node_selected)
+                    (self.pipeline_view.process_clicked.
+                                                    connect)(self.node_selected)
+
+                    bricks = self.find_associated_bricks(full_brick_name[0])
+                    for bricks_uuids in bricks.values():
+                        for i in range(0, len(bricks_uuids)):
+                            if bricks_uuids[i] == brick_uuid:
+                                self.uuid_idx = i
+                                break
+                        else:
+                            continue
+                        break
+
+                    selected_name = full_brick_name[0]
+                    try:
+                        self.node_selected(selected_name, pipeline.nodes[selected_name])
+                    except:
+                        print('\nerror in naming association brick\\pipeline, cannot select node')
+                        pass
+
         inputs = getattr(brick_row, BRICK_INPUTS)
         outputs = getattr(brick_row, BRICK_OUTPUTS)
-        self.table.setRowCount(1)
-        self.table.setColumnCount(5 + len(inputs) + len(outputs))
+        brick_name = getattr(brick_row, BRICK_NAME)
+        init = getattr(brick_row, BRICK_INIT)
+        init_time = getattr(brick_row, BRICK_INIT_TIME)
+        exec = getattr(brick_row, BRICK_INIT)
+        exec_time = getattr(brick_row, BRICK_INIT_TIME)
+        self.update_table(inputs, outputs, brick_name, init, init_time, exec, exec_time)
 
-        # Brick name
-        item = QTableWidgetItem()
-        item.setText(BRICK_NAME)
-        self.table.setHorizontalHeaderItem(0, item)
-        item = QTableWidgetItem()
-        item.setText(getattr(brick_row, BRICK_NAME))
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        self.table.setItem(0, 0, item)
+        self.splitter.addWidget(self.table)
 
-        # Brick init
-        item = QTableWidgetItem()
-        item.setText(BRICK_INIT)
-        self.table.setHorizontalHeaderItem(1, item)
-        item = QTableWidgetItem()
-        item.setText(getattr(brick_row, BRICK_INIT))
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        self.table.setItem(0, 1, item)
-
-        # Brick init time
-        item = QTableWidgetItem()
-        item.setText(BRICK_INIT_TIME)
-        self.table.setHorizontalHeaderItem(2, item)
-        item = QTableWidgetItem()
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        if getattr(brick_row, BRICK_INIT_TIME) is not None:
-            item.setText(str(getattr(brick_row, BRICK_INIT_TIME)))
-            self.table.setItem(0, 2, item)
-
-        # Brick execution
-        item = QTableWidgetItem()
-        item.setText(BRICK_EXEC)
-        self.table.setHorizontalHeaderItem(3, item)
-        item = QTableWidgetItem()
-        item.setText(getattr(brick_row, BRICK_EXEC))
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        self.table.setItem(0, 3, item)
-
-        # Brick execution time
-        item = QTableWidgetItem()
-        item.setText(BRICK_EXEC_TIME)
-        self.table.setHorizontalHeaderItem(4, item)
-        item = QTableWidgetItem()
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        if getattr(brick_row, BRICK_EXEC_TIME) is not None:
-            item.setText(str(getattr(brick_row, BRICK_EXEC_TIME)))
-        self.table.setItem(0, 4, item)
-
-        column = 5
-
-        # Inputs
-        for key, value in sorted(inputs.items()):
-            item = QTableWidgetItem()
-            item.setText(key)
-            self.table.setHorizontalHeaderItem(column, item)
-            if isinstance(value, list):
-                value = str(value).strip('[]')
-
-            value_scan = self.io_value_is_scan(value)
-            if value_scan is not None:
-                widget = QWidget()
-                output_layout = QVBoxLayout()
-                button = QPushButton(value_scan)
-                button.clicked.connect(self.file_clicked)
-                output_layout.addWidget(button)
-                widget.setLayout(output_layout)
-                self.table.setCellWidget(0, column, widget)
-            else:
-                item = QTableWidgetItem()
-                item.setText(str(value))
-                item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                self.table.setItem(0, column, item)
-            column += 1
-
-        # Outputs
-        for key, value in sorted(outputs.items()):
-            item = QTableWidgetItem()
-            item.setText(key)
-            self.table.setHorizontalHeaderItem(column, item)
-            value = outputs[key]
-            if isinstance(value, list):
-                sub_widget = QWidget()
-                sub_layout = QVBoxLayout()
-                for sub_value in value:
-                    value_scan = self.io_value_is_scan(sub_value)
-                    if value_scan is not None:
-                        button = QPushButton(value_scan)
-                        button.clicked.connect(self.file_clicked)
-                        sub_layout.addWidget(button)
-                    else:
-                        label = QLabel(str(sub_value))
-                        sub_layout.addWidget(label)
-                sub_widget.setLayout(sub_layout)
-                self.table.setCellWidget(0, column, sub_widget)
-            else:
-                value_scan = self.io_value_is_scan(value)
-                if value_scan is not None:
-                    widget = QWidget()
-                    output_layout = QVBoxLayout()
-                    button = QPushButton(value_scan)
-                    button.clicked.connect(self.file_clicked)
-                    output_layout.addWidget(button)
-                    widget.setLayout(output_layout)
-                    self.table.setCellWidget(0, column, widget)
-                else:
-                    item = QTableWidgetItem()
-                    item.setText(str(value))
-                    item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-                    self.table.setItem(0, column, item)
-            column += 1
-
-        self.table.verticalHeader().setMinimumSectionSize(30)
-        self.table.resizeColumnsToContents()
-        self.table.resizeRowsToContents()
-        layout.addWidget(self.table)
-
+        layout.addWidget(self.splitter)
         self.setLayout(layout)
 
         screen_resolution = QApplication.instance().desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
-        self.setMinimumHeight(round(0.5 * height))
-        self.setMinimumWidth(round(0.8 * width))
+        self.setGeometry(300, 200, round(0.6 * width), round(0.4 * height))
 
     def io_value_is_scan(self, value):
         """Checks if the I/O value is a scan.
@@ -5131,6 +5086,245 @@ class PopUpShowHistory(QDialog):
         item_to_scroll_to = self.databrowser.table_data.item(row_to_select, 0)
         self.databrowser.table_data.scrollToItem(item_to_scroll_to)
         self.close()
+
+    def find_associated_bricks(self, node_name):
+        bricks = {}
+        for uuid in self.brick_list:
+            full_brick_name = self.project.session.get_value(
+                COLLECTION_BRICK,
+                uuid,
+                BRICK_NAME)
+            list_full_brick_name = full_brick_name.split('.')
+
+            if self.unitary_pipeline:
+                list_full_brick_name.pop(0)
+
+            if list_full_brick_name[0] == node_name:
+                if full_brick_name not in bricks:
+                    bricks[full_brick_name] = [uuid]
+                else:
+                    bricks[full_brick_name].append(uuid)
+        return bricks
+
+    def find_process_from_plug(self, plug):
+        process_name = ''
+        plug_name = ''
+        if plug.output:
+            link_done = False
+            for link in plug.links_from:
+                if not link_done:
+                    link_done = True
+                    process_name += '.' + link[2].name
+                    plug_name = link[1]
+                    if isinstance(link[2], PipelineNode):
+                        sub_process_name, plug_name = \
+                            self.find_process_from_plug(link[2].plugs[link[1]])
+                        process_name += sub_process_name
+        else:
+            link_done = False
+            for link in plug.links_to:
+                if not link_done:
+                    link_done = True
+                    process_name += '.' + link[2].name
+                    plug_name = link[1]
+                    if isinstance(link[2], PipelineNode):
+                        sub_process_name, plug_name = \
+                            self.find_process_from_plug(link[2].plugs[link[1]])
+                        process_name += sub_process_name
+        return process_name, plug_name
+
+    def node_selected(self, node_name, process):
+        """Emit a signal when a node is clicked.
+
+        :param node_name: node name
+        :param process: process of the corresponding node
+        """
+
+        if hasattr(process, 'pipeline_node'):
+            process = process.pipeline_node
+
+        bricks = self.find_associated_bricks(node_name)
+
+        if bricks:
+            if len(bricks) == 1:
+                brick_row = self.project.session.get_document(COLLECTION_BRICK,
+                                                              next(iter(bricks.values()))[self.uuid_idx])
+                inputs = getattr(brick_row, BRICK_INPUTS)
+                outputs = getattr(brick_row, BRICK_OUTPUTS)
+                brick_name = getattr(brick_row, BRICK_NAME)
+                init = getattr(brick_row, BRICK_INIT)
+                init_time = getattr(brick_row, BRICK_INIT_TIME)
+                exec = getattr(brick_row, BRICK_INIT)
+                exec_time = getattr(brick_row, BRICK_INIT_TIME)
+                self.update_table(inputs, outputs, brick_name, init, init_time, exec, exec_time)
+            else:
+                # subpipeline case
+                inputs_dict = {}
+                outputs_dict = {}
+                if isinstance(process, PipelineNode):
+                    for plug_name, plug in process.plugs.items():
+                        if plug.activated:
+                            process_name, inner_plug_name = self.find_process_from_plug(plug)
+                            for uuid in bricks.values():
+                                full_brick_name = self.project.session.get_value(
+                                    COLLECTION_BRICK,
+                                    uuid[0],
+                                    BRICK_NAME)
+                                if full_brick_name == node_name + process_name:
+                                    if plug.output:
+                                        plugs = self.project.session.get_value(
+                                            COLLECTION_BRICK,
+                                            uuid[self.uuid_idx],
+                                            BRICK_OUTPUTS)
+                                        outputs_dict[plug_name] = plugs[inner_plug_name]
+                                    else:
+                                        plugs = self.project.session.get_value(
+                                            COLLECTION_BRICK,
+                                            uuid[self.uuid_idx],
+                                            BRICK_INPUTS)
+                                        inputs_dict[plug_name] = plugs[inner_plug_name]
+
+                self.update_table(inputs_dict, outputs_dict, node_name)
+
+            for name, gnode in self.pipeline_view.scene.gnodes.items():
+                if name == node_name:
+                    gnode.fonced_viewer(False)
+                else:
+                    gnode.fonced_viewer(True)
+
+    def update_table(self, inputs, outputs, brick_name, init='', init_time=None, exec='', exec_time=None):
+        # Filling the table
+        self.table.removeRow(0)
+        self.table.setRowCount(1)
+        nbColumn = 1
+        if init != '':
+            nbColumn += 2
+        if exec != '':
+            nbColumn += 2
+
+        self.table.setColumnCount(nbColumn + len(inputs) + len(outputs))
+
+        # Brick name
+        item_idx = 0
+        item = QTableWidgetItem()
+        item.setText(BRICK_NAME)
+        self.table.setHorizontalHeaderItem(item_idx, item)
+        item = QTableWidgetItem()
+        item.setText(brick_name)
+        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+        self.table.setItem(0, item_idx, item)
+        item_idx += 1
+
+        # Brick init
+        if init != '':
+            item = QTableWidgetItem()
+            item.setText(BRICK_INIT)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setText(init)
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
+
+            # Brick init time
+            item = QTableWidgetItem()
+            item.setText(BRICK_INIT_TIME)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            if init_time is not None:
+                item.setText(str(init_time))
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
+
+        # Brick execution
+        if init != '':
+            item = QTableWidgetItem()
+            item.setText(BRICK_EXEC)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setText(exec)
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
+
+            # Brick execution time
+            item = QTableWidgetItem()
+            item.setText(BRICK_EXEC_TIME)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            item = QTableWidgetItem()
+            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            if exec_time is not None:
+                item.setText(str(exec_time))
+            self.table.setItem(0, item_idx, item)
+            item_idx += 1
+
+        # Inputs
+        for key, value in sorted(inputs.items()):
+            item = QTableWidgetItem()
+            item.setText(key)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            if isinstance(value, list):
+                #value = str(value).strip('[]')
+                value = str(value)
+
+            value_scan = self.io_value_is_scan(value)
+            if value_scan is not None:
+                widget = QWidget()
+                output_layout = QVBoxLayout()
+                button = QPushButton(value_scan)
+                button.clicked.connect(self.file_clicked)
+                output_layout.addWidget(button)
+                widget.setLayout(output_layout)
+                self.table.setCellWidget(0, item_idx, widget)
+            else:
+                item = QTableWidgetItem()
+                item.setText(str(value))
+                item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.table.setItem(0, item_idx, item)
+            item_idx += 1
+
+        # Outputs
+        for key, value in sorted(outputs.items()):
+            item = QTableWidgetItem()
+            item.setText(key)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+            value = outputs[key]
+            if isinstance(value, list):
+                sub_widget = QWidget()
+                sub_layout = QVBoxLayout()
+                for sub_value in value:
+                    value_scan = self.io_value_is_scan(sub_value)
+                    if value_scan is not None:
+                        button = QPushButton(value_scan)
+                        button.clicked.connect(self.file_clicked)
+                        sub_layout.addWidget(button)
+                    else:
+                        label = QLabel(str(sub_value))
+                        sub_layout.addWidget(label)
+                sub_widget.setLayout(sub_layout)
+                self.table.setCellWidget(0, item_idx, sub_widget)
+            else:
+                value_scan = self.io_value_is_scan(value)
+                if value_scan is not None:
+                    widget = QWidget()
+                    output_layout = QVBoxLayout()
+                    button = QPushButton(value_scan)
+                    button.clicked.connect(self.file_clicked)
+                    output_layout.addWidget(button)
+                    widget.setLayout(output_layout)
+                    self.table.setCellWidget(0, item_idx, widget)
+                else:
+                    item = QTableWidgetItem()
+                    item.setText(str(value))
+                    item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+                    self.table.setItem(0, item_idx, item)
+            item_idx += 1
+
+        self.table.verticalHeader().setMinimumSectionSize(30)
+        self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()
 
 
 class PopUpVisualizedTags(QWidget):
@@ -5235,7 +5429,7 @@ class PopUpVisualizedTags(QWidget):
                              # the tags on the left (invisible tags)
 
         for tag in project.session.get_fields_names(COLLECTION_CURRENT):
-            if tag != TAG_CHECKSUM and tag != TAG_FILENAME:
+            if tag != TAG_CHECKSUM and tag != TAG_FILENAME and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 if tag not in self.visualized_tags:
                     # Tag not visible: left side

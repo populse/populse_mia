@@ -44,6 +44,7 @@ from capsul.pipeline.pipeline_nodes import PipelineNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.qt_gui.widgets.attributed_process_widget import (
                                                         AttributedProcessWidget)
+from capsul.attributes.completion_engine import ProcessCompletionEngine
 
 # Populse_MIA imports
 from populse_mia.data_manager.filter import Filter
@@ -479,6 +480,10 @@ class CapsulNodeController(QWidget):
 
         userlevel = Config().get_user_level()
         self.process = process
+
+        # force initializing the completion engine
+        ProcessCompletionEngine.get_completion_engine(process)
+
         self.process_widget = AttributedProcessWidget(
             process, override_control_types={
                 'File': type_editors.PopulseFileControlWidget,
