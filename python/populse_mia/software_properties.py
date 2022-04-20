@@ -389,7 +389,9 @@ class Config:
             m['config_id'] = 'fsl'
             m['config_environment'] = 'global'
             m['config'] = fsl_config
-            m['directory'] = os.path.dirname(fsl_config)
+            m['directory'] = os.path.dirname(
+                os.path.dirname(
+                    os.path.dirname(fsl_config)))
 
         # AFNI
         if use_afni:
