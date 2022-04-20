@@ -1589,7 +1589,7 @@ class TableDataBrowser(QTableWidget):
                     col_type = tag_types[column]
                     current_value = scan[current_tag]
                     # The scan has a value for the tag
-                    if current_value is not None:
+                    if current_value:
                         if current_tag != TAG_BRICKS:
                             set_item_data(
                                 item, current_value,
@@ -2174,7 +2174,8 @@ class TableDataBrowser(QTableWidget):
         brick_uuid = self.bricks[self.sender()]
         self.brick_history_popup = PopUpShowHistory(
             self.project, brick_uuid, scan, self.data_browser,
-            self.data_browser.parent)
+            self.data_browser.main_window)
+
         self.brick_history_popup.show()
 
     def sort_column(self, order):

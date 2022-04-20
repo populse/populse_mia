@@ -51,6 +51,10 @@ from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import WorkflowExecutionError
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
 from capsul.pipeline import pipeline_tools
+from capsul.pipeline.process_iteration import ProcessIteration
+
+# MIA processes imports
+from mia_processes.bricks.tools.tools import Input_Filter
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -309,13 +313,15 @@ class PipelineManagerTab(QWidget):
         self.nodeController.value_changed.connect(
             self.controller_value_changed)
 
-    def _register_node_io_in_database(self, job, node, pipeline_name='', history_id=''):
+    def _register_node_io_in_database(self, job, node, pipeline_name='',
+                                      history_id=''):
         """bla bla bla"""
 
         def _serialize_tmp(item):
             import soma_workflow.client as swc
             if item in (Undefined, [Undefined]):
-                return '<undefined'
+                #return '<undefined'
+                return '<undefined>'
             if isinstance(item, swc.TemporaryPath):
                 return '<temp>'
             raise TypeError
@@ -1220,8 +1226,23 @@ class PipelineManagerTab(QWidget):
         """
 
         self.postprocess_pipeline_execution()
-        self.project.cleanup_orphan_bricks()
+
+        # 2022/04/13: FIX #236
+        # 1. Now that we reconstruct all history of a file through
+        # bricks, we cannot remove bricks on the only basis that they
+        # are not referenced in files of CURRENT_COLLECTION, they may
+        # be part of a history pipeline. Then, we use instead
+        # clean_up_orphan_history function that will delete history
+        # (and inner bricks) that are not referenced in any file
+        # 2. update_data_history seems to be useless since
+        # brick tag should now always contain one brick (history is
+        # kept in a separate collection)
+        # obsolete = self.project.update_data_history(outputs)
+        # self.project.cleanup_orphan_bricks()
         self.project.cleanup_orphan_nonexisting_files()
+        self.project.cleanup_orphan_history()
+        # 2022/04/13: FIX #236 - End
+
         self.main_window.data_browser.table_data.update_table()
         if (hasattr(self.pipelineEditorTabs.get_current_editor(),
                     'initialized') and
@@ -1619,7 +1640,15 @@ class PipelineManagerTab(QWidget):
 
             # serialize pipeline
             buffer = io.StringIO()
-            pipeline_tools.save_pipeline(pipeline, buffer, format='xml')
+            if pipeline.name == 'Iteration_pipeline':
+                for proc in pipeline.list_process_in_pipeline:
+                    if isinstance(proc, ProcessIteration):
+                        inner_pipeline = proc.process
+                        break
+                pipeline_tools.save_pipeline(inner_pipeline, buffer, format='xml')
+            else:
+                pipeline_tools.save_pipeline(pipeline, buffer, format='xml')
+
             pipeline_xml = buffer.getvalue()
             self.project.session.set_values(
                 COLLECTION_HISTORY, history_id,
@@ -1664,7 +1693,7 @@ class PipelineManagerTab(QWidget):
                             except ValueError:
                                 # # id is not unique. It happens in iterations
                                 # # FIXME: we need a better way to handle UUIDs in
-                                # # iterated processes
+                                # #        iterated processes
                                 # brick_id = str(uuid.uuid4())
                                 # job.uuid = brick_id
                                 # self.brick_list[-1] = brick_id
@@ -1904,16 +1933,13 @@ class PipelineManagerTab(QWidget):
                 {BRICK_EXEC: 'Done', BRICK_EXEC_TIME: exec_date})
 
         # now cleanup earlier history of data
-        obsolete = self.project.update_data_history(outputs)
-
+        # 2022/04/13: FIX #236
         # get obsolete bricks (done) referenced from current outputs
-        print('obsolete bricks:', obsolete)
-        self.project.cleanup_orphan_bricks(obsolete)
-        # temporarily disabled 2022/01/13 (Denis) to avoid breaking
-        # history graphs
-        #self.project.cleanup_orphan_bricks()  # modified on 4th January 2022
+        # print('obsolete bricks:', obsolete)
+        # self.project.cleanup_orphan_bricks(obsolete)
         self.project.cleanup_orphan_nonexisting_files()
-
+        self.project.cleanup_orphan_history()
+        # 2022/04/13: FIX #236 - End
         QtThreadCall().push(
             self.main_window.data_browser.table_data.update_table)
 
