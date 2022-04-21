@@ -1570,7 +1570,7 @@ class TableDataBrowser(QTableWidget):
         tag_types = {field.field_name: field.field_type
                      for field in dbs.get_fields(COLLECTION_CURRENT)}
         tag_types = [tag_types[tag] for tag in tags]
-
+###################################################################################################################################
         for scan in scans:
             for column, current_tag in enumerate(tags):
                 idx += 1
@@ -1640,7 +1640,7 @@ class TableDataBrowser(QTableWidget):
                 self.setItem(row, column, item)
 
             row += 1
-
+###################################################################################################################################
         # We apply the saved sort when the project is opened or after the
         # tab is changed
         # Saved sort applied if it exists
@@ -1800,49 +1800,147 @@ class TableDataBrowser(QTableWidget):
         :param list_tags: list of the tags on which to sort the documents
         :param order: "Ascending" or "Descending"
         """
-
+##########################################################################################
         self.itemChanged.disconnect()
-
         list_tags_name = list_tags
         list_tags = []
+
         for tag_name in list_tags_name:
-            list_tags.append(self.project.session.get_field(
-                COLLECTION_CURRENT, tag_name))
+            list_tags.append(self.project.session.get_field(COLLECTION_CURRENT,
+                                                            tag_name))
         list_sort = []
+
         for scan in self.scans_to_visualize:
             tags_value = []
+
             for tag in list_tags:
                 current_value = str(self.project.session.get_value(
-                    COLLECTION_CURRENT, scan, tag.field_name))
+                                                             COLLECTION_CURRENT,
+                                                             scan,
+                                                             tag.field_name))
+
                 if current_value is not None:
                     tags_value.append(current_value)
+
                 else:
                     tags_value.append(not_defined_value)
+
             list_sort.append(tags_value)
 
         if order == "Descending":
             self.scans_to_visualize = [x for _, x in sorted(zip(
-                list_sort, self.scans_to_visualize), reverse=True)]
+                                                       list_sort,
+                                                       self.scans_to_visualize),
+                                                            reverse=True)]
+
         else:
             self.scans_to_visualize = [x for _, x in sorted(zip(
-                list_sort, self.scans_to_visualize))]
+                                                      list_sort,
+                                                      self.scans_to_visualize))]
 
         # Table updated
         self.setSortingEnabled(False)
+
         for row in range(0, self.rowCount()):
             scan = self.scans_to_visualize[row]
             old_row = self.get_scan_row(scan)
+
             if old_row != row:
+
                 for column in range(0, self.columnCount()):
-                    item_to_move = self.takeItem(old_row, column)
-                    item_wrong_row = self.takeItem(row, column)
-                    self.setItem(row, column, item_to_move)
-                    self.setItem(old_row, column, item_wrong_row)
+
+                    if self.horizontalHeaderItem(column).text() == TAG_BRICKS:
+                        widget_to_move = self.cellWidget(old_row, column)
+                        item_to_move = self.takeItem(old_row, column)
+
+                        widget_wrong_row = self.cellWidget(row, column)
+                        item_wrong_row = self.takeItem(row, column)
+
+                        if widget_to_move:
+                            widget = QWidget()
+                            widget.moveToThread(QApplication.instance(
+                                                                     ).thread())
+                            layout = QVBoxLayout()
+                            cur_val = self.project.session.get_value(
+                                                             COLLECTION_CURRENT,
+                                                             scan,
+                                                             TAG_BRICKS)
+                            brick_uuid = cur_val[0]
+                            brick_name = self.project.session.get_value(
+                                COLLECTION_BRICK, brick_uuid, BRICK_NAME)
+
+                            if brick_name:
+                                brick_name_button = QPushButton(brick_name)
+                                brick_name_button.moveToThread(
+                                    QApplication.instance().thread())
+
+                                for key, value in self.bricks.items():
+                                    if value == brick_uuid:
+                                        self.bricks[
+                                            brick_name_button] = self.bricks.pop(
+                                            key)
+
+                                brick_name_button.clicked.connect(
+                                    partial(self.show_brick_history,
+                                            scan))
+                                layout.addWidget(brick_name_button)
+                            widget.setLayout(layout)
+                            self.setCellWidget(row, column, widget)
+                            self.setItem(row, column, item_to_move)
+
+                        else:
+                            #self.setCellWidget(row, column, widget_to_move)
+                            self.setCellWidget(row, column, None)
+                            set_item_data(item_to_move, "", FIELD_TYPE_STRING)
+                            item_to_move.setFlags(item_to_move.flags() & ~Qt.ItemIsEditable)
+                            self.setItem(row, column, item_to_move)
+
+                        if widget_wrong_row:
+                            widget = QWidget()
+                            widget.moveToThread(QApplication.instance(
+                            ).thread())
+                            layout = QVBoxLayout()
+                            cur_val = self.project.session.get_value(
+                                                             COLLECTION_CURRENT,
+                                                             self.item(old_row, 0).text(),
+                                                             TAG_BRICKS)
+                            brick_uuid = cur_val[0]
+                            brick_name = self.project.session.get_value(
+                                COLLECTION_BRICK, brick_uuid, BRICK_NAME)
+
+                            if brick_name:
+                                brick_name_button = QPushButton(brick_name)
+                                brick_name_button.moveToThread(
+                                    QApplication.instance().thread())
+
+                                for key, value in self.bricks.items():
+                                    if value == brick_uuid:
+                                        self.bricks[brick_name_button] = self.bricks.pop(key)
+
+                                brick_name_button.clicked.connect(
+                                    partial(self.show_brick_history,
+                                            self.item(old_row, 0).text()))
+                                layout.addWidget(brick_name_button)
+                            widget.setLayout(layout)
+                            self.setCellWidget(old_row, column, widget)
+                            self.setItem(old_row, column, item_wrong_row)
+
+                        else:
+                            self.setCellWidget(old_row, column, None)
+                            set_item_data(item_wrong_row, "", FIELD_TYPE_STRING)
+                            item_wrong_row.setFlags(item_wrong_row.flags() & ~Qt.ItemIsEditable)
+                            self.setItem(old_row, column, item_wrong_row)
+
+                    else:
+                        item_to_move = self.takeItem(old_row, column)
+                        item_wrong_row = self.takeItem(row, column)
+                        self.setItem(row, column, item_to_move)
+                        self.setItem(old_row, column, item_wrong_row)
+
         self.itemChanged.connect(self.change_cell_color)
         self.horizontalHeader().setSortIndicator(-1, 0)
         self.itemChanged.disconnect()
         self.setSortingEnabled(True)
-
         self.itemChanged.connect(self.change_cell_color)
 
     def multiple_sort_pop_up(self):
