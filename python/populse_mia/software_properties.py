@@ -390,8 +390,8 @@ class Config:
             m['config_environment'] = 'global'
             m['config'] = fsl_config
             m['directory'] = os.path.dirname(
-                os.path.dirname(
-                    os.path.dirname(fsl_config)))
+                                    os.path.dirname(
+                                           os.path.dirname(fsl_config)))
 
         # AFNI
         if use_afni:
@@ -1041,12 +1041,22 @@ class Config:
                 self.set_fsl_config(fsl_conf_path)
                 self.set_use_fsl(True)
 
-            # if only the directory parameter has been set, let's try using
-            # the config parameter = directory/fsl.sh:
+            # If only the directory parameter has been set, let's try using
+            # the config parameter = directory/etc/fslconf/fsl.sh:
             elif fsl_dir_path:
-                use_fsl = True
-                self.set_fsl_config(os.path.join(fsl_dir_path, 'fsl.sh'))
-                self.set_use_fsl(True)
+                fsl_conf = os.path.join(fsl_dir_path, 'etc', 'fslconf','fsl.sh')
+
+                if os.path.isfile(fsl_conf):
+                    use_fsl = True
+                    self.set_fsl_config(fsl_conf)
+                    self.set_use_fsl(True)
+
+                else:
+                    print('\nThe automatic determination of the configuration '
+                          'file from the directory known for fsl ({}) did not '
+                          'work. FSL is not correctly defined in the '
+                          'preferences (see File > Mia Preferences) '
+                          '...'.format(fsl_dir_path))
 
         if use_fsl is False:
             self.set_use_fsl(False)
