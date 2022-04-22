@@ -1942,6 +1942,8 @@ class TableDataBrowser(QTableWidget):
         self.itemChanged.disconnect()
         self.setSortingEnabled(True)
         self.itemChanged.connect(self.change_cell_color)
+        self.resizeRowsToContents()
+        self.resizeColumnsToContents()
 
     def multiple_sort_pop_up(self):
         """Display the multiple sort pop-up."""
