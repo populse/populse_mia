@@ -18,5 +18,5 @@ _________________________________
 - test.py is cleaned (30/03/2022)
 
 **In python/populse_mia/utils:**
-- __init__.py is cleaned
+- \_\_init__.py is cleaned
 - utils.py is cleaned
