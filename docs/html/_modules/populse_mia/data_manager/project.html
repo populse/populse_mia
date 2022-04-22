@@ -1,22 +1,32 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 2.0.0-dev+37a91841 documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>populse_mia.data_manager.project &#8212; populse_mia 2.0.0-dev+51df3533 documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.0.0-dev+51df3533',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
-  </head><body>
+  </head>
+  <body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.0.0-dev+37a91841 documentation</span></a></h1>
+          <span>populse_mia 2.0.0-dev+51df3533 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -26,7 +36,7 @@
         </p>
 
       </div>
-      <div class="content" role="main">
+      <div class="content">
         
         
   <h1>Source code for populse_mia.data_manager.project</h1><div class="highlight"><pre>
@@ -49,39 +59,41 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">verCmp</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.filter</span> <span class="k">import</span> <span class="n">Filter</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="k">import</span> <span class="n">set_item_data</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">verCmp</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.filter</span> <span class="kn">import</span> <span class="n">Filter</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DatabaseMIA</span><span class="p">,</span> <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="n">TAG_ORIGIN_USER</span><span class="p">)</span>
 
 <span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_JSON</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_INTEGER</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="k">import</span> <span class="n">Pipeline</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="k">import</span> <span class="n">pipeline_tools</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="k">import</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">ProcessNode</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="kn">import</span> <span class="n">pipeline_tools</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">ProcessNode</span>
 
 <span class="n">COLLECTION_CURRENT</span> <span class="o">=</span> <span class="s2">&quot;current&quot;</span>
 <span class="n">COLLECTION_INITIAL</span> <span class="o">=</span> <span class="s2">&quot;initial&quot;</span>
 <span class="n">COLLECTION_BRICK</span> <span class="o">=</span> <span class="s2">&quot;brick&quot;</span>
+<span class="n">COLLECTION_HISTORY</span> <span class="o">=</span> <span class="s2">&quot;history&quot;</span>
 
 <span class="c1"># MIA tags</span>
 <span class="n">TAG_CHECKSUM</span> <span class="o">=</span> <span class="s2">&quot;Checksum&quot;</span>
 <span class="n">TAG_TYPE</span> <span class="o">=</span> <span class="s2">&quot;Type&quot;</span>
 <span class="n">TAG_EXP_TYPE</span> <span class="o">=</span> <span class="s2">&quot;Exp Type&quot;</span>
 <span class="n">TAG_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;FileName&quot;</span>
-<span class="n">TAG_BRICKS</span> <span class="o">=</span> <span class="s2">&quot;Bricks&quot;</span>
+<span class="n">TAG_BRICKS</span> <span class="o">=</span> <span class="s2">&quot;History&quot;</span>
+<span class="n">TAG_HISTORY</span> <span class="o">=</span> <span class="s2">&quot;Full history&quot;</span>
 <span class="n">CLINICAL_TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Site&quot;</span><span class="p">,</span> <span class="s2">&quot;Spectro&quot;</span><span class="p">,</span> <span class="s2">&quot;MR&quot;</span><span class="p">,</span> <span class="s2">&quot;PatientRef&quot;</span><span class="p">,</span> <span class="s2">&quot;Pathology&quot;</span><span class="p">,</span> <span class="s2">&quot;Age&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;Sex&quot;</span><span class="p">,</span> <span class="s2">&quot;Message&quot;</span><span class="p">]</span>
 <span class="n">BRICK_ID</span> <span class="o">=</span> <span class="s2">&quot;ID&quot;</span>
@@ -92,6 +104,11 @@
 <span class="n">BRICK_EXEC</span> <span class="o">=</span> <span class="s2">&quot;Exec&quot;</span>
 <span class="n">BRICK_INIT_TIME</span> <span class="o">=</span> <span class="s2">&quot;Init Time&quot;</span>
 <span class="n">BRICK_EXEC_TIME</span> <span class="o">=</span> <span class="s2">&quot;Exec Time&quot;</span>
+
+<span class="n">HISTORY_ID</span> <span class="o">=</span> <span class="s2">&quot;ID&quot;</span>
+<span class="n">HISTORY_PIPELINE</span> <span class="o">=</span> <span class="s2">&quot;Pipeline xml&quot;</span>
+<span class="n">HISTORY_BRICKS</span> <span class="o">=</span> <span class="s2">&quot;Bricks uuid&quot;</span>
+
 
 <span class="n">TYPE_NII</span> <span class="o">=</span> <span class="s2">&quot;Scan&quot;</span>
 <span class="n">TYPE_MAT</span> <span class="o">=</span> <span class="s2">&quot;Matrix&quot;</span>
@@ -136,7 +153,7 @@
 <span class="sd">        - unsaveModifications: unsaves the pending operations of the project</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Project.__init__"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_root_folder</span><span class="p">,</span> <span class="n">new_project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_root_folder</span><span class="p">,</span> <span class="n">new_project</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the project class.</span>
 
 <span class="sd">        :param project_root_folder: project&#39;s path</span>
@@ -232,6 +249,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span>
                 <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">BRICK_ID</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span>
+                <span class="n">COLLECTION_HISTORY</span><span class="p">,</span> <span class="n">HISTORY_ID</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="c1"># Tags manually added</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
@@ -260,6 +280,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span>
                                    <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="s2">&quot;Path bricks&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
                                    <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_HISTORY</span><span class="p">,</span>
+                                   <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="s2">&quot;History uuid&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">TAG_HISTORY</span><span class="p">,</span>
+                                   <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="s2">&quot;History uuid&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">,</span>
                                    <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="s2">&quot;Brick name&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
@@ -283,6 +309,13 @@
                                    <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span> <span class="s2">&quot;Brick exec time&quot;</span><span class="p">,</span>
                                    <span class="kc">False</span><span class="p">,</span> <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">COLLECTION_HISTORY</span><span class="p">,</span> <span class="n">HISTORY_PIPELINE</span><span class="p">,</span>
+                                   <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="s2">&quot;Pipeline XML&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">COLLECTION_HISTORY</span><span class="p">,</span> <span class="n">HISTORY_BRICKS</span><span class="p">,</span>
+                                   <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="s2">&quot;Bricks list&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
             <span class="c1"># Adding default tags for the clinical mode</span>
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_clinical</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">clinical_tag</span> <span class="ow">in</span> <span class="n">CLINICAL_TAGS</span><span class="p">:</span>
@@ -304,7 +337,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">undos</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redos</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_filters</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_filters</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Project.add_clinical_tags"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.add_clinical_tags">[docs]</a>    <span class="k">def</span> <span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add new clinical tags to the project.</span>
@@ -390,7 +423,7 @@
 <span class="sd">        :returns: Return the name typed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span>
+        <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span>
 
         <span class="n">text</span><span class="p">,</span> <span class="n">ok_pressed</span> <span class="o">=</span> <span class="n">QInputDialog</span><span class="o">.</span><span class="n">getText</span><span class="p">(</span>
             <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Save a filter&quot;</span><span class="p">,</span> <span class="s2">&quot;Filter name: &quot;</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -479,7 +512,7 @@
 <span class="sd">            - modified_visibilities</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># To avoid circular imports</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
             <span class="n">not_defined_value</span><span class="p">)</span>
 
         <span class="c1"># We can redo if we have an action to make again</span>
@@ -654,7 +687,7 @@
 <span class="sd">        :param custom_filters: The customized filter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QMessageBox</span>
+        <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QMessageBox</span>
 
         <span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">nots</span><span class="p">)</span> <span class="o">=</span> <span class="n">custom_filters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
@@ -782,7 +815,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># To avoid circular imports</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
             <span class="n">not_defined_value</span><span class="p">)</span>
 
         <span class="c1"># We can undo if we have an action to revert</span>
@@ -947,7 +980,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">QCoreApplication</span>
+            <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span>
 
             <span class="n">app</span> <span class="o">=</span> <span class="n">QCoreApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span> <span class="p">:</span>
@@ -1014,7 +1047,7 @@
 <span class="sd">        :return: history (dict)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">data_history_inspect</span>
+        <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data_history_inspect</span>
 
         <span class="k">return</span> <span class="n">data_history_inspect</span><span class="o">.</span><span class="n">get_data_history</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
@@ -1055,9 +1088,9 @@
                         <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">new_bricks</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">bricks</span> <span class="ow">in</span> <span class="n">scan_bricks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">obsolete</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">brick</span> <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="n">bricks</span> <span class="k">if</span> <span class="n">brick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bricks</span><span class="p">:</span>
+                <span class="n">obsolete</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">brick</span> <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="n">bricks</span> <span class="k">if</span> <span class="n">brick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obsolete</span></div>
-
 
 <div class="viewcode-block" id="Project.finished_bricks"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.finished_bricks">[docs]</a>    <span class="k">def</span> <span class="nf">finished_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_done</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1118,7 +1151,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">soma_workflow.client</span> <span class="k">as</span> <span class="nn">swclient</span>
-        <span class="kn">from</span> <span class="nn">soma_workflow</span> <span class="k">import</span> <span class="n">constants</span>
+        <span class="kn">from</span> <span class="nn">soma_workflow</span> <span class="kn">import</span> <span class="n">constants</span>
 
         <span class="n">swm</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;SomaWorkflowConfig&#39;</span><span class="p">]</span>
         <span class="n">swm</span><span class="o">.</span><span class="n">connect_resource</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">connected_to</span><span class="p">())</span>
@@ -1210,7 +1243,7 @@
         <span class="k">if</span> <span class="n">bricks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bricks</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">bricks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bricks</span><span class="p">)</span>
 
-        <span class="n">brick_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span>
+        <span class="n">brick_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
             <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">document_ids</span><span class="o">=</span><span class="n">bricks</span><span class="p">,</span>
             <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">,</span> <span class="n">BRICK_OUTPUTS</span><span class="p">],</span> <span class="n">as_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -1285,6 +1318,100 @@
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">doc</span><span class="p">)):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">doc</span><span class="p">))</span></div>
 
+<div class="viewcode-block" id="Project.get_orphan_history"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_history">[docs]</a>    <span class="k">def</span> <span class="nf">get_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">orphan_hist</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">orphan_bricks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">orphan_weak_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">used_hist</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="n">hist_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span>
+            <span class="n">COLLECTION_HISTORY</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">HISTORY_ID</span><span class="p">,</span> <span class="n">HISTORY_BRICKS</span><span class="p">],</span>
+            <span class="n">as_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">hist</span> <span class="ow">in</span> <span class="n">hist_docs</span><span class="p">:</span>
+            <span class="n">hist_id</span> <span class="o">=</span> <span class="n">hist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">hist_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">hist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">orphan_hist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hist_id</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">brid</span> <span class="ow">in</span> <span class="n">hist</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">brick_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
+                    <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">brid</span><span class="p">,</span> <span class="n">BRICK_OUTPUTS</span><span class="p">)</span>
+                <span class="n">todo</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">brick_doc</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+                <span class="k">while</span> <span class="n">todo</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">todo</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">set</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                        <span class="n">todo</span> <span class="o">+=</span> <span class="n">value</span>
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
+                            <span class="n">value</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="n">lp</span><span class="p">:]</span>
+                            <span class="n">values</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="n">docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span>
+                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">document_ids</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">),</span>
+                <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">,</span> <span class="n">TAG_HISTORY</span><span class="p">],</span> <span class="n">as_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">used</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">orphan_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">hist_id</span> <span class="o">==</span> <span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;scripts/&#39;</span><span class="p">)</span>
+                        <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
+                                                           <span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))):</span>
+                        <span class="c1"># script files are &quot;weak&quot; and should not prevent</span>
+                        <span class="c1"># brick deletion.</span>
+                        <span class="c1"># non-existing files can be cleared too.</span>
+                        <span class="n">orphan_files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="k">continue</span>
+                    <span class="n">used</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">used_hist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hist_id</span><span class="p">)</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">used</span><span class="p">:</span>
+                <span class="n">orphan_hist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hist_id</span><span class="p">)</span>
+                <span class="n">orphan_bricks</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">hist</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">orphan_weak_files</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">orphan_files</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">orphan_hist</span><span class="p">,</span> <span class="n">orphan_bricks</span><span class="p">,</span> <span class="n">orphan_weak_files</span></div>
+
+<div class="viewcode-block" id="Project.cleanup_orphan_history"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.cleanup_orphan_history">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove orphan bricks from the database</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obs_hist</span><span class="p">,</span> <span class="n">obs_bricks</span><span class="p">,</span> <span class="n">orphan_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_history</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;orphan histories:&#39;</span><span class="p">,</span> <span class="n">obs_hist</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;orphan bricks:&#39;</span><span class="p">,</span> <span class="n">obs_bricks</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">hist</span> <span class="ow">in</span> <span class="n">obs_hist</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;remove obsolete history:&#39;</span><span class="p">,</span> <span class="n">hist</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">COLLECTION_HISTORY</span><span class="p">,</span> <span class="n">hist</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># malformed database, the brick doesn&#39;t exist</span>
+        <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="n">obs_bricks</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;remove obsolete brick:&#39;</span><span class="p">,</span> <span class="n">brick</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">brick</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># malformed database, the brick doesn&#39;t exist</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">orphan_files</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;remove orphan file:&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># malformed database, the file doesn&#39;t exist</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">doc</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">doc</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Project.get_orphan_nonexsiting_files"><a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_nonexsiting_files">[docs]</a>    <span class="k">def</span> <span class="nf">get_orphan_nonexsiting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get orphan files which do not exist from the database</span>
@@ -1336,7 +1463,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>
