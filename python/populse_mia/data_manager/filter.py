@@ -2,9 +2,9 @@
 """Module that handle the filter class which contains the results of both
 rapid and advanced search
 
-Contains:
-    Class:
-    - Filter
+:Contains:
+    :Class:
+        - Filter
 
 """
 

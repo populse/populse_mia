@@ -3,6 +3,7 @@
 
 :Contains:
     :Class:
+        - ClickableLabel
         - DefaultValueListCreation
         - DefaultValueQLineEdit
         - PopUpAddPath
@@ -1263,7 +1264,7 @@ class PopUpFilterSelection(QDialog):
     """Is called when the user wants to open a filter that has already been
        saved.
 
-    .. Methods:
+    :Methods:
         - cancel_clicked: closes the pop-up
         - ok_clicked: actions when the "OK" button is clicked
         - search_str: matches the searched pattern with the saved filters
@@ -1402,7 +1403,7 @@ class PopUpInformation(QWidget):
 class PopUpInheritanceDict(QDialog):
     """Is called to select from which input the output will inherit the tags.
 
-    .. Methods:
+    :Methods:
         - on_clicked: event when radiobutton is clicked
         - ok_clicked: event when ok button is clicked
         - okall_clicked: event when Ok all button is clicked

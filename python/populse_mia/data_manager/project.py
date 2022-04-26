@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*- #
 """Module that handle the projects and their database.
 
-Contains:
-    Class:
-    - Project
+:Contains:
+    :Class:
+        - Project
 
 """
 
