@@ -20,3 +20,4 @@ _________________________________
 **In python/populse_mia/utils:**
 - \_\_init__.py is cleaned
 - utils.py is cleaned
+- tools.py is deleted (ClickableLabel class is delegated to user_interface.pop_ups module)
