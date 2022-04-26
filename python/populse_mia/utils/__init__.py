@@ -3,7 +3,6 @@ Utilities and tools used across Mia
 
 Contains:
     Modules:
-        - utils.py
         - tools.py
 """
 

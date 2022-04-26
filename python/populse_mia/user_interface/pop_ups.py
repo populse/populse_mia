@@ -95,8 +95,31 @@ from populse_mia.data_manager.project import (
 from populse_mia.software_properties import Config, verCmp
 from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.utils import utils
-from populse_mia.utils.tools import ClickableLabel
 from populse_mia.utils.utils import check_value_type
+
+
+class ClickableLabel(QLabel):
+    """
+    QLabel with a clicked signal
+
+    .. Methods:
+        - mousePressEvent: overrides the mousePressEvent method by emitting
+          the clicked signal
+    """
+
+    # Signal that will be emitted when the widget is clicked
+    clicked = pyqtSignal()
+
+    def __init__(self):
+        super().__init__()
+
+    def mousePressEvent(self, event):
+        """
+        Overrides the mousePressEvent method by emitting the clicked signal
+
+        :param event: clicked event
+        """
+        self.clicked.emit()
 
 
 class DefaultValueListCreation(QDialog):

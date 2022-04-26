@@ -26,9 +26,9 @@ from PyQt5.QtWidgets import (
     QVBoxLayout, QMessageBox)
 
 # Populse_MIA imports
-from populse_mia.utils.tools import ClickableLabel
-from populse_mia.software_properties import Config
 from populse_mia.data_manager.project import TAG_FILENAME, COLLECTION_CURRENT
+from populse_mia.software_properties import Config
+from populse_mia.user_interface.pop_ups import ClickableLabel
 
 # Populse_db imports
 from populse_db.database import (

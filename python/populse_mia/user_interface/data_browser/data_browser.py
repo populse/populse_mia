@@ -44,14 +44,12 @@ from populse_mia.user_interface.data_browser.count_table import CountTable
 from populse_mia.user_interface.data_browser.modify_table import ModifyTable
 from populse_mia.user_interface.data_browser.mini_viewer import MiniViewer
 from populse_mia.user_interface.pop_ups import (
-    PopUpMultipleSort, PopUpProperties, PopUpShowHistory, PopUpAddPath,
-    PopUpAddTag, PopUpCloneTag, PopUpRemoveTag, PopUpSelectFilter,
-    PopUpRemoveScan)
-from populse_mia.user_interface.pop_ups import (
-    PopUpDataBrowserCurrentSelection)
-from populse_mia.utils.tools import ClickableLabel
-from populse_mia.utils.utils import (
-    check_value_type, set_item_data, table_to_database)
+                       ClickableLabel, PopUpAddPath, PopUpAddTag, PopUpCloneTag,
+                       PopUpDataBrowserCurrentSelection, PopUpMultipleSort,
+                       PopUpProperties, PopUpRemoveScan, PopUpRemoveTag,
+                       PopUpSelectFilter, PopUpShowHistory)
+from populse_mia.utils.utils import (check_value_type, set_item_data,
+                                     table_to_database)
 from populse_mia.data_manager.project import (
     COLLECTION_CURRENT, COLLECTION_INITIAL, COLLECTION_BRICK, TAG_HISTORY,
     TAG_CHECKSUM, TAG_FILENAME, TAG_BRICKS, BRICK_NAME)
