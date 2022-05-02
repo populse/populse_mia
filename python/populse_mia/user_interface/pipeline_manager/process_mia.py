@@ -311,11 +311,12 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             # self.completion_progress = 0.
             # self.completion_progress_total = 1.
 
-            if self.process.context_name.split('.')[0] == 'Pipeline':
-                node_name = '.'.join(self.process.context_name.split('.')[1:])
+            name = getattr(self.process, 'context_name', self.process.name)
+            if name.split('.')[0] == 'Pipeline':
+                node_name = '.'.join(name.split('.')[1:])
 
             else:
-                node_name = self.process.context_name
+                node_name = name
 
             print('\n. {0} ({1}) MIA node ...'.format(
                 node_name,
