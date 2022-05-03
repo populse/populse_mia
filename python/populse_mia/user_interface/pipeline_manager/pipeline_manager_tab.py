@@ -324,6 +324,8 @@ class PipelineManagerTab(QWidget):
                 return '<undefined>'
             if isinstance(item, swc.TemporaryPath):
                 return '<temp>'
+            if isinstance(item, datetime.datetime):
+                return item.__str__()
             raise TypeError
 
         if isinstance(node, (PipelineNode, Pipeline)):
