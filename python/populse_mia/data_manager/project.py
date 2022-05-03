@@ -1304,7 +1304,10 @@ class Project():
             for brid in hist[1]:
                 brick_doc = self.session.get_value(
                     COLLECTION_BRICK, brid, BRICK_OUTPUTS)
-                todo = list(brick_doc.values())
+                if brick_doc is None:
+                    todo = []
+                else:
+                    todo = list(brick_doc.values())
 
                 while todo:
                     value = todo.pop(0)
