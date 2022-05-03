@@ -550,9 +550,17 @@ def launch_mia():
     global main_window
 
     # useful for WebEngine
+    try:
+        # QtWebEngineWidgets need to be imported before QCoreApplication
+        # instance is created (used later)
+        from soma.qt_gui.qt_backend import QtWebEngineWidgets
+    except ImportError:
+        pass  # QtWebEngineWidgets is not installed
+
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
 
     app = QApplication(sys.argv)
+    
     QApplication.setOverrideCursor(Qt.WaitCursor)
     sys.excepthook = _my_excepthook
 
