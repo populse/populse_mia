@@ -2286,7 +2286,7 @@ class PopUpPreferences(QDialog):
         self.use_ants_label = QLabel("Use ANTS")
         self.use_ants_checkbox = QCheckBox('', self)
 
-        self.ants_label = QLabel("ANTS path:")
+        self.ants_label = QLabel("ANTS path (e.g. /usr/lib/ants):")
         self.ants_choice = QLineEdit(config.get_ants_path())
         self.ants_browse = QPushButton("Browse")
         self.ants_browse.clicked.connect(self.browse_ants)
