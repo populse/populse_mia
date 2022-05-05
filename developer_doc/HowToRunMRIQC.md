@@ -1,4 +1,4 @@
-# 1. Install casa_distro 5.1 WITHIN A WRITABLE DIRECTORY:
+# 1. Install casa_distro 5.1 (and not lower!) WITHIN A WRITABLE DIRECTORY:
 * https://github.com/populse/populse_mia/blob/master/developer_doc/UsingVirtualisation.md
 
 # 2. Install inside the singularity container:
