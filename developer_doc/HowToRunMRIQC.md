@@ -28,13 +28,13 @@ To:
 
 This is not a neat solution, but it does the job until we can use casa-distro 5.3 based on Ubuntu 22.04 (as a reminder, the issue with 5.3 is that it’s based on python 3.10 which is not yet supported by dipy, also needed for MRIQC - https://github.com/populse/capsul/issues/207)
 
-# 4. Install AFNI on host
+# 4. Install AFNI (only tested outside the container)
 Following these instructions step-by-step:
-https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup
+https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/index.html
 
-# 5. Install FSL on host
+# 5. Install FSL (only tested outside the container)
 Following these instructions step-by-step:
-https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup
+https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
 
 # 6. Your install is ready...
 Launch MIA and configure libraries (AFNI, ANTS and FSL) in preferences.
