@@ -2926,8 +2926,8 @@ class RunProgress(QWidget):
         self.worker = RunWorker(self.pipeline_manager)
         self.worker.finished.connect(self.end_progress)
 
-    def __del__(self):
-        self.cleanup()
+    #def __del__(self):
+        #self.cleanup()
 
     def cleanup(self):
         self.worker.wait()
