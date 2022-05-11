@@ -1188,6 +1188,7 @@ class PipelineManagerTab(QWidget):
         from soma_workflow import constants as swconstants
         self.stop_pipeline_action.setEnabled(False)
         status = self.progress.worker.status
+        self.progress.worker.finished.disconnect(self.finish_execution)
         self.last_status = status
         try:
             engine = self.last_run_pipeline.get_study_config().engine
@@ -1216,6 +1217,13 @@ class PipelineManagerTab(QWidget):
         self.show_pipeline_status_action.setIcon(
             QIcon(os.path.join(sources_images_dir, icon)))
         del self._mmovie
+        Qt.QTimer.singleShot(100, self.remove_progress)
+
+    def remove_progress(self):
+        self.progress.cleanup()
+        #self.hLayout.removeWidget(self.progress)
+        self.progress.close()
+        self.progress.deleteLater()
         del self.progress
 
     def garbage_collect(self):
@@ -2916,11 +2924,21 @@ class RunProgress(QWidget):
         self.progressbar.setMinimumWidth(350) # For mac OS
 
         self.worker = RunWorker(self.pipeline_manager)
-        self.worker.finished.connect(self.close)
+        self.worker.finished.connect(self.end_progress)
 
-    def close(self):
+    def __del__(self):
+        self.cleanup()
 
-        super().close()
+    def cleanup(self):
+        self.worker.wait()
+        self.worker.finished.disconnect() #self.end_progress)
+        del self.worker
+        #self.progressbar.deleteLater()
+        #del self.progressbar
+        #self.hide()
+
+    def end_progress(self):
+
         self.worker.wait()
         QApplication.instance().restoreOverrideCursor()
 
@@ -2946,7 +2964,7 @@ class RunProgress(QWidget):
                 mbox_text = 'Pipeline execution was OK.'
         mbox = QMessageBox(mbox_icon, mbox_title, mbox_text)
         timer = QTimer.singleShot(2000, mbox.accept)
-        mbox.exec()       
+        mbox.exec()
 
     def start(self):
 
@@ -3051,6 +3069,7 @@ class RunWorker(QThread):
             import traceback
             traceback.print_exc()
 
+        del self.pipeline_manager
         # restore current working directory in case it has been changed
         os.chdir(cwd)
 
