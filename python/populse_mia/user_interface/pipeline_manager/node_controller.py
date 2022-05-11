@@ -513,7 +513,7 @@ class CapsulNodeController(QWidget):
                 self.process_widget.attrib_widget.layout().insertWidget(0, btn)
 
         self.layout().addWidget(self.process_widget)
-        self.process.on_trait_change(self.parameters_changed)
+        self.process.on_trait_change(self.parameters_changed, dispatch='ui')
         # this cannot be done in __del__ since the C++ part will be already
         # destroyed by then.
         # However this signal seems never to be emitted, and I don't understand
