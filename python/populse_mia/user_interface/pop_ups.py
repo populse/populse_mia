@@ -2191,8 +2191,9 @@ class PopUpPreferences(QDialog):
         self.use_spm_standalone_label = QLabel("Use SPM standalone")
         self.use_spm_standalone_checkbox = QCheckBox('', self)
 
-        self.spm_standalone_label = QLabel("SPM standalone path (e.g., "
-                                           "spm_standalone_dir/spm12):")
+        self.spm_standalone_label = QLabel("SPM standalone path (e.g., the "
+                                           "directory hosting the run_spm12.sh "
+                                           "file):")
         self.spm_standalone_choice = QLineEdit(
             config.get_spm_standalone_path())
         self.spm_standalone_browse = QPushButton("Browse")
@@ -2226,7 +2227,7 @@ class PopUpPreferences(QDialog):
         self.use_fsl_checkbox = QCheckBox('', self)
 
         self.fsl_label = QLabel("FSL config file (e.g., "
-                                "/fsl_dir/etc/fslconf/fsl.sh):")
+                                "fsl_dir/etc/fslconf/fsl.sh):")
         self.fsl_choice = QLineEdit(config.get_fsl_config())
         self.fsl_browse = QPushButton("Browse")
         self.fsl_browse.clicked.connect(self.browse_fsl)
@@ -2256,7 +2257,7 @@ class PopUpPreferences(QDialog):
         self.use_afni_label = QLabel("Use AFNI")
         self.use_afni_checkbox = QCheckBox('', self)
 
-        self.afni_label = QLabel("AFNI path (e.g. /afni_dir/abin):")
+        self.afni_label = QLabel("AFNI path (e.g. dir_containing_abin/abin):")
         self.afni_choice = QLineEdit(config.get_afni_path())
         self.afni_browse = QPushButton("Browse")
         self.afni_browse.clicked.connect(self.browse_afni)
@@ -2286,7 +2287,7 @@ class PopUpPreferences(QDialog):
         self.use_ants_label = QLabel("Use ANTS")
         self.use_ants_checkbox = QCheckBox('', self)
 
-        self.ants_label = QLabel("ANTS path (e.g. /usr/lib/ants):")
+        self.ants_label = QLabel("ANTS path (e.g. ANTs_dir/bin):")
         self.ants_choice = QLineEdit(config.get_ants_path())
         self.ants_browse = QPushButton("Browse")
         self.ants_browse.clicked.connect(self.browse_ants)
