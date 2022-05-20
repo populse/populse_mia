@@ -99,6 +99,7 @@ if not os.path.dirname(os.path.dirname(
               '...'.format(soma_workflow_dev_dir))
         sys.path.insert(1, soma_workflow_dev_dir)
         del soma_workflow_dev_dir
+from traits.api import Undefined
 
 # populse_mia import
 from populse_mia.data_manager.project import (COLLECTION_BRICK,
@@ -3153,6 +3154,106 @@ class TestMIAPipelineManager(unittest.TestCase):
         # TODO: open a project and modify the filter pop-up
     '''
 
+    def test_plug_filter(self):
+        """
+        Displays the parameters of a node, displays a plug filter and modifies it.
+    
+        Notes:
+        -----
+        Tests the class PlugFilter() within the Node Controller V1 (class NodeController()).
+        """
+    
+        # Switches to node controller V1
+        config = Config(config_path=self.config_path)
+        config.setControlV1(True)
+        
+        self.restart_MIA()
+    
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
+
+        # Get the 2 first documents/records
+        DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+        DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]
+        
+        pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        node_controller = self.main_window.pipeline_manager.nodeController
+    
+        # Add the "Smooth" process
+        from nipype.interfaces.spm import Smooth
+        process_class = Smooth
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        
+        # Creates a node called "smooth_1"
+        pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+        # Exports the mandatory plugs
+        pipeline_editor_tabs.get_current_editor().current_node_name = "smooth_1"
+        pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
+        
+        # Display parameters of "smooth_1" node
+        input_process = pipeline.nodes[""].process
+        node_controller.display_parameters("inputs", get_process_instance(input_process), pipeline)
+    
+        # Opens a filter for the plug "in_files", without "node_controller.scans_list"
+        parameters = (0, pipeline, type(Undefined))
+        node_controller.display_filter("inputs", "in_files", parameters, input_process)
+    
+        # Asserts its default value
+        node = pipeline.nodes[""]
+        self.assertEqual(Undefined, node.get_plug_value("in_files"))
+    
+        # Searchs for "DOCUMENT_2" the input documents
+        plug_filter = node_controller.pop_up
+        plug_filter.search_str(DOCUMENT_2)
+        self.assertTrue(plug_filter.table_data.isRowHidden(0)) # if "DOCUMENT_1" is hidden
+    
+        # Resets the search bar
+        plug_filter.reset_search_bar()
+        self.assertFalse(plug_filter.table_data.isRowHidden(0)) # if "DOCUMENT_1" is not hidden
+    
+        # Tries search for an empty string
+        plug_filter.search_str('')
+    
+        # Search for "DOCUMENT_2" and changes tags
+        plug_filter.search_str(DOCUMENT_2)
+        plug_filter.table_data.selectRow(1)
+    
+        # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag    
+        QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate')) # DO NOT put a breakpoint here
+        QTimer.singleShot(2000, self.execute_QDialogAccept) # nor here
+        plug_filter.update_tags()
+        self.assertTrue(type(plug_filter.table_data.get_tag_column('AcquisitionDate')) == int)
+    
+        # Updates the tag to filter with
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        plug_filter.update_tag_to_filter()
+        plug_filter.push_button_tag_filter.setText('FileName')
+        # TODO: select tag to filter with
+    
+        # Closes the filter for the plug "in_files"
+        plug_filter.ok_clicked()
+    
+        # Assert the modified value
+        self.assertIn(DOCUMENT_2, node.get_plug_value("in_files")[0])
+    
+        # Opens a filter for the plug "in_files", now with a "scans_list"
+        node_controller.scan_list = self.main_window.project.session.get_documents_names("current")
+        node_controller.display_filter("inputs", "in_files", parameters, input_process)
+        
+        # Searchs for something that does not give any match
+        plug_filter.search_str('!@#')
+        # this will empty the "plug_filter.table_data.selectedIndexes()" and trigger
+        # a uncovered part of "set_plug_value(self)"
+    
+        plug_filter.ok_clicked()
+    
+        # Switches back to node controller V2
+        config = Config(config_path=self.config_path)
+        config.setControlV1(False) 
+
     def test_process_library(self):
         #        """
         #        Install the brick_test and mia_processes libraries and then remove them
@@ -3981,6 +4082,39 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("fwhm" in
                                  pipeline.nodes["test_pipeline_1"].plugs.keys())
+
+    def add_visualized_tag(self, tag):
+    
+      w = QApplication.activeWindow()
+    
+      if isinstance(w, QDialog):
+    
+        visualized_tags = w.layout().itemAt(0).widget()
+        tags_list = visualized_tags.list_widget_tags
+    
+        found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
+        tags_list.setCurrentItem(found_item[0])
+    
+        visualized_tags.click_select_tag() 
+
+    def restart_MIA(self):
+
+      self.main_window.close()
+
+      # Removing the opened projects (in CI, the tests are run twice)
+      config = Config(config_path=self.config_path)
+      config.set_opened_projects([])
+      config.saveConfig()
+
+      config.set_user_mode(False)
+
+      self.app = QApplication.instance()
+
+      if self.app is None:
+        self.app = QApplication(sys.argv)
+
+      self.project = Project(None, True)
+      self.main_window = MainWindow(self.project, test=True)
 
 if __name__ == '__main__':
     unittest.main()
