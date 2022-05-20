@@ -2721,6 +2721,52 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(pipeline_editor_tabs.count(), 4)
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
 
+    def test_attributes_filter(self):
+      """
+      Displays the parameters of a node, displays an attributes filter and modifies it.
+    
+      Notes:
+      -----
+      Tests the method "AttributesFilter" within the Node Controller V2 (CapsulNodeController()).
+      """
+    
+      # Opens project 8 and switches to it
+      project_8_path = self.get_new_test_project()
+      self.main_window.switch_project(project_8_path, "project_8")
+    
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      node_controller = self.main_window.pipeline_manager.nodeController 
+    
+      # Adds the process Smooth, creates a node called "smooth_1"
+      from nipype.interfaces.spm import Smooth
+      process_class = Smooth
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+      # Exports the input plugs
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
+      pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
+      
+      # Displays parameters of 'inputs' node
+      input_process = pipeline.nodes[''].process
+      self.main_window.pipeline_manager.displayNodeParameters('inputs', input_process)
+      
+      # Alternative to the above statement
+      #node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
+      
+      # Opens the attributes filter, selects item and closes it
+      node_controller.filter_attributes()
+      attributes_filter = node_controller.pop_up
+      attributes_filter.table_data.selectRow(0)
+      attributes_filter.ok_clicked()
+    
+      # Opens the attributes filter, does not select an item and closes it
+      node_controller.filter_attributes()
+      attributes_filter = node_controller.pop_up
+      attributes_filter.search_str('!@#')
+      attributes_filter.ok_clicked()
+
     def test_close_tab(self):
         """
         Closes a tab in the PipelineEditorTabs
@@ -3208,18 +3254,20 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Searchs for "DOCUMENT_2" the input documents
         plug_filter = node_controller.pop_up
         plug_filter.search_str(DOCUMENT_2)
-        self.assertTrue(plug_filter.table_data.isRowHidden(0)) # if "DOCUMENT_1" is hidden
+        index_DOCUMENT_1 = plug_filter.table_data.get_scan_row(DOCUMENT_1)
+        self.assertTrue(plug_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is hidden
     
         # Resets the search bar
         plug_filter.reset_search_bar()
-        self.assertFalse(plug_filter.table_data.isRowHidden(0)) # if "DOCUMENT_1" is not hidden
+        self.assertFalse(plug_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
     
         # Tries search for an empty string
         plug_filter.search_str('')
     
         # Search for "DOCUMENT_2" and changes tags
         plug_filter.search_str(DOCUMENT_2)
-        plug_filter.table_data.selectRow(1)
+        index_DOCUMENT_2= plug_filter.table_data.get_scan_row(DOCUMENT_2)
+        plug_filter.table_data.selectRow(index_DOCUMENT_2)
     
         # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag    
         QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate')) # DO NOT put a breakpoint here
