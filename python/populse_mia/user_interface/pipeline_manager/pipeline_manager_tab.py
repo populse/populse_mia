@@ -1218,6 +1218,7 @@ class PipelineManagerTab(QWidget):
             QIcon(os.path.join(sources_images_dir, icon)))
         del self._mmovie
         Qt.QTimer.singleShot(100, self.remove_progress)
+        self.nodeController.update_parameters()
 
     def remove_progress(self):
         self.progress.cleanup()
