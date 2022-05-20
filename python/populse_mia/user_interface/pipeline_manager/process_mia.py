@@ -491,6 +491,10 @@ class ProcessMIA(Process):
    This class is mainly used by MIA bricks.
 
     .. Methods:
+
+        - _after_run_process: Try to recover the output values, when the
+                              calculation has been delegated to a process in
+                              ProcessMIA
         - _run_processes: Call the run_process_mia method in the 
                           ProcessMIA subclass
         - init_default_traits: Automatically initialise necessary parameters
@@ -513,6 +517,26 @@ class ProcessMIA(Process):
         self.requirement = None
         self.outputs = {}
         self.inheritance_dict = {}
+
+    def _after_run_process(self, run_process_result):
+        """Try to recover the output values.
+        """
+        if hasattr(self, 'process') and isinstance(self.process, NipypeProcess):
+            # FIXME: Here we claim that the outputs in ProcessMIA are mapped to
+            #        the outputs in the wrapped process that has the same name
+            #        prefixed with an underscore. This is not necessarily true.
+            #        ProcessMIA can have completely different output names than
+            #        the Nipype outputs, which are themselves modified by an
+            #        additional underscore in NipypeProcess. For the code here
+            #        to work, the output in ProcessMIA must be equal to the
+            #        output in NipypeProcess without the underscore!
+
+            for mia_output in self.user_traits():
+                wrapped_output = '_' + mia_output
+                new = getattr(self.process, wrapped_output, None)
+                old = getattr(self, mia_output, None)
+                if (new and old != new):
+                    setattr(self, mia_output, new)
 
     def _run_process(self):
         """Call the run_process_mia method in the Process_Mia subclass"""
