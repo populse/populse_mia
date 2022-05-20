@@ -1870,7 +1870,9 @@ class TableDataBrowser(QTableWidget):
                                 brick_name_button.moveToThread(
                                                QApplication.instance().thread())
 
-                                for key, value in self.bricks.items():
+                                bricks_copy = {**self.bricks}
+
+                                for key, value in bricks_copy.items():
 
                                     if (value == brick_uuid and
                                             key == widget_to_move.findChildren(
@@ -1878,6 +1880,8 @@ class TableDataBrowser(QTableWidget):
                                         del self.bricks[key]
                                         self.bricks[
                                                  brick_name_button] = brick_uuid
+
+                                del bricks_copy
 
                                 brick_name_button.clicked.connect(partial(
                                                         self.show_brick_history,
@@ -1914,7 +1918,9 @@ class TableDataBrowser(QTableWidget):
                                 brick_name_button.moveToThread(
                                                QApplication.instance().thread())
 
-                                for key, value in self.bricks.items():
+                                bricks_copy = {**self.bricks}
+
+                                for key, value in bricks_copy.items():
 
                                     if (value == brick_uuid and
                                             key == widget_wrong_row.
@@ -1922,6 +1928,8 @@ class TableDataBrowser(QTableWidget):
                                         del self.bricks[key]
                                         self.bricks[
                                                  brick_name_button] = brick_uuid
+
+                                del bricks_copy
 
                                 brick_name_button.clicked.connect(partial(
                                                   self.show_brick_history,
