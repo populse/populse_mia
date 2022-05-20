@@ -1219,6 +1219,8 @@ class PipelineManagerTab(QWidget):
         del self._mmovie
         Qt.QTimer.singleShot(100, self.remove_progress)
         self.nodeController.update_parameters()
+        self.run_pipeline_action.setDisabled(False)
+        self.garbage_collect_action.setDisabled(False)
 
     def remove_progress(self):
         self.progress.cleanup()
@@ -2136,6 +2138,8 @@ class PipelineManagerTab(QWidget):
         # Initialize the pipeline
         self.initialize()
         if self.test_init:
+            self.run_pipeline_action.setDisabled(True)
+            self.garbage_collect_action.setDisabled(True)
             # End - added on January, 4th 2020
             name = os.path.basename(self.pipelineEditorTabs.get_current_filename())
             if name == '': name = 'NoName'
