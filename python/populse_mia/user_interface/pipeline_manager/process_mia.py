@@ -491,6 +491,10 @@ class ProcessMIA(Process):
    This class is mainly used by MIA bricks.
 
     .. Methods:
+
+        - _after_run_process: Try to recover the output values, when the
+                              calculation has been delegated to a process in
+                              ProcessMIA
         - _run_processes: Call the run_process_mia method in the 
                           ProcessMIA subclass
         - init_default_traits: Automatically initialise necessary parameters
@@ -513,6 +517,21 @@ class ProcessMIA(Process):
         self.requirement = None
         self.outputs = {}
         self.inheritance_dict = {}
+
+    def _after_run_process(self, run_process_result):
+        """Try to recover the output values.
+        """
+        if hasattr(self, 'process') and isinstance(self.process, NipypeProcess):
+
+            for mia_output in self.user_traits():
+                wrapped_output = self.trait(mia_output).nipype_process_name
+
+                if wrapped_output:
+                    new = getattr(self.process, wrapped_output, None)
+                    old = getattr(self, mia_output, None)
+
+                    if (new and old != new):
+                        setattr(self, mia_output, new)
 
     def _run_process(self):
         """Call the run_process_mia method in the Process_Mia subclass"""
