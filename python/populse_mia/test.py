@@ -4171,7 +4171,8 @@ class TestMIAPipelineManager(unittest.TestCase):
             visualized_tags = w.layout().itemAt(0).widget()
             tags_list = visualized_tags.list_widget_tags
     
-            found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
+            #found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
+            found_item = tags_list.findItems(tag,  Qt.MatchExactly)
             tags_list.setCurrentItem(found_item[0])
     
             visualized_tags.click_select_tag() 
