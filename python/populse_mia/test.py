@@ -4183,14 +4183,14 @@ class TestMIAPipelineManager(unittest.TestCase):
         """blabla"""
 
         self.main_window.close()
-
         # Removing the opened projects (in CI, the tests are run twice)
         config = Config(config_path=self.config_path)
         config.set_opened_projects([])
         config.saveConfig()
+        self.app.exit()
 
+        config = Config(config_path=self.config_path)
         config.set_user_mode(False)
-
         self.app = QApplication.instance()
 
         if self.app is None:
