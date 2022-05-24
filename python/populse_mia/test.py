@@ -38,6 +38,7 @@ import yaml
 from datetime import datetime
 from functools import partial
 from packaging import version
+from pathlib import Path
 from traits.api import Undefined
 
 if not os.path.dirname(os.path.dirname(
@@ -2736,46 +2737,46 @@ class TestMIAPipelineManager(unittest.TestCase):
       """
       Displays the parameters of a node, displays an attributes filter
       and modifies it.
-    
+
       Notes:
       -----
       Tests the method "AttributesFilter" within the Node Controller V2
       (CapsulNodeController()).
       """
-    
+
       # Opens project 8 and switches to it
       project_8_path = self.get_new_test_project()
       self.main_window.switch_project(project_8_path, "project_8")
-    
+
       pipeline_editor_tabs = (self.main_window.pipeline_manager.
                                                              pipelineEditorTabs)
-      node_controller = self.main_window.pipeline_manager.nodeController 
-    
+      node_controller = self.main_window.pipeline_manager.nodeController
+
       # Adds the process Smooth, creates a node called "smooth_1"
       process_class = Smooth
       pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
       pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
       pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
+
       # Exports the input plugs
       pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
       (pipeline_editor_tabs.
                  get_current_editor)().export_node_unconnected_mandatory_plugs()
-      
+
       # Displays parameters of 'inputs' node
       input_process = pipeline.nodes[''].process
       self.main_window.pipeline_manager.displayNodeParameters('inputs',
                                                               input_process)
-      
+
       # Alternative to the above statement
       #node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
-      
+
       # Opens the attributes filter, selects item and closes it
       node_controller.filter_attributes()
       attributes_filter = node_controller.pop_up
       attributes_filter.table_data.selectRow(0)
       attributes_filter.ok_clicked()
-    
+
       # Opens the attributes filter, does not select an item and closes it
       node_controller.filter_attributes()
       attributes_filter = node_controller.pop_up
@@ -3316,7 +3317,8 @@ class TestMIAPipelineManager(unittest.TestCase):
         plug_filter.ok_clicked()
     
         # Assert the modified value
-        self.assertIn(DOCUMENT_2, node.get_plug_value("in_files")[0])
+        self.assertIn(str(Path(DOCUMENT_2)),
+                      str(Path(node.get_plug_value("in_files")[0])))
     
         # Opens a filter for the plug "in_files", now with a "scans_list"
         node_controller.scan_list = (self.main_window.project.session.
