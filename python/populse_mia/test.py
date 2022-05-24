@@ -2341,7 +2341,14 @@ class TestMIADataBrowser(unittest.TestCase):
         # 4. clone tag
         self.main_window.data_browser.clone_tag_action.trigger()
         clone_tag = self.main_window.data_browser.pop_up_clone_tag
-        clone_tag.list_widget_tags.setCurrentRow(39)  # 'FOV' tag selected
+
+        for fov_column in range(clone_tag.list_widget_tags.count()):
+
+            if clone_tag.list_widget_tags.item(fov_column).text() == 'FOV':
+                break
+
+        # 'FOV' tag selected
+        clone_tag.list_widget_tags.setCurrentRow(fov_column)
         clone_tag.line_edit_new_tag_name.setText('Test')
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
 
