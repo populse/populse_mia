@@ -2783,6 +2783,74 @@ class TestMIAPipelineManager(unittest.TestCase):
       attributes_filter.search_str('!@#')
       attributes_filter.ok_clicked()
 
+    def test_capsul_node_controller(self):
+      """
+      Adds, changes and deletes processes to the capsul node controller, display the 
+      attributes filter.
+    
+      Notes:
+      ------
+      Tests the class CapsulNodeController().
+      """
+    
+      # Opens project 8 and switches to it
+      project_8_path = self.get_new_test_project()
+      self.main_window.switch_project(project_8_path, "project_8")
+    
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      node_controller = self.main_window.pipeline_manager.nodeController        
+    
+      # Adds 2 processes Smooth, creates 2 nodes called "smooth_1" and "smooth_2"
+      from nipype.interfaces.spm import Smooth
+      process_class = Smooth
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+      # Exports the input plugs for "smooth_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
+      pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
+    
+      # Display parameters of the "inputs" node
+      input_process = pipeline.nodes[''].process
+      node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
+    
+      # Displays parameters of "smooth_1" node
+      input_process = pipeline.nodes['smooth_1'].process
+      self.main_window.pipeline_manager.displayNodeParameters('smooth_1', input_process)
+    
+      # Tries to changes its name to "smooth_2" and then to "Smooth_3"
+      node_controller.update_node_name()
+      self.assertEqual(node_controller.node_name, 'smooth_1')
+      node_controller.update_node_name(new_node_name='smooth_2', old_node_name='smooth_1')
+      self.assertEqual(node_controller.node_name, 'smooth_1')
+      node_controller.update_node_name(new_node_name='smooth_3', old_node_name='smooth_1')
+      self.assertEqual(node_controller.node_name, 'smooth_3')
+    
+      # Deletes node "smooth_2"
+      pipeline_editor_tabs.get_current_editor().del_node("smooth_2")
+    
+      # Adds the process Smooth, creates a node called "spatial_preprocessing_1_1"
+      from mia_processes.pipelines.preprocess.spatial_preprocessing_1 import Spatial_preprocessing_1
+      process_class = Spatial_preprocessing_1
+    
+      # Runs pipeline and expects an error
+      QTimer.singleShot(1000, self.execute_QDialogAccept)
+      self.main_window.pipeline_manager.runPipeline()
+    
+      # Displays attributes filter
+      node_controller.filter_attributes()
+      attributes_filter = node_controller.pop_up
+      attributes_filter.table_data.selectRow(0)
+      QTimer.singleShot(1000, self.execute_QDialogAccept)
+      attributes_filter.ok_clicked()
+      
+    
+      # Releases the process
+      node_controller.release_process()
+      node_controller.update_parameters()
+
     def test_close_tab(self):
         """
         Closes a tab in the PipelineEditorTabs
@@ -4165,7 +4233,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def add_visualized_tag(self, tag):
         """
-        With the "Visualized tags" pop up open, selects a tag to display.
+        With the "Visualized tags" pop-up open, selects a tag to display.
 
         Parameters
         ----------
@@ -4174,7 +4242,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         Usage
         -----
-        Should be called, with a delay, before opening the "Visualized tags" pop up:
+        Should be called, with a delay, before opening the "Visualized tags" pop-up:
         QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate'))
         """
     
