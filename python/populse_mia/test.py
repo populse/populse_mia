@@ -17,7 +17,7 @@
 
 #  PyQt5 import
 from PyQt5 import QtGui
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QPoint, QTimer
+from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QPoint, QTimer, QT_VERSION_STR
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QDialog, QMessageBox,
                              QTableWidgetItem)
@@ -4164,7 +4164,19 @@ class TestMIAPipelineManager(unittest.TestCase):
                                  pipeline.nodes["test_pipeline_1"].plugs.keys())
 
     def add_visualized_tag(self, tag):
-        """ blabla"""
+        """
+        With the "Visualized tags" pop up open, selects a tag to display.
+
+        Parameters
+        ----------
+        tag: string
+          The tag to be displayed
+
+        Usage
+        -----
+        Should be called, with a delay, before opening the "Visualized tags" pop up:
+        QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate'))
+        """
     
         w = QApplication.activeWindow()
     
@@ -4174,13 +4186,24 @@ class TestMIAPipelineManager(unittest.TestCase):
             tags_list = visualized_tags.list_widget_tags
     
             #found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
-            found_item = tags_list.findItems(tag,  Qt.MatchExactly)
+            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
+              found_item = tags_list.findItems(tag,  Qt.MatchExactly)
+            else:
+              found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
+
             tags_list.setCurrentItem(found_item[0])
     
             visualized_tags.click_select_tag() 
 
     def restart_MIA(self):
-        """blabla"""
+        """
+        Restarts MIA withing a unit test.
+
+        Notes
+        -----
+        Can be used to restart MIA after changing the controller version in MIA
+        preferences.
+        """
 
         self.main_window.close()
         # Removing the opened projects (in CI, the tests are run twice)
