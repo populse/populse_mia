@@ -3052,6 +3052,97 @@ class TestMIAPipelineManager(unittest.TestCase):
                         pipeline_editor_tabs.get_current_pipeline(
                                                                  ).nodes.keys())
 
+    def test_filter_widget(self):
+      """
+      Places a node of the "Input_Filter" process, feeds in documents and opens up
+      the "FilterWidget()" to modify its parameters.
+      
+      Notes:
+      -----
+      Tests the class FilterWidget() within the Node Controller V1 (class NodeController()).
+      The class FilterWidget() is independent on the Node Controller version (V1 or V2) and
+      can be used in both of them.
+      """
+
+      # Switches to node controller V1
+      config = Config(config_path=self.config_path)
+      config.setControlV1(True)
+      
+      self.restart_MIA()
+
+      # Opens project 8 and switches to it
+      project_8_path = self.get_new_test_project()
+      self.main_window.switch_project(project_8_path, "project_8")
+
+      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+      DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]  
+    
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      node_controller = self.main_window.pipeline_manager.nodeController 
+    
+      # Adds the process Smooth, creates a node called "input_filter_1"
+      from mia_processes.bricks.tools import Input_Filter
+      process_class = Input_Filter
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+      # Exports the input plugs for "input_filter_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'input_filter_1'
+      pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
+      
+      # Displays parameters of the "inputs" node
+      input_process = pipeline.nodes[''].process
+      node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
+
+      # Opens a filter for the plug "input" of the "inputs" node
+      parameters = (0, pipeline, type(Undefined))
+      node_controller.display_filter('inputs', 'input', parameters, input_process)
+    
+      # Selects all records in the "input" node
+      plug_filter = node_controller.pop_up
+      plug_filter.ok_clicked()
+
+      # Opens the filter widget for the node "input_filter_1"
+      pipeline_editor_tabs.open_filter('input_filter_1')
+      input_filter = pipeline_editor_tabs.filter_widget
+
+      index_DOCUMENT_1 = input_filter.table_data.get_scan_row(DOCUMENT_1)
+      index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
+
+      # Tries to search for an empty string and assert that none of the documents are not hidden
+      input_filter.search_str('')
+      self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
+      self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
+
+      # Searches for "DOCUMENT_2" and verifies that "DOCUMENT_1" is hidden
+      input_filter.search_str(DOCUMENT_2)
+      self.assertTrue(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
+
+      # Resets the search bar and assert that none of the documents are not hidden
+      input_filter.reset_search_bar()
+      self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
+      self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
+      
+      # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag    
+      #QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate')) # DO NOT put a breakpoint here
+      #QTimer.singleShot(2000, self.execute_QDialogAccept) # nor here
+      #input_filter.update_tags()
+      #self.assertTrue(type(input_filter.table_data.get_tag_column('AcquisitionDate')) == int)
+
+      # Updates the tag to filter with
+      QTimer.singleShot(1000, self.execute_QDialogAccept)
+      input_filter.update_tag_to_filter()
+      input_filter.push_button_tag_filter.setText('FileName')
+      # TODO: select tag to filter with
+
+      # Closes the filter
+      input_filter.ok_clicked()
+
+      # Switches back to node controller V2
+      config = Config(config_path=self.config_path)
+      config.setControlV1(False)
+
     # def test_init_MIA_processes(self):
     #     """
     #     Adds all the tools processes, initializes and runs the pipeline
