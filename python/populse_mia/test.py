@@ -3375,6 +3375,85 @@ class TestMIAPipelineManager(unittest.TestCase):
         # TODO: open a project and modify the filter pop-up
     '''
 
+    def test_node_controller(self):
+      """
+      Adds, changes and deletes processes to the node controller, display the 
+      attributes filter.
+    
+      Notes:
+      ------
+      Tests the class NodeController().
+      """
+
+      # Switches to node controller V1
+      config = Config(config_path=self.config_path)
+      config.setControlV1(True)
+      
+      self.restart_MIA()
+
+      # Opens project 8 and switches to it
+      project_8_path = self.get_new_test_project()
+      self.main_window.switch_project(project_8_path, "project_8")
+    
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      node_controller = self.main_window.pipeline_manager.nodeController        
+    
+      # Adds 2 processes Smooth, creates 2 nodes called "smooth_1" and "smooth_2"
+      from nipype.interfaces.spm import Smooth
+      process_class = Smooth
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+      # Exports the input plugs for "smooth_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
+      pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
+
+      # Display parameters of the "inputs" node
+      input_process = pipeline.nodes[''].process
+      node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
+    
+      # Display the filter of the 'in' plug, "inputs" node
+      node_controller.display_filter('inputs', 'in_files', (0, pipeline, type(Undefined)), input_process)
+      plug_filter = node_controller.pop_up
+      plug_filter.ok_clicked()
+      
+      # Displays parameters of "smooth_1" node
+      input_process = pipeline.nodes['smooth_1'].process
+      self.main_window.pipeline_manager.displayNodeParameters('smooth_1', input_process)
+
+      # Checks the indexed of input and output plug labels
+      in_plug_index = node_controller.get_index_from_plug_name('in_files', 'in')
+      self.assertEqual(in_plug_index, 5)
+      out_plug_index = node_controller.get_index_from_plug_name('_smoothed_files', 'out')
+      self.assertEqual(out_plug_index, 0)
+
+      # Tries to updates the plug value without a new value
+      node_controller.update_plug_value('in', 'in_files', pipeline, type(Undefined))
+      node_controller.update_plug_value('out', '_smoothed_files', pipeline, type(Undefined))
+      node_controller.update_plug_value(None, 'in_files', pipeline, type(Undefined))
+    
+      # Tries to changes its name to "smooth_2" and then to "Smooth_3"
+      node_controller.update_node_name()
+      self.assertEqual(node_controller.node_name, 'smooth_1')
+      node_controller.update_node_name(new_node_name='smooth_2')
+      self.assertEqual(node_controller.node_name, 'smooth_1')
+      node_controller.update_node_name(new_node_name='smooth_3')
+      self.assertEqual(node_controller.node_name, 'smooth_3')
+      
+      # Deletes node "smooth_2"
+      pipeline_editor_tabs.get_current_editor().del_node("smooth_2")
+      self.assertRaises(KeyError, lambda:pipeline.nodes['smooth_2'])
+
+      # Releases the process
+      node_controller.release_process()
+      node_controller.update_parameters()
+
+      # Switches back to node controller V2
+      config = Config(config_path=self.config_path)
+      config.setControlV1(False)
+
     def test_plug_filter(self):
         """
         Displays the parameters of a node, displays a plug filter
