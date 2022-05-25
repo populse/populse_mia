@@ -3113,7 +3113,8 @@ class TestMIAPipelineManager(unittest.TestCase):
       # Tries to search for an empty string and assert that none of the documents are not hidden
       input_filter.search_str('')
       print('DEBUG 1')
-      self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
+      print(index_DOCUMENT_1)
+      #self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
       print('DEBUG 2')
       self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
 
