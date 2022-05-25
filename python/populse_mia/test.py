@@ -1330,63 +1330,6 @@ class TestMIADataBrowser(unittest.TestCase):
                           "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
                           "pvm-000142_400.nii"])
 
-    def test_register_node_io_in_database(self):
-      '''
-      Adds a process, sets input and output parameters and registers them in database.
-
-      Notes
-      -----
-      Tests the method PipelineManagerTab(QWidget)._register_node_io_in_database.
-      '''
-      
-      # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, 'project_9')
-      
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-    
-      # Adds the processes Smooth, creates the "rename_1" node
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
-      # Exports the mandatory input and output plugs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
-
-      old_scan_name = DOCUMENT_1.split('/')[-1]
-      new_scan_name = 'new_name.nii'
-
-      # Sets the mandatory plug values in the "inputs" node
-      pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
-      pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
-
-      # Changes the "_out_file" in the "outputs" node
-      pipeline.nodes[''].set_plug_value('_out_file', 
-        DOCUMENT_1.replace(old_scan_name, new_scan_name))
-
-      pipeline_manager = self.main_window.pipeline_manager
-
-      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
-
-      job = pipeline_manager.workflow.jobs[0]
-
-      import uuid
-      brick_id = str(uuid.uuid4())
-      job.uuid = brick_id
-      pipeline_manager.brick_list.append(brick_id)
-
-      from populse_mia.data_manager.project import COLLECTION_BRICK
-      pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
-
-      pipeline_manager._register_node_io_in_database(job, job.process())
-
     def test_remove_scan(self):
         """
         Tests scans removal in the DataBrowser
@@ -3169,16 +3112,21 @@ class TestMIAPipelineManager(unittest.TestCase):
 
       # Tries to search for an empty string and assert that none of the documents are not hidden
       input_filter.search_str('')
+      print('DEBUG 1')
       self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
+      print('DEBUG 2')
       self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
 
       # Searches for "DOCUMENT_2" and verifies that "DOCUMENT_1" is hidden
       input_filter.search_str(DOCUMENT_2)
+      print('DEBUG 3')
       self.assertTrue(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
 
       # Resets the search bar and assert that none of the documents are not hidden
       input_filter.reset_search_bar()
+      print('DEBUG 4')
       self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
+      print('DEBUG 5')
       self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
       
       # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag    
@@ -3700,6 +3648,63 @@ class TestMIAPipelineManager(unittest.TestCase):
 
             # self.assertNotIn("mia_processes", pro_dic["Packages"])
             self.assertNotIn("brick_test", pro_dic["Packages"])
+
+    def test_register_node_io_in_database(self):
+      '''
+      Adds a process, sets input and output parameters and registers them in database.
+
+      Notes
+      -----
+      Tests the method PipelineManagerTab(QWidget)._register_node_io_in_database.
+      '''
+      
+      # Opens project 8 and switches to it
+      project_8_path = self.get_new_test_project()
+      self.main_window.switch_project(project_8_path, 'project_9')
+      
+      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+    
+      # Adds the processes Smooth, creates the "rename_1" node
+      from nipype.interfaces import Rename
+      process_class = Rename
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+      # Exports the mandatory input and output plugs for "rename_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+      old_scan_name = DOCUMENT_1.split('/')[-1]
+      new_scan_name = 'new_name.nii'
+
+      # Sets the mandatory plug values in the "inputs" node
+      pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+      pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
+
+      # Changes the "_out_file" in the "outputs" node
+      pipeline.nodes[''].set_plug_value('_out_file', 
+        DOCUMENT_1.replace(old_scan_name, new_scan_name))
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
+      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
+
+      job = pipeline_manager.workflow.jobs[0]
+
+      import uuid
+      brick_id = str(uuid.uuid4())
+      job.uuid = brick_id
+      pipeline_manager.brick_list.append(brick_id)
+
+      from populse_mia.data_manager.project import COLLECTION_BRICK
+      pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
+
+      pipeline_manager._register_node_io_in_database(job, job.process())
 
     def test_save_pipeline(self):
         """
