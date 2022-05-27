@@ -377,7 +377,6 @@ class AttributesFilter(PlugFilter):
 
     def ok_clicked(self):
         """Close the widget"""
-        print('OK')
         self.close()
         attributes = {}
 
