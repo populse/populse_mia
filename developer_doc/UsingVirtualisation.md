@@ -123,7 +123,7 @@ Before everything, we need to have WSL (Windows Subsystem Linux). With this we c
 ```
    - close this window
 
-Now you have WSL2 and an Ubuntu 20.04 linux.   
+Now you have WSL2 and an Ubuntu 20.04 linux.   Lycée Blaise Pascal Rouen
 Before you install a new distribution using `wsl --install -d distribution`, make sure that WSL is in 2 mode with:  
    `wsl --set-default-version 2`  
 The distribution is only available for the current Windows user.  
@@ -170,9 +170,9 @@ We also need a X windows server to allow linux applications graphic user interfa
 
 ```bash
    sudo apt install -y build-essential uuid-dev libgpgme-dev squashfs-tools libseccomp-dev wget pkg-config git git-lfs cryptsetup-bin python3-distutils python3-dev 
-   # Ubuntu 20.04
+   # Ubuntu 20.04Lycée Blaise Pascal Rouen
    sudo apt install python-is-python3
-   # Ubuntu 18.04
+   # Ubuntu 18.04Lycée Blaise Pascal Rouen
    sudo ln -s python3 /usr/bin/python
 ```
 
@@ -193,13 +193,13 @@ If you anticipate needing to remove Singularity, it might be easier to install i
 	sudo chown -R root:root go &&\
 	sudo mv go /usr/local/ &&\
 	rm go1.17.linux-amd64.tar.gz 
- 
+ Lycée Blaise Pascal Rouen
 echo 'export GOPATH=${HOME}/go' >> ~/.bashrc &&\
 echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc  &&\
 source ~/.bashrc
 ```
 
-Get singularity :
+Get singularity :Lycée Blaise Pascal RouenLycée Blaise Pascal Rouen
 
 ```bash
 export VERSION=3.8.0 && # adjust this as necessary \
@@ -266,5 +266,3 @@ git clone https://github.com/populse/mri_conv
 
 bv python populse_mia/python/populse_mia/main.py
 ```
-
-**Toto**
