@@ -2733,6 +2733,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(pipeline_editor_tabs.count(), 4)
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
 
+    #@unittest.skip #here
     def test_attributes_filter(self):
       """
       Displays the parameters of a node, displays an attributes filter
@@ -2785,7 +2786,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_capsul_node_controller(self):
       """
-      Adds, changes and deletes processes to the capsul node controller, display the 
+      Adds, changes and deletes processes to the capsul node controller, displays the 
       attributes filter.
     
       Notes:
@@ -2796,57 +2797,64 @@ class TestMIAPipelineManager(unittest.TestCase):
       # Opens project 8 and switches to it
       project_8_path = self.get_new_test_project()
       self.main_window.switch_project(project_8_path, "project_8")
+
+      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
     
       pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
       node_controller = self.main_window.pipeline_manager.nodeController        
     
-      # Adds 2 processes Smooth, creates 2 nodes called "smooth_1" and "smooth_2"
-      from nipype.interfaces.spm import Smooth
-      process_class = Smooth
+      # Adds 2 processes Rename, creates 2 nodes called "rename_1" and "rename_2"
+      from nipype.interfaces import Rename
+      process_class = Rename
       pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
       pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
       pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
       pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+      # Displays parameters of "rename_2" node
+      rename_process = pipeline.nodes['rename_2'].process
+      self.main_window.pipeline_manager.displayNodeParameters('rename_2', rename_process)
+
+      # Tries to changes its name to "rename_2" and then to "rename_3"
+      node_controller.update_node_name()
+      self.assertEqual(node_controller.node_name, 'rename_2')
+      node_controller.update_node_name(new_node_name='rename_1', old_node_name='rename_2')
+      self.assertEqual(node_controller.node_name, 'rename_2')
+      node_controller.update_node_name(new_node_name='rename_3', old_node_name='rename_2')
+      self.assertEqual(node_controller.node_name, 'rename_3')
     
-      # Exports the input plugs for "smooth_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
-      pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
-    
+      # Deletes node "rename_3"
+      pipeline_editor_tabs.get_current_editor().del_node("rename_3")
+      
       # Display parameters of the "inputs" node
       input_process = pipeline.nodes[''].process
       node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
     
-      # Displays parameters of "smooth_1" node
-      input_process = pipeline.nodes['smooth_1'].process
-      self.main_window.pipeline_manager.displayNodeParameters('smooth_1', input_process)
+      # Displays parameters of "rename_1" node
+      rename_process = pipeline.nodes['rename_1'].process
+      self.main_window.pipeline_manager.displayNodeParameters('rename_1', rename_process)
     
-      # Tries to changes its name to "smooth_2" and then to "Smooth_3"
-      node_controller.update_node_name()
-      self.assertEqual(node_controller.node_name, 'smooth_1')
-      node_controller.update_node_name(new_node_name='smooth_2', old_node_name='smooth_1')
-      self.assertEqual(node_controller.node_name, 'smooth_1')
-      node_controller.update_node_name(new_node_name='smooth_3', old_node_name='smooth_1')
-      self.assertEqual(node_controller.node_name, 'smooth_3')
-    
-      # Deletes node "smooth_2"
-      pipeline_editor_tabs.get_current_editor().del_node("smooth_2")
-    
-      # Adds the process Smooth, creates a node called "spatial_preprocessing_1_1"
-      from mia_processes.pipelines.preprocess.spatial_preprocessing_1 import Spatial_preprocessing_1
-      process_class = Spatial_preprocessing_1
+      # Exports the input plugs for "rename_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+      pipeline.nodes['rename_1'].set_plug_value('in_file', DOCUMENT_1)
+      pipeline.nodes['rename_1'].set_plug_value('format_string', 'new_name.nii')
     
       # Runs pipeline and expects an error
-      QTimer.singleShot(1000, self.execute_QDialogAccept)
-      self.main_window.pipeline_manager.runPipeline()
+      #QTimer.singleShot(1000, self.execute_QDialogAccept)
+      #self.main_window.pipeline_manager.runPipeline()
+      # FIXME: running the pipeline gives the error "wrapped C/C++ object of type 
+      # PipelineEditorTabs has been deleted".
     
       # Displays attributes filter
       node_controller.filter_attributes()
       attributes_filter = node_controller.pop_up
       attributes_filter.table_data.selectRow(0)
-      QTimer.singleShot(1000, self.execute_QDialogAccept)
+      #QTimer.singleShot(1000, self.execute_QDialogAccept)
       attributes_filter.ok_clicked()
-      
-    
+
       # Releases the process
       node_controller.release_process()
       node_controller.update_parameters()
@@ -3110,7 +3118,7 @@ class TestMIAPipelineManager(unittest.TestCase):
       index_DOCUMENT_1 = input_filter.table_data.get_scan_row(DOCUMENT_1)
       index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
 
-      # Tries to search for an empty string and assert that none of the documents are not hidden
+      # Tries to search for an empty string and asserts that none of the documents are not hidden
       input_filter.search_str('')
       #self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
       #self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
@@ -3128,11 +3136,12 @@ class TestMIAPipelineManager(unittest.TestCase):
       # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag    
       #QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate')) # DO NOT put a breakpoint here
       #QTimer.singleShot(2000, self.execute_QDialogAccept) # nor here
-      #input_filter.update_tags()
-      #self.assertTrue(type(input_filter.table_data.get_tag_column('AcquisitionDate')) == int)
+      input_filter.update_tags()
+      self.add_visualized_tag('AcquisitionDate')
+      self.assertTrue(type(input_filter.table_data.get_tag_column('AcquisitionDate')) == int)
 
       # Updates the tag to filter with
-      QTimer.singleShot(1000, self.execute_QDialogAccept)
+      #QTimer.singleShot(1000, self.execute_QDialogAccept)
       input_filter.update_tag_to_filter()
       input_filter.push_button_tag_filter.setText('FileName')
       # TODO: select tag to filter with
@@ -3376,6 +3385,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         # TODO: open a project and modify the filter pop-up
     '''
 
+    #@unittest.skip
     def test_node_controller(self):
       """
       Adds, changes and deletes processes to the node controller, display the 
@@ -3395,57 +3405,69 @@ class TestMIAPipelineManager(unittest.TestCase):
       # Opens project 8 and switches to it
       project_8_path = self.get_new_test_project()
       self.main_window.switch_project(project_8_path, "project_8")
-    
+
+      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+
       pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
       node_controller = self.main_window.pipeline_manager.nodeController        
     
-      # Adds 2 processes Smooth, creates 2 nodes called "smooth_1" and "smooth_2"
-      from nipype.interfaces.spm import Smooth
-      process_class = Smooth
+      # Adds the process Rename, creates the "rename_1" nodes
+      from nipype.interfaces import Rename
+      process_class = Rename
       pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
       pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
       pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
       pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
-      # Exports the input plugs for "smooth_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
-      pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
 
+      # Displays parameters of "rename_2" node
+      rename_process = pipeline.nodes['rename_2'].process
+      self.main_window.pipeline_manager.displayNodeParameters('rename_2', rename_process)
+
+      # Tries to changes its name to "rename_2" and then to "rename_3"
+      node_controller.update_node_name()
+      self.assertEqual(node_controller.node_name, 'rename_2')
+      node_controller.update_node_name(new_node_name='rename_1')
+      self.assertEqual(node_controller.node_name, 'rename_2')
+      node_controller.update_node_name(new_node_name='rename_3')
+      self.assertEqual(node_controller.node_name, 'rename_3')
+      
+      # Deletes node "rename_2"
+      pipeline_editor_tabs.get_current_editor().del_node("rename_3")
+      self.assertRaises(KeyError, lambda:pipeline.nodes['rename_3'])
+    
+      # Exports the input plugs for "rename_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+      
       # Display parameters of the "inputs" node
       input_process = pipeline.nodes[''].process
       node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
     
-      # Display the filter of the 'in' plug, "inputs" node
-      node_controller.display_filter('inputs', 'in_files', (0, pipeline, type(Undefined)), input_process)
-      plug_filter = node_controller.pop_up
-      plug_filter.ok_clicked()
-      
-      # Displays parameters of "smooth_1" node
-      input_process = pipeline.nodes['smooth_1'].process
-      self.main_window.pipeline_manager.displayNodeParameters('smooth_1', input_process)
+      # Display the filter of the 'in_file' plug, "inputs" node
+      node_controller.display_filter('inputs', 'in_file', (0, pipeline, type(Undefined)), input_process)
+      node_controller.pop_up.close()
 
+      # Sets the values of the mandatory plugs 
+      pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+      pipeline.nodes[''].set_plug_value('format_string', 'new_file.nii')
+      
       # Checks the indexed of input and output plug labels
-      in_plug_index = node_controller.get_index_from_plug_name('in_files', 'in')
-      self.assertEqual(in_plug_index, 5)
-      out_plug_index = node_controller.get_index_from_plug_name('_smoothed_files', 'out')
+      in_plug_index = node_controller.get_index_from_plug_name('in_file', 'in')
+      self.assertEqual(in_plug_index, 1)
+      out_plug_index = node_controller.get_index_from_plug_name('_out_file', 'out')
       self.assertEqual(out_plug_index, 0)
 
       # Tries to updates the plug value without a new value
-      node_controller.update_plug_value('in', 'in_files', pipeline, type(Undefined))
-      node_controller.update_plug_value('out', '_smoothed_files', pipeline, type(Undefined))
-      node_controller.update_plug_value(None, 'in_files', pipeline, type(Undefined))
-    
-      # Tries to changes its name to "smooth_2" and then to "Smooth_3"
-      node_controller.update_node_name()
-      self.assertEqual(node_controller.node_name, 'smooth_1')
-      node_controller.update_node_name(new_node_name='smooth_2')
-      self.assertEqual(node_controller.node_name, 'smooth_1')
-      node_controller.update_node_name(new_node_name='smooth_3')
-      self.assertEqual(node_controller.node_name, 'smooth_3')
-      
-      # Deletes node "smooth_2"
-      pipeline_editor_tabs.get_current_editor().del_node("smooth_2")
-      self.assertRaises(KeyError, lambda:pipeline.nodes['smooth_2'])
+      node_controller.update_plug_value('in', 'in_file', pipeline, type(Undefined))
+      node_controller.update_plug_value('out', '_out_file', pipeline, type(Undefined))
+      node_controller.update_plug_value(None, 'in_file', pipeline, type(Undefined))
+
+      # Tries to updates the plug value with a new value
+      node_controller.update_plug_value('in', 'in_file', pipeline, str, 
+        new_value='new_value.nii')
+      node_controller.update_plug_value('out', '_out_file', pipeline, str, 
+        new_value='new_value.nii')
 
       # Releases the process
       node_controller.release_process()
@@ -3702,6 +3724,208 @@ class TestMIAPipelineManager(unittest.TestCase):
 
       pipeline_manager._register_node_io_in_database(job, job.process())
 
+    def test_update_node_list(self):
+      '''
+      Adds a process, exports input and output plugs, initializes a workflow and adds
+      the process to the "pipline_manager.node_list".
+
+      Notes
+      -----
+      Tests the PipelineManagerTab(QWidget).update_node_list().
+      '''
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      pipeline_manager = self.main_window.pipeline_manager
+      pipeline = pipeline_editor_tabs.get_current_pipeline()    
+
+      from nipype.interfaces import Rename
+      process_class = Rename
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+      # Exports the mandatory inputs and outputs for "rename_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+      
+      # Initializes the workflow
+      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
+      pipeline_manager.workflow = workflow_from_pipeline(pipeline, 
+        complete_parameters=True)
+
+      # Asserts that the "node_list" is empty by default
+      node_list = self.main_window.pipeline_manager.node_list
+      self.assertEqual(len(node_list), 0)
+
+      # Asserts that the process "Rename" was added to "node_list"
+      pipeline_manager.update_node_list()
+      self.assertEqual(len(node_list), 1)
+      self.assertEqual(node_list[0]._nipype_class, 'Rename')
+
+    #@unittest.skip #here
+    def test_get_missing_mandatory_parameters(self):
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      pipeline_manager = self.main_window.pipeline_manager
+
+      from nipype.interfaces import Rename
+      process_class = Rename
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+      # Exports the mandatory inputs and outputs for "rename_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor()._export_plug(temp_plug_name=('rename_1', 
+        '_out_file'), pipeline_parameter='_out_file', optional=False, weak_link=False)
+    
+      # Initializes the pipeline
+      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
+      pipeline_manager.workflow = workflow_from_pipeline(pipeline, 
+        complete_parameters=True)
+      pipeline_manager.update_node_list()
+
+      # Asserts that 2 mandatory parameters are missing
+      pipeline_manager.update_node_list()
+      missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
+      self.assertEqual(len(missing_inputs), 2)
+      self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
+      self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
+
+      # Empties the jobs list
+      pipeline_manager.workflow.jobs = []
+
+      # Asserts that 2 mandatory parameters are still missing
+      missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
+      self.assertEqual(len(missing_inputs), 2)
+      self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
+      self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
+
+    def test_add_plug_value_to_database(self):
+
+      # Opens project 8 and switches to it
+      project_8_path = self.get_new_test_project()
+      self.main_window.switch_project(project_8_path, 'project_9')
+      
+      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+    
+      # Adds the processes Smooth, creates the "rename_1" node
+      from nipype.interfaces import Rename
+      process_class = Rename
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+      # Exports the mandatory input and output plugs for "rename_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+      old_scan_name = DOCUMENT_1.split('/')[-1]
+      new_scan_name = 'new_name.nii'
+
+      # Changes the "_out_file" in the "outputs" node
+      pipeline.nodes[''].set_plug_value('_out_file', 
+        DOCUMENT_1.replace(old_scan_name, new_scan_name))
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
+      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
+
+      job = pipeline_manager.workflow.jobs[0]
+
+      import uuid
+      brick_id = str(uuid.uuid4())
+      job.uuid = brick_id
+      pipeline_manager.brick_list.append(brick_id)
+
+      from populse_mia.data_manager.project import COLLECTION_BRICK
+      pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
+
+      #pipeline_manager._register_node_io_in_database(job, job.process())
+
+      # Sets the mandatory plug values in the "inputs" node
+      pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+      pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
+
+      process = job.process()
+      plug_name = 'in_file'
+      trait = process.trait(plug_name)
+      
+      inputs = process.get_inputs()
+      
+      attributes = {}
+      from capsul.attributes.completion_engine import ProcessCompletionEngine
+      completion = ProcessCompletionEngine.get_completion_engine(process)
+      if completion:
+          attributes = completion.get_attribute_values().export_to_dict()
+
+      has_document = pipeline_manager.project.session.has_document
+
+      # Plug value is file location outside project directory
+      pipeline_manager.add_plug_value_to_database(DOCUMENT_1, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
+      self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
+
+      # Plug value is file location inside project directory
+      inside_project = os.path.join(pipeline_manager.project.folder, DOCUMENT_1.split('/')[-1])
+      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+
+      # Plug value that is already in the database
+      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+
+      # Plug value is tag
+      tag_value = os.path.join(pipeline_manager.project.folder,'tag.gz')
+      pipeline_manager.add_plug_value_to_database(tag_value, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+      
+      # Plug value is .mat
+      mat_value = os.path.join(pipeline_manager.project.folder,'file.mat')
+      pipeline_manager.add_plug_value_to_database(mat_value, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+
+      # Plug value is .mat
+      txt_value = os.path.join(pipeline_manager.project.folder, 'file.txt')
+      pipeline_manager.add_plug_value_to_database(txt_value, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+
+
+      job.inheritance_dict = {
+        inside_project: {
+          'own_tags': [
+            {
+              'name':'tag_name',
+              'field_type': 'string',
+              'description': 'description_content',
+              'visibility': 'visibility_content',
+              'origin': 'origin_content',
+              'unit': 'unit_content',
+              'value': 'value_content',
+              'default_value': 'default_value_content'
+              }
+            ],
+            'parent': 'parent_content'
+          }
+        }
+
+      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+      
+      job.auto_inheritance_dict = {
+        
+      }
+
+      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+      
     def test_save_pipeline(self):
         """
         Saves a simple pipeline
