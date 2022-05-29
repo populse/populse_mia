@@ -17,8 +17,8 @@ In the following we propose exclusively for linux the use of a Singularity conta
   - bv bash # to open a terminal in the container
 
   *To create a container within a writable directory*:
-  - sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.0-1_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)
-  - sudo singularity run --writable $HOME/casa_distro/casa-dev-5.0-1_wr bash # to modify the image
+  - sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)
+  - sudo singularity run --writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image
   - "It is now possible to modify the image. For example let's update all packages and install emacs:"
   - Singularity> apt update  # Singularity> is the prompt
   - Singularity> apt-get install -y software-properties-common
