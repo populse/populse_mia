@@ -2612,16 +2612,33 @@ class TestMIAPipelineManager(unittest.TestCase):
             - execute_QDialogAccept: accept (close) a QDialog window
             - get_new_test_project: create a temporary project that can be
               safely modified
+            - test_add_plug_value_to_database: sets the mandatory plug 
+            parameters and adds them to the database
             - test_add_tab: adds tabs to the PipelineEditorTabs
+            - test_attributes_filter: displays an attributes filter and 
+            modifies it
+            - test_capsul_node_controller: adds, changes and deletes processes 
+            using the capsul node controller
             - test_close_tab: closes a tab in the PipelineEditorTabs
             - test_delete_processes: deletes a process and makes the undo/redo
             - test_display_filter: displays node parameters and a plug filter
             - test_drop_process: adds a Nipype SPM Smooth process to the
               pipeline editor
+            - test_filter_widget: opens up the "FilterWidget()" to modify its 
+            parameters.
+            - test_get_missing_mandatory_parameters: ries to initialize the 
+            pipeline with missing mandatory parameters
             - test_iteration_table: plays with the iteration table
+            - test_node_controller: adds, changes and deletes processes to the 
+            node controller
+            - test_plug_filter: displays a plug filter and modifies it
             - test_process_library: install the brick_test and then remove it
+            - test_register_node_io_in_database: sets input and output 
+            parameters and registers them in database
             - test_save_pipeline: saves a simple pipeline
             - test_undo_redo: tests the undo/redo
+            - test_update_node_list: initializes a workflow and adds a process 
+            to the "pipline_manager.node_list"
             - test_update_node_name: displays node parameters and updates
               its name
             - test_update_plug_value: displays node parameters and updates
@@ -2733,7 +2750,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(pipeline_editor_tabs.count(), 4)
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
 
-    #@unittest.skip #here
     def test_attributes_filter(self):
       """
       Displays the parameters of a node, displays an attributes filter
@@ -2786,8 +2802,8 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_capsul_node_controller(self):
       """
-      Adds, changes and deletes processes to the capsul node controller, displays the 
-      attributes filter.
+      Adds, changes and deletes processes using the capsul node controller, displays 
+      the attributes filter.
     
       Notes:
       ------
@@ -3763,8 +3779,15 @@ class TestMIAPipelineManager(unittest.TestCase):
       self.assertEqual(len(node_list), 1)
       self.assertEqual(node_list[0]._nipype_class, 'Rename')
 
-    #@unittest.skip #here
     def test_get_missing_mandatory_parameters(self):
+      '''
+      Adds a process, exports input and output plugs and tries to initialize
+      the pipeline with missing mandatory parameters.
+
+      Notes
+      -----
+      Tests the PipelineManagerTab(QWidget).get_missing_mandatory_parameters().
+      '''
 
       pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
       pipeline_manager = self.main_window.pipeline_manager
@@ -3804,6 +3827,14 @@ class TestMIAPipelineManager(unittest.TestCase):
       self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
 
     def test_add_plug_value_to_database(self):
+      '''
+      Adds a process, exports input and output plugs, sets the mandatory plug 
+      parameters and adds them to the database.
+
+      Notes
+      -----
+      Tests the PipelineManagerTab(QWidget).add_plug_value_to_database().
+      '''
 
       # Opens project 8 and switches to it
       project_8_path = self.get_new_test_project()
