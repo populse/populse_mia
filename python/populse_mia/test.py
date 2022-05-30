@@ -39,7 +39,7 @@ from datetime import datetime
 from functools import partial
 from packaging import version
 from pathlib import Path
-from traits.api import Undefined
+from traits.api import Undefined, TraitListObject
 
 if not os.path.dirname(os.path.dirname(
         os.path.realpath(__file__))) in sys.path:  # "developer" mode
@@ -2611,8 +2611,10 @@ class TestMIAPipelineManager(unittest.TestCase):
             - execute_QDialogAccept: accept (close) a QDialog window
             - get_new_test_project: create a temporary project that can be
               safely modified
-            - test_add_plug_value_to_database: sets the mandatory plug 
-            parameters and adds them to the database
+            - test_add_plug_value_to_database_list_type: adds a list type plug
+            value to the database
+            - test_add_plug_value_to_database_non_list_type: adds a non list
+            type plug value to the database
             - test_add_tab: adds tabs to the PipelineEditorTabs
             - test_attributes_filter: displays an attributes filter and 
             modifies it
@@ -3692,11 +3694,12 @@ class TestMIAPipelineManager(unittest.TestCase):
       '''
       
       # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, 'project_9')
+      #project_8_path = self.get_new_test_project()
+      #self.main_window.switch_project(project_8_path, 'project_9')
       
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-      DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]
+      # Retrieves the documents from the 'ressources' folder
+      DOCUMENT_1 = 'data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii'
+      DOCUMENT_2 = 'data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii'
 
       pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
     
@@ -3849,10 +3852,10 @@ class TestMIAPipelineManager(unittest.TestCase):
       self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
       self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
 
-    def test_add_plug_value_to_database(self):
+    def test_add_plug_value_to_database_list_type(self):
       '''
-      Adds a process, exports input and output plugs, sets the mandatory plug 
-      parameters and adds them to the database.
+      Opens a project, adds a 'Select' process, exports a list type input plug 
+      and adds it to the database.
 
       Notes
       -----
@@ -3862,6 +3865,95 @@ class TestMIAPipelineManager(unittest.TestCase):
       # Opens project 8 and switches to it
       project_8_path = self.get_new_test_project()
       self.main_window.switch_project(project_8_path, 'project_9')
+      
+      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+      DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+    
+      # Adds the processes Select, creates the "select_1" node
+      from nipype.interfaces import Select
+      process_class = Select
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+      # Exports the mandatory input and output plugs for "select_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'select_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # Initializes the workflow manually
+      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
+      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
+
+      job = pipeline_manager.workflow.jobs[0]
+
+      import uuid
+      brick_id = str(uuid.uuid4())
+      job.uuid = brick_id
+      pipeline_manager.brick_list.append(brick_id)
+
+      from populse_mia.data_manager.project import COLLECTION_BRICK
+      pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
+
+      # Sets the mandatory plug values corresponding to the "inputs" node
+      from nipype.interfaces.base.traits_extension import InputMultiObject
+      trait_list_inlist = TraitListObject(InputMultiObject(), pipeline, 'inlist', [
+        DOCUMENT_1, 
+        DOCUMENT_2])
+      
+      #pipeline.nodes[''].set_plug_value('inlist', trait_list_inlist)
+      #pipeline.nodes[''].set_plug_value('index', trait_list_index)
+      # the plug values do not have to be set for the test to succed
+
+      # Testing with 
+      process = job.process()
+      plug_name = 'inlist'
+      trait = process.trait(plug_name)
+      
+      inputs = process.get_inputs()
+      
+      # Sets the 'attributes' dict
+      attributes = {}
+      from capsul.attributes.completion_engine import ProcessCompletionEngine
+      completion = ProcessCompletionEngine.get_completion_engine(process)
+      if completion:
+          attributes = completion.get_attribute_values().export_to_dict()
+
+      # Mocks the attributes dict
+      attributes={
+        'not_list':'not_list_value', 
+        'small_list':['list_item1'], 
+        'large_list':['list_item1','list_item2','list_item3']
+        }
+      
+      # Adds plug value of type 'TraitListObject'
+      pipeline_manager.add_plug_value_to_database(trait_list_inlist, brick_id, '',
+        'select_1', plug_name, 'select_1', job, trait, inputs, attributes)
+      
+      # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in the database
+      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
+      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_2)
+      has_document = pipeline_manager.project.session.has_document
+      self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
+      self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_2))
+  
+    def test_add_plug_value_to_database_non_list_type(self):
+      '''
+      Opens a project, adds a 'Rename' process, exports a non list type input 
+      plug and adds it to the database.
+
+      Notes
+      -----
+      Tests the PipelineManagerTab(QWidget).add_plug_value_to_database().
+      '''
+
+      # Opens project 8 and switches to it
+      project_8_path = self.get_new_test_project()
+      self.main_window.switch_project(project_8_path, 'project_8')
       
       DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
 
@@ -3901,7 +3993,6 @@ class TestMIAPipelineManager(unittest.TestCase):
       from populse_mia.data_manager.project import COLLECTION_BRICK
       pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
 
-      #pipeline_manager._register_node_io_in_database(job, job.process())
 
       # Sets the mandatory plug values in the "inputs" node
       pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
@@ -3926,6 +4017,8 @@ class TestMIAPipelineManager(unittest.TestCase):
         'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
       pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
       self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
+      # Plug values outside the directory are not registered into the database,
+      # therefore only plug values inside the project will be used from now on.
 
       # Plug value is file location inside project directory
       inside_project = os.path.join(pipeline_manager.project.folder, DOCUMENT_1.split('/')[-1])
@@ -3951,7 +4044,25 @@ class TestMIAPipelineManager(unittest.TestCase):
       pipeline_manager.add_plug_value_to_database(txt_value, brick_id, '',
         'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
 
+      # 'parent_files' are extracted from the 'inheritance_dict' and 'auto_inheritance_dict'
+      # attributes of 'job'. They test cases are listed below:
 
+      # 'parent_files' inside 'auto_inheritance_dict'
+      job.auto_inheritance_dict = {
+        inside_project: 'parent_files_value'
+        }
+      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+      
+      # 'parent_files' inside 'inheritance_dict'
+      job.auto_inheritance_dict = None
+      job.inheritance_dict = {
+        inside_project: 'parent_files_value'
+        }
+      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
+        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+      
+      # 'parent_files' inside 'inheritance_dict', dict type
       job.inheritance_dict = {
         inside_project: {
           'own_tags': [
@@ -3969,17 +4080,32 @@ class TestMIAPipelineManager(unittest.TestCase):
             'parent': 'parent_content'
           }
         }
-
       pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
         'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
       
-      job.auto_inheritance_dict = {
-        
-      }
+      # 'parent_files' inside 'inheritance_dict', output is one of the inputs
+      job.inheritance_dict = {
+        inside_project: {
+          'own_tags': [
+            {
+              'name':'tag_name',
+              'field_type': 'string',
+              'description': 'description_content',
+              'visibility': 'visibility_content',
+              'origin': 'origin_content',
+              'unit': 'unit_content',
+              'value': 'value_content',
+              'default_value': 'default_value_content'
+              }
+            ],
+          'parent': 'parent_content',
+          'output': inside_project
+          }
+        }
 
       pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
         'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-      
+
     def test_save_pipeline(self):
         """
         Saves a simple pipeline
