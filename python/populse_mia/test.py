@@ -130,7 +130,7 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_TIME)
 
 # capsul import
-from capsul.api import get_process_instance
+from capsul.api import get_process_instance, ProcessNode, PipelineNode, Switch
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -2599,7 +2599,6 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue(TAG_TYPE in columns_displayed)
         self.assertTrue(TAG_BRICKS in columns_displayed)
 
-
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
 
@@ -3401,7 +3400,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         # TODO: open a project and modify the filter pop-up
     '''
 
-    #@unittest.skip
     def test_node_controller(self):
       """
       Adds, changes and deletes processes to the node controller, display the 
@@ -3697,6 +3695,7 @@ class TestMIAPipelineManager(unittest.TestCase):
       self.main_window.switch_project(project_8_path, 'project_9')
       
       DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+      DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]
 
       pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
     
@@ -3738,6 +3737,29 @@ class TestMIAPipelineManager(unittest.TestCase):
       from populse_mia.data_manager.project import COLLECTION_BRICK
       pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
 
+      pipeline_manager._register_node_io_in_database(job, job.process())
+
+      # Simulates multiple inputs and outputs
+      #job.param_dict['in_file'] = [DOCUMENT_1,DOCUMENT_2]
+      #job.param_dict['_out_file'] = ['out_file1.nii', 'out_file2.nii']
+      #pipeline_manager._register_node_io_in_database(job, job.process())
+
+      # Simulates a 'ProcessNode()' as 'process'
+      process_node = ProcessNode(pipeline, '', job.process())
+      pipeline_manager._register_node_io_in_database(job, process_node)
+
+      # Simulates a 'PipelineNode()' as 'process'
+      pipeline_node = PipelineNode(pipeline, '', job.process())
+      pipeline_manager._register_node_io_in_database(job, pipeline_node)
+
+      # Simulates a 'Switch()' as 'process'      
+      switch = Switch(pipeline, '', [''], [''])
+      switch.completion_engine=None
+      pipeline_manager._register_node_io_in_database(job, switch)
+
+      # Simulates a a list of outputs in 'process'
+      job.process().list_outputs = []
+      job.process().outputs = []
       pipeline_manager._register_node_io_in_database(job, job.process())
 
     def test_update_node_list(self):
