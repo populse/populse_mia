@@ -7,24 +7,25 @@ In the following we propose exclusively for linux the use of a Singularity conta
   *Read-only container*:
   - "Two softwares must be installed: Python (version >= 3.7) and Singularity (version > 3.6)"
   - mkdir -p $HOME/casa_distro/brainvisa-opensource-master # create an installation directory
-  - "[download the last casa-dev image](https://brainvisa.info/download/) (ex. casa-dev-5.0-1.sif), preferably into the $HOME/casa_distro directory"
-  - singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.0-1.sif branch=master distro=opensource # execute the container image using Singularity
+  - "[download the last casa-dev image](https://brainvisa.info/download/) (ex. casa-dev-5.3-6.sif version compatible with Ubuntu 22.04), preferably into the $HOME/casa_distro directory"
+  - singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-6.sif branch=master distro=opensource # execute the container image using Singularity
   - "set the bin/ directory of the installation directory in the PATH environment variable of the host system, typically add `export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"` in $HOME/.bashrc if unix bash shell
-  - "add `cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3` in the [ build $CASA_BUILD ] section of the $HOME/casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg file (host) to make python3 as default"
+  - "add `cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3` and  `cmake_options += -DDESIRED_QT_VERSION=5`
+ in the [ build $CASA_BUILD ] section of the $HOME/casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg file (host) to make python3 as default"
   - bv_maker #  to build from within container terminal or from outside the container
   - bv # to run the configuration GUI
   - bv bash # to open a terminal in the container
 
   *To create a container within a writable directory*:
-  - sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.0-1_wr $HOME/casa_distro/casa-dev-5.0-1.sif # to make an editable image (casa-dev-5.0-1_wr)
-  - sudo singularity run --writable $HOME/casa_distro/casa-dev-5.0-1_wr bash # to modify the image
+  - sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)
+  - sudo singularity run --writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image
   - "It is now possible to modify the image. For example let's update all packages and install emacs:"
   - Singularity> apt update  # Singularity> is the prompt
   - Singularity> apt-get install -y software-properties-common
   - Singularity> add-apt-repository ppa:kelleyk/emacs
   - Singularity> apt install emacs26
-  - "Edit the $HOME/casa_distro/brainvisa-opensource-master/conf/casa_distro.json file and change the value of the `image` key (ex. "image": "/home/econdami/casa_distro/casa-dev-5.0-1_wr" in place of "image": "/home/econdami/casa_distro/casa-dev-5.0-1.sif")"
-  - "Then using `bv` or `bv bash` will use the casa-dev-5.0-1_wr image" 
+  - "Edit the $HOME/casa_distro/brainvisa-opensource-master/conf/casa_distro.json file and change the value of the `image` key (ex. "image": "/home/econdami/casa_distro/casa-dev-5.3-6_wr" in place of "image": "/home/econdami/casa_distro/casa-dev-5.3-6.sif")"
+  - "Then using `bv` or `bv bash` will use the casa-dev-5.3-6_wr image" 
 
 **[Longer](https://brainvisa.info/web/download.html)**
 
@@ -98,7 +99,9 @@ Windows
 Here you find documentation to install Populse_MIA in Windows 10.  
 We use virtualization with Singularity.  
 
-Before everything, we need to have WSL (Windows Subsystem Linux). With this we can install a linux Ubuntu 20.04 or 18.04.  
+Before everything, we need to have WSL (Windows Subsystem Linux). With this we can install a linux Ubuntu 22.04, 20.04 or 18.04.
+To install linux Ubuntu 22.04 you can either make an upgrade of the linux Ubuntu 20.04.
+We recommand an update of  linux Ubuntu 20.04 once it's installed.
 
 
 ### 1 - WSL2 (Windows Subsystem Linux) installation
@@ -123,7 +126,7 @@ Before everything, we need to have WSL (Windows Subsystem Linux). With this we c
 ```
    - close this window
 
-Now you have WSL2 and an Ubuntu 20.04 linux.   
+Now you have WSL2 and an Ubuntu 20.04 linux.   Lycée Blaise Pascal Rouen
 Before you install a new distribution using `wsl --install -d distribution`, make sure that WSL is in 2 mode with:  
    `wsl --set-default-version 2`  
 The distribution is only available for the current Windows user.  
@@ -135,8 +138,47 @@ To know more:
    - [Basic commands for WSL](https://docs.microsoft.com/en-us/windows/wsl/basic-commands)  
 
 
+### 2- Upgrade Ubuntu 20.04 to 22.04 (Only for devellopers )
 
-### 2 - X server installation in windows with VcXsrv 
+If you are a developper, you will need Ubuntu 22.04 to work on the whole project populse.
+If not , you can ignore this part 2.
+You have precedently update the linux system. You can directly upgrade your linux Ubuntu distriution to 22.04 with the following commands:
+
+* To get if any new rekease is available type:
+
+`sudo apt dist-upgrade`
+
+* Install the update manager:
+
+Although the update manager core will already be there, however, to confirm just run the given command.
+
+`sudo apt install update-manager-core`
+	
+* Edit release-upgrades configuration file using the below-given command.
+	
+`sudo nano /etc/update-manager/release-upgrades`
+
+* After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS.
+	
+`Prompt = lts`
+	
+Save the file by pressing Ctrl+O and then exit the same with Ctrl+X.
+
+* Here startes the concrete upgrade by the command:
+
+`sudo do-release-upgrade -d`
+
+After running the above command, the system will update and replace the system repository and after that, once the system is ready to get upgraded, you will ask finally whether you want to upgrade or not. If you have changed your mind then type ‘n‘ and the system will roll back all the made changes.
+
+Once the installation of the new Jammy Jelly Fish is completed, remove the obsolete packages to clear some space by pressing Y and hitting the Enter key.
+
+The WSL Ubuntu App will ask you to restart the system. However, it has not been started as an init system, so that will not be possible. Therefore, simply close the WSL app window and open it again.
+
+* You can chechk the Ubuntu version installed via the command:
+
+`cat /otc/os-release`
+	
+### 3- X server installation in windows with VcXsrv 
 
 We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
 
@@ -156,9 +198,10 @@ We also need a X windows server to allow linux applications graphic user interfa
    - <img src="images/screenshots/Xlaunch_4.png" width=80%>
 
 - Allow access asked by Windows firewall  
+ 
+ P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux ditribution.
   
-  
-### 3 - Dependencies Installation 
+### 4 - Dependencies Installation 
 
 - Open an Ubuntu session in Windows by: 
    - click on Ubuntu new icon  
@@ -170,18 +213,21 @@ We also need a X windows server to allow linux applications graphic user interfa
 
 ```bash
    sudo apt install -y build-essential uuid-dev libgpgme-dev squashfs-tools libseccomp-dev wget pkg-config git git-lfs cryptsetup-bin python3-distutils python3-dev 
-   # Ubuntu 20.04
+   # Ubuntu 20.04Lycée Blaise Pascal Rouen
    sudo apt install python-is-python3
-   # Ubuntu 18.04
+   # Ubuntu 18.04Lycée Blaise Pascal Rouen
    sudo ln -s python3 /usr/bin/python
 ```
 
 
-### 4 - Singularity Installation 
+### 5 - Singularity Installation 
 
 On ubuntu, at this time (27-08-2021) there is no package for singularity  
+
 Then to allow [singularity installation](https://singularity.hpcng.org/admin-docs/3.8/) we need go language and some dependances for compilation.  
 If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig. In that case Singularity can be uninstalled simply by deleting the parent directory.  
+
+
 ```bash
 #Ubuntu 20.04
 	sudo apt install -y golang 
@@ -193,16 +239,34 @@ If you anticipate needing to remove Singularity, it might be easier to install i
 	sudo chown -R root:root go &&\
 	sudo mv go /usr/local/ &&\
 	rm go1.17.linux-amd64.tar.gz 
- 
+ Lycée Blaise Pascal Rouen
 echo 'export GOPATH=${HOME}/go' >> ~/.bashrc &&\
 echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc  &&\
 source ~/.bashrc
 ```
 
-Get singularity :
+Get singularity :Lycée Blaise Pascal RouenLycée Blaise Pascal Rouen
+
+Ubuntu 22.04 is recommanded for developpers. The latest version of singularity is the 3.8.3 which is compatible with Ubuntu 22.04.
+Regarding your Ubuntu version get the right download link of the singularity version you need here https://brainvisa.info/web/download.html#prerequisites.
+See the section **Prerequisites for Singularity on Linux**
+The 3.8.3 version link is https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb
+You can install singularity either like 
+
+- Way 1
+``` 
+wget https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb
+sudo dpkg -i singularity-container-*.deb
+sudo mkdir /opt/singularity
+./mconfig --prefix=/opt/singularity
+cd builddir
+make
+sudo make install
+```
+or - Way 2
 
 ```bash
-export VERSION=3.8.0 && # adjust this as necessary \
+export VERSION=3.8.3 && # adjust this as necessary \
 	wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
 	tar -xzf singularity-ce-${VERSION}.tar.gz && \
 	cd singularity-ce-${VERSION}
@@ -217,26 +281,41 @@ Test it with :
 ```bash
 /opt/singularity/bin/singularity version
 ```
-Then remove installation files:  
-```bash
-cd ../.. &&\  
-rm -R singularity-ce-${VERSION}*
-```
+Then remove installation files. Enter the reportory where you donwload the singularity install.
+Use the command ```rm -R singularity-ce_3.8.3~ubuntu-20.04_amd64.deb``` if you installed via Way 1 or ```rm -R singularity-ce-${VERSION}*``` if you installed via Way 2.
 
 
-### 5 - Populse_MIA with BrainVisa Singularity image installation
+
+
+### 6 - Populse_MIA with BrainVisa Singularity image installation
 
 In the aim to install Populse_MIA with anatomist viewer, we need the Brainvisa dev singularity image compatible with python 3, QT5
- 
+
 - #### 5 - 1 - Brainvisa Installation
-```bash
-mkdir ~/brainvisa_dev_5.0.4
-cd ~/brainvisa_dev_5.0.4
-wget https://brainvisa.info/download/casa-dev-5.0-4.sif
-mkdir brainvisa_ro
-echo	'export PATH=${PATH}:/opt/singularity/bin/:${HOME}/brainvisa_dev_5.0.4/brainvisa_ro/bin' >> ~/.bashrc &&\
+P.S: Choose your BrainVisa install according to your Ubuntu version. Go to https://brainvisa.info/web/download.html#prerequisites.
+See the section **Installing a Singularity developer environment** and follow the steps.
+
+
+- Create an installation directory:
+
+`mkdir -p $HOME/casa_distro/brainvisa-opensource-master`
+(note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations - but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
+
+- Download the "casa-dev" image found here (https://brainvisa.info/download/), preferably into the $HOME/casa_distro directory. It’s a .sif file, for instance casa-dev-5.3-6.sif.
+
+``` cd /$HOME/casa_distro 
+wget https://brainvisa.info/download/casa-dev-5.3-6.sif
+```
+Note that you don’t need to download an image built for your host system, the virtualization allows precisely to run, for instance, an Ubuntu-18.04 image, on any host system (Linux, Windows, or Mac).
+
+- Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional:
+`singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.0.sif branch=master distro=opensource`
+
+- set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell:
+
+```
+echo	'export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH" >> ~/.bashrc &&\
 source ~/.bashrc
-singularity run -B brainvisa_ro:/casa/setup casa-dev-5.0-4.sif branch=master distro=opensource
 
 # we get the ip address to allow X server access and this ip can change when Windows reboot
 nano ~/.bashrc
@@ -252,18 +331,39 @@ bv_maker
 # it takes time to compile
 ```
 
+Now you can test if the brainvisa configuration GUI works well via the command:
+`bv`
+
+
 - #### 5 - 2 - Populse_MIA Installation
+
+For the purpose of the container is to make profit of its ressources,
+you will install populse_mia, mri_conv and mia_processes in the container repertory.
+
+
 ```bash
+### enter in the container ###
+
+bv bash
+
 ### require for mri_conv ###
 sudo apt install -y openjdk-17-jre-headless
 
 mkdir ~/DEV &&\
 mkdir ~/DEV/populse_dev &&\
 cd ~/DEV/populse_dev
-git-lfs clone https://github.com/populse/populse_mia.git #git-lfs allow icons and other ressources to be download
+git clone https://github.com/populse/populse_mia.git #git allow icons and other ressources to be download
 git clone https://github.com/populse/mia_processes
 git clone https://github.com/populse/mri_conv
-
-bv python populse_mia/python/populse_mia/main.py
 ```
+
+To launch mia using an alias, insert the  following commands in the bash of your container.
+
+# mia launch
+alias mia='pwd_orig=$PWD; cd /casa/home/DEV/populse_dev/populse_mia/python/populse_mia; python3 main.py; cd $pwd_orig'
+
+You can now lauch mia with the command:
+```mia```
+
+
 
