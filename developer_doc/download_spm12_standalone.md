@@ -1,6 +1,11 @@
 Linux
 =====
 
+Before following the steps, make sure your are on your root directory ( /home ) and outside the container .
+This allows to avoid root accesses issues.
+Chose the user account folder on your host to make the installations : /home/<your_lacal_user_account>/ . 
+
+
 1- Download the desired version of spm: https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/
 Unzip it
 
@@ -25,7 +30,30 @@ sudo ldconfig
 Execute SPM12, the second path being the path of the MCR (that has been chosen during the installation):
 ./run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v93
 
-P.S. Tested on linux with http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip (part 1 above), https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip (part 2 above) and without using parts 5 and 6 above: It works!
+P.S. Tested on linux with http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip (part 1 above), https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip (part 2 above) and without using parts 5 and 6 above: It works! We can now launch Mia. 
+
+In **MIA** go to:
+
+File> MIA preferences > Pipelines:
+
+In the **MATLAB section**:
+   
+   -Check on the box <use Matlab standalone>.
+  
+   -Click on browse and add the installation path of your MATLAB Runtime supposed to look like:
+       /usr/local/MATLAB/MATLAB_Runtime/v95.
+
+
+In the **SMP section** :
+  
+   -Check on the box <use SPM standalone>.
+  
+   -Click on browse and add the path of the unzip file of spm12 supposed to look like:
+       /home/<your_lacal_user_account>/smp12.
+
+Then validate your changes by clicking on **OK button** 
+
+You can now use MATLAB and SPM with MIA!
 
 MacOS
 =====
