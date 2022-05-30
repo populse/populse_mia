@@ -2635,6 +2635,7 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_register_node_io_in_database: sets input and output 
             parameters and registers them in database
             - test_save_pipeline: saves a simple pipeline
+            - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
             - test_undo_redo: tests the undo/redo
             - test_update_node_list: initializes a workflow and adds a process 
             to the "pipline_manager.node_list"
@@ -4017,6 +4018,22 @@ class TestMIAPipelineManager(unittest.TestCase):
                                                     'processes',
                                                     'User_processes',
                                                     'test_pipeline.py')))
+    
+    def test_set_anim_frame(self):
+      '''
+      Runs the 'rotatingBrainVISA.gif' animation.
+      '''
+      pipeline_manager = self.main_window.pipeline_manager
+      
+      config = Config()
+      sources_images_dir = config.getSourceImageDir()
+      self.assertTrue(sources_images_dir) # if the string is not empty
+
+      from PyQt5.QtGui import QMovie
+      mmovie = QMovie(os.path.join(sources_images_dir, 'rotatingBrainVISA.gif'))
+      pipeline_manager._mmovie = mmovie
+
+      pipeline_manager._set_anim_frame()
 
     def test_undo_redo(self):
         """
