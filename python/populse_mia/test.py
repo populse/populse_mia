@@ -17,14 +17,15 @@
 
 #  PyQt5 import
 from PyQt5 import QtGui
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QPoint, QTimer, QT_VERSION_STR
+from PyQt5.QtCore import (QCoreApplication, QEvent, QPoint, Qt, QTimer,
+                          QT_VERSION_STR)
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QDialog, QMessageBox,
                              QTableWidgetItem)
 
 # Nipype import
-from nipype.interfaces.spm import Smooth
-from nipype.interfaces.spm import Threshold
+from nipype.interfaces import Rename
+from nipype.interfaces.spm import Smooth, Threshold
 
 # other import
 import ast
@@ -34,6 +35,7 @@ import sys
 import tempfile
 import threading
 import unittest
+import uuid
 import yaml
 from datetime import datetime
 from functools import partial
@@ -41,8 +43,8 @@ from packaging import version
 from pathlib import Path
 from traits.api import Undefined, TraitListObject
 
-if not os.path.dirname(os.path.dirname(
-        os.path.realpath(__file__))) in sys.path:  # "developer" mode
+if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
+    # "developer" mode
     root_dev_dir = os.path.dirname(
         os.path.dirname(
             os.path.dirname(
@@ -102,6 +104,10 @@ if not os.path.dirname(os.path.dirname(
         sys.path.insert(1, soma_workflow_dev_dir)
         del soma_workflow_dev_dir
 
+
+# mia_processes import
+from mia_processes.bricks.tools import Input_Filter
+
 # populse_mia import
 from populse_mia.data_manager.project import (COLLECTION_BRICK,
                                               COLLECTION_CURRENT,
@@ -131,6 +137,8 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
 
 # capsul import
 from capsul.api import get_process_instance, ProcessNode, PipelineNode, Switch
+from capsul.attributes.completion_engine import ProcessCompletionEngine
+from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -147,14 +155,14 @@ class TestMIADataBrowser(unittest.TestCase):
         :Method:
             - edit_databrowser_list: change value to [25000] for a tag in
               DataBrowser
-            - setUp: called automatically before each test method
-            - tearDown: cleans up after each test method
-            - setUpClass: called before tests in the individual class
-            - tearDownClass: called after tests in the individual class
             - execute_QMessageBox_clickOk: press the Ok button of a QMessageBox
               instance
             - get_new_test_project: create a temporary project that can be
               safely modified
+            - setUp: called automatically before each test method
+            - tearDown: cleans up after each test method
+            - setUpClass: called before tests in the individual class
+            - tearDownClass: called after tests in the individual class
             - test_add_path: tests the popup to add a path
             - test_add_tag: tests the pop up adding a tag
             - test_advanced_search: tests the advanced search widget
@@ -202,6 +210,34 @@ class TestMIADataBrowser(unittest.TestCase):
         item = w.table.item(0, 0)
         item.setText(value)
         w.update_table_values(True)
+
+    def execute_QMessageBox_clickOk(self):
+        """
+        Press the Ok button of a QMessageBox instance
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Ok)
+            QTest.mouseClick(close_button, Qt.LeftButton)
+
+    def get_new_test_project(self):
+        """
+        Copy the test project in a location we can modify safely
+        """
+
+        project_path = os.path.join(self.config_path, 'project_8')
+
+        if os.path.exists(project_path):
+            shutil.rmtree(project_path)
+
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+                                      'project_8')
+        shutil.copytree(project_8_path, project_path)
+        return project_path
 
     def setUp(self):
         """
@@ -252,34 +288,6 @@ class TestMIADataBrowser(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
-    def execute_QMessageBox_clickOk(self):
-        """
-        Press the Ok button of a QMessageBox instance
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Ok)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def get_new_test_project(self):
-        """
-        Copy the test project in a location we can modify safely
-        """
-
-        project_path = os.path.join(self.config_path, 'project_8')
-
-        if os.path.exists(project_path):
-            shutil.rmtree(project_path)
-
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
-                                      'project_8')
-        shutil.copytree(project_8_path, project_path)
-        return project_path
-
     def test_add_path(self):
         """
         Tests the popup to add a path
@@ -303,16 +311,16 @@ class TestMIADataBrowser(unittest.TestCase):
         QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
 
         self.assertEqual(self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_CURRENT),
-                         [os.path.join('data', 'downloaded_data', 'test.py')])
+            COLLECTION_CURRENT),
+            [os.path.join('data', 'downloaded_data', 'test.py')])
         self.assertEqual(self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_INITIAL),
-                         [os.path.join('data', 'downloaded_data', 'test.py')])
+            COLLECTION_INITIAL),
+            [os.path.join('data', 'downloaded_data', 'test.py')])
         self.assertEqual(self.main_window.data_browser.table_data.rowCount(),
                          1)
         self.assertEqual(self.main_window.data_browser.table_data.item(
-                                                                      0,
-                                                                      0).text(),
+            0,
+            0).text(),
                          os.path.join('data', 'downloaded_data', 'test.py'))
 
     def test_add_tag(self):
@@ -363,25 +371,25 @@ class TestMIADataBrowser(unittest.TestCase):
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                            COLLECTION_CURRENT))
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                            COLLECTION_INITIAL))
 
         for document in self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_CURRENT):
+                COLLECTION_CURRENT):
             self.assertEqual(self.main_window.project.session.get_value(
-                                          COLLECTION_CURRENT, document, "Test"),
-                             "def_value")
+                COLLECTION_CURRENT, document, "Test"),
+                "def_value")
 
         for document in self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_INITIAL):
+                COLLECTION_INITIAL):
             self.assertEqual(self.main_window.project.session.get_value(
-                                          COLLECTION_INITIAL, document, "Test"),
-                             "def_value")
+                COLLECTION_INITIAL, document, "Test"),
+                "def_value")
 
         test_column = self.main_window.data_browser.table_data.get_tag_column(
-                                                                         "Test")
+            "Test")
 
         for row in range(0,
                          self.main_window.data_browser.table_data.rowCount()):
@@ -407,11 +415,11 @@ class TestMIADataBrowser(unittest.TestCase):
         add_tag.combo_box_type.setCurrentText("Integer List")
         QTest.mouseClick(add_tag.text_edit_default_value, Qt.LeftButton)
         QTest.mouseClick(
-                add_tag.text_edit_default_value.list_creation.add_element_label,
-                Qt.LeftButton)
+            add_tag.text_edit_default_value.list_creation.add_element_label,
+            Qt.LeftButton)
         QTest.mouseClick(
-                add_tag.text_edit_default_value.list_creation.add_element_label,
-                Qt.LeftButton)
+            add_tag.text_edit_default_value.list_creation.add_element_label,
+            Qt.LeftButton)
         table = add_tag.text_edit_default_value.list_creation.table
         item = QTableWidgetItem()
         item.setText(str(1))
@@ -426,20 +434,20 @@ class TestMIADataBrowser(unittest.TestCase):
         QTest.qWait(100)
 
         QTest.mouseClick(
-                        add_tag.text_edit_default_value.list_creation.ok_button,
-                        Qt.LeftButton)
+            add_tag.text_edit_default_value.list_creation.ok_button,
+            Qt.LeftButton)
         self.assertEqual(add_tag.text_edit_default_value.text(),
                          "[1, 2, 3]")
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
 
         test_list_column = (self.main_window.data_browser.table_data.
-                                                    get_tag_column("Test_list"))
+                            get_tag_column("Test_list"))
 
         for row in range(0,
                          self.main_window.data_browser.table_data.rowCount()):
             item = self.main_window.data_browser.table_data.item(
-                                                               row,
-                                                               test_list_column)
+                row,
+                test_list_column)
             self.assertEqual(item.text(), "[1, 2, 3]")
 
         QApplication.processEvents()
@@ -497,22 +505,22 @@ class TestMIADataBrowser(unittest.TestCase):
         # Testing - and + buttons
         self.assertEqual(1,
                          len(
-                            self.main_window.data_browser.advanced_search.rows))
+                             self.main_window.data_browser.advanced_search.rows))
         first_row = self.main_window.data_browser.advanced_search.rows[0]
         QTest.mouseClick(first_row[6], Qt.LeftButton)
         self.assertEqual(2,
                          len(
-                            self.main_window.data_browser.advanced_search.rows))
+                             self.main_window.data_browser.advanced_search.rows))
         second_row = self.main_window.data_browser.advanced_search.rows[1]
         QTest.mouseClick(second_row[5], Qt.LeftButton)
         self.assertEqual(1,
                          len(
-                            self.main_window.data_browser.advanced_search.rows))
+                             self.main_window.data_browser.advanced_search.rows))
         first_row = self.main_window.data_browser.advanced_search.rows[0]
         QTest.mouseClick(first_row[5], Qt.LeftButton)
         self.assertEqual(1,
                          len(
-                            self.main_window.data_browser.advanced_search.rows))
+                             self.main_window.data_browser.advanced_search.rows))
 
         field = self.main_window.data_browser.advanced_search.rows[0][2]
         condition = self.main_window.data_browser.advanced_search.rows[0][3]
@@ -595,51 +603,52 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.switch_project(project_8_path, "project_8")
 
         bricks_column = (self.main_window.data_browser.table_data.
-                                                      get_tag_column)("History")
+                         get_tag_column)("History")
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(
-                                                                  0,
-                                                                  bricks_column)
+            0,
+            bricks_column)
         smooth_button = bricks_widget.layout().itemAt(0).widget()
         self.assertEqual(smooth_button.text(), "smooth_1")
         QTest.mouseClick(smooth_button, Qt.LeftButton)
         # brick_history = (self.main_window.data_browser.table_data.
         #                                                        show_brick_popup)
         brick_history = (self.main_window.data_browser.table_data.
-                                                            brick_history_popup)
+                         brick_history_popup)
         brick_table = brick_history.table
         self.assertEqual(brick_table.horizontalHeaderItem(0).text(), "Name")
         self.assertEqual(brick_table.horizontalHeaderItem(1).text(), "Init")
         self.assertEqual(brick_table.horizontalHeaderItem(2).text(),
-                                                                    "Init Time")
+                         "Init Time")
         self.assertEqual(brick_table.horizontalHeaderItem(3).text(), "Exec")
         self.assertEqual(brick_table.horizontalHeaderItem(4).text(),
-                                                                    "Exec Time")
+                         "Exec Time")
         self.assertEqual(brick_table.horizontalHeaderItem(5).text(),
-                                                                    "data_type")
+                         "data_type")
         self.assertEqual(brick_table.horizontalHeaderItem(6).text(), "fwhm")
         self.assertEqual(brick_table.horizontalHeaderItem(7).text(),
-                                                             "implicit_masking")
-        self.assertEqual(brick_table.horizontalHeaderItem(8).text(), "in_files")
+                         "implicit_masking")
+        self.assertEqual(brick_table.horizontalHeaderItem(8).text(),
+                         "in_files")
         self.assertEqual(brick_table.horizontalHeaderItem(9).text(),
-                                                                   "matlab_cmd")
+                         "matlab_cmd")
         self.assertEqual(brick_table.horizontalHeaderItem(10).text(), "mfile")
         self.assertEqual(brick_table.item(0, 0).text(), "smooth_1")
         self.assertEqual(brick_table.item(0, 1).text(), "Done")
         self.assertEqual(brick_table.item(0, 2).text(),
-                                                   "2022-04-05 14:22:30.298043")
+                         "2022-04-05 14:22:30.298043")
         self.assertEqual(brick_table.item(0, 3).text(), "Done")
         self.assertEqual(brick_table.item(0, 4).text(),
-                                                   "2022-04-05 14:22:30.298043")
+                         "2022-04-05 14:22:30.298043")
         self.assertEqual(brick_table.item(0, 5).text(), "0")
         self.assertEqual(brick_table.item(0, 6).text(), "[6.0, 6.0, 6.0]")
         self.assertEqual(brick_table.item(0, 7).text(), "False")
         self.assertEqual(brick_table.cellWidget(0, 8).children()[1].text(),
-                                  "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                                  "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                                  "pvm-000220_000.nii")
+                         "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                         "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                         "pvm-000220_000.nii")
         self.assertEqual(brick_table.item(0, 9).text(),
-                                 "/usr/local/SPM/spm12_standalone/run_spm12.sh "
-                                 "/usr/local/MATLAB/MATLAB_Runtime/v95 script")
+                         "/usr/local/SPM/spm12_standalone/run_spm12.sh "
+                         "/usr/local/MATLAB/MATLAB_Runtime/v95 script")
         self.assertEqual(brick_table.item(0, 10).text(), "True")
 
     def test_clear_cell(self):
@@ -652,17 +661,17 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Selecting a cell
         bw_column = self.main_window.data_browser.table_data.get_tag_column(
-                                                                    "BandWidth")
+            "BandWidth")
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         bw_item.setSelected(True)
         self.assertEqual(float(bw_item.text()[1:-1]), 50000.0)
         self.assertEqual(self.main_window.project.session.get_value(
-                             COLLECTION_CURRENT,
-                             "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                             "pvm-000220_000.nii",
-                             "BandWidth"),
-                         [50000.0])
+            COLLECTION_CURRENT,
+            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+            "pvm-000220_000.nii",
+            "BandWidth"),
+            [50000.0])
 
         # Clearing the cell
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
@@ -676,11 +685,11 @@ class TestMIADataBrowser(unittest.TestCase):
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         self.assertEqual(bw_item.text(), "*Not Defined*")
         self.assertIsNone(self.main_window.project.session.get_value(
-                             COLLECTION_CURRENT,
-                             "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                             "pvm-000220_000.nii",
-                             "BandWidth"))
+            COLLECTION_CURRENT,
+            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+            "pvm-000220_000.nii",
+            "BandWidth"))
 
     def test_clone_tag(self):
         """
@@ -719,16 +728,16 @@ class TestMIADataBrowser(unittest.TestCase):
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                            COLLECTION_CURRENT))
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                            COLLECTION_INITIAL))
         test_row = self.main_window.project.session.get_field(
-                                                             COLLECTION_CURRENT,
-                                                             "Test")
+            COLLECTION_CURRENT,
+            "Test")
         bandwidth_row = self.main_window.project.session.get_field(
-                                                             COLLECTION_CURRENT,
-                                                             "BandWidth")
+            COLLECTION_CURRENT,
+            "BandWidth")
         self.assertEqual(test_row.description, bandwidth_row.description)
         self.assertEqual(test_row.unit, bandwidth_row.unit)
         self.assertEqual(test_row.default_value, bandwidth_row.default_value)
@@ -736,11 +745,11 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(test_row.origin, TAG_ORIGIN_USER)
         self.assertEqual(test_row.visibility, True)
         test_row = self.main_window.project.session.get_field(
-                                                             COLLECTION_INITIAL,
-                                                             "Test")
+            COLLECTION_INITIAL,
+            "Test")
         bandwidth_row = self.main_window.project.session.get_field(
-                                                             COLLECTION_INITIAL,
-                                                             "BandWidth")
+            COLLECTION_INITIAL,
+            "BandWidth")
         self.assertEqual(test_row.description, bandwidth_row.description)
         self.assertEqual(test_row.unit, bandwidth_row.unit)
         self.assertEqual(test_row.default_value, bandwidth_row.default_value)
@@ -749,39 +758,39 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(test_row.visibility, True)
 
         for document in self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_CURRENT):
+                COLLECTION_CURRENT):
             self.assertEqual(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             document,
-                                                             "Test"),
-                             self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             document,
-                                                             "BandWidth"))
+                COLLECTION_CURRENT,
+                document,
+                "Test"),
+                self.main_window.project.session.get_value(
+                    COLLECTION_CURRENT,
+                    document,
+                    "BandWidth"))
 
         for document in self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_INITIAL):
+                COLLECTION_INITIAL):
             self.assertEqual(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             document,
-                                                             "Test"),
-                             self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             document,
-                                                             "BandWidth"))
+                COLLECTION_INITIAL,
+                document,
+                "Test"),
+                self.main_window.project.session.get_value(
+                    COLLECTION_INITIAL,
+                    document,
+                    "BandWidth"))
 
         test_column = self.main_window.data_browser.table_data.get_tag_column(
-                                                                         "Test")
+            "Test")
         bw_column = self.main_window.data_browser.table_data.get_tag_column(
-                                                                    "BandWidth")
+            "BandWidth")
 
         for row in range(0,
                          self.main_window.data_browser.table_data.rowCount()):
             item_bw = self.main_window.data_browser.table_data.item(row,
                                                                     bw_column)
             item_test = self.main_window.data_browser.table_data.item(
-                                                                    row,
-                                                                    test_column)
+                row,
+                test_column)
             self.assertEqual(item_bw.text(), item_test.text())
 
     def test_count_table(self):
@@ -816,19 +825,22 @@ class TestMIADataBrowser(unittest.TestCase):
 
         self.assertEqual(count_table.table.horizontalHeaderItem(0).text(),
                          "BandWidth")
-        self.assertEqual(count_table.table.horizontalHeaderItem(1).text()[1:-1],
-                         "75.0")
+        self.assertEqual(
+            count_table.table.horizontalHeaderItem(1).text()[1:-1],
+            "75.0")
         self.assertAlmostEqual(float(count_table.table.horizontalHeaderItem(
-                                                               2).text()[1:-1]),
+            2).text()[1:-1]),
                                5.8239923)
-        self.assertEqual(count_table.table.horizontalHeaderItem(3).text()[1:-1],
-                         "5.0")
+        self.assertEqual(
+            count_table.table.horizontalHeaderItem(3).text()[1:-1],
+            "5.0")
         self.assertEqual(count_table.table.verticalHeaderItem(3).text(),
                          "Total")
         self.assertEqual(count_table.table.item(0, 0).text()[1:-1], "50000.0")
         self.assertEqual(count_table.table.item(1, 0).text()[1:-1], "25000.0")
-        self.assertAlmostEqual(float(count_table.table.item(2, 0).text()[1:-1]),
-                               65789.48)
+        self.assertAlmostEqual(
+            float(count_table.table.item(2, 0).text()[1:-1]),
+            65789.48)
         self.assertEqual(count_table.table.item(3, 0).text(), "3")
         self.assertEqual(count_table.table.item(0, 1).text(), "2")
         self.assertEqual(count_table.table.item(1, 1).text(), "")
@@ -856,8 +868,8 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.action_software_preferences.trigger()
         properties = self.main_window.pop_up_preferences
         properties.projects_save_path_line_edit.setText(
-                                               tempfile.mkdtemp(
-                                                       prefix='projects_tests'))
+            tempfile.mkdtemp(
+                prefix='projects_tests'))
         properties.tab_widget.setCurrentIndex(1)
         properties.save_checkbox.setChecked(True)
         QTest.mouseClick(properties.push_button_ok, Qt.LeftButton)
@@ -926,9 +938,11 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(config.getThumbnailTag(), "SequenceName")
 
         self.assertEqual(False,
-                         version.parse(yaml.__version__) > version.parse("9.1"))
+                         version.parse(yaml.__version__) > version.parse(
+                             "9.1"))
         self.assertEqual(True,
-                         version.parse(yaml.__version__) < version.parse("9.1"))
+                         version.parse(yaml.__version__) < version.parse(
+                             "9.1"))
 
         self.assertEqual(config.get_projects_save_path(), '')
 
@@ -951,9 +965,9 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Test that the value will not change if the tag's type is incorrect
         old_value = self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scans_displayed[0],
-                                                             "FOV")
+            COLLECTION_CURRENT,
+            scans_displayed[0],
+            "FOV")
 
         mod = ModifyTable(self.main_window.project,
                           value,
@@ -962,15 +976,15 @@ class TestMIADataBrowser(unittest.TestCase):
                           tag_name)
         mod.update_table_values(True)
         new_value = self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scans_displayed[0],
-                                                             "FOV")
+            COLLECTION_CURRENT,
+            scans_displayed[0],
+            "FOV")
         self.assertEqual(old_value, new_value)
 
         # Test that the value will change when all parameters are correct
         tag_object = self.main_window.project.session.get_field(
-                                                             COLLECTION_CURRENT,
-                                                             "FOV")
+            COLLECTION_CURRENT,
+            "FOV")
         mod = ModifyTable(self.main_window.project,
                           value,
                           [tag_object.field_type],
@@ -978,9 +992,9 @@ class TestMIADataBrowser(unittest.TestCase):
                           tag_name)
         mod.update_table_values(True)
         new_value = self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scans_displayed[0],
-                                                             "FOV")
+            COLLECTION_CURRENT,
+            scans_displayed[0],
+            "FOV")
         self.assertEqual(mod.table.columnCount(), 2)
         self.assertEqual(value, new_value)
 
@@ -995,7 +1009,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.multiple_sort_pop_up()
         self.main_window.data_browser.table_data.itemChanged.connect(
-                     self.main_window.data_browser.table_data.change_cell_color)
+            self.main_window.data_browser.table_data.change_cell_color)
         multiple_sort = self.main_window.data_browser.table_data.pop_up
 
         multiple_sort.push_buttons[0].setText("BandWidth")
@@ -1064,7 +1078,7 @@ class TestMIADataBrowser(unittest.TestCase):
                          " (Admin mode) - project_8")
 
         documents = self.main_window.project.session.get_documents_names(
-                                                             COLLECTION_CURRENT)
+            COLLECTION_CURRENT)
 
         self.assertEqual(len(documents), 9)
         self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
@@ -1095,7 +1109,7 @@ class TestMIADataBrowser(unittest.TestCase):
                         "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
                         "pvm-000220_000.nii" in documents)
         documents = self.main_window.project.session.get_documents_names(
-                                                             COLLECTION_INITIAL)
+            COLLECTION_INITIAL)
         self.assertEqual(len(documents), 9)
         self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
                         "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
@@ -1428,23 +1442,23 @@ class TestMIADataBrowser(unittest.TestCase):
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
 
         old_tags_current = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_CURRENT)
+            COLLECTION_CURRENT)
         old_tags_initial = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_INITIAL)
+            COLLECTION_INITIAL)
         self.main_window.data_browser.remove_tag_action.trigger()
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
         new_tags_current = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_CURRENT)
+            COLLECTION_CURRENT)
         new_tags_initial = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_INITIAL)
+            COLLECTION_INITIAL)
         self.assertTrue(old_tags_current == new_tags_current)
         self.assertTrue(old_tags_initial == new_tags_initial)
 
         old_tags_current = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_CURRENT)
+            COLLECTION_CURRENT)
         old_tags_initial = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_INITIAL)
+            COLLECTION_INITIAL)
         self.assertTrue("Test" in old_tags_current)
         self.assertTrue("Test" in old_tags_initial)
         self.main_window.data_browser.remove_tag_action.trigger()
@@ -1452,9 +1466,9 @@ class TestMIADataBrowser(unittest.TestCase):
         remove_tag.list_widget_tags.setCurrentRow(0)  # Test tag selected
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
         new_tags_current = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_CURRENT)
+            COLLECTION_CURRENT)
         new_tags_initial = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_INITIAL)
+            COLLECTION_INITIAL)
         self.assertTrue("Test" not in new_tags_current)
         self.assertTrue("Test" not in new_tags_initial)
 
@@ -1473,17 +1487,17 @@ class TestMIADataBrowser(unittest.TestCase):
         ### Test for a list:
         # values in the db
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name,
+            "BandWidth")[0])
 
         # value in the DataBrowser
         bandwidth_column = (self.main_window.data_browser.
-                                         table_data.get_tag_column)("BandWidth")
+                            table_data.get_tag_column)("BandWidth")
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
         databrowser = float(item.text()[1:-1])
@@ -1495,18 +1509,19 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # we change the value
         item.setSelected(True)
-        threading.Timer(2, partial(self.edit_databrowser_list, '25000')).start()
+        threading.Timer(2,
+                        partial(self.edit_databrowser_list, '25000')).start()
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # we test again the equality between DataBrowser and db
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name,
+            "BandWidth")[0])
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
         databrowser = float(item.text()[1:-1])
@@ -1521,18 +1536,18 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_cell()
         self.main_window.data_browser.table_data.itemChanged.connect(
-                     self.main_window.data_browser.table_data.change_cell_color)
+            self.main_window.data_browser.table_data.change_cell_color)
         item.setSelected(False)
 
         # we test whether the data has been reset
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name,
+            "BandWidth")[0])
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
         databrowser = float(item.text()[1:-1])
@@ -1546,13 +1561,13 @@ class TestMIADataBrowser(unittest.TestCase):
                                                            scan_name,
                                                            "Type")
         value_initial = self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "Type")
+            COLLECTION_INITIAL,
+            scan_name,
+            "Type")
 
         # value in the DataBrowser
         type_column = (self.main_window.data_browser.
-                                              table_data.get_tag_column)("Type")
+                       table_data.get_tag_column)("Type")
         item = self.main_window.data_browser.table_data.item(0, type_column)
         databrowser = item.text()
 
@@ -1571,9 +1586,9 @@ class TestMIADataBrowser(unittest.TestCase):
                                                            scan_name,
                                                            "Type")
         value_initial = self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "Type")
+            COLLECTION_INITIAL,
+            scan_name,
+            "Type")
         item = self.main_window.data_browser.table_data.item(0, type_column)
 
         databrowser = item.text()
@@ -1596,9 +1611,9 @@ class TestMIADataBrowser(unittest.TestCase):
                                                            scan_name,
                                                            "Type")
         value_initial = self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "Type")
+            COLLECTION_INITIAL,
+            scan_name,
+            "Type")
         item = self.main_window.data_browser.table_data.item(0, type_column)
         databrowser = item.text()
         self.assertEqual(value, "Scan")
@@ -1619,19 +1634,19 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # second document; values in the db
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name2,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name2,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name2,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name2,
+            "BandWidth")[0])
 
         # second document; value in the DataBrowser
         bandwidth_column = (self.main_window.data_browser.
-                                         table_data.get_tag_column)("BandWidth")
+                            table_data.get_tag_column)("BandWidth")
         item2 = self.main_window.data_browser.table_data.item(1,
-                                                             bandwidth_column)
+                                                              bandwidth_column)
         databrowser = float(item2.text()[1:-1])
 
         # we test equality between DataBrowser and db for second document
@@ -1646,17 +1661,17 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # third document; values in the db
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name3,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name3,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name3,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name3,
+            "BandWidth")[0])
 
         # third document; value in the DataBrowser
         item3 = self.main_window.data_browser.table_data.item(2,
-                                                             bandwidth_column)
+                                                              bandwidth_column)
 
         # we test equality between DataBrowser and db for third document
         databrowser = float(item3.text()[1:-1])
@@ -1666,21 +1681,22 @@ class TestMIADataBrowser(unittest.TestCase):
         item3.setSelected(True)
 
         # we change the value to [70000] for the third and second documents
-        threading.Timer(2, partial(self.edit_databrowser_list, '70000')).start()
+        threading.Timer(2,
+                        partial(self.edit_databrowser_list, '70000')).start()
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # second document; values in the db
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name2,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name2,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name2,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name2,
+            "BandWidth")[0])
         # second document; value in the DataBrowser
         item2 = self.main_window.data_browser.table_data.item(1,
-                                                             bandwidth_column)
+                                                              bandwidth_column)
         databrowser = float(item2.text()[1:-1])
 
         # we test equality between DataBrowser and db for second document
@@ -1691,17 +1707,17 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # third document; values in the db
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name3,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name3,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name3,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name3,
+            "BandWidth")[0])
 
         # third document; value in the DataBrowser
         item3 = self.main_window.data_browser.table_data.item(2,
-                                                             bandwidth_column)
+                                                              bandwidth_column)
         databrowser = float(item3.text()[1:-1])
 
         # we test value in database for the third document
@@ -1714,20 +1730,20 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_column()
         self.main_window.data_browser.table_data.itemChanged.connect(
-                     self.main_window.data_browser.table_data.change_cell_color)
+            self.main_window.data_browser.table_data.change_cell_color)
 
         # we test the value in the db and DataBrowser for the second document
         # has been reset
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name2,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name2,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name2,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name2,
+            "BandWidth")[0])
         item2 = self.main_window.data_browser.table_data.item(1,
-                                                             bandwidth_column)
+                                                              bandwidth_column)
         databrowser = float(item2.text()[1:-1])
         self.assertEqual(value, float(50000))
         self.assertEqual(value, databrowser)
@@ -1736,15 +1752,15 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test the value in the db and DataBrowser for the third document
         # has been reset
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name3,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name3,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name3,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name3,
+            "BandWidth")[0])
         item3 = self.main_window.data_browser.table_data.item(2,
-                                                             bandwidth_column)
+                                                              bandwidth_column)
         databrowser = float(item3.text()[1:-1])
         self.assertEqual(value, float(25000))
         self.assertEqual(value, databrowser)
@@ -1760,7 +1776,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # value in DataBrowser for the second document
         type_column = (self.main_window.data_browser.
-                                              table_data.get_tag_column)("Type")
+                       table_data.get_tag_column)("Type")
         type_item = self.main_window.data_browser.table_data.item(1,
                                                                   type_column)
         old_type = type_item.text()
@@ -1773,7 +1789,8 @@ class TestMIADataBrowser(unittest.TestCase):
         type_item.setText("Test")
 
         # we test if value in DataBrowser as been changed
-        set_item = self.main_window.data_browser.table_data.item(1, type_column)
+        set_item = self.main_window.data_browser.table_data.item(1,
+                                                                 type_column)
         set_type = set_item.text()
         self.assertEqual(set_type, "Test")
 
@@ -1784,7 +1801,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_row()
         self.main_window.data_browser.table_data.itemChanged.connect(
-                     self.main_window.data_browser.table_data.change_cell_color)
+            self.main_window.data_browser.table_data.change_cell_color)
 
         # we test if value in DataBrowser as been reset
         type_item = self.main_window.data_browser.table_data.item(1,
@@ -1798,7 +1815,7 @@ class TestMIADataBrowser(unittest.TestCase):
         """
         config = Config(config_path=self.config_path)
         projects_dir = os.path.realpath(tempfile.mkdtemp(
-                                                       prefix='projects_tests'))
+            prefix='projects_tests'))
         config.set_projects_save_path(projects_dir)
         something_path = os.path.join(projects_dir, 'something')
         project_8_path = self.get_new_test_project()
@@ -1823,9 +1840,9 @@ class TestMIADataBrowser(unittest.TestCase):
         PopUpOpenProject.get_filename = lambda x, y: True
         PopUpOpenProject.relative_path = something_path
         PopUpOpenProject.path, PopUpOpenProject.name = os.path.split(
-                                                                 something_path)
+            something_path)
 
-        self.main_window.create_project_pop_up() # Saves the project 'something'
+        self.main_window.create_project_pop_up()  # Saves the project 'something'
         self.assertEqual(self.main_window.project.getName(), "something")
         self.assertEqual(os.path.exists(something_path), True)
 
@@ -1849,8 +1866,8 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Sending the selection (all scans), but closing the popup
         QTest.mouseClick(
-                self.main_window.data_browser.send_documents_to_pipeline_button,
-                Qt.LeftButton)
+            self.main_window.data_browser.send_documents_to_pipeline_button,
+            Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
         QTest.qWait(100)
@@ -1862,8 +1879,8 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Sending the selection (all scans)
         QTest.mouseClick(
-                self.main_window.data_browser.send_documents_to_pipeline_button,
-                Qt.LeftButton)
+            self.main_window.data_browser.send_documents_to_pipeline_button,
+            Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
         QTest.qWait(100)
@@ -1911,8 +1928,8 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Sending the selection (first 2 scans)
         QTest.mouseClick(
-                self.main_window.data_browser.send_documents_to_pipeline_button,
-                Qt.LeftButton)
+            self.main_window.data_browser.send_documents_to_pipeline_button,
+            Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
         QTest.qWait(100)
@@ -1931,8 +1948,8 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Sending the selection (G3 scans)
         QTest.mouseClick(
-                self.main_window.data_browser.send_documents_to_pipeline_button,
-                Qt.LeftButton)
+            self.main_window.data_browser.send_documents_to_pipeline_button,
+            Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
         QTest.qWait(100)
@@ -1967,17 +1984,17 @@ class TestMIADataBrowser(unittest.TestCase):
         ### Test for a list:
         # values in the db
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name,
+            "BandWidth")[0])
 
         # value in the DataBrowser
         bandwidth_column = (self.main_window.data_browser.
-                                         table_data.get_tag_column)("BandWidth")
+                            table_data.get_tag_column)("BandWidth")
         item = self.main_window.data_browser.table_data.item(1,
                                                              bandwidth_column)
         databrowser = float(item.text()[1:-1])
@@ -1987,18 +2004,19 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # we change the value
         item.setSelected(True)
-        threading.Timer(2, partial(self.edit_databrowser_list, '25000')).start()
+        threading.Timer(2,
+                        partial(self.edit_databrowser_list, '25000')).start()
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # we test if value was changed in db and DataBrowser
         value = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_CURRENT,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_CURRENT,
+            scan_name,
+            "BandWidth")[0])
         value_initial = float(self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "BandWidth")[0])
+            COLLECTION_INITIAL,
+            scan_name,
+            "BandWidth")[0])
         item = self.main_window.data_browser.table_data.item(1,
                                                              bandwidth_column)
         databrowser = float(item.text()[1:-1])
@@ -2013,13 +2031,13 @@ class TestMIADataBrowser(unittest.TestCase):
                                                            scan_name,
                                                            "Type")
         value_initial = self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "Type")
+            COLLECTION_INITIAL,
+            scan_name,
+            "Type")
 
         # value in the DataBrowser
         type_column = (self.main_window.data_browser.
-                                              table_data.get_tag_column)("Type")
+                       table_data.get_tag_column)("Type")
         item = self.main_window.data_browser.table_data.item(1, type_column)
         databrowser = item.text()
 
@@ -2038,9 +2056,9 @@ class TestMIADataBrowser(unittest.TestCase):
                                                            scan_name,
                                                            "Type")
         value_initial = self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "Type")
+            COLLECTION_INITIAL,
+            scan_name,
+            "Type")
         item = self.main_window.data_browser.table_data.item(1, type_column)
         databrowser = item.text()
         self.assertEqual(value, "Test")
@@ -2060,27 +2078,27 @@ class TestMIADataBrowser(unittest.TestCase):
         for row in range(0,
                          self.main_window.data_browser.table_data.rowCount()):
             bandwidth_column = (self.main_window.data_browser.
-                                         table_data.get_tag_column)("BandWidth")
+                                table_data.get_tag_column)("BandWidth")
             item = self.main_window.data_browser.table_data.item(
-                                                               row,
-                                                               bandwidth_column)
+                row,
+                bandwidth_column)
             scan_name = item.text()
 
             if not self.main_window.data_browser.table_data.isRowHidden(row):
                 mixed_bandwidths.append(scan_name)
 
         self.main_window.data_browser.table_data.horizontalHeader(
-                                         ).setSortIndicator(bandwidth_column, 0)
+        ).setSortIndicator(bandwidth_column, 0)
 
         up_bandwidths = []
 
         for row in range(0,
                          self.main_window.data_browser.table_data.rowCount()):
             bandwidth_column = (self.main_window.data_browser.
-                                         table_data.get_tag_column)("BandWidth")
+                                table_data.get_tag_column)("BandWidth")
             item = self.main_window.data_browser.table_data.item(
-                                                               row,
-                                                               bandwidth_column)
+                row,
+                bandwidth_column)
             scan_name = item.text()
 
             if not self.main_window.data_browser.table_data.isRowHidden(row):
@@ -2090,17 +2108,17 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(sorted(mixed_bandwidths), up_bandwidths)
 
         self.main_window.data_browser.table_data.horizontalHeader(
-                                         ).setSortIndicator(bandwidth_column, 1)
+        ).setSortIndicator(bandwidth_column, 1)
 
         down_bandwidths = []
 
         for row in range(0,
                          self.main_window.data_browser.table_data.rowCount()):
             bandwidth_column = (self.main_window.data_browser.
-                                         table_data.get_tag_column)("BandWidth")
+                                table_data.get_tag_column)("BandWidth")
             item = self.main_window.data_browser.table_data.item(
-                                                               row,
-                                                               bandwidth_column)
+                row,
+                bandwidth_column)
             scan_name = item.text()
 
             if not self.main_window.data_browser.table_data.isRowHidden(row):
@@ -2121,7 +2139,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.tabs.setCurrentIndex(2)
         index = self.main_window.tabs.currentIndex()
         scans = self.main_window.project.session.get_documents_names(
-                                                             COLLECTION_CURRENT)
+            COLLECTION_CURRENT)
         self.assertEqual(scans, self.main_window.pipeline_manager.scan_list)
         self.assertEqual("Pipeline Manager",
                          self.main_window.tabs.tabText(index))
@@ -2145,7 +2163,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # DataBrowser value for second document
         bw_column = (self.main_window.data_browser.table_data.
-                                                    get_tag_column)("BandWidth")
+                     get_tag_column)("BandWidth")
         bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
         bw_old = bw_item.text()
 
@@ -2166,8 +2184,8 @@ class TestMIADataBrowser(unittest.TestCase):
                              "BandWidth",
                              [50000.0],
                              [0.0]
-                           ]]
-                         ]])
+                             ]]
+                           ]])
         self.assertEqual(self.main_window.project.redos, [])
 
         # we test the value has really been changed to 0.0.
@@ -2192,8 +2210,8 @@ class TestMIADataBrowser(unittest.TestCase):
                              "BandWidth",
                              [50000.0],
                              [0.0]
-                           ]]
-                         ]])
+                             ]]
+                           ]])
         self.assertEqual(self.main_window.project.undos, [])
 
         # we redo
@@ -2213,21 +2231,20 @@ class TestMIADataBrowser(unittest.TestCase):
                              "BandWidth",
                              [50000.0],
                              [0.0]
-                           ]]
-                         ]])
+                             ]]
+                           ]])
         self.assertEqual(self.main_window.project.redos, [])
-
 
         # 2. Remove a can (document)
         # we test there are 9 documents in db (current and initial)
         self.assertEqual(
-                       9,
-                       len(self.main_window.project.session.get_documents_names(
-                                                           COLLECTION_CURRENT)))
+            9,
+            len(self.main_window.project.session.get_documents_names(
+                COLLECTION_CURRENT)))
         self.assertEqual(
-                       9,
-                       len(self.main_window.project.session.get_documents_names(
-                                                           COLLECTION_INITIAL)))
+            9,
+            len(self.main_window.project.session.get_documents_names(
+                COLLECTION_INITIAL)))
 
         # we remove the eighth document
         self.main_window.data_browser.table_data.selectRow(8)
@@ -2235,37 +2252,37 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # we test if there are now 8 documents in db (current and initial)
         self.assertEqual(
-                       8,
-                       len(self.main_window.project.session.get_documents_names(
-                                                           COLLECTION_CURRENT)))
+            8,
+            len(self.main_window.project.session.get_documents_names(
+                COLLECTION_CURRENT)))
         self.assertEqual(
-                       8,
-                       len(self.main_window.project.session.get_documents_names(
-                                                           COLLECTION_INITIAL)))
+            8,
+            len(self.main_window.project.session.get_documents_names(
+                COLLECTION_INITIAL)))
 
-         # we undo
+        # we undo
         self.main_window.action_undo.trigger()
 
         # we test there are still only 8 documents in the database
         # (current and initial). In fact the document has been permanently
         # deleted and we cannot recover it in this case
         self.assertEqual(
-                       8,
-                       len(self.main_window.project.session.get_documents_names(
-                                                           COLLECTION_CURRENT)))
+            8,
+            len(self.main_window.project.session.get_documents_names(
+                COLLECTION_CURRENT)))
         self.assertEqual(
-                       8,
-                       len(self.main_window.project.session.get_documents_names(
-                                                           COLLECTION_INITIAL)))
+            8,
+            len(self.main_window.project.session.get_documents_names(
+                COLLECTION_INITIAL)))
 
         # 3. Add a tag
         # we test we don't have 'Test' tag in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                             COLLECTION_CURRENT))
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                             COLLECTION_INITIAL))
 
         # we add the Test tag
         self.main_window.data_browser.add_tag_action.trigger()
@@ -2276,10 +2293,10 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test we have the 'Test' tag in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                            COLLECTION_CURRENT))
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                            COLLECTION_INITIAL))
 
         # we undo
         self.main_window.action_undo.trigger()
@@ -2287,10 +2304,10 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test we don't have 'Test' tag in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                             COLLECTION_CURRENT))
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                             COLLECTION_INITIAL))
 
         # we redo
         self.main_window.action_redo.trigger()
@@ -2298,10 +2315,10 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test we have the 'Test' tag in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                            COLLECTION_CURRENT))
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                            COLLECTION_INITIAL))
 
         # 4. remove tag
         # we remove the 'Test' tag
@@ -2313,10 +2330,10 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test we don't have 'Test' tag in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                             COLLECTION_CURRENT))
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                             COLLECTION_INITIAL))
 
         # we undo
         self.main_window.action_undo.trigger()
@@ -2324,10 +2341,10 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test we have the 'Test' tag in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                            COLLECTION_CURRENT))
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                            COLLECTION_INITIAL))
 
         # we redo
         self.main_window.action_redo.trigger()
@@ -2335,10 +2352,10 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test we don't have 'Test' tag in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                             COLLECTION_CURRENT))
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                             COLLECTION_INITIAL))
 
         # 4. clone tag
         self.main_window.data_browser.clone_tag_action.trigger()
@@ -2357,10 +2374,10 @@ class TestMIADataBrowser(unittest.TestCase):
         # we test we have the 'Test' tag in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                            COLLECTION_CURRENT))
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                            COLLECTION_INITIAL))
 
         # value in the db
         item = self.main_window.data_browser.table_data.item(1, 0)
@@ -2369,13 +2386,13 @@ class TestMIADataBrowser(unittest.TestCase):
                                                            scan_name,
                                                            "Test")
         value_initial = self.main_window.project.session.get_value(
-                                                             COLLECTION_INITIAL,
-                                                             scan_name,
-                                                             "Test")
+            COLLECTION_INITIAL,
+            scan_name,
+            "Test")
 
         # value in the DataBrowser
         test_column = (self.main_window.data_browser.
-                                              table_data.get_tag_column)("Test")
+                       table_data.get_tag_column)("Test")
         item = self.main_window.data_browser.table_data.item(1, test_column)
         databrowser = item.text()
 
@@ -2389,13 +2406,13 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # we test we don't have the 'Test' tag in the db and in the DataBrowser
         self.assertFalse("Test" in
-                        self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_CURRENT))
+                         self.main_window.project.session.get_fields_names(
+                             COLLECTION_CURRENT))
         self.assertFalse("Test" in
-                        self.main_window.project.session.get_fields_names(
-                                                            COLLECTION_INITIAL))
+                         self.main_window.project.session.get_fields_names(
+                             COLLECTION_INITIAL))
         self.assertIsNone((self.main_window.data_browser.table_data.
-                                                        get_tag_column)("Test"))
+                           get_tag_column)("Test"))
 
     def test_unnamed_proj_soft_open(self):
         """
@@ -2406,7 +2423,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(self.main_window.project.getName(),
                          "Unnamed project")
         tags = self.main_window.project.session.get_fields_names(
-                                                             COLLECTION_CURRENT)
+            COLLECTION_CURRENT)
         self.assertEqual(len(tags), 6)
         self.assertTrue(TAG_CHECKSUM in tags)
         self.assertTrue(TAG_FILENAME in tags)
@@ -2415,11 +2432,11 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue(TAG_BRICKS in tags)
         self.assertTrue(TAG_HISTORY in tags)
         self.assertEqual(self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_CURRENT),
-                         [])
+            COLLECTION_CURRENT),
+            [])
         self.assertEqual(self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_INITIAL),
-                         [])
+            COLLECTION_INITIAL),
+            [])
         collections = self.main_window.project.session.get_collections_names()
         self.assertEqual(len(collections), 5)
         self.assertTrue(COLLECTION_INITIAL in collections)
@@ -2480,13 +2497,13 @@ class TestMIADataBrowser(unittest.TestCase):
         columns_displayed = []
 
         for column in range(
-                        0,
-                        self.main_window.data_browser.table_data.columnCount()):
+                0,
+                self.main_window.data_browser.table_data.columnCount()):
             tag_displayed = (self.main_window.data_browser.
-                                 table_data.horizontalHeaderItem)(column).text()
+                             table_data.horizontalHeaderItem)(column).text()
 
             if not self.main_window.data_browser.table_data.isColumnHidden(
-                                                                        column):
+                    column):
                 columns_displayed.append(tag_displayed)
 
         self.assertEqual(sorted(visibles), sorted(columns_displayed))
@@ -2495,7 +2512,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(
             TAG_FILENAME,
             self.main_window.data_browser.table_data.horizontalHeaderItem(
-                                                                      0).text())
+                0).text())
 
         # Trying to set the visibles tags
         QTest.mouseClick(self.main_window.data_browser.visualized_tags_button,
@@ -2526,7 +2543,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Testing when hiding a tag
         settings.tab_tags.list_widget_selected_tags.item(
-                                     2).setSelected(True)  # Bricks tag selected
+            2).setSelected(True)  # Bricks tag selected
         QTest.mouseClick(settings.tab_tags.push_button_unselect_tag,
                          Qt.LeftButton)
         visible_tags = []
@@ -2550,13 +2567,13 @@ class TestMIADataBrowser(unittest.TestCase):
         columns_displayed = []
 
         for column in range(
-                        0,
-                        self.main_window.data_browser.table_data.columnCount()):
+                0,
+                self.main_window.data_browser.table_data.columnCount()):
             item = (self.main_window.data_browser.table_data.
-                                                   horizontalHeaderItem)(column)
+                    horizontalHeaderItem)(column)
 
             if not self.main_window.data_browser.table_data.isColumnHidden(
-                                                                        column):
+                    column):
                 columns_displayed.append(item.text())
 
         self.assertEqual(len(columns_displayed), 3)
@@ -2584,13 +2601,13 @@ class TestMIADataBrowser(unittest.TestCase):
         columns_displayed = []
 
         for column in range(
-                        0,
-                        self.main_window.data_browser.table_data.columnCount()):
+                0,
+                self.main_window.data_browser.table_data.columnCount()):
             item = (self.main_window.data_browser.table_data.
-                                                   horizontalHeaderItem)(column)
+                    horizontalHeaderItem)(column)
 
             if not self.main_window.data_browser.table_data.isColumnHidden(
-                                                                        column):
+                    column):
                 columns_displayed.append(item.text())
 
         self.assertEqual(len(columns_displayed), 4)
@@ -2599,48 +2616,49 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue(TAG_TYPE in columns_displayed)
         self.assertTrue(TAG_BRICKS in columns_displayed)
 
+
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
 
     :Contains:
         :Method:
+            - add_visualized_tag: selects a tag to display
+            - execute_QDialogAccept: accept (close) a QDialog window
+            - get_new_test_project: create a temporary project that can be
+              safely modified
+            - restart_MIA: restarts MIA within a unit test
             - setUp: called automatically before each test method
             - tearDown: cleans up after each test method
             - setUpClass: called before tests in the individual class
             - tearDownClass: called after tests in the individual class
-            - execute_QDialogAccept: accept (close) a QDialog window
-            - get_new_test_project: create a temporary project that can be
-              safely modified
-            - test_add_plug_value_to_database_list_type: adds a list type plug
-            value to the database
-            - test_add_plug_value_to_database_non_list_type: adds a non list
-            type plug value to the database
+            - test_add_plug_value_to_database: sets the mandatory plug 
+              parameters and adds them to the database
             - test_add_tab: adds tabs to the PipelineEditorTabs
             - test_attributes_filter: displays an attributes filter and 
-            modifies it
+              modifies it
             - test_capsul_node_controller: adds, changes and deletes processes 
-            using the capsul node controller
+              using the capsul node controller
             - test_close_tab: closes a tab in the PipelineEditorTabs
             - test_delete_processes: deletes a process and makes the undo/redo
             - test_display_filter: displays node parameters and a plug filter
             - test_drop_process: adds a Nipype SPM Smooth process to the
               pipeline editor
             - test_filter_widget: opens up the "FilterWidget()" to modify its 
-            parameters.
+              parameters.
             - test_get_missing_mandatory_parameters: ries to initialize the 
-            pipeline with missing mandatory parameters
+              pipeline with missing mandatory parameters
             - test_iteration_table: plays with the iteration table
             - test_node_controller: adds, changes and deletes processes to the 
-            node controller
+              node controller
             - test_plug_filter: displays a plug filter and modifies it
             - test_process_library: install the brick_test and then remove it
             - test_register_node_io_in_database: sets input and output 
-            parameters and registers them in database
+              parameters and registers them in database
             - test_save_pipeline: saves a simple pipeline
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
             - test_undo_redo: tests the undo/redo
             - test_update_node_list: initializes a workflow and adds a process 
-            to the "pipline_manager.node_list"
+              to the "pipline_manager.node_list"
             - test_update_node_name: displays node parameters and updates
               its name
             - test_update_plug_value: displays node parameters and updates
@@ -2657,6 +2675,95 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_zz_check_modif: opens a pipeline, opens it as a process in
               another tab, modifies it and check the modifications
     """
+
+    def add_visualized_tag(self, tag):
+        """
+        With the "Visualized tags" pop-up open, selects a tag to display.
+
+        Parameters
+        ----------
+        tag: string
+          The tag to be displayed
+
+        Usage
+        -----
+        Should be called, with a delay, before opening the "Visualized tags"
+        pop-up:
+        QTimer.singleShot(1000,
+                          lambda:self.add_visualized_tag('AcquisitionDate'))
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+
+            visualized_tags = w.layout().itemAt(0).widget()
+            tags_list = visualized_tags.list_widget_tags
+
+            # found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
+            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
+                found_item = tags_list.findItems(tag, Qt.MatchExactly)
+            else:
+                found_item = tags_list.findItems(tag,
+                                                 Qt.MatchFlag.MatchExactly)
+
+            tags_list.setCurrentItem(found_item[0])
+
+            visualized_tags.click_select_tag()
+
+    def execute_QDialogAccept(self):
+        """
+        Accept (close) a QDialog window
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.accept()
+
+    def get_new_test_project(self):
+        """
+        Copy the test project in a location we can modify safely
+        """
+
+        project_path = os.path.join(self.config_path, 'project_8')
+
+        if os.path.exists(project_path):
+            shutil.rmtree(project_path)
+
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+                                      'project_8')
+        shutil.copytree(project_8_path, project_path)
+        return project_path
+
+    def restart_MIA(self):
+        """
+        Restarts MIA within a unit test.
+
+        Notes
+        -----
+        Can be used to restart MIA after changing the controller version in MIA
+        preferences.
+        """
+
+        self.main_window.close()
+        # Removing the opened projects (in CI, the tests are run twice)
+        config = Config(config_path=self.config_path)
+        config.set_opened_projects([])
+        config.saveConfig()
+        self.app.exit()
+
+        config = Config(config_path=self.config_path)
+        config.set_user_mode(False)
+        self.app = QApplication.instance()
+
+        if self.app is None:
+            self.app = QApplication(sys.argv)
+
+        self.project = Project(None, True)
+        self.main_window = MainWindow(self.project, test=True)
 
     def setUp(self):
         """
@@ -2709,32 +2816,156 @@ class TestMIAPipelineManager(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
-    def execute_QDialogAccept(self):
-        """
-        Accept (close) a QDialog window
-        """
+    def test_add_plug_value_to_database(self):
+        '''
+      Adds a process, exports input and output plugs, sets the mandatory plug
+      parameters and adds them to the database.
 
-        w = QApplication.activeWindow()
+      Notes
+      -----
+      Tests the PipelineManagerTab(QWidget).add_plug_value_to_database().
+      '''
 
-        if isinstance(w, QDialog):
-            w.accept()
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, 'project_9')
 
-    def get_new_test_project(self):
-        """
-        Copy the test project in a location we can modify safely
-        """
+        DOCUMENT_1 = (self.main_window.project.session.
+                      get_documents_names)("current")[0]
 
-        project_path = os.path.join(self.config_path, 'project_8')
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
 
-        if os.path.exists(project_path):
-            shutil.rmtree(project_path)
+        # Adds the processes Smooth, creates the "rename_1" node
+        process_class = Rename
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
-                                      'project_8')
-        shutil.copytree(project_8_path, project_path)
-        return project_path
+        # Exports the mandatory input and output plugs for "rename_1"
+        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_unconnected_mandatory_inputs()
+        pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        old_scan_name = DOCUMENT_1.split('/')[-1]
+        new_scan_name = 'new_name.nii'
+
+        # Changes the "_out_file" in the "outputs" node
+        pipeline.nodes[''].set_plug_value('_out_file',
+                                          DOCUMENT_1.replace(old_scan_name,
+                                                             new_scan_name))
+
+        pipeline_manager = self.main_window.pipeline_manager
+
+        (pipeline_manager.
+         workflow) = workflow_from_pipeline(pipeline,
+                                            complete_parameters=True)
+
+        job = pipeline_manager.workflow.jobs[0]
+
+        brick_id = str(uuid.uuid4())
+        job.uuid = brick_id
+        pipeline_manager.brick_list.append(brick_id)
+
+        pipeline_manager.project.session.add_document(COLLECTION_BRICK,
+                                                      brick_id)
+
+        # pipeline_manager._register_node_io_in_database(job, job.process())
+
+        # Sets the mandatory plug values in the "inputs" node
+        pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
+
+        process = job.process()
+        plug_name = 'in_file'
+        trait = process.trait(plug_name)
+
+        inputs = process.get_inputs()
+
+        attributes = {}
+        completion = ProcessCompletionEngine.get_completion_engine(process)
+        if completion:
+            attributes = completion.get_attribute_values().export_to_dict()
+
+        has_document = pipeline_manager.project.session.has_document
+
+        # Plug value is file location outside project directory
+        pipeline_manager.add_plug_value_to_database(DOCUMENT_1, brick_id, '',
+                                                    'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
+        pipeline_manager.project.session.get_document(COLLECTION_CURRENT,
+                                                      DOCUMENT_1)
+        self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
+
+        # Plug value is file location inside project directory
+        inside_project = os.path.join(pipeline_manager.project.folder,
+                                      DOCUMENT_1.split('/')[-1])
+        pipeline_manager.add_plug_value_to_database(inside_project, brick_id,
+                                                    '',
+                                                    'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
+
+        # Plug value that is already in the database
+        pipeline_manager.add_plug_value_to_database(inside_project, brick_id,
+                                                    '',
+                                                    'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
+
+        # Plug value is tag
+        tag_value = os.path.join(pipeline_manager.project.folder, 'tag.gz')
+        pipeline_manager.add_plug_value_to_database(tag_value, brick_id, '',
+                                                    'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
+
+        # Plug value is .mat
+        mat_value = os.path.join(pipeline_manager.project.folder, 'file.mat')
+        pipeline_manager.add_plug_value_to_database(mat_value, brick_id, '',
+                                                    'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
+
+        # Plug value is .mat
+        txt_value = os.path.join(pipeline_manager.project.folder, 'file.txt')
+        pipeline_manager.add_plug_value_to_database(txt_value, brick_id, '',
+                                                    'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
+
+        job.inheritance_dict = {
+            inside_project: {
+                'own_tags': [
+                    {
+                        'name': 'tag_name',
+                        'field_type': 'string',
+                        'description': 'description_content',
+                        'visibility': 'visibility_content',
+                        'origin': 'origin_content',
+                        'unit': 'unit_content',
+                        'value': 'value_content',
+                        'default_value': 'default_value_content'
+                    }
+                ],
+                'parent': 'parent_content'
+            }
+        }
+
+        pipeline_manager.add_plug_value_to_database(inside_project, brick_id,
+                                                    '', 'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
+
+        job.auto_inheritance_dict = {}
+
+        pipeline_manager.add_plug_value_to_database(inside_project, brick_id,
+                                                    '', 'rename_1', plug_name,
+                                                    'rename_1', job, trait,
+                                                    inputs, attributes)
 
     def test_add_tab(self):
         """
@@ -2742,7 +2973,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
 
         # Adding two new tabs
         pipeline_editor_tabs.new_tab()
@@ -2753,7 +2984,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
 
     def test_attributes_filter(self):
-      """
+        """
       Displays the parameters of a node, displays an attributes filter
       and modifies it.
 
@@ -2763,119 +2994,135 @@ class TestMIAPipelineManager(unittest.TestCase):
       (CapsulNodeController()).
       """
 
-      # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, "project_8")
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
 
-      pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-      node_controller = self.main_window.pipeline_manager.nodeController
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
+        node_controller = self.main_window.pipeline_manager.nodeController
 
-      # Adds the process Smooth, creates a node called "smooth_1"
-      process_class = Smooth
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+        # Adds the process Smooth, creates a node called "smooth_1"
+        process_class = Smooth
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-      # Exports the input plugs
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
-      (pipeline_editor_tabs.
-                 get_current_editor)().export_node_unconnected_mandatory_plugs()
+        # Exports the input plugs
+        pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_node_unconnected_mandatory_plugs()
 
-      # Displays parameters of 'inputs' node
-      input_process = pipeline.nodes[''].process
-      self.main_window.pipeline_manager.displayNodeParameters('inputs',
-                                                              input_process)
+        # Displays parameters of 'inputs' node
+        input_process = pipeline.nodes[''].process
+        self.main_window.pipeline_manager.displayNodeParameters('inputs',
+                                                                input_process)
 
-      # Alternative to the above statement
-      #node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
+        # Alternative to the above statement
+        # node_controller.display_parameters('inputs', get_process_instance(
+        #                                                          input_process),
+        #                                   pipeline)
 
-      # Opens the attributes filter, selects item and closes it
-      node_controller.filter_attributes()
-      attributes_filter = node_controller.pop_up
-      attributes_filter.table_data.selectRow(0)
-      attributes_filter.ok_clicked()
+        # Opens the attributes filter, selects item and closes it
+        node_controller.filter_attributes()
+        attributes_filter = node_controller.pop_up
+        attributes_filter.table_data.selectRow(0)
+        attributes_filter.ok_clicked()
 
-      # Opens the attributes filter, does not select an item and closes it
-      node_controller.filter_attributes()
-      attributes_filter = node_controller.pop_up
-      attributes_filter.search_str('!@#')
-      attributes_filter.ok_clicked()
+        # Opens the attributes filter, does not select an item and closes it
+        node_controller.filter_attributes()
+        attributes_filter = node_controller.pop_up
+        attributes_filter.search_str('!@#')
+        attributes_filter.ok_clicked()
 
     def test_capsul_node_controller(self):
-      """
-      Adds, changes and deletes processes using the capsul node controller, displays 
-      the attributes filter.
-    
+        """
+      Adds, changes and deletes processes using the capsul node controller,
+      displays the attributes filter.
+
       Notes:
       ------
       Tests the class CapsulNodeController().
       """
-    
-      # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, "project_8")
 
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-    
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-      node_controller = self.main_window.pipeline_manager.nodeController        
-    
-      # Adds 2 processes Rename, creates 2 nodes called "rename_1" and "rename_2"
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
 
-      # Displays parameters of "rename_2" node
-      rename_process = pipeline.nodes['rename_2'].process
-      self.main_window.pipeline_manager.displayNodeParameters('rename_2', rename_process)
+        DOCUMENT_1 = (self.main_window.project.session.
+                      get_documents_names)("current")[0]
 
-      # Tries to changes its name to "rename_2" and then to "rename_3"
-      node_controller.update_node_name()
-      self.assertEqual(node_controller.node_name, 'rename_2')
-      node_controller.update_node_name(new_node_name='rename_1', old_node_name='rename_2')
-      self.assertEqual(node_controller.node_name, 'rename_2')
-      node_controller.update_node_name(new_node_name='rename_3', old_node_name='rename_2')
-      self.assertEqual(node_controller.node_name, 'rename_3')
-    
-      # Deletes node "rename_3"
-      pipeline_editor_tabs.get_current_editor().del_node("rename_3")
-      
-      # Display parameters of the "inputs" node
-      input_process = pipeline.nodes[''].process
-      node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
-    
-      # Displays parameters of "rename_1" node
-      rename_process = pipeline.nodes['rename_1'].process
-      self.main_window.pipeline_manager.displayNodeParameters('rename_1', rename_process)
-    
-      # Exports the input plugs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
+        node_controller = self.main_window.pipeline_manager.nodeController
 
-      pipeline.nodes['rename_1'].set_plug_value('in_file', DOCUMENT_1)
-      pipeline.nodes['rename_1'].set_plug_value('format_string', 'new_name.nii')
-    
-      # Runs pipeline and expects an error
-      #QTimer.singleShot(1000, self.execute_QDialogAccept)
-      #self.main_window.pipeline_manager.runPipeline()
-      # FIXME: running the pipeline gives the error "wrapped C/C++ object of type 
-      # PipelineEditorTabs has been deleted".
-    
-      # Displays attributes filter
-      node_controller.filter_attributes()
-      attributes_filter = node_controller.pop_up
-      attributes_filter.table_data.selectRow(0)
-      #QTimer.singleShot(1000, self.execute_QDialogAccept)
-      attributes_filter.ok_clicked()
+        # Adds 2 processes Rename, creates 2 nodes called "rename_1" and
+        # "rename_2":
 
-      # Releases the process
-      node_controller.release_process()
-      node_controller.update_parameters()
+        process_class = Rename
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+        # Displays parameters of "rename_2" node
+        rename_process = pipeline.nodes['rename_2'].process
+        self.main_window.pipeline_manager.displayNodeParameters('rename_2',
+                                                                rename_process)
+
+        # Tries to changes its name to "rename_2" and then to "rename_3"
+        node_controller.update_node_name()
+        self.assertEqual(node_controller.node_name, 'rename_2')
+        node_controller.update_node_name(new_node_name='rename_1',
+                                         old_node_name='rename_2')
+        self.assertEqual(node_controller.node_name, 'rename_2')
+        node_controller.update_node_name(new_node_name='rename_3',
+                                         old_node_name='rename_2')
+        self.assertEqual(node_controller.node_name, 'rename_3')
+
+        # Deletes node "rename_3"
+        pipeline_editor_tabs.get_current_editor().del_node("rename_3")
+
+        # Display parameters of the "inputs" node
+        input_process = pipeline.nodes[''].process
+        node_controller.display_parameters('inputs',
+                                           get_process_instance(input_process),
+                                           pipeline)
+
+        # Displays parameters of "rename_1" node
+        rename_process = pipeline.nodes['rename_1'].process
+        self.main_window.pipeline_manager.displayNodeParameters('rename_1',
+                                                                rename_process)
+
+        # Exports the input plugs for "rename_1"
+        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_unconnected_mandatory_inputs()
+        pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        pipeline.nodes['rename_1'].set_plug_value('in_file', DOCUMENT_1)
+        pipeline.nodes['rename_1'].set_plug_value('format_string',
+                                                  'new_name.nii')
+
+        # Runs pipeline and expects an error
+        # QTimer.singleShot(1000, self.execute_QDialogAccept)
+        # self.main_window.pipeline_manager.runPipeline()
+        # FIXME: running the pipeline gives the error "wrapped C/C++ object of
+        #        type PipelineEditorTabs has been deleted".
+
+        # Displays attributes filter
+        node_controller.filter_attributes()
+        attributes_filter = node_controller.pop_up
+        attributes_filter.table_data.selectRow(0)
+        # QTimer.singleShot(1000, self.execute_QDialogAccept)
+        attributes_filter.ok_clicked()
+
+        # Releases the process
+        node_controller.release_process()
+        node_controller.update_parameters()
 
     def test_close_tab(self):
         """
@@ -2883,7 +3130,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
 
         # Adding a new tab and closing the first one
         pipeline_editor_tabs.new_tab()
@@ -2899,7 +3146,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         process_class = Smooth
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
         self.assertEqual(pipeline_editor_tabs.tabText(0)[-2:], " *")
 
         # # Still some bug with the pop-up execution
@@ -2930,7 +3177,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         pipeline_manager = self.main_window.pipeline_manager
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
 
         # Adding processes
         process_class = Smooth
@@ -2938,13 +3185,13 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         # Creates a node called "smooth_1"
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
         # Creates a node called "smooth_2"
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
         # Creates a node called "smooth_3"
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
@@ -2953,28 +3200,28 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertTrue("smooth_3" in pipeline.nodes.keys())
 
         pipeline_editor_tabs.get_current_editor().add_link(
-                                                ("smooth_1", "_smoothed_files"),
-                                                ("smooth_2", "in_files"),
-                                                active=True, weak=False)
+            ("smooth_1", "_smoothed_files"),
+            ("smooth_2", "in_files"),
+            active=True, weak=False)
 
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         pipeline_editor_tabs.get_current_editor().add_link(
-                                                 ("smooth_2", "_smoothed_files"),
-                                                 ("smooth_3", "in_files"),
-                                                 active=True, weak=False)
+            ("smooth_2", "_smoothed_files"),
+            ("smooth_3", "in_files"),
+            active=True, weak=False)
 
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_3"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         pipeline_editor_tabs.get_current_editor().current_node_name = "smooth_2"
         pipeline_editor_tabs.get_current_editor().del_node()
@@ -2984,10 +3231,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertTrue("smooth_3" in pipeline.nodes.keys())
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_3"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
 
         pipeline_manager.undo()
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
@@ -2995,16 +3242,16 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertTrue("smooth_3" in pipeline.nodes.keys())
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_3"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         pipeline_manager.redo()
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
@@ -3012,10 +3259,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertTrue("smooth_3" in pipeline.nodes.keys())
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_3"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
 
     def test_display_filter(self):
         """
@@ -3023,7 +3270,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         node_controller = self.main_window.pipeline_manager.nodeController
 
         # Adding a process
@@ -3031,14 +3278,14 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         # Creates a node called "threshold_1"
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
         # Exporting the input plugs and modifying the "synchronize" input plug
         pipeline_editor_tabs.get_current_editor(
-                                             ).current_node_name = "threshold_1"
+        ).current_node_name = "threshold_1"
         pipeline_editor_tabs.get_current_editor(
-                                          ).export_node_all_unconnected_inputs()
+        ).export_node_all_unconnected_inputs()
 
         input_process = pipeline.nodes[""].process
         node_controller.display_parameters("inputs",
@@ -3058,7 +3305,7 @@ class TestMIAPipelineManager(unittest.TestCase):
             node_controller.pop_up.close()
             self.assertEqual(2,
                              pipeline.nodes["threshold_1"].get_plug_value(
-                                                                 "synchronize"))
+                                 "synchronize"))
         # TODO 1: currently we do not enter in the last if statement (controller
         #         v2). Implement the switch to V1 controller to enable the
         #         last if
@@ -3070,106 +3317,117 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 'nipype.interfaces.spm.Smooth')
+            'nipype.interfaces.spm.Smooth')
         self.assertTrue('smooth_1' in
                         pipeline_editor_tabs.get_current_pipeline(
-                                                                 ).nodes.keys())
+                        ).nodes.keys())
 
     def test_filter_widget(self):
-      """
-      Places a node of the "Input_Filter" process, feeds in documents and opens up
-      the "FilterWidget()" to modify its parameters.
-      
+        """
+      Places a node of the "Input_Filter" process, feeds in documents and
+      opens up the "FilterWidget()" to modify its parameters.
+
       Notes:
       -----
-      Tests the class FilterWidget() within the Node Controller V1 (class NodeController()).
-      The class FilterWidget() is independent on the Node Controller version (V1 or V2) and
-      can be used in both of them.
+      Tests the class FilterWidget() within the Node Controller V1 (class
+      NodeController()). The class FilterWidget() is independent on the Node
+      Controller version (V1 or V2) and can be used in both of them.
       """
 
-      # Switches to node controller V1
-      config = Config(config_path=self.config_path)
-      config.setControlV1(True)
-      
-      self.restart_MIA()
+        # Switches to node controller V1
+        config = Config(config_path=self.config_path)
+        config.setControlV1(True)
 
-      # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, "project_8")
+        self.restart_MIA()
 
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-      DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]  
-    
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-      node_controller = self.main_window.pipeline_manager.nodeController 
-    
-      # Adds the process Smooth, creates a node called "input_filter_1"
-      from mia_processes.bricks.tools import Input_Filter
-      process_class = Input_Filter
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
 
-      # Exports the input plugs for "input_filter_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'input_filter_1'
-      pipeline_editor_tabs.get_current_editor().export_node_unconnected_mandatory_plugs()
-      
-      # Displays parameters of the "inputs" node
-      input_process = pipeline.nodes[''].process
-      node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
+        DOCUMENT_1 = (self.main_window.project.session.
+                      get_documents_names)("current")[0]
+        DOCUMENT_2 = (self.main_window.project.session.
+                      get_documents_names)("current")[1]
 
-      # Opens a filter for the plug "input" of the "inputs" node
-      parameters = (0, pipeline, type(Undefined))
-      node_controller.display_filter('inputs', 'input', parameters, input_process)
-    
-      # Selects all records in the "input" node
-      plug_filter = node_controller.pop_up
-      plug_filter.ok_clicked()
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
+        node_controller = self.main_window.pipeline_manager.nodeController
 
-      # Opens the filter widget for the node "input_filter_1"
-      pipeline_editor_tabs.open_filter('input_filter_1')
-      input_filter = pipeline_editor_tabs.filter_widget
+        # Adds the process Smooth, creates a node called "input_filter_1"
+        process_class = Input_Filter
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-      index_DOCUMENT_1 = input_filter.table_data.get_scan_row(DOCUMENT_1)
-      index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
+        # Exports the input plugs for "input_filter_1"
+        (pipeline_editor_tabs.
+         get_current_editor)().current_node_name = 'input_filter_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_node_unconnected_mandatory_plugs()
 
-      # Tries to search for an empty string and asserts that none of the documents are not hidden
-      input_filter.search_str('')
-      #self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
-      #self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
+        # Displays parameters of the "inputs" node
+        input_process = pipeline.nodes[''].process
+        node_controller.display_parameters('inputs',
+                                           get_process_instance(input_process),
+                                           pipeline)
 
-      # Searches for "DOCUMENT_2" and verifies that "DOCUMENT_1" is hidden
-      input_filter.search_str(DOCUMENT_2)
-      #self.assertTrue(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
+        # Opens a filter for the plug "input" of the "inputs" node
+        parameters = (0, pipeline, type(Undefined))
+        node_controller.display_filter('inputs', 'input', parameters,
+                                       input_process)
 
-      # Resets the search bar and assert that none of the documents are not hidden
-      input_filter.reset_search_bar()
-      #self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
-      #self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
-      # FIXME: input_filter.table_data.isRowHidden() does not work as expected
+        # Selects all records in the "input" node
+        plug_filter = node_controller.pop_up
+        plug_filter.ok_clicked()
 
-      # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag    
-      #QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate')) # DO NOT put a breakpoint here
-      #QTimer.singleShot(2000, self.execute_QDialogAccept) # nor here
-      input_filter.update_tags()
-      self.add_visualized_tag('AcquisitionDate')
-      self.assertTrue(type(input_filter.table_data.get_tag_column('AcquisitionDate')) == int)
+        # Opens the filter widget for the node "input_filter_1"
+        pipeline_editor_tabs.open_filter('input_filter_1')
+        input_filter = pipeline_editor_tabs.filter_widget
 
-      # Updates the tag to filter with
-      #QTimer.singleShot(1000, self.execute_QDialogAccept)
-      input_filter.update_tag_to_filter()
-      input_filter.push_button_tag_filter.setText('FileName')
-      # TODO: select tag to filter with
+        index_DOCUMENT_1 = input_filter.table_data.get_scan_row(DOCUMENT_1)
+        index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
 
-      # Closes the filter
-      input_filter.ok_clicked()
+        # Tries to search for an empty string and asserts that none of the
+        # documents are not hidden
+        input_filter.search_str('')
+        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
+        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
 
-      # Switches back to node controller V2
-      config = Config(config_path=self.config_path)
-      config.setControlV1(False)
+        # Searches for "DOCUMENT_2" and verifies that "DOCUMENT_1" is hidden
+        input_filter.search_str(DOCUMENT_2)
+        # self.assertTrue(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
+
+        # Resets the search bar and assert that none of the documents are not hidden
+        input_filter.reset_search_bar()
+        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1)) # if "DOCUMENT_1" is not hidden
+        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2)) # if "DOCUMENT_1" is not hidden
+        # FIXME: input_filter.table_data.isRowHidden() does not work as expected
+
+        # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag
+        # QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate')) # DO NOT put a breakpoint here
+        # QTimer.singleShot(2000, self.execute_QDialogAccept) # nor here
+        input_filter.update_tags()
+        self.add_visualized_tag('AcquisitionDate')
+        self.assertTrue(
+            type(input_filter.table_data.get_tag_column(
+                'AcquisitionDate')) == int)
+
+        # Updates the tag to filter with
+        # QTimer.singleShot(1000, self.execute_QDialogAccept)
+        input_filter.update_tag_to_filter()
+        input_filter.push_button_tag_filter.setText('FileName')
+        # TODO: select tag to filter with
+
+        # Closes the filter
+        input_filter.ok_clicked()
+
+        # Switches back to node controller V2
+        config = Config(config_path=self.config_path)
+        config.setControlV1(False)
 
     # def test_init_MIA_processes(self):
     #     """
@@ -3341,6 +3599,58 @@ class TestMIAPipelineManager(unittest.TestCase):
     #     self.assertEqual(pipeline.nodes['coregister1'].get_plug_value('coregistered_files'),
     #                      os.path.abspath(os.path.join(folder, nii_file)))
 
+    def test_get_missing_mandatory_parameters(self):
+        '''
+      Adds a process, exports input and output plugs and tries to initialize
+      the pipeline with missing mandatory parameters.
+
+      Notes
+      -----
+      Tests the PipelineManagerTab(QWidget).get_missing_mandatory_parameters().
+      '''
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
+        pipeline_manager = self.main_window.pipeline_manager
+
+        process_class = Rename
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+        # Exports the mandatory inputs and outputs for "rename_1"
+        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_unconnected_mandatory_inputs()
+        (pipeline_editor_tabs.
+         get_current_editor)()._export_plug(temp_plug_name=('rename_1',
+                                                            '_out_file'),
+                                            pipeline_parameter='_out_file',
+                                            optional=False,
+                                            weak_link=False)
+
+        # Initializes the pipeline
+        pipeline_manager.workflow = workflow_from_pipeline(pipeline,
+                                                           complete_parameters=True)
+        pipeline_manager.update_node_list()
+
+        # Asserts that 2 mandatory parameters are missing
+        pipeline_manager.update_node_list()
+        missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
+        self.assertEqual(len(missing_inputs), 2)
+        self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
+        self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
+
+        # Empties the jobs list
+        pipeline_manager.workflow.jobs = []
+
+        # Asserts that 2 mandatory parameters are still missing
+        missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
+        self.assertEqual(len(missing_inputs), 2)
+        self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
+        self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
+
     def test_iteration_table(self):
         """
         Plays with the iteration table
@@ -3365,9 +3675,9 @@ class TestMIAPipelineManager(unittest.TestCase):
         iteration_table.fill_values(2)
         iteration_table.update_table()
         self.assertTrue(iteration_table.combo_box.currentText()[1:-1] in [
-                                                                     "65789.48",
-                                                                     "25000.0",
-                                                                     "50000.0"])
+            "65789.48",
+            "25000.0",
+            "50000.0"])
 
     '''def test_open_filter(self):
         """
@@ -3404,7 +3714,7 @@ class TestMIAPipelineManager(unittest.TestCase):
     '''
 
     def test_node_controller(self):
-      """
+        """
       Adds, changes and deletes processes to the node controller, display the 
       attributes filter.
     
@@ -3413,139 +3723,156 @@ class TestMIAPipelineManager(unittest.TestCase):
       Tests the class NodeController().
       """
 
-      # Switches to node controller V1
-      config = Config(config_path=self.config_path)
-      config.setControlV1(True)
-      
-      self.restart_MIA()
+        # Switches to node controller V1
+        config = Config(config_path=self.config_path)
+        config.setControlV1(True)
 
-      # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, "project_8")
+        self.restart_MIA()
 
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-      node_controller = self.main_window.pipeline_manager.nodeController        
-    
-      # Adds the process Rename, creates the "rename_1" nodes
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+        DOCUMENT_1 = (self.main_window.project.session.
+                      get_documents_names)("current")[0]
 
-      # Displays parameters of "rename_2" node
-      rename_process = pipeline.nodes['rename_2'].process
-      self.main_window.pipeline_manager.displayNodeParameters('rename_2', rename_process)
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
+        node_controller = self.main_window.pipeline_manager.nodeController
 
-      # Tries to changes its name to "rename_2" and then to "rename_3"
-      node_controller.update_node_name()
-      self.assertEqual(node_controller.node_name, 'rename_2')
-      node_controller.update_node_name(new_node_name='rename_1')
-      self.assertEqual(node_controller.node_name, 'rename_2')
-      node_controller.update_node_name(new_node_name='rename_3')
-      self.assertEqual(node_controller.node_name, 'rename_3')
-      
-      # Deletes node "rename_2"
-      pipeline_editor_tabs.get_current_editor().del_node("rename_3")
-      self.assertRaises(KeyError, lambda:pipeline.nodes['rename_3'])
-    
-      # Exports the input plugs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
-      
-      # Display parameters of the "inputs" node
-      input_process = pipeline.nodes[''].process
-      node_controller.display_parameters('inputs', get_process_instance(input_process), pipeline)
-    
-      # Display the filter of the 'in_file' plug, "inputs" node
-      node_controller.display_filter('inputs', 'in_file', (0, pipeline, type(Undefined)), input_process)
-      node_controller.pop_up.close()
+        # Adds the process Rename, creates the "rename_1" nodes
+        process_class = Rename
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-      # Sets the values of the mandatory plugs 
-      pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
-      pipeline.nodes[''].set_plug_value('format_string', 'new_file.nii')
-      
-      # Checks the indexed of input and output plug labels
-      in_plug_index = node_controller.get_index_from_plug_name('in_file', 'in')
-      self.assertEqual(in_plug_index, 1)
-      out_plug_index = node_controller.get_index_from_plug_name('_out_file', 'out')
-      self.assertEqual(out_plug_index, 0)
+        # Displays parameters of "rename_2" node
+        rename_process = pipeline.nodes['rename_2'].process
+        self.main_window.pipeline_manager.displayNodeParameters('rename_2',
+                                                                rename_process)
 
-      # Tries to updates the plug value without a new value
-      node_controller.update_plug_value('in', 'in_file', pipeline, type(Undefined))
-      node_controller.update_plug_value('out', '_out_file', pipeline, type(Undefined))
-      node_controller.update_plug_value(None, 'in_file', pipeline, type(Undefined))
+        # Tries to changes its name to "rename_2" and then to "rename_3"
+        node_controller.update_node_name()
+        self.assertEqual(node_controller.node_name, 'rename_2')
+        node_controller.update_node_name(new_node_name='rename_1')
+        self.assertEqual(node_controller.node_name, 'rename_2')
+        node_controller.update_node_name(new_node_name='rename_3')
+        self.assertEqual(node_controller.node_name, 'rename_3')
 
-      # Tries to updates the plug value with a new value
-      node_controller.update_plug_value('in', 'in_file', pipeline, str, 
-        new_value='new_value.nii')
-      node_controller.update_plug_value('out', '_out_file', pipeline, str, 
-        new_value='new_value.nii')
+        # Deletes node "rename_2"
+        pipeline_editor_tabs.get_current_editor().del_node("rename_3")
+        self.assertRaises(KeyError, lambda: pipeline.nodes['rename_3'])
 
-      # Releases the process
-      node_controller.release_process()
-      node_controller.update_parameters()
+        # Exports the input plugs for "rename_1"
+        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_unconnected_mandatory_inputs()
+        pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
 
-      # Switches back to node controller V2
-      config = Config(config_path=self.config_path)
-      config.setControlV1(False)
+        # Display parameters of the "inputs" node
+        input_process = pipeline.nodes[''].process
+        node_controller.display_parameters('inputs',
+                                           get_process_instance(input_process),
+                                           pipeline)
+
+        # Display the filter of the 'in_file' plug, "inputs" node
+        node_controller.display_filter('inputs',
+                                       'in_file',
+                                       (0, pipeline, type(Undefined)),
+                                       input_process)
+        node_controller.pop_up.close()
+
+        # Sets the values of the mandatory plugs
+        pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        pipeline.nodes[''].set_plug_value('format_string', 'new_file.nii')
+
+        # Checks the indexed of input and output plug labels
+        in_plug_index = node_controller.get_index_from_plug_name('in_file',
+                                                                 'in')
+        self.assertEqual(in_plug_index, 1)
+        out_plug_index = node_controller.get_index_from_plug_name('_out_file',
+                                                                  'out')
+        self.assertEqual(out_plug_index, 0)
+
+        # Tries to updates the plug value without a new value
+        node_controller.update_plug_value('in', 'in_file',
+                                          pipeline, type(Undefined))
+        node_controller.update_plug_value('out', '_out_file',
+                                          pipeline, type(Undefined))
+        node_controller.update_plug_value(None, 'in_file',
+                                          pipeline, type(Undefined))
+
+        # Tries to updates the plug value with a new value
+        node_controller.update_plug_value('in', 'in_file',
+                                          pipeline, str,
+                                          new_value='new_value.nii')
+        node_controller.update_plug_value('out', '_out_file',
+                                          pipeline, str,
+                                          new_value='new_value.nii')
+
+        # Releases the process
+        node_controller.release_process()
+        node_controller.update_parameters()
+
+        # Switches back to node controller V2
+        config = Config(config_path=self.config_path)
+        config.setControlV1(False)
 
     def test_plug_filter(self):
         """
         Displays the parameters of a node, displays a plug filter
         and modifies it.
-    
+
         Notes:
         -----
         Tests the class PlugFilter() within the Node Controller V1
         (class NodeController()).
         """
-    
+
         # Switches to node controller V1
         config = Config(config_path=self.config_path)
         config.setControlV1(True)
-        
+
         self.restart_MIA()
-    
+
         # Opens project 8 and switches to it
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Get the 2 first documents/records
         DOCUMENT_1 = (self.main_window.project.session.
-                                              get_documents_names)("current")[0]
+                      get_documents_names)("current")[0]
         DOCUMENT_2 = (self.main_window.project.session.
-                                              get_documents_names)("current")[1]
-        
+                      get_documents_names)("current")[1]
+
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         node_controller = self.main_window.pipeline_manager.nodeController
-    
+
         # Add the "Smooth" process
         process_class = Smooth
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        
+
         # Creates a node called "smooth_1"
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
         pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
+
         # Exports the mandatory plugs
         pipeline_editor_tabs.get_current_editor().current_node_name = "smooth_1"
         (pipeline_editor_tabs.
-                 get_current_editor)().export_node_unconnected_mandatory_plugs()
-        
+         get_current_editor)().export_node_unconnected_mandatory_plugs()
+
         # Display parameters of "smooth_1" node
         input_process = pipeline.nodes[""].process
 
         node_controller.display_parameters("inputs",
                                            get_process_instance(input_process),
                                            pipeline)
-    
+
         # Opens a filter for the plug "in_files",
         # without "node_controller.scans_list"
         parameters = (0, pipeline, type(Undefined))
@@ -3567,17 +3894,16 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Resets the search bar
         plug_filter.reset_search_bar()
 
-         # if "DOCUMENT_1" is not hidden
+        # if "DOCUMENT_1" is not hidden
         self.assertFalse(plug_filter.table_data.isRowHidden(index_DOCUMENT_1))
-    
+
         # Tries search for an empty string
         plug_filter.search_str('')
-
 
         # Search for "DOCUMENT_2" and changes tags
         plug_filter.search_str(DOCUMENT_2)
 
-        index_DOCUMENT_2= plug_filter.table_data.get_scan_row(DOCUMENT_2)
+        index_DOCUMENT_2 = plug_filter.table_data.get_scan_row(DOCUMENT_2)
         plug_filter.table_data.selectRow(index_DOCUMENT_2)
 
         # FIXME: we need to find a better way to interact with the plug_filter
@@ -3590,46 +3916,46 @@ class TestMIAPipelineManager(unittest.TestCase):
         #        much the test coverage because the objects are still used
         #        (update_tags, update_tag_to_filter)
 
-        # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag    
-        #QTimer.singleShot(1000,
+        # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag
+        # QTimer.singleShot(1000,
         #                  lambda:self.add_visualized_tag('AcquisitionDate'))
-        #QTimer.singleShot(2000, self.execute_QDialogAccept)
+        # QTimer.singleShot(2000, self.execute_QDialogAccept)
 
         plug_filter.update_tags()
-        
+
         self.assertTrue(type(
-               plug_filter.table_data.get_tag_column('AcquisitionDate')) == int)
+            plug_filter.table_data.get_tag_column('AcquisitionDate')) == int)
 
         # Updates the tag to filter with
-        #QTimer.singleShot(1000, self.execute_QDialogAccept)
+        # QTimer.singleShot(1000, self.execute_QDialogAccept)
 
         plug_filter.update_tag_to_filter()
         plug_filter.push_button_tag_filter.setText('FileName')
         # TODO: select tag to filter with
-    
+
         # Closes the filter for the plug "in_files"
         plug_filter.ok_clicked()
-    
+
         # Assert the modified value
         self.assertIn(str(Path(DOCUMENT_2)),
                       str(Path(node.get_plug_value("in_files")[0])))
-    
+
         # Opens a filter for the plug "in_files", now with a "scans_list"
         node_controller.scan_list = (self.main_window.project.session.
-                                                 get_documents_names)("current")
+                                     get_documents_names)("current")
         node_controller.display_filter("inputs", "in_files",
                                        parameters, input_process)
-        
+
         # Searchs for something that does not give any match
         plug_filter.search_str('!@#')
         # this will empty the "plug_filter.table_data.selectedIndexes()"
         # and trigger a uncovered part of "set_plug_value(self)"
-    
+
         plug_filter.ok_clicked()
-    
+
         # Switches back to node controller V2
         config = Config(config_path=self.config_path)
-        config.setControlV1(False) 
+        config.setControlV1(False)
 
     def test_process_library(self):
         """
@@ -3685,426 +4011,91 @@ class TestMIAPipelineManager(unittest.TestCase):
             self.assertNotIn("brick_test", pro_dic["Packages"])
 
     def test_register_node_io_in_database(self):
-      '''
-      Adds a process, sets input and output parameters and registers them in database.
+        '''
+      Adds a process, sets input and output parameters and registers them
+      in database.
 
       Notes
       -----
-      Tests the method PipelineManagerTab(QWidget)._register_node_io_in_database.
-      '''
-      
-      # Opens project 8 and switches to it
-      #project_8_path = self.get_new_test_project()
-      #self.main_window.switch_project(project_8_path, 'project_9')
-      
-      # Retrieves the documents from the 'ressources' folder
-      DOCUMENT_1 = 'data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii'
-      DOCUMENT_2 = 'data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii'
-
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-    
-      # Adds the processes Smooth, creates the "rename_1" node
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
-      # Exports the mandatory input and output plugs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
-
-      old_scan_name = DOCUMENT_1.split('/')[-1]
-      new_scan_name = 'new_name.nii'
-
-      # Sets the mandatory plug values in the "inputs" node
-      pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
-      pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
-
-      # Changes the "_out_file" in the "outputs" node
-      pipeline.nodes[''].set_plug_value('_out_file', 
-        DOCUMENT_1.replace(old_scan_name, new_scan_name))
-
-      pipeline_manager = self.main_window.pipeline_manager
-
-      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
-
-      job = pipeline_manager.workflow.jobs[0]
-
-      import uuid
-      brick_id = str(uuid.uuid4())
-      job.uuid = brick_id
-      pipeline_manager.brick_list.append(brick_id)
-
-      from populse_mia.data_manager.project import COLLECTION_BRICK
-      pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
-
-      pipeline_manager._register_node_io_in_database(job, job.process())
-
-      # Simulates multiple inputs and outputs
-      #job.param_dict['in_file'] = [DOCUMENT_1,DOCUMENT_2]
-      #job.param_dict['_out_file'] = ['out_file1.nii', 'out_file2.nii']
-      #pipeline_manager._register_node_io_in_database(job, job.process())
-
-      # Simulates a 'ProcessNode()' as 'process'
-      process_node = ProcessNode(pipeline, '', job.process())
-      pipeline_manager._register_node_io_in_database(job, process_node)
-
-      # Simulates a 'PipelineNode()' as 'process'
-      pipeline_node = PipelineNode(pipeline, '', job.process())
-      pipeline_manager._register_node_io_in_database(job, pipeline_node)
-
-      # Simulates a 'Switch()' as 'process'      
-      switch = Switch(pipeline, '', [''], [''])
-      switch.completion_engine=None
-      pipeline_manager._register_node_io_in_database(job, switch)
-
-      # Simulates a a list of outputs in 'process'
-      job.process().list_outputs = []
-      job.process().outputs = []
-      pipeline_manager._register_node_io_in_database(job, job.process())
-
-    def test_update_node_list(self):
-      '''
-      Adds a process, exports input and output plugs, initializes a workflow and adds
-      the process to the "pipline_manager.node_list".
-
-      Notes
-      -----
-      Tests the PipelineManagerTab(QWidget).update_node_list().
+      Tests the method:
+          PipelineManagerTab(QWidget)._register_node_io_in_database
       '''
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-      pipeline_manager = self.main_window.pipeline_manager
-      pipeline = pipeline_editor_tabs.get_current_pipeline()    
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, 'project_9')
 
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+        DOCUMENT_1 = (self.main_window.project.session.
+                      get_documents_names)("current")[0]
+        DOCUMENT_2 = (self.main_window.project.session.
+                      get_documents_names)("current")[1]
 
-      # Exports the mandatory inputs and outputs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
-      
-      # Initializes the workflow
-      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-      pipeline_manager.workflow = workflow_from_pipeline(pipeline, 
-        complete_parameters=True)
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
 
-      # Asserts that the "node_list" is empty by default
-      node_list = self.main_window.pipeline_manager.node_list
-      self.assertEqual(len(node_list), 0)
+        # Adds the processes Smooth, creates the "rename_1" node
+        process_class = Rename
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-      # Asserts that the process "Rename" was added to "node_list"
-      pipeline_manager.update_node_list()
-      self.assertEqual(len(node_list), 1)
-      self.assertEqual(node_list[0]._nipype_class, 'Rename')
+        # Exports the mandatory input and output plugs for "rename_1"
+        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_unconnected_mandatory_inputs()
+        pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
 
-    def test_get_missing_mandatory_parameters(self):
-      '''
-      Adds a process, exports input and output plugs and tries to initialize
-      the pipeline with missing mandatory parameters.
+        old_scan_name = DOCUMENT_1.split('/')[-1]
+        new_scan_name = 'new_name.nii'
 
-      Notes
-      -----
-      Tests the PipelineManagerTab(QWidget).get_missing_mandatory_parameters().
-      '''
+        # Sets the mandatory plug values in the "inputs" node
+        pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-      pipeline_manager = self.main_window.pipeline_manager
+        # Changes the "_out_file" in the "outputs" node
+        pipeline.nodes[''].set_plug_value('_out_file',
+                                          DOCUMENT_1.replace(old_scan_name,
+                                                             new_scan_name))
 
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+        pipeline_manager = self.main_window.pipeline_manager
+        pipeline_manager.workflow = workflow_from_pipeline(
+            pipeline,
+            complete_parameters=True)
 
-      # Exports the mandatory inputs and outputs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor()._export_plug(temp_plug_name=('rename_1', 
-        '_out_file'), pipeline_parameter='_out_file', optional=False, weak_link=False)
-    
-      # Initializes the pipeline
-      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-      pipeline_manager.workflow = workflow_from_pipeline(pipeline, 
-        complete_parameters=True)
-      pipeline_manager.update_node_list()
+        job = pipeline_manager.workflow.jobs[0]
 
-      # Asserts that 2 mandatory parameters are missing
-      pipeline_manager.update_node_list()
-      missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
-      self.assertEqual(len(missing_inputs), 2)
-      self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
-      self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
+        brick_id = str(uuid.uuid4())
+        job.uuid = brick_id
+        pipeline_manager.brick_list.append(brick_id)
 
-      # Empties the jobs list
-      pipeline_manager.workflow.jobs = []
+        pipeline_manager.project.session.add_document(COLLECTION_BRICK,
+                                                      brick_id)
 
-      # Asserts that 2 mandatory parameters are still missing
-      missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
-      self.assertEqual(len(missing_inputs), 2)
-      self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
-      self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
+        pipeline_manager._register_node_io_in_database(job, job.process())
 
-    def test_add_plug_value_to_database_list_type(self):
-      '''
-      Opens a project, adds a 'Select' process, exports a list type input plug 
-      and adds it to the database.
+        # Simulates multiple inputs and outputs
+        # job.param_dict['in_file'] = [DOCUMENT_1,DOCUMENT_2]
+        # job.param_dict['_out_file'] = ['out_file1.nii', 'out_file2.nii']
+        # pipeline_manager._register_node_io_in_database(job, job.process())
 
-      Notes
-      -----
-      Tests the PipelineManagerTab(QWidget).add_plug_value_to_database().
-      '''
+        # Simulates a 'ProcessNode()' as 'process'
+        process_node = ProcessNode(pipeline, '', job.process())
+        pipeline_manager._register_node_io_in_database(job, process_node)
 
-      # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, 'project_9')
-      
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-      DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]
+        # Simulates a 'PipelineNode()' as 'process'
+        pipeline_node = PipelineNode(pipeline, '', job.process())
+        pipeline_manager._register_node_io_in_database(job, pipeline_node)
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-    
-      # Adds the processes Select, creates the "select_1" node
-      from nipype.interfaces import Select
-      process_class = Select
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
-      # Exports the mandatory input and output plugs for "select_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'select_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+        # Simulates a 'Switch()' as 'process'
+        switch = Switch(pipeline, '', [''], [''])
+        switch.completion_engine = None
+        pipeline_manager._register_node_io_in_database(job, switch)
 
-      pipeline_manager = self.main_window.pipeline_manager
-
-      # Initializes the workflow manually
-      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
-
-      job = pipeline_manager.workflow.jobs[0]
-
-      import uuid
-      brick_id = str(uuid.uuid4())
-      job.uuid = brick_id
-      pipeline_manager.brick_list.append(brick_id)
-
-      from populse_mia.data_manager.project import COLLECTION_BRICK
-      pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
-
-      # Sets the mandatory plug values corresponding to the "inputs" node
-      from nipype.interfaces.base.traits_extension import InputMultiObject
-      trait_list_inlist = TraitListObject(InputMultiObject(), pipeline, 'inlist', [
-        DOCUMENT_1, 
-        DOCUMENT_2])
-      
-      #pipeline.nodes[''].set_plug_value('inlist', trait_list_inlist)
-      #pipeline.nodes[''].set_plug_value('index', trait_list_index)
-      # the plug values do not have to be set for the test to succed
-
-      # Testing with 
-      process = job.process()
-      plug_name = 'inlist'
-      trait = process.trait(plug_name)
-      
-      inputs = process.get_inputs()
-      
-      # Sets the 'attributes' dict
-      attributes = {}
-      from capsul.attributes.completion_engine import ProcessCompletionEngine
-      completion = ProcessCompletionEngine.get_completion_engine(process)
-      if completion:
-          attributes = completion.get_attribute_values().export_to_dict()
-
-      # Mocks the attributes dict
-      attributes={
-        'not_list':'not_list_value', 
-        'small_list':['list_item1'], 
-        'large_list':['list_item1','list_item2','list_item3']
-        }
-      
-      # Adds plug value of type 'TraitListObject'
-      pipeline_manager.add_plug_value_to_database(trait_list_inlist, brick_id, '',
-        'select_1', plug_name, 'select_1', job, trait, inputs, attributes)
-      
-      # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in the database
-      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
-      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_2)
-      has_document = pipeline_manager.project.session.has_document
-      self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
-      self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_2))
-  
-    def test_add_plug_value_to_database_non_list_type(self):
-      '''
-      Opens a project, adds a 'Rename' process, exports a non list type input 
-      plug and adds it to the database.
-
-      Notes
-      -----
-      Tests the PipelineManagerTab(QWidget).add_plug_value_to_database().
-      '''
-
-      # Opens project 8 and switches to it
-      project_8_path = self.get_new_test_project()
-      self.main_window.switch_project(project_8_path, 'project_8')
-      
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-    
-      # Adds the processes Smooth, creates the "rename_1" node
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
-      # Exports the mandatory input and output plugs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
-
-      old_scan_name = DOCUMENT_1.split('/')[-1]
-      new_scan_name = 'new_name.nii'
-
-      # Changes the "_out_file" in the "outputs" node
-      pipeline.nodes[''].set_plug_value('_out_file', 
-        DOCUMENT_1.replace(old_scan_name, new_scan_name))
-
-      pipeline_manager = self.main_window.pipeline_manager
-
-      from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
-
-      job = pipeline_manager.workflow.jobs[0]
-
-      import uuid
-      brick_id = str(uuid.uuid4())
-      job.uuid = brick_id
-      pipeline_manager.brick_list.append(brick_id)
-
-      from populse_mia.data_manager.project import COLLECTION_BRICK
-      pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
-
-
-      # Sets the mandatory plug values in the "inputs" node
-      pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
-      pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
-
-      process = job.process()
-      plug_name = 'in_file'
-      trait = process.trait(plug_name)
-      
-      inputs = process.get_inputs()
-      
-      attributes = {}
-      from capsul.attributes.completion_engine import ProcessCompletionEngine
-      completion = ProcessCompletionEngine.get_completion_engine(process)
-      if completion:
-          attributes = completion.get_attribute_values().export_to_dict()
-
-      has_document = pipeline_manager.project.session.has_document
-
-      # Plug value is file location outside project directory
-      pipeline_manager.add_plug_value_to_database(DOCUMENT_1, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
-      self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
-      # Plug values outside the directory are not registered into the database,
-      # therefore only plug values inside the project will be used from now on.
-
-      # Plug value is file location inside project directory
-      inside_project = os.path.join(pipeline_manager.project.folder, DOCUMENT_1.split('/')[-1])
-      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-
-      # Plug value that is already in the database
-      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-
-      # Plug value is tag
-      tag_value = os.path.join(pipeline_manager.project.folder,'tag.gz')
-      pipeline_manager.add_plug_value_to_database(tag_value, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-      
-      # Plug value is .mat
-      mat_value = os.path.join(pipeline_manager.project.folder,'file.mat')
-      pipeline_manager.add_plug_value_to_database(mat_value, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-
-      # Plug value is .mat
-      txt_value = os.path.join(pipeline_manager.project.folder, 'file.txt')
-      pipeline_manager.add_plug_value_to_database(txt_value, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-
-      # 'parent_files' are extracted from the 'inheritance_dict' and 'auto_inheritance_dict'
-      # attributes of 'job'. They test cases are listed below:
-
-      # 'parent_files' inside 'auto_inheritance_dict'
-      job.auto_inheritance_dict = {
-        inside_project: 'parent_files_value'
-        }
-      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-      
-      # 'parent_files' inside 'inheritance_dict'
-      job.auto_inheritance_dict = None
-      job.inheritance_dict = {
-        inside_project: 'parent_files_value'
-        }
-      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-      
-      # 'parent_files' inside 'inheritance_dict', dict type
-      job.inheritance_dict = {
-        inside_project: {
-          'own_tags': [
-            {
-              'name':'tag_name',
-              'field_type': 'string',
-              'description': 'description_content',
-              'visibility': 'visibility_content',
-              'origin': 'origin_content',
-              'unit': 'unit_content',
-              'value': 'value_content',
-              'default_value': 'default_value_content'
-              }
-            ],
-            'parent': 'parent_content'
-          }
-        }
-      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
-      
-      # 'parent_files' inside 'inheritance_dict', output is one of the inputs
-      job.inheritance_dict = {
-        inside_project: {
-          'own_tags': [
-            {
-              'name':'tag_name',
-              'field_type': 'string',
-              'description': 'description_content',
-              'visibility': 'visibility_content',
-              'origin': 'origin_content',
-              'unit': 'unit_content',
-              'value': 'value_content',
-              'default_value': 'default_value_content'
-              }
-            ],
-          'parent': 'parent_content',
-          'output': inside_project
-          }
-        }
-
-      pipeline_manager.add_plug_value_to_database(inside_project, brick_id, '',
-        'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
+        # Simulates a a list of outputs in 'process'
+        job.process().list_outputs = []
+        job.process().outputs = []
+        pipeline_manager._register_node_io_in_database(job, job.process())
 
     def test_save_pipeline(self):
         """
@@ -4112,7 +4103,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         node_controller = self.main_window.pipeline_manager.nodeController
         config = Config(config_path=self.config_path)
 
@@ -4122,7 +4113,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Creates a node called "smooth_1"
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Displaying the node parameters
         pipeline = pipeline_editor_tabs.get_current_pipeline()
@@ -4133,9 +4124,9 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Exporting the input plugs
         pipeline_editor_tabs.get_current_editor().current_node_name = "smooth_1"
         pipeline_editor_tabs.get_current_editor(
-                                     ).export_node_unconnected_mandatory_plugs()
+        ).export_node_unconnected_mandatory_plugs()
         pipeline_editor_tabs.get_current_editor(
-                                         ).export_node_all_unconnected_outputs()
+        ).export_node_all_unconnected_outputs()
         filename = os.path.join(config.get_mia_path(), 'processes',
                                 'User_processes', 'test_pipeline.py')
         save_pipeline(pipeline, filename)
@@ -4168,14 +4159,14 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         pipeline_manager = self.main_window.pipeline_manager
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
 
         # Add a process => creates a node called "smooth_1",
         # test if Smooth_1 is a node in the current pipeline / editor
         process_class = Smooth
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
 
@@ -4205,15 +4196,15 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Creates a node called "smooth_1"
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Export the "out_prefix" plug,
         # test if the Input node have a prefix_smooth plug
         pipeline_editor_tabs.get_current_editor()._export_plug(
-                                      temp_plug_name=("smooth_1", "out_prefix"),
-                                      pipeline_parameter="prefix_smooth",
-                                      optional=False,
-                                      weak_link=False)
+            temp_plug_name=("smooth_1", "out_prefix"),
+            pipeline_parameter="prefix_smooth",
+            optional=False,
+            weak_link=False)
         self.assertTrue("prefix_smooth" in pipeline.nodes[''].plugs.keys())
 
         # Undo (remove prefix_smooth from Input node),
@@ -4229,7 +4220,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Delete the "prefix_smooth" plug from the Input node,
         # test if the Input node have not a prefix_smooth plug
         pipeline_editor_tabs.get_current_editor()._remove_plug(
-                                    _temp_plug_name=("inputs", "prefix_smooth"))
+            _temp_plug_name=("inputs", "prefix_smooth"))
         self.assertFalse("prefix_smooth" in pipeline.nodes[''].plugs.keys())
 
         # Undo (export again the "out_prefix" plug),
@@ -4248,73 +4239,73 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Adding a new process => creates a node called "smooth_2"
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 550)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Adding a link
         pipeline_editor_tabs.get_current_editor().add_link(
-                                                ("smooth_1", "_smoothed_files"),
-                                                ("smooth_2", "in_files"),
-                                                active=True, weak=False)
+            ("smooth_1", "_smoothed_files"),
+            ("smooth_2", "in_files"),
+            active=True, weak=False)
 
         # test if the 2 nodes have the good links
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Undo (remove the link), test if the 2 nodes have not the links
         pipeline_manager.undo()
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Redo (add again the link), test if the 2 nodes have the good links
         pipeline_manager.redo()
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Removing the link, test if the 2 nodes have not the links
         link = "smooth_1._smoothed_files->smooth_2.in_files"
         pipeline_editor_tabs.get_current_editor()._del_link(link)
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Undo (add again the link), test if the 2 nodes have the good links
         pipeline_manager.undo()
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Redo (remove the link), test if the 2 nodes have not the links
         pipeline_manager.redo()
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Re-adding a link
         pipeline_editor_tabs.get_current_editor().add_link(
-                                                ("smooth_1", "_smoothed_files"),
-                                                ("smooth_2", "in_files"),
-                                                active=True, weak=False)
+            ("smooth_1", "_smoothed_files"),
+            ("smooth_2", "in_files"),
+            active=True, weak=False)
 
         # Updating the node name
         process = pipeline.nodes['smooth_2'].process
@@ -4334,10 +4325,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertFalse("smooth_2" in pipeline.nodes.keys())
         self.assertEqual(1,
                          len(pipeline.nodes["my_smooth"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Undo (Updating the node name from my_smooth to smooth_2),
         # test if it's ok
@@ -4347,10 +4338,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertTrue("smooth_2" in pipeline.nodes.keys())
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Redo (Updating the node name from smooth_2 to my_smooth),
         # test if it's ok
@@ -4360,10 +4351,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertFalse("smooth_2" in pipeline.nodes.keys())
         self.assertEqual(1,
                          len(pipeline.nodes["my_smooth"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         # Updating a plug value
         if hasattr(node_controller, 'get_index_from_plug_name'):
@@ -4375,17 +4366,57 @@ class TestMIAPipelineManager(unittest.TestCase):
 
             self.assertEqual("PREFIX",
                              pipeline.nodes["my_smooth"].get_plug_value(
-                                                                  "out_prefix"))
+                                 "out_prefix"))
 
             pipeline_manager.undo()
             self.assertEqual("s",
                              pipeline.nodes["my_smooth"].get_plug_value(
-                                                                  "out_prefix"))
+                                 "out_prefix"))
 
             pipeline_manager.redo()
             self.assertEqual("PREFIX",
                              pipeline.nodes["my_smooth"].get_plug_value(
-                                                                  "out_prefix"))
+                                 "out_prefix"))
+
+    def test_update_node_list(self):
+        '''
+      Adds a process, exports input and output plugs, initializes a workflow
+      and adds the process to the "pipline_manager.node_list".
+
+      Notes
+      -----
+      Tests the PipelineManagerTab(QWidget).update_node_list().
+      '''
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                pipelineEditorTabs)
+        pipeline_manager = self.main_window.pipeline_manager
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+        process_class = Rename
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+            process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+        # Exports the mandatory inputs and outputs for "rename_1"
+        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+        (pipeline_editor_tabs.
+         get_current_editor)().export_unconnected_mandatory_inputs()
+        pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        # Initializes the workflow
+        pipeline_manager.workflow = workflow_from_pipeline(pipeline,
+                                                           complete_parameters=True)
+
+        # Asserts that the "node_list" is empty by default
+        node_list = self.main_window.pipeline_manager.node_list
+        self.assertEqual(len(node_list), 0)
+
+        # Asserts that the process "Rename" was added to "node_list"
+        pipeline_manager.update_node_list()
+        self.assertEqual(len(node_list), 1)
+        self.assertEqual(node_list[0]._nipype_class, 'Rename')
 
     def test_update_node_name(self):
         """
@@ -4399,7 +4430,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         process_class = Smooth
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Displaying the smooth_1 node parameters
         pipeline = pipeline_editor_tabs.get_current_pipeline()
@@ -4419,9 +4450,9 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Add 2 another Smooth process => Creates nodes called
         # smooth_1 and smooth_2
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Adding link between smooth_test and smooth_1 nodes
         source = ('smooth_test', '_smoothed_files')
@@ -4462,10 +4493,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Verifying that the updated node has the same links
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_test_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
-            len(pipeline.nodes["smooth_test_2"].plugs[
-                                                   "_smoothed_files"].links_to))
+                         len(pipeline.nodes["smooth_test_2"].plugs[
+                                 "_smoothed_files"].links_to))
 
     def test_update_plug_value(self):
         """
@@ -4473,7 +4504,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         node_controller = self.main_window.pipeline_manager.nodeController
 
         # Adding a process
@@ -4482,7 +4513,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Creates a node called "threshold_1":
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Displaying the node parameters
         pipeline = pipeline_editor_tabs.get_current_pipeline()
@@ -4500,25 +4531,25 @@ class TestMIAPipelineManager(unittest.TestCase):
             node_controller.line_edit_input[index].returnPressed.emit()
             self.assertEqual(1,
                              pipeline.nodes["threshold_1"].get_plug_value(
-                                                                 "synchronize"))
+                                 "synchronize"))
 
             # Updating the value of the "_activation_forced" plug
             index = node_controller.get_index_from_plug_name(
-                                                           "_activation_forced",
-                                                           "out")
+                "_activation_forced",
+                "out")
             node_controller.line_edit_output[index].setText("True")
 
             # This calls "update_plug_value" method:
             node_controller.line_edit_output[index].returnPressed.emit()
             self.assertEqual(True,
                              pipeline.nodes["threshold_1"].get_plug_value(
-                                                          "_activation_forced"))
+                                 "_activation_forced"))
 
         # Exporting the input plugs and modifying the "synchronize" input plug
         pipeline_editor_tabs.get_current_editor(
-                                             ).current_node_name = "threshold_1"
+        ).current_node_name = "threshold_1"
         pipeline_editor_tabs.get_current_editor(
-                                          ).export_node_all_unconnected_inputs()
+        ).export_node_all_unconnected_inputs()
 
         input_process = pipeline.nodes[""].process
         node_controller.display_parameters("inputs",
@@ -4534,7 +4565,7 @@ class TestMIAPipelineManager(unittest.TestCase):
             node_controller.line_edit_input[index].returnPressed.emit()
             self.assertEqual(2,
                              pipeline.nodes["threshold_1"].get_plug_value(
-                                                                 "synchronize"))
+                                 "synchronize"))
 
     def test_z_get_editor(self):
         """
@@ -4548,7 +4579,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         config = Config(config_path=self.config_path)
 
         filename = os.path.join(config.get_mia_path(), 'processes',
@@ -4565,14 +4596,15 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(pipeline_editor_tabs.get_current_editor(), editor1)
         self.assertEqual(editor0,
                          pipeline_editor_tabs.get_editor_by_tab_name(
-                                                            "test_pipeline.py"))
+                             "test_pipeline.py"))
         self.assertEqual(editor1,
                          pipeline_editor_tabs.get_editor_by_tab_name(
-                                                              "New Pipeline 1"))
+                             "New Pipeline 1"))
         self.assertEqual(None,
                          pipeline_editor_tabs.get_editor_by_tab_name("dummy"))
         self.assertEqual(editor0,
-                         pipeline_editor_tabs.get_editor_by_file_name(filename))
+                         pipeline_editor_tabs.get_editor_by_file_name(
+                             filename))
         self.assertEqual(None,
                          pipeline_editor_tabs.get_editor_by_file_name("dummy"))
 
@@ -4587,7 +4619,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         config = Config(config_path=self.config_path)
 
         filename = os.path.join(config.get_mia_path(), 'processes',
@@ -4596,11 +4628,11 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         self.assertEqual(filename,
                          os.path.abspath(
-                                 pipeline_editor_tabs.get_filename_by_index(0)))
+                             pipeline_editor_tabs.get_filename_by_index(0)))
         self.assertEqual(None, pipeline_editor_tabs.get_filename_by_index(1))
         self.assertEqual(filename,
                          os.path.abspath(
-                                   pipeline_editor_tabs.get_current_filename()))
+                             pipeline_editor_tabs.get_current_filename()))
 
     def test_z_get_index(self):
         """
@@ -4613,7 +4645,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         config = Config(config_path=self.config_path)
         filename = os.path.join(config.get_mia_path(), 'processes',
                                 'User_processes', 'test_pipeline.py')
@@ -4626,10 +4658,10 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         self.assertEqual(0,
                          pipeline_editor_tabs.get_index_by_tab_name(
-                                                            "test_pipeline.py"))
+                             "test_pipeline.py"))
         self.assertEqual(1,
                          pipeline_editor_tabs.get_index_by_tab_name(
-                                                              "New Pipeline 1"))
+                             "New Pipeline 1"))
         self.assertEqual(None,
                          pipeline_editor_tabs.get_index_by_tab_name("dummy"))
 
@@ -4653,7 +4685,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
 
         self.assertEqual("New Pipeline",
                          pipeline_editor_tabs.get_tab_name_by_index(0))
@@ -4668,7 +4700,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         config = Config(config_path=self.config_path)
 
         # Forcing the exit and disabling the init progressbar
@@ -4690,7 +4722,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Adding the "test_pipeline" as a process
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Added another Smooth process
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 550)
@@ -4704,9 +4736,9 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Adding a link
         pipeline_editor_tabs.get_current_editor().add_link(
-                                                ("smooth_1", "_smoothed_files"),
-                                                ("test_pipeline_1", "in_files"),
-                                                 active=True, weak=False)
+            ("smooth_1", "_smoothed_files"),
+            ("test_pipeline_1", "in_files"),
+            active=True, weak=False)
 
         # Choosing a nii file from the project_8's raw_data folder
         folder = os.path.abspath(os.path.join(config.get_mia_path(),
@@ -4726,10 +4758,11 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Verifying the results
         self.assertEqual(
-                   pipeline.nodes['smooth_1'].get_plug_value('_smoothed_files'),
-                   os.path.abspath(os.path.join(folder, 'TEST' + nii_file)))
+            pipeline.nodes['smooth_1'].get_plug_value('_smoothed_files'),
+            os.path.abspath(os.path.join(folder, 'TEST' + nii_file)))
         self.assertEqual(
-            pipeline.nodes['test_pipeline_1'].get_plug_value('_smoothed_files'),
+            pipeline.nodes['test_pipeline_1'].get_plug_value(
+                '_smoothed_files'),
             os.path.abspath(os.path.join(folder, 'sTEST' + nii_file)))
 
     def test_z_load_pipeline(self):
@@ -4738,7 +4771,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         config = Config(config_path=self.config_path)
 
         filename = os.path.join(config.get_mia_path(), 'processes',
@@ -4754,7 +4787,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         config = Config(config_path=self.config_path)
 
         # Adding the processes path to the system path
@@ -4773,7 +4806,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Adding the "test_pipeline" as a process
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+            process_class)
 
         # Opening the sub-pipeline in a new editor
         pipeline = pipeline_editor_tabs.get_current_pipeline()
@@ -4783,7 +4816,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertTrue(3, pipeline_editor_tabs.count())
         self.assertEqual("test_pipeline.py",
                          os.path.basename(
-                                 pipeline_editor_tabs.get_filename_by_index(1)))
+                             pipeline_editor_tabs.get_filename_by_index(1)))
 
     def test_z_set_current_editor(self):
         """
@@ -4796,7 +4829,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         config = Config(config_path=self.config_path)
         filename = os.path.join(config.get_mia_path(), 'processes',
                                 'User_processes', 'test_pipeline.py')
@@ -4827,7 +4860,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+                                pipelineEditorTabs)
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         config = Config(config_path=self.config_path)
 
@@ -4843,29 +4876,29 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
 
         pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 "User_processes.Test_pipeline")
+            "User_processes.Test_pipeline")
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
         self.assertTrue("test_pipeline_1" in pipeline.nodes.keys())
 
         pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 "nipype.interfaces.spm.Smooth")
+            "nipype.interfaces.spm.Smooth")
         pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 "nipype.interfaces.spm.Smooth")
+            "nipype.interfaces.spm.Smooth")
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
         self.assertTrue("smooth_2" in pipeline.nodes.keys())
 
         pipeline_editor_tabs.get_current_editor().add_link(
-                                                ("smooth_1", "_smoothed_files"),
-                                                ("test_pipeline_1", "in_files"),
-                                                active=True, weak=False)
+            ("smooth_1", "_smoothed_files"),
+            ("test_pipeline_1", "in_files"),
+            active=True, weak=False)
 
         self.assertEqual(1,
                          len(pipeline.nodes["test_pipeline_1"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         pipeline_editor_tabs.get_current_editor().add_link(
                                          ("test_pipeline_1", "_smoothed_files"),
@@ -4874,85 +4907,29 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
+                                 "in_files"].links_from))
         self.assertEqual(1,
                          len(pipeline.nodes["test_pipeline_1"].plugs[
-                                                   "_smoothed_files"].links_to))
+                                 "_smoothed_files"].links_to))
 
         pipeline_editor_tabs.set_current_editor_by_tab_name("test_pipeline.py")
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
 
         pipeline_editor_tabs.get_current_editor(
-                                  ).export_node_plugs("smooth_1", optional=True)
+        ).export_node_plugs("smooth_1", optional=True)
         self.main_window.pipeline_manager.savePipeline(uncheck=True)
 
         pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
         pipeline_editor_tabs.get_current_editor(
-                               ).scene.pos["test_pipeline_1"] = QPoint(450, 500)
+        ).scene.pos["test_pipeline_1"] = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().check_modifications()
 
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("fwhm" in
-                                 pipeline.nodes["test_pipeline_1"].plugs.keys())
+                        pipeline.nodes["test_pipeline_1"].plugs.keys())
 
-    def add_visualized_tag(self, tag):
-        """
-        With the "Visualized tags" pop-up open, selects a tag to display.
 
-        Parameters
-        ----------
-        tag: string
-          The tag to be displayed
 
-        Usage
-        -----
-        Should be called, with a delay, before opening the "Visualized tags" pop-up:
-        QTimer.singleShot(1000, lambda:self.add_visualized_tag('AcquisitionDate'))
-        """
-    
-        w = QApplication.activeWindow()
-    
-        if isinstance(w, QDialog):
-    
-            visualized_tags = w.layout().itemAt(0).widget()
-            tags_list = visualized_tags.list_widget_tags
-    
-            #found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
-            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
-              found_item = tags_list.findItems(tag,  Qt.MatchExactly)
-            else:
-              found_item = tags_list.findItems(tag,  Qt.MatchFlag.MatchExactly)
-
-            tags_list.setCurrentItem(found_item[0])
-    
-            visualized_tags.click_select_tag() 
-
-    def restart_MIA(self):
-        """
-        Restarts MIA withing a unit test.
-
-        Notes
-        -----
-        Can be used to restart MIA after changing the controller version in MIA
-        preferences.
-        """
-
-        self.main_window.close()
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-        self.app.exit()
-
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
 
 if __name__ == '__main__':
     unittest.main()
