@@ -3328,7 +3328,7 @@ class TestMIAPipelineManager(unittest.TestCase):
       brick_id = str(uuid.uuid4())
       pipeline_manager.brick_list.append(brick_id)
 
-      # Mocks methods used in the method
+      # Mocks methods used in the test
       from unittest.mock import MagicMock
       pipeline_manager.main_window.data_browser.table_data.delete_from_brick = MagicMock()
       pipeline_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
@@ -3396,6 +3396,28 @@ class TestMIAPipelineManager(unittest.TestCase):
       # Asserts the output
       self.assertTrue(isinstance(config, dict))
       self.assertTrue(list(config.keys()) == ['capsul_engine', 'capsul.engine.module.nipype'])
+
+    def test_complete_pipeline_parameters(self):
+      '''
+      Mocks a method of pipeline manager and completes the pipeline parameters.
+
+      Notes
+      -----
+      Tests the method 'PipelineManagerTab.complete_pipeline_parameters'. 
+      '''
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # Mocks method used in the test
+      from unittest.mock import MagicMock
+      pipeline_manager.get_capsul_engine = MagicMock(
+        return_value=pipeline_manager.get_pipeline_or_process())
+
+      # Complete pipeline parameters
+      pipeline_manager.complete_pipeline_parameters()
+
+      # Asserts that the mock method was called as expected
+      pipeline_manager.get_capsul_engine.assert_called_once_with()
 
         # # Still some bug with the pop-up execution
         #
