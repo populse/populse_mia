@@ -3174,7 +3174,7 @@ class TestMIAPipelineManager(unittest.TestCase):
     def test_build_iterated_pipeline(self):
       '''
       Adds a 'Select' process, exports its mandatory inputs, mocks some methods of
-      'PipelineManagerTab' and builds an iterated pipeline.
+      the pipeline manager and builds an iterated pipeline.
 
       Notes
       -----
@@ -3310,6 +3310,39 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Releases the process
         node_controller.release_process()
         node_controller.update_parameters()
+
+    def test_cleanup_older_init(self):
+      '''
+      Mocks a brick list, mocks some methods from  the pipeline manager and 
+      cleans older inits.
+
+      Notes
+      -----
+      Tests the method 'PipelineManagerTab.cleanup_older_init'. 
+      '''
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # Mocks a 'pipeline_manager.brick_list'
+      import uuid
+      brick_id = str(uuid.uuid4())
+      pipeline_manager.brick_list.append(brick_id)
+
+      # Mocks methods used in the method
+      from unittest.mock import MagicMock
+      pipeline_manager.main_window.data_browser.table_data.delete_from_brick = MagicMock()
+      pipeline_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
+
+      # Cleans up older init
+      pipeline_manager.cleanup_older_init()
+
+      # Asserts that the mock methods were called as expected
+      pipeline_manager.main_window.data_browser.table_data.delete_from_brick.assert_called_once_with(brick_id)
+      pipeline_manager.project.cleanup_orphan_nonexisting_files.assert_called_once_with()
+
+      # Asserts that both 'brick_list' and 'node_list' were cleaned
+      self.assertTrue(len(pipeline_manager.brick_list) == 0)
+      self.assertTrue(len(pipeline_manager.node_list) == 0)
 
     def test_close_tab(self):
         """
