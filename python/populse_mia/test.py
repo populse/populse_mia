@@ -2640,6 +2640,7 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_capsul_node_controller: adds, changes and deletes processes 
             using the capsul node controller
             - test_close_tab: closes a tab in the PipelineEditorTabs
+            - test_check_requirements: checks the requirements for a given node
             - test_delete_processes: deletes a process and makes the undo/redo
             - test_display_filter: displays node parameters and a plug filter
             - test_drop_process: adds a Nipype SPM Smooth process to the
@@ -3334,6 +3335,34 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline_editor_tabs.get_current_editor().add_named_process(
             process_class)
         self.assertEqual(pipeline_editor_tabs.tabText(0)[-2:], " *")
+
+    def test_check_requirements(self):
+      '''
+      Adds a 'Select' process, appends it to the nodes list and checks the requirements
+      for the given node.
+
+      Notes
+      -----
+      Tests the method 'PipelineManagerTab.check_requirements'.
+      '''
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # Adds the processes Select, creates the "select_1" node
+      from nipype.interfaces import Select
+      process_class = Select
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+      # Appends a 'Process' to 'pipeline_manager.node_list' and checks requirements
+      pipeline_manager.node_list.append(pipeline.nodes['select_1'].process)
+      config = pipeline_manager.check_requirements()
+
+      # Asserts the output
+      self.assertTrue(isinstance(config, dict))
+      self.assertTrue(list(config.keys()) == ['capsul_engine', 'capsul.engine.module.nipype'])
 
         # # Still some bug with the pop-up execution
         #
