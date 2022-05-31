@@ -9,7 +9,7 @@ In the following we propose exclusively for linux the use of a Singularity conta
   - mkdir -p $HOME/casa_distro/brainvisa-opensource-master # create an installation directory
   - "[download the last casa-dev image](https://brainvisa.info/download/) (ex. casa-dev-5.3-6.sif version compatible with Ubuntu 22.04), preferably into the $HOME/casa_distro directory"
   - singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-6.sif branch=master distro=opensource # execute the container image using Singularity
-  - "set the bin/ directory of the installation directory in the PATH environment variable of the host system, typically add `export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"` in $HOME/.bashrc if unix bash shell
+  - "set the bin/ directory of the installation directory in the PATH environment variable of the host system, typically add `export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"`in $HOME/.bashrc if unix bash shell
   - "add `cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3` and  `cmake_options += -DDESIRED_QT_VERSION=5`
  in the [ build $CASA_BUILD ] section of the $HOME/casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg file (host) to make python3 as default"
   - bv_maker #  to build from within container terminal or from outside the container
@@ -126,7 +126,7 @@ We recommand an update of  linux Ubuntu 20.04 once it's installed.
 ```
    - close this window
 
-Now you have WSL2 and an Ubuntu 20.04 linux.   Lycée Blaise Pascal Rouen
+Now you have WSL2 and an Ubuntu 20.04 linux.
 Before you install a new distribution using `wsl --install -d distribution`, make sure that WSL is in 2 mode with:  
    `wsl --set-default-version 2`  
 The distribution is only available for the current Windows user.  
@@ -213,9 +213,9 @@ We also need a X windows server to allow linux applications graphic user interfa
 
 ```bash
    sudo apt install -y build-essential uuid-dev libgpgme-dev squashfs-tools libseccomp-dev wget pkg-config git git-lfs cryptsetup-bin python3-distutils python3-dev 
-   # Ubuntu 20.04Lycée Blaise Pascal Rouen
+   # Ubuntu 20.04
    sudo apt install python-is-python3
-   # Ubuntu 18.04Lycée Blaise Pascal Rouen
+   # Ubuntu 18.04
    sudo ln -s python3 /usr/bin/python
 ```
 
@@ -239,13 +239,13 @@ If you anticipate needing to remove Singularity, it might be easier to install i
 	sudo chown -R root:root go &&\
 	sudo mv go /usr/local/ &&\
 	rm go1.17.linux-amd64.tar.gz 
- Lycée Blaise Pascal Rouen
+ 
 echo 'export GOPATH=${HOME}/go' >> ~/.bashrc &&\
 echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc  &&\
 source ~/.bashrc
 ```
 
-Get singularity :Lycée Blaise Pascal RouenLycée Blaise Pascal Rouen
+Get singularity:
 
 Ubuntu 22.04 is recommanded for developpers. The latest version of singularity is the 3.8.3 which is compatible with Ubuntu 22.04.
 Regarding your Ubuntu version get the right download link of the singularity version you need here https://brainvisa.info/web/download.html#prerequisites.
