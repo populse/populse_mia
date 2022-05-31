@@ -2710,6 +2710,42 @@ class TestMIAPipelineManager(unittest.TestCase):
 
             visualized_tags.click_select_tag()
 
+    def test_ask_iterated_pipeline_plugs(self):
+      '''
+      Adds the process 'Rename', export mandatory input and output plug and opens
+      an iteration dialog for each plug.
+
+      Notes
+      -----
+      Tests the PipelineManagerTab.ask_iterated_pipeline_plugs.
+      '''
+
+      # Opens project 8 and switches to it
+      #project_8_path = self.get_new_test_project()
+      #self.main_window.switch_project(project_8_path, 'project_8')
+      
+      #DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
+      DOCUMENT_1 = 'data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii'
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+    
+      # Adds the processes Smooth, creates the "rename_1" node
+      from nipype.interfaces import Rename
+      process_class = Rename
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # Exports the mandatory input and output plugs for "rename_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+      QTimer.singleShot(1000, self.execute_QDialogAccept)
+      pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
+
     def execute_QDialogAccept(self):
         """
         Accept (close) a QDialog window
@@ -3002,7 +3038,7 @@ class TestMIAPipelineManager(unittest.TestCase):
       pipeline_manager.add_plug_value_to_database(mat_value, brick_id, '',
         'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
 
-      # Plug value is .mat
+      # Plug value is .txt
       txt_value = os.path.join(pipeline_manager.project.folder, 'file.txt')
       pipeline_manager.add_plug_value_to_database(txt_value, brick_id, '',
         'rename_1', plug_name, 'rename_1', job, trait, inputs, attributes)
@@ -5029,7 +5065,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("fwhm" in
                         pipeline.nodes["test_pipeline_1"].plugs.keys())
-
 
 
 
