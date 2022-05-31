@@ -2635,6 +2635,8 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_add_tab: adds tabs to the PipelineEditorTabs
             - test_attributes_filter: displays an attributes filter and 
             modifies it
+            - test_build_iterated_pipeline: mocks methods and builds an interated 
+            pipeline
             - test_capsul_node_controller: adds, changes and deletes processes 
             using the capsul node controller
             - test_close_tab: closes a tab in the PipelineEditorTabs
@@ -2720,13 +2722,6 @@ class TestMIAPipelineManager(unittest.TestCase):
       Tests the PipelineManagerTab.ask_iterated_pipeline_plugs.
       '''
 
-      # Opens project 8 and switches to it
-      #project_8_path = self.get_new_test_project()
-      #self.main_window.switch_project(project_8_path, 'project_8')
-      
-      #DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-      DOCUMENT_1 = 'data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii'
-
       pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
     
       # Adds the processes Smooth, creates the "rename_1" node
@@ -2744,6 +2739,7 @@ class TestMIAPipelineManager(unittest.TestCase):
       pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
 
       QTimer.singleShot(1000, self.execute_QDialogAccept)
+      # PyQt5.QtWidgets.QScrollArea at w.layout().itemAt(0).widget().layout().itemAt(0).widget()
       pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
 
     def execute_QDialogAccept(self):
@@ -3174,6 +3170,58 @@ class TestMIAPipelineManager(unittest.TestCase):
         attributes_filter.search_str('!@#')
         attributes_filter.ok_clicked()
 
+    def test_build_iterated_pipeline(self):
+      '''
+      Adds a 'Select' process, exports its mandatory inputs, mocks some methods of
+      'PipelineManagerTab' and builds an iterated pipeline.
+
+      Notes
+      -----
+      Tests the method 'PipelineManagerTab.build_iterated_pipeline'.
+      '''
+
+      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      pipeline_manager = self.main_window.pipeline_manager
+    
+      # Adds the processes Select, creates the "select_1" node
+      from nipype.interfaces import Select
+      process_class = Select
+      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = pipeline_editor_tabs.get_current_pipeline()
+    
+      # Exports the mandatory input and output plugs for "select_1"
+      pipeline_editor_tabs.get_current_editor().current_node_name = 'select_1'
+      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+
+      from unittest.mock import MagicMock
+
+      # Mocks 'parent_pipeline' and returns a 'Process' instead of a 'Pipeline'
+      #pipeline = pipeline_manager.get_pipeline_or_process()
+      pipeline = pipeline.nodes['select_1'].process
+      #pipeline.context_name = 'Pipeline.'
+      #from capsul.api import Pipeline
+      pipeline.parent_pipeline = True
+      #pipeline.nodes[''].set_plug_value('inlist', DOCUMENT_1)
+
+      pipeline_manager.get_pipeline_or_process = MagicMock(return_value=pipeline)
+
+      # Mocks 'ask_iterated_pipeline_plugs' and returns the tuple 
+      # '(iterated_plugs, database_plugs)'
+      pipeline_manager.ask_iterated_pipeline_plugs = MagicMock(return_value=(['index','inlist','_out'],['inlist']))
+
+      # Mocks 'update_nodes_and_plugs_activation' with no returned values
+      pipeline.update_nodes_and_plugs_activation = MagicMock()
+
+      # Builds iterated pipeline
+      pipeline_manager.build_iterated_pipeline()
+
+      # Asserts the mock methods were called as expected
+      pipeline_manager.get_pipeline_or_process.assert_called_once_with()
+      pipeline_manager.ask_iterated_pipeline_plugs.assert_called_once_with(pipeline)
+      pipeline.update_nodes_and_plugs_activation.assert_called_once_with()
+    
     def test_capsul_node_controller(self):
         """
       Adds, changes and deletes processes using the capsul node controller,
