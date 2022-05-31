@@ -2647,6 +2647,7 @@ class TestMIAPipelineManager(unittest.TestCase):
               pipeline editor
             - test_filter_widget: opens up the "FilterWidget()" to modify its 
             parameters.
+            - test_finish_execution: finishes the execution of the pipeline
             - test_get_missing_mandatory_parameters: ries to initialize the 
             pipeline with missing mandatory parameters
             - test_iteration_table: plays with the iteration table
@@ -3699,6 +3700,70 @@ class TestMIAPipelineManager(unittest.TestCase):
         config = Config(config_path=self.config_path)
         config.setControlV1(False)
 
+    def test_finish_execution(self):
+      '''
+      Mocks several objects of the pipeline manager and finishes the execution of the
+      pipeline.
+
+      Notes
+      -----
+      Tests the method PipelineManagerTab.finish_execution.
+      '''
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      from unittest.mock import MagicMock, Mock
+
+      # Mock objects of 'pipeline_manager' used during the test
+      pipeline_manager.progress = Mock()
+      pipeline_manager.progress.worker.status = 'status_value'
+      pipeline_manager.last_run_pipeline = Mock()
+      pipeline_manager.last_pipeline_name = 'last_pipeline_name_value'
+      pipeline_manager._mmovie = Mock()
+
+      # Mock methods of 'pipeline_manager' used during the test
+      pipeline_manager.main_window.statusBar().showMessage = MagicMock()
+      pipeline_manager.show_pipeline_status_action.setIcon = MagicMock()
+      pipeline_manager.nodeController.update_parameters = MagicMock()
+      pipeline_manager.run_pipeline_action.setDisabled = MagicMock()
+      pipeline_manager.garbage_collect_action.setDisabled = MagicMock()
+      pipeline_manager.stop_pipeline_action.setEnabled = MagicMock()
+
+      # Connect 'worker' to 'finished_execution' method
+      pipeline_manager.progress.worker.finished.connect(pipeline_manager.finish_execution)
+
+      # Finish the execution of the pipeline (no errors are thrown)
+      pipeline_manager.finish_execution()
+
+      # Asserts that the mocked objects were called as expected
+      self.assertEqual('status_value', pipeline_manager.last_status)
+      self.assertFalse(hasattr(pipeline_manager,'_mmovie'))
+      self.assertIsNone(pipeline_manager.last_run_log)
+
+      # Asserts that the mocked methods were called as expected
+      pipeline_manager.stop_pipeline_action.setEnabled.assert_called_once_with(False)
+      pipeline_manager.last_run_pipeline.get_study_config().engine.raise_for_status.assert_called_once()
+      pipeline_manager.main_window.statusBar().showMessage.assert_called_once_with(
+        'Pipeline "{0}" has been correctly run.'.format(pipeline_manager.last_pipeline_name)
+      )
+      pipeline_manager.show_pipeline_status_action.setIcon.assert_called_once()
+      pipeline_manager.nodeController.update_parameters.assert_called_once_with()
+      pipeline_manager.run_pipeline_action.setDisabled.assert_called_once_with(False)
+      pipeline_manager.garbage_collect_action.setDisabled.assert_called_once_with(False)
+
+      # Mock objects in order to induce a 'RuntimeError' which is treated by the method
+      pipeline_manager.progress = Mock()
+      from soma_workflow import constants as swconstants
+      pipeline_manager.progress.worker.status = swconstants.WORKFLOW_DONE
+      delattr(pipeline_manager.progress.worker, 'exec_id')
+      pipeline_manager._mmovie = Mock()
+
+      # Finish the execution of the pipeline with no 'worker.exec_id' (an error is thrown)
+      pipeline_manager.finish_execution()
+
+      # Asserts that the execution of the pipeline failed
+      self.assertEqual(pipeline_manager.last_run_log, 'Execution aborted before running')
+    
     # def test_init_MIA_processes(self):
     #     """
     #     Adds all the tools processes, initializes and runs the pipeline
