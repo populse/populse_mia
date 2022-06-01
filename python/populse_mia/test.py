@@ -147,7 +147,6 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 if 'NO_ET' not in os.environ:
     os.environ['NO_ET'] = "1"
 
-
 class TestMIADataBrowser(unittest.TestCase):
     """Tests for the data browser tab
 
@@ -2648,6 +2647,8 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_filter_widget: opens up the "FilterWidget()" to modify its 
             parameters.
             - test_finish_execution: finishes the execution of the pipeline
+            - test_garbage_collect: collects the garbage of the pipeline
+            - test_get_capsul_engine: gets the capsul engine of the pipeline
             - test_get_missing_mandatory_parameters: ries to initialize the 
             pipeline with missing mandatory parameters
             - test_iteration_table: plays with the iteration table
@@ -2657,6 +2658,7 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_process_library: install the brick_test and then remove it
             - test_register_node_io_in_database: sets input and output 
             parameters and registers them in database
+            - test_remove_progress: removes the progress of the pipeline
             - test_save_pipeline: saves a simple pipeline
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
             - test_undo_redo: tests the undo/redo
@@ -3596,6 +3598,55 @@ class TestMIAPipelineManager(unittest.TestCase):
                         pipeline_editor_tabs.get_current_pipeline(
                         ).nodes.keys())
 
+    def test_garbage_collect(self):
+      '''
+      Mocks several objects of the pipeline manager and collects the garbage
+      of the pipeline.
+
+      Notes
+      -----
+      Tests PipelineManagerTab.test_garbage_collect.
+      '''
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # INTEGRATED TEST
+
+      # Mocks the 'initialized' object
+      pipeline_manager.pipelineEditorTabs.get_current_editor().initialized = True
+
+      # Collects the garbage
+      pipeline_manager.garbage_collect()
+
+      # Asserts that the 'initialized' object changed state
+      self.assertFalse(pipeline_manager.pipelineEditorTabs.get_current_editor().initialized)
+      
+      # ISOLATED TEST
+
+      # Mocks again the 'initialized' object
+      pipeline_manager.pipelineEditorTabs.get_current_editor().initialized = True
+
+      # Mocks the methods used in the test
+      from unittest.mock import MagicMock
+      pipeline_manager.postprocess_pipeline_execution = MagicMock()
+      pipeline_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
+      pipeline_manager.project.cleanup_orphan_history = MagicMock()
+      pipeline_manager.main_window.data_browser.table_data.update_table = MagicMock()
+      pipeline_manager.update_user_buttons_states = MagicMock()
+
+      # Collects the garbage
+      pipeline_manager.garbage_collect()
+
+      # Asserts that the 'initialized' object changed state
+      self.assertFalse(pipeline_manager.pipelineEditorTabs.get_current_editor().initialized)
+
+      # Assertes that the mocked methods were called as expected
+      pipeline_manager.postprocess_pipeline_execution.assert_called_once_with()
+      pipeline_manager.project.cleanup_orphan_nonexisting_files.assert_called_once_with()
+      pipeline_manager.project.cleanup_orphan_history.assert_called_once_with()
+      pipeline_manager.main_window.data_browser.table_data.update_table.assert_called_once_with()
+      pipeline_manager.update_user_buttons_states.assert_called_once_with()
+
     def test_filter_widget(self):
         """
       Places a node of the "Input_Filter" process, feeds in documents and
@@ -3933,6 +3984,37 @@ class TestMIAPipelineManager(unittest.TestCase):
     #                      os.path.abspath(os.path.join(folder, 'rp_' + nii_no_ext + '.txt')))
     #     self.assertEqual(pipeline.nodes['coregister1'].get_plug_value('coregistered_files'),
     #                      os.path.abspath(os.path.join(folder, nii_file)))
+
+    def test_get_capsul_engine(self):
+      '''
+      Mocks an object in the pipeline manager and gets the capsul engine
+      of the pipeline.
+
+      Notes
+      -----
+      Tests PipelineManagerTab.get_capsul_engine()
+      '''
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # INTEGRATED
+
+      # Gets the capsul engine
+      capsul_engine = pipeline_manager.get_capsul_engine() # integrated
+
+      # Asserts that the 'capsul_engine' is of class 'CapsulEngine'
+      from capsul.engine import CapsulEngine
+      self.assertIsInstance(capsul_engine, CapsulEngine)
+
+      # ISOLATED
+      from unittest.mock import MagicMock
+      pipeline_manager.pipelineEditorTabs.get_capsul_engine = MagicMock()
+
+      # Gets the capsul engine
+      capsul_engine = pipeline_manager.get_capsul_engine() # isolated
+
+      # Asserts that the mocked method was called as expected
+      pipeline_manager.pipelineEditorTabs.get_capsul_engine.assert_called_once_with()
 
     def test_get_missing_mandatory_parameters(self):
         '''
@@ -4431,6 +4513,28 @@ class TestMIAPipelineManager(unittest.TestCase):
         job.process().list_outputs = []
         job.process().outputs = []
         pipeline_manager._register_node_io_in_database(job, job.process())
+
+    def test_remove_progress(self):
+      '''
+      Mocks an object of the pipeline manager and removes its progress.
+
+      Notes
+      -----
+      Tests the method PipelineManagerTab.remove_progress.
+      
+      '''
+
+      pipeline_manager = self.main_window.pipeline_manager
+
+      # Mocks the 'progress' object
+      from unittest.mock import Mock
+      pipeline_manager.progress = Mock()
+
+      # Removes progress
+      pipeline_manager.remove_progress()
+
+      # Asserts that the object 'progress' was deleted
+      self.assertFalse(hasattr(pipeline_manager, 'progress'))
 
     def test_save_pipeline(self):
         """
@@ -5262,8 +5366,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("fwhm" in
                         pipeline.nodes["test_pipeline_1"].plugs.keys())
-
-
 
 if __name__ == '__main__':
     unittest.main()
