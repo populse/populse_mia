@@ -136,7 +136,7 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_TIME)
 
 # capsul import
-from capsul.api import get_process_instance, ProcessNode, PipelineNode, Switch
+from capsul.api import get_process_instance, ProcessNode, PipelineNode, Switch, Process
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
 
