@@ -2651,9 +2651,8 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_finish_execution: finishes the execution of the pipeline
             - test_garbage_collect: collects the garbage of the pipeline
             - test_get_capsul_engine: gets the capsul engine of the pipeline
-            - test_get_missing_mandatory_parameters: ries to initialize the 
+            - test_get_missing_mandatory_parameters: tries to initialize the 
             pipeline with missing mandatory parameters
-            - test_initialize: adds a process and initializes the workflow 
             - test_iteration_table: plays with the iteration table
             - test_node_controller: adds, changes and deletes processes to the 
             node controller
@@ -3652,7 +3651,7 @@ class TestMIAPipelineManager(unittest.TestCase):
       
     def test_get_pipeline_or_process(self):
       '''
-      Mocks several objects and gets a pipeline and a process from the pipeline
+      Adds a process and gets a pipeline and a process from the pipeline
       manager.
 
       Notes
@@ -3662,10 +3661,8 @@ class TestMIAPipelineManager(unittest.TestCase):
 
       pipeline_manager = self.main_window.pipeline_manager
 
-      # INTEGRATED
-
       # Gets the pipeline
-      pipeline = pipeline_manager.get_pipeline_or_process() # integrated
+      pipeline = pipeline_manager.get_pipeline_or_process()
 
       # Asserts that the object 'pipeline' is a 'Pipeline'
       from capsul.pipeline.pipeline import Pipeline
@@ -3680,22 +3677,11 @@ class TestMIAPipelineManager(unittest.TestCase):
       pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
       
       # Gets a process
-      process = pipeline_manager.get_pipeline_or_process() # integrated
+      process = pipeline_manager.get_pipeline_or_process()
 
       # Asserts that the process 'pipeline' is indeed a 'NipypeProcess'
       from capsul.process.process import NipypeProcess
       self.assertIsInstance(process, NipypeProcess)
-
-      # ISOLATED
-
-      # Mocks objects used during the test
-
-
-      # Mocks methods used in the test
-      from unittest.mock import MagicMock
-      pipeline_manager.pipelineEditorTabs.get_current_editor = MagicMock()
-      pipeline_manager.pipelineEditorTabs.get_current_editor.scene.pipeline.nodes = {'':'inputs', 'node_1':ProcessNode(pipeline, 'node_1', Process())}
-      pipeline_manager.pipelineEditorTabs.get_current_editor.scene.pipeline.pipeline_node.plugs = {}
 
     def test_filter_widget(self):
         """
@@ -4117,65 +4103,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(len(missing_inputs), 2)
         self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
         self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
-
-    def test_initialize(self):
-      '''
-      Adds Select process, exports its plugs, mocks objects from the pipeline manager and
-      initializes the workflow.
-
-      Notes
-      -----
-      Tests the PipelineManagerTab.initialize.
-      '''
-      
-      DOCUMENT_1 = 'data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii'
-      DOCUMENT_2 = 'data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii'
-
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-      pipeline_manager = self.main_window.pipeline_manager
-
-      # Adds the process 'Select' as the node 'select_1'
-      from nipype.interfaces import Select
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(Select)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
-
-      # Exports the mandatory inputs and outputs for 'select_1'
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'select_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
-
-      # Set mandatory parameters 'select_1'
-      pipeline.nodes[''].set_plug_value('inlist', [DOCUMENT_1, DOCUMENT_2])
-      pipeline.nodes[''].set_plug_value('index', [0])
-
-      # Checks that there is no workflow 
-      self.assertIsNone(pipeline_manager.workflow)
-
-      # Mocks objects
-      pipeline_manager.init_clicked = True
-      pipeline_manager.ignore_node = True
-      pipeline_manager.key = {'item':'item_value'}
-      pipeline_manager.ignore = {'item':'item_value'}
-
-      # Initializes the pipeline
-      pipeline_manager.initialize()
-
-      # Asserts that a workflow has been created
-      self.assertIsNotNone(pipeline_manager.workflow)
-      from soma_workflow.client_types import Workflow
-      self.assertIsInstance(pipeline_manager.workflow, Workflow)
-      self.assertFalse(pipeline_manager.ignore_node)
-      self.assertEqual(len(pipeline_manager.key), 0)
-      self.assertEqual(len(pipeline_manager.ignore), 0)
-
-      # Mocks an object to induce an exception
-      pipeline_manager.init_pipeline = None
-
-      # Induces an exception in the pipeline initialization
-      pipeline_manager.initialize()
-
-      self.assertFalse(pipeline_manager.ignore_node)
 
     def test_iteration_table(self):
         """
