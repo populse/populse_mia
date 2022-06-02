@@ -3659,25 +3659,25 @@ class TestMIAPipelineManager(unittest.TestCase):
       Tests PipelineManagerTab.get_pipeline_or_process.
       '''
 
-      pipeline_manager = self.main_window.pipeline_manager
+      # Sets shortcuts for often used objects
+      ppl_manager = self.main_window.pipeline_manager
+      ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
       # Gets the pipeline
-      pipeline = pipeline_manager.get_pipeline_or_process()
+      pipeline = ppl_manager.get_pipeline_or_process()
 
       # Asserts that the object 'pipeline' is a 'Pipeline'
       from capsul.pipeline.pipeline import Pipeline
       self.assertIsInstance(pipeline, Pipeline)
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-
       # Adds the processes Rename, creates the "rename_1" node
       from nipype.interfaces import Rename
       process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      ppl_edt_tabs.get_current_editor().add_named_process(process_class)
       
       # Gets a process
-      process = pipeline_manager.get_pipeline_or_process()
+      process = ppl_manager.get_pipeline_or_process()
 
       # Asserts that the process 'pipeline' is indeed a 'NipypeProcess'
       from capsul.process.process import NipypeProcess
