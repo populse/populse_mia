@@ -24,7 +24,7 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QMessageBox,
                              QTableWidgetItem)
 
 # Nipype import
-from nipype.interfaces import Rename
+from nipype.interfaces import Rename, Select
 from nipype.interfaces.spm import Smooth, Threshold
 
 # other import
@@ -42,6 +42,8 @@ from functools import partial
 from packaging import version
 from pathlib import Path
 from traits.api import Undefined, TraitListObject
+
+from unittest.mock import Mock, MagicMock
 
 if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
     # "developer" mode
@@ -2728,36 +2730,6 @@ class TestMIAPipelineManager(unittest.TestCase):
 
             visualized_tags.click_select_tag()
 
-    def test_ask_iterated_pipeline_plugs(self):
-      '''
-      Adds the process 'Rename', export mandatory input and output plug and opens
-      an iteration dialog for each plug.
-
-      Notes
-      -----
-      Tests the PipelineManagerTab.ask_iterated_pipeline_plugs.
-      '''
-
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-    
-      # Adds the processes Smooth, creates the "rename_1" node
-      from nipype.interfaces import Rename
-      process_class = Rename
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
-      pipeline_manager = self.main_window.pipeline_manager
-
-      # Exports the mandatory input and output plugs for "rename_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
-
-      QTimer.singleShot(1000, self.execute_QDialogAccept)
-      # PyQt5.QtWidgets.QScrollArea at w.layout().itemAt(0).widget().layout().itemAt(0).widget()
-      pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
-
     def execute_QDialogAccept(self):
         """
         Accept (close) a QDialog window
@@ -2796,6 +2768,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         """
 
         self.main_window.close()
+
         # Removing the opened projects (in CI, the tests are run twice)
         config = Config(config_path=self.config_path)
         config.set_opened_projects([])
@@ -2865,8 +2838,8 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_add_plug_value_to_database_list_type(self):
       '''
-      Opens a project, adds a 'Select' process, exports a list type input plug 
-      and adds it to the database.
+      Opens a project, adds a 'Select' process, exports a list type 
+      input plug and adds it to the database.
 
       Notes
       -----
@@ -2877,29 +2850,32 @@ class TestMIAPipelineManager(unittest.TestCase):
       project_8_path = self.get_new_test_project()
       self.main_window.switch_project(project_8_path, 'project_9')
       
-      DOCUMENT_1 = self.main_window.project.session.get_documents_names("current")[0]
-      DOCUMENT_2 = self.main_window.project.session.get_documents_names("current")[1]
+      DOCUMENT_1 = self.main_window.project.session.\
+                   get_documents_names("current")[0]
+      DOCUMENT_2 = self.main_window.project.session.\
+                   get_documents_names("current")[1]
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
     
       # Adds the processes Select, creates the "select_1" node
-      from nipype.interfaces import Select
-      process_class = Select
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+      ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      ppl_edt_tabs.get_current_editor().add_named_process(Select)
+      pipeline = ppl_edt_tabs.get_current_pipeline()
     
       # Exports the mandatory input and output plugs for "select_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'select_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+      ppl_edt_tabs.get_current_editor().current_node_name = 'select_1'
+      ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+      ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
       pipeline_manager = self.main_window.pipeline_manager
 
       # Initializes the workflow manually
       from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-      pipeline_manager.workflow = workflow_from_pipeline(pipeline, complete_parameters=True)      
+      pipeline_manager.workflow = workflow_from_pipeline(pipeline, 
+                                                         complete_parameters=
+                                                         True)      
 
+      # Gets the 'job' and mocks adding a brick to the collection
       job = pipeline_manager.workflow.jobs[0]
 
       import uuid
@@ -2910,24 +2886,22 @@ class TestMIAPipelineManager(unittest.TestCase):
       from populse_mia.data_manager.project import COLLECTION_BRICK
       pipeline_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
 
-      # Sets the mandatory plug values corresponding to the "inputs" node
+      # Sets the mandatory plug values corresponding to "inputs" node
       from nipype.interfaces.base.traits_extension import InputMultiObject
-      trait_list_inlist = TraitListObject(InputMultiObject(), pipeline, 'inlist', [
-        DOCUMENT_1, 
-        DOCUMENT_2])
+      trait_list_inlist = TraitListObject(InputMultiObject(), pipeline, 
+                                          'inlist', [DOCUMENT_1, DOCUMENT_2])
       
       #pipeline.nodes[''].set_plug_value('inlist', trait_list_inlist)
       #pipeline.nodes[''].set_plug_value('index', trait_list_index)
       # the plug values do not have to be set for the test to succed
 
-      # Testing with 
+      # Mocks the creation of a completion engine
       process = job.process()
       plug_name = 'inlist'
       trait = process.trait(plug_name)
       
       inputs = process.get_inputs()
       
-      # Sets the 'attributes' dict
       attributes = {}
       from capsul.attributes.completion_engine import ProcessCompletionEngine
       completion = ProcessCompletionEngine.get_completion_engine(process)
@@ -2945,17 +2919,20 @@ class TestMIAPipelineManager(unittest.TestCase):
       pipeline_manager.add_plug_value_to_database(trait_list_inlist, brick_id, '',
         'select_1', plug_name, 'select_1', job, trait, inputs, attributes)
       
-      # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in the database
-      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
-      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, DOCUMENT_2)
+      # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in 
+      # the database
+      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, 
+                                                    DOCUMENT_1)
+      pipeline_manager.project.session.get_document(COLLECTION_CURRENT, 
+                                                    DOCUMENT_2)
       has_document = pipeline_manager.project.session.has_document
       self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
       self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_2))
   
     def test_add_plug_value_to_database_non_list_type(self):
       '''
-      Opens a project, adds a 'Rename' process, exports a non list type input 
-      plug and adds it to the database.
+      Opens a project, adds a 'Rename' process, exports a non list type 
+      input plug and adds it to the database.
 
       Notes
       -----
@@ -2971,10 +2948,8 @@ class TestMIAPipelineManager(unittest.TestCase):
       pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
     
       # Adds the processes Smooth, creates the "rename_1" node
-      from nipype.interfaces import Rename
-      process_class = Rename
       pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
+      pipeline_editor_tabs.get_current_editor().add_named_process(Rename)
       pipeline = pipeline_editor_tabs.get_current_pipeline()
     
       # Exports the mandatory input and output plugs for "rename_1"
@@ -3133,35 +3108,61 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(pipeline_editor_tabs.count(), 4)
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
 
+    def test_ask_iterated_pipeline_plugs(self):
+        '''
+        Adds the process 'Rename', export mandatory input and output plug 
+        and opens an iteration dialog for each plug.
+
+        Notes
+        -----
+        Tests the PipelineManagerTab.ask_iterated_pipeline_plugs.
+        '''
+
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+
+        # Adds the processes Smooth, creates the "rename_1" node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        pipeline = ppl_edt_tabs.get_current_pipeline()
+        pipeline_manager = self.main_window.pipeline_manager
+
+        # Exports the mandatory input and output plugs for "rename_1"
+        ppl_edt_tabs.get_current_editor().current_node_name = 'rename_1'
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        # PyQt5.QtWidgets.QScrollArea at w.layout().itemAt(0).widget().
+        # layout().itemAt(0).widget() -> for changhing the popu-up
+        pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
+
     def test_attributes_filter(self):
         """
-      Displays the parameters of a node, displays an attributes filter
-      and modifies it.
+        Displays the parameters of a node, displays an attributes filter
+        and modifies it.
 
-      Notes:
-      -----
-      Tests the method "AttributesFilter" within the Node Controller V2
-      (CapsulNodeController()).
-      """
+        Notes:
+        -----
+        Tests the method "AttributesFilter" within the Node Controller V2
+        (CapsulNodeController()).
+        """
 
         # Opens project 8 and switches to it
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                pipelineEditorTabs)
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_controller = self.main_window.pipeline_manager.nodeController
 
         # Adds the process Smooth, creates a node called "smooth_1"
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Exports the input plugs
-        pipeline_editor_tabs.get_current_editor().current_node_name = 'smooth_1'
-        (pipeline_editor_tabs.
+        ppl_edt_tabs.get_current_editor().current_node_name = 'smooth_1'
+        (ppl_edt_tabs.
          get_current_editor)().export_node_unconnected_mandatory_plugs()
 
         # Displays parameters of 'inputs' node
@@ -3171,8 +3172,8 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Alternative to the above statement
         # node_controller.display_parameters('inputs', get_process_instance(
-        #                                                          input_process),
-        #                                   pipeline)
+        #                                    input_process),
+        #                                    pipeline)
 
         # Opens the attributes filter, selects item and closes it
         node_controller.filter_attributes()
@@ -3187,66 +3188,66 @@ class TestMIAPipelineManager(unittest.TestCase):
         attributes_filter.ok_clicked()
 
     def test_build_iterated_pipeline(self):
-      '''
-      Adds a 'Select' process, exports its mandatory inputs, mocks some methods of
-      the pipeline manager and builds an iterated pipeline.
+        '''
+        Adds a 'Select' process, exports its mandatory inputs, mocks 
+        some methods of the pipeline manager and builds an iterated 
+        pipeline.
 
-      Notes
-      -----
-      Tests the method 'PipelineManagerTab.build_iterated_pipeline'.
-      '''
+        Notes
+        -----
+        Tests the method 'PipelineManagerTab.build_iterated_pipeline'.
+        '''
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-      pipeline_manager = self.main_window.pipeline_manager
-    
-      # Adds the processes Select, creates the "select_1" node
-      from nipype.interfaces import Select
-      process_class = Select
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
-    
-      # Exports the mandatory input and output plugs for "select_1"
-      pipeline_editor_tabs.get_current_editor().current_node_name = 'select_1'
-      pipeline_editor_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-      pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        ppl_manager = self.main_window.pipeline_manager
 
-      from unittest.mock import MagicMock
+        # Adds the processes Select, creates the "select_1" node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Select)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
 
-      # Mocks 'parent_pipeline' and returns a 'Process' instead of a 'Pipeline'
-      #pipeline = pipeline_manager.get_pipeline_or_process()
-      pipeline = pipeline.nodes['select_1'].process
-      #pipeline.context_name = 'Pipeline.'
-      #from capsul.api import Pipeline
-      pipeline.parent_pipeline = True
-      #pipeline.nodes[''].set_plug_value('inlist', DOCUMENT_1)
+        # Exports the mandatory input and output plugs for "select_1"
+        ppl_edt_tabs.get_current_editor().current_node_name = 'select_1'
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
-      pipeline_manager.get_pipeline_or_process = MagicMock(return_value=pipeline)
+        # Mocks 'parent_pipeline' and returns a 'Process' instead of a 
+        # 'Pipeline'
+        pipeline = pipeline.nodes['select_1'].process
+        pipeline.parent_pipeline = True
 
-      # Mocks 'ask_iterated_pipeline_plugs' and returns the tuple 
-      # '(iterated_plugs, database_plugs)'
-      pipeline_manager.ask_iterated_pipeline_plugs = MagicMock(return_value=(['index','inlist','_out'],['inlist']))
+        ppl_manager.get_pipeline_or_process = MagicMock(return_value=pipeline)
 
-      # Mocks 'update_nodes_and_plugs_activation' with no returned values
-      pipeline.update_nodes_and_plugs_activation = MagicMock()
+        # Mocks 'ask_iterated_pipeline_plugs' and returns the tuple 
+        # '(iterated_plugs, database_plugs)'
+        ppl_manager.ask_iterated_pipeline_plugs = MagicMock(return_value=(
+                                                            ['index','inlist',
+                                                            '_out'],['inlist']
+                                                            ))
 
-      # Builds iterated pipeline
-      pipeline_manager.build_iterated_pipeline()
+        # Mocks 'update_nodes_and_plugs_activation' with no returned 
+        # values
+        pipeline.update_nodes_and_plugs_activation = MagicMock()
 
-      # Asserts the mock methods were called as expected
-      pipeline_manager.get_pipeline_or_process.assert_called_once_with()
-      pipeline_manager.ask_iterated_pipeline_plugs.assert_called_once_with(pipeline)
-      pipeline.update_nodes_and_plugs_activation.assert_called_once_with()
+        # Builds iterated pipeline
+        print('\n** an exception message is expected below\n')
+        ppl_manager.build_iterated_pipeline()
+
+        # Asserts the mock methods were called as expected
+        ppl_manager.get_pipeline_or_process.assert_called_once_with()
+        ppl_manager.ask_iterated_pipeline_plugs.\
+                    assert_called_once_with(pipeline)
+        pipeline.update_nodes_and_plugs_activation.assert_called_once_with()
     
     def test_capsul_node_controller(self):
         """
-      Adds, changes and deletes processes using the capsul node controller,
-      displays the attributes filter.
+        Adds, changes and deletes processes using the capsul node 
+        controller, displays the attributes filter.
 
-      Notes:
-      ------
-      Tests the class CapsulNodeController().
-      """
+        Notes:
+        ------
+        Tests the class CapsulNodeController().
+        """
 
         # Opens project 8 and switches to it
         project_8_path = self.get_new_test_project()
@@ -3255,20 +3256,16 @@ class TestMIAPipelineManager(unittest.TestCase):
         DOCUMENT_1 = (self.main_window.project.session.
                       get_documents_names)("current")[0]
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                pipelineEditorTabs)
-        node_controller = self.main_window.pipeline_manager.nodeController
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        node_ctrler = self.main_window.pipeline_manager.nodeController
 
         # Adds 2 processes Rename, creates 2 nodes called "rename_1" and
         # "rename_2":
-
         process_class = Rename
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Displays parameters of "rename_2" node
         rename_process = pipeline.nodes['rename_2'].process
@@ -3276,23 +3273,23 @@ class TestMIAPipelineManager(unittest.TestCase):
                                                                 rename_process)
 
         # Tries to changes its name to "rename_2" and then to "rename_3"
-        node_controller.update_node_name()
-        self.assertEqual(node_controller.node_name, 'rename_2')
-        node_controller.update_node_name(new_node_name='rename_1',
-                                         old_node_name='rename_2')
-        self.assertEqual(node_controller.node_name, 'rename_2')
-        node_controller.update_node_name(new_node_name='rename_3',
-                                         old_node_name='rename_2')
-        self.assertEqual(node_controller.node_name, 'rename_3')
+        node_ctrler.update_node_name()
+        self.assertEqual(node_ctrler.node_name, 'rename_2')
+        node_ctrler.update_node_name(new_node_name='rename_1',
+                                     old_node_name='rename_2')
+        self.assertEqual(node_ctrler.node_name, 'rename_2')
+        node_ctrler.update_node_name(new_node_name='rename_3',
+                                     old_node_name='rename_2')
+        self.assertEqual(node_ctrler.node_name, 'rename_3')
 
         # Deletes node "rename_3"
-        pipeline_editor_tabs.get_current_editor().del_node("rename_3")
+        ppl_edt_tabs.get_current_editor().del_node("rename_3")
 
         # Display parameters of the "inputs" node
         input_process = pipeline.nodes[''].process
-        node_controller.display_parameters('inputs',
-                                           get_process_instance(input_process),
-                                           pipeline)
+        node_ctrler.display_parameters('inputs',
+                                       get_process_instance(input_process),
+                                       pipeline)
 
         # Displays parameters of "rename_1" node
         rename_process = pipeline.nodes['rename_1'].process
@@ -3300,64 +3297,63 @@ class TestMIAPipelineManager(unittest.TestCase):
                                                                 rename_process)
 
         # Exports the input plugs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-        (pipeline_editor_tabs.
-         get_current_editor)().export_unconnected_mandatory_inputs()
-        pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+        ppl_edt_tabs.get_current_editor().current_node_name = 'rename_1'
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
         pipeline.nodes['rename_1'].set_plug_value('in_file', DOCUMENT_1)
         pipeline.nodes['rename_1'].set_plug_value('format_string',
                                                   'new_name.nii')
 
         # Runs pipeline and expects an error
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
         # self.main_window.pipeline_manager.runPipeline()
         # FIXME: running the pipeline gives the error "wrapped C/C++ object of
         #        type PipelineEditorTabs has been deleted".
 
         # Displays attributes filter
-        node_controller.filter_attributes()
-        attributes_filter = node_controller.pop_up
+        node_ctrler.filter_attributes()
+        attributes_filter = node_ctrler.pop_up
         attributes_filter.table_data.selectRow(0)
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
         attributes_filter.ok_clicked()
 
         # Releases the process
-        node_controller.release_process()
-        node_controller.update_parameters()
+        node_ctrler.release_process()
+        node_ctrler.update_parameters()
 
     def test_cleanup_older_init(self):
       '''
-      Mocks a brick list, mocks some methods from  the pipeline manager and 
-      cleans older inits.
+      Mocks a brick list, mocks some methods from  the pipeline manager 
+      and cleans older inits.
 
       Notes
       -----
       Tests the method 'PipelineManagerTab.cleanup_older_init'. 
       '''
 
-      pipeline_manager = self.main_window.pipeline_manager
+      ppl_manager = self.main_window.pipeline_manager
 
       # Mocks a 'pipeline_manager.brick_list'
       import uuid
       brick_id = str(uuid.uuid4())
-      pipeline_manager.brick_list.append(brick_id)
+      ppl_manager.brick_list.append(brick_id)
 
       # Mocks methods used in the test
-      from unittest.mock import MagicMock
-      pipeline_manager.main_window.data_browser.table_data.delete_from_brick = MagicMock()
-      pipeline_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
+      (ppl_manager.main_window.data_browser.table_data.
+       delete_from_brick) = MagicMock()
+      ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
 
       # Cleans up older init
-      pipeline_manager.cleanup_older_init()
+      ppl_manager.cleanup_older_init()
 
       # Asserts that the mock methods were called as expected
-      pipeline_manager.main_window.data_browser.table_data.delete_from_brick.assert_called_once_with(brick_id)
-      pipeline_manager.project.cleanup_orphan_nonexisting_files.assert_called_once_with()
+      (ppl_manager.main_window.data_browser.table_data.delete_from_brick.
+       assert_called_once_with(brick_id))
+      (ppl_manager.project.cleanup_orphan_nonexisting_files.
+       assert_called_once_with())
 
       # Asserts that both 'brick_list' and 'node_list' were cleaned
-      self.assertTrue(len(pipeline_manager.brick_list) == 0)
-      self.assertTrue(len(pipeline_manager.node_list) == 0)
+      self.assertTrue(len(ppl_manager.brick_list) == 0)
+      self.assertTrue(len(ppl_manager.node_list) == 0)
 
     def test_close_tab(self):
         """
@@ -3386,53 +3382,55 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_check_requirements(self):
       '''
-      Adds a 'Select' process, appends it to the nodes list and checks the requirements
-      for the given node.
+      Adds a 'Select' process, appends it to the nodes list and checks 
+      the requirements for the given node.
 
       Notes
       -----
       Tests the method 'PipelineManagerTab.check_requirements'.
       '''
 
-      pipeline_editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+      ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
       pipeline_manager = self.main_window.pipeline_manager
 
       # Adds the processes Select, creates the "select_1" node
       from nipype.interfaces import Select
       process_class = Select
-      pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      pipeline_editor_tabs.get_current_editor().add_named_process(process_class)
-      pipeline = pipeline_editor_tabs.get_current_pipeline()
+      ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+      ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+      pipeline = ppl_edt_tabs.get_current_pipeline()
 
-      # Appends a 'Process' to 'pipeline_manager.node_list' and checks requirements
+      # Appends a 'Process' to 'pipeline_manager.node_list' and checks 
+      # requirements
       pipeline_manager.node_list.append(pipeline.nodes['select_1'].process)
       config = pipeline_manager.check_requirements()
 
       # Asserts the output
       self.assertTrue(isinstance(config, dict))
-      self.assertTrue(list(config.keys()) == ['capsul_engine', 'capsul.engine.module.nipype'])
+      self.assertTrue(list(config.keys()) == ['capsul_engine', 
+                                              'capsul.engine.module.nipype'])
 
     def test_complete_pipeline_parameters(self):
       '''
-      Mocks a method of pipeline manager and completes the pipeline parameters.
+      Mocks a method of pipeline manager and completes the pipeline 
+      parameters.
 
       Notes
       -----
       Tests the method 'PipelineManagerTab.complete_pipeline_parameters'. 
       '''
 
-      pipeline_manager = self.main_window.pipeline_manager
+      ppl_manager = self.main_window.pipeline_manager
 
       # Mocks method used in the test
-      from unittest.mock import MagicMock
-      pipeline_manager.get_capsul_engine = MagicMock(
-        return_value=pipeline_manager.get_pipeline_or_process())
+      ppl_manager.get_capsul_engine = MagicMock(
+        return_value=ppl_manager.get_pipeline_or_process())
 
       # Complete pipeline parameters
-      pipeline_manager.complete_pipeline_parameters()
+      ppl_manager.complete_pipeline_parameters()
 
       # Asserts that the mock method was called as expected
-      pipeline_manager.get_capsul_engine.assert_called_once_with()
+      ppl_manager.get_capsul_engine.assert_called_once_with()
 
         # # Still some bug with the pop-up execution
         #
@@ -3611,99 +3609,102 @@ class TestMIAPipelineManager(unittest.TestCase):
                         ).nodes.keys())
 
     def test_garbage_collect(self):
-      '''
-      Mocks several objects of the pipeline manager and collects the garbage
-      of the pipeline.
+        '''
+        Mocks several objects of the pipeline manager and collects the 
+        garbage of the pipeline.
 
-      Notes
-      -----
-      Tests PipelineManagerTab.test_garbage_collect.
-      '''
+        Notes
+        -----
+        Tests PipelineManagerTab.test_garbage_collect.
+        '''
 
-      pipeline_manager = self.main_window.pipeline_manager
+        ppl_manager = self.main_window.pipeline_manager
 
-      # INTEGRATED TEST
+        # INTEGRATED TEST
 
-      # Mocks the 'initialized' object
-      pipeline_manager.pipelineEditorTabs.get_current_editor().initialized = True
+        # Mocks the 'initialized' object
+        ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
 
-      # Collects the garbage
-      pipeline_manager.garbage_collect()
+        # Collects the garbage
+        ppl_manager.garbage_collect()
 
-      # Asserts that the 'initialized' object changed state
-      self.assertFalse(pipeline_manager.pipelineEditorTabs.get_current_editor().initialized)
-      
-      # ISOLATED TEST
+        # Asserts that the 'initialized' object changed state
+        self.assertFalse(ppl_manager.pipelineEditorTabs.get_current_editor().
+                         initialized)
 
-      # Mocks again the 'initialized' object
-      pipeline_manager.pipelineEditorTabs.get_current_editor().initialized = True
+        # ISOLATED TEST
 
-      # Mocks the methods used in the test
-      from unittest.mock import MagicMock
-      pipeline_manager.postprocess_pipeline_execution = MagicMock()
-      pipeline_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
-      pipeline_manager.project.cleanup_orphan_history = MagicMock()
-      pipeline_manager.main_window.data_browser.table_data.update_table = MagicMock()
-      pipeline_manager.update_user_buttons_states = MagicMock()
+        # Mocks again the 'initialized' object
+        ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
 
-      # Collects the garbage
-      pipeline_manager.garbage_collect()
+        # Mocks the methods used in the test
+        ppl_manager.postprocess_pipeline_execution = MagicMock()
+        ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
+        ppl_manager.project.cleanup_orphan_history = MagicMock()
+        (ppl_manager.main_window.data_browser.table_data.
+         update_table) = MagicMock()
+        ppl_manager.update_user_buttons_states = MagicMock()
 
-      # Asserts that the 'initialized' object changed state
-      self.assertFalse(pipeline_manager.pipelineEditorTabs.get_current_editor().initialized)
+        # Collects the garbage
+        ppl_manager.garbage_collect()
 
-      # Assertes that the mocked methods were called as expected
-      pipeline_manager.postprocess_pipeline_execution.assert_called_once_with()
-      pipeline_manager.project.cleanup_orphan_nonexisting_files.assert_called_once_with()
-      pipeline_manager.project.cleanup_orphan_history.assert_called_once_with()
-      pipeline_manager.main_window.data_browser.table_data.update_table.assert_called_once_with()
-      pipeline_manager.update_user_buttons_states.assert_called_once_with()
+        # Asserts that the 'initialized' object changed state
+        self.assertFalse(ppl_manager.pipelineEditorTabs.get_current_editor().
+                         initialized)
+
+        # Assertes that the mocked methods were called as expected
+        ppl_manager.postprocess_pipeline_execution.assert_called_once_with()
+        (ppl_manager.project.
+         cleanup_orphan_nonexisting_files.assert_called_once_with())
+        ppl_manager.project.cleanup_orphan_history.assert_called_once_with()
+        (ppl_manager.main_window.data_browser.table_data.
+         update_table.assert_called_once_with())
+        ppl_manager.update_user_buttons_states.assert_called_once_with()
       
     def test_get_pipeline_or_process(self):
-      '''
-      Adds a process and gets a pipeline and a process from the pipeline
-      manager.
+        '''
+        Adds a process and gets a pipeline and a process from the pipeline
+        manager.
 
-      Notes
-      -----
-      Tests PipelineManagerTab.get_pipeline_or_process.
-      '''
+        Notes
+        -----
+        Tests PipelineManagerTab.get_pipeline_or_process.
+        '''
 
-      # Sets shortcuts for often used objects
-      ppl_manager = self.main_window.pipeline_manager
-      ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        # Sets shortcuts for often used objects
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
-      # Gets the pipeline
-      pipeline = ppl_manager.get_pipeline_or_process()
+        # Gets the pipeline
+        pipeline = ppl_manager.get_pipeline_or_process()
 
-      # Asserts that the object 'pipeline' is a 'Pipeline'
-      from capsul.pipeline.pipeline import Pipeline
-      self.assertIsInstance(pipeline, Pipeline)
+        # Asserts that the object 'pipeline' is a 'Pipeline'
+        from capsul.pipeline.pipeline import Pipeline
+        self.assertIsInstance(pipeline, Pipeline)
 
-      # Adds the processes Rename, creates the "rename_1" node
-      from nipype.interfaces import Rename
-      process_class = Rename
-      ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-      ppl_edt_tabs.get_current_editor().add_named_process(process_class)
-      
-      # Gets a process
-      process = ppl_manager.get_pipeline_or_process()
+        # Adds the processes Rename, creates the "rename_1" node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
 
-      # Asserts that the process 'pipeline' is indeed a 'NipypeProcess'
-      from capsul.process.process import NipypeProcess
-      self.assertIsInstance(process, NipypeProcess)
+        # Gets a process
+        process = ppl_manager.get_pipeline_or_process()
+
+        # Asserts that the process 'pipeline' is indeed a 'NipypeProcess'
+        from capsul.process.process import NipypeProcess
+        self.assertIsInstance(process, NipypeProcess)
 
     def test_filter_widget(self):
         """
-      Places a node of the "Input_Filter" process, feeds in documents and
-      opens up the "FilterWidget()" to modify its parameters.
-
-      Notes:
-      -----
-      Tests the class FilterWidget() within the Node Controller V1 (class
-      NodeController()). The class FilterWidget() is independent on the Node
-      Controller version (V1 or V2) and can be used in both of them.
-      """
+        Places a node of the "Input_Filter" process, feeds in documents 
+        and opens up the "FilterWidget()" to modify its parameters.
+  
+        Notes:
+        -----
+        Tests the class FilterWidget() within the Node Controller V1 
+        (class NodeController()). The class FilterWidget() is 
+        independent on the Node
+        Controller version (V1 or V2) and can be used in both of them.
+        """
 
         # Switches to node controller V1
         config = Config(config_path=self.config_path)
@@ -3720,41 +3721,39 @@ class TestMIAPipelineManager(unittest.TestCase):
         DOCUMENT_2 = (self.main_window.project.session.
                       get_documents_names)("current")[1]
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+        ppl_edt_tabs = (self.main_window.pipeline_manager.
                                 pipelineEditorTabs)
-        node_controller = self.main_window.pipeline_manager.nodeController
+        node_ctrler = self.main_window.pipeline_manager.nodeController
 
-        # Adds the process Smooth, creates a node called "input_filter_1"
+        # Adds the process Smooth, creates the node "input_filter_1"
         process_class = Input_Filter
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Exports the input plugs for "input_filter_1"
-        (pipeline_editor_tabs.
-         get_current_editor)().current_node_name = 'input_filter_1'
-        (pipeline_editor_tabs.
+        ppl_edt_tabs.get_current_editor().current_node_name = 'input_filter_1'
+        (ppl_edt_tabs.
          get_current_editor)().export_node_unconnected_mandatory_plugs()
 
         # Displays parameters of the "inputs" node
         input_process = pipeline.nodes[''].process
-        node_controller.display_parameters('inputs',
-                                           get_process_instance(input_process),
-                                           pipeline)
+        node_ctrler.display_parameters('inputs',
+                                       get_process_instance(input_process),
+                                       pipeline)
 
         # Opens a filter for the plug "input" of the "inputs" node
         parameters = (0, pipeline, type(Undefined))
-        node_controller.display_filter('inputs', 'input', parameters,
-                                       input_process)
+        node_ctrler.display_filter('inputs', 'input', parameters,
+                                   input_process)
 
         # Selects all records in the "input" node
-        plug_filter = node_controller.pop_up
+        plug_filter = node_ctrler.pop_up
         plug_filter.ok_clicked()
 
         # Opens the filter widget for the node "input_filter_1"
-        pipeline_editor_tabs.open_filter('input_filter_1')
-        input_filter = pipeline_editor_tabs.filter_widget
+        ppl_edt_tabs.open_filter('input_filter_1')
+        input_filter = ppl_edt_tabs.filter_widget
 
         index_DOCUMENT_1 = input_filter.table_data.get_scan_row(DOCUMENT_1)
         index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
@@ -3781,11 +3780,10 @@ class TestMIAPipelineManager(unittest.TestCase):
         input_filter.update_tags()
         self.add_visualized_tag('AcquisitionDate')
         self.assertTrue(
-            type(input_filter.table_data.get_tag_column(
-                'AcquisitionDate')) == int)
+                        type(input_filter.table_data.get_tag_column(
+                        'AcquisitionDate')) == int)
 
         # Updates the tag to filter with
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
         input_filter.update_tag_to_filter()
         input_filter.push_button_tag_filter.setText('FileName')
         # TODO: select tag to filter with
@@ -3798,68 +3796,74 @@ class TestMIAPipelineManager(unittest.TestCase):
         config.setControlV1(False)
 
     def test_finish_execution(self):
-      '''
-      Mocks several objects of the pipeline manager and finishes the execution of the
-      pipeline.
+        '''
+        Mocks several objects of the pipeline manager and finishes the 
+        execution of the pipeline.
 
-      Notes
-      -----
-      Tests the method PipelineManagerTab.finish_execution.
-      '''
+        Notes
+        -----
+        Tests the method PipelineManagerTab.finish_execution.
+        '''
 
-      pipeline_manager = self.main_window.pipeline_manager
+        ppl_manager = self.main_window.pipeline_manager
 
-      from unittest.mock import MagicMock, Mock
+        # Mock objects of 'pipeline_manager' used during the test
+        ppl_manager.progress = Mock()
+        ppl_manager.progress.worker.status = 'status_value'
+        ppl_manager.last_run_pipeline = Mock()
+        ppl_manager.last_pipeline_name = 'last_pipeline_name_value'
+        ppl_manager._mmovie = Mock()
 
-      # Mock objects of 'pipeline_manager' used during the test
-      pipeline_manager.progress = Mock()
-      pipeline_manager.progress.worker.status = 'status_value'
-      pipeline_manager.last_run_pipeline = Mock()
-      pipeline_manager.last_pipeline_name = 'last_pipeline_name_value'
-      pipeline_manager._mmovie = Mock()
+        # Mock methods of 'ppl_manager' used during the test
+        ppl_manager.main_window.statusBar().showMessage = MagicMock()
+        ppl_manager.show_pipeline_status_action.setIcon = MagicMock()
+        ppl_manager.nodeController.update_parameters = MagicMock()
+        ppl_manager.run_pipeline_action.setDisabled = MagicMock()
+        ppl_manager.garbage_collect_action.setDisabled = MagicMock()
+        ppl_manager.stop_pipeline_action.setEnabled = MagicMock()
 
-      # Mock methods of 'pipeline_manager' used during the test
-      pipeline_manager.main_window.statusBar().showMessage = MagicMock()
-      pipeline_manager.show_pipeline_status_action.setIcon = MagicMock()
-      pipeline_manager.nodeController.update_parameters = MagicMock()
-      pipeline_manager.run_pipeline_action.setDisabled = MagicMock()
-      pipeline_manager.garbage_collect_action.setDisabled = MagicMock()
-      pipeline_manager.stop_pipeline_action.setEnabled = MagicMock()
+        # Connect 'worker' to 'finished_execution' method
+        (ppl_manager.progress.worker.finished.
+         connect(ppl_manager.finish_execution))
 
-      # Connect 'worker' to 'finished_execution' method
-      pipeline_manager.progress.worker.finished.connect(pipeline_manager.finish_execution)
+        # Finish the execution of the pipeline (no errors are thrown)
+        ppl_manager.finish_execution()
 
-      # Finish the execution of the pipeline (no errors are thrown)
-      pipeline_manager.finish_execution()
+        # Asserts that the mocked objects were called as expected
+        self.assertEqual('status_value', ppl_manager.last_status)
+        self.assertFalse(hasattr(ppl_manager,'_mmovie'))
+        self.assertIsNone(ppl_manager.last_run_log)
 
-      # Asserts that the mocked objects were called as expected
-      self.assertEqual('status_value', pipeline_manager.last_status)
-      self.assertFalse(hasattr(pipeline_manager,'_mmovie'))
-      self.assertIsNone(pipeline_manager.last_run_log)
+        # Asserts that the mocked methods were called as expected
+        (ppl_manager.stop_pipeline_action.
+         setEnabled.assert_called_once_with(False))
+        (ppl_manager.last_run_pipeline.get_study_config().
+         engine.raise_for_status.assert_called_once())
+        (ppl_manager.main_window.statusBar().showMessage.
+         assert_called_once_with('Pipeline "{0}" has been correctly run.'.
+         format(ppl_manager.last_pipeline_name)))
+        ppl_manager.show_pipeline_status_action.setIcon.assert_called_once()
+        ppl_manager.nodeController.update_parameters.assert_called_once_with()
+        (ppl_manager.run_pipeline_action.
+         setDisabled.assert_called_once_with(False))
+        (ppl_manager.garbage_collect_action.
+         setDisabled.assert_called_once_with(False))
 
-      # Asserts that the mocked methods were called as expected
-      pipeline_manager.stop_pipeline_action.setEnabled.assert_called_once_with(False)
-      pipeline_manager.last_run_pipeline.get_study_config().engine.raise_for_status.assert_called_once()
-      pipeline_manager.main_window.statusBar().showMessage.assert_called_once_with(
-        'Pipeline "{0}" has been correctly run.'.format(pipeline_manager.last_pipeline_name)
-      )
-      pipeline_manager.show_pipeline_status_action.setIcon.assert_called_once()
-      pipeline_manager.nodeController.update_parameters.assert_called_once_with()
-      pipeline_manager.run_pipeline_action.setDisabled.assert_called_once_with(False)
-      pipeline_manager.garbage_collect_action.setDisabled.assert_called_once_with(False)
+        # Mock objects in order to induce a 'RuntimeError' which is 
+        # treated by the method
+        ppl_manager.progress = Mock()
+        from soma_workflow import constants as swconstants
+        ppl_manager.progress.worker.status = swconstants.WORKFLOW_DONE
+        delattr(ppl_manager.progress.worker, 'exec_id')
+        ppl_manager._mmovie = Mock()
 
-      # Mock objects in order to induce a 'RuntimeError' which is treated by the method
-      pipeline_manager.progress = Mock()
-      from soma_workflow import constants as swconstants
-      pipeline_manager.progress.worker.status = swconstants.WORKFLOW_DONE
-      delattr(pipeline_manager.progress.worker, 'exec_id')
-      pipeline_manager._mmovie = Mock()
+        # Finish the execution of the pipeline with no 'worker.exec_id' 
+        # (an error is thrown)
+        ppl_manager.finish_execution()
 
-      # Finish the execution of the pipeline with no 'worker.exec_id' (an error is thrown)
-      pipeline_manager.finish_execution()
-
-      # Asserts that the execution of the pipeline failed
-      self.assertEqual(pipeline_manager.last_run_log, 'Execution aborted before running')
+        # Asserts that the execution of the pipeline failed
+        self.assertEqual(ppl_manager.last_run_log, 
+                         'Execution aborted before running')
     
     # def test_init_MIA_processes(self):
     #     """
@@ -4032,61 +4036,58 @@ class TestMIAPipelineManager(unittest.TestCase):
     #                      os.path.abspath(os.path.join(folder, nii_file)))
 
     def test_get_capsul_engine(self):
-      '''
-      Mocks an object in the pipeline manager and gets the capsul engine
-      of the pipeline.
+        '''
+        Mocks an object in the pipeline manager and gets the capsul engine
+        of the pipeline.
 
-      Notes
-      -----
-      Tests PipelineManagerTab.get_capsul_engine()
-      '''
+        Notes
+        -----
+        Tests PipelineManagerTab.get_capsul_engine()
+        '''
 
-      pipeline_manager = self.main_window.pipeline_manager
+        ppl_manager = self.main_window.pipeline_manager
 
-      # INTEGRATED
+        # INTEGRATED
 
-      # Gets the capsul engine
-      capsul_engine = pipeline_manager.get_capsul_engine() # integrated
+        # Gets the capsul engine
+        capsul_engine = ppl_manager.get_capsul_engine() # integrated
 
-      # Asserts that the 'capsul_engine' is of class 'CapsulEngine'
-      from capsul.engine import CapsulEngine
-      self.assertIsInstance(capsul_engine, CapsulEngine)
+        # Asserts that the 'capsul_engine' is of class 'CapsulEngine'
+        from capsul.engine import CapsulEngine
+        self.assertIsInstance(capsul_engine, CapsulEngine)
 
-      # ISOLATED
-      from unittest.mock import MagicMock
-      pipeline_manager.pipelineEditorTabs.get_capsul_engine = MagicMock()
+        # ISOLATED
+        ppl_manager.pipelineEditorTabs.get_capsul_engine = MagicMock()
 
-      # Gets the capsul engine
-      capsul_engine = pipeline_manager.get_capsul_engine() # isolated
+        # Gets the capsul engine
+        capsul_engine = ppl_manager.get_capsul_engine() # isolated
 
-      # Asserts that the mocked method was called as expected
-      pipeline_manager.pipelineEditorTabs.get_capsul_engine.assert_called_once_with()
+        # Asserts that the mocked method was called as expected
+        (ppl_manager.pipelineEditorTabs.
+         get_capsul_engine.assert_called_once_with())
 
     def test_get_missing_mandatory_parameters(self):
         '''
-      Adds a process, exports input and output plugs and tries to initialize
-      the pipeline with missing mandatory parameters.
+        Adds a process, exports input and output plugs and tries to initialize
+        the pipeline with missing mandatory parameters.
 
-      Notes
-      -----
-      Tests the PipelineManagerTab(QWidget).get_missing_mandatory_parameters().
-      '''
+        Notes
+        -----
+        Tests the PipelineManagerTab(QWidget).get_missing_mandatory_parameters().
+        '''
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                pipelineEditorTabs)
-        pipeline_manager = self.main_window.pipeline_manager
-
-        process_class = Rename
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Exports the mandatory inputs and outputs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-        (pipeline_editor_tabs.
+        ppl_edt_tabs.get_current_editor().current_node_name = 'rename_1'
+        (ppl_edt_tabs.
          get_current_editor)().export_unconnected_mandatory_inputs()
-        (pipeline_editor_tabs.
+        (ppl_edt_tabs.
          get_current_editor)()._export_plug(temp_plug_name=('rename_1',
                                                             '_out_file'),
                                             pipeline_parameter='_out_file',
@@ -4094,27 +4095,27 @@ class TestMIAPipelineManager(unittest.TestCase):
                                             weak_link=False)
 
         # Initializes the pipeline
-        pipeline_manager.workflow = workflow_from_pipeline(pipeline,
-                                                           complete_parameters=True)
-        pipeline_manager.update_node_list()
+        ppl_manager.workflow = workflow_from_pipeline(pipeline,
+                                                           complete_parameters=
+                                                           True)
+        ppl_manager.update_node_list()
 
         # Asserts that 2 mandatory parameters are missing
-        pipeline_manager.update_node_list()
-        missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
+        ppl_manager.update_node_list()
+        missing_inputs = ppl_manager.get_missing_mandatory_parameters()
         self.assertEqual(len(missing_inputs), 2)
         self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
         self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
 
         # Empties the jobs list
-        pipeline_manager.workflow.jobs = []
+        ppl_manager.workflow.jobs = []
 
         # Asserts that 2 mandatory parameters are still missing
-        missing_inputs = pipeline_manager.get_missing_mandatory_parameters()
+        missing_inputs = ppl_manager.get_missing_mandatory_parameters()
         self.assertEqual(len(missing_inputs), 2)
         self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
         self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
 
-    #@unittest.skip
     def test_initialize(self):
         '''
         Adds Select process, exports its plugs, mocks objects from the 
@@ -4141,7 +4142,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         
         # Adds the process 'Select' as the node 'select_1'
-        from nipype.interfaces import Rename
         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
         pipeline = ppl_edt_tabs.get_current_pipeline()
@@ -4165,7 +4165,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         ppl_manager.ignore = {'item': 'item_value'}
 
         # Mocks methods
-        from unittest.mock import Mock
         ppl_manager.init_pipeline = Mock()
         # XXX: if the method 'init_pipeline' is not mocked the whole 
         # test routine fails with a 'Segmentation Fault'
@@ -4188,7 +4187,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         ppl_manager.init_pipeline = None
 
         # Induces an exception in the pipeline initialization
-        print('** an exception message is expected below')
+        print('\n** an exception message is expected below\n')
         ppl_manager.initialize()
 
         self.assertFalse(ppl_manager.ignore_node)
@@ -4257,13 +4256,13 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_node_controller(self):
         """
-      Adds, changes and deletes processes to the node controller, display the 
-      attributes filter.
-    
-      Notes:
-      ------
-      Tests the class NodeController().
-      """
+        Adds, changes and deletes processes to the node controller, 
+        display the attributes filter.
+
+        Notes:
+        ------
+        Tests the class NodeController().
+        """
 
         # Switches to node controller V1
         config = Config(config_path=self.config_path)
@@ -4278,18 +4277,17 @@ class TestMIAPipelineManager(unittest.TestCase):
         DOCUMENT_1 = (self.main_window.project.session.
                       get_documents_names)("current")[0]
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                pipelineEditorTabs)
-        node_controller = self.main_window.pipeline_manager.nodeController
+        ppl_edt_tabs = (self.main_window.pipeline_manager.pipelineEditorTabs)
+        node_ctrler = self.main_window.pipeline_manager.nodeController
 
         # Adds the process Rename, creates the "rename_1" nodes
         process_class = Rename
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(
             process_class)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
+        ppl_edt_tabs.get_current_editor().add_named_process(
             process_class)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Displays parameters of "rename_2" node
         rename_process = pipeline.nodes['rename_2'].process
@@ -4297,67 +4295,63 @@ class TestMIAPipelineManager(unittest.TestCase):
                                                                 rename_process)
 
         # Tries to changes its name to "rename_2" and then to "rename_3"
-        node_controller.update_node_name()
-        self.assertEqual(node_controller.node_name, 'rename_2')
-        node_controller.update_node_name(new_node_name='rename_1')
-        self.assertEqual(node_controller.node_name, 'rename_2')
-        node_controller.update_node_name(new_node_name='rename_3')
-        self.assertEqual(node_controller.node_name, 'rename_3')
+        node_ctrler.update_node_name()
+        self.assertEqual(node_ctrler.node_name, 'rename_2')
+        node_ctrler.update_node_name(new_node_name='rename_1')
+        self.assertEqual(node_ctrler.node_name, 'rename_2')
+        node_ctrler.update_node_name(new_node_name='rename_3')
+        self.assertEqual(node_ctrler.node_name, 'rename_3')
 
         # Deletes node "rename_2"
-        pipeline_editor_tabs.get_current_editor().del_node("rename_3")
+        ppl_edt_tabs.get_current_editor().del_node("rename_3")
         self.assertRaises(KeyError, lambda: pipeline.nodes['rename_3'])
 
         # Exports the input plugs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-        (pipeline_editor_tabs.
+        ppl_edt_tabs.get_current_editor().current_node_name = 'rename_1'
+        (ppl_edt_tabs.
          get_current_editor)().export_unconnected_mandatory_inputs()
-        pipeline_editor_tabs.get_current_editor().export_all_unconnected_outputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
         # Display parameters of the "inputs" node
         input_process = pipeline.nodes[''].process
-        node_controller.display_parameters('inputs',
-                                           get_process_instance(input_process),
-                                           pipeline)
+        node_ctrler.display_parameters('inputs',
+                                       get_process_instance(input_process),
+                                       pipeline)
 
         # Display the filter of the 'in_file' plug, "inputs" node
-        node_controller.display_filter('inputs',
-                                       'in_file',
-                                       (0, pipeline, type(Undefined)),
-                                       input_process)
-        node_controller.pop_up.close()
+        node_ctrler.display_filter('inputs','in_file',
+                                   (0, pipeline, type(Undefined)),
+                                   input_process)
+        node_ctrler.pop_up.close()
 
         # Sets the values of the mandatory plugs
         pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
         pipeline.nodes[''].set_plug_value('format_string', 'new_file.nii')
 
         # Checks the indexed of input and output plug labels
-        in_plug_index = node_controller.get_index_from_plug_name('in_file',
-                                                                 'in')
+        in_plug_index = node_ctrler.get_index_from_plug_name('in_file','in')
         self.assertEqual(in_plug_index, 1)
-        out_plug_index = node_controller.get_index_from_plug_name('_out_file',
-                                                                  'out')
+        out_plug_index = node_ctrler.get_index_from_plug_name('_out_file',
+                                                              'out')
         self.assertEqual(out_plug_index, 0)
 
         # Tries to updates the plug value without a new value
-        node_controller.update_plug_value('in', 'in_file',
-                                          pipeline, type(Undefined))
-        node_controller.update_plug_value('out', '_out_file',
-                                          pipeline, type(Undefined))
-        node_controller.update_plug_value(None, 'in_file',
-                                          pipeline, type(Undefined))
+        node_ctrler.update_plug_value('in', 'in_file',pipeline, 
+                                      type(Undefined))
+        node_ctrler.update_plug_value('out', '_out_file',pipeline, 
+                                      type(Undefined))
+        node_ctrler.update_plug_value(None, 'in_file',pipeline, 
+                                      type(Undefined))
 
         # Tries to updates the plug value with a new value
-        node_controller.update_plug_value('in', 'in_file',
-                                          pipeline, str,
-                                          new_value='new_value.nii')
-        node_controller.update_plug_value('out', '_out_file',
-                                          pipeline, str,
-                                          new_value='new_value.nii')
+        node_ctrler.update_plug_value('in', 'in_file',pipeline, str,
+                                      new_value='new_value.nii')
+        node_ctrler.update_plug_value('out', '_out_file',pipeline, str,
+                                      new_value='new_value.nii')
 
         # Releases the process
-        node_controller.release_process()
-        node_controller.update_parameters()
+        node_ctrler.release_process()
+        node_ctrler.update_parameters()
 
         # Switches back to node controller V2
         config = Config(config_path=self.config_path)
@@ -4652,7 +4646,6 @@ class TestMIAPipelineManager(unittest.TestCase):
       pipeline_manager = self.main_window.pipeline_manager
 
       # Mocks the 'progress' object
-      from unittest.mock import Mock
       pipeline_manager.progress = Mock()
 
       # Removes progress
