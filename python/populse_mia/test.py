@@ -2625,62 +2625,72 @@ class TestMIAPipelineManager(unittest.TestCase):
             - setUpClass: called before tests in the individual class
             - tearDownClass: called after tests in the individual class
             - execute_QDialogAccept: accept (close) a QDialog window
-            - get_new_test_project: create a temporary project that can be
-              safely modified
-            - test_add_plug_value_to_database_list_type: adds a list type plug
-            value to the database
-            - test_add_plug_value_to_database_non_list_type: adds a non list
-            type plug value to the database
+            - get_new_test_project: create a temporary project that can 
+              be safely modified
+            - test_add_plug_value_to_database_list_type: adds a list 
+              type plug value to the database
+            - test_add_plug_value_to_database_non_list_type: adds a non 
+              list type plug value to the database
             - test_add_tab: adds tabs to the PipelineEditorTabs
             - test_attributes_filter: displays an attributes filter and 
-            modifies it
-            - test_build_iterated_pipeline: mocks methods and builds an interated 
-            pipeline
-            - test_capsul_node_controller: adds, changes and deletes processes 
-            using the capsul node controller
+              modifies it
+            - test_build_iterated_pipeline: mocks methods and builds an 
+              interated pipeline
+            - test_capsul_node_controller: adds, changes and deletes 
+              processes using the capsul node controller
             - test_close_tab: closes a tab in the PipelineEditorTabs
-            - test_check_requirements: checks the requirements for a given node
-            - test_delete_processes: deletes a process and makes the undo/redo
-            - test_display_filter: displays node parameters and a plug filter
+            - test_check_requirements: checks the requirements for a 
+              given node
+            - test_delete_processes: deletes a process and makes the 
+              undo/redo
+            - test_display_filter: displays node parameters and a plug 
+              filter
             - test_drop_process: adds a Nipype SPM Smooth process to the
               pipeline editor
-            - test_get_pipeline_or_process: gets a pipelina and a process from the
-            pipeline_manager
-            - test_filter_widget: opens up the "FilterWidget()" to modify its 
-            parameters.
-            - test_finish_execution: finishes the execution of the pipeline
+            - test_get_pipeline_or_process: gets a pipelin and a 
+              process from the pipeline_manager
+            - test_filter_widget: opens up the "FilterWidget()" to 
+              modify its parameters
+            - test_finish_execution: finishes the execution of the 
+              pipeline
             - test_garbage_collect: collects the garbage of the pipeline
-            - test_get_capsul_engine: gets the capsul engine of the pipeline
-            - test_get_missing_mandatory_parameters: tries to initialize the 
-            pipeline with missing mandatory parameters
+            - test_get_capsul_engine: gets the capsul engine of the 
+              pipeline
+            - test_get_missing_mandatory_parameters: tries to initialize 
+              the pipeline with missing mandatory parameters
+            - test_initialize: mocks objects and initializes the 
+              workflow
             - test_iteration_table: plays with the iteration table
-            - test_node_controller: adds, changes and deletes processes to the 
-            node controller
+            - test_node_controller: adds, changes and deletes processes 
+              to the node controller
             - test_plug_filter: displays a plug filter and modifies it
-            - test_process_library: install the brick_test and then remove it
+            - test_process_library: install the brick_test and then 
+              remove it
             - test_register_node_io_in_database: sets input and output 
-            parameters and registers them in database
+              parameters and registers them in database
             - test_remove_progress: removes the progress of the pipeline
             - test_save_pipeline: saves a simple pipeline
-            - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
+            - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' 
+              animation
             - test_undo_redo: tests the undo/redo
-            - test_update_node_list: initializes a workflow and adds a process 
-            to the "pipline_manager.node_list"
-            - test_update_node_name: displays node parameters and updates
-              its name
-            - test_update_plug_value: displays node parameters and updates
-              a plug value
+            - test_update_node_list: initializes a workflow and adds a 
+              process to the "pipline_manager.node_list"
+            - test_update_node_name: displays node parameters and 
+              updates its name
+            - test_update_plug_value: displays node parameters and 
+              updates a plug value
             - test_z_get_editor: gets the instance of an editor
-            - test_z_get_filename: gets the relative path to a previously
-              saved pipeline file
+            - test_z_get_filename: gets the relative path to a 
+              previously saved pipeline file
             - test_z_get_index: gets the index of an editor
             - test_z_get_tab_name: gets the tab name of the editor
             - test_z_init_pipeline: initializes the pipeline
             - test_z_load_pipeline: loads a pipeline
             - test_z_open_sub_pipeline: opens a sub_pipeline
             - test_z_set_current_editor: sets the current editor
-            - test_zz_check_modif: opens a pipeline, opens it as a process in
-              another tab, modifies it and check the modifications
+            - test_zz_check_modif: opens a pipeline, opens it as a 
+              process in another tab, modifies it and check the 
+              modifications
     """
 
     def add_visualized_tag(self, tag):
@@ -4103,6 +4113,85 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(len(missing_inputs), 2)
         self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
         self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
+
+    #@unittest.skip
+    def test_initialize(self):
+        '''
+        Adds Select process, exports its plugs, mocks objects from the 
+        pipeline manager and initializes the workflow.
+
+        Notes
+        -----
+        Tests the PipelineManagerTab.initialize.
+        '''
+
+        # Gets the paths of 2 documents
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+        
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        
+        # Adds the process 'Select' as the node 'select_1'
+        from nipype.interfaces import Rename
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
+
+        # Exports the mandatory inputs and outputs for 'select_1'
+        ppl_edt_tabs.get_current_editor().current_node_name = 'rename_1'
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        # Sets mandatory parameters 'select_1'
+        pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        pipeline.nodes[''].set_plug_value('format_string', 'new_name.nii')
+
+        # Checks that there is no workflowindex
+        self.assertIsNone(ppl_manager.workflow)
+
+        # Mocks objects
+        ppl_manager.init_clicked = True
+        ppl_manager.ignore_node = True
+        ppl_manager.key = {'item': 'item_value'}
+        ppl_manager.ignore = {'item': 'item_value'}
+
+        # Mocks methods
+        from unittest.mock import Mock
+        ppl_manager.init_pipeline = Mock()
+        # XXX: if the method 'init_pipeline' is not mocked the whole 
+        # test routine fails with a 'Segmentation Fault'
+
+        # Initializes the pipeline
+        ppl_manager.initialize()
+
+        # Asserts that a workflow has been created
+        #self.assertIsNotNone(ppl_manager.workflow)
+        #from soma_workflow.client_types import Workflow
+        #self.assertIsInstance(ppl_manager.workflow, Workflow)
+        # XXX: the above code alse leads to 'Segmentation Fault'
+
+        self.assertFalse(ppl_manager.ignore_node)
+        self.assertEqual(len(ppl_manager.key), 0)
+        self.assertEqual(len(ppl_manager.ignore), 0)
+        ppl_manager.init_pipeline.assert_called_once_with()
+
+        # Mocks an object to induce an exception
+        ppl_manager.init_pipeline = None
+
+        # Induces an exception in the pipeline initialization
+        print('** an exception message is expected below')
+        ppl_manager.initialize()
+
+        self.assertFalse(ppl_manager.ignore_node)
 
     def test_iteration_table(self):
         """
