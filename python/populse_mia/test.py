@@ -4116,6 +4116,114 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(missing_inputs[0], 'Pipeline.rename_1.format_string')
         self.assertEqual(missing_inputs[1], 'Pipeline.rename_1.in_file')
 
+    def test_z_init_pipeline(self):
+        '''
+        Adds a process, mocks several parameters from the pipeline
+        manager and initializes the pipeline.
+
+        Notes
+        -----
+        Tests PipelineManagerTab.init_pipeline.
+        The 'z' prefix places this test at the end of the alphabetically
+        organized routine. This prevents the 'Segmentation Fault' error 
+        to be thrown during the test.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+
+        # Gets the path of one document
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
+                      'Guerbet_Anat-RAREpvm-000220_000.nii')
+
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        
+        # Verifies that all the processes were added
+        self.assertEqual(['', 'rename_1'], ppl.nodes.keys())
+        
+        # Initialize the pipeline with missing mandatory parameters
+        ppl_manager.workflow = workflow_from_pipeline(ppl,complete_parameters=
+                                                      True)
+        
+        ppl_manager.update_node_list()
+        init_result = ppl_manager.init_pipeline()
+        #self.assertFalse(init_result)
+        
+        # Sets the mandatory parameters
+        ppl.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
+
+        # Mocks an iteration pipeline
+        ppl.name = 'Iteration_pipeline'
+        from capsul.pipeline.process_iteration import ProcessIteration
+        process_it = ProcessIteration(ppl.nodes['rename_1'].process, '')
+        ppl.list_process_in_pipeline.append(process_it)
+
+        # Initialize the pipeline with mandatory parameters set
+        init_result = ppl_manager.init_pipeline(pipeline=ppl)
+
+        # Mocks null requirements and initializes the pipeline
+        ppl_manager.check_requirements = Mock(return_value=None)
+        init_result = ppl_manager.init_pipeline()
+        self.assertFalse(init_result)
+        ppl_manager.check_requirements.assert_called_once_with('global', 
+                                                               message_list=[])
+
+        # Mocks external packages as requirements and initializes the 
+        # pipeline
+        pkgs = ['fsl', 'afni', 'ants', 'matlab', 'spm']
+        req = {'capsul_engine':{'uses': Mock()}}
+
+        for pkg in pkgs:                
+            req['capsul.engine.module.{}'.format(pkg)] = {'directory':False}
+
+        req['capsul_engine']['uses'].get = Mock(return_value = 1)
+        ppl_manager.check_requirements = Mock(return_value = req)
+
+        init_result = ppl_manager.init_pipeline()
+        self.assertFalse(init_result)
+
+        # Extra steps for SPM
+        req['capsul.engine.module.spm']['directory'] = True
+        req['capsul.engine.module.spm']['standalone'] = True
+        Config().set_matlab_standalone_path(None)
+
+        init_result = ppl_manager.init_pipeline()
+        self.assertFalse(init_result)
+
+        req['capsul.engine.module.spm']['standalone'] = False
+
+        init_result = ppl_manager.init_pipeline()
+        self.assertFalse(init_result)
+
+        # Deletes an attribute of each package requirement
+        for pkg in pkgs:
+            del req['capsul.engine.module.{}'.format(pkg)]
+
+        init_result = ppl_manager.init_pipeline()
+        self.assertFalse(init_result)
+
+        # Mocks a 'ValueError' in 'workflow_from_pipeline'
+        ppl.find_empty_parameters = Mock(side_effect=ValueError)
+
+        init_result = ppl_manager.init_pipeline()
+        self.assertFalse(init_result)
+        
+
     def test_initialize(self):
         '''
         Adds Select process, exports its plugs, mocks objects from the 
