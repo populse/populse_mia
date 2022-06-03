@@ -5336,7 +5336,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertFalse(init_result)
     
     @unittest.skip
-    def test_z_init_pipeline_(self):
+    def test_z_init_pipeline(self):
         """
         Initializes the pipeline (z to run at the end)
         """
