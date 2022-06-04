@@ -4692,55 +4692,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Asserts that the object 'progress' was deleted
         self.assertFalse(hasattr(pipeline_manager, 'progress'))
 
-    def test_runPipeline(self):
-        '''
-        Adds a process, export plugs and runs a pipeline.
-
-        Notes
-        -----
-        Tests PipelineManagerTab.runPipeline.
-        '''
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Gets the path of one document
-        config = Config(config_path=self.config_path)
-        folder = os.path.abspath(os.path.join(config.get_mia_path(),
-                                              'resources', 'mia', 'project_8',
-                                              'data', 'raw_data'))
-
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
-                      'Guerbet_Anat-RAREpvm-000220_000.nii')
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-        
-        # Sets the mandatory parameters
-        ppl.nodes[''].set_plug_value('in_file', DOCUMENT_1)
-        ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
-
-        # Mocks 'initialize' in order to avoid 'Segmentation Fault'
-        ppl_manager.test_init = True
-        ppl_manager.initialize = Mock()
-
-        # Runs the pipeline assuring that the it will be initialized
-        ppl_manager.runPipeline()
-
-        # Asserts that the pipeline has run
-        ppl_manager.initialize.assert_called_once_with()
-        self.assertEqual(len(ppl_manager.brick_list), 0)
-        self.assertEqual(ppl_manager.last_run_pipeline, ppl)
-        self.assertTrue(hasattr(ppl_manager, '_mmovie'))
-    
     def test_save_pipeline(self):
         """
         Saves a simple pipeline
@@ -5606,6 +5557,55 @@ class TestMIAPipelineManager(unittest.TestCase):
                          os.path.basename(
                              pipeline_editor_tabs.get_filename_by_index(1)))
 
+    def test_z_runPipeline(self):
+        '''
+        Adds a process, export plugs and runs a pipeline.
+
+        Notes
+        -----
+        Tests PipelineManagerTab.runPipeline.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+
+        # Gets the path of one document
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
+                      'Guerbet_Anat-RAREpvm-000220_000.nii')
+
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        
+        # Sets the mandatory parameters
+        ppl.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
+
+        # Mocks 'initialize' in order to avoid 'Segmentation Fault'
+        #ppl_manager.test_init = True
+        #ppl_manager.initialize = Mock()
+
+        # Runs the pipeline assuring that the it will be initialized
+        ppl_manager.runPipeline()
+
+        # Asserts that the pipeline has run
+        #ppl_manager.initialize.assert_called_once_with()
+        self.assertEqual(len(ppl_manager.brick_list), 0)
+        self.assertEqual(ppl_manager.last_run_pipeline, ppl)
+        self.assertTrue(hasattr(ppl_manager, '_mmovie'))
+    
     def test_z_set_current_editor(self):
         """
         Sets the current editor (z to run at the end)
