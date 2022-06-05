@@ -2746,6 +2746,26 @@ class TestMIAPipelineManager(unittest.TestCase):
         if isinstance(w, QDialog):
             w.accept()
 
+    def execute_QMessageBox_clickYes(self):
+        """
+        Is supposed to allow to press the Yes button if a pipeline is 
+        overwritten in the test_zz_check_modifications method
+        """
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Yes)
+            QTest.mouseClick(close_button, Qt.LeftButton)
+
+    def execute_QDialogClose(self):
+        """
+        Is supposed to abort( close) a QDialog window
+        """
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.close()
+    
     def get_new_test_project(self):
         """
         Copy the test project in a location we can modify safely
@@ -3239,7 +3259,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         pipeline.update_nodes_and_plugs_activation = MagicMock()
 
         # Builds iterated pipeline
-        print('\n** an exception message is expected below\n')
+        print('\n\n** an exception message is expected below\n')
         ppl_manager.build_iterated_pipeline()
 
         # Asserts the mock methods were called as expected
@@ -4185,7 +4205,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         ppl_manager.init_pipeline = None
 
         # Induces an exception in the pipeline initialization
-        print('\n** an exception message is expected below\n')
+        print('\n\n** an exception message is expected below')
         ppl_manager.initialize()
 
         self.assertFalse(ppl_manager.ignore_node)
@@ -4646,6 +4666,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         ppl_edt_tabs.get_current_editor().add_named_process(Select)
 
         # Export plugs and sets their values
+        print('\n\n** an exception message is expected below\n')
         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
         ppl.nodes[''].set_plug_value('inlist', [DOCUMENT_1, DOCUMENT_2])
@@ -4692,6 +4713,54 @@ class TestMIAPipelineManager(unittest.TestCase):
         # Asserts that the object 'progress' was deleted
         self.assertFalse(hasattr(pipeline_manager, 'progress'))
 
+    def test_savePipeline(self):
+        '''
+        Mocks methods of the pipeline manager and tries to save the 
+        pipeline over several conditions.
+
+        Notes
+        -----
+        Tests PipelineManagerTab.savePipeline.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+        config = Config()
+        ppl_path = os.path.abspath(os.path.join(config.get_mia_path(),
+                                                'pipeline_1'))
+        ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
+
+        # Mocks methods
+        #ppl_manager.main_window.statusBar().showMessage = Mock()
+
+        # Save pipeline as with empty filename, checked
+        ppl_manager.savePipeline(uncheck = True)
+
+        # Mocks 'savePipeline' from 'ppl_edt_tabs'
+        ppl_edt_tabs.save_pipeline = Mock(return_value = 'not_empty')
+
+        # Saves pipeline as with empty filename, checked
+        ppl_manager.savePipeline(uncheck = True)
+
+        # Sets the path to save the pipeline
+        config = Config()
+        ppl_path = os.path.abspath(os.path.join(config.get_mia_path(),
+                                                'pipeline_1'))
+        ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
+
+        # Saves pipeline as with filled filename, uncheck
+        ppl_manager.savePipeline(uncheck = True)
+
+        # Aborts pipeline saving with filled filename
+        QTimer.singleShot(1000, self.execute_QDialogClose)
+        ppl_manager.savePipeline()
+        
+        # Accept pipeline saving with filled filename
+        QTimer.singleShot(1000, self.execute_QMessageBox_clickYes)
+        ppl_manager.savePipeline()
+    
     def test_save_pipeline(self):
         """
         Saves a simple pipeline
@@ -5014,6 +5083,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertEqual(len(node_list), 1)
         self.assertEqual(node_list[0]._nipype_class, 'Rename')
 
+    #@unittest.skip
     def test_update_node_name(self):
         """
         Displays parameters of a node and updates its name
