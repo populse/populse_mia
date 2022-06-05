@@ -5416,6 +5416,29 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         QTimer.singleShot(1000, self.execute_QMessageBox_clickYes)
         ppl_manager.savePipeline()
     
+    def test_savePipelineAs(self):
+        '''
+        Mocks a method from pipeline manager and saves a pipeline under
+        another name.
+
+        Notes
+        -----
+        Tests PipelineManagerTab.savePipelineAs.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+        # Saves pipeline with empty filename
+        ppl_manager.savePipelineAs()
+
+        # Mocks 'savePipeline' from 'ppl_edt_tabs'
+        ppl_edt_tabs.save_pipeline = Mock(return_value = 'not_empty')
+
+        # Saves pipeline with not empty filename
+        ppl_manager.savePipelineAs()
+
     def test_set_anim_frame(self):
       """
       Runs the 'rotatingBrainVISA.gif' animation.
