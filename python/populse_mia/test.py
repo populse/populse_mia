@@ -5455,6 +5455,37 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                                        'rotatingBrainVISA.gif'))
       pipeline_manager._set_anim_frame()
 
+    def test_show_status(self):
+        '''
+        Shows the status window of the pipeline manager.
+        Tests PipelineManagerTab.test_show_status.        
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+
+        ppl_manager.show_status()
+
+        # Asserts that the status windows was created
+        self.assertTrue(hasattr(ppl_manager, 'status_widget'))
+
+    def test_stop_execution(self):
+        '''
+        Shows the status window of the pipeline manager.
+        Tests PipelineManagerTab.test_show_status.        
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+
+        # Creates a 'RunProgress' object
+        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
+        ppl_manager.progress = RunProgress(ppl_manager)
+
+        ppl_manager.stop_execution()
+
+        self.assertTrue(ppl_manager.progress.worker.interrupt_request)
+
     def test_undo_redo(self):
         """
         Tests the undo/redo actions
