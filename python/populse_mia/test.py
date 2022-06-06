@@ -5712,10 +5712,86 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                              pipeline.nodes["my_smooth"].get_plug_value(
                                                                   "out_prefix"))
 
+    def test_update_auto_inheritance(self):
+        '''
+        Tests PipelineManagerTab.update_auto_inheritance.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
+                      'Guerbet_Anat-RAREpvm-000220_000.nii')
+        NII_FILE_2 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+        
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Select)
+
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        print('\n\n** an exception message is expected below\n')
+        ppl.nodes['select_1'].set_plug_value('inlist', [DOCUMENT_1,DOCUMENT_2])
+        node = ppl.nodes['select_1']
+
+        # Initializes the workflow manually
+        ppl_manager.workflow = workflow_from_pipeline(ppl,
+                                                      complete_parameters=True)
+
+        job = ppl_manager.workflow.jobs[0]
+
+        # Mocks the node's parameters
+        node.auto_inheritance_dict = {}
+        process = node.process
+        process.study_config.project = Mock()
+        process.study_config.project.folder = config.get_mia_path()
+        process.outputs = []
+        process.list_outputs = []
+        process.auto_inheritance_dict = {}
+
+        # 'job.param_dict' as single object
+        job.param_dict['_out'] = '_out_value'
+        ppl_manager.update_auto_inheritance(job, node)
+
+        # 'job.param_dict' as list of objects
+        job.param_dict['inlist'] = [DOCUMENT_1, DOCUMENT_2]
+        process.get_outputs = Mock(return_value={'_out':['_out_value']})
+        job.param_dict['_out'] = ['_out_value']
+        ppl_manager.update_auto_inheritance(job, node)
+
+        # 'node' does not have a 'project'
+        del node.process.study_config.project
+        ppl_manager.update_auto_inheritance(job, node)
+
+        # 'node.process' is not a process
+        #node.process = {}
+        #ppl_manager.update_auto_inheritance(job, node)
+
+        # 'node' is not a 'Process'
+        node = {}
+        ppl_manager.update_auto_inheritance(job, node)
+
     def test_update_inheritance(self):
         '''
         Adds a process and updates the job's inheritance dict.
-        Tests PipelineManagerTab.test_update_inheritance.
+        Tests PipelineManagerTab.update_inheritance.
         '''
 
         # Sets shortcuts for objects that are often used
