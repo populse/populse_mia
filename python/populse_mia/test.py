@@ -5712,6 +5712,54 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                              pipeline.nodes["my_smooth"].get_plug_value(
                                                                   "out_prefix"))
 
+    def test_update_inheritance(self):
+        '''
+        Adds a process and updates the job's inheritance dict.
+        Tests PipelineManagerTab.test_update_inheritance.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+        
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        node = ppl.nodes['rename_1']
+
+        # Initializes the workflow manually
+        ppl_manager.workflow = workflow_from_pipeline(ppl,
+                                                      complete_parameters=True)
+
+        # Gets the 'job' and mocks adding a brick to the collection
+        job = ppl_manager.workflow.jobs[0]
+
+        # Node's name does not contains 'Pipeline'
+        node.context_name = ''
+        node.process.inheritance_dict = {'item':'value'}
+        ppl_manager.project.node_inheritance_history = {}
+        ppl_manager.update_inheritance(job, node)
+        
+        self.assertEqual(job.inheritance_dict, {'item':'value'})
+
+        # Node's name contains 'Pipeline'
+        node.context_name = 'Pipeline.rename_1'
+        ppl_manager.update_inheritance(job, node)
+
+        self.assertEqual(job.inheritance_dict, {'item':'value'})
+
+        # Node's name in 'node_inheritance_history'
+        (ppl_manager.project
+         .node_inheritance_history['rename_1']) = [{0:'new_value'}]
+        ppl_manager.update_inheritance(job, node)
+
+        self.assertEqual(job.inheritance_dict, {0:'new_value'})
+
     def test_update_node_list(self):
         """
         Adds a process, exports input and output plugs, initializes a workflow
@@ -5797,6 +5845,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                                       True)
         
         ppl_manager.update_node_list()
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
         
@@ -5811,10 +5860,12 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl.list_process_in_pipeline.append(process_it)
 
         # Initialize the pipeline with mandatory parameters set
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline(pipeline=ppl)
 
         # Mocks null requirements and initializes the pipeline
         ppl_manager.check_requirements = Mock(return_value=None)
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
         ppl_manager.check_requirements.assert_called_once_with('global', 
@@ -5831,6 +5882,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         req['capsul_engine']['uses'].get = Mock(return_value = 1)
         ppl_manager.check_requirements = Mock(return_value = req)
 
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
 
@@ -5839,11 +5891,13 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         req['capsul.engine.module.spm']['standalone'] = True
         Config().set_matlab_standalone_path(None)
 
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
 
         req['capsul.engine.module.spm']['standalone'] = False
 
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
 
@@ -5851,12 +5905,14 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         for pkg in pkgs:
             del req['capsul.engine.module.{}'.format(pkg)]
 
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
 
         # Mocks a 'ValueError' in 'workflow_from_pipeline'
         ppl.find_empty_parameters = Mock(side_effect=ValueError)
 
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
     
