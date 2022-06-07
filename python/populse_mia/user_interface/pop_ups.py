@@ -700,6 +700,7 @@ class PopUpAddTag(QDialog):
             name_already_exists = True
 
         # Default value checked
+
         default_value = self.text_edit_default_value.text()
         wrong_default_value_type = not check_value_type(default_value,
                                                         self.type, False)
@@ -763,6 +764,8 @@ class PopUpAddTag(QDialog):
 
         if text == "String":
             self.type = FIELD_TYPE_STRING
+            self.text_edit_default_value.setPlaceholderText(
+                "Please enter a string")
         elif text == "Integer":
             self.type = FIELD_TYPE_INTEGER
             self.text_edit_default_value.setPlaceholderText(
@@ -790,18 +793,32 @@ class PopUpAddTag(QDialog):
                 "Please enter a time in the following format: hh:mm:ss.zzz")
         elif text == "String List":
             self.type = FIELD_TYPE_LIST_STRING
+            self.text_edit_default_value.setPlaceholderText(
+                "Please  click here to add a string list")
         elif text == "Integer List":
             self.type = FIELD_TYPE_LIST_INTEGER
+            self.text_edit_default_value.setPlaceholderText(
+                "Please enter a integer list")
         elif text == "Float List":
             self.type = FIELD_TYPE_LIST_FLOAT
+            self.text_edit_default_value.setPlaceholderText(
+                "Please enter a float list")
         elif text == "Boolean List":
             self.type = FIELD_TYPE_LIST_BOOLEAN
+            self.text_edit_default_value.setPlaceholderText(
+                "Please enter a boolean list")
         elif text == "Date List":
             self.type = FIELD_TYPE_LIST_DATE
+            self.text_edit_default_value.setPlaceholderText(
+                "Please enter a date list")
         elif text == "Datetime List":
             self.type = FIELD_TYPE_LIST_DATETIME
+            self.text_edit_default_value.setPlaceholderText(
+                "Please enter a datetime list")
         elif text == "Time List":
             self.type = FIELD_TYPE_LIST_TIME
+            self.text_edit_default_value.setPlaceholderText(
+                "Please enter a time list")
 
 
 class PopUpCloneTag(QDialog):
