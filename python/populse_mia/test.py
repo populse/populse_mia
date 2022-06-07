@@ -5714,6 +5714,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
     def test_update_auto_inheritance(self):
         '''
+        Adds a process and updates the job's auto inheritance dict.
         Tests PipelineManagerTab.update_auto_inheritance.
         '''
 
@@ -5742,14 +5743,17 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         
         # Adds a Rename processes, creates the 'rename_1' node
         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
+        #ppl_edt_tabs.get_current_editor().add_named_process(Select)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
 
         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
         print('\n\n** an exception message is expected below\n')
-        ppl.nodes['select_1'].set_plug_value('inlist', [DOCUMENT_1,DOCUMENT_2])
-        node = ppl.nodes['select_1']
+        #ppl.nodes['select_1'].set_plug_value('inlist', [DOCUMENT_1,DOCUMENT_2])
+        #node = ppl.nodes['rename_1']
+        ppl.nodes['rename_1'].set_plug_value('in_file', DOCUMENT_1)
+        node = ppl.nodes['rename_1']
 
         # Initializes the workflow manually
         ppl_manager.workflow = workflow_from_pipeline(ppl,
@@ -5766,14 +5770,22 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         process.list_outputs = []
         process.auto_inheritance_dict = {}
 
-        # 'job.param_dict' as single object
-        job.param_dict['_out'] = '_out_value'
+        # Mocks 'job.param_dict' to share items with both the inputs and
+        # outputs list of the process
+        # Note: only 'in_file' and '_out_file' are file trait types
+        job.param_dict['_out_file'] = '_out_file_value'
+
         ppl_manager.update_auto_inheritance(job, node)
 
-        # 'job.param_dict' as list of objects
-        job.param_dict['inlist'] = [DOCUMENT_1, DOCUMENT_2]
-        process.get_outputs = Mock(return_value={'_out':['_out_value']})
-        job.param_dict['_out'] = ['_out_value']
+        # Mocks 'job.param_dict' for the same purpose, but now to share 
+        # a list of items
+        job.param_dict['in_file'] = [DOCUMENT_1, DOCUMENT_2]
+        process.get_inputs = Mock(return_value={'in_file':[DOCUMENT_1,                                          DOCUMENT_2]})
+        job.param_dict['_outlist'] = ['_outlist_value']
+        process.get_outputs = Mock(return_value={'_outlist':['_outlist_value'],
+                                                 'item': 'item_value'})
+        process.outputs = {'notInDb':['item']}
+        
         ppl_manager.update_auto_inheritance(job, node)
 
         # 'node' does not have a 'project'
