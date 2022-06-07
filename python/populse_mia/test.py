@@ -4,6 +4,7 @@
     :Class:
         - TestMIADataBrowser
         - TestMIAPipelineManager
+        - TestMIAPipelineManagerTab
 
 """
 
@@ -113,12 +114,13 @@ if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
 # developer configuration:
 
 # capsul import
-from capsul.api import (get_process_instance, ProcessNode,
-                        PipelineNode, Switch, Process)
+from capsul.api import (get_process_instance, Process, ProcessNode,
+                        PipelineNode, Switch)
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import CapsulEngine
 from capsul.pipeline.pipeline import Pipeline
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
+from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
 
 # mia_processes import
@@ -139,6 +141,8 @@ from populse_mia.user_interface.data_browser.modify_table import ModifyTable
 from populse_mia.user_interface.main_window import MainWindow
 from populse_mia.user_interface.pipeline_manager.pipeline_editor import (
                                                                   save_pipeline)
+from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import (
+                                                                    RunProgress)
 from populse_mia.user_interface.pipeline_manager.process_library import (
                                                            InstallProcesses,
                                                            PackageLibraryDialog)
@@ -1731,7 +1735,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_column()
         self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color)
+                     self.main_window.data_browser.table_data.change_cell_color)
 
         # we test the value in the db and DataBrowser for the second document
         # has been reset
@@ -1802,7 +1806,7 @@ class TestMIADataBrowser(unittest.TestCase):
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_row()
         self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color)
+                     self.main_window.data_browser.table_data.change_cell_color)
 
         # we test if value in DataBrowser as been reset
         type_item = self.main_window.data_browser.table_data.item(1,
@@ -3096,8 +3100,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.
-                                              get_documents_names)("current")[0]
         DOCUMENT_2 = (self.main_window.project.session.
                                               get_documents_names)("current")[1]
 
@@ -4150,8 +4152,8 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.main_window.pipeline_manager.savePipeline(uncheck=True)
 
         pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
-        pipeline_editor_tabs.get_current_editor(
-        ).scene.pos["test_pipeline_1"] = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().scene.pos[
+                                           "test_pipeline_1"] = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().check_modifications()
 
         pipeline = pipeline_editor_tabs.get_current_pipeline()
@@ -4180,7 +4182,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
             - test_ask_iterated_pipeline_plugs: test the iteration dialog for
                each plug of a Rename process
             - test_build_iterated_pipeline: mocks methods and builds an 
-              interated pipeline
+              iterated pipeline
             - test_check_requirements: checks the requirements for a
               given node
             - test_cleanup_older_init: tests the cleaning of old initialisations
@@ -5230,15 +5232,15 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         process_class = Rename
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class)
+                                                                  process_class)
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
         # Exports the mandatory input and output plugs for "rename_1"
         pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
         (pipeline_editor_tabs.
-         get_current_editor)().export_unconnected_mandatory_inputs()
+                     get_current_editor)().export_unconnected_mandatory_inputs()
         (pipeline_editor_tabs.
-         get_current_editor)().export_all_unconnected_outputs()
+                          get_current_editor)().export_all_unconnected_outputs()
 
         old_scan_name = DOCUMENT_1.split('/')[-1]
         new_scan_name = 'new_name.nii'
@@ -5254,8 +5256,8 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         pipeline_manager = self.main_window.pipeline_manager
         pipeline_manager.workflow = workflow_from_pipeline(
-            pipeline,
-            complete_parameters=True)
+                                                       pipeline,
+                                                       complete_parameters=True)
 
         job = pipeline_manager.workflow.jobs[0]
 
@@ -5327,7 +5329,8 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
         ppl.nodes[''].set_plug_value('inlist', [DOCUMENT_1, DOCUMENT_2])
         proj_dir = (os.path.join(os.path.abspath(os.path.normpath(
-                    ppl_manager.project.folder)), ''))
+                                                   ppl_manager.project.folder)),
+                                 ''))
         output_dir = os.path.join(proj_dir, 'output_file.nii')
         ppl.nodes[''].set_plug_value('_out', output_dir)
 
@@ -5337,13 +5340,13 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # Mocks 'get_capsul_engine' for the method not to throw an error
         # with the insertion of the upcoming mock
         capsul_engine = ppl_edt_tabs.get_capsul_engine()
-        ppl_manager.get_capsul_engine = Mock(return_value = capsul_engine)
+        ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
 
         # Mocks attributes values that are in the tags list
         attributes = {'Checksum':'Checksum_value'}
-        (ProcessCompletionEngine.get_completion_engine(ppl)
-         .get_attribute_values().export_to_dict) = Mock(return_value = 
-                                                        attributes)
+        (ProcessCompletionEngine.get_completion_engine(ppl).
+                                  get_attribute_values)().export_to_dict = Mock(
+                                                      return_value=attributes)
 
         # Register completion with mocked 'attributes'
         ppl_manager.register_completion_attributes(ppl)
@@ -5382,31 +5385,30 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
-        config = Config()
-        ppl_path = os.path.abspath(os.path.join(config.get_mia_path(),
-                                                'pipeline_1'))
+        tmp_dir = tempfile.mkdtemp(prefix='projects_tests')
+        ppl_path = os.path.abspath(os.path.join(tmp_dir, 'pipeline_1'))
+
         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
 
         # Mocks methods
         #ppl_manager.main_window.statusBar().showMessage = Mock()
 
         # Save pipeline as with empty filename, checked
-        ppl_manager.savePipeline(uncheck = True)
+        ppl_manager.savePipeline(uncheck=True)
 
         # Mocks 'savePipeline' from 'ppl_edt_tabs'
-        ppl_edt_tabs.save_pipeline = Mock(return_value = 'not_empty')
+        ppl_edt_tabs.save_pipeline = Mock(return_value='not_empty')
 
         # Saves pipeline as with empty filename, checked
-        ppl_manager.savePipeline(uncheck = True)
+        ppl_manager.savePipeline(uncheck=True)
 
         # Sets the path to save the pipeline
-        config = Config()
-        ppl_path = os.path.abspath(os.path.join(config.get_mia_path(),
+        ppl_path = os.path.abspath(os.path.join(tmp_dir,
                                                 'pipeline_1'))
         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
 
         # Saves pipeline as with filled filename, uncheck
-        ppl_manager.savePipeline(uncheck = True)
+        ppl_manager.savePipeline(uncheck=True)
 
         # Aborts pipeline saving with filled filename
         QTimer.singleShot(1000, self.execute_QDialogClose)
@@ -5434,7 +5436,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager.savePipelineAs()
 
         # Mocks 'savePipeline' from 'ppl_edt_tabs'
-        ppl_edt_tabs.save_pipeline = Mock(return_value = 'not_empty')
+        ppl_edt_tabs.save_pipeline = Mock(return_value='not_empty')
 
         # Saves pipeline with not empty filename
         ppl_manager.savePipelineAs()
@@ -5448,7 +5450,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
       
       config = Config()
       sources_images_dir = config.getSourceImageDir()
-      self.assertTrue(sources_images_dir) # if the string is not empty
+      self.assertTrue(sources_images_dir)  # if the string is not empty
 
       pipeline_manager._mmovie = QtGui.QMovie(os.path.join(
                                                        sources_images_dir,
@@ -5479,7 +5481,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager = self.main_window.pipeline_manager
 
         # Creates a 'RunProgress' object
-        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
         ppl_manager.progress = RunProgress(ppl_manager)
 
         ppl_manager.stop_execution()
@@ -5772,7 +5773,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # 'job.param_dict' as list of objects
         job.param_dict['inlist'] = [DOCUMENT_1, DOCUMENT_2]
-        process.get_outputs = Mock(return_value={'_out':['_out_value']})
+        process.get_outputs = Mock(return_value={'_out': ['_out_value']})
         job.param_dict['_out'] = ['_out_value']
         ppl_manager.update_auto_inheritance(job, node)
 
@@ -5817,24 +5818,24 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Node's name does not contains 'Pipeline'
         node.context_name = ''
-        node.process.inheritance_dict = {'item':'value'}
+        node.process.inheritance_dict = {'item': 'value'}
         ppl_manager.project.node_inheritance_history = {}
         ppl_manager.update_inheritance(job, node)
         
-        self.assertEqual(job.inheritance_dict, {'item':'value'})
+        self.assertEqual(job.inheritance_dict, {'item': 'value'})
 
         # Node's name contains 'Pipeline'
         node.context_name = 'Pipeline.rename_1'
         ppl_manager.update_inheritance(job, node)
 
-        self.assertEqual(job.inheritance_dict, {'item':'value'})
+        self.assertEqual(job.inheritance_dict, {'item': 'value'})
 
         # Node's name in 'node_inheritance_history'
         (ppl_manager.project
-         .node_inheritance_history['rename_1']) = [{0:'new_value'}]
+         .node_inheritance_history['rename_1']) = [{0: 'new_value'}]
         ppl_manager.update_inheritance(job, node)
 
-        self.assertEqual(job.inheritance_dict, {0:'new_value'})
+        self.assertEqual(job.inheritance_dict, {0: 'new_value'})
 
     def test_update_node_list(self):
         """
@@ -5917,8 +5918,8 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertEqual(['', 'rename_1'], ppl.nodes.keys())
         
         # Initialize the pipeline with missing mandatory parameters
-        ppl_manager.workflow = workflow_from_pipeline(ppl,complete_parameters=
-                                                      True)
+        ppl_manager.workflow = workflow_from_pipeline(ppl,
+                                                      complete_parameters=True)
         
         ppl_manager.update_node_list()
         QTimer.singleShot(1000, self.execute_QDialogAccept)
@@ -5931,13 +5932,12 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Mocks an iteration pipeline
         ppl.name = 'Iteration_pipeline'
-        from capsul.pipeline.process_iteration import ProcessIteration
         process_it = ProcessIteration(ppl.nodes['rename_1'].process, '')
         ppl.list_process_in_pipeline.append(process_it)
 
         # Initialize the pipeline with mandatory parameters set
         QTimer.singleShot(1000, self.execute_QDialogAccept)
-        init_result = ppl_manager.init_pipeline(pipeline=ppl)
+        #init_result = ppl_manager.init_pipeline(pipeline=ppl)
 
         # Mocks null requirements and initializes the pipeline
         ppl_manager.check_requirements = Mock(return_value=None)
@@ -5953,10 +5953,10 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         req = {'capsul_engine':{'uses': Mock()}}
 
         for pkg in pkgs:                
-            req['capsul.engine.module.{}'.format(pkg)] = {'directory':False}
+            req['capsul.engine.module.{}'.format(pkg)] = {'directory': False}
 
-        req['capsul_engine']['uses'].get = Mock(return_value = 1)
-        ppl_manager.check_requirements = Mock(return_value = req)
+        req['capsul_engine']['uses'].get = Mock(return_value=1)
+        ppl_manager.check_requirements = Mock(return_value=req)
 
         QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
@@ -6033,8 +6033,8 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertEqual(['', 'rename_1'], ppl.nodes.keys())
         
         # Initialize the pipeline with missing mandatory parameters
-        ppl_manager.workflow = workflow_from_pipeline(ppl,complete_parameters=
-                                                      True)
+        ppl_manager.workflow = workflow_from_pipeline(ppl,
+                                                      complete_parameters=True)
         
         ppl_manager.update_node_list()
         init_result = ppl_manager.init_pipeline()
@@ -6046,7 +6046,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Mocks an iteration pipeline
         ppl.name = 'Iteration_pipeline'
-        from capsul.pipeline.process_iteration import ProcessIteration
         process_it = ProcessIteration(ppl.nodes['rename_1'].process, '')
         ppl.list_process_in_pipeline.append(process_it)
 
@@ -6063,13 +6062,13 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # Mocks external packages as requirements and initializes the 
         # pipeline
         pkgs = ['fsl', 'afni', 'ants', 'matlab', 'spm']
-        req = {'capsul_engine':{'uses': Mock()}}
+        req = {'capsul_engine': {'uses': Mock()}}
 
         for pkg in pkgs:                
-            req['capsul.engine.module.{}'.format(pkg)] = {'directory':False}
+            req['capsul.engine.module.{}'.format(pkg)] = {'directory': False}
 
-        req['capsul_engine']['uses'].get = Mock(return_value = 1)
-        ppl_manager.check_requirements = Mock(return_value = req)
+        req['capsul_engine']['uses'].get = Mock(return_value=1)
+        ppl_manager.check_requirements = Mock(return_value=req)
 
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
