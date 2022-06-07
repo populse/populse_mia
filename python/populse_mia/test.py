@@ -4901,6 +4901,42 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                          len(pipeline.nodes["smooth_3"].plugs[
                                                         "in_files"].links_from))
 
+    def test_end_progress(self):
+        '''
+        Creates a pipeline manager progress object and tries to end it.
+        Tests RunProgress.end_progress.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+
+        # Creates a 'RunProgress' object
+        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
+        ppl_manager.progress = RunProgress(ppl_manager)
+
+        # 'ppl_manager.worker' does not have a 'exec_id'
+        ppl_manager.progress.end_progress()
+
+        # Mocks an 'exec_id' and an 'get_pipeline_or_process'
+        ppl_manager.progress.worker.exec_id = str(uuid.uuid4())
+        engine = ppl.get_study_config().engine
+        engine.raise_for_status = Mock()
+
+        # Ends the progress with success
+        ppl_manager.progress.end_progress()
+
+        (engine.raise_for_status.assert_called_once_with(ppl_manager.progress.worker.status, 
+         ppl_manager.progress.worker.exec_id))
+        
+        # Mocks a 'WorkflowExecutionError' exception
+        from capsul.engine import WorkflowExecutionError
+        engine.raise_for_status = Mock(side_effect=WorkflowExecutionError({},{},verbose=False))
+
+        # Raises a 'WorkflowExecutionError' while ending progress 
+        ppl_manager.progress.end_progress()
+
     def test_finish_execution(self):
         '''
         Mocks several objects of the pipeline manager and finishes the 
@@ -5749,7 +5785,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
-        print('\n\n** an exception message is expected below\n')
         ppl.nodes['rename_1'].set_plug_value('in_file', DOCUMENT_1)
         node = ppl.nodes['rename_1']
 
