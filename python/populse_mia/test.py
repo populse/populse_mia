@@ -4180,7 +4180,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertFalse("Test_pipeline" in
                              pkg.package_library.package_tree['User_processes'])
 
-
 class TestMIAPipelineManagerTab(unittest.TestCase):
     """Tests 'pipeline_manager_tab.py'.
 
