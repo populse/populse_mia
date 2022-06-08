@@ -6232,6 +6232,5 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertFalse("Test_pipeline_1" in
                          pkg.package_library.package_tree['User_processes'])
 
-
 if __name__ == '__main__':
     unittest.main()
