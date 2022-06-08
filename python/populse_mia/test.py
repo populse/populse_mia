@@ -166,7 +166,6 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 if 'NO_ET' not in os.environ:
     os.environ['NO_ET'] = "1"
 
-
 class TestMIADataBrowser(unittest.TestCase):
     """Tests for the data browser tab
 
