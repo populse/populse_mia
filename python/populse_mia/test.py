@@ -2828,6 +2828,13 @@ class TestMIAPipelineManager(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
+        config = Config(config_path=cls.config_path)
+
+        if os.path.exists(os.path.join(config.get_mia_path(), 'processes',
+                                       'User_processes', 'test_pipeline.py')):
+            os.remove(os.path.join(config.get_mia_path(), 'processes',
+                                   'User_processes', 'test_pipeline.py'))
+
     def test_add_tab(self):
         """
         Adds tabs to the PipelineEditorTabs
@@ -4377,6 +4384,13 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
+        config = Config(config_path=cls.config_path)
+
+        if os.path.exists(os.path.join(config.get_mia_path(), 'processes',
+                                       'User_processes', 'test_pipeline_1.py')):
+            os.remove(os.path.join(config.get_mia_path(), 'processes',
+                                   'User_processes', 'test_pipeline_1.py'))
+
     def test_add_plug_value_to_database_list_type(self):
         """
         Opens a project, adds a 'Select' process, exports a list type
@@ -5385,8 +5399,9 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
-        tmp_dir = tempfile.mkdtemp(prefix='projects_tests')
-        ppl_path = os.path.abspath(os.path.join(tmp_dir, 'pipeline_1'))
+        config = Config(config_path=self.config_path)
+        ppl_path = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline_1.py')
 
         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
 
@@ -5403,8 +5418,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager.savePipeline(uncheck=True)
 
         # Sets the path to save the pipeline
-        ppl_path = os.path.abspath(os.path.join(tmp_dir,
-                                                'pipeline_1'))
         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
 
         # Saves pipeline as with filled filename, uncheck
