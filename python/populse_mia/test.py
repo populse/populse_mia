@@ -166,6 +166,7 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 if 'NO_ET' not in os.environ:
     os.environ['NO_ET'] = "1"
 
+
 class TestMIADataBrowser(unittest.TestCase):
     """Tests for the data browser tab
 
@@ -2667,6 +2668,7 @@ class TestMIAPipelineManager(unittest.TestCase):
             - test_zz_check_modif: opens a pipeline, opens it as a 
               process in another tab, modifies it and check the 
               modifications
+            - test_zz_del_pack(self): deletion of the brick created during UTs
     """
 
     def add_visualized_tag(self, tag):
@@ -2828,13 +2830,6 @@ class TestMIAPipelineManager(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
-        config = Config(config_path=cls.config_path)
-
-        if os.path.exists(os.path.join(config.get_mia_path(), 'processes',
-                                       'User_processes', 'test_pipeline.py')):
-            os.remove(os.path.join(config.get_mia_path(), 'processes',
-                                   'User_processes', 'test_pipeline.py'))
-
     def test_add_tab(self):
         """
         Adds tabs to the PipelineEditorTabs
@@ -2898,7 +2893,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_capsul_node_controller(self):
         """
-        Adds, changes and deletes processes using the capsul node 
+        Adds, changes and deletes processes using the capsul node
         controller, displays the attributes filter.
 
         Notes:
@@ -3086,13 +3081,13 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_filter_widget(self):
         """
-        Places a node of the "Input_Filter" process, feeds in documents 
+        Places a node of the "Input_Filter" process, feeds in documents
         and opens up the "FilterWidget()" to modify its parameters.
-  
+
         Notes:
         -----
-        Tests the class FilterWidget() within the Node Controller V1 
-        (class NodeController()). The class FilterWidget() is 
+        Tests the class FilterWidget() within the Node Controller V1
+        (class NodeController()). The class FilterWidget() is
         independent on the Node
         Controller version (V1 or V2) and can be used in both of them.
         """
@@ -3414,7 +3409,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_node_controller(self):
         """
-        Adds, changes and deletes processes to the node controller, 
+        Adds, changes and deletes processes to the node controller,
         display the attributes filter.
 
         Notes:
@@ -3719,6 +3714,7 @@ class TestMIAPipelineManager(unittest.TestCase):
                  get_current_editor)().export_node_unconnected_mandatory_plugs()
         (pipeline_editor_tabs.
                      get_current_editor)().export_node_all_unconnected_outputs()
+
         filename = os.path.join(config.get_mia_path(), 'processes',
                                 'User_processes', 'test_pipeline.py')
         save_pipeline(pipeline, filename)
@@ -4167,6 +4163,24 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertTrue("fwhm" in
                                  pipeline.nodes["test_pipeline_1"].plugs.keys())
 
+    def test_zz_del_pack(self):
+        """ We remove the brick created during the unit tests, and we take
+        advantage of this to cover the part of the code used to remove the
+        packages """
+         
+        pkg = PackageLibraryDialog(self.main_window)
+
+        # The Test_pipeline brick was added in the package library
+        self.assertTrue("Test_pipeline" in
+                             pkg.package_library.package_tree['User_processes'])
+
+        pkg.delete_package(to_delete="User_processes.Test_pipeline", loop=True)
+
+        # The Test_pipeline brick has been removed from the package library
+        self.assertFalse("Test_pipeline" in
+                             pkg.package_library.package_tree['User_processes'])
+
+
 class TestMIAPipelineManagerTab(unittest.TestCase):
     """Tests 'pipeline_manager_tab.py'.
 
@@ -4223,6 +4237,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
             - test_z_init_pipeline_2: initialize a pipeline with several
                mock parameters
             - test_z_runPipeline: adds a processruns a pipeline
+            - test_zz_del_pack(self): deletion of the brick created during UTs
     """
 
     def add_visualized_tag(self, tag):
@@ -4383,13 +4398,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
-
-        config = Config(config_path=cls.config_path)
-
-        if os.path.exists(os.path.join(config.get_mia_path(), 'processes',
-                                       'User_processes', 'test_pipeline_1.py')):
-            os.remove(os.path.join(config.get_mia_path(), 'processes',
-                                   'User_processes', 'test_pipeline_1.py'))
 
     def test_add_plug_value_to_database_list_type(self):
         """
@@ -6160,6 +6168,23 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertEqual(len(ppl_manager.brick_list), 0)
         self.assertEqual(ppl_manager.last_run_pipeline, ppl)
         self.assertTrue(hasattr(ppl_manager, '_mmovie'))
-    
+
+    def test_zz_del_pack(self):
+        """ We remove the brick created during the unit tests, and we take
+        advantage of this to cover the part of the code used to remove the
+        packages """
+
+        pkg = PackageLibraryDialog(self.main_window)
+        # The Test_pipeline brick was added in the package library
+        self.assertTrue("Test_pipeline_1" in
+                        pkg.package_library.package_tree['User_processes'])
+
+        pkg.delete_package(to_delete="User_processes.Test_pipeline_1", loop=True)
+
+        # The Test_pipeline brick has been removed from the package library
+        self.assertFalse("Test_pipeline_1" in
+                         pkg.package_library.package_tree['User_processes'])
+
+
 if __name__ == '__main__':
     unittest.main()
