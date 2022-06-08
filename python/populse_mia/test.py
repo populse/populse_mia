@@ -5396,16 +5396,18 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         Tests the method PipelineManagerTab.remove_progress.
         """
 
-        pipeline_manager = self.main_window.pipeline_manager
+        ppl_manager = self.main_window.pipeline_manager
 
         # Mocks the 'progress' object
-        pipeline_manager.progress = Mock()
+        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab\
+        import RunProgress
+        ppl_manager.progress = RunProgress(ppl_manager)
 
         # Removes progress
-        pipeline_manager.remove_progress()
+        ppl_manager.remove_progress()
 
         # Asserts that the object 'progress' was deleted
-        self.assertFalse(hasattr(pipeline_manager, 'progress'))
+        self.assertFalse(hasattr(ppl_manager, 'progress'))
 
     def test_savePipeline(self):
         '''
@@ -6177,6 +6179,10 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # Mocks 'initialize' in order to avoid 'Segmentation Fault'
         #ppl_manager.test_init = True
         #ppl_manager.initialize = Mock()
+
+        # Runs the pipeline assuring that it will be initialized
+        #capsul_engine = ppl_manager.get_capsul_engine()
+        #ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
 
         # Runs the pipeline assuring that the it will be initialized
         ppl_manager.runPipeline()
