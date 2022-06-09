@@ -4958,7 +4958,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         #ppl_manager.progress.end_progress()
         # FIXME: the above call to the function leads to a Segmentation
         # fault when the test routine is lauched in AppVeyor.
-        ppl
 
     def test_finish_execution(self):
         '''
