@@ -2972,28 +2972,78 @@ class TestMIAPipelineManager(unittest.TestCase):
 
     def test_close_tab(self):
         """
-        Closes a tab in the PipelineEditorTabs
+        Closes a tab in the pipeline editor tabs while mocking the
+        execution of the dialog boxes.
+        Tests PipelineEditor.close_tab.
+
+        Notes
+        -----
+        Indirectly tests PopUpClosePipeline.
         """
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
+        # Sets shortcuts for objects that are often used
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
 
         # Adding a new tab and closing the first one
-        pipeline_editor_tabs.new_tab()
-        pipeline_editor_tabs.close_tab(0)
-        self.assertEqual(pipeline_editor_tabs.count(), 2)
-        self.assertEqual(pipeline_editor_tabs.tabText(0), "New Pipeline 1")
+        #ppl_edt_tabs.new_tab()
 
-        # When the last editor is closed, one is automatically opened
-        pipeline_editor_tabs.close_tab(0)
-        self.assertEqual(pipeline_editor_tabs.tabText(0), "New Pipeline")
+        # Closes an unmodified tab 
+        ppl_edt_tabs.close_tab(0)
 
-        # Modifying the pipeline editor
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
-        self.assertEqual(pipeline_editor_tabs.tabText(0)[-2:], " *")
+        # Adds a process to modify the pipeline
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        self.assertEqual(ppl_edt_tabs.tabText(0)[-2:], " *")
+
+        # Mocks the execution of the 'QDialog'
+        # Instead of showing it, directly chooses 'save_as_clicked'
+        from populse_mia.user_interface.pop_ups import PopUpClosePipeline
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.save_as_clicked())
+        ppl_edt_tabs.save_pipeline = Mock()
+
+        # Tries to close the modified tab and saves the pipeline as
+        ppl_edt_tabs.close_tab(0)
+
+        # Asserts that 'undos' and 'redos' were deleted
+        editor = ppl_edt_tabs.get_editor_by_index(0)
+        with self.assertRaises(KeyError):
+            ppl_edt_tabs.undos[editor]
+            ppl_edt_tabs.redos[editor]
+
+        # Directly chooses 'do_not_save_clicked'
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.do_not_save_clicked())
+
+        # Adds a new tab and a process
+        ppl_edt_tabs.new_tab()
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Tries to close the modified tab and cancels saving
+        ppl_edt_tabs.close_tab(0)
+
+        # Directly chooses 'cancel_clicked'
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.cancel_clicked())
+
+        # Adds a process
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Tries to close the modified tab and cancels saving
+        ppl_edt_tabs.close_tab(0)
+
+        # Directly chooses 'cancel_clicked'
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.cancel_clicked())
+
+        # Adds a new process
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Tries to close the modified tab and cancels saving
+        ppl_edt_tabs.close_tab(0)
 
         # # Still some bug with the pop-up execution
         #
@@ -4208,6 +4258,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
               completion
             - test_delete_processes: deletes a process and makes the 
               undo/redo
+            - test_end_progress: creates a progress object and tries to end it
             - test_finish_execution: finishes the execution of the 
               pipeline
             - test_garbage_collect: collects the garbage of the pipeline
@@ -4223,11 +4274,18 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
               attributes
             - test_register_node_io_in_database: sets input and output 
               parameters and registers them in database
+            - test_register_completion_attributes: mocks methods of the pipeline manager 				  and registers completion attributes
             - test_remove_progress: removes the progress of the pipeline
+            - test_run: creates a pipeline manager progress object and tries to run it
             - test_save_pipeline: saves a simple pipeline
+            - test_savePipelineAs: saves a pipeline under another name
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' 
               animation
+            - test_show_status: shows the status of the pipeline execution
+            - test_stop_execution: shows the status window of the pipeline manager
             - test_undo_redo: tests the undo/redo
+            - test_update_auto_inheritance: updates the job's auto inheritance dict
+            - test_update_inheritance: updates the job's inheritance dict
             - test_update_node_list: initializes a workflow and adds a 
               process to the "pipline_manager.node_list"
             - test_z_init_pipeline: initializes the pipeline
