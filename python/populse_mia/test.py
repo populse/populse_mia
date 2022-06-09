@@ -158,7 +158,6 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
 # soma_workflow import
 from soma_workflow import constants as swconstants
 
-
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
@@ -5430,6 +5429,65 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Asserts that the object 'progress' was deleted
         self.assertFalse(hasattr(ppl_manager, 'progress'))
+
+    def test_run(self):
+        '''
+        Adds a process, creates a pipeline manager progress object and 
+        tries to run it while mockeing methods of the pipeline manager.
+        Tests RunWorker.run.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
+                      'Guerbet_Anat-RAREpvm-000220_000.nii')
+
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+        # Sets the mandatory parameters
+        ppl.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
+
+        # Creates a 'RunProgress' object
+        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
+        ppl_manager.progress = RunProgress(ppl_manager)
+
+        # Mocks a node that does not have a process and a node that has 
+        # a pipeline as a process
+        ppl.nodes['switch'] = Switch(ppl, '', [''], [''])
+        ppl.nodes['pipeline'] = ProcessNode(ppl,'pipeline',Pipeline())
+
+        ppl_manager.progress.worker.run()
+
+        # Mocks 'get_pipeline_or_process' to return a 'NipypeProcess' 
+        # instead of a 'Pipeline' and 'postprocess_pipeline_execution'
+        # to throw an exception
+        ppl_manager.progress = RunProgress(ppl_manager)
+        ppl_manager.progress.worker.pipeline_manager.get_pipeline_or_process = Mock(return_value=ppl.nodes['rename_1'].process)
+        ppl_manager.progress.worker.pipeline_manager.postprocess_pipeline_execution = Mock(side_effect=ValueError())
+
+        print('\n\n** an exception message is expected below\n')
+        ppl_manager.progress.worker.run()
+
+        # Mocks an interruption request
+        ppl_manager.progress.worker.interrupt_request = True
+
+        ppl_manager.progress.worker.run()
 
     def test_savePipeline(self):
         '''
