@@ -5576,17 +5576,38 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
     def test_show_status(self):
         '''
-        Shows the status window of the pipeline manager.
-        Tests PipelineManagerTab.test_show_status.        
+        Shows the status of the pipeline execution.
+        Tests PipelineManagerTab.test_show_status.
+
+        Notes
+        -----
+        Indirectly tests StatusWidget.__init__ and 
+        StatusWidget.toggle_soma_workflow.
         '''
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
 
+        # Shows the status of the pipeline's execution
         ppl_manager.show_status()
 
-        # Asserts that the status windows was created
-        self.assertTrue(hasattr(ppl_manager, 'status_widget'))
+        self.assertIsNone(ppl_manager.status_widget.swf_widget)
+
+        # Creates 'ppl_manager.status_widget.swf_widget', not visible by 
+        # default (the argument is irrelevant)
+        ppl_manager.status_widget.toggle_soma_workflow(False)
+
+        # Asserts that 'swf_widget' has been created and is visible
+        self.assertIsNotNone(ppl_manager.status_widget.swf_widget)
+        self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
+
+        # Toggles visibility on
+        ppl_manager.status_widget.toggle_soma_workflow(False)
+        self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
+
+        # Toggles visibility off
+        ppl_manager.status_widget.toggle_soma_workflow(True)
+        self.assertTrue(ppl_manager.status_widget.swf_widget.isVisible())
 
     def test_stop_execution(self):
         '''
