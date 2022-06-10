@@ -140,7 +140,8 @@ from populse_mia.software_properties import Config, verCmp
 from populse_mia.user_interface.data_browser.modify_table import ModifyTable
 from populse_mia.user_interface.main_window import MainWindow
 from populse_mia.user_interface.pipeline_manager.pipeline_editor import (
-                                                                  save_pipeline)
+                                                                save_pipeline,
+                                                                PipelineEditor)
 from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import (
                                                                     RunProgress)
 from populse_mia.user_interface.pipeline_manager.process_library import (
@@ -6366,6 +6367,246 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # The Test_pipeline brick has been removed from the package library
         self.assertFalse("Test_pipeline_1" in
                          pkg.package_library.package_tree['User_processes'])
+
+class TestMIAPipeineEditor(unittest.TestCase):
+    """Tests 'pipeline_editor.py'.
+
+    :Contains:
+        :Method:
+            - test_export_plug: exports plugs and mocks dialog boxes
+    """
+
+    def add_visualized_tag(self, tag):
+        """
+        With the "Visualized tags" pop-up open, selects a tag to display.
+
+        Parameters
+        ----------
+        tag: string
+          The tag to be displayed
+
+        Usage
+        -----
+        Should be called, with a delay, before opening the "Visualized tags"
+        pop-up:
+        QTimer.singleShot(1000,
+                          lambda:self.add_visualized_tag('AcquisitionDate'))
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            visualized_tags = w.layout().itemAt(0).widget()
+            tags_list = visualized_tags.list_widget_tags
+
+            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
+                found_item = tags_list.findItems(tag, Qt.MatchExactly)
+
+            else:
+                found_item = tags_list.findItems(tag,
+                                                 Qt.MatchFlag.MatchExactly)
+
+            tags_list.setCurrentItem(found_item[0])
+            visualized_tags.click_select_tag()
+
+    def execute_QDialogAccept(self):
+        """
+        Accept (close) a QDialog window
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.accept()
+
+    def execute_QMessageBox_clickYes(self):
+        """
+        Is supposed to allow to press the Yes button if a pipeline is 
+        overwritten in the test_zz_check_modifications method
+        """
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Yes)
+            QTest.mouseClick(close_button, Qt.LeftButton)
+
+    def execute_QDialogClose(self):
+        """
+        Is supposed to abort( close) a QDialog window
+        """
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.close()
+    
+    def get_new_test_project(self):
+        """
+        Copy the test project in a location we can modify safely
+        """
+
+        project_path = os.path.join(self.config_path, 'project_8')
+
+        if os.path.exists(project_path):
+            shutil.rmtree(project_path)
+
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+                                      'project_8')
+        shutil.copytree(project_8_path, project_path)
+        return project_path
+
+    def restart_MIA(self):
+        """
+        Restarts MIA within a unit test.
+
+        Notes
+        -----
+        Can be used to restart MIA after changing the controller version in MIA
+        preferences.
+        """
+
+        self.main_window.close()
+
+        # Removing the opened projects (in CI, the tests are run twice)
+        config = Config(config_path=self.config_path)
+        config.set_opened_projects([])
+        config.saveConfig()
+        self.app.exit()
+
+        config = Config(config_path=self.config_path)
+        config.set_user_mode(False)
+        self.app = QApplication.instance()
+
+        if self.app is None:
+            self.app = QApplication(sys.argv)
+
+        self.project = Project(None, True)
+        self.main_window = MainWindow(self.project, test=True)
+
+    def setUp(self):
+        """
+        Called before each test
+        """
+
+        # All the tests are run in admin mode
+        config = Config(config_path=self.config_path)
+        config.set_user_mode(False)
+
+        self.app = QApplication.instance()
+
+        if self.app is None:
+            self.app = QApplication(sys.argv)
+
+        self.project = Project(None, True)
+        self.main_window = MainWindow(self.project, test=True)
+
+    @classmethod
+    def setUpClass(cls):
+        """
+        Called once at the beginning of the class
+        """
+
+        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
+        # hack the Config class to get config_path, because some Config
+        # instances are created out of our control in the code
+        Config.config_path = cls.config_path
+
+    def tearDown(self):
+        """
+        Called after each test
+        """
+
+        self.main_window.close()
+
+        # Removing the opened projects (in CI, the tests are run twice)
+        config = Config(config_path=self.config_path)
+        config.set_opened_projects([])
+        config.saveConfig()
+
+        self.app.exit()
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Called once at the end of the class
+        """
+
+        if os.path.exists(cls.config_path):
+            shutil.rmtree(cls.config_path)
+
+    def test_export_plug(self):
+        '''
+        Adds a process and exports plugs in the pipeline editor while 
+        mocking the execution of dialog boxes.
+        Tests PipelineEditor.test_export_plug.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        ppl_edt = ppl_edt_tabs.get_current_editor()
+
+        # Mocks 'PipelineEditor' attributes
+        ppl_edt._temp_plug_name = ('','')
+        ppl_edt._temp_plug = Mock()
+        ppl_edt._temp_plug.optional = False
+
+        # Mocks the execution of a plug edit dialog
+        PipelineEditor._PlugEdit.exec_ = Mock()
+        
+        # Exports a plug with no parameters
+        ppl_edt._export_plug(pipeline_parameter=False, temp_plug_name=None)
+
+        PipelineEditor._PlugEdit.exec_.assert_called_once_with()
+
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Exports a plug value
+        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
+                                   pipeline_parameter='_out_file')
+        
+        self.assertIsNone(res)
+
+        # Mocks 'QMessageBox.question' to click accept
+        from PyQt5.QtWidgets import QInputDialog
+        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
+
+        # Tries to export the same plug value, accepts overwriting it
+        # With 'multi_export' then the temp_plug_value will be returned
+        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
+                                   pipeline_parameter='_out_file', 
+                                   multi_export=True)
+
+        QMessageBox.question.assert_called_once()
+        self.assertEqual(res, '_out_file')
+
+        # Mocks again 'QMessageBox.question' to click reject
+        QMessageBox.question = Mock(return_value=QMessageBox.No)
+        QInputDialog.getText = Mock(return_value=('new_name', True))
+
+        # Mocks 'export_parameter' to throw a 'TraitError'
+        from traits.api import TraitError
+        ppl_edt.scene.pipeline.export_parameter = Mock(side_effect=TraitError())
+
+        # Tries to export the same plug value, denies overwriting it
+        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
+                                   pipeline_parameter='_out_file',
+                                   multi_export = True)
+
+        QMessageBox.question.assert_called_once()
+        QInputDialog.getText.assert_called_once()
+        self.assertIsNone(res)
+
+        # Mocks 'export_parameter' to throw a 'ValueError'
+        ppl_edt.scene.pipeline.export_parameter = Mock(side_effect=ValueError())
+
+        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
+                                   pipeline_parameter='_out_file',
+                                   multi_export = True)
+
+        self.assertIsNone(res)                    
 
 if __name__ == '__main__':
     unittest.main()
