@@ -587,6 +587,8 @@ class PopUpAddTag(QDialog):
         # The 'Default value' text edit
         self.text_edit_default_value = DefaultValueQLineEdit(self)
         self.text_edit_default_value.setObjectName("textEdit_default_value")
+        # By default the tag is a string
+        self.text_edit_default_value.setText('Undefined')
 
         # The 'Description value' label
         self.label_description_value = QtWidgets.QLabel(self)
@@ -693,17 +695,12 @@ class PopUpAddTag(QDialog):
 
         """
 
-        # Tag name checked
         name_already_exists = False
+
+        # Tag name checked
         if (self.text_edit_tag_name.text() in
                 self.project.session.get_fields_names(COLLECTION_CURRENT)):
             name_already_exists = True
-
-        # Default value checked
-
-        default_value = self.text_edit_default_value.text()
-        wrong_default_value_type = not check_value_type(default_value,
-                                                        self.type, False)
 
         # Tag name can't be empty
         if self.text_edit_tag_name.text() == "":
@@ -712,9 +709,9 @@ class PopUpAddTag(QDialog):
             self.msg.setText("The tag name cannot be empty")
             self.msg.setInformativeText("Please enter a tag name")
             self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
+            self.msg.setStandardButtons(QMessageBox.Close)
+            self.msg.exec()
+            return
 
         # Tag name can't exist already
         elif name_already_exists:
@@ -723,37 +720,45 @@ class PopUpAddTag(QDialog):
             self.msg.setText("This tag name already exists")
             self.msg.setInformativeText("Please select another tag name")
             self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
+            self.msg.setStandardButtons(QMessageBox.Close)
+            self.msg.exec()
+            return
+
+        # Default value checked
+        wrong_default_value_type = not check_value_type(
+                                            self.text_edit_default_value.text(),
+                                            self.type, False)
+
 
         # The default value must be valid
-        elif wrong_default_value_type:
+        if wrong_default_value_type:
             self.msg = QMessageBox()
             self.msg.setIcon(QMessageBox.Critical)
             self.msg.setText("Invalid default value")
-            self.msg.setInformativeText("The default value " + default_value +
-                                        " is invalid with the type " +
-                                        self.type + ".")
+            self.msg.setInformativeText("The default value '{0}' is invalid "
+                                        "with the '{1}' type!".format(
+                                            self.text_edit_default_value.text(),
+                                            self.type))
             self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
+            self.msg.setStandardButtons(QMessageBox.Close)
+            self.msg.exec()
+            return
 
-        # Ok
-        else:
-            self.accept()
-            self.new_tag_name = self.text_edit_tag_name.text()
-            self.new_default_value = self.text_edit_default_value.text()
-            self.new_tag_description = self.text_edit_description_value.text()
-            self.new_tag_unit = self.combo_box_unit.currentText()
-            if self.new_tag_unit == '':
-                self.new_tag_unit = None
-            self.databrowser.add_tag_infos(self.new_tag_name,
-                                           self.new_default_value, self.type,
-                                           self.new_tag_description,
-                                           self.new_tag_unit)
-            self.close()
+        # Everything is Ok
+        self.accept()
+        self.new_tag_name = self.text_edit_tag_name.text()
+        self.new_default_value = self.text_edit_default_value.text()
+        self.new_tag_description = self.text_edit_description_value.text()
+        self.new_tag_unit = self.combo_box_unit.currentText()
+
+        if self.new_tag_unit == '':
+            self.new_tag_unit = None
+
+        self.databrowser.add_tag_infos(self.new_tag_name,
+                                       self.new_default_value, self.type,
+                                       self.new_tag_description,
+                                       self.new_tag_unit)
+        self.close()
 
     def on_activated(self, text):
         """Type updated.
@@ -764,61 +769,62 @@ class PopUpAddTag(QDialog):
 
         if text == "String":
             self.type = FIELD_TYPE_STRING
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a string")
+            self.text_edit_default_value.setText('Undefined')
         elif text == "Integer":
             self.type = FIELD_TYPE_INTEGER
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter an integer")
+            self.text_edit_default_value.setText("0")
         elif text == "Float":
             self.type = FIELD_TYPE_FLOAT
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a float")
+            self.text_edit_default_value.setText("0.0")
         elif text == "Boolean":
             self.type = FIELD_TYPE_BOOLEAN
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a boolean (True or False)")
+            self.text_edit_default_value.setText("True")
         elif text == "Date":
             self.type = FIELD_TYPE_DATE
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a date in the following format: dd/mm/yyyy")
+            date_value = datetime.now()
+            date_format = date_value.strftime(
+                "%d/%m/%Y")
+            self.text_edit_default_value.setText(date_format)
         elif text == "Datetime":
             self.type = FIELD_TYPE_DATETIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a datetime in the following format: "
-                "dd/mm/yyyy hh:mm:ss.zzz")
+            datetime_value = datetime.now()
+            datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
+            self.text_edit_default_value.setText(datetime_format)
         elif text == "Time":
             self.type = FIELD_TYPE_TIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a time in the following format: hh:mm:ss.zzz")
+            time_value = datetime.now()
+            time_format = time_value.strftime("%H:%M:%S.%f")
+            self.text_edit_default_value.setText(time_format)
         elif text == "String List":
             self.type = FIELD_TYPE_LIST_STRING
-            self.text_edit_default_value.setPlaceholderText(
-                "Please  click here to add a string list")
+            self.text_edit_default_value.setText("['Undefined', 'Undefined']")
         elif text == "Integer List":
             self.type = FIELD_TYPE_LIST_INTEGER
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a integer list")
+            self.text_edit_default_value.setText("[0, 0]")
         elif text == "Float List":
             self.type = FIELD_TYPE_LIST_FLOAT
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a float list")
+            self.text_edit_default_value.setText("[0.0, 0.0]")
         elif text == "Boolean List":
             self.type = FIELD_TYPE_LIST_BOOLEAN
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a boolean list")
+            self.text_edit_default_value.setText("[True, True]")
         elif text == "Date List":
             self.type = FIELD_TYPE_LIST_DATE
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a date list")
+            date_value = datetime.now()
+            date_format = date_value.strftime("%d/%m/%Y")
+            self.text_edit_default_value.setText("{}".format([date_format,
+                                                              date_format]))
         elif text == "Datetime List":
             self.type = FIELD_TYPE_LIST_DATETIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a datetime list")
+            datetime_value = datetime.now()
+            datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
+            self.text_edit_default_value.setText("{}".format([datetime_format,
+                                                              datetime_format]))
         elif text == "Time List":
             self.type = FIELD_TYPE_LIST_TIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a time list")
+            time_value = datetime.now()
+            time_format = time_value.strftime("%H:%M:%S.%f")
+            self.text_edit_default_value.setText("{}".format([time_format,
+                                                              time_format]))
 
 
 class PopUpCloneTag(QDialog):

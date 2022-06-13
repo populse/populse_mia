@@ -154,7 +154,7 @@ from populse_mia.utils.utils import check_value_type, table_to_database
 # populse_db import
 from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_DATETIME, FIELD_TYPE_INTEGER,
-                                 FIELD_TYPE_TIME)
+                                 FIELD_TYPE_STRING, FIELD_TYPE_TIME)
 
 # soma_workflow import
 from soma_workflow import constants as swconstants
@@ -173,6 +173,8 @@ class TestMIADataBrowser(unittest.TestCase):
         :Method:
             - edit_databrowser_list: change value to [25000] for a tag in
               DataBrowser
+            - execute_QMessageBox_clickClose: press the Close button of a
+              QMessageBox instance
             - execute_QMessageBox_clickOk: press the Ok button of a QMessageBox
               instance
             - get_new_test_project: create a temporary project that can be
@@ -228,6 +230,17 @@ class TestMIADataBrowser(unittest.TestCase):
         item = w.table.item(0, 0)
         item.setText(value)
         w.update_table_values(True)
+
+    def execute_QMessageBox_clickClose(self):
+        """
+        Press the Close button of a QMessageBox instance
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Close)
+            QTest.mouseClick(close_button, Qt.LeftButton)
 
     def execute_QMessageBox_clickOk(self):
         """
@@ -350,37 +363,35 @@ class TestMIADataBrowser(unittest.TestCase):
         # Testing without tag name
         self.main_window.data_browser.add_tag_action.trigger()
         add_tag = self.main_window.data_browser.pop_up_add_tag
+        QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(add_tag.msg.text(), "The tag name cannot be empty")
 
         QApplication.processEvents()
 
         # Testing with tag name already existing
-        self.main_window.data_browser.add_tag_action.trigger()
-        add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Type")
+        QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(add_tag.msg.text(), "This tag name already exists")
 
         QApplication.processEvents()
 
         # Testing with wrong type
-        self.main_window.data_browser.add_tag_action.trigger()
-        add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Test")
         add_tag.combo_box_type.setCurrentText(FIELD_TYPE_INTEGER)
         add_tag.type = FIELD_TYPE_INTEGER
         add_tag.text_edit_default_value.setText("Should be integer")
+        QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(add_tag.msg.text(), "Invalid default value")
 
         QApplication.processEvents()
 
         # Testing when everything is ok
-        self.main_window.data_browser.add_tag_action.trigger()
-        add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Test")
         add_tag.text_edit_default_value.setText("def_value")
+        add_tag.type = FIELD_TYPE_STRING
 
         QTest.qWait(100)
 
@@ -430,9 +441,6 @@ class TestMIADataBrowser(unittest.TestCase):
 
         add_tag.combo_box_type.setCurrentText("Integer List")
         QTest.mouseClick(add_tag.text_edit_default_value, Qt.LeftButton)
-        QTest.mouseClick(
-                add_tag.text_edit_default_value.list_creation.add_element_label,
-                Qt.LeftButton)
         QTest.mouseClick(
                 add_tag.text_edit_default_value.list_creation.add_element_label,
                 Qt.LeftButton)
