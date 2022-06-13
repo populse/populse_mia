@@ -213,7 +213,10 @@ class MiniViewer(QWidget):
         """
         Remove the Nibabel images to be able to remove it in the unit tests 
         """
-        delattr(self, 'img')
+        try:
+            delattr(self, 'img')
+        except AttributeError:
+            pass
 
     def clearLayouts(self):
         """Clear the final layout"""
