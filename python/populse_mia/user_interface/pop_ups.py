@@ -587,6 +587,8 @@ class PopUpAddTag(QDialog):
         # The 'Default value' text edit
         self.text_edit_default_value = DefaultValueQLineEdit(self)
         self.text_edit_default_value.setObjectName("textEdit_default_value")
+        # By default the tag is a string
+        self.text_edit_default_value.setPlaceholderText("Please enter a string")
 
         # The 'Description value' label
         self.label_description_value = QtWidgets.QLabel(self)
@@ -693,17 +695,13 @@ class PopUpAddTag(QDialog):
 
         """
 
-        # Tag name checked
         name_already_exists = False
+        returnValue = QMessageBox.Ok
+
+        # Tag name checked
         if (self.text_edit_tag_name.text() in
                 self.project.session.get_fields_names(COLLECTION_CURRENT)):
             name_already_exists = True
-
-        # Default value checked
-
-        default_value = self.text_edit_default_value.text()
-        wrong_default_value_type = not check_value_type(default_value,
-                                                        self.type, False)
 
         # Tag name can't be empty
         if self.text_edit_tag_name.text() == "":
@@ -712,9 +710,9 @@ class PopUpAddTag(QDialog):
             self.msg.setText("The tag name cannot be empty")
             self.msg.setInformativeText("Please enter a tag name")
             self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
+            self.msg.setStandardButtons(QMessageBox.Close)
+            self.msg.exec()
+            return
 
         # Tag name can't exist already
         elif name_already_exists:
@@ -723,25 +721,86 @@ class PopUpAddTag(QDialog):
             self.msg.setText("This tag name already exists")
             self.msg.setInformativeText("Please select another tag name")
             self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
+            self.msg.setStandardButtons(QMessageBox.Close)
+            self.msg.exec()
+            return
+
+        # The default value must be existing
+        elif self.text_edit_default_value.text() == '':
+            self.msg = QMessageBox()
+            self.msg.setIcon(QMessageBox.Warning)
+            self.msg.setText("Default value must be existing")
+
+            # Default value is set considering the type
+            if self.type == FIELD_TYPE_STRING:
+                self.text_edit_default_value.setText('Undefined')
+            if self.type == FIELD_TYPE_LIST_STRING:
+                self.text_edit_default_value.setText("['Undefined',""'Undefined']")
+
+            if self.type == FIELD_TYPE_INTEGER:
+                self.text_edit_default_value.setText("0")
+            if self.type == FIELD_TYPE_LIST_INTEGER:
+                self.text_edit_default_value.setText("[0,0]")
+
+            if self.type == FIELD_TYPE_FLOAT:
+                self.text_edit_default_value.setText("0.0")
+            if self.type == FIELD_TYPE_LIST_FLOAT:
+                self.text_edit_default_value.setText("[0.0, 0.0]")
+
+            if self.type == FIELD_TYPE_BOOLEAN:
+                self.text_edit_default_value.setText("True")
+            if self.type == FIELD_TYPE_LIST_BOOLEAN:
+                self.text_edit_default_value.setText("[True, True]")
+
+            if self.type == FIELD_TYPE_DATE:
+                date_value = datetime.now()
+                date_format = date_value.strftime("%d/%m/%Y")
+                self.text_edit_default_value.setText(date_format)
+            if self.type == FIELD_TYPE_LIST_DATE:
+                date_value = datetime.now()
+                date_format = date_value.strftime("%d/%m/%Y")
+                self.text_edit_default_value.setText("{}".format([date_format, date_format]))
+
+            if self.type == FIELD_TYPE_DATETIME:
+                datetime_value = datetime.now()
+                datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
+                self.text_edit_default_value.setText(datetime_format)
+            if self.type == FIELD_TYPE_LIST_DATETIME:
+                datetime_value = datetime.now()
+                datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
+                self.text_edit_default_value.setText("{}".format([datetime_format, datetime_format]))
+
+            if self.type == FIELD_TYPE_TIME:
+                time_value = datetime.now()
+                time_format = time_value.strftime("%H:%M:%S.%f")
+                self.text_edit_default_value.setText(time_format)
+            if self.type == FIELD_TYPE_LIST_TIME:
+                time_value = datetime.now()
+                time_format = time_value.strftime("%H:%M:%S.%f")
+                self.text_edit_default_value.setText("{}".format([time_format, time_format]))
+
+
+            # Default value checked
+            wrong_default_value_type = not check_value_type(
+                                                self.text_edit_default_value.text(),
+                                                self.type, False)
+
 
         # The default value must be valid
-        elif wrong_default_value_type:
+        if wrong_default_value_type:
             self.msg = QMessageBox()
             self.msg.setIcon(QMessageBox.Critical)
             self.msg.setText("Invalid default value")
-            self.msg.setInformativeText("The default value " + default_value +
+            self.msg.setInformativeText("The default value " + self.text_edit_default_value.text() +
                                         " is invalid with the type " +
                                         self.type + ".")
             self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
+            self.msg.setStandardButtons(QMessageBox.Close)
+            self.msg.exec()
+            return
 
-        # Ok
-        else:
+        # Everything is Ok
+        if returnValue == QMessageBox.Ok:
             self.accept()
             self.new_tag_name = self.text_edit_tag_name.text()
             self.new_default_value = self.text_edit_default_value.text()
