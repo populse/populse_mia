@@ -2451,6 +2451,94 @@ class TestMIADataBrowser(unittest.TestCase):
                          "MIA - Multiparametric Image Analysis "
                          "(Admin mode) - Unnamed project")
 
+    def test_update_default_value(self):
+        '''
+        Updates the values when a list of default values is created.
+        Tests DefaultValueListCreation.update_default_value.
+        '''
+        
+        # Sets shortcuts for objects that are often used
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        ppl_edt = ppl_edt_tabs.get_current_editor()
+        ppl = ppl_edt_tabs.get_current_pipeline()
+        data_browser = self.main_window.data_browser
+
+        from populse_mia.user_interface.pop_ups import PopUpAddTag, DefaultValueListCreation, DefaultValueQLineEdit
+        # The objects are successively created in the following order:
+        # PopUpAddTag > DefaultValueQLineEdit > DefaultValueListCreation
+        pop_up = PopUpAddTag(data_browser, data_browser.project)
+        text_edt = pop_up.text_edit_default_value
+
+        # Assures the instantiation of 'DefaultValueListCreation'
+        text_edt.parent.type = 'list_'
+
+        # Mocks the execution of a dialog window
+        DefaultValueListCreation.show = Mock()
+
+        # 'DefaultValueListCreation' can be instantiated with an empty
+        # string, non empty string or list
+        # Only a list leads to the table values being filled
+
+        # Empty string
+        text_edt.setText('')
+        text_edt.mousePressEvent(None)
+
+        # Non empty string
+        text_edt.setText('non_empty')
+        text_edt.mousePressEvent(None)
+        self.assertEqual(text_edt.list_creation.table.itemAt(0,0).text(), '')
+
+        # List of length = 2
+        text_edt.setText('[1,2]')
+        text_edt.mousePressEvent(None)
+
+        self.assertEqual(text_edt.list_creation.table.itemAt(0,0).text(), '1')
+        self.assertEqual(text_edt.list_creation.table.columnCount(), 2)
+        # ''[1]'' will become '[1]' after being passed through s
+        # 'ast.literal_eval()' 
+
+        # Adds one element to the table
+        text_edt.list_creation.add_element()
+        self.assertEqual(text_edt.list_creation.table.columnCount(), 3)
+
+        # Removes one element to the table
+        text_edt.list_creation.remove_element()
+        self.assertEqual(text_edt.list_creation.table.columnCount(), 2)
+
+        # Resize the table
+        text_edt.list_creation.resize_table()
+
+        # Resize the table while mocking a column width of 900 elements
+        text_edt.list_creation.table.setColumnWidth(0,900)
+        text_edt.list_creation.resize_table()
+
+        # The default value can be updated with several types of data
+        from populse_db.database import ( 
+        FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_DATE, 
+        FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_FLOAT, 
+        FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_LIST_STRING, FIELD_TYPE_LIST_TIME)
+
+        types = [FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_LIST_FLOAT, 
+                 FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_BOOLEAN,
+                 FIELD_TYPE_LIST_STRING, FIELD_TYPE_LIST_DATE, 
+                 FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_TIME]
+        values = ['[1]', '[1.1]', '[True]', '[False]', '["str"]', 
+                  '["11/11/1111"]', '["11/11/1111 11:11:11.11"]', 
+                  '["11:11:11.11"]']
+
+        for (type_,value) in zip(types,values):
+            text_edt.setText(value)
+            text_edt.mousePressEvent(None)
+            text_edt.list_creation.type = type_
+            text_edt.list_creation.update_default_value()
+
+        # Induces a 'ValueError', mocks the execution of a dialog box
+        QMessageBox.exec = Mock()
+        text_edt.setText('["not_boolean"]')
+        text_edt.mousePressEvent(None)
+        text_edt.list_creation.type = FIELD_TYPE_LIST_BOOLEAN
+        text_edt.list_creation.update_default_value()
+
     def test_utils(self):
         """
         Test the utils functions
@@ -6535,7 +6623,6 @@ class TestMIAPipeineEditor(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
-    #@unittest.skip
     def test_export_plug(self):
         '''
         Adds a process and exports plugs in the pipeline editor while 
@@ -6599,6 +6686,7 @@ class TestMIAPipeineEditor(unittest.TestCase):
         QMessageBox.question.assert_called_once()
         QInputDialog.getText.assert_called_once()
         #self.assertIsNone(res)
+        self.assertEqual(res, '_out_file')
 
         # Mocks 'export_parameter' to throw a 'ValueError'
         #ppl_edt.scene.pipeline.export_parameter = Mock(side_effect=ValueError())
