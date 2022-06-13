@@ -588,7 +588,7 @@ class PopUpAddTag(QDialog):
         self.text_edit_default_value = DefaultValueQLineEdit(self)
         self.text_edit_default_value.setObjectName("textEdit_default_value")
         # By default the tag is a string
-        self.text_edit_default_value.setPlaceholderText("Please enter a string")
+        self.text_edit_default_value.setPlaceholderText("Undefined")
 
         # The 'Description value' label
         self.label_description_value = QtWidgets.QLabel(self)
@@ -725,65 +725,10 @@ class PopUpAddTag(QDialog):
             self.msg.exec()
             return
 
-        # The default value must be existing
-        elif self.text_edit_default_value.text() == '':
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Warning)
-            self.msg.setText("Default value must be existing")
-
-            # Default value is set considering the type
-            if self.type == FIELD_TYPE_STRING:
-                self.text_edit_default_value.setText('Undefined')
-            if self.type == FIELD_TYPE_LIST_STRING:
-                self.text_edit_default_value.setText("['Undefined',""'Undefined']")
-
-            if self.type == FIELD_TYPE_INTEGER:
-                self.text_edit_default_value.setText("0")
-            if self.type == FIELD_TYPE_LIST_INTEGER:
-                self.text_edit_default_value.setText("[0,0]")
-
-            if self.type == FIELD_TYPE_FLOAT:
-                self.text_edit_default_value.setText("0.0")
-            if self.type == FIELD_TYPE_LIST_FLOAT:
-                self.text_edit_default_value.setText("[0.0, 0.0]")
-
-            if self.type == FIELD_TYPE_BOOLEAN:
-                self.text_edit_default_value.setText("True")
-            if self.type == FIELD_TYPE_LIST_BOOLEAN:
-                self.text_edit_default_value.setText("[True, True]")
-
-            if self.type == FIELD_TYPE_DATE:
-                date_value = datetime.now()
-                date_format = date_value.strftime("%d/%m/%Y")
-                self.text_edit_default_value.setText(date_format)
-            if self.type == FIELD_TYPE_LIST_DATE:
-                date_value = datetime.now()
-                date_format = date_value.strftime("%d/%m/%Y")
-                self.text_edit_default_value.setText("{}".format([date_format, date_format]))
-
-            if self.type == FIELD_TYPE_DATETIME:
-                datetime_value = datetime.now()
-                datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
-                self.text_edit_default_value.setText(datetime_format)
-            if self.type == FIELD_TYPE_LIST_DATETIME:
-                datetime_value = datetime.now()
-                datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
-                self.text_edit_default_value.setText("{}".format([datetime_format, datetime_format]))
-
-            if self.type == FIELD_TYPE_TIME:
-                time_value = datetime.now()
-                time_format = time_value.strftime("%H:%M:%S.%f")
-                self.text_edit_default_value.setText(time_format)
-            if self.type == FIELD_TYPE_LIST_TIME:
-                time_value = datetime.now()
-                time_format = time_value.strftime("%H:%M:%S.%f")
-                self.text_edit_default_value.setText("{}".format([time_format, time_format]))
-
-
-            # Default value checked
-            wrong_default_value_type = not check_value_type(
-                                                self.text_edit_default_value.text(),
-                                                self.type, False)
+        # Default value checked
+        wrong_default_value_type = not check_value_type(
+                                            self.text_edit_default_value.text(),
+                                            self.type, False)
 
 
         # The default value must be valid
@@ -823,61 +768,70 @@ class PopUpAddTag(QDialog):
 
         if text == "String":
             self.type = FIELD_TYPE_STRING
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a string")
+            self.text_edit_default_value.setText('Undefined')
         elif text == "Integer":
-            self.type = FIELD_TYPE_INTEGER
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter an integer")
+            self.type == FIELD_TYPE_INTEGER
+            self.text_edit_default_value.setText("0")
         elif text == "Float":
             self.type = FIELD_TYPE_FLOAT
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a float")
+            self.text_edit_default_value.setText("0.0")
         elif text == "Boolean":
             self.type = FIELD_TYPE_BOOLEAN
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a boolean (True or False)")
+            self.text_edit_default_value.setText("True")
         elif text == "Date":
             self.type = FIELD_TYPE_DATE
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a date in the following format: dd/mm/yyyy")
+            date_value = datetime.now()
+            date_format = date_value.strftime(
+                "%d/%m/%Y")
+            self.text_edit_default_value.setText(date_format)
         elif text == "Datetime":
-            self.type = FIELD_TYPE_DATETIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a datetime in the following format: "
-                "dd/mm/yyyy hh:mm:ss.zzz")
+            self.type == FIELD_TYPE_DATETIME
+            datetime_value = datetime.now()
+            datetime_format = datetime_value.strftime(
+                "%d/%m/%Y %H:%M:%S.%f")
+            self.text_edit_default_value.setText(datetime_format)
+
         elif text == "Time":
             self.type = FIELD_TYPE_TIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a time in the following format: hh:mm:ss.zzz")
+            time_value = datetime.now()
+            time_format = time_value.strftime(
+                "%H:%M:%S.%f")
+            self.text_edit_default_value.setText(
+                time_format)
         elif text == "String List":
             self.type = FIELD_TYPE_LIST_STRING
-            self.text_edit_default_value.setPlaceholderText(
-                "Please  click here to add a string list")
+            self.text_edit_default_value.setText(
+                "['Undefined', 'Undefined']")
         elif text == "Integer List":
             self.type = FIELD_TYPE_LIST_INTEGER
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a integer list")
+            self.text_edit_default_value.setText(
+                "[0, 0]")
         elif text == "Float List":
             self.type = FIELD_TYPE_LIST_FLOAT
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a float list")
+            self.text_edit_default_value.setText(
+                "[0.0, 0.0]")
         elif text == "Boolean List":
             self.type = FIELD_TYPE_LIST_BOOLEAN
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a boolean list")
+            self.text_edit_default_value.setText(
+                "[True, True]")
         elif text == "Date List":
-            self.type = FIELD_TYPE_LIST_DATE
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a date list")
+            self.type == FIELD_TYPE_LIST_DATE
+            date_value = datetime.now()
+            date_format = date_value.strftime(
+                "%d/%m/%Y")
+            self.text_edit_default_value.setText("{}".format([date_format, date_format]))
         elif text == "Datetime List":
-            self.type = FIELD_TYPE_LIST_DATETIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a datetime list")
+            datetime_value = datetime.now()
+            datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
+            self.text_edit_default_value.setText(
+                "{}".format([datetime_format, datetime_format]))
         elif text == "Time List":
             self.type = FIELD_TYPE_LIST_TIME
-            self.text_edit_default_value.setPlaceholderText(
-                "Please enter a time list")
+            time_value = datetime.now()
+            time_format = time_value.strftime(
+                "%H:%M:%S.%f")
+            self.text_edit_default_value.setText(
+                "{}".format([time_format, time_format]))
 
 
 class PopUpCloneTag(QDialog):
