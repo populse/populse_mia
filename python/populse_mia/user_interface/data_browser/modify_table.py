@@ -29,7 +29,8 @@ from populse_mia.data_manager.project import COLLECTION_CURRENT
 # Populse_db imports
 from populse_db.database import (
     FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_DATE, FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_TIME)
+    FIELD_TYPE_LIST_DATE, FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_TIME,
+    FIELD_TYPE_LIST_BOOLEAN)
 
 
 class ModifyTable(QDialog):
@@ -176,6 +177,8 @@ class ModifyTable(QDialog):
                         database_value.append(float(text))
                     elif tag_type == FIELD_TYPE_LIST_STRING:
                         database_value.append(str(text))
+                    elif tag_type == FIELD_TYPE_LIST_BOOLEAN:
+                        database_value.append(bool(text))
                     elif tag_type == FIELD_TYPE_LIST_DATE:
                         format = "%d/%m/%Y"
                         subvalue = datetime.strptime(text, format).date()
