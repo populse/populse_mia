@@ -178,17 +178,17 @@ class ModifyTable(QDialog):
                     elif tag_type == FIELD_TYPE_LIST_STRING:
                         database_value.append(str(text))
                     elif tag_type == FIELD_TYPE_LIST_BOOLEAN:
-                        database_value.append(bool(text))
+                        database_value.append(eval(text))
                     elif tag_type == FIELD_TYPE_LIST_DATE:
                         format = "%d/%m/%Y"
                         subvalue = datetime.strptime(text, format).date()
                         database_value.append(subvalue)
                     elif tag_type == FIELD_TYPE_LIST_DATETIME:
-                        format = "%d/%m/%Y %H:%M"
+                        format = "%d/%m/%Y %H:%M:%S.%f"
                         subvalue = datetime.strptime(text, format)
                         database_value.append(subvalue)
                     elif tag_type == FIELD_TYPE_LIST_TIME:
-                        format = "%H:%M"
+                        format = "%H:%M:%S.%f"
                         subvalue = datetime.strptime(text, format).time()
                         database_value.append(subvalue)
 
