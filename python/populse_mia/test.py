@@ -48,6 +48,9 @@ from packaging import version
 from pathlib import Path
 from traits.api import Undefined, TraitListObject
 from unittest.mock import Mock, MagicMock
+import copy
+
+sys.settrace
 
 if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
     # "developer" mode
@@ -1182,6 +1185,127 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue("data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
                         "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
                         "pvm-000220_000.nii" in scans_displayed)
+
+    def test_openTagsPopUp(self):
+        '''
+        Opens a docuemnt in data viewer and opens a pop-up to select the
+        legend of the thumbnails.
+        Tests MiniViewer.openTagsPopUp.
+
+        Notes
+        -----
+        Indirectly tests PopUpSelectTag.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        data_browser = self.main_window.data_browser
+
+        # Gets a document filepath
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+        # Adds the document to the data browser
+        from populse_mia.user_interface.pop_ups import PopUpSelectTag, PopUpAddPath
+        addPath = PopUpAddPath(data_browser.project, data_browser)
+        addPath.file_line_edit.setText(DOCUMENT_1)
+        addPath.save_path()
+
+        # Selects the document in the data browser
+        data_browser.table_data.item(0,0).setSelected(True)
+
+        # Mocks the execution of the dialog window
+        PopUpSelectTag.exec_ = Mock(return_value=True)
+
+        # Opens the tags pop-up and selects one tab
+        data_browser.viewer.openTagsPopUp()
+        data_browser.viewer.popUp.list_widget_tags.item(0).setCheckState(Qt.Checked)
+        data_browser.viewer.popUp.ok_clicked()
+
+    def test_popUpDeletedProject(self):
+        '''
+        Adds a deleted projects to the projects list and laches mia.
+        Tests PopUpDeletedProject.
+        '''
+        
+        # Sets a projects save directory
+        config = Config()
+        projects_save_path = os.path.join(config.get_mia_path(),'projects')
+        config.set_projects_save_path(projects_save_path)
+
+        # Mocks a project filepath that does not exist in the filesystem
+        # Adds this filepath to 'saved_projects.yml' 
+        savedProjects = SavedProjects()
+        del_prjct = os.path.join(projects_save_path,'missing_project')
+        savedProjects.addSavedProject(del_prjct)
+
+        # Asserts that 'saved_projects.yml' contains the filepath
+        self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+        # Mocks the execution of a dialog box
+        from populse_mia.user_interface.pop_ups import PopUpDeletedProject
+        PopUpDeletedProject.exec = Mock()
+
+        # Adds code from the 'main.py', gets deleted projects
+        saved_projects_object = SavedProjects()
+        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
+        deleted_projects = []
+        for saved_project in saved_projects_list:
+            if not os.path.isdir(saved_project):
+                deleted_projects.append(os.path.abspath(saved_project))
+                saved_projects_object.removeSavedProject(saved_project)
+
+        if deleted_projects is not None and deleted_projects:
+            self.msg = PopUpDeletedProject(deleted_projects)
+
+        # Asserts that 'saved_projects.yml' no longer contains it
+        self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+    def test_popUpDeleteProject(self):
+        '''
+        Creates a new project and deletes it.
+        Tests PopUpDeleteProject.
+
+        Notes
+        -----
+        Not to be confused with PopUpDeletedProject.
+        '''
+
+        # Gets a new project
+        proj_8_path = self.get_new_test_project()
+        self.main_window.switch_project(proj_8_path, "project_8")
+
+        # Sets a projects save directory
+        config = Config()
+        proj_save_path = os.path.join(config.get_mia_path(),
+                                      proj_8_path.split('/project_8')[0])
+        config.set_projects_save_path(proj_save_path)
+
+        # Append 'proj_8_path' to 'saved_projects.pathsList' and 
+        # 'opened_projects', to increase coverage
+        self.main_window.saved_projects.pathsList.append(os.path.relpath(proj_8_path))
+        config.set_opened_projects([os.path.relpath(proj_8_path)])
+
+        from populse_mia.user_interface.pop_ups import PopUpDeleteProject
+        exPopup = PopUpDeleteProject(self.main_window)
+
+        # Checks 'project_8' to be deleted
+        exPopup.check_boxes[0].setChecked(True)
+
+        #exPopup.exec() # does not execute the pop-up to save time
+
+        # Mocks the dialog box to directly return 'YesToAll'
+        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
+        exPopup.ok_clicked()
+
+        # Asserts that the project was deleted
+        self.assertEqual(len(self.main_window.saved_projects.pathsList), 0)
+        self.assertEqual(len(Config().get_opened_projects()), 0)
+        self.assertFalse(os.path.exists(proj_8_path))
 
     def test_project_properties(self):
         """
@@ -5113,6 +5237,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # FIXME: the above call to the function leads to a Segmentation
         # fault when the test routine is lauched in AppVeyor.
 
+    @unittest.skip('triggers core dumped error')
     def test_finish_execution(self):
         '''
         Mocks several objects of the pipeline manager and finishes the 
@@ -5588,7 +5713,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
     def test_run(self):
         '''
         Adds a process, creates a pipeline manager progress object and 
-        tries to run it while mockeing methods of the pipeline manager.
+        tries to run it while mocking methods of the pipeline manager.
         Tests RunWorker.run.
         '''
 
