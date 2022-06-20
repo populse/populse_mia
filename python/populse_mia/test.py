@@ -322,38 +322,75 @@ class TestMIADataBrowser(unittest.TestCase):
             shutil.rmtree(cls.config_path)
 
     def test_add_path(self):
-        """
-        Tests the popup to add a path
-        """
+        '''
+        Tries import a document to the project.
+        Tests DataBrowser.add_path and PopUpAddPath.
 
-        QTest.mouseClick(self.main_window.data_browser.addRowLabel,
-                         Qt.LeftButton)
+        Notes
+        -----
+        Mocks the execution of QFileDialog and QMessageBox.
+        '''
+
+        # Gets the paths of one document
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+        
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+        # Sets shortcuts for often used objects
+        session = self.main_window.project.session
+        table_data = self.main_window.data_browser.table_data
+
+        # Mocks the execution of a message box
+        from PyQt5.QtWidgets import QMessageBox
+        QMessageBox.show = Mock()
+
+        # Opens the 'add_path' pop-up
+        self.main_window.data_browser.table_data.add_path()
         add_path = self.main_window.data_browser.table_data.pop_up_add_path
 
+        # Tries to add a document without filling the pop-up fields
         QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
         self.assertEqual(add_path.msg.text(), "Invalid arguments")
 
-        add_path.file_line_edit.setText(os.path.join(".",
-                                                     "test_not_existing.py"))
-        add_path.type_line_edit.setText("Python")
+        # Tries to add invalid document path
+        add_path.file_line_edit.setText(DOCUMENT_1+'_')
+        from populse_mia.data_manager.project import TYPE_NII
+        add_path.type_line_edit.setText(TYPE_NII)
         QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
         self.assertEqual(add_path.msg.text(), "Invalid arguments")
 
-        add_path.file_line_edit.setText(os.path.join(".", "test.py"))
-        add_path.type_line_edit.setText("Python")
+        # Adds a valid docuent
+        add_path.file_line_edit.setText(DOCUMENT_1)
+        add_path.type_line_edit.setText(TYPE_NII)
         QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
 
-        self.assertEqual(self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_CURRENT),
-                         [os.path.join('data', 'downloaded_data', 'test.py')])
-        self.assertEqual(self.main_window.project.session.get_documents_names(
-                                                            COLLECTION_INITIAL),
-                         [os.path.join('data', 'downloaded_data', 'test.py')])
-        self.assertEqual(self.main_window.data_browser.table_data.rowCount(),
-                         1)
-        self.assertEqual(self.main_window.data_browser.table_data.item(0, 0
-                                                                       ).text(),
-                         os.path.join('data', 'downloaded_data', 'test.py'))
+        # Asserts that the document was added into the the data browser
+        file_name = (session.get_documents_names(COLLECTION_CURRENT)[0]
+                     .split('/')[-1])
+        self.assertTrue(file_name in DOCUMENT_1)
+
+        self.assertEqual(table_data.rowCount(),1)
+
+        file_name = table_data.item(0, 0).text().split('/')[-1]
+        self.assertTrue(file_name in DOCUMENT_1)
+        
+        # Mocks the execution of file dialog box and finds the file type
+        from PyQt5.QtWidgets import QFileDialog
+        for ext in ['nii', 'mat', 'txt']:
+            QFileDialog.getOpenFileName = Mock(return_value=['file.'+ext])
+            add_path.file_to_choose()
+
+        # Adds a document into the database and tries to save the same
+        # one once again
+        self.project.session.add_document('current', DOCUMENT_1)
+        add_path.file_line_edit.setText(DOCUMENT_1)
+        add_path.save_path()
 
     def test_add_tag(self):
         """
