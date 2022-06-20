@@ -1193,15 +1193,35 @@ class TestMIADataBrowser(unittest.TestCase):
                         "pvm-000220_000.nii" in documents)
 
     def test_open_project_filter(self):
-        """
-        Tests project filter opening
-        """
+        '''
+        Opens a project, switches to it and tries to open a saved 
+        filter.
+        Tests DataBrowser.open_popup e PopUpSelectFilter.
+        '''
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
+        # Opens the saved filters spop-up
         self.main_window.data_browser.open_filter_action.trigger()
         open_popup = self.main_window.data_browser.popUp
+
+        # Closes the pop-up and re-opens it
+        open_popup.cancel_clicked()
+        self.main_window.data_browser.open_filter_action.trigger()
+
+        # Tries to search for an empty string
+        open_popup.search_str('')
+        self.assertFalse(open_popup.list_widget_filters.item(0).isHidden())
+
+        # Tries to search for an existing filter 
+        open_popup.search_str('g1_rapid')
+        self.assertFalse(open_popup.list_widget_filters.item(0).isHidden())
+
+        # Tries to search for a non existing filter 
+        open_popup.search_str('g1_rapid_')
+        self.assertTrue(open_popup.list_widget_filters.item(0).isHidden())
+
         open_popup.list_widget_filters.item(0).setSelected(True)
         QTest.mouseClick(open_popup.push_button_ok, Qt.LeftButton)
 
