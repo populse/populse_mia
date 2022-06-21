@@ -4815,7 +4815,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
 
-        # Adds the processes Select, creates the "select_1" node
+        # Adds the processe Select, creates the "select_1" node
         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
         ppl_edt_tabs.get_current_editor().add_named_process(Select)
         pipeline = ppl_edt_tabs.get_current_pipeline()
@@ -5060,6 +5060,185 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                                     '', 'rename_1', plug_name,
                                                     'rename_1', job, trait,
                                                     inputs, attributes)
+
+    def test_add_plug_value_to_database_several_inputs(self):
+        '''
+        Creates a new project folder, adds a 'Rename' process, exports a 
+        non list type input plug and with several possible inputs.
+        Independently opens a inheritance dict pop-up.
+        
+        Tests the objects
+          - PipelineManagerTab.add_plug_value_to_database
+          - PopUpInheritanceDict.
+
+        Notes
+        -----
+        Mocks the object
+          - PopUpInheritanceDict.exec
+        '''
+
+        # Sets shortcuts for often used objects
+        ppl_manager = self.main_window.pipeline_manager
+        session = ppl_manager.project.session
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl_edt_tab = ppl_edt_tabs.get_current_editor()
+
+        # Creates a new project folder and adds one document to the 
+        # project, sets the plug value that is added to the database
+        project_8_path = self.get_new_test_project()
+        ppl_manager.project.folder = project_8_path
+        folder = os.path.join(project_8_path,'data','raw_data')
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        P_VALUE = DOCUMENT_1.replace(os.path.abspath(project_8_path), "")[1:]
+        
+        session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+
+        # Adds the processes Smooth, creates the "rename_1" node
+        ppl_edt_tab.click_pos = QPoint(450, 500)
+        ppl_edt_tab.add_named_process(Rename)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
+
+        # Exports the mandatory input and output plugs for "rename_1"
+        ppl_edt_tab.current_node_name = 'rename_1'
+        ppl_edt_tab.export_unconnected_mandatory_inputs()
+        ppl_edt_tab.export_all_unconnected_outputs()
+
+        old_scan_name = DOCUMENT_1.split('/')[-1]
+        new_scan_name = 'new_name.nii'
+
+        # Changes the "_out_file" in the "outputs" node
+        pipeline.nodes[''].set_plug_value('_out_file',
+                                          DOCUMENT_1.replace(old_scan_name,
+                                                             new_scan_name))
+
+        ppl_manager.workflow = workflow_from_pipeline(pipeline,
+                                                      complete_parameters=True)
+
+        job = ppl_manager.workflow.jobs[0]
+
+        brick_id = str(uuid.uuid4())
+        job.uuid = brick_id
+        ppl_manager.brick_list.append(brick_id)
+
+        ppl_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
+
+        # Sets the mandatory plug values in the "inputs" node
+        pipeline.nodes[''].set_plug_value('in_file', DOCUMENT_1)
+        pipeline.nodes[''].set_plug_value('format_string', new_scan_name)
+
+        process = job.process()
+        plug_name = 'in_file'
+        trait = process.trait(plug_name)
+
+        inputs = process.get_inputs()
+
+        attributes = {}
+        completion = ProcessCompletionEngine.get_completion_engine(process)
+
+        if completion:
+            attributes = completion.get_attribute_values().export_to_dict()
+
+        # Mocks the document getter to always return a scan 
+        SCAN_1 = session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
+
+        def mock_get_document(collection, relfile):
+
+            SCAN_1_ = SCAN_1
+
+            if relfile == 'mock_val_1':
+                SCAN_1_._values[3] = 'Exp Type 1'
+                return SCAN_1_
+            elif relfile == 'mock_val_2':
+                SCAN_1_._values[3] = 'Exp Type 2'
+                return SCAN_1_
+
+            return None            
+        
+        session.get_document = mock_get_document
+
+        # Mocks the value setter on the session
+        session.set_values = Mock()
+
+        # Those methods are called prior to adding a plug to the database
+        def reset_inheritance_dicts():
+            job.inheritance_dict = {DOCUMENT_1: None}
+            job.auto_inheritance_dict = {DOCUMENT_1: parent_files}
+
+        def reset_collections():
+            if session.has_document(COLLECTION_CURRENT, P_VALUE):
+                session.remove_document(COLLECTION_CURRENT, P_VALUE)
+            if  session.has_document(COLLECTION_CURRENT, DOCUMENT_1):
+                session.remove_document(COLLECTION_CURRENT, DOCUMENT_1)
+            if session.has_document(COLLECTION_INITIAL, P_VALUE):
+                session.remove_document(COLLECTION_INITIAL, P_VALUE)
+            if session.has_document(COLLECTION_INITIAL, DOCUMENT_1):
+                session.remove_document(COLLECTION_INITIAL, DOCUMENT_1)
+
+        '''
+        The test cases are divided into
+           - 'parent_files' is a dict with 2 keys and identical values
+           -                   ''                     distinct values
+           - 'mock_key_2' is in 'ppl_manager.key' indexed by the node 
+              name
+           - 'mock_key_2' is in 'ppl_manager.key' indexed by the node 
+              name + plug value
+        '''
+
+        # 'parent_files' is a dict with 2 keys and identical values
+        parent_files = {
+            'mock_key_1': os.path.join(ppl_manager.project.folder,'mock_val_1'),
+            'mock_key_2': os.path.join(ppl_manager.project.folder,'mock_val_1')
+        }
+
+        reset_inheritance_dicts()
+        reset_collections()
+
+        args = [DOCUMENT_1, brick_id,'', 'rename_1', plug_name,'rename_1', job, 
+                trait,inputs, attributes]
+        ppl_manager.add_plug_value_to_database(*args)
+
+        # Mocks the execution of 'PopUpInheritanceDict' to avoid 
+        # assyncronous shot
+        from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
+        PopUpInheritanceDict.exec = Mock()
+
+        # 'parent_files' is a dict with 2 keys and distinct values
+        # Triggers the execution of 'PopUpInheritanceDict'
+        parent_files['mock_key_2'] = os.path.join(ppl_manager.project.folder,'mock_val_2')
+
+        reset_inheritance_dicts()
+        reset_collections()
+        
+        ppl_manager.add_plug_value_to_database(*args)
+
+        # 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
+        ppl_manager.key = {'rename_1': 'mock_key_2'}
+
+        reset_inheritance_dicts()
+        reset_collections()
+
+        ppl_manager.add_plug_value_to_database(*args)
+
+        # 'mock_key_2' is in 'ppl_manager.key' indexed by the node name 
+        # + plug value
+        ppl_manager.key = {'rename_1in_file': 'mock_key_2'}
+
+        reset_inheritance_dicts()
+        reset_collections()
+
+        ppl_manager.add_plug_value_to_database(*args)
+
+        # Independently tests 'PopUpInheritanceDict'
+        pop_up = PopUpInheritanceDict({'mock_key': 'mock_value'},
+                                      'mock_full_name','mock_plug_name', True)
+
+        pop_up.ok_clicked()
+        pop_up.okall_clicked()
+        pop_up.ignore_clicked()
+        pop_up.ignoreall_clicked()
+        pop_up.ignore_node_clicked()
 
     def test_ask_iterated_pipeline_plugs(self):
         '''
