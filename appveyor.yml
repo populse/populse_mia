@@ -4,7 +4,7 @@ environment:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: "C:\\Python37"
-#      APPVEYOR_RDP_PASSWORD:
+      APPVEYOR_RDP_PASSWORD: Ow>X/N
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       PYTHON: "$HOME/venv3.7"
@@ -21,7 +21,7 @@ install:
   - sh: if [[ $(uname -s) == Linux ]]; then echo "     ** linux build **"; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then echo "     ** macos build **"; fi
 
-#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
   - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
@@ -84,9 +84,10 @@ install:
 
   - sh: if [[ $(uname -s) == Linux ]]; then Xvfb & fi
   - sh: if [[ $(uname -s) == Linux ]]; then sleep 3; fi # give xvfb some time to start
-  
+
 #  - sh: export APPVEYOR_SSH_BLOCK=true
 #  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 test_script:
   - cmd: python .\\python\\populse_mia\\test.py -v
