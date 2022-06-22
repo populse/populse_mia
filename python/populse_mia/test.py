@@ -376,10 +376,6 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue(filename in DOCUMENT_1)
 
         self.assertEqual(table_data.rowCount(),1)
-
-        file_name = table_data.item(0, 0).text().split('/')[-1]
-        self.assertTrue(file_name in DOCUMENT_1)
-        self.assertIn
         
         # Mocks the execution of file dialog box and finds the file type
         from PyQt5.QtWidgets import QFileDialog
