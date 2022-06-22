@@ -23,7 +23,10 @@ Contains:
 
 import ast
 import os
+import subprocess
 import traceback
+from functools import partial
+from sys import platform
 
 # PyQt5 imports
 from PyQt5 import QtWidgets, QtCore
@@ -63,7 +66,7 @@ from populse_db.database import (
     FIELD_TYPE_DATE, FIELD_TYPE_TIME, FIELD_TYPE_LIST_DATE,
     FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_TIME, FIELD_TYPE_LIST_INTEGER,
     FIELD_TYPE_LIST_STRING, FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_BOOLEAN)
-from functools import partial
+
 
 # Variable shown everywhere when no value for the tag
 not_defined_value = "*Not Defined*"
@@ -82,12 +85,14 @@ class DataBrowser(QWidget):
         - clone_tag_pop_up: display the clone tag pop-up
         - connect_actions: connect actions method to views
         - connect_mini_viewer: display the selected documents in the viewer
+        - connect_pdf_viewer: tries to display a pdf file in the user's
+          preferred application
         - connect_toolbar: connect toolbar views to methods
         - create_view_actions: create the actions of the tab
         - create_toolbar_view: create the toolbar views
         - count_table_pop_up: open the count table
         - move_splitter: check if the viewer's splitter is at its lowest
-           position
+          position
         - open_filter: open a project filter that has already been saved
         - open_filter_infos: apply the current filter
         - remove_tag_infos: remove user tags after the pop-up
@@ -95,9 +100,9 @@ class DataBrowser(QWidget):
         - reset_search_bar: reset the rapid search bar
         - run_advanced_search: launch the advanced search
         - search_str: search a string in the table and updates the
-           visualized documents
+          visualized documents
         - send_documents_to_pipeline: send the current list of scans to the
-           Pipeline Manager
+          Pipeline Manager
         - update_database: update the database in the software
 
     """
@@ -329,6 +334,20 @@ class DataBrowser(QWidget):
                         full_names.append(full_name)
 
             self.viewer.verify_slices(full_names)
+
+    def connect_pdf_viewer(self, scan):
+        """Tries to display a pdf file in the user's preferred application."""
+        full_name = os.path.join(self.project.folder, scan)
+
+        if platform == "linux":
+            subprocess.Popen(["xdg-open", full_name])
+
+        # FIXME: test the following part of the code for windows and macos!
+        elif platform == "darwin":
+            subprocess.Popen(["open", full_name])
+
+        elif platform == "win32":
+            subprocess.Popen(["start", full_name])
 
     def connect_toolbar(self):
         """Connect methods to toolbar."""
@@ -2278,6 +2297,10 @@ class TableDataBrowser(QTableWidget):
             if not scan_already_in_list:
                 # Scan not in the list, we add it
                 self.scans.append([scan_name, [tag_name]])
+
+        for scan in self.scans:
+            if scan[0].endswith(".pdf"):
+                self.data_browser.connect_pdf_viewer(scan[0])
 
         # image_viewer updated
         if self.link_viewer:
