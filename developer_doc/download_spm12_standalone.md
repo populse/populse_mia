@@ -32,13 +32,14 @@ Execute SPM12, the second path being the path of the MCR (that has been chosen d
 
 P.S. Tested on linux with http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip (part 1 above), https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip (part 2 above) and without using parts 5 and 6 above: It works! We can now launch Mia. 
 
+8- Setting MIA with smp12 and MATLAB paths.
 In **MIA** go to:
 
 File> MIA preferences > Pipelines:
 
 In the **MATLAB section**:
    
-   -Check on the box <use Matlab standalone>.
+   -Check on the box use Matlab standalone.
   
    -Click on browse and add the installation path of your MATLAB Runtime supposed to look like:
        /usr/local/MATLAB/MATLAB_Runtime/v95.
@@ -46,7 +47,7 @@ In the **MATLAB section**:
 
 In the **SMP section** :
   
-   -Check on the box <use SPM standalone>.
+   -Check on the box use SPM standalone.
   
    -Click on browse and add the path of the unzip file of spm12 supposed to look like:
        /home/<your_lacal_user_account>/smp12.
