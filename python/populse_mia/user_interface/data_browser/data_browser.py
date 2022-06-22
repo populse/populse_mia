@@ -85,8 +85,6 @@ class DataBrowser(QWidget):
         - clone_tag_pop_up: display the clone tag pop-up
         - connect_actions: connect actions method to views
         - connect_mini_viewer: display the selected documents in the viewer
-        - connect_pdf_viewer: tries to display a pdf file in the user's
-          preferred application
         - connect_toolbar: connect toolbar views to methods
         - create_view_actions: create the actions of the tab
         - create_toolbar_view: create the toolbar views
@@ -334,20 +332,6 @@ class DataBrowser(QWidget):
                         full_names.append(full_name)
 
             self.viewer.verify_slices(full_names)
-
-    def connect_pdf_viewer(self, scan):
-        """Tries to display a pdf file in the user's preferred application."""
-        full_name = os.path.join(self.project.folder, scan)
-
-        if platform == "linux":
-            subprocess.Popen(["xdg-open", full_name])
-
-        # FIXME: test the following part of the code for windows and macos!
-        elif platform == "darwin":
-            subprocess.Popen(["open", full_name])
-
-        elif platform == "win32":
-            subprocess.Popen(["start", full_name])
 
     def connect_toolbar(self):
         """Connect methods to toolbar."""
@@ -711,6 +695,8 @@ class TableDataBrowser(QTableWidget):
         - delete_from_brick: delete a document from its brick id
         - display_unreset_values: display an error message when trying to
            reset user tags
+        - display_pdf:  tries to display a pdf file in the user's
+          preferred application
         - edit_table_data_values: change values in DataBrowser
         - fill_cells_update_table: initialize and fills the cells of the table
         - fill_headers: initialize and fill the headers of the table
@@ -1279,6 +1265,8 @@ class TableDataBrowser(QTableWidget):
         self.action_multiple_sort = self.menu.addAction("Multiple sort")
         self.action_send_documents_to_pipeline = self.menu.addAction(
             "Send documents to the Pipeline Manager")
+        self.action_display_pdf_file = self.menu.addAction(
+            "Display a pdf file")
 
         action = self.menu.exec_(self.mapToGlobal(position))
         msg = QMessageBox()
@@ -1329,6 +1317,8 @@ class TableDataBrowser(QTableWidget):
             self.multiple_sort_pop_up()
         elif action == self.action_send_documents_to_pipeline:
             self.data_browser.send_documents_to_pipeline()
+        elif action == self.action_display_pdf_file:
+            self.display_pdf()
 
         self.update_colors()
 
@@ -1411,6 +1401,26 @@ class TableDataBrowser(QTableWidget):
         self.msg.setStandardButtons(QMessageBox.Ok)
         self.msg.buttonClicked.connect(self.msg.close)
         self.msg.show()
+
+    def display_pdf(self):
+        """Tries to display a pdf file in the user's preferred application."""
+
+        points = self.selectedIndexes()
+
+        for point in points:
+            row = point.row()
+            scan_path = self.item(row, 0).text()
+            full_name = os.path.join(self.project.folder, scan_path)
+
+            if platform == "linux":
+                subprocess.Popen(["xdg-open", full_name])
+
+            # FIXME: test the following part of the code for windows and macos!
+            elif platform == "darwin":
+                subprocess.Popen(["open", full_name])
+
+            elif platform == "win32":
+                subprocess.Popen(["start", full_name])
 
     def edit_table_data_values(self):
         """Change values in DataBrowser"""
@@ -2297,10 +2307,6 @@ class TableDataBrowser(QTableWidget):
             if not scan_already_in_list:
                 # Scan not in the list, we add it
                 self.scans.append([scan_name, [tag_name]])
-
-        for scan in self.scans:
-            if scan[0].endswith(".pdf"):
-                self.data_browser.connect_pdf_viewer(scan[0])
 
         # image_viewer updated
         if self.link_viewer:
