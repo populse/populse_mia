@@ -5532,8 +5532,9 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # FIXME: the above call to the function leads to a Segmentation
         # fault when the test routine is lauched in AppVeyor.
 
-    @unittest.skip('triggers segmentation fault error')
-    def test_finish_execution(self):
+    # XXX: This method is unstable and should be places at the end of 
+    # the testing routine
+    def test_zz_finish_execution(self):
         '''
         Mocks several objects of the pipeline manager and finishes the 
         execution of the pipeline.
@@ -5546,105 +5547,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Gets the path of one document
-        config = Config(config_path=self.config_path)
-        folder = os.path.abspath(os.path.join(config.get_mia_path(),
-                                              'resources', 'mia', 'project_8',
-                                              'data', 'raw_data'))
-
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
-                      'Guerbet_Anat-RAREpvm-000220_000.nii')
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-        
-        # Sets the mandatory parameters
-        ppl.nodes[''].set_plug_value('in_file', DOCUMENT_1)
-        ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
-
-        ppl_manager.runPipeline()
-
-        # Mock objects of 'pipeline_manager' used during the test
-        ppl_manager.progress = Mock()
-        ppl_manager.progress.worker.status = 'status_value'
-        ppl_manager.last_run_pipeline = Mock()
-        ppl_manager.last_pipeline_name = 'last_pipeline_name_value'
-        ppl_manager._mmovie = Mock()
-
-        # Mock methods of 'ppl_manager' used during the test
-        ppl_manager.main_window.statusBar().showMessage = MagicMock()
-        ppl_manager.show_pipeline_status_action.setIcon = MagicMock()
-        ppl_manager.nodeController.update_parameters = MagicMock()
-        ppl_manager.run_pipeline_action.setDisabled = MagicMock()
-        ppl_manager.garbage_collect_action.setDisabled = MagicMock()
-        ppl_manager.stop_pipeline_action.setEnabled = MagicMock()
-
-        # Connect 'worker' to 'finished_execution' method
-        #(ppl_manager.progress.worker.finished.
-        #                                  connect(ppl_manager.finish_execution))
-
-        # Finish the execution of the pipeline (no errors are thrown)
-        #ppl_manager.finish_execution()
-        # TODO: fix 'core dumped' error, likely triggered by the above 
-        # line
-
-        # Asserts that the mocked objects were called as expected
-        #self.assertEqual('status_value', ppl_manager.last_status)
-        #self.assertFalse(hasattr(ppl_manager, '_mmovie'))
-        #self.assertIsNone(ppl_manager.last_run_log)
-
-        # Asserts that the mocked methods were called as expected
-        #(ppl_manager.stop_pipeline_action.
-        #                              setEnabled.assert_called_once_with(False))
-        #(ppl_manager.last_run_pipeline.get_study_config().
-        #                           engine.raise_for_status.assert_called_once())
-        #(ppl_manager.main_window.statusBar().showMessage.
-        #                                               assert_called_once_with)(
-        #                        'Pipeline "{0}" has been correctly run.'.format(
-        #                                        ppl_manager.last_pipeline_name))
-        #ppl_manager.show_pipeline_status_action.setIcon.assert_called_once()
-        #ppl_manager.nodeController.update_parameters.assert_called_once_with()
-        #(ppl_manager.run_pipeline_action.
-        #                             setDisabled.assert_called_once_with(False))
-        #(ppl_manager.garbage_collect_action.
-        #                             setDisabled.assert_called_once_with(False))
-
-        # Mock objects in order to induce a 'RuntimeError' which is 
-        # treated by the method
-        ppl_manager.progress = Mock()
-        ppl_manager.progress.worker.status = swconstants.WORKFLOW_DONE
-        delattr(ppl_manager.progress.worker, 'exec_id')
-        ppl_manager._mmovie = Mock()
-
-        # Finish the execution of the pipeline with no 'worker.exec_id' 
-        # (an error is thrown)
-        ppl_manager.finish_execution()
-
-        # Asserts that the execution of the pipeline failed
-        self.assertEqual(ppl_manager.last_run_log, 
-                         'Execution aborted before running')
-
-    
-    @unittest.skip('triggers core dumped error')
-    def test_finish_execution1(self):
-        '''
-        Mocks several objects of the pipeline manager and finishes the 
-        execution of the pipeline.
-
-        Notes
-        -----
-        Tests the method PipelineManagerTab.finish_execution.
-        '''
-
-        ppl_manager = self.main_window.pipeline_manager
 
         # Mock objects of 'pipeline_manager' used during the test
         ppl_manager.progress = Mock()
@@ -5666,7 +5568,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                           connect(ppl_manager.finish_execution))
 
         # Finish the execution of the pipeline (no errors are thrown)
-        #ppl_manager.finish_execution()
+        ppl_manager.finish_execution()
         # TODO: fix 'core dumped' error, likely triggered by the above 
         # line
 
@@ -6667,25 +6569,23 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         Tests the PipelineManagerTab.update_node_list.
         """
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        pipeline_manager = self.main_window.pipeline_manager
+        # Sets shortcuts for often used objects
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        
 
         process_class = Rename
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Exports the mandatory inputs and outputs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = 'rename_1'
-        (pipeline_editor_tabs.
-                     get_current_editor)().export_unconnected_mandatory_inputs()
-        (pipeline_editor_tabs.
-                          get_current_editor)().export_all_unconnected_outputs()
+        ppl_edt_tabs.get_current_editor().current_node_name = 'rename_1'
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
         # Initializes the workflow
-        pipeline_manager.workflow = workflow_from_pipeline(
+        ppl_manager.workflow = workflow_from_pipeline(
                                                        pipeline,
                                                        complete_parameters=True)
 
@@ -6694,7 +6594,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertEqual(len(node_list), 0)
 
         # Asserts that the process "Rename" was added to "node_list"
-        pipeline_manager.update_node_list()
+        ppl_manager.update_node_list()
         self.assertEqual(len(node_list), 1)
         self.assertEqual(node_list[0]._nipype_class, 'Rename')
 
@@ -6812,113 +6712,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
     
-    @unittest.skip('triggers core dumped error')
-    def test_z_init_pipeline_2(self):
-        '''
-        Adds a process, mocks several parameters from the pipeline
-        manager and initializes the pipeline.
-
-        Notes
-        -----
-        Tests PipelineManagerTab.init_pipeline.
-        The 'z' prefix places this test at the end of the alphabetically
-        organized routine. This prevents the 'Segmentation Fault' error 
-        to be thrown during the test.
-        '''
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Gets the path of one document
-        config = Config(config_path=self.config_path)
-        folder = os.path.abspath(os.path.join(config.get_mia_path(),
-                                              'resources', 'mia', 'project_8',
-                                              'data', 'raw_data'))
-
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
-                      'Guerbet_Anat-RAREpvm-000220_000.nii')
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-        
-        # Verifies that all the processes were added
-        self.assertEqual(['', 'rename_1'], ppl.nodes.keys())
-        
-        # Initialize the pipeline with missing mandatory parameters
-        ppl_manager.workflow = workflow_from_pipeline(ppl,
-                                                      complete_parameters=True)
-        
-        ppl_manager.update_node_list()
-        init_result = ppl_manager.init_pipeline()
-        #self.assertFalse(init_result)
-        
-        # Sets the mandatory parameters
-        ppl.nodes[''].set_plug_value('in_file', DOCUMENT_1)
-        ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
-
-        # Mocks an iteration pipeline
-        ppl.name = 'Iteration_pipeline'
-        process_it = ProcessIteration(ppl.nodes['rename_1'].process, '')
-        ppl.list_process_in_pipeline.append(process_it)
-
-        # Initialize the pipeline with mandatory parameters set
-        init_result = ppl_manager.init_pipeline(pipeline=ppl)
-
-        # Mocks null requirements and initializes the pipeline
-        ppl_manager.check_requirements = Mock(return_value=None)
-        init_result = ppl_manager.init_pipeline()
-        self.assertFalse(init_result)
-        ppl_manager.check_requirements.assert_called_once_with('global', 
-                                                               message_list=[])
-
-        # Mocks external packages as requirements and initializes the 
-        # pipeline
-        pkgs = ['fsl', 'afni', 'ants', 'matlab', 'spm']
-        req = {'capsul_engine': {'uses': Mock()}}
-
-        for pkg in pkgs:                
-            req['capsul.engine.module.{}'.format(pkg)] = {'directory': False}
-
-        req['capsul_engine']['uses'].get = Mock(return_value=1)
-        ppl_manager.check_requirements = Mock(return_value=req)
-
-        init_result = ppl_manager.init_pipeline()
-        self.assertFalse(init_result)
-
-        # Extra steps for SPM
-        req['capsul.engine.module.spm']['directory'] = True
-        req['capsul.engine.module.spm']['standalone'] = True
-        Config().set_matlab_standalone_path(None)
-
-        init_result = ppl_manager.init_pipeline()
-        self.assertFalse(init_result)
-
-        req['capsul.engine.module.spm']['standalone'] = False
-
-        init_result = ppl_manager.init_pipeline()
-        self.assertFalse(init_result)
-
-        # Deletes an attribute of each package requirement
-        for pkg in pkgs:
-            del req['capsul.engine.module.{}'.format(pkg)]
-
-        init_result = ppl_manager.init_pipeline()
-        self.assertFalse(init_result)
-
-        # Mocks a 'ValueError' in 'workflow_from_pipeline'
-        ppl.find_empty_parameters = Mock(side_effect=ValueError)
-
-        init_result = ppl_manager.init_pipeline()
-        self.assertFalse(init_result)
-
     def test_z_runPipeline(self):
         '''
         Adds a process, export plugs and runs a pipeline.
