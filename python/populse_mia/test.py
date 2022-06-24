@@ -3009,7 +3009,8 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Sets the projects folder path
         config = Config(config_path=self.config_path)
-        config.set_projects_save_path(os.path.split(ppl_manager.project.folder)[0])
+        #config.set_projects_save_path(os.path.split(ppl_manager.project.folder)[0])
+        # FIXME: triggers segmentation fault on windows build
 
         # Mocks the execution of 'PopUpNewProject' and its attributes
         NEW_PROJ_PATH = os.path.join(os.path.split(project_8_path)[0], 
