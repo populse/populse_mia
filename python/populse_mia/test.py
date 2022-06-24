@@ -119,7 +119,7 @@ if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
 
 # capsul import
 from capsul.api import (get_process_instance, Process, ProcessNode,
-                        PipelineNode, Switch)
+                        PipelineNode, Switch, capsul_engine)
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import CapsulEngine
 from capsul.pipeline.pipeline import Pipeline
@@ -3023,7 +3023,6 @@ class TestMIAMainWindow(unittest.TestCase):
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
 
-    #@unittest.skip
     def test_software_preferences_pop_up(self):
         '''
         Opens the preferences pop up and changes parameters.
@@ -3177,7 +3176,6 @@ class TestMIAMainWindow(unittest.TestCase):
         #main_wnd.pop_up_preferences.change_admin_psswd('')
         #QDialog.exec = lambda x: True
         #main_wnd.pop_up_preferences.change_admin_psswd('')
-        # FIXME: the above test on 'change_admin_psswd'
 
         # Mocks the click of the OK button on 'QMessageBox.exec' 
         QMessageBox.exec = lambda x: QMessageBox.Yes
@@ -3191,23 +3189,21 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd.pop_up_preferences.control_checkbox_toggled(main_wnd)
         self.assertFalse(main_wnd.get_controller_version())
 
-        # Tries do edit the config file
+        # Edits the Capsul config file
         QDialog.exec = lambda x: False
-        main_wnd.pop_up_preferences.edit_config_file()
+        capsul_engine.load = lambda x: True
+        main_wnd.pop_up_preferences.edit_capsul_config()
 
-        # Mokcs an edition in the config file
-        config_file = config.config
-        config_file['mock_setting'] = 'mock_value'
-        from json import dumps
-        config_file_plain = dumps(config_file)
+        # Mocks an exception in the QDialog execution
+        exc_1 = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
+        QDialog.exec = exc_1
+        main_wnd.pop_up_preferences.edit_capsul_config()
 
-        # Effectively changes the config file
+        # Mocks an exception in the 'set_capsul_config' call
         QDialog.exec = lambda x: True
-        QPlainTextEdit.toPlainText = lambda x: config_file_plain
-        main_wnd.pop_up_preferences.edit_config_file()
-
-        self.assertTrue('mock_setting' in config.config, 
-                        'the config file could not be changed')
+        exc_2 = lambda x, y: (_ for _ in ()).throw(Exception('mock exception'))
+        Config.set_capsul_config = exc_2
+        main_wnd.pop_up_preferences.edit_capsul_config()
 
         main_wnd.pop_up_preferences.close()
 
