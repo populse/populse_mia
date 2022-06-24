@@ -5848,83 +5848,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         # FIXME: the above call to the function leads to a Segmentation
         # fault when the test routine is lauched in AppVeyor.
 
-    # XXX: This method is unstable and should be placed at the end of 
-    # the testing routine
-    @unittest.skip('triggers a segmentation fault error')
-    def test_zz_finish_execution(self):
-        '''
-        Mocks several objects of the pipeline manager and finishes the 
-        execution of the pipeline.
-
-        Notes
-        -----
-        Tests the method PipelineManagerTab.finish_execution.
-        '''
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        # Mock objects of 'pipeline_manager' used during the test
-        ppl_manager.progress = Mock()
-        ppl_manager.progress.worker.status = 'status_value'
-        ppl_manager.last_run_pipeline = Mock()
-        ppl_manager.last_pipeline_name = 'last_pipeline_name_value'
-        ppl_manager._mmovie = Mock()
-
-        # Mock methods of 'ppl_manager' used during the test
-        ppl_manager.main_window.statusBar().showMessage = MagicMock()
-        ppl_manager.show_pipeline_status_action.setIcon = MagicMock()
-        ppl_manager.nodeController.update_parameters = MagicMock()
-        ppl_manager.run_pipeline_action.setDisabled = MagicMock()
-        ppl_manager.garbage_collect_action.setDisabled = MagicMock()
-        ppl_manager.stop_pipeline_action.setEnabled = MagicMock()
-
-        # Connect 'worker' to 'finished_execution' method
-        #(ppl_manager.progress.worker.finished.
-        #                                  connect(ppl_manager.finish_execution))
-
-        # Finish the execution of the pipeline (no errors are thrown)
-        ppl_manager.finish_execution()
-        # TODO: fix 'core dumped' error, likely triggered by the above 
-        # line
-
-        # Asserts that the mocked objects were called as expected
-        #self.assertEqual('status_value', ppl_manager.last_status)
-        #self.assertFalse(hasattr(ppl_manager, '_mmovie'))
-        #self.assertIsNone(ppl_manager.last_run_log)
-
-        # Asserts that the mocked methods were called as expected
-        #(ppl_manager.stop_pipeline_action.
-        #                              setEnabled.assert_called_once_with(False))
-        #(ppl_manager.last_run_pipeline.get_study_config().
-        #                           engine.raise_for_status.assert_called_once())
-        #(ppl_manager.main_window.statusBar().showMessage.
-        #                                               assert_called_once_with)(
-        #                        'Pipeline "{0}" has been correctly run.'.format(
-        #                                        ppl_manager.last_pipeline_name))
-        #ppl_manager.show_pipeline_status_action.setIcon.assert_called_once()
-        #ppl_manager.nodeController.update_parameters.assert_called_once_with()
-        #(ppl_manager.run_pipeline_action.
-        #                             setDisabled.assert_called_once_with(False))
-        #(ppl_manager.garbage_collect_action.
-        #                             setDisabled.assert_called_once_with(False))
-
-        # Mock objects in order to induce a 'RuntimeError' which is 
-        # treated by the method
-        #ppl_manager.progress = Mock()
-        #ppl_manager.progress.worker.status = swconstants.WORKFLOW_DONE
-        #delattr(ppl_manager.progress.worker, 'exec_id')
-        #ppl_manager._mmovie = Mock()
-
-        # Finish the execution of the pipeline with no 'worker.exec_id' 
-        # (an error is thrown)
-        ppl_manager.finish_execution()
-
-        # Asserts that the execution of the pipeline failed
-        #self.assertEqual(ppl_manager.last_run_log, 
-        #                 'Execution aborted before running')
-
     def test_garbage_collect(self):
         '''
         Mocks several objects of the pipeline manager and collects the 
@@ -7080,7 +7003,84 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertEqual(ppl_manager.last_run_pipeline, ppl)
         self.assertTrue(hasattr(ppl_manager, '_mmovie'))
 
-    def test_zz_del_pack(self):
+    # XXX: This method is unstable and should be placed at the end of 
+    # the testing routine
+    @unittest.skip('triggers a segmentation fault error')
+    def test_zz_finish_execution(self):
+        '''
+        Mocks several objects of the pipeline manager and finishes the 
+        execution of the pipeline.
+
+        Notes
+        -----
+        Tests the method PipelineManagerTab.finish_execution.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+        # Mock objects of 'pipeline_manager' used during the test
+        ppl_manager.progress = Mock()
+        ppl_manager.progress.worker.status = 'status_value'
+        ppl_manager.last_run_pipeline = Mock()
+        ppl_manager.last_pipeline_name = 'last_pipeline_name_value'
+        ppl_manager._mmovie = Mock()
+
+        # Mock methods of 'ppl_manager' used during the test
+        ppl_manager.main_window.statusBar().showMessage = MagicMock()
+        ppl_manager.show_pipeline_status_action.setIcon = MagicMock()
+        ppl_manager.nodeController.update_parameters = MagicMock()
+        ppl_manager.run_pipeline_action.setDisabled = MagicMock()
+        ppl_manager.garbage_collect_action.setDisabled = MagicMock()
+        ppl_manager.stop_pipeline_action.setEnabled = MagicMock()
+
+        # Connect 'worker' to 'finished_execution' method
+        #(ppl_manager.progress.worker.finished.
+        #                                  connect(ppl_manager.finish_execution))
+
+        # Finish the execution of the pipeline (no errors are thrown)
+        ppl_manager.finish_execution()
+        # TODO: fix 'core dumped' error, likely triggered by the above 
+        # line
+
+        # Asserts that the mocked objects were called as expected
+        #self.assertEqual('status_value', ppl_manager.last_status)
+        #self.assertFalse(hasattr(ppl_manager, '_mmovie'))
+        #self.assertIsNone(ppl_manager.last_run_log)
+
+        # Asserts that the mocked methods were called as expected
+        #(ppl_manager.stop_pipeline_action.
+        #                              setEnabled.assert_called_once_with(False))
+        #(ppl_manager.last_run_pipeline.get_study_config().
+        #                           engine.raise_for_status.assert_called_once())
+        #(ppl_manager.main_window.statusBar().showMessage.
+        #                                               assert_called_once_with)(
+        #                        'Pipeline "{0}" has been correctly run.'.format(
+        #                                        ppl_manager.last_pipeline_name))
+        #ppl_manager.show_pipeline_status_action.setIcon.assert_called_once()
+        #ppl_manager.nodeController.update_parameters.assert_called_once_with()
+        #(ppl_manager.run_pipeline_action.
+        #                             setDisabled.assert_called_once_with(False))
+        #(ppl_manager.garbage_collect_action.
+        #                             setDisabled.assert_called_once_with(False))
+
+        # Mock objects in order to induce a 'RuntimeError' which is 
+        # treated by the method
+        #ppl_manager.progress = Mock()
+        #ppl_manager.progress.worker.status = swconstants.WORKFLOW_DONE
+        #delattr(ppl_manager.progress.worker, 'exec_id')
+        #ppl_manager._mmovie = Mock()
+
+        # Finish the execution of the pipeline with no 'worker.exec_id' 
+        # (an error is thrown)
+        ppl_manager.finish_execution()
+
+        # Asserts that the execution of the pipeline failed
+        #self.assertEqual(ppl_manager.last_run_log, 
+        #                 'Execution aborted before running')
+
+    def test_zzz_del_pack(self):
         """ We remove the brick created during the unit tests, and we take
         advantage of this to cover the part of the code used to remove the
         packages """
