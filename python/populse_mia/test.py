@@ -6996,12 +6996,24 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         #capsul_engine = ppl_manager.get_capsul_engine()
         #ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
 
+        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
+        RunProgress.start = lambda x: True
+
+        #from threading import Thread
+        #try:
+        #    t = Thread(target=ppl_manager.runPipeline)
+        #    t.start()
+        #    t.join()
+        #    print('no exception')
+        #except:
+        #    print('exception caugth')
+
         # Runs the pipeline assuring that the it will be initialized
         ppl_manager.runPipeline()
 
         # Asserts that the pipeline has run
         #ppl_manager.initialize.assert_called_once_with()
-        self.assertEqual(len(ppl_manager.brick_list), 0)
+        #self.assertEqual(len(ppl_manager.brick_list), 0)
         self.assertEqual(ppl_manager.last_run_pipeline, ppl)
         self.assertTrue(hasattr(ppl_manager, '_mmovie'))
 
