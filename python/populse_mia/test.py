@@ -3160,22 +3160,54 @@ class TestMIAMainWindow(unittest.TestCase):
         self.assertEqual(main_wnd.pop_up_preferences
                          .spm_standalone_choice.text(), mock_path)
 
-        # Sets the admin passord to be 'mock_admin_password'
-        #admin_password = 'mock_admin_password'
-        #old_psswd = main_wnd.pop_up_preferences.salt + admin_password
-        #from hashlib import sha256
-        #hash_psswd = sha256(old_psswd.encode()).hexdigest()
-        #config.set_admin_hash(hash_psswd)
+        # Sets the admin password to be 'mock_admin_password'
+        admin_password = 'mock_admin_password'
+        old_psswd = main_wnd.pop_up_preferences.salt + admin_password
+        from hashlib import sha256
+        hash_psswd = sha256(old_psswd.encode()).hexdigest()
+        config.set_admin_hash(hash_psswd)
+
+        # Calls 'admin_mode_switch' without checking the box
+        main_wnd.pop_up_preferences.admin_mode_switch()
+
+        # Calls 'admin_mode_switch', mocking the execution of 'QInputDialog'
+        main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
+        QInputDialog.getText = lambda w,x,y,z,: (None, False)
+        main_wnd.pop_up_preferences.admin_mode_switch()
+
+        # Tries to activates admin mode with the wrong password
+        main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
+        QInputDialog.getText = lambda w,x,y,z,: ('mock_wrong_password', True)
+        main_wnd.pop_up_preferences.admin_mode_switch()
+        self.assertFalse(main_wnd.pop_up_preferences.change_psswd.isVisible())
+
+        # Activates admin mode with the correct password
+        QInputDialog.getText = lambda w,x,y,z,: (admin_password, True)
+        main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
+        main_wnd.pop_up_preferences.admin_mode_switch()
+        self.assertTrue(main_wnd.pop_up_preferences.change_psswd.isVisible())
 
         # Mocks the old passowd text field to be 'mock_admin_password'
         # (and the other textfields too!)
         #QLineEdit.text = lambda x: admin_password
 
         # Changes the admin password
-        #QDialog.exec = lambda x: False
-        #main_wnd.pop_up_preferences.change_admin_psswd('')
+        QDialog.exec = lambda x: False
+        main_wnd.pop_up_preferences.change_admin_psswd('')
         #QDialog.exec = lambda x: True
         #main_wnd.pop_up_preferences.change_admin_psswd('')
+
+        # Shows a wrong path pop-up message
+        main_wnd.pop_up_preferences.wrong_path('/mock_path','mock_tool', 
+                                               extra_mess='mock_msg')
+        self.assertTrue(hasattr(main_wnd.pop_up_preferences, 'msg'))
+        self.assertEqual(main_wnd.pop_up_preferences.msg.icon(), QMessageBox.Critical)
+        main_wnd.pop_up_preferences.msg.close()
+
+        # Sets the mainwindow size
+        main_wnd.pop_up_preferences.use_current_mainwindow_size(main_wnd)
+
+
 
         # Mocks the click of the OK button on 'QMessageBox.exec' 
         QMessageBox.exec = lambda x: QMessageBox.Yes
