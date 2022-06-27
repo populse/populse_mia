@@ -3242,20 +3242,28 @@ class TestMIAMainWindow(unittest.TestCase):
 
     def test_software_preferences_pop_up_config_file(self):
         '''
-        Doc
+        Opens the preferences pop up and changes parameters to edit the
+        config file and capsul config file.
+        Tests
+          - PopUpPreferences.edit_config_file
+          - PopUpPreferences.findChar
+          - PopUpPreferences.edit_capsul_config
+
+        Notes
+        -----
+        Mocks
+          - Config.set_capsul_config
+          - QDialog.exec
+          - SettingsEditor.update_gui
         '''
 
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
-        ppl_manager = main_wnd.pipeline_manager
 
         # Creates a new project folder and adds one document to the 
         # project, sets the plug value that is added to the database
-        project_8_path = self.get_new_test_project()
-        ppl_manager.project.folder = project_8_path
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
-                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
-                      
+        #project_8_path = self.get_new_test_project()
+        #ppl_manager.project.folder = project_8_path      
 
         main_wnd.software_preferences_pop_up()
         
@@ -3300,16 +3308,54 @@ class TestMIAMainWindow(unittest.TestCase):
 
         QDialog.exec = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
         main_wnd.pop_up_preferences.edit_capsul_config()
-        
+
         QDialog.exec = lambda x: False
         main_wnd.pop_up_preferences.edit_capsul_config()
         
-        
-
         #main_wnd.pop_up_preferences.validate_and_save = lambda: False
         #main_wnd.pop_up_preferences.edit_capsul_config()
 
-        main_wnd.pop_up_preferences.close()
+        # Validates the Pipeline tab without pressing the 'OK' button
+
+        # Selects non standalone modules
+        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
+            getattr(main_wnd.pop_up_preferences, 'use_' + module + 
+                    '_checkbox').setChecked(True)
+
+        # Validates the Pipeline tab without pressing the 'OK' button
+        main_wnd.pop_up_preferences.validate_and_save()
+
+        config = Config(config_path=self.config_path)
+        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
+            self.assertTrue(getattr(config, 'get_use_'+ module)())
+
+        # Selects non standalone modules
+        for module in ['matlab_standalone', 'spm_standalone']:
+            getattr(main_wnd.pop_up_preferences, 'use_' + module + 
+                    '_checkbox').setChecked(True)
+
+        # Validates the Pipeline tab without pressing the 'OK' button
+        main_wnd.pop_up_preferences.validate_and_save()
+
+        config = Config(config_path=self.config_path)
+        for module in ['matlab_standalone', 'spm_standalone']:
+            self.assertTrue(getattr(config, 'get_use_'+ module)())
+
+        # Validates the all tab after pressing the 'OK' button
+        main_wnd.pop_up_preferences.ok_clicked()
+        # Closes the preferences window
+
+        # Reopens the preferences window
+        main_wnd.software_preferences_pop_up()
+
+        main_wnd.pop_up_preferences.save_checkbox.setChecked(True)
+        main_wnd.pop_up_preferences.control_checkbox.setChecked(True)
+        main_wnd.pop_up_preferences.clinical_mode_checkbox.setChecked(True)
+
+        # Validates the Pipeline tab without pressing the 'OK' button
+        main_wnd.pop_up_preferences.validate_and_save()
+
+        #main_wnd.pop_up_preferences.close()
     
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
