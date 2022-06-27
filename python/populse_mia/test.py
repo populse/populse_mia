@@ -3298,11 +3298,13 @@ class TestMIAMainWindow(unittest.TestCase):
         Config.set_capsul_config = lambda x, y: (_ for _ in ()).throw(Exception('mock exception'))
         main_wnd.pop_up_preferences.edit_capsul_config()
 
+        QDialog.exec = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
+        main_wnd.pop_up_preferences.edit_capsul_config()
+        
         QDialog.exec = lambda x: False
         main_wnd.pop_up_preferences.edit_capsul_config()
         
-        QDialog.exec = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
-        main_wnd.pop_up_preferences.edit_capsul_config()
+        
 
         #main_wnd.pop_up_preferences.validate_and_save = lambda: False
         #main_wnd.pop_up_preferences.edit_capsul_config()
