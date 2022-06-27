@@ -3260,7 +3260,7 @@ class TestMIAMainWindow(unittest.TestCase):
         
         # Tries do edit the config file, mocks failure in 'QDialog.exec'
         QDialog.exec = lambda x: False
-        main_wnd.pop_up_preferences.edit_config_file()
+        main_wnd.pop_up_preferences.c()
         self.assertTrue(hasattr(main_wnd.pop_up_preferences,'editConf'))
         
         # Mocks the execution to change 'user_mode' from 'false' to
