@@ -3295,8 +3295,6 @@ class TestMIAMainWindow(unittest.TestCase):
         #main_wnd.pop_up_preferences.validate_and_save = lambda: True
         main_wnd.pop_up_preferences.edit_capsul_config()
 
-
-
         Config.set_capsul_config = lambda x, y: (_ for _ in ()).throw(Exception('mock exception'))
         main_wnd.pop_up_preferences.edit_capsul_config()
 
