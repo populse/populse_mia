@@ -3240,6 +3240,69 @@ class TestMIAMainWindow(unittest.TestCase):
 
         main_wnd.pop_up_preferences.close()
 
+    def test_software_preferences_pop_up_config_file(self):
+        '''
+        Doc
+        '''
+
+        # Sets shortcuts for objects that are often used
+        main_wnd = self.main_window
+        ppl_manager = main_wnd.pipeline_manager
+
+        # Creates a new project folder and adds one document to the 
+        # project, sets the plug value that is added to the database
+        project_8_path = self.get_new_test_project()
+        ppl_manager.project.folder = project_8_path
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+                      
+        main_wnd.software_preferences_pop_up()
+        
+        # Tries do edit the config file, mocks failure in 'QDialog.exec'
+        QDialog.exec = lambda x: False
+        main_wnd.pop_up_preferences.edit_config_file()
+        self.assertTrue(hasattr(main_wnd.pop_up_preferences,'editConf'))
+        
+        # Mocks the execution to change 'user_mode' from 'false' to
+        # 'true'
+        def mock_exec(x):
+            config_file = main_wnd.pop_up_preferences.editConf.txt.toPlainText()
+            config_file = config_file.replace('user_mode: false', 'user_mode: true')
+            main_wnd.pop_up_preferences.editConf.txt.setPlainText(config_file)
+            return True
+        QDialog.exec = mock_exec
+
+        # Asserts that the 'Config' object was updated
+        main_wnd.pop_up_preferences.edit_config_file()
+        self.assertTrue(Config().get_user_mode())
+
+        # Tries to find an empty string of characters in the config file
+        main_wnd.pop_up_preferences.findChar()
+        
+        # Highlights the string 'user_mode' in the config file
+        main_wnd.pop_up_preferences.findChar_line_edit.setText('user_mode')
+        main_wnd.pop_up_preferences.findChar()
+
+        # Mocks an edition in the config file  
+
+        QDialog.exec = lambda x: True
+        main_wnd.pop_up_preferences.validate_and_save = lambda: True
+        main_wnd.pop_up_preferences.edit_capsul_config()
+
+        Config.set_capsul_config = lambda x, y: (_ for _ in ()).throw(Exception('mock exception'))
+        main_wnd.pop_up_preferences.edit_capsul_config()
+
+        QDialog.exec = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
+        main_wnd.pop_up_preferences.edit_capsul_config()
+
+        QDialog.exec = lambda x: False
+        main_wnd.pop_up_preferences.edit_capsul_config()
+
+        main_wnd.pop_up_preferences.validate_and_save = lambda: False
+        main_wnd.pop_up_preferences.edit_capsul_config()
+
+        main_wnd.pop_up_preferences.close()
+    
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
 
