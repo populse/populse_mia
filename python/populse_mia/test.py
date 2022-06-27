@@ -3256,11 +3256,12 @@ class TestMIAMainWindow(unittest.TestCase):
         NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
                       'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
                       
+
         main_wnd.software_preferences_pop_up()
         
         # Tries do edit the config file, mocks failure in 'QDialog.exec'
         QDialog.exec = lambda x: False
-        main_wnd.pop_up_preferences.c()
+        main_wnd.pop_up_preferences.edit_config_file()
         self.assertTrue(hasattr(main_wnd.pop_up_preferences,'editConf'))
         
         # Mocks the execution to change 'user_mode' from 'false' to
@@ -3274,7 +3275,8 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Asserts that the 'Config' object was updated
         main_wnd.pop_up_preferences.edit_config_file()
-        self.assertTrue(Config().get_user_mode())
+        config = Config(config_path=self.config_path)
+        self.assertTrue(config.get_user_mode())
 
         # Tries to find an empty string of characters in the config file
         main_wnd.pop_up_preferences.findChar()
@@ -3283,23 +3285,29 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd.pop_up_preferences.findChar_line_edit.setText('user_mode')
         main_wnd.pop_up_preferences.findChar()
 
-        # Mocks an edition in the config file  
+        # Mocks the execution of a 'capsul' method
+        from capsul.qt_gui.widgets.settings_editor import SettingsEditor
+        SettingsEditor.update_gui = lambda x: None
+        # This fixes the Mac OS build
 
+        # Mocks the execution
         QDialog.exec = lambda x: True
-        main_wnd.pop_up_preferences.validate_and_save = lambda: True
+        #main_wnd.pop_up_preferences.validate_and_save = lambda: True
         main_wnd.pop_up_preferences.edit_capsul_config()
+
+
 
         Config.set_capsul_config = lambda x, y: (_ for _ in ()).throw(Exception('mock exception'))
         main_wnd.pop_up_preferences.edit_capsul_config()
 
+        QDialog.exec = lambda x: False
+        main_wnd.pop_up_preferences.edit_capsul_config()
+        
         QDialog.exec = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
         main_wnd.pop_up_preferences.edit_capsul_config()
 
-        QDialog.exec = lambda x: False
-        main_wnd.pop_up_preferences.edit_capsul_config()
-
-        main_wnd.pop_up_preferences.validate_and_save = lambda: False
-        main_wnd.pop_up_preferences.edit_capsul_config()
+        #main_wnd.pop_up_preferences.validate_and_save = lambda: False
+        #main_wnd.pop_up_preferences.edit_capsul_config()
 
         main_wnd.pop_up_preferences.close()
     
