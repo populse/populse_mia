@@ -3262,7 +3262,8 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Creates a new project folder and adds one document to the 
         # project, sets the plug value that is added to the database
-        #project_8_path = self.get_new_test_project()
+        project_8_path = self.get_new_test_project()
+        tmp_path = os.path.split(project_8_path)[0]
         #ppl_manager.project.folder = project_8_path      
 
         main_wnd.software_preferences_pop_up()
@@ -3317,6 +3318,18 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Validates the Pipeline tab without pressing the 'OK' button
 
+        # Selects standalone modules
+        for module in ['matlab_standalone', 'spm_standalone']:
+            getattr(main_wnd.pop_up_preferences, 'use_' + module + 
+                    '_checkbox').setChecked(True)
+
+        # Validates the Pipeline tab without pressing the 'OK' button
+        main_wnd.pop_up_preferences.validate_and_save()
+
+        config = Config(config_path=self.config_path)
+        for module in ['matlab_standalone', 'spm_standalone']:
+            self.assertTrue(getattr(config, 'get_use_'+ module)())
+
         # Selects non standalone modules
         for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
             getattr(main_wnd.pop_up_preferences, 'use_' + module + 
@@ -3329,33 +3342,95 @@ class TestMIAMainWindow(unittest.TestCase):
         for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
             self.assertTrue(getattr(config, 'get_use_'+ module)())
 
-        # Selects non standalone modules
-        for module in ['matlab_standalone', 'spm_standalone']:
+        # Validates the Pipeline tab by pressing the 'OK' button
+
+        # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
+        main_wnd.pop_up_preferences.wrong_path = lambda x, y: None
+        QMessageBox.show = lambda x: None
+
+        # Deselects non standalone modules
+        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
             getattr(main_wnd.pop_up_preferences, 'use_' + module + 
-                    '_checkbox').setChecked(True)
+                    '_checkbox').setChecked(False)
 
-        # Validates the Pipeline tab without pressing the 'OK' button
-        main_wnd.pop_up_preferences.validate_and_save()
-
-        config = Config(config_path=self.config_path)
-        for module in ['matlab_standalone', 'spm_standalone']:
-            self.assertTrue(getattr(config, 'get_use_'+ module)())
+        # Deselects the 'radioView', 'adminMode' and 'clinicalMode' option
+        for opt in ['save', 'radioView', 'admin_mode', 'clinical_mode']:
+            (getattr(main_wnd.pop_up_preferences, opt + '_checkbox')
+             .setChecked(False))
+        # The options autoSave, radioView and controlV1 are not selected 
 
         # Validates the all tab after pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
-        # Closes the preferences window
+        
+        config = Config(config_path=self.config_path)
+        for opt in ['isAutoSave', 'isRadioView', 'isControlV1', 
+                    'get_use_clinical']:
+            print(opt)
+            self.assertFalse(getattr(config, opt)())
+        self.assertTrue(config.get_user_mode())
 
         # Reopens the preferences window
-        main_wnd.software_preferences_pop_up()
+        #main_wnd.software_preferences_pop_up()
 
-        main_wnd.pop_up_preferences.save_checkbox.setChecked(True)
-        main_wnd.pop_up_preferences.control_checkbox.setChecked(True)
-        main_wnd.pop_up_preferences.clinical_mode_checkbox.setChecked(True)
+        # Selects the autoSave, radioView and controlV1 options
+        config = Config(config_path=self.config_path)
+        for opt in ['save_checkbox', 'radioView_checkbox', 'control_checkbox',
+                    'admin_mode_checkbox', 'clinical_mode_checkbox']:
+              getattr(main_wnd.pop_up_preferences, opt).setChecked(True)
 
         # Validates the Pipeline tab without pressing the 'OK' button
-        main_wnd.pop_up_preferences.validate_and_save()
+        main_wnd.pop_up_preferences.ok_clicked()
 
-        #main_wnd.pop_up_preferences.close()
+        # Tests the AFNI configuration
+
+        # Enables AFNI
+        main_wnd.pop_up_preferences.use_afni_checkbox.setChecked(True)
+
+        # Sets a directory that does not exists
+        (main_wnd.pop_up_preferences
+         .afni_choice.setText(os.path.join(tmp_path + 'mock')))
+        main_wnd.pop_up_preferences.ok_clicked()
+
+        # Sets a directory that does not contain the 'afni' cmd
+        main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
+        main_wnd.pop_up_preferences.ok_clicked()
+
+        # Asserts that AFNI is disabled in the 'config' object 
+        config = Config(config_path=self.config_path)
+        self.assertFalse(config.get_use_afni())
+
+        import subprocess
+
+        def mock_working_executable(exc_dir, exc_name):
+            # Mocks an executable that echos 'mock executable'
+            exc_name = 'afni'
+            exc_path = os.path.join(exc_dir, exc_name)
+            exc_content = '#!/bin/bash\necho "mock executable"'
+            exc = open(exc_path, 'w')
+            exc.write(exc_content)
+            exc.close()
+            subprocess.run(['chmod', '+x', exc_path])
+
+        def mock_failing_executable(exc_dir, exc_name):
+            # Mocks an executable that echos 'mock executable'
+            exc_name = 'afni'
+            exc_path = os.path.join(exc_dir, exc_name)
+            exc_content = '#!/bin/bash\nech "mock executable"'
+            exc = open(exc_path, 'w')
+            exc.write(exc_content)
+            exc.close()
+            subprocess.run(['chmod', '+x', exc_path])
+
+        main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
+
+        from platform import architecture
+        if architecture()[1] == 'ELF':
+            mock_working_executable(tmp_path, 'afni')
+            main_wnd.pop_up_preferences.ok_clicked()
+            mock_failing_executable(tmp_path, 'afni')
+            main_wnd.pop_up_preferences.ok_clicked()
+
+        main_wnd.pop_up_preferences.close()
     
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
