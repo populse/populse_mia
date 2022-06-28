@@ -3380,29 +3380,13 @@ class TestMIAMainWindow(unittest.TestCase):
         # Validates the Pipeline tab without pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
 
-        # Tests the AFNI configuration
-
-        # Enables AFNI
-        main_wnd.pop_up_preferences.use_afni_checkbox.setChecked(True)
-
-        # Sets a directory that does not exists
-        (main_wnd.pop_up_preferences
-         .afni_choice.setText(os.path.join(tmp_path + 'mock')))
-        main_wnd.pop_up_preferences.ok_clicked()
-
-        # Sets a directory that does not contain the 'afni' cmd
-        main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
-        main_wnd.pop_up_preferences.ok_clicked()
-
-        # Asserts that AFNI is disabled in the 'config' object 
-        config = Config(config_path=self.config_path)
-        self.assertFalse(config.get_use_afni())
-
-        import subprocess
-
-        import platform
+        # Mocks executables to be used as the afni, ants, fslm, matlab 
+        # and spm cmds
 
         def mock_working_executable(exc_dir, exc_name):
+            '''
+            Echos the arguments passed to the executable.
+            '''
 
             system = platform.system()
             if system == 'Linux':
@@ -3423,7 +3407,10 @@ class TestMIAMainWindow(unittest.TestCase):
                 pass              
 
         def mock_failing_executable(exc_dir, exc_name):
-            # Mocks an executable that echos 'mock executable'
+            '''
+            An executable that throws an error when called
+            '''
+
             exc_name = 'afni'
             exc_path = os.path.join(exc_dir, exc_name)
             exc_content = '#!/bin/bash\nech "mock executable"'
@@ -3432,6 +3419,29 @@ class TestMIAMainWindow(unittest.TestCase):
             exc.close()
             subprocess.run(['chmod', '+x', exc_path])
 
+
+        # Tests the AFNI configuration
+
+        # Enables AFNI
+        main_wnd.pop_up_preferences.use_afni_checkbox.setChecked(True)
+
+        # Sets a directory that does not exists
+        (main_wnd.pop_up_preferences
+         .afni_choice.setText(os.path.join(tmp_path + 'mock')))
+        main_wnd.pop_up_preferences.ok_clicked()
+
+        # Sets a directory that does not contain the 'afni' cmd
+        main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
+        main_wnd.pop_up_preferences.ok_clicked()
+
+        # Asserts that AFNI is disabled in the 'config' object 
+        config = Config(config_path=self.config_path)
+        self.assertFalse(config.get_use_afni())
+
+        import subprocess
+        import platform
+
+        
         main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
 
         mock_working_executable(tmp_path, 'afni')
