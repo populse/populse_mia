@@ -3365,7 +3365,6 @@ class TestMIAMainWindow(unittest.TestCase):
         config = Config(config_path=self.config_path)
         for opt in ['isAutoSave', 'isRadioView', 'isControlV1', 
                     'get_use_clinical']:
-            print(opt)
             self.assertFalse(getattr(config, opt)())
         self.assertTrue(config.get_user_mode())
 
@@ -3401,15 +3400,27 @@ class TestMIAMainWindow(unittest.TestCase):
 
         import subprocess
 
+        import platform
+
         def mock_working_executable(exc_dir, exc_name):
-            # Mocks an executable that echos 'mock executable'
-            exc_name = 'afni'
-            exc_path = os.path.join(exc_dir, exc_name)
-            exc_content = '#!/bin/bash\necho "mock executable"'
-            exc = open(exc_path, 'w')
-            exc.write(exc_content)
-            exc.close()
-            subprocess.run(['chmod', '+x', exc_path])
+
+            system = platform.system()
+            if system == 'Linux':
+                exc_content = '#!/bin/bash\necho "mock executable"'
+                exc_path = os.path.join(exc_dir, exc_name)
+                exc = open(exc_path, 'w')
+                exc.write(exc_content)
+                exc.close()
+                subprocess.run(['chmod', '+x', exc_path])
+            elif system == 'Darwin':
+                exc_content = '#!/usr/bin/env bash\necho "mock executable"'
+                exc_path = os.path.join(exc_dir, exc_name)
+                exc = open(exc_path, 'w')
+                exc.write(exc_content)
+                exc.close()
+                subprocess.run(['chmod', '+x', exc_path])
+            else:
+                pass              
 
         def mock_failing_executable(exc_dir, exc_name):
             # Mocks an executable that echos 'mock executable'
@@ -3423,14 +3434,12 @@ class TestMIAMainWindow(unittest.TestCase):
 
         main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
 
-        from platform import architecture
-        if architecture()[1] == 'ELF':
-            mock_working_executable(tmp_path, 'afni')
-            main_wnd.pop_up_preferences.ok_clicked()
-            mock_failing_executable(tmp_path, 'afni')
-            main_wnd.pop_up_preferences.ok_clicked()
+        mock_working_executable(tmp_path, 'afni')
+        main_wnd.pop_up_preferences.ok_clicked()
+        #mock_failing_executable(tmp_path, 'afni')
+        #main_wnd.pop_up_preferences.ok_clicked()
 
-        main_wnd.pop_up_preferences.close()
+        print()
     
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
