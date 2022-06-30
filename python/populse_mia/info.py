@@ -20,9 +20,10 @@ import sys
 
 # Current version
 version_major = 2
-version_minor = 0
-version_micro = 0
+version_minor = 1
+version_micro = 1
 version_extra = "dev"  # leave empty for release
+#version_extra = ""
 
 # Expected by setup.py: string of form "X.Y.Z"
 if version_extra:
@@ -122,11 +123,11 @@ REQUIRES = [
     'jinja2 == 2.8.1',
     'lark-parser >= 0.7.0',
     'matplotlib',
-    'mia-processes >= 2.0.0',
+    'mia-processes >= 2.1.0',
     'nibabel',
     'nipype',
     'pillow',
-    'populse-db >= 2.0.0',
+    'populse-db >= 2.1.0',
     'pyqt5',
     'python-dateutil',
     'pyyaml',
@@ -135,7 +136,7 @@ REQUIRES = [
     'snakeviz',
     'soma_workflow',
     'six >= 1.13',
-    'traits == 5.2.0',  # Remove '==5.2.0' when capsul get a new release
+    'traits',  # Remove '==5.2.0' when capsul get a new release
                         # (> 2.2.1)
 ]
 
