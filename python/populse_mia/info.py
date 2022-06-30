@@ -136,7 +136,7 @@ REQUIRES = [
     'snakeviz',
     'soma_workflow',
     'six >= 1.13',
-    'traits == 5.2.0',  # Remove '==5.2.0' when capsul get a new release
+    'traits',  # Remove '==5.2.0' when capsul get a new release
                         # (> 2.2.1)
 ]
 
