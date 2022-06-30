@@ -3260,6 +3260,10 @@ class TestMIAMainWindow(unittest.TestCase):
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
 
+        # Mocks the execution of 'PopUpPreferences' to speed up the test
+        from populse_mia.user_interface.pop_ups import PopUpPreferences
+        #PopUpPreferences.show = lambda x: None
+
         # Creates a new project folder and adds one document to the 
         # project, sets the plug value that is added to the database
         project_8_path = self.get_new_test_project()
@@ -3299,9 +3303,8 @@ class TestMIAMainWindow(unittest.TestCase):
         SettingsEditor.update_gui = lambda x: None
         # This fixes the Mac OS build
 
-        # Mocks the execution
+        # Mocks the execution of a 'QDialog'
         QDialog.exec = lambda x: True
-        #main_wnd.pop_up_preferences.validate_and_save = lambda: True
         main_wnd.pop_up_preferences.edit_capsul_config()
 
         Config.set_capsul_config = lambda x, y: (_ for _ in ()).throw(Exception('mock exception'))
@@ -3312,11 +3315,40 @@ class TestMIAMainWindow(unittest.TestCase):
 
         QDialog.exec = lambda x: False
         main_wnd.pop_up_preferences.edit_capsul_config()
-        
-        #main_wnd.pop_up_preferences.validate_and_save = lambda: False
-        #main_wnd.pop_up_preferences.edit_capsul_config()
 
+        main_wnd.pop_up_preferences.close()
+
+    def test_software_preferences_pop_up_validate(self):
+        '''
+        Opens the preferences pop up, sets the configuration of the 
+        modules AFNI, ANTS, FSL, SPM and MATLAB without pressing the OK 
+        button and switches the auto-save, controller version and radio 
+        view options.
+
+        Tests
+          - PopUpPreferences.validate_and_save
+
+        Notes
+        -----
+        Mocks
+          - PopUpPreferences.show
+          - QMessageBox.show
+        '''
         # Validates the Pipeline tab without pressing the 'OK' button
+
+        # Sets shortcuts for objects that are often used
+        main_wnd = self.main_window
+
+        # Mocks the execution of 'PopUpPreferences' to speed up the test
+        from populse_mia.user_interface.pop_ups import PopUpPreferences
+        PopUpPreferences.show = lambda x: None
+
+        # Creates a new project folder and adds one document to the 
+        # project, sets the plug value that is added to the database
+        project_8_path = self.get_new_test_project()
+        tmp_path = os.path.split(project_8_path)[0]
+
+        main_wnd.software_preferences_pop_up()
 
         # Selects standalone modules
         for module in ['matlab_standalone', 'spm_standalone']:
@@ -3344,6 +3376,11 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Validates the Pipeline tab by pressing the 'OK' button
 
+        # Sets the projects folder for the preferences window to close 
+        # when pressing on 'OK'
+        (main_wnd.pop_up_preferences.projects_save_path_line_edit
+         .setText(tmp_path))
+
         # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
         main_wnd.pop_up_preferences.wrong_path = lambda x, y: None
         QMessageBox.show = lambda x: None
@@ -3368,89 +3405,21 @@ class TestMIAMainWindow(unittest.TestCase):
             self.assertFalse(getattr(config, opt)())
         self.assertTrue(config.get_user_mode())
 
-        # Reopens the preferences window
-        #main_wnd.software_preferences_pop_up()
+        # Deselects MATLAB and SPM modules from the config file
+        config = Config(config_path=self.config_path)
+        for module in ['matlab', 'spm']:
+            getattr(config, 'set_use_' + module)(False)
+        
+        main_wnd.software_preferences_pop_up() # Reopens the window
 
         # Selects the autoSave, radioView and controlV1 options
-        config = Config(config_path=self.config_path)
         for opt in ['save_checkbox', 'radioView_checkbox', 'control_checkbox',
                     'admin_mode_checkbox', 'clinical_mode_checkbox']:
               getattr(main_wnd.pop_up_preferences, opt).setChecked(True)
 
-        # Validates the Pipeline tab without pressing the 'OK' button
+        # Validates the all tab after pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
 
-        # Mocks executables to be used as the afni, ants, fslm, matlab 
-        # and spm cmds
-
-        def mock_working_executable(exc_dir, exc_name):
-            '''
-            Echos the arguments passed to the executable.
-            '''
-
-            system = platform.system()
-            if system == 'Linux':
-                exc_content = '#!/bin/bash\necho "mock executable"'
-                exc_path = os.path.join(exc_dir, exc_name)
-                exc = open(exc_path, 'w')
-                exc.write(exc_content)
-                exc.close()
-                subprocess.run(['chmod', '+x', exc_path])
-            elif system == 'Darwin':
-                exc_content = '#!/usr/bin/env bash\necho "mock executable"'
-                exc_path = os.path.join(exc_dir, exc_name)
-                exc = open(exc_path, 'w')
-                exc.write(exc_content)
-                exc.close()
-                subprocess.run(['chmod', '+x', exc_path])
-            else:
-                pass              
-
-        def mock_failing_executable(exc_dir, exc_name):
-            '''
-            An executable that throws an error when called
-            '''
-
-            exc_name = 'afni'
-            exc_path = os.path.join(exc_dir, exc_name)
-            exc_content = '#!/bin/bash\nech "mock executable"'
-            exc = open(exc_path, 'w')
-            exc.write(exc_content)
-            exc.close()
-            subprocess.run(['chmod', '+x', exc_path])
-
-
-        # Tests the AFNI configuration
-
-        # Enables AFNI
-        main_wnd.pop_up_preferences.use_afni_checkbox.setChecked(True)
-
-        # Sets a directory that does not exists
-        (main_wnd.pop_up_preferences
-         .afni_choice.setText(os.path.join(tmp_path + 'mock')))
-        main_wnd.pop_up_preferences.ok_clicked()
-
-        # Sets a directory that does not contain the 'afni' cmd
-        main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
-        main_wnd.pop_up_preferences.ok_clicked()
-
-        # Asserts that AFNI is disabled in the 'config' object 
-        config = Config(config_path=self.config_path)
-        self.assertFalse(config.get_use_afni())
-
-        import subprocess
-        import platform
-
-        
-        main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
-
-        mock_working_executable(tmp_path, 'afni')
-        main_wnd.pop_up_preferences.ok_clicked()
-        #mock_failing_executable(tmp_path, 'afni')
-        #main_wnd.pop_up_preferences.ok_clicked()
-
-        print()
-    
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
 
