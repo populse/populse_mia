@@ -3334,14 +3334,15 @@ class TestMIAMainWindow(unittest.TestCase):
           - PopUpPreferences.show
           - QMessageBox.show
         '''
-        # Validates the Pipeline tab without pressing the 'OK' button
+        
+        '''Validates the Pipeline tab without pressing the 'OK' button'''
 
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
 
         # Mocks the execution of 'PopUpPreferences' to speed up the test
         from populse_mia.user_interface.pop_ups import PopUpPreferences
-        PopUpPreferences.show = lambda x: None
+        #PopUpPreferences.show = lambda x: None
 
         # Creates a new project folder and adds one document to the 
         # project, sets the plug value that is added to the database
@@ -3374,7 +3375,7 @@ class TestMIAMainWindow(unittest.TestCase):
         for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
             self.assertTrue(getattr(config, 'get_use_'+ module)())
 
-        # Validates the Pipeline tab by pressing the 'OK' button
+        '''Validates the Pipeline tab by pressing the 'OK' button'''
 
         # Sets the projects folder for the preferences window to close 
         # when pressing on 'OK'
@@ -3394,7 +3395,10 @@ class TestMIAMainWindow(unittest.TestCase):
         for opt in ['save', 'radioView', 'admin_mode', 'clinical_mode']:
             (getattr(main_wnd.pop_up_preferences, opt + '_checkbox')
              .setChecked(False))
-        # The options autoSave, radioView and controlV1 are not selected 
+        # The options autoSave, radioView and controlV1 are not selected
+
+        # Sets the projects save path
+        Config(config_path=self.config_path).set_projects_save_path(tmp_path)
 
         # Validates the all tab after pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
@@ -3404,6 +3408,8 @@ class TestMIAMainWindow(unittest.TestCase):
                     'get_use_clinical']:
             self.assertFalse(getattr(config, opt)())
         self.assertTrue(config.get_user_mode())
+
+        self.assertEqual(config.get_projects_save_path(), tmp_path)
 
         # Deselects MATLAB and SPM modules from the config file
         config = Config(config_path=self.config_path)
@@ -3417,8 +3423,20 @@ class TestMIAMainWindow(unittest.TestCase):
                     'admin_mode_checkbox', 'clinical_mode_checkbox']:
               getattr(main_wnd.pop_up_preferences, opt).setChecked(True)
 
+        # Alternates to minimized mode
+        main_wnd.pop_up_preferences.fullscreen_cbox.setChecked(True)
+
+        # Sets an inexistant projects save path
+        (Config(config_path=self.config_path).
+         set_projects_save_path(os.path.join(tmp_path, 'inexistant')))
+
         # Validates the all tab after pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
+
+        # Asserts that the 'config' objects was not updated with the 
+        # inexistant projects folder
+        config = Config(config_path=self.config_path)
+        self.assertEqual(config.get_projects_save_path(), tmp_path)
 
     def test_software_preferences_pop_up_modules_config(self):
         '''
@@ -3880,6 +3898,542 @@ class TestMIAMainWindow(unittest.TestCase):
         test_spm_matlab_config()
         test_matlab_config()
         test_matlab_mcr_spm_standalone()
+
+    def test_software_preferences_pop_up_modules_config(self):
+        '''
+        Opens the preferences pop up and sets configuration of the 
+        modules AFNI, ANTS, FSL, SPM, MATLAB and MRIFileManager in the 
+        preferences window.
+        Tests
+          - PopUpPreferences.validate_and_save
+
+        Notes
+        -----
+        Mocks
+          - PopUpPreferences.show
+          - QMessageBox.show
+          - QLineEdit.text
+          - QDialog.exec
+          - QMessageBox.exec
+          - QPlainTextEdit.toPlainText
+        '''
+
+        # Sets shortcuts for objects that are often used
+        main_wnd = self.main_window
+
+        # Mocks the execution of 'PopUpPreferences' to speed up the test
+        from populse_mia.user_interface.pop_ups import PopUpPreferences
+        #PopUpPreferences.show = lambda x: None
+
+        # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
+        #QMessageBox.show = lambda x: None
+
+        # Creates a new project folder and adds one document to the 
+        # project, sets the plug value that is added to the database
+        project_8_path = self.get_new_test_project()
+        tmp_path = os.path.split(project_8_path)[0]
+
+        import subprocess
+        import platform
+
+        # Temporary solution that allows test on Linux and MacOS
+        if platform.system() == 'Windows':
+            return
+
+        # Mocks executables to be used as the afni, ants, fslm, matlab 
+        # and spm cmds
+        def mock_executable(exc_dir, exc_name, failing = False, 
+                            output = 'mock executable', 
+                            err_msg = 'mock_error'):
+            '''
+            Creates a working or failing mocked executable, optionally 
+            setting the output and error messages,
+            '''
+
+            system = platform.system()
+
+            if system == 'Linux':
+                exc_content = '#!/bin/bash\necho "{}"'.format(output)
+                if failing: 
+                    exc_content += '\necho "{}" 1>&2\nexit 1'.format(err_msg)
+                exc_path = os.path.join(exc_dir, exc_name)
+                exc = open(exc_path, 'w')
+                exc.write(exc_content)
+                exc.close()
+                subprocess.run(['chmod', '+x', exc_path])
+
+            elif system == 'Darwin':
+                exc_content = '#!/usr/bin/env bash\necho "mock executable"'
+                if failing: 
+                    exc_content += '\necho "{}" 1>&2\nexit 1'.format(err_msg)
+                exc_path = os.path.join(exc_dir, exc_name)
+                exc = open(exc_path, 'w')
+                exc.write(exc_content)
+                exc.close()
+                subprocess.run(['chmod', '+x', exc_path])
+
+            elif system == 'Windows':
+                pass
+                # TODO: build mocked executable for Windows
+
+        # Segment module testing into functions to improve readability 
+        # of the code
+
+        def test_afni_config():
+            '''
+            Tests the AFNI configuration.
+            '''
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Enables AFNI
+            main_wnd.pop_up_preferences.use_afni_checkbox.setChecked(True)
+
+            # Sets a directory that does not exists
+            (main_wnd.pop_up_preferences
+             .afni_choice.setText(os.path.join(tmp_path + 'mock')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Sets a directory that does not contain the AFNI cmd
+            main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Asserts that AFNI is disabled in the 'config' object 
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_use_afni())
+
+            # Sets the path to the AFNI to 'tmp_path'
+            main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
+
+            mock_executable(tmp_path, 'afni', failing=True)
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            mock_executable(tmp_path, 'afni')
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            # Disables AFNI
+            config = Config(config_path=self.config_path)
+            config.set_use_afni(False)
+            config.set_afni_path('')
+
+        def test_ants_config():
+            '''
+            Tests the ANTS configuration.
+            '''
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Enables ANTS
+            main_wnd.pop_up_preferences.use_ants_checkbox.setChecked(True)
+
+            # Sets a directory that does not exists
+            (main_wnd.pop_up_preferences
+             .ants_choice.setText(os.path.join(tmp_path + 'mock')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Sets a directory that does not contain the ANTS cmd
+            main_wnd.pop_up_preferences.ants_choice.setText(tmp_path)
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Asserts that ANTS is disabled in the 'config' object 
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_use_ants())
+
+            # Sets the path to the AFNI to 'tmp_path'
+            main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
+
+            mock_executable(tmp_path, 'SmoothImage', failing=True)
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            mock_executable(tmp_path, 'SmoothImage')
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            # Disables ANTS
+            config = Config(config_path=self.config_path)
+            config.set_use_ants(False)
+            config.set_ants_path('')
+
+        def test_fsl_config():
+            '''
+            Tests the FSL configuration.
+            '''
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Enables FSL
+            main_wnd.pop_up_preferences.use_fsl_checkbox.setChecked(True)
+
+            # Does not set a directory for FSL
+            main_wnd.pop_up_preferences.ok_clicked()
+
+            # Sets paths to the bin and parent directory folders
+            (main_wnd.pop_up_preferences
+             .fsl_choice.setText(os.path.join(tmp_path, 'etc', 'fslconf', 'bin')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            (main_wnd.pop_up_preferences
+             .fsl_choice.setText(os.path.join(tmp_path, 'etc', 'fslconf')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Sets a directory that does not contain the FSL cmd
+            main_wnd.pop_up_preferences.fsl_choice.setText(tmp_path)
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Asserts that FSL is disabled in the 'config' object 
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_use_fsl())
+
+            # Sets the path to the FSL to 'tmp_path'
+            fsl_path = os.path.join(tmp_path, 'bin')
+            os.mkdir(fsl_path)
+            main_wnd.pop_up_preferences.fsl_choice.setText(fsl_path)
+
+            mock_executable(fsl_path, 'flirt', failing=True)
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            mock_executable(fsl_path, 'flirt')
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            # Disables FSL
+            config = Config(config_path=self.config_path)
+            config.set_use_fsl(False)
+            config.set_fsl_config('')
+
+        def test_spm_matlab_config():
+            '''
+            Tests the SPM and MATLAB (licence) configuration.
+            '''
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Enables SPM
+            main_wnd.pop_up_preferences.use_spm_checkbox.setChecked(True)
+
+            # Sets a MATLAB executable path that does not exists
+            (main_wnd.pop_up_preferences
+             .matlab_choice.setText(os.path.join(tmp_path, 'matlab')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Creates a failing MATLAB executable
+            mock_executable(tmp_path, 'matlab', failing=True)
+
+            # Sets the same MATLAB directory in the preferences window and 
+            # in the config object
+            config = Config(config_path=self.config_path)
+            config.set_matlab_path(os.path.join(tmp_path, 'matlab'))
+            #main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Also sets the same SPM directory in the preferenes window and 
+            # in the config object, and a 'tmp_path' as the MATLAB directory
+            config = Config(config_path=self.config_path)
+            config.set_spm_path(tmp_path)
+            main_wnd.pop_up_preferences.spm_choice.setText(tmp_path)
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            config = Config(config_path=self.config_path)
+            self.assertTrue(config.get_use_spm())
+            self.assertTrue(config.get_use_matlab())
+            self.assertFalse(config.get_use_matlab_standalone())
+            # Case where both MATLAB and SPM applications are used
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Resets the MATLAB executable path
+            Config(config_path=self.config_path).set_matlab_path('')
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Creates a working MATLAB executable
+            mock_executable(tmp_path, 'matlab')
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Restricts the permission on the MATLAB executable to induce
+            # an exception on 'subprocess.Popen'
+            subprocess.run(['chmod', '-x', os.path.join(tmp_path, 'matlab')])
+
+            # Resets the MATLAB executable path (which was set by the last
+            # call on 'ok_clicked')
+            Config(config_path=self.config_path).set_matlab_path('')
+
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Case where SPM directory is not valid
+            (main_wnd.pop_up_preferences.spm_choice
+             .setText(os.path.join(tmp_path, 'not_existing')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            main_wnd.pop_up_preferences.close()
+
+            # Disables MATLAB and SPM
+            config = Config(config_path=self.config_path)
+            config.set_use_matlab(False)
+            config.set_use_spm(False)
+            config.set_spm_path('')
+            config.set_matlab_path('')
+
+        def test_matlab_config():
+            '''
+            Tests the MATLAB (license) configuration.
+            '''
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Enables MATLAB
+            main_wnd.pop_up_preferences.use_matlab_checkbox.setChecked(True)
+
+            # Sets the same MATLAB directory on both the preferences 
+            # window and 'config' object
+            main_wnd.pop_up_preferences.matlab_choice.setText(tmp_path)
+            Config(config_path=self.config_path).set_matlab_path(tmp_path)
+
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            # Asserts that MATLAB was enabled and MATLAB standalone 
+            # remains disabled
+            config = Config(config_path=self.config_path)
+            self.assertTrue(config.get_use_matlab())
+            self.assertFalse(config.get_use_matlab_standalone())
+
+            main_wnd.software_preferences_pop_up() # Reopens the window
+
+            # Resets the 'config' object
+            config.set_use_matlab(False)
+
+            # Resets the MATLAB directory
+            main_wnd.pop_up_preferences.matlab_choice.setText('')
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Creates a failing MATLAB executable
+            mock_executable(tmp_path, 'matlab', failing=True)
+
+            # Sets the MATLAB directory to this executable
+            (main_wnd.pop_up_preferences
+             .matlab_choice.setText(os.path.join(tmp_path, 'matlab')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Restricts the permission required to run the MATLAB 
+            # executable to induce an exception on 'subprocess.Popen'
+            subprocess.run(['chmod', '-x', os.path.join(tmp_path, 'matlab')])
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Asserts that MATLAB was still not enabled
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_use_matlab())
+
+            # Creates a working MATLAB executable
+            mock_executable(tmp_path, 'matlab')
+            main_wnd.pop_up_preferences.ok_clicked() # Closes window
+
+            # Asserts that MATLAB was enabled and MATLAB standalone 
+            # remains disabled
+            config = Config(config_path=self.config_path)
+            self.assertTrue(config.get_use_matlab())
+            self.assertFalse(config.get_use_matlab_standalone())
+
+            # Disables MATLAB
+            config = Config(config_path=self.config_path)
+            config.set_use_matlab(False)
+            config.set_matlab_path('')
+
+        def test_matlab_mcr_spm_standalone_config():
+            '''
+            Tests the Matlab MCR and SPM standalone configuration.
+            '''
+
+            main_wnd.software_preferences_pop_up() # Opens the window
+
+            # Enables SPM standalone
+            (main_wnd.pop_up_preferences.use_spm_standalone_checkbox.
+             setChecked(True))
+
+            '''Failing configurations for SPM standalone + MATLAB MCR'''
+
+            # Sets a non exixting directory for MATLAB MCR
+            (main_wnd.pop_up_preferences.matlab_standalone_choice.
+             setText(os.path.join(tmp_path, 'inexistant')))
+
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error message
+
+            # Sets an existing directory for MATLAB MCR, inexistant 
+            # directory for SPM standalone
+            (main_wnd.pop_up_preferences.matlab_standalone_choice.
+             setText(tmp_path))
+            (main_wnd.pop_up_preferences.spm_standalone_choice.
+             setText(os.path.join(tmp_path, 'inexistant')))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Sets existing directories for both MATLAB MCR and SPM 
+            # standalone
+            (main_wnd.pop_up_preferences.spm_standalone_choice.
+             setText(tmp_path))
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Does not find a SPM standalone executable
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Creates a failing SPM standalone executable
+            mock_executable(tmp_path, 'run_spm.sh', failing=True)
+
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            mock_executable(tmp_path, 'run_spm.sh', failing=True, 
+                            err_msg = 'shared libraries')
+
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Restricts the permission required to run the MATLAB 
+            # executable to induce an exception on 'subprocess.Popen'
+            subprocess.run(['chmod', '-x', os.path.join(tmp_path, 'run_spm.sh')])
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_use_spm_standalone())
+            self.assertFalse(config.get_use_matlab_standalone())
+          
+            '''Passing configurations for SPM standalone + MATLAB MCR'''
+
+            # Creates an SPM standalone executable that throws a non
+            # critical error
+            mock_executable(tmp_path, 'run_spm.sh', failing=True, 
+                            output = '_ _ version (standalone)')
+
+            main_wnd.pop_up_preferences.ok_clicked() # Closes window
+
+            
+            config = Config(config_path=self.config_path)
+            self.assertTrue(config.get_use_spm_standalone())
+            self.assertTrue(config.get_use_matlab_standalone())
+
+            # Resets the 'config' object
+            config.set_spm_standalone_path('')
+            config.set_use_spm_standalone(False)
+            config.set_use_matlab_standalone(False)
+
+            main_wnd.software_preferences_pop_up() # Opens the window 
+
+            (main_wnd.pop_up_preferences.use_spm_standalone_checkbox.
+             setChecked(True))
+            main_wnd.pop_up_preferences.spm_standalone_choice.setText(tmp_path)
+
+            mock_executable(tmp_path, 'run_spm.sh')
+
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            config = Config(config_path=self.config_path)
+            self.assertTrue(config.get_use_spm_standalone())
+            self.assertTrue(config.get_use_matlab_standalone())
+
+            # Resets the 'config' object
+            config.set_use_spm_standalone(False)
+            config.set_use_matlab_standalone(False)
+
+            main_wnd.software_preferences_pop_up() # Opens the window 
+            (main_wnd.pop_up_preferences.use_spm_standalone_checkbox.
+             setChecked(True))
+
+            # The same MATLAB directory is already the same on both the 
+            # preferences window and 'config' object, same for SPM 
+            # standalone
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            config = Config(config_path=self.config_path)
+            self.assertTrue(config.get_use_spm_standalone())
+            self.assertTrue(config.get_use_matlab_standalone())
+
+            # Disables MATLAB MCR and SPM standalone
+            config = Config(config_path=self.config_path)
+            config.set_use_matlab_standalone(False)
+            config.set_matlab_standalone_path('')
+            config.set_use_spm_standalone(False)
+            config.set_spm_standalone_path('')
+
+        def test_matlab_mcr_config():
+            '''
+            Tests the Matlab MCR configuration.
+            '''
+
+            main_wnd.software_preferences_pop_up() # Opens the window
+
+            # Enables MATLAB MCR
+            (main_wnd.pop_up_preferences.use_matlab_standalone_checkbox.
+             setChecked(True))
+            # Sets an inexistant path for MATLAB MCR
+            (main_wnd.pop_up_preferences.matlab_standalone_choice.
+             setText(os.path.join(tmp_path, 'inexistant')))
+
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Asserts that it remains disabled
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_use_matlab_standalone())
+            
+            # Sets an existant path for MATLAB MCR
+            (main_wnd.pop_up_preferences.matlab_standalone_choice.
+             setText(tmp_path))
+
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            # Asserts that it is now enabled
+            config = Config(config_path=self.config_path)
+            self.assertTrue(config.get_use_matlab_standalone())
+
+            # Disables MATLAB MCR
+            config.set_use_matlab_standalone(False)
+            config.set_matlab_standalone_path('')
+
+        def test_MRIFileManager_config():
+            '''
+            Tests the MRIFileManager configuration.
+            '''
+            
+            main_wnd.software_preferences_pop_up() # Opens the window
+
+            # Sets an inexistant file path for MRIFileManager
+            (main_wnd.pop_up_preferences.mri_conv_path_line_edit.
+             setText(os.path.join(tmp_path, 'inexistant')))
+
+            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+
+            # Sets an empty string as the file path for MRIFileManager
+            main_wnd.pop_up_preferences.mri_conv_path_line_edit.setText('')
+
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_mri_conv_path())
+
+            main_wnd.software_preferences_pop_up() # Opens the window
+
+            # Creates a MRIFileManager executable
+            mock_executable(tmp_path, 'MRIFileManager.jar')
+
+            # Sets the executable to the MRIFileManager path
+            (main_wnd.pop_up_preferences.mri_conv_path_line_edit.
+             setText(os.path.join(tmp_path, 'MRIFileManager.jar')))
+
+            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+
+            config = Config(config_path=self.config_path)
+            self.assertEqual(config.get_mri_conv_path(), 
+                             os.path.join(tmp_path, 'MRIFileManager.jar'))
+            
+            # Disables the MRIFileManager
+            config.set_mri_conv_path('')
+
+        # Sets the projects save path in order to enable the preferences
+        # window to close
+        Config(config_path=self.config_path).set_projects_save_path(tmp_path)
+
+        # Test the configuration modules AFNI, ANTS, FSL, SPM and MATLAB
+        test_afni_config()
+        test_ants_config()
+        test_fsl_config()
+        test_spm_matlab_config()
+        test_matlab_config()
+        test_matlab_mcr_spm_standalone_config()
+        test_matlab_mcr_config()
+        test_MRIFileManager_config()
 
 class TestMIAPipelineManager(unittest.TestCase):
     """Tests for the pipeline manager tab.
