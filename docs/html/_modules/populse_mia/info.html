@@ -1,22 +1,23 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.info &#8212; populse_mia 2.0.0-dev+87e096a3 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>populse_mia.info &#8212; populse_mia 2.2.1-dev+ed17088d documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.0.0-dev+87e096a3 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+ed17088d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.info</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -52,9 +53,10 @@
 
 <span class="c1"># Current version</span>
 <span class="n">version_major</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">version_minor</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">version_micro</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">version_minor</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">version_micro</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">version_extra</span> <span class="o">=</span> <span class="s2">&quot;dev&quot;</span>  <span class="c1"># leave empty for release</span>
+<span class="c1">#version_extra = &quot;&quot;</span>
 
 <span class="c1"># Expected by setup.py: string of form &quot;X.Y.Z&quot;</span>
 <span class="k">if</span> <span class="n">version_extra</span><span class="p">:</span>
@@ -152,13 +154,13 @@
     <span class="s1">&#39;capsul&#39;</span><span class="p">,</span>
     <span class="s1">&#39;cryptography&#39;</span><span class="p">,</span>
     <span class="s1">&#39;jinja2 == 2.8.1&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;lark-parser &gt;= 0.7.0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;lark-parser &gt;= 0.7.0, &lt; 1.0.0&#39;</span><span class="p">,</span>
     <span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;mia-processes &gt;= 2.0.0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mia-processes &gt;= 2.2.0&#39;</span><span class="p">,</span>
     <span class="s1">&#39;nibabel&#39;</span><span class="p">,</span>
     <span class="s1">&#39;nipype&#39;</span><span class="p">,</span>
     <span class="s1">&#39;pillow&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;populse-db &gt;= 2.0.0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;populse-db &gt;= 2.1.0&#39;</span><span class="p">,</span>
     <span class="s1">&#39;pyqt5&#39;</span><span class="p">,</span>
     <span class="s1">&#39;python-dateutil&#39;</span><span class="p">,</span>
     <span class="s1">&#39;pyyaml&#39;</span><span class="p">,</span>
@@ -167,7 +169,7 @@
     <span class="s1">&#39;snakeviz&#39;</span><span class="p">,</span>
     <span class="s1">&#39;soma_workflow&#39;</span><span class="p">,</span>
     <span class="s1">&#39;six &gt;= 1.13&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;traits == 5.2.0&#39;</span><span class="p">,</span>  <span class="c1"># Remove &#39;==5.2.0&#39; when capsul get a new release</span>
+    <span class="s1">&#39;traits&#39;</span><span class="p">,</span>  <span class="c1"># Remove &#39;==5.2.0&#39; when capsul get a new release</span>
                         <span class="c1"># (&gt; 2.2.1)</span>
 <span class="p">]</span>
 
@@ -194,7 +196,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
