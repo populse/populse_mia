@@ -19,11 +19,11 @@ Populse_mia's linux - macOS installation, pre-requirements
   Note:
     * Depending on your Python setup and OS, the ``python3`` command can be use as the default Python command. Try ``python -V``, if it returns ``Python 3.x.x`` replace all the ``python3`` commands below by ``python``.
 
-    * Populse_mia is ensured to work under Python's 3.5, 3.6 and 3.7 versions. 
+    * Populse_mia is ensured to run on Python's 3.6 and later. 
 
 |
 
-* Make sure to have a java package installed. You can verify it by typing the following in a command line: ::
+* Make sure to have a java package installed . You can verify it by typing the following in a command line: ::
 
         java -version
 
