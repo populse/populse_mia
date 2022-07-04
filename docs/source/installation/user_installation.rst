@@ -24,7 +24,7 @@ Pre-requirements
 Installation
 ------------
 
-* First download the archive `here <https://github.com/servoz/populse_mia_install/archive/master.zip>`_.
+* First download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
 
 |
 
