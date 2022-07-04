@@ -19,12 +19,14 @@ Populse_MIA's documentation
 Operating mode
 --------------
 
-Populse_MIA has two operating modes: 
-  * User mode
-      * When creating a project, more default tags are stored in the database
+Populse_MIA has two operating modes:
+
+  * Clinical mode
+      * When creating a project, more default tags are stored in the database (ex. Age, Sex, Pathologie, etc.)
       * Process library disabled (no pipeline creation)
+
   * Research mode
-      * When creating a project, MIA default tags are stored in the database
+      * When creating a project, Mia's default tags are stored in the database
       * Process library enabled
 
-To modify it, go to the software preferences (File > MIA preferences) and disable/enable “User mode”.
+To modify it, go to the software preferences (File > MIA preferences) and disable/enable “Clinical mode”.
