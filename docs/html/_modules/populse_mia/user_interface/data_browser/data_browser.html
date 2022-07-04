@@ -1,22 +1,23 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.0.0-dev+87e096a3 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.2.1-dev+ed17088d documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.0.0-dev+87e096a3 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+ed17088d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -55,13 +56,16 @@
 
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">platform</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QTableWidgetItem</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span> <span class="n">QToolBar</span><span class="p">,</span> <span class="n">QToolButton</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QProgressDialog</span><span class="p">,</span> <span class="n">QDoubleSpinBox</span><span class="p">,</span>
     <span class="n">QDateTimeEdit</span><span class="p">,</span> <span class="n">QDateEdit</span><span class="p">,</span> <span class="n">QTimeEdit</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span>
@@ -69,33 +73,33 @@
     <span class="n">QAbstractItemView</span><span class="p">)</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="k">import</span> <span class="n">RapidSearch</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AdvancedSearch</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.count_table</span> <span class="k">import</span> <span class="n">CountTable</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="k">import</span> <span class="n">ModifyTable</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.mini_viewer</span> <span class="k">import</span> <span class="n">MiniViewer</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.count_table</span> <span class="kn">import</span> <span class="n">CountTable</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="kn">import</span> <span class="n">ModifyTable</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.mini_viewer</span> <span class="kn">import</span> <span class="n">MiniViewer</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
                        <span class="n">ClickableLabel</span><span class="p">,</span> <span class="n">PopUpAddPath</span><span class="p">,</span> <span class="n">PopUpAddTag</span><span class="p">,</span> <span class="n">PopUpCloneTag</span><span class="p">,</span>
                        <span class="n">PopUpDataBrowserCurrentSelection</span><span class="p">,</span> <span class="n">PopUpMultipleSort</span><span class="p">,</span>
                        <span class="n">PopUpProperties</span><span class="p">,</span> <span class="n">PopUpRemoveScan</span><span class="p">,</span> <span class="n">PopUpRemoveTag</span><span class="p">,</span>
                        <span class="n">PopUpSelectFilter</span><span class="p">,</span> <span class="n">PopUpShowHistory</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">check_value_type</span><span class="p">,</span> <span class="n">set_item_data</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">check_value_type</span><span class="p">,</span> <span class="n">set_item_data</span><span class="p">,</span>
                                      <span class="n">table_to_database</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">TAG_HISTORY</span><span class="p">,</span>
     <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span> <span class="n">TAG_ORIGIN_USER</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 
 <span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+
 
 <span class="c1"># Variable shown everywhere when no value for the tag</span>
 <span class="n">not_defined_value</span> <span class="o">=</span> <span class="s2">&quot;*Not Defined*&quot;</span>
@@ -114,12 +118,14 @@
 <span class="sd">        - clone_tag_pop_up: display the clone tag pop-up</span>
 <span class="sd">        - connect_actions: connect actions method to views</span>
 <span class="sd">        - connect_mini_viewer: display the selected documents in the viewer</span>
+<span class="sd">        - connect_pdf_viewer: tries to display a pdf file in the user&#39;s</span>
+<span class="sd">          preferred application</span>
 <span class="sd">        - connect_toolbar: connect toolbar views to methods</span>
 <span class="sd">        - create_view_actions: create the actions of the tab</span>
 <span class="sd">        - create_toolbar_view: create the toolbar views</span>
 <span class="sd">        - count_table_pop_up: open the count table</span>
 <span class="sd">        - move_splitter: check if the viewer&#39;s splitter is at its lowest</span>
-<span class="sd">           position</span>
+<span class="sd">          position</span>
 <span class="sd">        - open_filter: open a project filter that has already been saved</span>
 <span class="sd">        - open_filter_infos: apply the current filter</span>
 <span class="sd">        - remove_tag_infos: remove user tags after the pop-up</span>
@@ -127,14 +133,14 @@
 <span class="sd">        - reset_search_bar: reset the rapid search bar</span>
 <span class="sd">        - run_advanced_search: launch the advanced search</span>
 <span class="sd">        - search_str: search a string in the table and updates the</span>
-<span class="sd">           visualized documents</span>
+<span class="sd">          visualized documents</span>
 <span class="sd">        - send_documents_to_pipeline: send the current list of scans to the</span>
-<span class="sd">           Pipeline Manager</span>
+<span class="sd">          Pipeline Manager</span>
 <span class="sd">        - update_database: update the database in the software</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DataBrowser.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<div class="viewcode-block" id="DataBrowser.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the data_browser class</span>
 
 <span class="sd">        :param project: current project in the software</span>
@@ -361,6 +367,20 @@
                         <span class="n">full_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">verify_slices</span><span class="p">(</span><span class="n">full_names</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataBrowser.connect_pdf_viewer"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_pdf_viewer">[docs]</a>    <span class="k">def</span> <span class="nf">connect_pdf_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tries to display a pdf file in the user&#39;s preferred application.&quot;&quot;&quot;</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">scan</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;xdg-open&quot;</span><span class="p">,</span> <span class="n">full_name</span><span class="p">])</span>
+
+        <span class="c1"># FIXME: test the following part of the code for windows and macos!</span>
+        <span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">full_name</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">full_name</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="DataBrowser.connect_toolbar"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_toolbar">[docs]</a>    <span class="k">def</span> <span class="nf">connect_toolbar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connect methods to toolbar.&quot;&quot;&quot;</span>
@@ -666,7 +686,7 @@
 <div class="viewcode-block" id="DateFormatDelegate"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate">[docs]</a><span class="k">class</span> <span class="nc">DateFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delegate that is used to handle dates in the TableDataBrowser.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DateFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DateFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DateFormatDelegate.createEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.createEditor">[docs]</a>    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
@@ -680,7 +700,7 @@
 <div class="viewcode-block" id="DateTimeFormatDelegate"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate">[docs]</a><span class="k">class</span> <span class="nc">DateTimeFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delegate that is used to handle date &amp; time in the TableDataBrowser.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DateTimeFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DateTimeFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DateTimeFormatDelegate.createEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.createEditor">[docs]</a>    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
@@ -694,7 +714,7 @@
 <div class="viewcode-block" id="NumberFormatDelegate"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate">[docs]</a><span class="k">class</span> <span class="nc">NumberFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delegate that is used to handle numbers in the TableDataBrowser.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="NumberFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="NumberFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">QItemDelegate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NumberFormatDelegate.createEditor"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.createEditor">[docs]</a>    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
@@ -757,7 +777,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TableDataBrowser.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">data_browser</span><span class="p">,</span> <span class="n">tags_to_display</span><span class="p">,</span>
+<div class="viewcode-block" id="TableDataBrowser.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">data_browser</span><span class="p">,</span> <span class="n">tags_to_display</span><span class="p">,</span>
                  <span class="n">update_values</span><span class="p">,</span> <span class="n">activate_selection</span><span class="p">,</span> <span class="n">link_viewer</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the class</span>
 
@@ -1571,7 +1591,7 @@
         <span class="k">try</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">main_window</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                <span class="kn">from</span> <span class="nn">PyQt5.QtTest</span> <span class="k">import</span> <span class="n">QTest</span>
+                <span class="kn">from</span> <span class="nn">PyQt5.QtTest</span> <span class="kn">import</span> <span class="n">QTest</span>
                 <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -1902,7 +1922,9 @@
                                 <span class="n">brick_name_button</span><span class="o">.</span><span class="n">moveToThread</span><span class="p">(</span>
                                                <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">thread</span><span class="p">())</span>
 
-                                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                                <span class="n">bricks_copy</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">}</span>
+
+                                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">bricks_copy</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
                                     <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">brick_uuid</span> <span class="ow">and</span>
                                             <span class="n">key</span> <span class="o">==</span> <span class="n">widget_to_move</span><span class="o">.</span><span class="n">findChildren</span><span class="p">(</span>
@@ -1910,6 +1932,8 @@
                                         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">[</span>
                                                  <span class="n">brick_name_button</span><span class="p">]</span> <span class="o">=</span> <span class="n">brick_uuid</span>
+
+                                <span class="k">del</span> <span class="n">bricks_copy</span>
 
                                 <span class="n">brick_name_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span>
                                                         <span class="bp">self</span><span class="o">.</span><span class="n">show_brick_history</span><span class="p">,</span>
@@ -1946,7 +1970,9 @@
                                 <span class="n">brick_name_button</span><span class="o">.</span><span class="n">moveToThread</span><span class="p">(</span>
                                                <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">thread</span><span class="p">())</span>
 
-                                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                                <span class="n">bricks_copy</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">}</span>
+
+                                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">bricks_copy</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
                                     <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">brick_uuid</span> <span class="ow">and</span>
                                             <span class="n">key</span> <span class="o">==</span> <span class="n">widget_wrong_row</span><span class="o">.</span>
@@ -1954,6 +1980,8 @@
                                         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">[</span>
                                                  <span class="n">brick_name_button</span><span class="p">]</span> <span class="o">=</span> <span class="n">brick_uuid</span>
+
+                                <span class="k">del</span> <span class="n">bricks_copy</span>
 
                                 <span class="n">brick_name_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span>
                                                   <span class="bp">self</span><span class="o">.</span><span class="n">show_brick_history</span><span class="p">,</span>
@@ -2303,6 +2331,10 @@
                 <span class="c1"># Scan not in the list, we add it</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">scan_name</span><span class="p">,</span> <span class="p">[</span><span class="n">tag_name</span><span class="p">]])</span>
 
+        <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scan</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.pdf&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">connect_pdf_viewer</span><span class="p">(</span><span class="n">scan</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
         <span class="c1"># image_viewer updated</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_viewer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">connect_mini_viewer</span><span class="p">()</span></div>
@@ -2611,7 +2643,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TimeFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeFormatDelegate.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the class</span>
 
 <span class="sd">        :param parent: QWidget parent</span>
@@ -2642,7 +2674,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, populse.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
