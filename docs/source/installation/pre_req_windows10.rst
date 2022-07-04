@@ -78,11 +78,11 @@ Populse_mia's Windows-PowerShell installation, pre-requirements
 
 |
 
-* Make sure you have Git installed. You can verify it by typing in PowerShell: ::
+* Make sure you have git installed. You can verify it by typing in PowerShell: ::
 
     git --version
 
-  * If Git is not installed, you need to `install it <https://git-scm.com/download/win>`__:
+  * If git is not installed, you need to `install it <https://git-scm.com/download/win>`__:
 
     * Download the executable for your specific distribution (64 or 32 bits).
     * Run it.
@@ -102,6 +102,12 @@ Populse_mia's Windows-PowerShell installation, pre-requirements
      :align: center
 
   * Select the C++ Build Tools and install it.
+
+|
+
+* Make sure you have git-lfs installed. You can verify it by typing in PowerShell: ::
+
+    git-lfs -v
 
 |
 
