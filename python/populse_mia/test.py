@@ -7639,14 +7639,18 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         init_result = ppl_manager.init_pipeline()
         self.assertFalse(init_result)
     
-    @unittest.skip('triggers a segmentation fault error')
     def test_z_runPipeline(self):
         '''
         Adds a process, export plugs and runs a pipeline.
+        Tests
+        - PipelineManagerTab.runPipeline
+        - PipelineManagerTab.finish_execution
+        - RunProgress
+        - RunWorker
 
         Notes
         -----
-        Tests PipelineManagerTab.runPipeline.
+        Mocks
         '''
 
         # Sets shortcuts for objects that are often used
@@ -7654,16 +7658,17 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
 
-        # Gets the path of one document
-        config = Config(config_path=self.config_path)
-        folder = os.path.abspath(os.path.join(config.get_mia_path(),
-                                              'resources', 'mia', 'project_8',
-                                              'data', 'raw_data'))
-
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
-                      'Guerbet_Anat-RAREpvm-000220_000.nii')
-
+        # Creates a new project folder and adds one document to the 
+        # project, sets the plug value that is added to the database
+        project_8_path = self.get_new_test_project()
+        ppl_manager.project.folder = project_8_path
+        folder = os.path.join(project_8_path,'data','raw_data')
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+        # Switches to pipiline manager tab
+        self.main_window.tabs.setCurrentIndex(2)
         
         # Adds a Rename processes, creates the 'rename_1' node
         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
@@ -7676,34 +7681,28 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl.nodes[''].set_plug_value('in_file', DOCUMENT_1)
         ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
 
-        # Mocks 'initialize' in order to avoid 'Segmentation Fault'
-        #ppl_manager.test_init = True
-        #ppl_manager.initialize = Mock()
+        # Mocks the allocation of the pipeline into another thread
+        from PyQt5.QtCore import QThread
+        QThread.start = lambda x: print('QThread.start was called')
 
-        # Runs the pipeline assuring that it will be initialized
-        #capsul_engine = ppl_manager.get_capsul_engine()
-        #ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
-
-        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
-        RunProgress.start = lambda x: True
-
-        #from threading import Thread
-        #try:
-        #    t = Thread(target=ppl_manager.runPipeline)
-        #    t.start()
-        #    t.join()
-        #    print('no exception')
-        #except:
-        #    print('exception caugth')
-
-        # Runs the pipeline assuring that the it will be initialized
+        # Pipeline fails while running, due to capsul import error
         ppl_manager.runPipeline()
 
-        # Asserts that the pipeline has run
-        #ppl_manager.initialize.assert_called_once_with()
-        #self.assertEqual(len(ppl_manager.brick_list), 0)
+        # Directly runs the 'QThread' object, as the only solution found
+        # to run the pipeline during the test routine
+        ppl_manager.progress.worker.run()
+
+        # Sends the signal to finish the pipeline
+        ppl_manager.progress.worker.finished.emit()
+
         self.assertEqual(ppl_manager.last_run_pipeline, ppl)
-        self.assertTrue(hasattr(ppl_manager, '_mmovie'))
+        
+        # Pipeline is stopped by the user, the pipeline fails before
+        # running
+        ppl_manager.runPipeline()
+        ppl_manager.stop_execution()
+        ppl_manager.progress.worker.run()
+        ppl_manager.progress.worker.finished.emit()
 
     # XXX: This method is unstable and should be placed at the end of 
     # the testing routine
