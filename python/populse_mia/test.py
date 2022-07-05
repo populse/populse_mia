@@ -1557,90 +1557,180 @@ class TestMIADataBrowser(unittest.TestCase):
                           "pvm-000142_400.nii"])
 
     def test_remove_scan(self):
-        """
-        Tests scans removal in the DataBrowser
-        """
+        '''
+        Creates a new project, adds scans to the session and remove 
+        them.
+        Tests
+         - PipelineManagerTab.remove_scan
+         - PopUpRemoveScan
 
+        Notes
+        -----
+        Mocks PopUpRemoveScan.exec.
+        - 
+         
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        data_browser = self.main_window.data_browser
+        tb_data = data_browser.table_data
+        session = self.main_window.project.session
+
+        # Creates a new project folder
         project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_8")
+        ppl_manager.project.folder = project_8_path
+        folder = os.path.join(project_8_path,'data','raw_data')
 
-        scans_displayed = []
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        NII_FILE_2 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-05-G4_'
+                      'Guerbet_T1SE_800-RAREpvm-000142_400.nii')
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
 
-        for row in range(0,
-                         self.main_window.data_browser.table_data.rowCount()):
-            item = self.main_window.data_browser.table_data.item(row, 0)
-            scan_name = item.text()
+        # Adds 2 scans to the current session
+        session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+        session.add_document(COLLECTION_INITIAL, DOCUMENT_1)
+        session.add_document(COLLECTION_CURRENT, DOCUMENT_2)
+        session.add_document(COLLECTION_INITIAL, DOCUMENT_2)
+        ppl_manager.scan_list.append(DOCUMENT_1)
+        ppl_manager.scan_list.append(DOCUMENT_2)
+        data_browser.data_sent = True
 
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                scans_displayed.append(scan_name)
+        # Refreshes the data browser tab
+        self.main_window.update_project(project_8_path)
 
-        self.assertEqual(len(scans_displayed), 9)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
-                        "-000220_000.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm"
-                        "-000940_800.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm"
-                        "-000940_800.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
-                        "-000220_000.nii" in scans_displayed)
+        from populse_mia.user_interface.pop_ups import PopUpRemoveScan
 
-        # Trying to remove a scan
-        self.main_window.data_browser.table_data.selectRow(0)
-        self.main_window.data_browser.table_data.remove_scan()
-        scans_displayed = []
+        # Selects all scans
+        tb_data.selectColumn(0)
 
-        for row in range(0,
-                         self.main_window.data_browser.table_data.rowCount()):
-            item = self.main_window.data_browser.table_data.item(row, 0)
-            scan_name = item.text()
+        # Cancels removing both scans
+        PopUpRemoveScan.exec = lambda x: tb_data.pop.cancel_clicked()
+        data_browser.table_data.remove_scan()
 
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                scans_displayed.append(scan_name)
+        # Rejects removing both scans
+        PopUpRemoveScan.exec = lambda x: tb_data.pop.no_all_clicked()
+        data_browser.table_data.remove_scan()
 
-        self.assertEqual(len(scans_displayed), 8)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm"
-                        "-000940_800.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm"
-                        "-000940_800.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
-                        "-000142_400.nii" in scans_displayed)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
-                        "-000220_000.nii" in scans_displayed)
+        # Asserts that the data browser kept both scans
+        self.assertEqual(len(tb_data.scans), 2)
+
+        # Effectively removes both scans
+        PopUpRemoveScan.exec = lambda x: tb_data.pop.yes_all_clicked()
+        data_browser.table_data.remove_scan()
+
+        # Asserts that the scans were deleted
+        self.assertEqual(len(tb_data.scans), 0)
+
+        # Adds one scan to the current session
+        session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+        session.add_document(COLLECTION_INITIAL, DOCUMENT_1)
+        self.main_window.update_project(project_8_path)
+        ppl_manager.scan_list.append(DOCUMENT_1)
+
+        # Selects the scan
+        data_browser.table_data.selectColumn(0)
+
+        # Removes the scan
+        PopUpRemoveScan.exec = lambda x: tb_data.pop.yes_clicked()
+        data_browser.table_data.remove_scan()
+
+        # Asserts that the scans were deleted
+        self.assertEqual(len(tb_data.scans), 0)
+
+
+
+        print()
+
+        
+        
+
+        #project_8_path = self.get_new_test_project()
+        #self.main_window.switch_project(project_8_path, "project_8")
+#
+        
+
+        #scans_displayed = []
+#
+        #for row in range(0,
+        #                 self.main_window.data_browser.table_data.rowCount()):
+        #    item = self.main_window.data_browser.table_data.item(row, 0)
+        #    scan_name = item.text()
+#
+        #    if not self.main_window.data_browser.table_data.isRowHidden(row):
+        #        scans_displayed.append(scan_name)
+#
+        #self.assertEqual(len(scans_displayed), 9)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
+        #                "-000220_000.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm"
+        #                "-000940_800.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm"
+        #                "-000940_800.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
+        #                "-000220_000.nii" in scans_displayed)
+#
+        ## Trying to remove a scan
+        #self.main_window.data_browser.table_data.selectRow(0)
+        #self.main_window.data_browser.table_data.remove_scan()
+        #scans_displayed = []
+#
+        #for row in range(0,
+        #                 self.main_window.data_browser.table_data.rowCount()):
+        #    item = self.main_window.data_browser.table_data.item(row, 0)
+        #    scan_name = item.text()
+#
+        #    if not self.main_window.data_browser.table_data.isRowHidden(row):
+        #        scans_displayed.append(scan_name)
+#
+        #self.assertEqual(len(scans_displayed), 8)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm"
+        #                "-000940_800.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm"
+        #                "-000940_800.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
+        #                "-000142_400.nii" in scans_displayed)
+        #self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+        #                "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
+        #                "-000220_000.nii" in scans_displayed)
+
+        print()
 
     def test_remove_tag(self):
         """
@@ -7682,7 +7772,9 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
 
         # Mocks the allocation of the pipeline into another thread
-        QThread.start = lambda x, y: print('QThread.start was called')
+        # This funciton seem to require a different number of arguments
+        # depending of the platform, therefore a 'Mock' is used
+        QThread.start = Mock()
 
         # Pipeline fails while running, due to capsul import error
         ppl_manager.runPipeline()
@@ -7695,6 +7787,8 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager.progress.worker.finished.emit()
 
         self.assertEqual(ppl_manager.last_run_pipeline, ppl)
+        QThread.start.assert_called_once()
+        
         
         # Pipeline is stopped by the user, the pipeline fails before
         # running
