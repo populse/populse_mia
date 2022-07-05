@@ -15,11 +15,9 @@ Populse_mia's developer installation
 Pre-requirements
 ----------------
 
-* `For linux - macOS <./pre_req_linux.html>`_
+* `For linux - macOS <./host_pre_req_linux_macos.html>`_
 
-|
-
-* `For Windows 10 <./pre_req_windows10.html>`_
+* `For Windows 10 <./host_pre_req_windows10.html>`_
 
 Installation
 ------------
