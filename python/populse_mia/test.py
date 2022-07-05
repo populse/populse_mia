@@ -22,7 +22,7 @@
 
 from PyQt5 import QtGui
 from PyQt5.QtCore import (QCoreApplication, QEvent, QPoint, Qt, QTimer,
-                          QT_VERSION_STR)
+                          QThread, QT_VERSION_STR)
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QDialog, QMessageBox, QInputDialog,
                              QTableWidgetItem, QFileDialog, QLineEdit, 
@@ -50,6 +50,10 @@ from pathlib import Path
 from traits.api import Undefined, TraitListObject
 from unittest.mock import Mock, MagicMock
 import copy
+import subprocess
+import platform
+from hashlib import sha256
+from platform import architecture
 
 sys.settrace
 
@@ -121,11 +125,12 @@ if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
 from capsul.api import (get_process_instance, Process, ProcessNode,
                         PipelineNode, Switch, capsul_engine)
 from capsul.attributes.completion_engine import ProcessCompletionEngine
-from capsul.engine import CapsulEngine
+from capsul.engine import CapsulEngine, WorkflowExecutionError
 from capsul.pipeline.pipeline import Pipeline
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
+from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
 # mia_processes import
 from mia_processes.bricks.tools import Input_Filter
@@ -138,7 +143,7 @@ from populse_mia.data_manager.project import (COLLECTION_BRICK,
                                               TAG_BRICKS, TAG_CHECKSUM,
                                               TAG_EXP_TYPE, TAG_FILENAME,
                                               TAG_HISTORY, TAG_ORIGIN_USER,
-                                              TAG_TYPE)
+                                              TAG_TYPE, TYPE_NII)
 from populse_mia.data_manager.project_properties import SavedProjects
 from populse_mia.software_properties import Config, verCmp
 from populse_mia.user_interface.data_browser.modify_table import ModifyTable
@@ -152,13 +157,31 @@ from populse_mia.user_interface.pipeline_manager.process_library import (
                                                            InstallProcesses,
                                                            PackageLibraryDialog)
 from populse_mia.user_interface.pop_ups import (PopUpNewProject,
-                                                PopUpOpenProject, PopUpQuit)
+                                                PopUpOpenProject, PopUpQuit,
+                                                PopUpInheritanceDict,
+                                                PopUpSelectTagCountTable,
+                                                PopUpClosePipeline,
+                                                PopUpPreferences,
+                                                PopUpDeleteProject,
+                                                PopUpDeletedProject,
+                                                PopUpSelectTag,
+                                                PopUpAddPath,
+                                                PopUpAddTag,
+                                                DefaultValueListCreation, 
+                                                DefaultValueQLineEdit)
 from populse_mia.utils.utils import check_value_type, table_to_database
 
 # populse_db import
 from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_DATETIME, FIELD_TYPE_INTEGER,
-                                 FIELD_TYPE_STRING, FIELD_TYPE_TIME)
+                                 FIELD_TYPE_STRING, FIELD_TYPE_TIME,
+                                 FIELD_TYPE_LIST_BOOLEAN, 
+                                 FIELD_TYPE_LIST_DATE, 
+                                 FIELD_TYPE_LIST_DATETIME, 
+                                 FIELD_TYPE_LIST_FLOAT, 
+                                 FIELD_TYPE_LIST_INTEGER, 
+                                 FIELD_TYPE_LIST_STRING, 
+                                 FIELD_TYPE_LIST_TIME)
 
 # soma_workflow import
 from soma_workflow import constants as swconstants
@@ -359,7 +382,6 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Tries to add invalid document path
         add_path.file_line_edit.setText(DOCUMENT_1+'_')
-        from populse_mia.data_manager.project import TYPE_NII
         add_path.type_line_edit.setText(TYPE_NII)
         QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
         self.assertEqual(add_path.msg.text(), "Invalid arguments")
@@ -1263,7 +1285,6 @@ class TestMIADataBrowser(unittest.TestCase):
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
 
         # Adds the document to the data browser
-        from populse_mia.user_interface.pop_ups import PopUpSelectTag, PopUpAddPath
         addPath = PopUpAddPath(data_browser.project, data_browser)
         addPath.file_line_edit.setText(DOCUMENT_1)
         addPath.save_path()
@@ -1276,7 +1297,8 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Opens the tags pop-up and selects one tab
         data_browser.viewer.openTagsPopUp()
-        data_browser.viewer.popUp.list_widget_tags.item(0).setCheckState(Qt.Checked)
+        (data_browser.viewer.popUp.list_widget_tags.item(0).
+         setCheckState(Qt.Checked))
         data_browser.viewer.popUp.ok_clicked()
 
     def test_popUpDeletedProject(self):
@@ -1300,7 +1322,6 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
 
         # Mocks the execution of a dialog box
-        from populse_mia.user_interface.pop_ups import PopUpDeletedProject
         PopUpDeletedProject.exec = Mock()
 
         # Adds code from the 'main.py', gets deleted projects
@@ -1340,10 +1361,10 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Append 'proj_8_path' to 'saved_projects.pathsList' and 
         # 'opened_projects', to increase coverage
-        self.main_window.saved_projects.pathsList.append(os.path.relpath(proj_8_path))
+        (self.main_window.saved_projects.pathsList.
+         append(os.path.relpath(proj_8_path)))
         config.set_opened_projects([os.path.relpath(proj_8_path)])
 
-        from populse_mia.user_interface.pop_ups import PopUpDeleteProject
         exPopup = PopUpDeleteProject(self.main_window)
 
         # Checks 'project_8' to be deleted
@@ -2649,7 +2670,6 @@ class TestMIADataBrowser(unittest.TestCase):
         ppl = ppl_edt_tabs.get_current_pipeline()
         data_browser = self.main_window.data_browser
 
-        from populse_mia.user_interface.pop_ups import PopUpAddTag, DefaultValueListCreation, DefaultValueQLineEdit
         # The objects are successively created in the following order:
         # PopUpAddTag > DefaultValueQLineEdit > DefaultValueListCreation
         pop_up = PopUpAddTag(data_browser, data_browser.project)
@@ -2699,11 +2719,6 @@ class TestMIADataBrowser(unittest.TestCase):
         text_edt.list_creation.resize_table()
 
         # The default value can be updated with several types of data
-        from populse_db.database import ( 
-        FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_DATE, 
-        FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_FLOAT, 
-        FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_LIST_STRING, FIELD_TYPE_LIST_TIME)
-
         types = [FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_LIST_FLOAT, 
                  FIELD_TYPE_LIST_BOOLEAN, FIELD_TYPE_LIST_BOOLEAN,
                  FIELD_TYPE_LIST_STRING, FIELD_TYPE_LIST_DATE, 
@@ -3095,7 +3110,6 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Enables SPM standalone
         config.set_use_spm_standalone(True)
-        from platform import architecture
         #if 'Windows' not in architecture()[1]: 
         #    self.assertTrue(main_wnd.pop_up_preferences
         #                    .use_matlab_standalone_checkbox.isChecked())
@@ -3163,7 +3177,6 @@ class TestMIAMainWindow(unittest.TestCase):
         # Sets the admin password to be 'mock_admin_password'
         admin_password = 'mock_admin_password'
         old_psswd = main_wnd.pop_up_preferences.salt + admin_password
-        from hashlib import sha256
         hash_psswd = sha256(old_psswd.encode()).hexdigest()
         config.set_admin_hash(hash_psswd)
 
@@ -3201,7 +3214,8 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd.pop_up_preferences.wrong_path('/mock_path','mock_tool', 
                                                extra_mess='mock_msg')
         self.assertTrue(hasattr(main_wnd.pop_up_preferences, 'msg'))
-        self.assertEqual(main_wnd.pop_up_preferences.msg.icon(), QMessageBox.Critical)
+        self.assertEqual(main_wnd.pop_up_preferences.msg.icon(), 
+                         QMessageBox.Critical)
         main_wnd.pop_up_preferences.msg.close()
 
         # Sets the mainwindow size
@@ -3261,7 +3275,6 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd = self.main_window
 
         # Mocks the execution of 'PopUpPreferences' to speed up the test
-        from populse_mia.user_interface.pop_ups import PopUpPreferences
         #PopUpPreferences.show = lambda x: None
 
         # Creates a new project folder and adds one document to the 
@@ -3299,7 +3312,6 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd.pop_up_preferences.findChar()
 
         # Mocks the execution of a 'capsul' method
-        from capsul.qt_gui.widgets.settings_editor import SettingsEditor
         SettingsEditor.update_gui = lambda x: None
         # This fixes the Mac OS build
 
@@ -3307,10 +3319,11 @@ class TestMIAMainWindow(unittest.TestCase):
         QDialog.exec = lambda x: True
         main_wnd.pop_up_preferences.edit_capsul_config()
 
-        Config.set_capsul_config = lambda x, y: (_ for _ in ()).throw(Exception('mock exception'))
+        mock_exc = lambda x, y :(_ for _ in ()).throw(Exception('mock_except'))
+        Config.set_capsul_config = mock_exc
         main_wnd.pop_up_preferences.edit_capsul_config()
 
-        QDialog.exec = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
+        QDialog.exec = mock_exc
         main_wnd.pop_up_preferences.edit_capsul_config()
 
         QDialog.exec = lambda x: False
@@ -3341,7 +3354,6 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd = self.main_window
 
         # Mocks the execution of 'PopUpPreferences' to speed up the test
-        from populse_mia.user_interface.pop_ups import PopUpPreferences
         #PopUpPreferences.show = lambda x: None
 
         # Creates a new project folder and adds one document to the 
@@ -3461,7 +3473,6 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd = self.main_window
 
         # Mocks the execution of 'PopUpPreferences' to speed up the test
-        from populse_mia.user_interface.pop_ups import PopUpPreferences
         #PopUpPreferences.show = lambda x: None
 
         # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
@@ -3471,9 +3482,6 @@ class TestMIAMainWindow(unittest.TestCase):
         # project, sets the plug value that is added to the database
         project_8_path = self.get_new_test_project()
         tmp_path = os.path.split(project_8_path)[0]
-
-        import subprocess
-        import platform
 
         # Temporary solution that allows test on Linux and MacOS
         if platform.system() == 'Windows':
@@ -3606,8 +3614,8 @@ class TestMIAMainWindow(unittest.TestCase):
             main_wnd.pop_up_preferences.ok_clicked()
 
             # Sets paths to the bin and parent directory folders
-            (main_wnd.pop_up_preferences
-             .fsl_choice.setText(os.path.join(tmp_path, 'etc', 'fslconf', 'bin')))
+            (main_wnd.pop_up_preferences.fsl_choice.
+             setText(os.path.join(tmp_path, 'etc', 'fslconf', 'bin')))
             main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
 
             (main_wnd.pop_up_preferences
@@ -4278,7 +4286,6 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Mocks the execution of the 'QDialog'
         # Instead of showing it, directly chooses 'save_as_clicked'
-        from populse_mia.user_interface.pop_ups import PopUpClosePipeline
         PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
                                        .pop_up_close.save_as_clicked())
         ppl_edt_tabs.save_pipeline = Mock()
@@ -4718,7 +4725,6 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         # Mocks the execution of 'PopUpSelectTagCountTable' to avoid 
         # assyncronous shot
-        from populse_mia.user_interface.pop_ups import PopUpSelectTagCountTable
         PopUpSelectTagCountTable.exec_ = Mock(return_value=True)
 
         # Selects a tag to iterate over, tests 'select_iteration_tag'
@@ -6204,7 +6210,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Mocks the execution of 'PopUpInheritanceDict' to avoid 
         # assyncronous shot
-        from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
         PopUpInheritanceDict.exec = Mock()
 
         # 'parent_files' is a dict with 2 keys and distinct values
@@ -6511,7 +6516,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl = ppl_edt_tabs.get_current_pipeline()
 
         # Creates a 'RunProgress' object
-        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
         ppl_manager.progress = RunProgress(ppl_manager)
 
         # 'ppl_manager.worker' does not have a 'exec_id'
@@ -6529,7 +6533,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
          ppl_manager.progress.worker.exec_id))
         
         # Mocks a 'WorkflowExecutionError' exception
-        from capsul.engine import WorkflowExecutionError
         engine.raise_for_status = Mock(side_effect=WorkflowExecutionError({},{},verbose=False))
 
         # Raises a 'WorkflowExecutionError' while ending progress 
@@ -6929,8 +6932,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager = self.main_window.pipeline_manager
 
         # Mocks the 'progress' object
-        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab\
-        import RunProgress
         ppl_manager.progress = RunProgress(ppl_manager)
 
         # Removes progress
@@ -6973,7 +6974,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
 
         # Creates a 'RunProgress' object
-        from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import RunProgress
         ppl_manager.progress = RunProgress(ppl_manager)
 
         # Mocks a node that does not have a process and a node that has 
@@ -7682,7 +7682,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
 
         # Mocks the allocation of the pipeline into another thread
-        from PyQt5.QtCore import QThread
         QThread.start = lambda x: print('QThread.start was called')
 
         # Pipeline fails while running, due to capsul import error
@@ -7704,84 +7703,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl_manager.progress.worker.run()
         ppl_manager.progress.worker.finished.emit()
 
-    # XXX: This method is unstable and should be placed at the end of 
-    # the testing routine
-    @unittest.skip('triggers a segmentation fault error')
-    def test_zz_finish_execution(self):
-        '''
-        Mocks several objects of the pipeline manager and finishes the 
-        execution of the pipeline.
-
-        Notes
-        -----
-        Tests the method PipelineManagerTab.finish_execution.
-        '''
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        # Mock objects of 'pipeline_manager' used during the test
-        ppl_manager.progress = Mock()
-        ppl_manager.progress.worker.status = 'status_value'
-        ppl_manager.last_run_pipeline = Mock()
-        ppl_manager.last_pipeline_name = 'last_pipeline_name_value'
-        ppl_manager._mmovie = Mock()
-
-        # Mock methods of 'ppl_manager' used during the test
-        ppl_manager.main_window.statusBar().showMessage = MagicMock()
-        ppl_manager.show_pipeline_status_action.setIcon = MagicMock()
-        ppl_manager.nodeController.update_parameters = MagicMock()
-        ppl_manager.run_pipeline_action.setDisabled = MagicMock()
-        ppl_manager.garbage_collect_action.setDisabled = MagicMock()
-        ppl_manager.stop_pipeline_action.setEnabled = MagicMock()
-
-        # Connect 'worker' to 'finished_execution' method
-        #(ppl_manager.progress.worker.finished.
-        #                                  connect(ppl_manager.finish_execution))
-
-        # Finish the execution of the pipeline (no errors are thrown)
-        ppl_manager.finish_execution()
-        # TODO: fix 'core dumped' error, likely triggered by the above 
-        # line
-
-        # Asserts that the mocked objects were called as expected
-        #self.assertEqual('status_value', ppl_manager.last_status)
-        #self.assertFalse(hasattr(ppl_manager, '_mmovie'))
-        #self.assertIsNone(ppl_manager.last_run_log)
-
-        # Asserts that the mocked methods were called as expected
-        #(ppl_manager.stop_pipeline_action.
-        #                              setEnabled.assert_called_once_with(False))
-        #(ppl_manager.last_run_pipeline.get_study_config().
-        #                           engine.raise_for_status.assert_called_once())
-        #(ppl_manager.main_window.statusBar().showMessage.
-        #                                               assert_called_once_with)(
-        #                        'Pipeline "{0}" has been correctly run.'.format(
-        #                                        ppl_manager.last_pipeline_name))
-        #ppl_manager.show_pipeline_status_action.setIcon.assert_called_once()
-        #ppl_manager.nodeController.update_parameters.assert_called_once_with()
-        #(ppl_manager.run_pipeline_action.
-        #                             setDisabled.assert_called_once_with(False))
-        #(ppl_manager.garbage_collect_action.
-        #                             setDisabled.assert_called_once_with(False))
-
-        # Mock objects in order to induce a 'RuntimeError' which is 
-        # treated by the method
-        #ppl_manager.progress = Mock()
-        #ppl_manager.progress.worker.status = swconstants.WORKFLOW_DONE
-        #delattr(ppl_manager.progress.worker, 'exec_id')
-        #ppl_manager._mmovie = Mock()
-
-        # Finish the execution of the pipeline with no 'worker.exec_id' 
-        # (an error is thrown)
-        ppl_manager.finish_execution()
-
-        # Asserts that the execution of the pipeline failed
-        #self.assertEqual(ppl_manager.last_run_log, 
-        #                 'Execution aborted before running')
-
-    def test_zzz_del_pack(self):
+    def test_z_del_pack(self):
         """ We remove the brick created during the unit tests, and we take
         advantage of this to cover the part of the code used to remove the
         packages """
