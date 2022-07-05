@@ -7682,7 +7682,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         ppl.nodes[''].set_plug_value('format_string', 'new_name.nii')
 
         # Mocks the allocation of the pipeline into another thread
-        QThread.start = lambda x: print('QThread.start was called')
+        QThread.start = lambda x, y: print('QThread.start was called')
 
         # Pipeline fails while running, due to capsul import error
         ppl_manager.runPipeline()
