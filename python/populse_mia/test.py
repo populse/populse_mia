@@ -168,7 +168,8 @@ from populse_mia.user_interface.pop_ups import (PopUpNewProject,
                                                 PopUpAddPath,
                                                 PopUpAddTag,
                                                 DefaultValueListCreation, 
-                                                DefaultValueQLineEdit)
+                                                DefaultValueQLineEdit,
+                                                PopUpSeeAllProjects)
 from populse_mia.utils.utils import check_value_type, table_to_database
 
 # populse_db import
@@ -280,19 +281,19 @@ class TestMIADataBrowser(unittest.TestCase):
             close_button = w.button(QMessageBox.Ok)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
-    def get_new_test_project(self):
+    def get_new_test_project(self, name = 'project_8'):
         """
         Copy the test project in a location we can modify safely
         """
 
-        project_path = os.path.join(self.config_path, 'project_8')
+        project_path = os.path.join(self.config_path, name)
 
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
                                       'project_8')
         shutil.copytree(project_8_path, project_path)
         return project_path
@@ -3000,19 +3001,19 @@ class TestMIADataBrowser(unittest.TestCase):
 
 class TestMIAMainWindow(unittest.TestCase):
         
-    def get_new_test_project(self):
+    def get_new_test_project(self, name = 'project_8'):
         """
         Copy the test project in a location we can modify safely
         """
 
-        project_path = os.path.join(self.config_path, 'project_8')
+        project_path = os.path.join(self.config_path, name)
 
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
                                       'project_8')
         shutil.copytree(project_8_path, project_path)
         return project_path
@@ -3127,6 +3128,65 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
+
+    def test_see_all_projects(self):
+        '''
+        Creates 2 projects and tries to open them through the all 
+        projects pop-up.
+        Tests
+        - MainWindow.see_all_projects
+        - PopUpSeeAllProjects
+
+        Notes
+        -----
+        Mocks
+        - PopUpSeeAllProjects.exec
+        - QMessageBox.exec
+        '''
+
+        # Sets shortcuts for objects that are often used
+        main_wnd = self.main_window
+
+        # Creates 2 new project folders
+        project_8_path = self.get_new_test_project()
+        project_9_path = self.get_new_test_project(name='project_9')
+
+        # Sets the projects save path
+        config = Config(config_path=self.config_path)
+        config.set_projects_save_path(os.path.split(project_8_path)[0])
+
+        # Adds the projects to the 'pathsList'
+        main_wnd.saved_projects.pathsList.append(project_8_path)
+        main_wnd.saved_projects.pathsList.append(project_9_path)
+
+        # Mocks the execution of 'PopUpSeeAllProjects' and 'QMessageBox'
+        PopUpSeeAllProjects.exec = lambda x: None
+        QMessageBox.exec = lambda x: None
+
+        # Deletes the folder containing the project 9
+        shutil.rmtree(project_9_path)
+
+        # Show the projects pop-up
+        main_wnd.see_all_projects()  
+
+        item_0 = self.main_window.exPopup.treeWidget.itemAt(0,0)
+        self.assertEqual(item_0.text(0), 'project_8')
+        self.assertEqual(main_wnd.exPopup.treeWidget.itemBelow(item_0).text(0), 
+                         'project_9')    
+
+        # Tries to open a project with no projects selected
+        main_wnd.exPopup.open_project()
+
+        # Selects project 8, which was not deleted
+        item_0.setSelected(True)
+
+        # Opens project 8
+        main_wnd.exPopup.open_project()
+
+        # Asserts that project 8 is now opened
+        config = Config(config_path=self.config_path)
+        self.assertEqual(os.path.abspath(config.get_opened_projects()[0]), 
+                         project_8_path)
 
     def test_software_preferences_pop_up(self):
         '''
@@ -4111,19 +4171,19 @@ class TestMIAPipelineManager(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self):
+    def get_new_test_project(self, name = 'project_8'):
         """
         Copy the test project in a location we can modify safely
         """
 
-        project_path = os.path.join(self.config_path, 'project_8')
+        project_path = os.path.join(self.config_path, name)
 
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
                                       'project_8')
         shutil.copytree(project_8_path, project_path)
         return project_path
@@ -5796,19 +5856,19 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self):
+    def get_new_test_project(self, name = 'project_8'):
         """
         Copy the test project in a location we can modify safely
         """
 
-        project_path = os.path.join(self.config_path, 'project_8')
+        project_path = os.path.join(self.config_path, name)
 
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
                                       'project_8')
         shutil.copytree(project_8_path, project_path)
         return project_path
@@ -7884,19 +7944,19 @@ class TestMIAPipelineEditor(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self):
+    def get_new_test_project(self, name = 'project_8'):
         """
         Copy the test project in a location we can modify safely
         """
 
-        project_path = os.path.join(self.config_path, 'project_8')
+        project_path = os.path.join(self.config_path, name)
 
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia',
+        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
                                       'project_8')
         shutil.copytree(project_8_path, project_path)
         return project_path
