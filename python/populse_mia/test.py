@@ -1275,6 +1275,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Sets shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
+        viewer = data_browser.viewer
 
         # Gets a document filepath
         config = Config(config_path=self.config_path)
@@ -1296,11 +1297,33 @@ class TestMIADataBrowser(unittest.TestCase):
         # Mocks the execution of the dialog window
         PopUpSelectTag.exec_ = Mock(return_value=True)
 
-        # Opens the tags pop-up and selects one tab
-        data_browser.viewer.openTagsPopUp()
-        (data_browser.viewer.popUp.list_widget_tags.item(0).
-         setCheckState(Qt.Checked))
-        data_browser.viewer.popUp.ok_clicked()
+        # Opens the tags pop-up and cancel it
+        viewer.openTagsPopUp()
+        viewer.popUp.cancel_clicked()
+
+        # Opens the tags pop-up
+        viewer.openTagsPopUp()
+
+        # Searches for an empty string
+        viewer.popUp.search_str('')
+
+        # Asserts that both the first and second tags are not hidden
+        self.assertFalse(viewer.popUp.list_widget_tags.item(0).isHidden())
+        self.assertFalse(viewer.popUp.list_widget_tags.item(1).isHidden())
+
+        # Searches for the tag 'Exp Type'
+        data_browser.viewer.popUp.search_str('Exp Type')
+
+        # Asserts that the second tag is hidden, the first is not 
+        self.assertFalse(viewer.popUp.list_widget_tags.item(0).isHidden())
+        self.assertTrue(viewer.popUp.list_widget_tags.item(1).isHidden())
+
+        # Selects one tab
+        item_0 = viewer.popUp.list_widget_tags.item(0)
+        viewer.popUp.list_widget_tags.itemClicked.emit(item_0)
+
+        viewer.popUp.list_widget_tags.item(0).setCheckState(Qt.Checked)
+        viewer.popUp.ok_clicked()
 
     def test_popUpDeletedProject(self):
         '''
@@ -3159,29 +3182,29 @@ class TestMIAMainWindow(unittest.TestCase):
         QMessageBox.exec = lambda x: None
 
         # Deletes the folder containing the project 9
-        #shutil.rmtree(project_9_path)
-#
-        ## Show the projects pop-up
-        #main_wnd.see_all_projects()  
-#
-        #item_0 = self.main_window.exPopup.treeWidget.itemAt(0,0)
-        #self.assertEqual(item_0.text(0), 'project_8')
-        #self.assertEqual(main_wnd.exPopup.treeWidget.itemBelow(item_0).text(0), 
-        #                 'project_9')    
-#
-        ## Tries to open a project with no projects selected
-        #main_wnd.exPopup.open_project()
-#
-        ## Selects project 8, which was not deleted
-        #item_0.setSelected(True)
-#
-        ## Opens project 8
-        #main_wnd.exPopup.open_project()
-#
-        ## Asserts that project 8 is now opened
-        #config = Config(config_path=self.config_path)
-        #self.assertEqual(os.path.abspath(config.get_opened_projects()[0]), 
-        #                 project_8_path)
+        shutil.rmtree(project_9_path)
+
+        # Show the projects pop-up
+        main_wnd.see_all_projects()  
+
+        item_0 = self.main_window.exPopup.treeWidget.itemAt(0,0)
+        self.assertEqual(item_0.text(0), 'project_8')
+        self.assertEqual(main_wnd.exPopup.treeWidget.itemBelow(item_0).text(0), 
+                         'project_9')    
+
+        # Tries to open a project with no projects selected
+        main_wnd.exPopup.open_project()
+
+        # Selects project 8, which was not deleted
+        item_0.setSelected(True)
+
+        # Opens project 8
+        main_wnd.exPopup.open_project()
+
+        # Asserts that project 8 is now opened
+        config = Config(config_path=self.config_path)
+        self.assertEqual(os.path.abspath(config.get_opened_projects()[0]), 
+                         project_8_path)
 
     def test_software_preferences_pop_up(self):
         """
