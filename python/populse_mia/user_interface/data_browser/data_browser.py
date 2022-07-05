@@ -1564,16 +1564,16 @@ class TableDataBrowser(QTableWidget):
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
 
-        # Quick fix for #168 populse_mia issue
-        try:
-
-            if getattr(self.data_browser.main_window, 'test', False):
-                from PyQt5.QtTest import QTest
-                QTest.qWait(100)
-
-        except AttributeError:
-            # Not a unit test case!
-            pass
+        ## Quick fix for #168 populse_mia issue
+        #try:
+        #
+        #    if getattr(self.data_browser.main_window, 'test', False):
+        #        from PyQt5.QtTest import QTest
+        #        QTest.qWait(100)
+        #
+        #except AttributeError:
+        #    # Not a unit test case!
+        #    pass
 
         idx = 0
         row = 0
