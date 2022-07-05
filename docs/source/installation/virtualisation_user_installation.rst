@@ -9,36 +9,39 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Mia's user installation
-=======================
+Mia's user installation - Using virtualisation
+==============================================
 
-Since version 2.0.0, Mia can be installed directly on the host or using virtualisation. On the host, the user will not have access to the `DataViewer <../documentation/data_viewer.html>`_  because the one currently available by default in Mia is based on `Anatomist <https://brainvisa.info/web/anatomist.html>`_, which should be compiled. We therefore propose to use the `BrainVISA <https://brainvisa.info/web/>`_ images which are available for two free and open source virtualisation technologies: `Singularity <https://en.wikipedia.org/wiki/Singularity_(software)>`_ and `VirtualBox <https://en.wikipedia.org/wiki/VirtualBox>`_.
+The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements`).
+Then, the installation will be almost identical to the one done directly on the host (see :ref:`installation`).
 
-Thus, by installing a container or a virtual machine, the user has access to all the stuffs already made available by the BrainVisa developers, such as Anatomist.
+You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_. In this case, skip the :ref:`prerequirements` below and proceed directly to the :ref:`installation`. Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation` section below
 
-In a nutshell, it is possible `to install a light version of Mia on the host <../host_user_installation.html>`_, without DataViewer, or `to use virtualisation to install Mia <../virtualisation_user_installation.tml>`_, with the DataViewer access (with an additional cost for hard disk space).
+Or you can follow the full procedure below which uses Singularity virtualization technology.
+
+
+.. _prerequirements:
 
 Pre-requirements
 ----------------
 
-* `For linux - macOS <./pre_req_linux.html>`_
+* `For linux <./virtualisation_pre_req_linux.html>`_
 
-|
+* `For macos <./virtualisation_pre_req_macos.html>`_
 
-* `For Windows 10 <./pre_req_windows10.html>`_
+* `For Windows 10 <./virtualisation_pre_req_windows10.html>`_
+
+
+.. _installation:
 
 Installation
 ------------
 
 * First download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
 
-|
-
-* Unzip it and launch the following command in the extracted folder ("populse_mia_install-master"): ::
+* Unzip it and launch the following command in the extracted folder ("mia_install-main"): ::
 
         python3 install_mia.py
-
-|
 
 * If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia's installation. 
 
@@ -54,15 +57,17 @@ Installation
 
 |
 
-* The populse_mia installation is now launched and you have to select three mandatory parameters:
+* The Mia installation is now launched and you have to select four mandatory parameters:
 
-  * Populse_mia installation path: the folder where to install few directories and files necessary for the operation of populse_mia, set by default to ".populse_mia" in the current user's directory. Two folders will be created in the selected folder
+  * Mia installation path: the folder where to install few directories and files necessary for the operation of populse_mia, set by default to ".populse_mia" in the current user's directory. Two folders will be created in the selected folder
 
-    * populse_mia: containing populse_mia's configuration and resources files.
+    * populse_mia: containing Mia's configuration and resources files.
 
-    * MRIFileManager: containing the file converter used in Populse_MIA.
+    * MRIFileManager: containing the file converter used in Mia.
 
-  * Populse_mia projects path: the folder containing the analysis projects saved in populse_mia. A "projects" folder will be created in the selected folder.
+  * Mia projects path: the folder containing the analysis projects saved in Mia. A "projects" folder will be created in the selected folder.
+
+  * Installation target: Check **Casa_distro** for installation on virtualized BrainVisa.
 
   * Operating mode: Choose between clinical and research mode (more information about `operating mode <../documentation/documentation.html#operating-mode>`_).
 
@@ -128,7 +133,8 @@ Installation
 
 |
 
-* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia>`_ to launch populse_mia.
+* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia#usage>`_ to launch populse_mia.
+
 
 
 
