@@ -21,12 +21,11 @@
 #  PyQt5 import
 
 from PyQt5 import QtGui
-from PyQt5.QtCore import (QCoreApplication, QEvent, QPoint, Qt, QTimer,
-                          QThread, QT_VERSION_STR)
+from PyQt5.QtCore import (QCoreApplication, QEvent, QPoint, Qt, QThread, QTimer,
+                          QT_VERSION_STR)
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QDialog, QMessageBox, QInputDialog,
-                             QTableWidgetItem, QFileDialog, QLineEdit, 
-                             QPlainTextEdit)
+                             QTableWidgetItem, QFileDialog)
 
 # Nipype import
 from nipype.interfaces import Rename, Select
@@ -53,16 +52,16 @@ import copy
 import subprocess
 import platform
 from hashlib import sha256
-from platform import architecture
 
 sys.settrace
 
 if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
     # "developer" mode
     root_dev_dir = os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(
-                os.path.dirname(os.path.realpath(__file__)))))
+                       os.path.dirname(
+                           os.path.dirname(
+                               os.path.dirname(
+                                   os.path.realpath(__file__)))))
 
     # Adding populse_mia
     print('\n- Mia in "developer" mode\n')
@@ -156,22 +155,25 @@ from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import (
 from populse_mia.user_interface.pipeline_manager.process_library import (
                                                            InstallProcesses,
                                                            PackageLibraryDialog)
-from populse_mia.user_interface.pop_ups import (PopUpNewProject,
-                                                PopUpOpenProject, PopUpQuit,
-                                                PopUpInheritanceDict,
-                                                PopUpSelectTagCountTable,
+from populse_mia.user_interface.pop_ups import (PopUpAddPath,
+                                                PopUpAddTag,
                                                 PopUpClosePipeline,
-                                                PopUpPreferences,
-                                                PopUpDeleteProject,
                                                 PopUpDeletedProject,
+                                                PopUpDeleteProject,
+                                                PopUpInheritanceDict,
+                                                PopUpNewProject,
+                                                PopUpOpenProject,
+                                                PopUpPreferences,
+                                                PopUpQuit,
+                                                PopUpRemoveScan,
                                                 PopUpSelectTag,
                                                 PopUpAddPath,
                                                 PopUpAddTag,
                                                 DefaultValueListCreation, 
                                                 DefaultValueQLineEdit,
                                                 PopUpSeeAllProjects)
-from populse_mia.utils.utils import check_value_type, table_to_database
 
+from populse_mia.utils.utils import check_value_type, table_to_database
 # populse_db import
 from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_DATETIME, FIELD_TYPE_INTEGER,
@@ -183,9 +185,6 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_LIST_INTEGER, 
                                  FIELD_TYPE_LIST_STRING, 
                                  FIELD_TYPE_LIST_TIME)
-
-# soma_workflow import
-from soma_workflow import constants as swconstants
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -365,7 +364,7 @@ class TestMIADataBrowser(unittest.TestCase):
         # project, sets the plug value that is added to the database
         project_8_path = self.get_new_test_project()
         ppl_manager.project.folder = project_8_path
-        folder = os.path.join(project_8_path,'data','raw_data')
+        folder = os.path.join(project_8_path, 'data', 'raw_data')
         NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
                       'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
@@ -1310,13 +1309,13 @@ class TestMIADataBrowser(unittest.TestCase):
         
         # Sets a projects save directory
         config = Config()
-        projects_save_path = os.path.join(config.get_mia_path(),'projects')
+        projects_save_path = os.path.join(config.get_mia_path(), 'projects')
         config.set_projects_save_path(projects_save_path)
 
         # Mocks a project filepath that does not exist in the filesystem
         # Adds this filepath to 'saved_projects.yml' 
         savedProjects = SavedProjects()
-        del_prjct = os.path.join(projects_save_path,'missing_project')
+        del_prjct = os.path.join(projects_save_path, 'missing_project')
         savedProjects.addSavedProject(del_prjct)
 
         # Asserts that 'saved_projects.yml' contains the filepath
@@ -1558,7 +1557,7 @@ class TestMIADataBrowser(unittest.TestCase):
                           "pvm-000142_400.nii"])
 
     def test_remove_scan(self):
-        '''
+        """
         Creates a new project, adds scans to the session and remove 
         them.
         Tests
@@ -1570,7 +1569,7 @@ class TestMIADataBrowser(unittest.TestCase):
         Mocks PopUpRemoveScan.exec.
         - 
          
-        '''
+        """
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
@@ -1581,7 +1580,7 @@ class TestMIADataBrowser(unittest.TestCase):
         # Creates a new project folder
         project_8_path = self.get_new_test_project()
         ppl_manager.project.folder = project_8_path
-        folder = os.path.join(project_8_path,'data','raw_data')
+        folder = os.path.join(project_8_path, 'data', 'raw_data')
 
         NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
                       'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
@@ -1601,8 +1600,6 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Refreshes the data browser tab
         self.main_window.update_project(project_8_path)
-
-        from populse_mia.user_interface.pop_ups import PopUpRemoveScan
 
         # Selects all scans
         tb_data.selectColumn(0)
@@ -1640,8 +1637,6 @@ class TestMIADataBrowser(unittest.TestCase):
 
         # Asserts that the scans were deleted
         self.assertEqual(len(tb_data.scans), 0)
-
-
 
         print()
 
@@ -2757,8 +2752,6 @@ class TestMIADataBrowser(unittest.TestCase):
         
         # Sets shortcuts for objects that are often used
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        ppl_edt = ppl_edt_tabs.get_current_editor()
-        ppl = ppl_edt_tabs.get_current_pipeline()
         data_browser = self.main_window.data_browser
 
         # The objects are successively created in the following order:
@@ -2806,7 +2799,7 @@ class TestMIADataBrowser(unittest.TestCase):
         text_edt.list_creation.resize_table()
 
         # Resize the table while mocking a column width of 900 elements
-        text_edt.list_creation.table.setColumnWidth(0,900)
+        text_edt.list_creation.table.setColumnWidth(0, 900)
         text_edt.list_creation.resize_table()
 
         # The default value can be updated with several types of data
@@ -2818,7 +2811,7 @@ class TestMIADataBrowser(unittest.TestCase):
                   '["11/11/1111"]', '["11/11/1111 11:11:11.11"]', 
                   '["11:11:11.11"]']
 
-        for (type_,value) in zip(types,values):
+        for (type_, value) in zip(types, values):
             text_edt.setText(value)
             text_edt.mousePressEvent(None)
             text_edt.list_creation.type = type_
@@ -3070,7 +3063,7 @@ class TestMIAMainWindow(unittest.TestCase):
             shutil.rmtree(cls.config_path)
 
     def test_create_project_pop_up(self):
-        '''
+        """
         Tries to create a new project with a project already open and
         with and without setting the projects folder path.
 
@@ -3084,7 +3077,7 @@ class TestMIAMainWindow(unittest.TestCase):
           - PopUpQuit.exec
           - QMessageBox.exec
           - PopUpNewProject (several methods)
-        '''
+        """
 
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
@@ -3093,7 +3086,7 @@ class TestMIAMainWindow(unittest.TestCase):
         # Creates a new project folder and adds one document to the 
         # project, sets the plug value that is added to the database
         project_8_path = self.get_new_test_project()
-        folder = os.path.join(project_8_path,'data','raw_data')
+        folder = os.path.join(project_8_path, 'data', 'raw_data')
         NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
                       'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
@@ -3124,7 +3117,8 @@ class TestMIAMainWindow(unittest.TestCase):
         PopUpNewProject.exec = lambda x: True
         PopUpNewProject.selectedFiles = lambda x: (NEW_PROJ_PATH,)
         PopUpNewProject.relative_path = NEW_PROJ_PATH
-        PopUpNewProject.path, PopUpNewProject.name =os.path.split(NEW_PROJ_PATH)
+        PopUpNewProject.path, PopUpNewProject.name = os.path.split(
+                                                                  NEW_PROJ_PATH)
 
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
@@ -3189,7 +3183,7 @@ class TestMIAMainWindow(unittest.TestCase):
                          project_8_path)
 
     def test_software_preferences_pop_up(self):
-        '''
+        """
         Opens the preferences pop up and changes parameters.
         Tests
           - MainWindow.software_preferences_pop_up
@@ -3204,7 +3198,7 @@ class TestMIAMainWindow(unittest.TestCase):
           - QDialog.exec
           - QMessageBox.exec
           - QPlainTextEdit.toPlainText
-        '''
+        """
 
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
@@ -3214,8 +3208,6 @@ class TestMIAMainWindow(unittest.TestCase):
         # project, sets the plug value that is added to the database
         project_8_path = self.get_new_test_project()
         ppl_manager.project.folder = project_8_path
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
-                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
 
         config = Config(config_path=self.config_path)
         config.setControlV1(True)
@@ -3224,7 +3216,7 @@ class TestMIAMainWindow(unittest.TestCase):
         config.set_use_fsl(True)
         config.set_use_afni(True)
         config.set_use_ants(True)
-        config.set_mainwindow_size([100,100,100])
+        config.set_mainwindow_size([100, 100, 100])
 
         main_wnd.software_preferences_pop_up()
         
@@ -3281,38 +3273,41 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Browses the FSL path
         main_wnd.pop_up_preferences.browse_fsl()
-        self.assertEqual(main_wnd.pop_up_preferences.fsl_choice
-                         .text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.fsl_choice.text(),
+                         mock_path)
 
         # Browses the AFNI path
         main_wnd.pop_up_preferences.browse_afni()
-        self.assertEqual(main_wnd.pop_up_preferences.afni_choice
-                         .text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.afni_choice.text(),
+                         mock_path)
 
         # Browses the ANTS path
         main_wnd.pop_up_preferences.browse_ants()
-        self.assertEqual(main_wnd.pop_up_preferences.ants_choice
-                         .text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.ants_choice.text(),
+                         mock_path)
 
         # Browses the MATLAB path
         main_wnd.pop_up_preferences.browse_matlab()
-        self.assertEqual(main_wnd.pop_up_preferences
-                         .matlab_choice.text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.matlab_choice.text(),
+                         mock_path)
 
         # Browses the MATLAB Standalone path
         main_wnd.pop_up_preferences.browse_matlab_standalone()
-        self.assertEqual(main_wnd.pop_up_preferences
-                         .matlab_standalone_choice.text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.matlab_standalone_choice.
+                                                                         text(),
+                         mock_path)
 
         # Browses the MriConv path
         main_wnd.pop_up_preferences.browse_mri_conv_path()
-        self.assertEqual(main_wnd.pop_up_preferences
-                         .mri_conv_path_line_edit.text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.mri_conv_path_line_edit.
+                                                                         text(),
+                         mock_path)
 
         # Browser the projects save path
         main_wnd.pop_up_preferences.browse_projects_save_path()
-        self.assertEqual(main_wnd.pop_up_preferences
-                         .projects_save_path_line_edit.text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.
+                                            projects_save_path_line_edit.text(),
+                         mock_path)
 
         # Browses the SPM path
         main_wnd.pop_up_preferences.browse_spm()
@@ -3321,8 +3316,9 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Browses the SPM Standalone path
         main_wnd.pop_up_preferences.browse_spm_standalone()
-        self.assertEqual(main_wnd.pop_up_preferences
-                         .spm_standalone_choice.text(), mock_path)
+        self.assertEqual(main_wnd.pop_up_preferences.spm_standalone_choice.
+                                                                         text(),
+                         mock_path)
 
         # Sets the admin password to be 'mock_admin_password'
         admin_password = 'mock_admin_password'
@@ -3335,17 +3331,18 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Calls 'admin_mode_switch', mocking the execution of 'QInputDialog'
         main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
-        QInputDialog.getText = lambda w,x,y,z,: (None, False)
+        QInputDialog.getText = lambda w, x, y, z, : (None, False)
         main_wnd.pop_up_preferences.admin_mode_switch()
 
         # Tries to activates admin mode with the wrong password
         main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
-        QInputDialog.getText = lambda w,x,y,z,: ('mock_wrong_password', True)
+        QInputDialog.getText = lambda w, x, y, z, : ('mock_wrong_password',
+                                                     True)
         main_wnd.pop_up_preferences.admin_mode_switch()
         self.assertFalse(main_wnd.pop_up_preferences.change_psswd.isVisible())
 
         # Activates admin mode with the correct password
-        QInputDialog.getText = lambda w,x,y,z,: (admin_password, True)
+        QInputDialog.getText = lambda w, x, y, z, : (admin_password, True)
         main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
         main_wnd.pop_up_preferences.admin_mode_switch()
         self.assertTrue(main_wnd.pop_up_preferences.change_psswd.isVisible())
@@ -3361,7 +3358,7 @@ class TestMIAMainWindow(unittest.TestCase):
         #main_wnd.pop_up_preferences.change_admin_psswd('')
 
         # Shows a wrong path pop-up message
-        main_wnd.pop_up_preferences.wrong_path('/mock_path','mock_tool', 
+        main_wnd.pop_up_preferences.wrong_path('/mock_path', 'mock_tool',
                                                extra_mess='mock_msg')
         self.assertTrue(hasattr(main_wnd.pop_up_preferences, 'msg'))
         self.assertEqual(main_wnd.pop_up_preferences.msg.icon(), 
@@ -3370,8 +3367,6 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Sets the mainwindow size
         main_wnd.pop_up_preferences.use_current_mainwindow_size(main_wnd)
-
-
 
         # Mocks the click of the OK button on 'QMessageBox.exec' 
         QMessageBox.exec = lambda x: QMessageBox.Yes
@@ -3405,7 +3400,7 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd.pop_up_preferences.close()
 
     def test_software_preferences_pop_up_config_file(self):
-        '''
+        """
         Opens the preferences pop up and changes parameters to edit the
         config file and capsul config file.
         Tests
@@ -3419,7 +3414,7 @@ class TestMIAMainWindow(unittest.TestCase):
           - Config.set_capsul_config
           - QDialog.exec
           - SettingsEditor.update_gui
-        '''
+        """
 
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
@@ -3430,7 +3425,6 @@ class TestMIAMainWindow(unittest.TestCase):
         # Creates a new project folder and adds one document to the 
         # project, sets the plug value that is added to the database
         project_8_path = self.get_new_test_project()
-        tmp_path = os.path.split(project_8_path)[0]
         #ppl_manager.project.folder = project_8_path      
 
         main_wnd.software_preferences_pop_up()
@@ -3438,13 +3432,14 @@ class TestMIAMainWindow(unittest.TestCase):
         # Tries do edit the config file, mocks failure in 'QDialog.exec'
         QDialog.exec = lambda x: False
         main_wnd.pop_up_preferences.edit_config_file()
-        self.assertTrue(hasattr(main_wnd.pop_up_preferences,'editConf'))
+        self.assertTrue(hasattr(main_wnd.pop_up_preferences, 'editConf'))
         
         # Mocks the execution to change 'user_mode' from 'false' to
         # 'true'
         def mock_exec(x):
             config_file = main_wnd.pop_up_preferences.editConf.txt.toPlainText()
-            config_file = config_file.replace('user_mode: false', 'user_mode: true')
+            config_file = config_file.replace('user_mode: false',
+                                              'user_mode: true')
             main_wnd.pop_up_preferences.editConf.txt.setPlainText(config_file)
             return True
         QDialog.exec = mock_exec
@@ -3469,7 +3464,7 @@ class TestMIAMainWindow(unittest.TestCase):
         QDialog.exec = lambda x: True
         main_wnd.pop_up_preferences.edit_capsul_config()
 
-        mock_exc = lambda x, y :(_ for _ in ()).throw(Exception('mock_except'))
+        mock_exc = lambda x, y: (_ for _ in ()).throw(Exception('mock_except'))
         Config.set_capsul_config = mock_exc
         main_wnd.pop_up_preferences.edit_capsul_config()
 
@@ -3482,7 +3477,7 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd.pop_up_preferences.close()
 
     def test_software_preferences_pop_up_validate(self):
-        '''
+        """
         Opens the preferences pop up, sets the configuration of the 
         modules AFNI, ANTS, FSL, SPM and MATLAB without pressing the OK 
         button and switches the auto-save, controller version and radio 
@@ -3496,7 +3491,7 @@ class TestMIAMainWindow(unittest.TestCase):
         Mocks
           - PopUpPreferences.show
           - QMessageBox.show
-        '''
+        """
         
         '''Validates the Pipeline tab without pressing the 'OK' button'''
 
@@ -3515,34 +3510,34 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Selects standalone modules
         for module in ['matlab_standalone', 'spm_standalone']:
-            getattr(main_wnd.pop_up_preferences, 'use_' + module + 
-                    '_checkbox').setChecked(True)
+            getattr(main_wnd.pop_up_preferences,
+                    'use_' + module + '_checkbox').setChecked(True)
 
         # Validates the Pipeline tab without pressing the 'OK' button
         main_wnd.pop_up_preferences.validate_and_save()
 
         config = Config(config_path=self.config_path)
         for module in ['matlab_standalone', 'spm_standalone']:
-            self.assertTrue(getattr(config, 'get_use_'+ module)())
+            self.assertTrue(getattr(config, 'get_use_' + module)())
 
         # Selects non standalone modules
         for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
-            getattr(main_wnd.pop_up_preferences, 'use_' + module + 
-                    '_checkbox').setChecked(True)
+            getattr(main_wnd.pop_up_preferences,
+                    'use_' + module + '_checkbox').setChecked(True)
 
         # Validates the Pipeline tab without pressing the 'OK' button
         main_wnd.pop_up_preferences.validate_and_save()
 
         config = Config(config_path=self.config_path)
         for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
-            self.assertTrue(getattr(config, 'get_use_'+ module)())
+            self.assertTrue(getattr(config, 'get_use_' + module)())
 
         '''Validates the Pipeline tab by pressing the 'OK' button'''
 
         # Sets the projects folder for the preferences window to close 
         # when pressing on 'OK'
         (main_wnd.pop_up_preferences.projects_save_path_line_edit
-         .setText(tmp_path))
+                                                             .setText(tmp_path))
 
         # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
         main_wnd.pop_up_preferences.wrong_path = lambda x, y: None
@@ -3550,13 +3545,13 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Deselects non standalone modules
         for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
-            getattr(main_wnd.pop_up_preferences, 'use_' + module + 
-                    '_checkbox').setChecked(False)
+            getattr(main_wnd.pop_up_preferences,
+                    'use_' + module + '_checkbox').setChecked(False)
 
         # Deselects the 'radioView', 'adminMode' and 'clinicalMode' option
         for opt in ['save', 'radioView', 'admin_mode', 'clinical_mode']:
-            (getattr(main_wnd.pop_up_preferences, opt + '_checkbox')
-             .setChecked(False))
+            (getattr(main_wnd.pop_up_preferences,
+                     opt + '_checkbox').setChecked(False))
         # The options autoSave, radioView and controlV1 are not selected
 
         # Sets the projects save path
@@ -3583,7 +3578,7 @@ class TestMIAMainWindow(unittest.TestCase):
         # Selects the autoSave, radioView and controlV1 options
         for opt in ['save_checkbox', 'radioView_checkbox', 'control_checkbox',
                     'admin_mode_checkbox', 'clinical_mode_checkbox']:
-              getattr(main_wnd.pop_up_preferences, opt).setChecked(True)
+            getattr(main_wnd.pop_up_preferences, opt).setChecked(True)
 
         # Alternates to minimized mode
         main_wnd.pop_up_preferences.fullscreen_cbox.setChecked(True)
@@ -3601,7 +3596,7 @@ class TestMIAMainWindow(unittest.TestCase):
         self.assertEqual(config.get_projects_save_path(), tmp_path)
 
     def test_software_preferences_pop_up_modules_config(self):
-        '''
+        """
         Opens the preferences pop up and sets configuration of the 
         modules AFNI, ANTS, FSL, SPM and MATLAB in the preferences 
         window.
@@ -3617,7 +3612,7 @@ class TestMIAMainWindow(unittest.TestCase):
           - QDialog.exec
           - QMessageBox.exec
           - QPlainTextEdit.toPlainText
-        '''
+        """
 
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
@@ -3640,12 +3635,12 @@ class TestMIAMainWindow(unittest.TestCase):
         # Mocks executables to be used as the afni, ants, fslm, matlab 
         # and spm cmds
         def mock_executable(exc_dir, exc_name, failing = False, 
-                            output = 'mock executable', 
-                            err_msg = 'mock_error'):
-            '''
+                            output='mock executable',
+                            err_msg='mock_error'):
+            """
             Creates a working or failing mocked executable, optionally 
             setting the output and error messages,
-            '''
+            """
 
             system = platform.system()
 
@@ -3677,23 +3672,23 @@ class TestMIAMainWindow(unittest.TestCase):
         # of the code
 
         def test_afni_config():
-            '''
+            """
             Tests the AFNI configuration.
-            '''
+            """
 
-            main_wnd.software_preferences_pop_up() # Reopens the window
+            main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Enables AFNI
             main_wnd.pop_up_preferences.use_afni_checkbox.setChecked(True)
 
             # Sets a directory that does not exists
             (main_wnd.pop_up_preferences
-             .afni_choice.setText(os.path.join(tmp_path + 'mock')))
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+                          .afni_choice.setText(os.path.join(tmp_path + 'mock')))
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Sets a directory that does not contain the AFNI cmd
             main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that AFNI is disabled in the 'config' object 
             config = Config(config_path=self.config_path)
@@ -3714,23 +3709,23 @@ class TestMIAMainWindow(unittest.TestCase):
             config.set_afni_path('')
 
         def test_ants_config():
-            '''
+            """
             Tests the ANTS configuration.
-            '''
+            """
 
-            main_wnd.software_preferences_pop_up() # Reopens the window
+            main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Enables ANTS
             main_wnd.pop_up_preferences.use_ants_checkbox.setChecked(True)
 
             # Sets a directory that does not exists
             (main_wnd.pop_up_preferences
-             .ants_choice.setText(os.path.join(tmp_path + 'mock')))
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+                          .ants_choice.setText(os.path.join(tmp_path + 'mock')))
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Sets a directory that does not contain the ANTS cmd
             main_wnd.pop_up_preferences.ants_choice.setText(tmp_path)
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that ANTS is disabled in the 'config' object 
             config = Config(config_path=self.config_path)
@@ -3740,10 +3735,10 @@ class TestMIAMainWindow(unittest.TestCase):
             main_wnd.pop_up_preferences.afni_choice.setText(tmp_path)
 
             mock_executable(tmp_path, 'SmoothImage', failing=True)
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             mock_executable(tmp_path, 'SmoothImage')
-            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+            main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
             # Disables ANTS
             config = Config(config_path=self.config_path)
@@ -3751,11 +3746,11 @@ class TestMIAMainWindow(unittest.TestCase):
             config.set_ants_path('')
 
         def test_fsl_config():
-            '''
+            """
             Tests the FSL configuration.
-            '''
+            """
 
-            main_wnd.software_preferences_pop_up() # Reopens the window
+            main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Enables FSL
             main_wnd.pop_up_preferences.use_fsl_checkbox.setChecked(True)
@@ -3764,17 +3759,22 @@ class TestMIAMainWindow(unittest.TestCase):
             main_wnd.pop_up_preferences.ok_clicked()
 
             # Sets paths to the bin and parent directory folders
-            (main_wnd.pop_up_preferences.fsl_choice.
-             setText(os.path.join(tmp_path, 'etc', 'fslconf', 'bin')))
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.fsl_choice.setText(os.path.join(
+                                                                      tmp_path,
+                                                                      'etc',
+                                                                      'fslconf',
+                                                                      'bin'))
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
-            (main_wnd.pop_up_preferences
-             .fsl_choice.setText(os.path.join(tmp_path, 'etc', 'fslconf')))
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.fsl_choice.setText(os.path.join(
+                                                                     tmp_path,
+                                                                     'etc',
+                                                                     'fslconf'))
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Sets a directory that does not contain the FSL cmd
             main_wnd.pop_up_preferences.fsl_choice.setText(tmp_path)
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that FSL is disabled in the 'config' object 
             config = Config(config_path=self.config_path)
@@ -3786,10 +3786,10 @@ class TestMIAMainWindow(unittest.TestCase):
             main_wnd.pop_up_preferences.fsl_choice.setText(fsl_path)
 
             mock_executable(fsl_path, 'flirt', failing=True)
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             mock_executable(fsl_path, 'flirt')
-            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+            main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
             # Disables FSL
             config = Config(config_path=self.config_path)
@@ -3797,19 +3797,20 @@ class TestMIAMainWindow(unittest.TestCase):
             config.set_fsl_config('')
 
         def test_spm_matlab_config():
-            '''
+            """
             Tests the SPM and MATLAB (licence) configuration.
-            '''
+            """
 
-            main_wnd.software_preferences_pop_up() # Reopens the window
+            main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Enables SPM
             main_wnd.pop_up_preferences.use_spm_checkbox.setChecked(True)
 
             # Sets a MATLAB executable path that does not exists
-            (main_wnd.pop_up_preferences
-             .matlab_choice.setText(os.path.join(tmp_path, 'matlab')))
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.matlab_choice.setText(os.path.join(
+                                                                      tmp_path,
+                                                                      'matlab'))
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Creates a failing MATLAB executable
             mock_executable(tmp_path, 'matlab', failing=True)
@@ -3825,7 +3826,7 @@ class TestMIAMainWindow(unittest.TestCase):
             config = Config(config_path=self.config_path)
             config.set_spm_path(tmp_path)
             main_wnd.pop_up_preferences.spm_choice.setText(tmp_path)
-            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+            main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
             config = Config(config_path=self.config_path)
             self.assertTrue(config.get_use_spm())
@@ -3833,17 +3834,17 @@ class TestMIAMainWindow(unittest.TestCase):
             self.assertFalse(config.get_use_matlab_standalone())
             # Case where both MATLAB and SPM applications are used
 
-            main_wnd.software_preferences_pop_up() # Reopens the window
+            main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Resets the MATLAB executable path
             Config(config_path=self.config_path).set_matlab_path('')
-            main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Creates a working MATLAB executable
             mock_executable(tmp_path, 'matlab')
-            main_wnd.pop_up_preferences.ok_clicked() # Closes the window
+            main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
-            main_wnd.software_preferences_pop_up() # Reopens the window
+            main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Restricts the permission on the MATLAB executable to induce
             # an exception on 'subprocess.Popen'
