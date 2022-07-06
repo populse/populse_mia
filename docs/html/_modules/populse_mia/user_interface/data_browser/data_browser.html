@@ -5,19 +5,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.2.1-dev+655e0d07 documentation</title>
-    <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.2.1-dev+7b35552a2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.1-dev+655e0d07 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+7b35552a2 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1587,16 +1586,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WA_DeleteOnClose</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-        <span class="c1"># Quick fix for #168 populse_mia issue</span>
-        <span class="k">try</span><span class="p">:</span>
-
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">main_window</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                <span class="kn">from</span> <span class="nn">PyQt5.QtTest</span> <span class="kn">import</span> <span class="n">QTest</span>
-                <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="c1"># Not a unit test case!</span>
-            <span class="k">pass</span>
+        <span class="c1">## Quick fix for #168 populse_mia issue</span>
+        <span class="c1">#try:</span>
+        <span class="c1">#</span>
+        <span class="c1">#    if getattr(self.data_browser.main_window, &#39;test&#39;, False):</span>
+        <span class="c1">#        from PyQt5.QtTest import QTest</span>
+        <span class="c1">#        QTest.qWait(100)</span>
+        <span class="c1">#</span>
+        <span class="c1">#except AttributeError:</span>
+        <span class="c1">#    # Not a unit test case!</span>
+        <span class="c1">#    pass</span>
 
         <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2674,7 +2673,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
     </div>
   </body>
 </html>
