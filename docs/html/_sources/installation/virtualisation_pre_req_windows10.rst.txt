@@ -15,35 +15,45 @@ Once pre-requirements are acquired, you will need to install Wsl2 to host a virt
 
 1- WSL2 (Windows Subsystem Linux) installation
 -------------------------------------------
-|
-In an administrator type Windows account:
+
+* In an administrator type Windows account:
       - Windows 10 must be up to date
       - You need to have enough free space on your system disk : around 20 Gb
       - Open a **PowerShell as administrator** (right clic on powershell icon):  
-      - enter ``wsl --install -d Ubuntu-20.04``
-      .. image:: ../images/screenshots/Windows 10 - PowerShell - WSL2.png
-         :align: center
-         :name: Windows 10
+      - enter: wsl --install -d Ubuntu-20.04
+
 |
 
-Reboot the computer
-
-Normally a linux ubuntu window is already available, enter it:
-      - enter a user / password who will be administrator of this linux (asked by the system)
-
-      .. image:: ../images/screenshots/Windows 10 - Ubuntu.png
-         :align: center
-         :name: Windows 10
-
-      - then you can write your first commands to make ubuntu up to date: ::
-
-       sudo apt update
-       #at this first sudo command, the system may ask you to enter the password you just enter before.
-       sudo apt upgrade -y
-       exit
-
-      - close this window
+.. image:: ../../../developer_doc/images/screenshots/Windows 10 - PowerShell - WSL2.png
+  :align: center
+  :name: Windows 10
 |
+
+* Reboot the computer
+
+* Normally a linux ubuntu window is already available, enter it:
+
+- enter a user / password who will be administrator of this linux (asked by the system)
+
+.. image:: ../../../developer_doc/images/screenshots/Windows 10 - Ubuntu.png
+   :align: center
+   :name: Windows 10
+
+|
+
+then you can write your first commands to make ubuntu up to date: ::
+
+   sudo apt update
+
+   #at this first sudo command, the system may ask you to enter the password you just enter before.
+
+   sudo apt upgrade -y
+
+   exit
+|
+
+- close this window
+
 
 Now you have WSL2 and an Ubuntu 20.04 linux.
 
@@ -66,7 +76,7 @@ If you are a developper, you will need Ubuntu 22.04 to work on the whole project
 If not , you can ignore this part 2.
 You have precedently update the linux system. You can directly upgrade your linux Ubuntu distriution to 22.04 with the following commands:
 
-* To get if any new rekease is available type: ::
+To get if any new release is available type: ::
 
   sudo apt dist-upgrade
 
@@ -80,13 +90,13 @@ Although the update manager core will already be there, however, to confirm just
 
 |
 	
-* Edit release-upgrades configuration file using the below-given command: ::
+Edit release-upgrades configuration file using the below-given command: ::
 
   sudo nano /etc/update-manager/release-upgrades
 
 |
 
-* After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS: ::
+After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS: ::
 
   Prompt = lts
 
@@ -94,7 +104,7 @@ Although the update manager core will already be there, however, to confirm just
 	
 Save the file by pressing Ctrl+O and then exit the same with Ctrl+X.
 
-* Here startes the concrete upgrade by the command: ::
+Here startes the concrete upgrade by the command: ::
 
   sudo do-release-upgrade -d
 
@@ -106,7 +116,7 @@ Once the installation of the new Jammy Jelly Fish is completed, remove the obsol
 
 The WSL Ubuntu App will ask you to restart the system. However, it has not been started as an init system, so that will not be possible. Therefore, simply close the WSL app window and open it again.
 
-* You can chechk the Ubuntu version installed via the command: ::
+You can chechk the Ubuntu version installed via the command: ::
 
   cat /otc/os-release
 
@@ -126,13 +136,13 @@ Looking for XLaunch application icon, launch it
 
 Configure it like the screenshots below:
   
-   .. image:: ../images/screenshots/Xlaunch_1.png
+   .. image:: ../../../developer_doc/images/screenshots/Xlaunch_1.png
       :align: center
       :name: Xlaunch_1
 
 |
 
-   .. image:: ../images/screenshots/Xlaunch_2.png
+   .. image:: ../../../developer_doc/images/screenshots/Xlaunch_2.png
       :align: center
       :name: Xlaunch_2
 
@@ -141,7 +151,7 @@ Configure it like the screenshots below:
 Disable *'Native opengl'*
 Enable *'Disable access control'*
      
-   .. image:: ../images/screenshots/Xlaunch_3.png
+   .. image:: ../../../developer_doc/images/screenshots/Xlaunch_3.png
       :align: center
       :name: Xlaunch_3
 
@@ -150,7 +160,7 @@ Enable *'Disable access control'*
 Do *'Save Configuration'* in a file that allow you to launch it later (ie on the Desktop)
 
 
-   .. image:: ../images/screenshots/Xlaunch_4.png
+   .. image:: ../../../developer_doc//images/screenshots/Xlaunch_4.png
       :align: center
       :name: Xlaunch_4
 
@@ -166,11 +176,11 @@ Allow access asked by Windows firewall
 
 Open an Ubuntu session in Windows by:
 
-   - click on Ubuntu new icon
+- click on Ubuntu new icon
 
   or
 
-   - open a normal Windows PowerShell,enter ``ubuntu.20.04.exe``
+- open a normal Windows PowerShell,enter ``ubuntu.20.04.exe``
 
 
 In this Ubuntu window terminal, install the following dependencies: ::
