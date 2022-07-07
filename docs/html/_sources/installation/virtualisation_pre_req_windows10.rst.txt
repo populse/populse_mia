@@ -27,7 +27,7 @@ enter: ::
 |
 
 
-.. image:: ../../../developer_doc/images/screenshots/Windows 10 - PowerShell - WSL2.png
+.. image:: ../../../developer_doc/images/screenshots/Windows%2010%20-%20PowerShell%20-%20WSL2.png
   :align: center
   :name: Windows 10
 
@@ -40,7 +40,7 @@ enter: ::
 - enter a user / password who will be administrator of this linux (asked by the system)
 
 
-.. image:: ../../../developer_doc/images/screenshots/Windows 10 - Ubuntu.png
+.. image:: ../../../developer_doc/images/screenshots/Windows%2010%20-%20Ubuntu.png
    :align: center
    :name: Windows 10
 
