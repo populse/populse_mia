@@ -281,22 +281,28 @@ class TestMIADataBrowser(unittest.TestCase):
             close_button = w.button(QMessageBox.Ok)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
-    def get_new_test_project(self, name = 'project_8'):
+    def get_new_test_project(self, name = 'project_8', light=False):
         """
         Copy the test project in a location we can modify safely
         """
 
-        project_path = os.path.join(self.config_path, name)
+        new_test_proj = os.path.join(self.config_path, name)
 
-        if os.path.exists(project_path):
-            shutil.rmtree(project_path)
+        if os.path.exists(new_test_proj):
+            shutil.rmtree(new_test_proj)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
-                                      'project_8')
-        shutil.copytree(project_8_path, project_path)
-        return project_path
+
+        if light:
+            test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                     'light_test_project')
+        else:
+            test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                     'project_8')
+        
+        shutil.copytree(test_proj, new_test_proj)
+        return new_test_proj
 
     def setUp(self):
         """
@@ -2385,6 +2391,56 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertEqual(value, "Test")
         self.assertEqual(value, databrowser)
         self.assertEqual(value_initial, "Scan")
+
+    def test_show_brick_history(self):
+        '''
+        Opens the history pop-up for scans with history related to 
+        standard bricks and bricks contained by a subpipeline.
+        Tests
+         - TableDataBrowser.show_brick_history
+         - PopUpShowHistory
+        '''
+
+        # Creates a new project folder and switches to it
+        new_project_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_project_path, "light_test_project")
+
+        # Sets shortcuts for objects that are often used
+        data_browser = self.main_window.data_browser
+        session = self.main_window.project.session
+
+        # Gets the input file path of the input scan
+        INPUT_SCAN = session.get_documents(COLLECTION_CURRENT)[0]['FileName']
+
+        # Opens the history pop-up for the scan related to 'smooth_1'
+        hist_index = data_browser.table_data.get_tag_column('History')
+        hist_button = (data_browser.table_data.cellWidget(0,hist_index).
+                       children()[-1])
+
+        hist_button.clicked.emit() # Opens the history window
+
+        # Asserts that a history pop-up was created
+        self.assertTrue(hasattr(data_browser.table_data, 
+                                'brick_history_popup'))
+
+        # Clicks on the input button displayed on the history pop-up
+        # This shows the corresponding scan in the data browser
+        input_button = (data_browser.table_data.brick_history_popup.
+                        table.cellWidget(0,8).children()[-1])
+
+        input_button.clicked.emit() # Clicks on the input button
+
+        # Asserts that 'INPUT_SCAN' history pop-up was created
+        self.assertNotEqual(data_browser.table_data.selectedItems(), 0)
+        self.assertEqual(data_browser.table_data.selectedItems()[0].text(), 
+                         INPUT_SCAN)
+
+        # Opens the history pop-up for the scan related to 'quad_smooth_1'
+        hist_button = (data_browser.table_data.cellWidget(1,hist_index).
+                       children()[-1])
+
+        hist_button.clicked.emit() # Opens the history window
+        hist_button.close()
 
     def test_sort(self):
         """
@@ -7054,7 +7110,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         folder = os.path.abspath(os.path.join(config.get_mia_path(),
                                               'resources', 'mia', 'project_8',
                                               'data', 'raw_data'))
-
         NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
                       'Guerbet_Anat-RAREpvm-000220_000.nii')
         NII_FILE_2 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
