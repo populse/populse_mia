@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>&lt;no title&gt; &#8212; populse_mia 2.2.1-dev+7b35552a2 documentation</title>
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+b06d92590 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+7b35552a2 documentation</span></a></h1>
-        <h2 class="heading"><span>&lt;no title&gt;</span></h2>
+          <span>populse_mia 2.2.1-dev+b06d92590 documentation</span></a></h1>
+        <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
       
@@ -47,46 +47,54 @@
 </tr>
 </tbody>
 </table>
-<p>Pre-requirements of windows installations are the same for <cite>windows host installation in user mode &lt;https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html&gt;</cite>. But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project in on ubuntu.</p>
-<p>Once pre-requirements are aquired, you will need installing Wsl2 to host a virtual machine of ubuntu to install mia.</p>
-<p><a href="#id1"><span class="problematic" id="id2">*</span></a>1 - WSL2 (Windows Subsystem Linux) installation</p>
-<blockquote>
-<div><ul>
-<li><dl>
-<dt>In an administrator type Windows account:</dt><dd><ul>
+<p>Pre-requirements of windows installations are the same for <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html">windows host installation in user mode</a>. But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project in on ubuntu.</p>
+<p>Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.</p>
+<section id="wsl2-windows-subsystem-linux-installation">
+<h1>1- WSL2 (Windows Subsystem Linux) installation<a class="headerlink" href="#wsl2-windows-subsystem-linux-installation" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl>
+<dt>In an administrator type Windows account:</dt><dd><ul class="simple">
 <li><p>Windows 10 must be up to date</p></li>
 <li><p>You need to have enough free space on your system disk : around 20 Gb</p></li>
 <li><p>Open a <strong>PowerShell as administrator</strong> (right clic on powershell icon):</p></li>
 <li><p>enter <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">Ubuntu-20.04</span></code></p></li>
-<li><img alt="images/screenshots/Windows10-PowerShell-WSL2.png" class="align-center" id="windows-10" src="images/screenshots/Windows10-PowerShell-WSL2.png" />
-</li>
 </ul>
+<img alt="images/screenshots/Windows10-PowerShell-WSL2.png" class="align-center" id="windows-10" src="images/screenshots/Windows10-PowerShell-WSL2.png" />
 </dd>
 </dl>
-</li>
-<li><p>Reboot the computer</p></li>
-<li><dl>
-<dt>Normaly a linux ubuntu window is already available, enter it:</dt><dd><ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Reboot the computer</p>
+<dl>
+<dt>Normally a linux ubuntu window is already available, enter it:</dt><dd><ul class="simple">
 <li><p>enter a user / password who will be administrator of this linux (asked by the system)</p></li>
-<li><img alt="images/screenshots/Windows10-Ubuntu.png" class="align-center" id="id3" src="images/screenshots/Windows10-Ubuntu.png" />
-</li>
+</ul>
+<img alt="images/screenshots/Windows10-Ubuntu.png" class="align-center" id="id1" src="images/screenshots/Windows10-Ubuntu.png" />
+<ul class="simple">
 <li><p>then you can write your first commands to make ubuntu up to date:</p></li>
 </ul>
-<p>sudo apt update
+<blockquote>
+<div><p>sudo apt update
 #at this first sudo command, the system may ask you to enter the password you just enter before.
 sudo apt upgrade -y
 exit</p>
-</dd>
-</dl>
-</li>
+</div></blockquote>
+<ul class="simple">
 <li><p>close this window</p></li>
 </ul>
-</div></blockquote>
-<p>Now you have WSL2 and an Ubuntu 20.04 linux.
-Before you install a new distribution using <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>, make sure that WSL is in 2 mode with:</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--set-default-version</span> <span class="pre">2</span></code></p>
-</div></blockquote>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Now you have WSL2 and an Ubuntu 20.04 linux.</p>
+<dl class="simple">
+<dt>Before you install a new distribution using <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>, make sure that WSL is in 2 mode with:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--set-default-version</span> <span class="pre">2</span></code></p>
+</dd>
+</dl>
 <p>The distribution is only available for the current Windows user.
 Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <code class="docutils literal notranslate"><span class="pre">/mnt/c/</span></code></p>
 <dl class="simple">
@@ -97,128 +105,149 @@ Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <
 </ul>
 </dd>
 </dl>
-<p><a href="#id4"><span class="problematic" id="id5">*</span></a>2- Upgrade Ubuntu 20.04 to 22.04 (Only for devellopers )</p>
+</section>
+<section id="upgrade-ubuntu-20-04-to-22-04-only-for-devellopers">
+<h1>2- Upgrade Ubuntu 20.04 to 22.04 (Only for devellopers )<a class="headerlink" href="#upgrade-ubuntu-20-04-to-22-04-only-for-devellopers" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>If you are a developper, you will need Ubuntu 22.04 to work on the whole project populse.
 If not , you can ignore this part 2.
 You have precedently update the linux system. You can directly upgrade your linux Ubuntu distriution to 22.04 with the following commands:</p>
-<ul class="simple">
-<li><p>To get if any new rekease is available type:</p></li>
+<ul>
+<li><p>To get if any new rekease is available type:</p>
+<p>sudo apt dist-upgrade</p>
+</li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">dist-upgrade</span></code></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ul class="simple">
 <li><p>Install the update manager:</p></li>
 </ul>
-<p>Although the update manager core will already be there, however, to confirm just run the given command.</p>
-<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">update-manager-core</span></code></p>
-<ul class="simple">
-<li><p>Edit release-upgrades configuration file using the below-given command.</p></li>
+<p>Although the update manager core will already be there, however, to confirm just run the given command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">update</span><span class="o">-</span><span class="n">manager</span><span class="o">-</span><span class="n">core</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Edit release-upgrades configuration file using the below-given command:</p>
+<p>sudo nano /etc/update-manager/release-upgrades</p>
+</li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">nano</span> <span class="pre">/etc/update-manager/release-upgrades</span></code></p>
-<ul class="simple">
-<li><p>After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS.</p></li>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS:</p>
+<p>Prompt = lts</p>
+</li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">Prompt</span> <span class="pre">=</span> <span class="pre">lts</span></code></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>Save the file by pressing Ctrl+O and then exit the same with Ctrl+X.</p>
-<ul class="simple">
-<li><p>Here startes the concrete upgrade by the command:</p></li>
+<ul>
+<li><p>Here startes the concrete upgrade by the command:</p>
+<p>sudo do-release-upgrade -d</p>
+</li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">do-release-upgrade</span> <span class="pre">-d</span></code></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>After running the above command, the system will update and replace the system repository and after that, once the system is ready to get upgraded, you will ask finally whether you want to upgrade or not. If you have changed your mind then type ‘n‘ and the system will roll back all the made changes.</p>
 <p>Once the installation of the new Jammy Jelly Fish is completed, remove the obsolete packages to clear some space by pressing Y and hitting the Enter key.</p>
 <p>The WSL Ubuntu App will ask you to restart the system. However, it has not been started as an init system, so that will not be possible. Therefore, simply close the WSL app window and open it again.</p>
-<ul class="simple">
-<li><p>You can chechk the Ubuntu version installed via the command:</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">/otc/os-release</span></code></p>
-<p><a href="#id6"><span class="problematic" id="id7">*</span></a>3- X server installation in windows with VcXsrv</p>
-<p>We also need a X windows server to allow linux applications graphic user interface (GUI) works.</p>
 <ul>
-<li><p>Get [VcXsrv](<a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">https://sourceforge.net/projects/vcxsrv/files/latest/download</a>)
-- Execute it,
-- click ‘next’ then ‘install’ to install it</p></li>
-<li><p>Looking for XLaunch application icon, launch it</p></li>
-<li><p>Configure it like the screenshots below:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>-.. image:: ../images/screenshots/Xlaunch_1.png</dt><dd><dl class="field-list simple">
-<dt class="field-odd">align</dt>
-<dd class="field-odd"><p>center</p>
-</dd>
-<dt class="field-even">name</dt>
-<dd class="field-even"><p>Xlaunch_1</p>
-</dd>
-</dl>
-</dd>
-<dt>-.. image:: ../images/screenshots/Xlaunch_2.png</dt><dd><dl class="field-list simple">
-<dt class="field-odd">align</dt>
-<dd class="field-odd"><p>center</p>
-</dd>
-<dt class="field-even">name</dt>
-<dd class="field-even"><p>Xlaunch_2</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<ul class="simple">
-<li><p>Disable <em>‘Native opengl’</em></p></li>
-<li><p>Enable <em>‘Disable access control’</em></p></li>
-</ul>
-<dl class="simple">
-<dt>-.. image:: ../images/screenshots/Xlaunch_3.png</dt><dd><dl class="field-list simple">
-<dt class="field-odd">align</dt>
-<dd class="field-odd"><p>center</p>
-</dd>
-<dt class="field-even">name</dt>
-<dd class="field-even"><p>Xlaunch_3</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<ul class="simple">
-<li><p>Do <em>‘Save Configuration’</em> in a file that allow you to launch it later (ie on the Desktop)</p></li>
-</ul>
-<dl class="simple">
-<dt>-.. image:: ../images/screenshots/Xlaunch_4.png</dt><dd><dl class="field-list simple">
-<dt class="field-odd">align</dt>
-<dd class="field-odd"><p>center</p>
-</dd>
-<dt class="field-even">name</dt>
-<dd class="field-even"><p>Xlaunch_4</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
+<li><p>You can chechk the Ubuntu version installed via the command:</p>
+<p>cat /otc/os-release</p>
 </li>
-<li><p>Allow access asked by Windows firewall</p></li>
 </ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="x-server-installation-in-windows-with-vcxsrv">
+<h1>3- X server installation in windows with VcXsrv<a class="headerlink" href="#x-server-installation-in-windows-with-vcxsrv" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>We also need a X windows server to allow linux applications graphic user interface (GUI) works.</p>
+<dl class="simple">
+<dt>Get <a href="#id2"><span class="problematic" id="id3">`</span></a>[VcXsrv](<a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">https://sourceforge.net/projects/vcxsrv/files/latest/download</a>)</dt><dd><ul class="simple">
+<li><p>Execute it,</p></li>
+<li><p>click ‘next’ then ‘install’ to install it</p></li>
+</ul>
+</dd>
+</dl>
+<p>Looking for XLaunch application icon, launch it</p>
+<p>Configure it like the screenshots below:</p>
 <blockquote>
-<div><p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux ditribution.</p>
+<div><img alt="images/screenshots/Xlaunch_1.png" class="align-center" id="xlaunch-1" src="images/screenshots/Xlaunch_1.png" />
 </div></blockquote>
-<p><a href="#id8"><span class="problematic" id="id9">*</span></a>4 - Dependencies Installation</p>
-<ul>
-<li><dl class="simple">
-<dt>Open an Ubuntu session in Windows by:</dt><dd><ul class="simple">
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><img alt="images/screenshots/Xlaunch_2.png" class="align-center" id="xlaunch-2" src="images/screenshots/Xlaunch_2.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Disable <em>‘Native opengl’</em>
+Enable <em>‘Disable access control’</em></p>
+<blockquote>
+<div><img alt="images/screenshots/Xlaunch_3.png" class="align-center" id="xlaunch-3" src="images/screenshots/Xlaunch_3.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Do <em>‘Save Configuration’</em> in a file that allow you to launch it later (ie on the Desktop)</p>
+<blockquote>
+<div><img alt="images/screenshots/Xlaunch_4.png" class="align-center" id="xlaunch-4" src="images/screenshots/Xlaunch_4.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Allow access asked by Windows firewall</p>
+<blockquote>
+<div><p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.</p>
+</div></blockquote>
+</section>
+<section id="dependencies-installation">
+<h1>4 - Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Open an Ubuntu session in Windows by:</p>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
 <li><p>click on Ubuntu new icon</p></li>
 </ul>
-</dd>
-<dt>or</dt><dd><ul class="simple">
-<li><p>open a normal Windows PowerShell,</p></li>
+</div></blockquote>
+<p>or</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>open a normal Windows PowerShell,enter <code class="docutils literal notranslate"><span class="pre">ubuntu.20.04.exe</span></code></p></li>
 </ul>
-</dd>
-</dl>
-<p>enter <code class="docutils literal notranslate"><span class="pre">ubuntu.20.04.exe</span></code></p>
-</li>
-<li><p>In this Ubuntu window terminal, install the following dependencies:</p></li>
-</ul>
-<dl class="simple">
-<dt>bash</dt><dd><p>sudo apt install -y build-essential uuid-dev libgpgme-dev squashfs-tools libseccomp-dev wget pkg-config git git-lfs cryptsetup-bin python3-distutils python3-dev
-# Ubuntu 20.04
-sudo apt install python-is-python3
-# Ubuntu 18.04
-sudo ln -s python3 /usr/bin/python</p>
-</dd>
-</dl>
+</div></blockquote>
+</div></blockquote>
+<p>In this Ubuntu window terminal, install the following dependencies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">uuid</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgpgme</span><span class="o">-</span><span class="n">dev</span> <span class="n">squashfs</span><span class="o">-</span><span class="n">tools</span> <span class="n">libseccomp</span><span class="o">-</span><span class="n">dev</span> <span class="n">wget</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> <span class="n">git</span> <span class="n">git</span><span class="o">-</span><span class="n">lfs</span> <span class="n">cryptsetup</span><span class="o">-</span><span class="nb">bin</span> <span class="n">python3</span><span class="o">-</span><span class="n">distutils</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span>
+<span class="c1"># Ubuntu 20.04</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">python3</span>
+<span class="c1"># Ubuntu 18.04</span>
+<span class="n">sudo</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="n">python3</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>You have completely installed a virtual Ubuntu which now is able to host. You can now follow steps for <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html">populse mia installation in user mode</a>.</p>
+</section>
 
 
       </div>
