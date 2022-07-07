@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+b06d92590 documentation</title>
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+d871b7431 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+b06d92590 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+d871b7431 documentation</span></a></h1>
         <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -51,45 +51,52 @@
 <p>Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.</p>
 <section id="wsl2-windows-subsystem-linux-installation">
 <h1>1- WSL2 (Windows Subsystem Linux) installation<a class="headerlink" href="#wsl2-windows-subsystem-linux-installation" title="Permalink to this headline">¶</a></h1>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-<dl>
-<dt>In an administrator type Windows account:</dt><dd><ul class="simple">
+<ul class="simple">
+<li><dl class="simple">
+<dt>In an administrator type Windows account:</dt><dd><ul>
 <li><p>Windows 10 must be up to date</p></li>
 <li><p>You need to have enough free space on your system disk : around 20 Gb</p></li>
 <li><p>Open a <strong>PowerShell as administrator</strong> (right clic on powershell icon):</p></li>
-<li><p>enter <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">Ubuntu-20.04</span></code></p></li>
+<li><p>enter: wsl –install -d Ubuntu-20.04</p></li>
 </ul>
-<img alt="images/screenshots/Windows10-PowerShell-WSL2.png" class="align-center" id="windows-10" src="images/screenshots/Windows10-PowerShell-WSL2.png" />
 </dd>
 </dl>
+</li>
+</ul>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>Reboot the computer</p>
-<dl>
-<dt>Normally a linux ubuntu window is already available, enter it:</dt><dd><ul class="simple">
+<img alt="../../developer_doc/images/screenshots/Windows10-PowerShell-WSL2.png" class="align-center" id="windows-10" src="../../developer_doc/images/screenshots/Windows10-PowerShell-WSL2.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Reboot the computer</p></li>
+<li><p>Normally a linux ubuntu window is already available, enter it:</p></li>
+</ul>
+<ul class="simple">
 <li><p>enter a user / password who will be administrator of this linux (asked by the system)</p></li>
 </ul>
-<img alt="images/screenshots/Windows10-Ubuntu.png" class="align-center" id="id1" src="images/screenshots/Windows10-Ubuntu.png" />
-<ul class="simple">
-<li><p>then you can write your first commands to make ubuntu up to date:</p></li>
-</ul>
-<blockquote>
-<div><p>sudo apt update
-#at this first sudo command, the system may ask you to enter the password you just enter before.
-sudo apt upgrade -y
-exit</p>
-</div></blockquote>
+<img alt="../../developer_doc/images/screenshots/Windows10-Ubuntu.png" class="align-center" id="id1" src="../../developer_doc/images/screenshots/Windows10-Ubuntu.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>then you can write your first commands to make ubuntu up to date:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
+
+<span class="c1">#at this first sudo command, the system may ask you to enter the password you just enter before.</span>
+
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">upgrade</span> <span class="o">-</span><span class="n">y</span>
+
+<span class="n">exit</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ul class="simple">
 <li><p>close this window</p></li>
 </ul>
-</dd>
-</dl>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <p>Now you have WSL2 and an Ubuntu 20.04 linux.</p>
 <dl class="simple">
 <dt>Before you install a new distribution using <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>, make sure that WSL is in 2 mode with:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--set-default-version</span> <span class="pre">2</span></code></p>
@@ -114,11 +121,10 @@ Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <
 <p>If you are a developper, you will need Ubuntu 22.04 to work on the whole project populse.
 If not , you can ignore this part 2.
 You have precedently update the linux system. You can directly upgrade your linux Ubuntu distriution to 22.04 with the following commands:</p>
-<ul>
-<li><p>To get if any new rekease is available type:</p>
-<p>sudo apt dist-upgrade</p>
-</li>
-</ul>
+<p>To get if any new release is available type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">dist</span><span class="o">-</span><span class="n">upgrade</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -132,39 +138,35 @@ You have precedently update the linux system. You can directly upgrade your linu
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<ul>
-<li><p>Edit release-upgrades configuration file using the below-given command:</p>
-<p>sudo nano /etc/update-manager/release-upgrades</p>
-</li>
-</ul>
+<p>Edit release-upgrades configuration file using the below-given command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">update</span><span class="o">-</span><span class="n">manager</span><span class="o">/</span><span class="n">release</span><span class="o">-</span><span class="n">upgrades</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<ul>
-<li><p>After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS:</p>
-<p>Prompt = lts</p>
-</li>
-</ul>
+<p>After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Prompt</span> <span class="o">=</span> <span class="n">lts</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>Save the file by pressing Ctrl+O and then exit the same with Ctrl+X.</p>
-<ul>
-<li><p>Here startes the concrete upgrade by the command:</p>
-<p>sudo do-release-upgrade -d</p>
-</li>
-</ul>
+<p>Here startes the concrete upgrade by the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">do</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">upgrade</span> <span class="o">-</span><span class="n">d</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>After running the above command, the system will update and replace the system repository and after that, once the system is ready to get upgraded, you will ask finally whether you want to upgrade or not. If you have changed your mind then type ‘n‘ and the system will roll back all the made changes.</p>
 <p>Once the installation of the new Jammy Jelly Fish is completed, remove the obsolete packages to clear some space by pressing Y and hitting the Enter key.</p>
 <p>The WSL Ubuntu App will ask you to restart the system. However, it has not been started as an init system, so that will not be possible. Therefore, simply close the WSL app window and open it again.</p>
-<ul>
-<li><p>You can chechk the Ubuntu version installed via the command:</p>
-<p>cat /otc/os-release</p>
-</li>
-</ul>
+<p>You can chechk the Ubuntu version installed via the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">otc</span><span class="o">/</span><span class="n">os</span><span class="o">-</span><span class="n">release</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -185,13 +187,13 @@ You have precedently update the linux system. You can directly upgrade your linu
 <p>Looking for XLaunch application icon, launch it</p>
 <p>Configure it like the screenshots below:</p>
 <blockquote>
-<div><img alt="images/screenshots/Xlaunch_1.png" class="align-center" id="xlaunch-1" src="images/screenshots/Xlaunch_1.png" />
+<div><img alt="../_images/Xlaunch_1.png" class="align-center" id="xlaunch-1" src="../_images/Xlaunch_1.png" />
 </div></blockquote>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <blockquote>
-<div><img alt="images/screenshots/Xlaunch_2.png" class="align-center" id="xlaunch-2" src="images/screenshots/Xlaunch_2.png" />
+<div><img alt="../_images/Xlaunch_2.png" class="align-center" id="xlaunch-2" src="../_images/Xlaunch_2.png" />
 </div></blockquote>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -199,14 +201,14 @@ You have precedently update the linux system. You can directly upgrade your linu
 <p>Disable <em>‘Native opengl’</em>
 Enable <em>‘Disable access control’</em></p>
 <blockquote>
-<div><img alt="images/screenshots/Xlaunch_3.png" class="align-center" id="xlaunch-3" src="images/screenshots/Xlaunch_3.png" />
+<div><img alt="../_images/Xlaunch_3.png" class="align-center" id="xlaunch-3" src="../_images/Xlaunch_3.png" />
 </div></blockquote>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>Do <em>‘Save Configuration’</em> in a file that allow you to launch it later (ie on the Desktop)</p>
 <blockquote>
-<div><img alt="images/screenshots/Xlaunch_4.png" class="align-center" id="xlaunch-4" src="images/screenshots/Xlaunch_4.png" />
+<div><img alt="../_images/Xlaunch_4.png" class="align-center" id="xlaunch-4" src="../_images/Xlaunch_4.png" />
 </div></blockquote>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -222,19 +224,12 @@ Enable <em>‘Disable access control’</em></p>
 <div class="line"><br /></div>
 </div>
 <p>Open an Ubuntu session in Windows by:</p>
-<blockquote>
-<div><blockquote>
-<div><ul class="simple">
-<li><p>click on Ubuntu new icon</p></li>
-</ul>
-</div></blockquote>
+<ul>
+<li><p>click on Ubuntu new icon</p>
 <p>or</p>
-<blockquote>
-<div><ul class="simple">
+</li>
 <li><p>open a normal Windows PowerShell,enter <code class="docutils literal notranslate"><span class="pre">ubuntu.20.04.exe</span></code></p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
 <p>In this Ubuntu window terminal, install the following dependencies:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">uuid</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgpgme</span><span class="o">-</span><span class="n">dev</span> <span class="n">squashfs</span><span class="o">-</span><span class="n">tools</span> <span class="n">libseccomp</span><span class="o">-</span><span class="n">dev</span> <span class="n">wget</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> <span class="n">git</span> <span class="n">git</span><span class="o">-</span><span class="n">lfs</span> <span class="n">cryptsetup</span><span class="o">-</span><span class="nb">bin</span> <span class="n">python3</span><span class="o">-</span><span class="n">distutils</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span>
 <span class="c1"># Ubuntu 20.04</span>
