@@ -133,7 +133,7 @@ You can chechk the Ubuntu version installed via the command: ::
 
 We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
 
-Get `[VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)
+Get [VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)
   - Execute it, 
   - click 'next' then 'install' to install it 
 
