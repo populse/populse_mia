@@ -198,7 +198,7 @@ In this Ubuntu window terminal, install the following dependencies: ::
 
 |
 
-You have completely installed a virtual Ubuntu which now is able to host. You can now follow steps for `populse mia installation in user mode <https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html>`_.
+You have completely installed a virtual Ubuntu which is now able to host mia. You can now follow steps from **installation** via `populse mia installation in user mode <https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html>`_.
 
 
 
