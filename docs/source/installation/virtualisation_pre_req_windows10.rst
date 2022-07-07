@@ -19,14 +19,18 @@ Once pre-requirements are acquired, you will need to install Wsl2 to host a virt
 * In an administrator type Windows account:
       - Windows 10 must be up to date
       - You need to have enough free space on your system disk : around 20 Gb
-      - Open a **PowerShell as administrator** (right clic on powershell icon):  
-      - enter: wsl --install -d Ubuntu-20.04
+      - Open a **PowerShell as administrator** (right clic on powershell icon
+enter: ::
+
+  wsl --install -d Ubuntu-20.04
 
 |
+
 
 .. image:: ../../../developer_doc/images/screenshots/Windows 10 - PowerShell - WSL2.png
   :align: center
   :name: Windows 10
+
 |
 
 * Reboot the computer
@@ -34,6 +38,7 @@ Once pre-requirements are acquired, you will need to install Wsl2 to host a virt
 * Normally a linux ubuntu window is already available, enter it:
 
 - enter a user / password who will be administrator of this linux (asked by the system)
+
 
 .. image:: ../../../developer_doc/images/screenshots/Windows 10 - Ubuntu.png
    :align: center
