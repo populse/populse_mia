@@ -22,7 +22,7 @@
 
 from PyQt5 import QtGui
 from PyQt5.QtCore import (QCoreApplication, QEvent, QPoint, Qt, QThread, QTimer,
-                          QT_VERSION_STR)
+                          QModelIndex, QT_VERSION_STR)
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QDialog, QMessageBox, QInputDialog,
                              QTableWidgetItem, QFileDialog)
@@ -175,6 +175,7 @@ from populse_mia.user_interface.pop_ups import (PopUpAddPath,
                                                 PopUpSelectTagCountTable)
 
 from populse_mia.utils.utils import check_value_type, table_to_database
+
 # populse_db import
 from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_DATETIME, FIELD_TYPE_INTEGER,
@@ -186,6 +187,10 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
                                  FIELD_TYPE_LIST_INTEGER, 
                                  FIELD_TYPE_LIST_STRING, 
                                  FIELD_TYPE_LIST_TIME)
+
+# soma import
+from soma.qt_gui.qt_backend.Qt import QTreeView
+from soma.qt_gui.qt_backend.Qt import QItemSelectionModel
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -282,11 +287,17 @@ class TestMIADataBrowser(unittest.TestCase):
             QTest.mouseClick(close_button, Qt.LeftButton)
 
     def get_new_test_project(self, name = 'project_8', light=False):
-        """
-        Copy the test project in a location we can modify safely
-        """
+        '''
+        Copies a test project where it can be safely modified.
+        The new project is created in the /tmp (/Temp) folder.
 
-        new_test_proj = os.path.join(self.config_path, name)
+        :param name: str, name of the directory containing the project
+        :param light: bool, True to copy a project with few documents
+
+        '''
+
+        new_test_proj = os.path.join(self.config_path, 
+                                     'light_test_project' if light else name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
@@ -294,12 +305,8 @@ class TestMIADataBrowser(unittest.TestCase):
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
 
-        if light:
-            test_proj = os.path.join(mia_path, 'resources', 'mia', 
-                                     'light_test_project')
-        else:
-            test_proj = os.path.join(mia_path, 'resources', 'mia', 
-                                     'project_8')
+        test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                 'light_test_project' if light else 'project_8')
         
         shutil.copytree(test_proj, new_test_proj)
         return new_test_proj
@@ -3074,22 +3081,30 @@ class TestMIADataBrowser(unittest.TestCase):
 
 class TestMIAMainWindow(unittest.TestCase):
         
-    def get_new_test_project(self, name = 'project_8'):
-        """
-        Copy the test project in a location we can modify safely
-        """
+    def get_new_test_project(self, name = 'project_8', light=False):
+        '''
+        Copies a test project where it can be safely modified.
+        The new project is created in the /tmp (/Temp) folder.
 
-        project_path = os.path.join(self.config_path, name)
+        :param name: str, name of the directory containing the project
+        :param light: bool, True to copy a project with few documents
 
-        if os.path.exists(project_path):
-            shutil.rmtree(project_path)
+        '''
+
+        new_test_proj = os.path.join(self.config_path, 
+                                     'light_test_project' if light else name)
+
+        if os.path.exists(new_test_proj):
+            shutil.rmtree(new_test_proj)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
-                                      'project_8')
-        shutil.copytree(project_8_path, project_path)
-        return project_path
+
+        test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                 'light_test_project' if light else 'project_8')
+        
+        shutil.copytree(test_proj, new_test_proj)
+        return new_test_proj
 
     def setUp(self):
         """
@@ -3202,6 +3217,115 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
+
+    def test_package_library_dialog(self):
+        '''
+        Tests
+         - PackageLibraryDialog
+        '''
+
+        def find_item_by_data(q_tree_view: QTreeView, data: str) -> QModelIndex:
+            '''
+            Looks for a QModelIndex whose contents correspond to the 
+            argument data.
+            '''
+            assert isinstance(q_tree_view, QTreeView), 'first argment is not a QTreeView instance'
+
+            q_tree_view.expandAll()
+            index = q_tree_view.indexAt(QPoint(0,0))
+
+            while index.data() and index.data() != data:
+                index = q_tree_view.indexBelow(index)
+            
+            return index
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl_edt_tab = ppl_edt_tabs.get_current_editor()
+        ppl = ppl_edt_tabs.get_current_pipeline()
+
+        # Writes the name of an existing package on the line edit
+        pkg_lib_window = ppl_manager.processLibrary.process_library.pkg_library
+        pkg_lib_window.line_edit.setText('nipype.interfaces.DataGrabber')
+
+        # Clicks on the remove package button
+        rmv_pkg_button = (pkg_lib_window.layout().children()[0].layout().
+                          children()[3].itemAt(1).widget())
+        rmv_pkg_button.clicked.emit()
+
+        pkg_lib_window.ok_clicked() # Apply changes
+
+        # Clicks on the delete package button
+        del_pkg_button = (pkg_lib_window.layout().children()[0].layout().
+                          children()[3].itemAt(2).widget())
+        del_pkg_button.clicked.emit()
+
+        QMessageBox.question = Mock(return_value=QMessageBox.No)
+        pkg_lib_window.ok_clicked() # Apply changes
+
+        # Clicks on the add package button
+        add_pkg_button = (pkg_lib_window.layout().children()[0].layout().
+                          children()[3].itemAt(0).widget())
+        add_pkg_button.clicked.emit()
+
+        pkg_lib_window.ok_clicked() # Apply changes
+
+        # Writes the name of non existing package on the line edit
+        pkg_lib_window.line_edit.setText('nipype.interfaces.DataGrabbe')
+
+        rmv_pkg_button.clicked.emit() # 
+        pkg_lib_window.ok_clicked() # Apply changes
+
+        # Switches to the pipeline manager tab
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # Selects the 'DataGrabber' package
+        proc_lib_view = ppl_manager.processLibrary.process_library
+        data_grabber_index = find_item_by_data(proc_lib_view, 'DataGrabber')
+        (proc_lib_view.selectionModel().
+         select(data_grabber_index, QItemSelectionModel.SelectCurrent))
+
+        # Mocks the execution of a 'QMessageBox'
+        QMessageBox.show = lambda x: None
+
+        # Tries to delete a package that cannot be deleted
+        event = Mock()
+        event.key = lambda: Qt.Key_Delete
+        proc_lib_view.keyPressEvent(event)
+
+        # Adds the processes Rename, creates the "rename_1" node
+        ppl_edt_tab.click_pos = QPoint(450, 500)
+        ppl_edt_tab.add_named_process(Rename)
+        
+        # Exports the mandatory input and output plugs for "rename_1"
+        ppl_edt_tab.current_node_name = 'rename_1'
+        ppl_edt_tab.export_unconnected_mandatory_inputs()
+        ppl_edt_tab.export_all_unconnected_outputs()
+
+        # Saves the pipeline as the package 'Test_pipeline'
+        config = Config(config_path=self.config_path)
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        save_pipeline(ppl, filename)
+        self.main_window.pipeline_manager.updateProcessLibrary(filename)
+
+        # Gets the 'test_pipeline' index and selects it
+        test_ppl_index = find_item_by_data(proc_lib_view, 'Test_pipeline')
+        proc_lib_view.selectionModel().select(test_ppl_index, QItemSelectionModel.SelectCurrent)        
+
+        # Tries to delete the package 'test_pipeline', rejects the dialog box
+        QMessageBox.question = Mock(return_value = QMessageBox.No)
+        proc_lib_view.keyPressEvent(event)
+        
+        # Effectively deletes the package 'test_pipeline', accepting the 
+        # dialog box
+        QMessageBox.question = Mock(return_value = QMessageBox.Yes)
+        proc_lib_view.keyPressEvent(event)
 
     def test_see_all_projects(self):
         '''
@@ -4252,22 +4376,30 @@ class TestMIAPipelineManager(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self, name = 'project_8'):
-        """
-        Copy the test project in a location we can modify safely
-        """
+    def get_new_test_project(self, name = 'project_8', light=False):
+        '''
+        Copies a test project where it can be safely modified.
+        The new project is created in the /tmp (/Temp) folder.
 
-        project_path = os.path.join(self.config_path, name)
+        :param name: str, name of the directory containing the project
+        :param light: bool, True to copy a project with few documents
 
-        if os.path.exists(project_path):
-            shutil.rmtree(project_path)
+        '''
+
+        new_test_proj = os.path.join(self.config_path, 
+                                     'light_test_project' if light else name)
+
+        if os.path.exists(new_test_proj):
+            shutil.rmtree(new_test_proj)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
-                                      'project_8')
-        shutil.copytree(project_8_path, project_path)
-        return project_path
+
+        test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                 'light_test_project' if light else 'project_8')
+        
+        shutil.copytree(test_proj, new_test_proj)
+        return new_test_proj
 
     def restart_MIA(self):
         """
@@ -5937,22 +6069,30 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self, name = 'project_8'):
-        """
-        Copy the test project in a location we can modify safely
-        """
+    def get_new_test_project(self, name = 'project_8', light=False):
+        '''
+        Copies a test project where it can be safely modified.
+        The new project is created in the /tmp (/Temp) folder.
 
-        project_path = os.path.join(self.config_path, name)
+        :param name: str, name of the directory containing the project
+        :param light: bool, True to copy a project with few documents
 
-        if os.path.exists(project_path):
-            shutil.rmtree(project_path)
+        '''
+
+        new_test_proj = os.path.join(self.config_path, 
+                                     'light_test_project' if light else name)
+
+        if os.path.exists(new_test_proj):
+            shutil.rmtree(new_test_proj)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
-                                      'project_8')
-        shutil.copytree(project_8_path, project_path)
-        return project_path
+
+        test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                 'light_test_project' if light else 'project_8')
+        
+        shutil.copytree(test_proj, new_test_proj)
+        return new_test_proj
 
     def restart_MIA(self):
         """
@@ -8024,22 +8164,30 @@ class TestMIAPipelineEditor(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self, name = 'project_8'):
-        """
-        Copy the test project in a location we can modify safely
-        """
+    def get_new_test_project(self, name = 'project_8', light=False):
+        '''
+        Copies a test project where it can be safely modified.
+        The new project is created in the /tmp (/Temp) folder.
 
-        project_path = os.path.join(self.config_path, name)
+        :param name: str, name of the directory containing the project
+        :param light: bool, True to copy a project with few documents
 
-        if os.path.exists(project_path):
-            shutil.rmtree(project_path)
+        '''
+
+        new_test_proj = os.path.join(self.config_path, 
+                                     'light_test_project' if light else name)
+
+        if os.path.exists(new_test_proj):
+            shutil.rmtree(new_test_proj)
 
         config = Config(config_path=self.config_path)
         mia_path = config.get_mia_path()
-        project_8_path = os.path.join(mia_path, 'resources', 'mia', 
-                                      'project_8')
-        shutil.copytree(project_8_path, project_path)
-        return project_path
+
+        test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                 'light_test_project' if light else 'project_8')
+        
+        shutil.copytree(test_proj, new_test_proj)
+        return new_test_proj
 
     def restart_MIA(self):
         """
