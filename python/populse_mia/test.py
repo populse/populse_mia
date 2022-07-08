@@ -3249,6 +3249,9 @@ class TestMIAMainWindow(unittest.TestCase):
         ppl_edt_tab = ppl_edt_tabs.get_current_editor()
         ppl = ppl_edt_tabs.get_current_pipeline()
 
+        # Does not open the packages library ito avoid thread deadlock
+        #ppl_manager.processLibrary.open_pkg_lib()
+
         # Writes the name of an existing package on the line edit
         pkg_lib_window = ppl_manager.processLibrary.process_library.pkg_library
         pkg_lib_window.line_edit.setText('nipype.interfaces.DataGrabber')
@@ -3278,7 +3281,9 @@ class TestMIAMainWindow(unittest.TestCase):
         # Writes the name of non existing package on the line edit
         pkg_lib_window.line_edit.setText('nipype.interfaces.DataGrabbe')
 
-        rmv_pkg_button.clicked.emit() # 
+        # Mocks execution of a dialog box
+        QMessageBox.exec = lambda x: None
+        rmv_pkg_button.clicked.emit() # Clicks on the remove button
         pkg_lib_window.ok_clicked() # Apply changes
 
         # Switches to the pipeline manager tab
@@ -3314,6 +3319,21 @@ class TestMIAMainWindow(unittest.TestCase):
         save_pipeline(ppl, filename)
         self.main_window.pipeline_manager.updateProcessLibrary(filename)
 
+        # Gets the mia path
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+
+        # Mocks 'InstallProcesses.show' 
+        InstallProcesses.show = lambda x: None
+
+        # Imports the user processes folder as a package
+        ppl_manager.processLibrary.process_library.pkg_library.install_processes_pop_up()
+        pkg_folder = os.path.join(mia_path, 'processes', 'User_processes')
+        ppl_manager.processLibrary.process_library.pkg_library.pop_up_install_processes.path_edit.setText(pkg_folder)
+        ppl_manager.processLibrary.process_library.pkg_library.pop_up_install_processes
+        ppl_manager.processLibrary.process_library.pkg_library.pop_up_install_processes.layout().children()[-1].itemAt(0).widget().clicked.emit()
+
+
         # Gets the 'test_pipeline' index and selects it
         test_ppl_index = find_item_by_data(proc_lib_view, 'Test_pipeline')
         proc_lib_view.selectionModel().select(test_ppl_index, QItemSelectionModel.SelectCurrent)        
@@ -3321,11 +3341,14 @@ class TestMIAMainWindow(unittest.TestCase):
         # Tries to delete the package 'test_pipeline', rejects the dialog box
         QMessageBox.question = Mock(return_value = QMessageBox.No)
         proc_lib_view.keyPressEvent(event)
-        
+
         # Effectively deletes the package 'test_pipeline', accepting the 
         # dialog box
         QMessageBox.question = Mock(return_value = QMessageBox.Yes)
         proc_lib_view.keyPressEvent(event)
+
+        # Saves the config to 'process_config.yml'
+        ppl_manager.processLibrary.save_config()
 
     def test_see_all_projects(self):
         '''
