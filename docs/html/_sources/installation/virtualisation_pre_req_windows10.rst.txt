@@ -63,8 +63,8 @@ then you can write your first commands to make ubuntu up to date: ::
 
 Now you have WSL2 and an Ubuntu 20.04 linux.
 
-Before you install a new distribution using ``wsl --install -d distribution``, make sure that WSL is in 2 mode with:  
-   ``wsl --set-default-version 2``
+Before you install a new distribution using ``wsl --install -d distribution``,
+make sure that WSL is in 2 mode with: ``wsl --set-default-version 2`` .
 The distribution is only available for the current Windows user.  
 Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via ``/mnt/c/``  
 
@@ -84,7 +84,7 @@ Get [VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)
   - Execute it, 
   - click 'next' then 'install' to install it 
 
-Looking for XLaunch application icon, launch it
+Looking for XLaunch application icon, launch it.
 
 Configure it like the screenshots below:
   
@@ -118,9 +118,9 @@ Do *'Save Configuration'* in a file that allow you to launch it later (ie on the
 
 |
 
-Allow access asked by Windows firewall
+Allow access asked by Windows firewall.
  
- P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.
+P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.
   
 3 - Dependencies Installation
 -----------------------------
