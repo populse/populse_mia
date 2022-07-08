@@ -111,12 +111,12 @@ We recommand an update of  linux Ubuntu 20.04 once it's installed.
       - You need to have enough free space on your system disk : around 20 Gb
       - Open a **PowerShell as administrator** (right clic on powershell icon):  
       - enter `wsl --install -d Ubuntu-20.04` 
-      - <img src="images/screenshots/Windows 10 - PowerShell - WSL2.png" width=80%>  
+      - <img src="images/screenshots/Windows_10_-_PowerShell_-_WSL2.png" width=80%>  
 
    - Reboot the computer	
    - Normaly a linux ubuntu window is already available, enter it:  
       - enter a user / password who will be administrator of this linux (asked by the system)
-      - <img src="images/screenshots/Windows 10 - Ubuntu.png" width=80%>
+      - <img src="images/screenshots/Windows_10_-_Ubuntu.png" width=80%>
       - then you can write your first commands to make ubuntu up to date:  
 ```bash
       sudo apt update
