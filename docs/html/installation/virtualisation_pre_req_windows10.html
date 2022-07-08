@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+18d274845 documentation</title>
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+718ab2b8c documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+18d274845 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+718ab2b8c documentation</span></a></h1>
         <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -107,11 +107,9 @@ But you can avoid numpy and PyQt5 install commands since they will be managed wh
 <li><p>close this window</p></li>
 </ul>
 <p>Now you have WSL2 and an Ubuntu 20.04 linux.</p>
-<dl class="simple">
-<dt>Before you install a new distribution using <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>, make sure that WSL is in 2 mode with:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--set-default-version</span> <span class="pre">2</span></code></p>
-</dd>
-</dl>
-<p>The distribution is only available for the current Windows user.
+<p>Before you install a new distribution using <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>,
+make sure that WSL is in 2 mode with: <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--set-default-version</span> <span class="pre">2</span></code> .
+The distribution is only available for the current Windows user.
 Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <code class="docutils literal notranslate"><span class="pre">/mnt/c/</span></code></p>
 <dl class="simple">
 <dt>To know more:</dt><dd><ul class="simple">
@@ -135,7 +133,7 @@ Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <
 </ul>
 </dd>
 </dl>
-<p>Looking for XLaunch application icon, launch it</p>
+<p>Looking for XLaunch application icon, launch it.</p>
 <p>Configure it like the screenshots below:</p>
 <blockquote>
 <div><img alt="../_images/Xlaunch_1.png" class="align-center" id="xlaunch-1" src="../_images/Xlaunch_1.png" />
@@ -164,10 +162,8 @@ Enable <em>‘Disable access control’</em></p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>Allow access asked by Windows firewall</p>
-<blockquote>
-<div><p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.</p>
-</div></blockquote>
+<p>Allow access asked by Windows firewall.</p>
+<p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.</p>
 </section>
 <section id="dependencies-installation">
 <h1>3 - Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this headline">¶</a></h1>
