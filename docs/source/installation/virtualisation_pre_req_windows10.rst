@@ -9,7 +9,8 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Pre-requirements of windows installations are the same for `windows host installation in user mode <https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html>`_. But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project in on ubuntu.
+Pre-requirements of windows installations are the same for `windows host installation in user mode <https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html>`_.
+But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project under ubuntu.
 
 Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.
 
@@ -27,9 +28,9 @@ enter: ::
 |
 
 
-.. image:: ../../../developer_doc/images/screenshots/Windows%2010%20-%20PowerShell%20-%20WSL2.png
-  :align: center
-  :name: Windows 10
+    .. image:: ../../../developer_doc/images/screenshots/Windows%2010%20-%20PowerShell%20-%20WSL2.png
+       :align: center
+       :name: Windows 10
 
 |
 
@@ -40,9 +41,9 @@ enter: ::
 - enter a user / password who will be administrator of this linux (asked by the system)
 
 
-.. image:: ../../../developer_doc/images/screenshots/Windows%2010%20-%20Ubuntu.png
-   :align: center
-   :name: Windows 10
+    .. image:: ../../../developer_doc/images/screenshots/Windows%2010%20-%20Ubuntu.png
+       :align: center
+       :name: Windows 10
 
 |
 
@@ -73,61 +74,7 @@ To know more:
    - [Basic commands for WSL](https://docs.microsoft.com/en-us/windows/wsl/basic-commands)
 
 
-2- Upgrade Ubuntu 20.04 to 22.04 (Only for devellopers )
---------------------------------------------------------
-|
-
-If you are a developper, you will need Ubuntu 22.04 to work on the whole project populse.
-If not , you can ignore this part 2.
-You have precedently update the linux system. You can directly upgrade your linux Ubuntu distriution to 22.04 with the following commands:
-
-To get if any new release is available type: ::
-
-  sudo apt dist-upgrade
-
-|
-
-* Install the update manager:
-
-Although the update manager core will already be there, however, to confirm just run the given command: ::
-
-  sudo apt install update-manager-core
-
-|
-	
-Edit release-upgrades configuration file using the below-given command: ::
-
-  sudo nano /etc/update-manager/release-upgrades
-
-|
-
-After that change the Prompt value from Normal to LTS. However, by default it will be set to LTS: ::
-
-  Prompt = lts
-
-|
-	
-Save the file by pressing Ctrl+O and then exit the same with Ctrl+X.
-
-Here startes the concrete upgrade by the command: ::
-
-  sudo do-release-upgrade -d
-
-|
-
-After running the above command, the system will update and replace the system repository and after that, once the system is ready to get upgraded, you will ask finally whether you want to upgrade or not. If you have changed your mind then type ‘n‘ and the system will roll back all the made changes.
-
-Once the installation of the new Jammy Jelly Fish is completed, remove the obsolete packages to clear some space by pressing Y and hitting the Enter key.
-
-The WSL Ubuntu App will ask you to restart the system. However, it has not been started as an init system, so that will not be possible. Therefore, simply close the WSL app window and open it again.
-
-You can chechk the Ubuntu version installed via the command: ::
-
-  cat /otc/os-release
-
-|
-
-3- X server installation in windows with VcXsrv
+2- X server installation in windows with VcXsrv
 -----------------------------------------------
 |
 
@@ -165,7 +112,7 @@ Enable *'Disable access control'*
 Do *'Save Configuration'* in a file that allow you to launch it later (ie on the Desktop)
 
 
-   .. image:: ../../../developer_doc//images/screenshots/Xlaunch_4.png
+   .. image:: ../../../developer_doc/images/screenshots/Xlaunch_4.png
       :align: center
       :name: Xlaunch_4
 
@@ -175,7 +122,7 @@ Allow access asked by Windows firewall
  
  P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.
   
-4 - Dependencies Installation
+3 - Dependencies Installation
 -----------------------------
 |
 
@@ -198,7 +145,8 @@ In this Ubuntu window terminal, install the following dependencies: ::
 
 |
 
-You have completely installed a virtual Ubuntu which is now able to host mia. You can now follow steps from **installation** via `populse mia installation in user mode <https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html>`_.
+You have completely installed a virtual Ubuntu which is now able to host mia.
+You can now follow steps from **installation** via `populse mia installation in user mode <https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html>`_.
 
 
 
