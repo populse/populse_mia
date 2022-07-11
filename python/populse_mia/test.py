@@ -1379,7 +1379,9 @@ class TestMIADataBrowser(unittest.TestCase):
     def test_popUpDeleteProject(self):
         '''
         Creates a new project and deletes it.
-        Tests PopUpDeleteProject.
+        Tests
+         - MainWindow.delete_project
+         - PopUpDeleteProject.
 
         Notes
         -----
@@ -1389,6 +1391,14 @@ class TestMIADataBrowser(unittest.TestCase):
         # Gets a new project
         proj_8_path = self.get_new_test_project()
         self.main_window.switch_project(proj_8_path, "project_8")
+
+        # Instead of executing the pop-up, only shows it
+        # This avoid thread deadlocking
+        QMessageBox.exec = lambda self_: self_.show()
+
+        # Tries to delete a project without setting the projects folder
+        self.main_window.delete_project()
+        self.main_window.msg.accept()
 
         # Sets a projects save directory
         config = Config()
@@ -1402,7 +1412,12 @@ class TestMIADataBrowser(unittest.TestCase):
          append(os.path.relpath(proj_8_path)))
         config.set_opened_projects([os.path.relpath(proj_8_path)])
 
-        exPopup = PopUpDeleteProject(self.main_window)
+        PopUpDeleteProject.exec = lambda self_: self_.show()
+
+        # Deletes a project with the projects folder set
+        self.main_window.delete_project()
+
+        exPopup = self.main_window.exPopup
 
         # Checks 'project_8' to be deleted
         exPopup.check_boxes[0].setChecked(True)
@@ -1412,12 +1427,6 @@ class TestMIADataBrowser(unittest.TestCase):
         # Mocks the dialog box to directly return 'YesToAll'
         QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
         exPopup.ok_clicked()
-
-        # Asserts that the project was deleted
-        #self.assertEqual(len(self.main_window.saved_projects.pathsList), 0)
-        #self.assertEqual(len(Config().get_opened_projects()), 0)
-        #self.assertFalse(os.path.exists(proj_8_path))
-        # FIXME: (Visual Studio 2019 build) project_8 is still present  
 
     def test_project_properties(self):
         """
