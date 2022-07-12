@@ -286,7 +286,7 @@ class TestMIADataBrowser(unittest.TestCase):
             close_button = w.button(QMessageBox.Ok)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
-    def get_new_test_project(self, name = 'project_8', light=False):
+    def get_new_test_project(self, name = 'test_project', light=False):
         '''
         Copies a test project where it can be safely modified.
         The new project is created in the /tmp (/Temp) folder.
@@ -296,8 +296,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
         '''
 
-        new_test_proj = os.path.join(self.config_path, 
-                                     'light_test_project' if light else name)
+        new_test_proj = os.path.join(self.config_path, name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
@@ -1154,7 +1153,7 @@ class TestMIADataBrowser(unittest.TestCase):
         Tests project opening
         """
 
-        project_8_path = self.get_new_test_project()
+        project_8_path = self.get_new_test_project(name = 'project_8')
         self.main_window.switch_project(project_8_path, "project_8")
 
         self.assertEqual(self.main_window.project.getName(), "project_8")
@@ -2173,7 +2172,7 @@ class TestMIADataBrowser(unittest.TestCase):
         # Sets the project save directory
         config.set_projects_save_path(projects_dir)
         something_path = os.path.join(projects_dir, 'something')
-        project_8_path = self.get_new_test_project()
+        project_8_path = self.get_new_test_project(name = 'project_8')
 
         # Saves the project 'something'
         self.main_window.saveChoice()
@@ -3107,7 +3106,7 @@ class TestMIADataBrowser(unittest.TestCase):
 
 class TestMIAMainWindow(unittest.TestCase):
         
-    def get_new_test_project(self, name = 'project_8', light=False):
+    def get_new_test_project(self, name = 'test_project', light=False):
         '''
         Copies a test project where it can be safely modified.
         The new project is created in the /tmp (/Temp) folder.
@@ -3117,8 +3116,7 @@ class TestMIAMainWindow(unittest.TestCase):
 
         '''
 
-        new_test_proj = os.path.join(self.config_path, 
-                                     'light_test_project' if light else name)
+        new_test_proj = os.path.join(self.config_path, name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
@@ -3243,6 +3241,45 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
+
+    def test_open_recent_project(self):
+        '''
+        Creates 2 test projects and opens one by the recent projects 
+        action.
+        Tests MainWindow.open_recent_project.
+        '''
+
+        # Creates 2 test projects
+        proj_test_1_path = self.get_new_test_project(name = 'test_project_1', 
+                                                     light=True)
+        proj_test_2_path = self.get_new_test_project(name = 'test_project_2', 
+                                                     light=True)
+        
+        # Switches to the first one
+        self.main_window.switch_project(proj_test_1_path, 'test_project_1')
+        config = Config(config_path=self.config_path)
+        config.set_projects_save_path(os.path.split(proj_test_1_path)[0])
+        self.main_window.saved_projects_list.append(proj_test_1_path)
+
+        # Saves project 1
+        self.main_window.saveChoice()
+
+        # Switches to project 2
+        self.main_window.switch_project(proj_test_2_path, 'test_project_2')
+
+        print('visible 1 = '+str(self.main_window.saved_projects_actions[0].isVisible()))
+        print('visible 2 = '+str(self.main_window.saved_projects_actions[1].isVisible()))
+
+        # Asserts that test project 1 is shown in recent projects
+        self.assertTrue(self.main_window.saved_projects_actions[0].isVisible())
+        
+        # Clicks on it
+        self.main_window.saved_projects_actions[0].triggered.emit()
+
+        # Asserts that it is now the current project
+        config = Config(config_path=self.config_path)
+        self.assertEqual(os.path.abspath(config.get_opened_projects()[0]),
+                         proj_test_1_path)
 
     def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
         '''
@@ -3553,8 +3590,8 @@ class TestMIAMainWindow(unittest.TestCase):
         main_wnd = self.main_window
 
         # Creates 2 new project folders
-        project_8_path = self.get_new_test_project()
-        project_9_path = self.get_new_test_project(name='project_9')
+        project_8_path = self.get_new_test_project(name = 'project_8')
+        project_9_path = self.get_new_test_project(name = 'project_9')
 
         # Sets the projects save path
         config = Config(config_path=self.config_path)
@@ -4583,7 +4620,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self, name = 'project_8', light=False):
+    def get_new_test_project(self, name = 'test_project', light=False):
         '''
         Copies a test project where it can be safely modified.
         The new project is created in the /tmp (/Temp) folder.
@@ -4593,8 +4630,7 @@ class TestMIAPipelineManager(unittest.TestCase):
 
         '''
 
-        new_test_proj = os.path.join(self.config_path, 
-                                     'light_test_project' if light else name)
+        new_test_proj = os.path.join(self.config_path, name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
@@ -6276,7 +6312,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self, name = 'project_8', light=False):
+    def get_new_test_project(self, name = 'test_project', light=False):
         '''
         Copies a test project where it can be safely modified.
         The new project is created in the /tmp (/Temp) folder.
@@ -6286,8 +6322,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         '''
 
-        new_test_proj = os.path.join(self.config_path, 
-                                     'light_test_project' if light else name)
+        new_test_proj = os.path.join(self.config_path, name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
@@ -8371,7 +8406,7 @@ class TestMIAPipelineEditor(unittest.TestCase):
         if isinstance(w, QDialog):
             w.close()
     
-    def get_new_test_project(self, name = 'project_8', light=False):
+    def get_new_test_project(self, name = 'test_project', light=False):
         '''
         Copies a test project where it can be safely modified.
         The new project is created in the /tmp (/Temp) folder.
@@ -8381,8 +8416,7 @@ class TestMIAPipelineEditor(unittest.TestCase):
 
         '''
 
-        new_test_proj = os.path.join(self.config_path, 
-                                     'light_test_project' if light else name)
+        new_test_proj = os.path.join(self.config_path, name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
