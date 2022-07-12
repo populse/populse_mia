@@ -2160,18 +2160,32 @@ class TestMIADataBrowser(unittest.TestCase):
         config = Config(config_path=self.config_path)
         projects_dir = os.path.realpath(tempfile.mkdtemp(
                                                        prefix='projects_tests'))
+
+        # Instead of executing the pop-up, only shows it
+        # This avoid thread deadlocking
+        QMessageBox.exec = lambda self_: self_.show()
+
+        # Tries to open the project pop-up without the projects save dir
+        config.set_projects_save_path(None)
+        self.main_window.create_project_pop_up()
+        self.main_window.msg.accept()
+
+        # Sets the project save directory
         config.set_projects_save_path(projects_dir)
         something_path = os.path.join(projects_dir, 'something')
         project_8_path = self.get_new_test_project()
 
-        self.main_window.saveChoice()  # Saves the project 'something'
+        # Saves the project 'something'
+        self.main_window.saveChoice()
         self.assertEqual(self.main_window.project.getName(), "something")
         self.assertEqual(os.path.exists(something_path), True)
 
+        # Switches to project 'project_8'
         self.main_window.switch_project(project_8_path, "project_8")
         self.assertEqual(self.main_window.project.getName(), "project_8")
         self.main_window.saveChoice()  # Updates the project 'project_8'
 
+        # Removes the project 'something' file tree
         shutil.rmtree(something_path)
 
         PopUpNewProject.exec = lambda x: True
@@ -2185,15 +2199,18 @@ class TestMIADataBrowser(unittest.TestCase):
         PopUpOpenProject.relative_path = something_path
         PopUpOpenProject.path, PopUpOpenProject.name = os.path.split(
                                                                  something_path)
-        # Saves the project 'something'
+        # Creates and saves the project 'something'
         self.main_window.create_project_pop_up()
         self.assertEqual(self.main_window.project.getName(), "something")
         self.assertEqual(os.path.exists(something_path), True)
 
+        # Switches to another project and verifies that project 
+        # 'something' is shown in the projects pop-up
         self.main_window.switch_project(project_8_path, "project_8")
         self.main_window.open_project_pop_up()
         self.assertEqual(self.main_window.project.getName(), "something")
 
+        # Removes the project 'something' tree
         self.main_window.switch_project(project_8_path, "project_8")
         shutil.rmtree(something_path)
 
