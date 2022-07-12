@@ -50,6 +50,7 @@ from traits.api import Undefined, TraitListObject
 from unittest.mock import Mock, MagicMock
 import copy
 import subprocess
+import sqlite3
 import platform
 from hashlib import sha256
 
@@ -3295,6 +3296,64 @@ class TestMIAMainWindow(unittest.TestCase):
             index = q_tree_view.indexBelow(index)
             
         return index
+
+    def test_switch_project(self):
+        '''
+        Creates a projects and switches to it.
+        Tests MainWindow.switch_project.
+
+        Notes
+        -----
+        Mocks QMessageBox.exec.
+        '''
+
+        # Mocks the execution of a dialog window
+        QMessageBox.exec = lambda self_: None
+
+        # Creates a new project
+        test_proj_path = self.get_new_test_project()
+
+        # Switches to an existing mia project
+        res = self.main_window.switch_project(test_proj_path, 'test_project')
+        self.assertTrue(res)
+
+        self.main_window.project.folder = '' # Resets the project folder
+
+        # Tries to switch to an inexistant project
+        res = self.main_window.switch_project(test_proj_path+'_', 'test_project')
+        self.assertFalse(res)
+
+        self.main_window.project.folder = '' # Resets the project folder
+
+        # Tries to switch to a project that is already opened in another
+        # instance of the software
+        res = self.main_window.switch_project(test_proj_path, 'test_project')
+        self.assertFalse(res)
+
+        self.main_window.project.folder = '' # Resets the project folder
+
+        # Resets the opened projects list
+        config = Config(config_path=self.config_path)
+        config.set_opened_projects([])
+
+        # Deletes the 'COLLECTION_CURRENT' equivalent in 'mia.db'
+        #con = sqlite3.connect(os.path.join(test_proj_path,'database','mia.db'))
+        #cursor = con.cursor()
+        #query = "DELETE FROM '_collection' WHERE collection_name = 'current'"
+        #cursor.execute(query)
+        #con.commit()
+        #con.close()
+
+        # Tries to switch to a project that cannot be read by mia
+        #res = self.main_window.switch_project(test_proj_path, 'test_project')
+        #self.assertFalse(res)
+
+        # Deletes the 'filters' folder of the project
+        subprocess.run(['rm', '-rf', os.path.join(test_proj_path, 'filters')])
+
+        # Tries to switch to non mia project
+        res = self.main_window.switch_project(test_proj_path, 'test_project')
+        self.assertFalse(res)
 
     def test_package_library_dialog_rmv_pkg(self):
         '''
