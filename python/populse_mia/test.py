@@ -1224,17 +1224,34 @@ class TestMIADataBrowser(unittest.TestCase):
                         "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
                         "pvm-000220_000.nii" in documents)
 
-    def test_open_project_filter(self):
+    def test_project_filter(self):
         '''
-        Opens a project, switches to it and tries to open a saved 
-        filter.
-        Tests DataBrowser.open_popup e PopUpSelectFilter.
+        Creates a project, saves a filter and opens it.
+        Tests 
+         - DataBrowser.open_popup
+         - Project.save_current_filter
+
+        Notes
+        -----
+        Mocks
+         - QMessageBox.exec
+         - QInputDialog.getText
         '''
 
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_8")
+        test_project_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(test_project_path, 'test_project')
 
-        # Opens the saved filters spop-up
+        # Mocks the execution of a dialog box 
+        QMessageBox.exec = lambda *arg: None
+
+        # Saves the current filter as 'filter_1'
+        QInputDialog.getText = lambda *argv: ('filter_1', True)
+        self.main_window.data_browser.save_filter_action.trigger()
+
+        # Tries to save it again by the same name
+        self.main_window.data_browser.save_filter_action.trigger()
+
+        # Opens the saved filters pop-up
         self.main_window.data_browser.open_filter_action.trigger()
         open_popup = self.main_window.data_browser.popUp
 
@@ -1246,16 +1263,17 @@ class TestMIADataBrowser(unittest.TestCase):
         open_popup.search_str('')
         self.assertFalse(open_popup.list_widget_filters.item(0).isHidden())
 
-        # Tries to search for an existing filter 
-        open_popup.search_str('g1_rapid')
-        self.assertFalse(open_popup.list_widget_filters.item(0).isHidden())
-
-        # Tries to search for a non existing filter 
-        open_popup.search_str('g1_rapid_')
+        # Tries to search for an inexistant filter 
+        open_popup.search_str('filter_2')
         self.assertTrue(open_popup.list_widget_filters.item(0).isHidden())
 
+        # Tries to search for an existing filter 
+        open_popup.search_str('filter_1')
+        self.assertFalse(open_popup.list_widget_filters.item(0).isHidden())
+
         open_popup.list_widget_filters.item(0).setSelected(True)
-        QTest.mouseClick(open_popup.push_button_ok, Qt.LeftButton)
+        #QTest.mouseClick(open_popup.push_button_ok, Qt.LeftButton)
+        open_popup.push_button_ok.clicked.emit()
 
         scans_displayed = []
 
@@ -1267,13 +1285,7 @@ class TestMIADataBrowser(unittest.TestCase):
             if not self.main_window.data_browser.table_data.isRowHidden(row):
                 scans_displayed.append(scan_name)
 
-        self.assertEqual(len(scans_displayed), 2)
-        self.assertTrue("data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                        "pvm-000220_000.nii" in scans_displayed)
-        self.assertTrue("data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                        "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                        "pvm-000220_000.nii" in scans_displayed)
+        self.assertEqual(len(scans_displayed), 3)
 
     def test_openTagsPopUp(self):
         '''
@@ -1337,96 +1349,6 @@ class TestMIADataBrowser(unittest.TestCase):
 
         viewer.popUp.list_widget_tags.item(0).setCheckState(Qt.Checked)
         viewer.popUp.ok_clicked()
-
-    def test_popUpDeletedProject(self):
-        '''
-        Adds a deleted projects to the projects list and laches mia.
-        Tests PopUpDeletedProject.
-        '''
-        
-        # Sets a projects save directory
-        config = Config()
-        projects_save_path = os.path.join(config.get_mia_path(), 'projects')
-        config.set_projects_save_path(projects_save_path)
-
-        # Mocks a project filepath that does not exist in the filesystem
-        # Adds this filepath to 'saved_projects.yml' 
-        savedProjects = SavedProjects()
-        del_prjct = os.path.join(projects_save_path, 'missing_project')
-        savedProjects.addSavedProject(del_prjct)
-
-        # Asserts that 'saved_projects.yml' contains the filepath
-        self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
-
-        # Mocks the execution of a dialog box
-        PopUpDeletedProject.exec = Mock()
-
-        # Adds code from the 'main.py', gets deleted projects
-        saved_projects_object = SavedProjects()
-        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
-        deleted_projects = []
-        for saved_project in saved_projects_list:
-            if not os.path.isdir(saved_project):
-                deleted_projects.append(os.path.abspath(saved_project))
-                saved_projects_object.removeSavedProject(saved_project)
-
-        if deleted_projects is not None and deleted_projects:
-            self.msg = PopUpDeletedProject(deleted_projects)
-
-        # Asserts that 'saved_projects.yml' no longer contains it
-        self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
-
-    def test_popUpDeleteProject(self):
-        '''
-        Creates a new project and deletes it.
-        Tests
-         - MainWindow.delete_project
-         - PopUpDeleteProject.
-
-        Notes
-        -----
-        Not to be confused with PopUpDeletedProject.
-        '''
-
-        # Gets a new project
-        proj_8_path = self.get_new_test_project()
-        self.main_window.switch_project(proj_8_path, "project_8")
-
-        # Instead of executing the pop-up, only shows it
-        # This avoid thread deadlocking
-        QMessageBox.exec = lambda self_: self_.show()
-
-        # Tries to delete a project without setting the projects folder
-        self.main_window.delete_project()
-        self.main_window.msg.accept()
-
-        # Sets a projects save directory
-        config = Config()
-        proj_save_path = os.path.join(config.get_mia_path(),
-                                      proj_8_path.split('/project_8')[0])
-        config.set_projects_save_path(proj_save_path)
-
-        # Append 'proj_8_path' to 'saved_projects.pathsList' and 
-        # 'opened_projects', to increase coverage
-        (self.main_window.saved_projects.pathsList.
-         append(os.path.relpath(proj_8_path)))
-        config.set_opened_projects([os.path.relpath(proj_8_path)])
-
-        PopUpDeleteProject.exec = lambda self_: self_.show()
-
-        # Deletes a project with the projects folder set
-        self.main_window.delete_project()
-
-        exPopup = self.main_window.exPopup
-
-        # Checks 'project_8' to be deleted
-        exPopup.check_boxes[0].setChecked(True)
-
-        #exPopup.exec() # does not execute the pop-up to save time
-
-        # Mocks the dialog box to directly return 'YesToAll'
-        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
-        exPopup.ok_clicked()
 
     def test_project_properties(self):
         """
@@ -3243,6 +3165,96 @@ class TestMIAMainWindow(unittest.TestCase):
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
 
+    def test_popUpDeletedProject(self):
+        '''
+        Adds a deleted projects to the projects list and laches mia.
+        Tests PopUpDeletedProject.
+        '''
+        
+        # Sets a projects save directory
+        config = Config()
+        projects_save_path = os.path.join(config.get_mia_path(), 'projects')
+        config.set_projects_save_path(projects_save_path)
+
+        # Mocks a project filepath that does not exist in the filesystem
+        # Adds this filepath to 'saved_projects.yml' 
+        savedProjects = SavedProjects()
+        del_prjct = os.path.join(projects_save_path, 'missing_project')
+        savedProjects.addSavedProject(del_prjct)
+
+        # Asserts that 'saved_projects.yml' contains the filepath
+        self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+        # Mocks the execution of a dialog box
+        PopUpDeletedProject.exec = Mock()
+
+        # Adds code from the 'main.py', gets deleted projects
+        saved_projects_object = SavedProjects()
+        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
+        deleted_projects = []
+        for saved_project in saved_projects_list:
+            if not os.path.isdir(saved_project):
+                deleted_projects.append(os.path.abspath(saved_project))
+                saved_projects_object.removeSavedProject(saved_project)
+
+        if deleted_projects is not None and deleted_projects:
+            self.msg = PopUpDeletedProject(deleted_projects)
+
+        # Asserts that 'saved_projects.yml' no longer contains it
+        self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+    def test_popUpDeleteProject(self):
+        '''
+        Creates a new project and deletes it.
+        Tests
+         - MainWindow.delete_project
+         - PopUpDeleteProject.
+
+        Notes
+        -----
+        Not to be confused with PopUpDeletedProject.
+        '''
+
+        # Gets a new project
+        proj_8_path = self.get_new_test_project()
+        self.main_window.switch_project(proj_8_path, "project_8")
+
+        # Instead of executing the pop-up, only shows it
+        # This avoid thread deadlocking
+        QMessageBox.exec = lambda self_: self_.show()
+
+        # Tries to delete a project without setting the projects folder
+        self.main_window.delete_project()
+        self.main_window.msg.accept()
+
+        # Sets a projects save directory
+        config = Config()
+        proj_save_path = os.path.join(config.get_mia_path(),
+                                      proj_8_path.split('/project_8')[0])
+        config.set_projects_save_path(proj_save_path)
+
+        # Append 'proj_8_path' to 'saved_projects.pathsList' and 
+        # 'opened_projects', to increase coverage
+        (self.main_window.saved_projects.pathsList.
+         append(os.path.relpath(proj_8_path)))
+        config.set_opened_projects([os.path.relpath(proj_8_path)])
+
+        PopUpDeleteProject.exec = lambda self_: self_.show()
+
+        # Deletes a project with the projects folder set
+        self.main_window.delete_project()
+
+        exPopup = self.main_window.exPopup
+
+        # Checks 'project_8' to be deleted
+        exPopup.check_boxes[0].setChecked(True)
+
+        #exPopup.exec() # does not execute the pop-up to save time
+
+        # Mocks the dialog box to directly return 'YesToAll'
+        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
+        exPopup.ok_clicked()
+
     def test_open_recent_project(self):
         '''
         Creates 2 test projects and opens one by the recent projects 
@@ -3267,9 +3279,6 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Switches to project 2
         self.main_window.switch_project(proj_test_2_path, 'test_project_2')
-
-        print('visible 1 = '+str(self.main_window.saved_projects_actions[0].isVisible()))
-        print('visible 2 = '+str(self.main_window.saved_projects_actions[1].isVisible()))
 
         # Asserts that test project 1 is shown in recent projects
         self.assertTrue(self.main_window.saved_projects_actions[0].isVisible())
