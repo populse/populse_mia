@@ -3165,6 +3165,28 @@ class TestMIAMainWindow(unittest.TestCase):
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
 
+    def test_files_in_project(self):
+        '''
+        Tests whether or not a given file is part of the project.
+        Tests MainWindow.files_in_project.
+        '''
+
+        # Creates a now test project
+        test_proj_path = self.get_new_test_project(light=True)
+        self.main_window.project.folder = test_proj_path
+
+        # Checks for a bool type as a file
+        res = self.main_window.project.files_in_project([{'mock_key': False}])
+        self.assertFalse(res)
+
+        # Checks for a str type path ocated out of the project
+        res = self.main_window.project.files_in_project('/out_of_project')
+        self.assertFalse(res)
+
+        # Checks for a str type path within the project
+        res = self.main_window.project.files_in_project(os.path.join(test_proj_path, 'mock_file'))
+        self.assertTrue(res) # Asserts it is not empty
+
     def test_open_recent_project(self):
         '''
         Creates 2 test projects and opens one by the recent projects 
