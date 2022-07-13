@@ -2859,6 +2859,7 @@ class TestMIADataBrowser(unittest.TestCase):
         text_edt.list_creation.type = FIELD_TYPE_LIST_BOOLEAN
         text_edt.list_creation.update_default_value()
 
+    @unittest.skip
     def test_utils(self):
         """
         Test the utils functions
@@ -3164,96 +3165,6 @@ class TestMIAMainWindow(unittest.TestCase):
 
         # Creates a project with the projects folder set
         self.main_window.create_project_pop_up()
-
-    def test_popUpDeletedProject(self):
-        '''
-        Adds a deleted projects to the projects list and laches mia.
-        Tests PopUpDeletedProject.
-        '''
-        
-        # Sets a projects save directory
-        config = Config()
-        projects_save_path = os.path.join(config.get_mia_path(), 'projects')
-        config.set_projects_save_path(projects_save_path)
-
-        # Mocks a project filepath that does not exist in the filesystem
-        # Adds this filepath to 'saved_projects.yml' 
-        savedProjects = SavedProjects()
-        del_prjct = os.path.join(projects_save_path, 'missing_project')
-        savedProjects.addSavedProject(del_prjct)
-
-        # Asserts that 'saved_projects.yml' contains the filepath
-        self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
-
-        # Mocks the execution of a dialog box
-        PopUpDeletedProject.exec = Mock()
-
-        # Adds code from the 'main.py', gets deleted projects
-        saved_projects_object = SavedProjects()
-        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
-        deleted_projects = []
-        for saved_project in saved_projects_list:
-            if not os.path.isdir(saved_project):
-                deleted_projects.append(os.path.abspath(saved_project))
-                saved_projects_object.removeSavedProject(saved_project)
-
-        if deleted_projects is not None and deleted_projects:
-            self.msg = PopUpDeletedProject(deleted_projects)
-
-        # Asserts that 'saved_projects.yml' no longer contains it
-        self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
-
-    def test_popUpDeleteProject(self):
-        '''
-        Creates a new project and deletes it.
-        Tests
-         - MainWindow.delete_project
-         - PopUpDeleteProject.
-
-        Notes
-        -----
-        Not to be confused with PopUpDeletedProject.
-        '''
-
-        # Gets a new project
-        proj_8_path = self.get_new_test_project()
-        self.main_window.switch_project(proj_8_path, "project_8")
-
-        # Instead of executing the pop-up, only shows it
-        # This avoid thread deadlocking
-        QMessageBox.exec = lambda self_: self_.show()
-
-        # Tries to delete a project without setting the projects folder
-        self.main_window.delete_project()
-        self.main_window.msg.accept()
-
-        # Sets a projects save directory
-        config = Config()
-        proj_save_path = os.path.join(config.get_mia_path(),
-                                      proj_8_path.split('/project_8')[0])
-        config.set_projects_save_path(proj_save_path)
-
-        # Append 'proj_8_path' to 'saved_projects.pathsList' and 
-        # 'opened_projects', to increase coverage
-        (self.main_window.saved_projects.pathsList.
-         append(os.path.relpath(proj_8_path)))
-        config.set_opened_projects([os.path.relpath(proj_8_path)])
-
-        PopUpDeleteProject.exec = lambda self_: self_.show()
-
-        # Deletes a project with the projects folder set
-        self.main_window.delete_project()
-
-        exPopup = self.main_window.exPopup
-
-        # Checks 'project_8' to be deleted
-        exPopup.check_boxes[0].setChecked(True)
-
-        #exPopup.exec() # does not execute the pop-up to save time
-
-        # Mocks the dialog box to directly return 'YesToAll'
-        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
-        exPopup.ok_clicked()
 
     def test_open_recent_project(self):
         '''
@@ -3638,6 +3549,100 @@ class TestMIAMainWindow(unittest.TestCase):
         # dialog box
         QMessageBox.question = Mock(return_value = QMessageBox.Yes)
         proc_lib_view.keyPressEvent(event)
+
+    def test_popUpDeletedProject(self):
+        '''
+        Adds a deleted projects to the projects list and laches mia.
+        Tests PopUpDeletedProject.
+        '''
+        
+        # Sets a projects save directory
+        config = Config()
+        projects_save_path = os.path.join(config.get_mia_path(), 'projects')
+        config.set_projects_save_path(projects_save_path)
+
+        # Mocks a project filepath that does not exist in the filesystem
+        # Adds this filepath to 'saved_projects.yml' 
+        savedProjects = SavedProjects()
+        del_prjct = os.path.join(projects_save_path, 'missing_project')
+        savedProjects.addSavedProject(del_prjct)
+
+        # Asserts that 'saved_projects.yml' contains the filepath
+        self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+        # Mocks the execution of a dialog box
+        PopUpDeletedProject.exec = Mock()
+
+        # Adds code from the 'main.py', gets deleted projects
+        saved_projects_object = SavedProjects()
+        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
+        deleted_projects = []
+        for saved_project in saved_projects_list:
+            if not os.path.isdir(saved_project):
+                deleted_projects.append(os.path.abspath(saved_project))
+                saved_projects_object.removeSavedProject(saved_project)
+
+        if deleted_projects is not None and deleted_projects:
+            self.msg = PopUpDeletedProject(deleted_projects)
+
+        # Asserts that 'saved_projects.yml' no longer contains it
+        self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+    def test_popUpDeleteProject(self):
+        '''
+        Creates a new project and deletes it.
+        Tests
+         - MainWindow.delete_project
+         - PopUpDeleteProject.
+
+        Notes
+        -----
+        Not to be confused with PopUpDeletedProject.
+        '''
+
+        # Gets a new project
+        test_proj_path = self.get_new_test_project()
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        # Instead of executing the pop-up, only shows it
+        # This avoid thread deadlocking
+        QMessageBox.exec = lambda self_: self_.show()
+
+        # Resets the projects folder
+        Config(config_path=self.config_path).set_projects_save_path('')
+
+        # Tries to delete a project without setting the projects folder
+        self.main_window.delete_project()
+        self.main_window.msg.accept()
+
+        # Sets a projects save directory
+        config = Config(config_path=self.config_path)
+        proj_save_path = os.path.join(config.get_mia_path(),
+                                      os.path.split(test_proj_path)[0])
+        config.set_projects_save_path(proj_save_path)
+
+        # Append 'test_proj_path' to 'saved_projects.pathsList' and 
+        # 'opened_projects', to increase coverage
+        (self.main_window.saved_projects.pathsList.
+         append(os.path.relpath(test_proj_path)))
+        config.set_opened_projects([os.path.relpath(test_proj_path)])
+
+        #PopUpDeleteProject.exec = lambda self_: self_.show()
+        PopUpDeleteProject.exec = lambda self_: None
+
+        # Deletes a project with the projects folder set
+        self.main_window.delete_project()
+
+        exPopup = self.main_window.exPopup
+
+        # Checks the first project to be deleted
+        exPopup.check_boxes[0].setChecked(True)
+
+        # Mocks the dialog box to directly return 'YesToAll'
+        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
+        exPopup.ok_clicked()
+
+        print(5)
 
     def test_see_all_projects(self):
         '''
