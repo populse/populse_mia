@@ -2779,6 +2779,23 @@ class TestMIADataBrowser(unittest.TestCase):
                          "MIA - Multiparametric Image Analysis "
                          "(Admin mode) - Unnamed project")
 
+    def test_update_data_history(self):
+        '''
+        Updates the history of data that have been re-written.
+        Tests Project.update_data_history.
+        '''
+
+        # Creates a test project
+        test_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        # Gets a scan that contains a smooth brick in its history
+        NII_FILE_3 = ('sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
+                      'Guerbet_Anat-RAREpvm-000220_000.nii')
+        DOCUMENT_3 = os.path.join('data', 'derived_data', NII_FILE_3)
+
+        self.main_window.project.update_data_history([DOCUMENT_3])
+
     def test_update_default_value(self):
         '''
         Updates the values when a list of default values is created.
