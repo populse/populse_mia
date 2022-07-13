@@ -7818,6 +7818,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
 
+    @unittest.skip
     def test_undo_redo(self):
         """
         Tests the undo/redo actions
