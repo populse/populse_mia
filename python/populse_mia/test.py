@@ -2859,7 +2859,6 @@ class TestMIADataBrowser(unittest.TestCase):
         text_edt.list_creation.type = FIELD_TYPE_LIST_BOOLEAN
         text_edt.list_creation.update_default_value()
 
-    @unittest.skip
     def test_utils(self):
         """
         Test the utils functions
@@ -5799,7 +5798,6 @@ class TestMIAPipelineManager(unittest.TestCase):
                                                     'User_processes',
                                                     'test_pipeline.py')))
 
-    @unittest.skip
     def test_update_node_name(self):
         """
         Displays parameters of a node and updates its name
