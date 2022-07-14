@@ -3308,7 +3308,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Tries to open a project with unsaved modificaitons
         self.main_window.saved_projects_actions[0].triggered.emit()
-        self.main_window.pop_up_close.accept()
+        #self.main_window.pop_up_close.accept()
 
     def test_switch_project(self):
         '''
