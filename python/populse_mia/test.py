@@ -4834,22 +4834,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
-    def test_add_tab(self):
-        """
-        Adds tabs to the PipelineEditorTabs
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-
-        # Adding two new tabs
-        pipeline_editor_tabs.new_tab()
-        self.assertEqual(pipeline_editor_tabs.count(), 3)
-        self.assertEqual(pipeline_editor_tabs.tabText(1), "New Pipeline 1")
-        pipeline_editor_tabs.new_tab()
-        self.assertEqual(pipeline_editor_tabs.count(), 4)
-        self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
-
+    
     def test_attributes_filter(self):
         '''
         Displays the parameters of a node, displays an attributes filter
@@ -7857,7 +7842,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
 
-    @unittest.skip
     def test_undo_redo(self):
         """
         Tests the undo/redo actions
@@ -8709,17 +8693,24 @@ class TestMIAPipelineEditor(unittest.TestCase):
         QMessageBox.question.assert_called_once()
         QInputDialog.getText.assert_called_once()
         #self.assertIsNone(res)
-        self.assertEqual(res, '_out_file')
+        self.assertEqual(res, '_out_file') 
 
-        # Mocks 'export_parameter' to throw a 'ValueError'
-        #ppl_edt.scene.pipeline.export_parameter = Mock(side_effect=ValueError())
+    def test_add_tab(self):
+        """
+        Adds tabs to the PipelineEditorTabs
+        """
 
-        #res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
-        #                           pipeline_parameter='_out_file',
-        #                           multi_export = True)
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
 
-        #self.assertIsNone(res)  
-                
+        # Adding two new tabs
+        pipeline_editor_tabs.new_tab()
+        self.assertEqual(pipeline_editor_tabs.count(), 3)
+        self.assertEqual(pipeline_editor_tabs.tabText(1), "New Pipeline 1")
+        pipeline_editor_tabs.new_tab()
+        self.assertEqual(pipeline_editor_tabs.count(), 4)
+        self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
+           
 
 if __name__ == '__main__':
     unittest.main()
