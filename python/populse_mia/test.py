@@ -3419,6 +3419,7 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.open_project_pop_up()
         self.main_window.pop_up_close.accept()
 
+    @unittest.skip
     def test_open_shell(self):
         '''
         Opens a Qt console and kill it afterwards.
@@ -5102,8 +5103,7 @@ class TestMIAPipelineManager(TestMIACase):
 
         # Tries to close the modified tab and cancels saving
         ppl_edt_tabs.close_tab(0)
-
-    
+  
     def test_drop_process(self):
         """
         Adds a Nipype SPM's Smooth process to the pipeline editor
