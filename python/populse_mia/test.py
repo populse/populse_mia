@@ -200,7 +200,195 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 if 'NO_ET' not in os.environ:
     os.environ['NO_ET'] = "1"
 
-class TestMIADataBrowser(unittest.TestCase):
+class TestMIACase(unittest.TestCase):
+    '''Parent class for the test classes of mia.'''
+
+    def add_visualized_tag(self, tag):
+        """
+        With the "Visualized tags" pop-up open, selects a tag to display.
+
+        Parameters
+        ----------
+        tag: string
+          The tag to be displayed
+
+        Usage
+        -----
+        Should be called, with a delay, before opening the "Visualized tags"
+        pop-up:
+        QTimer.singleShot(1000,
+                          lambda:self.add_visualized_tag('AcquisitionDate'))
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            visualized_tags = w.layout().itemAt(0).widget()
+            tags_list = visualized_tags.list_widget_tags
+
+            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
+                found_item = tags_list.findItems(tag, Qt.MatchExactly)
+
+            else:
+                found_item = tags_list.findItems(tag,
+                                                 Qt.MatchFlag.MatchExactly)
+
+            tags_list.setCurrentItem(found_item[0])
+            visualized_tags.click_select_tag()
+
+    def execute_QMessageBox_clickClose(self):
+        """
+        Press the Close button of a QMessageBox instance
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Close)
+            QTest.mouseClick(close_button, Qt.LeftButton)
+
+    def execute_QMessageBox_clickOk(self):
+        """
+        Press the Ok button of a QMessageBox instance
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Ok)
+            QTest.mouseClick(close_button, Qt.LeftButton)
+
+    def execute_QDialogAccept(self):
+        """
+        Accept (close) a QDialog window
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.accept()
+
+    def execute_QMessageBox_clickYes(self):
+        """
+        Is supposed to allow to press the Yes button if a pipeline is 
+        overwritten in the test_zz_check_modifications method
+        """
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QMessageBox):
+            close_button = w.button(QMessageBox.Yes)
+            QTest.mouseClick(close_button, Qt.LeftButton)
+
+    def execute_QDialogClose(self):
+        """
+        Is supposed to abort( close) a QDialog window
+        """
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.close()
+    
+    def get_new_test_project(self, name = 'test_project', light=False):
+        '''
+        Copies a test project where it can be safely modified.
+        The new project is created in the /tmp (/Temp) folder.
+
+        :param name: str, name of the directory containing the project
+        :param light: bool, True to copy a project with few documents
+
+        '''
+
+        new_test_proj = os.path.join(self.config_path, name)
+
+        if os.path.exists(new_test_proj):
+            shutil.rmtree(new_test_proj)
+
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+
+        test_proj = os.path.join(mia_path, 'resources', 'mia', 
+                                 'light_test_project' if light else 'project_8')
+        
+        shutil.copytree(test_proj, new_test_proj)
+        return new_test_proj
+
+    def restart_MIA(self):
+        """
+        Restarts MIA within a unit test.
+
+        Notes
+        -----
+        Can be used to restart MIA after changing the controller version in MIA
+        preferences.
+        """
+
+        self.main_window.close()
+
+        # Removing the opened projects (in CI, the tests are run twice)
+        config = Config(config_path=self.config_path)
+        config.set_opened_projects([])
+        config.saveConfig()
+        self.app.exit()
+
+        config = Config(config_path=self.config_path)
+        config.set_user_mode(False)
+        self.app = QApplication.instance()
+
+        if self.app is None:
+            self.app = QApplication(sys.argv)
+
+        self.project = Project(None, True)
+        self.main_window = MainWindow(self.project, test=True)
+
+    def setUp(self):
+        """
+        Called before each test
+        """
+
+        # All the tests are run in admin mode
+        config = Config(config_path=self.config_path)
+        config.set_user_mode(False)
+        self.app = QApplication.instance()
+
+        if self.app is None:
+            self.app = QApplication(sys.argv)
+
+        self.project = Project(None, True)
+        self.main_window = MainWindow(self.project, test=True)
+
+    def tearDown(self):
+        """
+        Called after each test
+        """
+
+        self.main_window.close()
+        # Removing the opened projects (in CI, the tests are run twice)
+        config = Config(config_path=self.config_path)
+        config.set_opened_projects([])
+        config.saveConfig()
+        self.app.exit()
+
+    @classmethod
+    def setUpClass(cls):
+        """
+        Called once at the beginning of the class
+        """
+
+        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
+        # hack the Config class to get config_path, because some Config
+        # instances are created out of our control in the code
+        Config.config_path = cls.config_path
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Called once at the end of the class
+        """
+
+        if os.path.exists(cls.config_path):
+            shutil.rmtree(cls.config_path)
+
+class TestMIADataBrowser(TestMIACase):
     """Tests for the data browser tab
 
     :Contains:
@@ -264,100 +452,6 @@ class TestMIADataBrowser(unittest.TestCase):
         item = w.table.item(0, 0)
         item.setText(value)
         w.update_table_values(True)
-
-    def execute_QMessageBox_clickClose(self):
-        """
-        Press the Close button of a QMessageBox instance
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Close)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def execute_QMessageBox_clickOk(self):
-        """
-        Press the Ok button of a QMessageBox instance
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Ok)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def get_new_test_project(self, name = 'test_project', light=False):
-        '''
-        Copies a test project where it can be safely modified.
-        The new project is created in the /tmp (/Temp) folder.
-
-        :param name: str, name of the directory containing the project
-        :param light: bool, True to copy a project with few documents
-
-        '''
-
-        new_test_proj = os.path.join(self.config_path, name)
-
-        if os.path.exists(new_test_proj):
-            shutil.rmtree(new_test_proj)
-
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-
-        test_proj = os.path.join(mia_path, 'resources', 'mia', 
-                                 'light_test_project' if light else 'project_8')
-        
-        shutil.copytree(test_proj, new_test_proj)
-        return new_test_proj
-
-    def setUp(self):
-        """
-        Called before each test
-        """
-
-        # All the tests are run in admin mode
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    def tearDown(self):
-        """
-        Called after each test
-        """
-
-        self.main_window.close()
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-        self.app.exit()
-
-    @classmethod
-    def setUpClass(cls):
-        """
-        Called once at the beginning of the class
-        """
-
-        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
-        # hack the Config class to get config_path, because some Config
-        # instances are created out of our control in the code
-        Config.config_path = cls.config_path
-
-    @classmethod
-    def tearDownClass(cls):
-        """
-        Called once at the end of the class
-        """
-
-        if os.path.exists(cls.config_path):
-            shutil.rmtree(cls.config_path)
 
     def test_add_path(self):
         '''
@@ -3044,82 +3138,22 @@ class TestMIADataBrowser(unittest.TestCase):
         self.assertTrue(TAG_TYPE in columns_displayed)
         self.assertTrue(TAG_BRICKS in columns_displayed)
 
-class TestMIAMainWindow(unittest.TestCase):
-        
-    def get_new_test_project(self, name = 'test_project', light=False):
+class TestMIAMainWindow(TestMIACase):
+
+    def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
         '''
-        Copies a test project where it can be safely modified.
-        The new project is created in the /tmp (/Temp) folder.
-
-        :param name: str, name of the directory containing the project
-        :param light: bool, True to copy a project with few documents
-
+        Looks for a QModelIndex, in a QTreeView, whose contents 
+        correspond to the argument data.
         '''
+        assert isinstance(q_tree_view, QTreeView), 'first argment is not a QTreeView instance'
 
-        new_test_proj = os.path.join(self.config_path, name)
+        q_tree_view.expandAll()
+        index = q_tree_view.indexAt(QPoint(0,0))
 
-        if os.path.exists(new_test_proj):
-            shutil.rmtree(new_test_proj)
-
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-
-        test_proj = os.path.join(mia_path, 'resources', 'mia', 
-                                 'light_test_project' if light else 'project_8')
-        
-        shutil.copytree(test_proj, new_test_proj)
-        return new_test_proj
-
-    def setUp(self):
-        """
-        Called before each test
-        """
-
-        # All the tests are run in admin mode
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    @classmethod
-    def setUpClass(cls):
-        """
-        Called once at the beginning of the class
-        """
-
-        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
-        # hack the Config class to get config_path, because some Config
-        # instances are created out of our control in the code
-        Config.config_path = cls.config_path
-
-    def tearDown(self):
-        """
-        Called after each test
-        """
-
-        self.main_window.close()
-
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-
-        self.app.exit()
-
-    @classmethod
-    def tearDownClass(cls):
-        """
-        Called once at the end of the class
-        """
-
-        if os.path.exists(cls.config_path):
-            shutil.rmtree(cls.config_path)
+        while index.data() and index.data() != data:
+            index = q_tree_view.indexBelow(index)
+            
+        return index
 
     def test_create_project_pop_up(self):
         """
@@ -3239,22 +3273,7 @@ class TestMIAMainWindow(unittest.TestCase):
         config = Config(config_path=self.config_path)
         self.assertEqual(os.path.abspath(config.get_opened_projects()[0]),
                          proj_test_1_path)
-
-    def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
-        '''
-        Looks for a QModelIndex, in a QTreeView, whose contents 
-        correspond to the argument data.
-        '''
-        assert isinstance(q_tree_view, QTreeView), 'first argment is not a QTreeView instance'
-
-        q_tree_view.expandAll()
-        index = q_tree_view.indexAt(QPoint(0,0))
-
-        while index.data() and index.data() != data:
-            index = q_tree_view.indexBelow(index)
-            
-        return index
-
+ 
     def test_switch_project(self):
         '''
         Creates a projects and switches to it.
@@ -4617,7 +4636,7 @@ class TestMIAMainWindow(unittest.TestCase):
         test_matlab_config()
         test_matlab_mcr_spm_standalone()
 
-class TestMIAPipelineManager(unittest.TestCase):
+class TestMIAPipelineManager(TestMIACase):
     """Tests for the pipeline manager tab.
 
     :Contains:
@@ -4701,140 +4720,6 @@ class TestMIAPipelineManager(unittest.TestCase):
             tags_list.setCurrentItem(found_item[0])
             visualized_tags.click_select_tag()
 
-    def execute_QDialogAccept(self):
-        """
-        Accept (close) a QDialog window
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.accept()
-
-    def execute_QMessageBox_clickYes(self):
-        """
-        Is supposed to allow to press the Yes button if a pipeline is 
-        overwritten in the test_zz_check_modifications method
-        """
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Yes)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def execute_QDialogClose(self):
-        """
-        Is supposed to abort( close) a QDialog window
-        """
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.close()
-    
-    def get_new_test_project(self, name = 'test_project', light=False):
-        '''
-        Copies a test project where it can be safely modified.
-        The new project is created in the /tmp (/Temp) folder.
-
-        :param name: str, name of the directory containing the project
-        :param light: bool, True to copy a project with few documents
-
-        '''
-
-        new_test_proj = os.path.join(self.config_path, name)
-
-        if os.path.exists(new_test_proj):
-            shutil.rmtree(new_test_proj)
-
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-
-        test_proj = os.path.join(mia_path, 'resources', 'mia', 
-                                 'light_test_project' if light else 'project_8')
-        
-        shutil.copytree(test_proj, new_test_proj)
-        return new_test_proj
-
-    def restart_MIA(self):
-        """
-        Restarts MIA within a unit test.
-
-        Notes
-        -----
-        Can be used to restart MIA after changing the controller version in MIA
-        preferences.
-        """
-
-        self.main_window.close()
-
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-        self.app.exit()
-
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    def setUp(self):
-        """
-        Called before each test
-        """
-
-        # All the tests are run in admin mode
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    @classmethod
-    def setUpClass(cls):
-        """
-        Called once at the beginning of the class
-        """
-
-        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
-        # hack the Config class to get config_path, because some Config
-        # instances are created out of our control in the code
-        Config.config_path = cls.config_path
-
-    def tearDown(self):
-        """
-        Called after each test
-        """
-
-        self.main_window.close()
-
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-
-        self.app.exit()
-
-    @classmethod
-    def tearDownClass(cls):
-        """
-        Called once at the end of the class
-        """
-
-        if os.path.exists(cls.config_path):
-            shutil.rmtree(cls.config_path)
-
-    
     def test_attributes_filter(self):
         '''
         Displays the parameters of a node, displays an attributes filter
@@ -6087,7 +5972,7 @@ class TestMIAPipelineManager(unittest.TestCase):
         self.assertFalse("Test_pipeline" in
                              pkg.package_library.package_tree['User_processes'])
 
-class TestMIAPipelineManagerTab(unittest.TestCase):
+class TestMIAPipelineManagerTab(TestMIACase):
     """Tests 'pipeline_manager_tab.py'.
 
     :Contains:
@@ -6153,39 +6038,6 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
             - test_z_runPipeline: adds a processruns a pipeline
             - test_zz_del_pack(self): deletion of the brick created during UTs
     """
-
-    def add_visualized_tag(self, tag):
-        """
-        With the "Visualized tags" pop-up open, selects a tag to display.
-
-        Parameters
-        ----------
-        tag: string
-          The tag to be displayed
-
-        Usage
-        -----
-        Should be called, with a delay, before opening the "Visualized tags"
-        pop-up:
-        QTimer.singleShot(1000,
-                          lambda:self.add_visualized_tag('AcquisitionDate'))
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            visualized_tags = w.layout().itemAt(0).widget()
-            tags_list = visualized_tags.list_widget_tags
-
-            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
-                found_item = tags_list.findItems(tag, Qt.MatchExactly)
-
-            else:
-                found_item = tags_list.findItems(tag,
-                                                 Qt.MatchFlag.MatchExactly)
-
-            tags_list.setCurrentItem(found_item[0])
-            visualized_tags.click_select_tag()
 
     def execute_QDialogAccept(self):
         """
@@ -8270,179 +8122,13 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertFalse("Test_pipeline_1" in
                          pkg.package_library.package_tree['User_processes'])
 
-class TestMIAPipelineEditor(unittest.TestCase):
+class TestMIAPipelineEditor(TestMIACase):
     """Tests 'pipeline_editor.py'.
 
     :Contains:
         :Method:
             - test_export_plug: exports plugs and mocks dialog boxes
     """
-
-    def add_visualized_tag(self, tag):
-        """
-        With the "Visualized tags" pop-up open, selects a tag to display.
-
-        Parameters
-        ----------
-        tag: string
-          The tag to be displayed
-
-        Usage
-        -----
-        Should be called, with a delay, before opening the "Visualized tags"
-        pop-up:
-        QTimer.singleShot(1000,
-                          lambda:self.add_visualized_tag('AcquisitionDate'))
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            visualized_tags = w.layout().itemAt(0).widget()
-            tags_list = visualized_tags.list_widget_tags
-
-            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
-                found_item = tags_list.findItems(tag, Qt.MatchExactly)
-
-            else:
-                found_item = tags_list.findItems(tag,
-                                                 Qt.MatchFlag.MatchExactly)
-
-            tags_list.setCurrentItem(found_item[0])
-            visualized_tags.click_select_tag()
-
-    def execute_QDialogAccept(self):
-        """
-        Accept (close) a QDialog window
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.accept()
-
-    def execute_QMessageBox_clickYes(self):
-        """
-        Is supposed to allow to press the Yes button if a pipeline is 
-        overwritten in the test_zz_check_modifications method
-        """
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Yes)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def execute_QDialogClose(self):
-        """
-        Is supposed to abort( close) a QDialog window
-        """
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.close()
-    
-    def get_new_test_project(self, name = 'test_project', light=False):
-        '''
-        Copies a test project where it can be safely modified.
-        The new project is created in the /tmp (/Temp) folder.
-
-        :param name: str, name of the directory containing the project
-        :param light: bool, True to copy a project with few documents
-
-        '''
-
-        new_test_proj = os.path.join(self.config_path, name)
-
-        if os.path.exists(new_test_proj):
-            shutil.rmtree(new_test_proj)
-
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-
-        test_proj = os.path.join(mia_path, 'resources', 'mia', 
-                                 'light_test_project' if light else 'project_8')
-        
-        shutil.copytree(test_proj, new_test_proj)
-        return new_test_proj
-
-    def restart_MIA(self):
-        """
-        Restarts MIA within a unit test.
-
-        Notes
-        -----
-        Can be used to restart MIA after changing the controller version in MIA
-        preferences.
-        """
-
-        self.main_window.close()
-
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-        self.app.exit()
-
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    def setUp(self):
-        """
-        Called before each test
-        """
-
-        # All the tests are run in admin mode
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    @classmethod
-    def setUpClass(cls):
-        """
-        Called once at the beginning of the class
-        """
-
-        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
-        # hack the Config class to get config_path, because some Config
-        # instances are created out of our control in the code
-        Config.config_path = cls.config_path
-
-    def tearDown(self):
-        """
-        Called after each test
-        """
-
-        self.main_window.close()
-
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-
-        self.app.exit()
-
-    @classmethod
-    def tearDownClass(cls):
-        """
-        Called once at the end of the class
-        """
-
-        if os.path.exists(cls.config_path):
-            shutil.rmtree(cls.config_path)
 
     def test_export_plug(self):
         '''
@@ -8524,6 +8210,5 @@ class TestMIAPipelineEditor(unittest.TestCase):
         self.assertEqual(pipeline_editor_tabs.count(), 4)
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
            
-
 if __name__ == '__main__':
     unittest.main()
