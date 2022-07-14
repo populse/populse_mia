@@ -5436,7 +5436,9 @@ class TestMIAPipelineManager(TestMIACase):
         config = Config(config_path=self.config_path)
         QMessageBox.exec = lambda x: True
 
-        pkg = InstallProcesses(self.main_window, folder=False)
+        self.main_window.install_processes_pop_up()
+        pkg = self.main_window.pop_up_install_processes
+
         brick = os.path.join(config.get_mia_path(), 'resources',
                              'mia', 'brick_test.zip')
         pkg.path_edit.text = lambda: brick
