@@ -52,7 +52,9 @@ import copy
 import subprocess
 import sqlite3
 import platform
+import psutil
 from hashlib import sha256
+from time import sleep
 
 sys.settrace
 
@@ -3402,6 +3404,44 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.open_project_pop_up()
         self.main_window.pop_up_close.accept()
 
+    def test_open_shell(self):
+        '''
+        Opens a Qt console and kill it afterwards.
+        Tests MainWindow.open_shell.
+        '''
+
+        # Opens the Qt console
+        self.main_window.action_open_shell.triggered.emit()
+
+        qt_console_process = None
+
+        time_elapsed = 0
+        while time_elapsed < 5:
+
+            # Gets the current process
+            current_process = psutil.Process()
+            children = current_process.children(recursive=True)
+
+            # If qt_console_process os not none, the qt console process 
+            # was found
+            if qt_console_process:
+                break
+
+            if children:
+                # Gets the process pid (process id)
+                for child in children:
+                    if child.name() == 'jupyter-qtconso':
+                        qt_console_process = child.pid
+
+            sleep(1)
+            time_elapsed += 1
+                        
+        self.assertTrue(qt_console_process, 
+                        'the Qt console process was not found')
+
+        # Kills the Qt console
+        os.kill(qt_console_process, 9)
+
     def test_package_library_dialog_rmv_pkg(self):
         '''
         Creates a new project folder, opens the processes library and 
@@ -3422,10 +3462,10 @@ class TestMIAMainWindow(TestMIACase):
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
-        pkg_lib_window = ppl_manager.processLibrary.process_library.pkg_library
 
-        # Does not open the packages library ito avoid thread deadlock
-        #ppl_manager.processLibrary.open_pkg_lib()
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        pkg_lib_window = self.main_window.pop_up_package_library
 
         rmv_pkg_button = (pkg_lib_window.layout().children()[0].layout().
                           children()[3].itemAt(1).widget())
@@ -3473,6 +3513,8 @@ class TestMIAMainWindow(TestMIACase):
         # Saves the config to 'process_config.yml'
         ppl_manager.processLibrary.save_config()
 
+        pkg_lib_window.close()
+
     def test_package_library_dialog_add_pkg(self):
         '''
         Creates a new project folder, opens the processes library and 
@@ -3493,10 +3535,10 @@ class TestMIAMainWindow(TestMIACase):
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
-        pkg_lib_window = ppl_manager.processLibrary.process_library.pkg_library
 
-        # Does not open the packages library ito avoid thread deadlock
-        #ppl_manager.processLibrary.open_pkg_lib()
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        pkg_lib_window = self.main_window.pop_up_package_library
 
         add_pkg_button = (pkg_lib_window.layout().children()[0].layout().
                           children()[3].itemAt(0).widget())
@@ -3542,6 +3584,8 @@ class TestMIAMainWindow(TestMIACase):
         (pkg_lib_window.layout().children()[0].layout().itemAt(8).widget().
          layout().itemAt(1).widget().clicked.emit())
 
+        pkg_lib_window.close()
+
     def test_package_library_dialog_del_pkg(self):
         '''
         Creates a new project folder, opens the processes library and 
@@ -3568,10 +3612,10 @@ class TestMIAMainWindow(TestMIACase):
         proc_lib_view = ppl_manager.processLibrary.process_library
         pkg_lib_window = proc_lib_view.pkg_library
 
-        # Does not open the packages library ito avoid thread deadlock
-        #ppl_manager.processLibrary.open_pkg_lib()
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        pkg_lib_window = self.main_window.pop_up_package_library
 
-        pkg_lib_window = ppl_manager.processLibrary.process_library.pkg_library
         del_pkg_button = (pkg_lib_window.layout().children()[0].layout().
                           children()[3].itemAt(2).widget())
 
@@ -3676,6 +3720,8 @@ class TestMIAMainWindow(TestMIACase):
         # dialog box
         QMessageBox.question = Mock(return_value = QMessageBox.Yes)
         proc_lib_view.keyPressEvent(event)
+
+        pkg_lib_window.close()
 
     def test_popUpDeletedProject(self):
         '''
@@ -4705,6 +4751,43 @@ class TestMIAMainWindow(TestMIACase):
         test_spm_matlab_config()
         test_matlab_config()
         test_matlab_mcr_spm_standalone()
+
+    def test_tab_changed(self):
+        '''
+        Switches between data browser, data viewer and pipeline manager.
+        Tests MainWindow.tab_changed.
+
+        Notes
+        -----
+        Mocks QMessageBox.exec.
+        '''
+
+        # Creates a test project
+        test_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        # Sets shortcuts for objects that are often used
+        data_browser = self.main_window.data_browser
+
+        # Switches to data viewer
+        self.main_window.tabs.setCurrentIndex(1) # Calls tab_changed()
+
+        # Deletes a scan from data browser
+        data_browser.table_data.selectRow(0)
+        data_browser.table_data.remove_scan()
+
+        # Mocks the execution of a dialog box by accpeting it
+        QMessageBox.exec = lambda self_, *arg: self_.accept()
+
+        # Switch to pipeline manager with unsaved modifications
+        self.main_window.tabs.setCurrentIndex(2) # Calls tab_changed()
+        #self.main_window.tab_changed()
+
+        # Mocks nots list
+        self.main_window.project.currentFilter.nots = ['NOT']
+
+        # Switches to data browser
+        self.main_window.tabs.setCurrentIndex(0) # Calls tab_changed()
 
 class TestMIAPipelineManager(TestMIACase):
     """Tests for the pipeline manager tab.
