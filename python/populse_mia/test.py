@@ -2173,6 +2173,7 @@ class TestMIADataBrowser(TestMIACase):
         """
         Test opening & saving of a project
         """
+
         config = Config(config_path=self.config_path)
         projects_dir = os.path.realpath(tempfile.mkdtemp(
                                                        prefix='projects_tests'))
@@ -2184,6 +2185,11 @@ class TestMIADataBrowser(TestMIACase):
         # Tries to open the project pop-up without the projects save dir
         config.set_projects_save_path(None)
         self.main_window.create_project_pop_up()
+        self.main_window.msg.accept()
+
+        # Tries to save the project 'something' without setting the 
+        # projects save directory
+        self.main_window.saveChoice()
         self.main_window.msg.accept()
 
         # Sets the project save directory
@@ -3273,7 +3279,20 @@ class TestMIAMainWindow(TestMIACase):
         config = Config(config_path=self.config_path)
         self.assertEqual(os.path.abspath(config.get_opened_projects()[0]),
                          proj_test_1_path)
- 
+
+        # Deletes a scan from data browser
+        self.main_window.data_browser.table_data.selectRow(0)
+        self.main_window.data_browser.table_data.remove_scan()
+
+        # Asserts that there are unsaved modificaiton
+        self.assertTrue(self.main_window.check_unsaved_modifications())
+
+        PopUpQuit.exec = lambda self_: self_.show()
+
+        # Tries to open a project with unsaved modificaitons
+        self.main_window.saved_projects_actions[0].triggered.emit()
+        self.main_window.pop_up_close.accept()
+
     def test_switch_project(self):
         '''
         Creates a projects and switches to it.
@@ -3331,6 +3350,57 @@ class TestMIAMainWindow(TestMIACase):
         # Tries to switch to non mia project
         res = self.main_window.switch_project(test_proj_path, 'test_project')
         self.assertFalse(res)
+
+    def test_open_project_pop_up(self):
+        '''
+        Creates a test project and opens a project, including unsaved 
+        modifications.
+        Tests MainWindow.open_project_pop_up.
+
+        Notes
+        -----
+        Mocks
+         - QMessageBox.exec
+         - PopUpOpenProject.exec
+         - PopUpQuit.exec 
+        '''
+
+        # Creates a test project
+        test_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        # Sets shortcuts for objects that are often used
+        data_browser = self.main_window.data_browser
+        
+        QMessageBox.exec = lambda self_, *arg: self_.show()
+
+        # Tries to open a project without setting the projects save dir
+        self.main_window.open_project_pop_up()
+        self.main_window.msg.accept()
+
+        # Sets the projects save dir
+        config = Config(config_path=self.config_path)
+        config.set_projects_save_path(os.path.split(test_proj_path)[0])
+
+        PopUpOpenProject.exec = lambda self_, *arg: self_.show()
+
+        # Opens a project
+        self.main_window.open_project_pop_up()
+
+        self.main_window.exPopup.get_filename((test_proj_path,))
+
+        # Deletes a scan from data browser
+        data_browser.table_data.selectRow(0)
+        self.main_window.data_browser.table_data.remove_scan()
+
+        # Asserts that there are unsaved modificaiton
+        self.assertTrue(self.main_window.check_unsaved_modifications())
+
+        PopUpQuit.exec = lambda self_: self_.show()
+
+        # Tries to open a project with unsaved modificaitons
+        self.main_window.open_project_pop_up()
+        self.main_window.pop_up_close.accept()
 
     def test_package_library_dialog_rmv_pkg(self):
         '''
