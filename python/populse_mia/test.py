@@ -7853,29 +7853,29 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Creates a new project folder and adds one document to the 
         # project
-        #test_proj_path = self.get_new_test_project()
-        #folder = os.path.join(test_proj_path, 'data', 'raw_data')
-        #NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
-        #              'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
-        #DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        test_proj_path = self.get_new_test_project()
+        folder = os.path.join(test_proj_path, 'data', 'raw_data')
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
 
         # Creates a project with another project already opened
-        #self.main_window.data_browser.table_data.add_path()
+        self.main_window.data_browser.table_data.add_path()
 
-        #pop_up_add_path = self.main_window.data_browser.table_data.pop_up_add_path
+        pop_up_add_path = self.main_window.data_browser.table_data.pop_up_add_path
 
-        #pop_up_add_path.file_line_edit.setText(DOCUMENT_1)
-        #pop_up_add_path.save_path()
+        pop_up_add_path.file_line_edit.setText(DOCUMENT_1)
+        pop_up_add_path.save_path()
 
-        #self.main_window.undo()
+        self.main_window.undo()
         
-        #self.main_window.redo()
+        self.main_window.redo()
 
         # Mocks not saving the pipeline
-        #QMessageBox.exec = lambda self_, *arg: self_.buttons()[-1].clicked.emit()
+        QMessageBox.exec = lambda self_, *arg: self_.buttons()[-1].clicked.emit()
 
         # Switches to pipeline manager
-        #self.main_window.tabs.setCurrentIndex(2)
+        self.main_window.tabs.setCurrentIndex(2)
 
         # Add a process => creates a node called "smooth_1",
         # test if Smooth_1 is a node in the current pipeline / editor
@@ -7883,15 +7883,17 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         pipeline_editor_tabs.get_current_editor().add_named_process(
                                                                   process_class)
+        
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+        print(pipeline.nodes.keys())
 
         # Undo (remove the node), test if the node was removed
-        self.main_window.undo()
+        pipeline_manager.undo()
         self.assertFalse("smooth_1" in pipeline.nodes.keys())
 
         # Redo (add again the node), test if the node was added
-        self.main_window.redo()
+        pipeline_manager.redo()
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
 
         # Delete the node, test if the node was removed
@@ -7900,11 +7902,11 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
         self.assertFalse("smooth_1" in pipeline.nodes.keys())
 
         # Undo (add again the node), test if the node was added
-        self.main_window.undo()
+        pipeline_manager.undo()
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
 
         # Redo (delete again the node), test if the node was removed
-        self.main_window.redo()
+        pipeline_manager.redo()
         self.assertFalse("smooth1" in pipeline.nodes.keys())
 
         # Adding a new process => creates a node called "smooth_1"
@@ -7925,12 +7927,12 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Undo (remove prefix_smooth from Input node),
         # test if the prefix_smooth plug was deleted from Input node
-        self.main_window.undo()
+        pipeline_manager.undo()
         self.assertFalse("prefix_smooth" in pipeline.nodes[''].plugs.keys())
 
         # redo (export again the "out_prefix" plug),
         # test if the Input node have a prefix_smooth plug
-        self.main_window.redo()
+        pipeline_manager.redo()
         self.assertTrue("prefix_smooth" in pipeline.nodes[''].plugs.keys())
 
         # Delete the "prefix_smooth" plug from the Input node,
@@ -7941,12 +7943,12 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Undo (export again the "out_prefix" plug),
         # test if the Input node have a prefix_smooth plug
-        self.main_window.undo()
+        pipeline_manager.undo()
         self.assertTrue("prefix_smooth" in pipeline.nodes[''].plugs.keys())
 
         # redo (deleting the "prefix_smooth" plug from the Input node),
         # test if the Input node have not a prefix_smooth plug
-        self.main_window.redo()
+        pipeline_manager.redo()
         self.assertFalse("prefix_smooth" in pipeline.nodes[''].plugs.keys())
 
         # FIXME: export_plugs (currently there is a bug if a plug is
@@ -7972,7 +7974,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                                    "_smoothed_files"].links_to))
 
         # Undo (remove the link), test if the 2 nodes have not the links
-        self.main_window.undo()
+        pipeline_manager.undo()
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_2"].plugs[
                                                         "in_files"].links_from))
@@ -7981,7 +7983,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                                    "_smoothed_files"].links_to))
 
         # Redo (add again the link), test if the 2 nodes have the good links
-        self.main_window.redo()
+        pipeline_manager.redo()
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
                                                         "in_files"].links_from))
@@ -8000,7 +8002,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                                    "_smoothed_files"].links_to))
 
         # Undo (add again the link), test if the 2 nodes have the good links
-        self.main_window.undo()
+        pipeline_manager.undo()
         self.assertEqual(1,
                          len(pipeline.nodes["smooth_2"].plugs[
                                                         "in_files"].links_from))
@@ -8009,7 +8011,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
                                                    "_smoothed_files"].links_to))
 
         # Redo (remove the link), test if the 2 nodes have not the links
-        self.main_window.redo()
+        pipeline_manager.redo()
         self.assertEqual(0,
                          len(pipeline.nodes["smooth_2"].plugs[
                                                         "in_files"].links_from))
@@ -8048,7 +8050,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Undo (Updating the node name from my_smooth to smooth_2),
         # test if it's ok
-        self.main_window.undo()
+        pipeline_manager.undo()
         QTest.qWait(100)
         self.assertFalse("my_smooth" in pipeline.nodes.keys())
         self.assertTrue("smooth_2" in pipeline.nodes.keys())
@@ -8061,7 +8063,7 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Redo (Updating the node name from smooth_2 to my_smooth),
         # test if it's ok
-        self.main_window.redo()
+        pipeline_manager.redo()
         QTest.qWait(100)
         self.assertTrue("my_smooth" in pipeline.nodes.keys())
         self.assertFalse("smooth_2" in pipeline.nodes.keys())
