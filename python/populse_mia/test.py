@@ -34,27 +34,27 @@ from nipype.interfaces.spm import Smooth, Threshold
 
 # other import
 import ast
+import copy
+from datetime import datetime
+from functools import partial
+from hashlib import sha256
 import os
+from packaging import version
+from pathlib import Path
+import platform
+import psutil
 import shutil
+import subprocess
+import sqlite3
 import sys
 import tempfile
 import threading
+from time import sleep
+from traits.api import Undefined, TraitListObject
 import unittest
 import uuid
-import yaml
-from datetime import datetime
-from functools import partial
-from packaging import version
-from pathlib import Path
-from traits.api import Undefined, TraitListObject
 from unittest.mock import Mock, MagicMock
-import copy
-import subprocess
-import sqlite3
-import platform
-import psutil
-from hashlib import sha256
-from time import sleep
+import yaml
 
 sys.settrace
 
@@ -8364,6 +8364,9 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs.new_tab()
         self.assertEqual(pipeline_editor_tabs.count(), 4)
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
-           
+
+class TestMIANodeController(TestMIACase):
+
+
 if __name__ == '__main__':
     unittest.main()
