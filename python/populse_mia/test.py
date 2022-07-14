@@ -2562,26 +2562,6 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(sorted(mixed_bandwidths, reverse=True),
                          down_bandwidths)
 
-    def test_tab_change(self):
-        """
-        Tests the tab change from data browser to pipeline manager
-        """
-
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_8")
-
-        self.main_window.tabs.setCurrentIndex(2)
-        index = self.main_window.tabs.currentIndex()
-        scans = self.main_window.project.session.get_documents_names(
-                                                             COLLECTION_CURRENT)
-        self.assertEqual(scans, self.main_window.pipeline_manager.scan_list)
-        self.assertEqual("Pipeline Manager",
-                         self.main_window.tabs.tabText(index))
-
-        self.main_window.tabs.setCurrentIndex(0)
-        index = self.main_window.tabs.currentIndex()
-        self.assertEqual(self.main_window.tabs.tabText(index), "Data Browser")
-
     def test_undo_redo_databrowser(self):
         """
         Tests the databrowser undo/redo
@@ -3148,6 +3128,7 @@ class TestMIADataBrowser(TestMIACase):
 
 class TestMIAMainWindow(TestMIACase):
 
+
     def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
         '''
         Looks for a QModelIndex, in a QTreeView, whose contents 
@@ -3162,6 +3143,40 @@ class TestMIAMainWindow(TestMIACase):
             index = q_tree_view.indexBelow(index)
             
         return index
+
+    def test_check_database(self):
+        '''
+        Checks if the database has changed since the scans were first 
+        imported.
+        Tests MainWindow.test_check_database.
+
+        Notes
+        -----
+        Mocks QMessageBox.exec.
+        '''
+
+        # Creates a new project and switches to it
+        test_proj_path = self.get_new_test_project()
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+
+        # Mocks the execution of a dialog box by accpeting it
+        QMessageBox.exec = lambda self_, *arg: self_.accept()
+
+        # Gets the file path 
+        ppl_manager.project.folder = test_proj_path
+        folder = os.path.join(test_proj_path,'data','raw_data')
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+        # Removes one document from the database
+        os.remove(DOCUMENT_1)
+
+        # Check if the files of the database have been modified
+        self.main_window.action_check_database.triggered.emit()
 
     def test_create_project_pop_up(self):
         """
@@ -4771,6 +4786,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Switches to data viewer
         self.main_window.tabs.setCurrentIndex(1) # Calls tab_changed()
+        self.assertEqual(self.main_window.tabs.currentIndex(), 1)
 
         # Deletes a scan from data browser
         data_browser.table_data.selectRow(0)
@@ -4781,143 +4797,17 @@ class TestMIAMainWindow(TestMIACase):
 
         # Switch to pipeline manager with unsaved modifications
         self.main_window.tabs.setCurrentIndex(2) # Calls tab_changed()
-        #self.main_window.tab_changed()
+        self.assertEqual(self.main_window.tabs.currentIndex(), 2)
 
         # Mocks nots list
-        self.main_window.project.currentFilter.nots = ['NOT']
+        #self.main_window.project.currentFilter.nots = ['NOT', '', '']
 
         # Switches to data browser
         self.main_window.tabs.setCurrentIndex(0) # Calls tab_changed()
+        self.assertEqual(self.main_window.tabs.currentIndex(), 0)
 
-class TestMIAPipelineManager(TestMIACase):
-    """Tests for the pipeline manager tab.
-
-    :Contains:
-        :Method:
-            - add_visualized_tag: selects a tag to display with the
-              "Visualized tags" pop-up
-            - execute_QDialogAccept: accept (close) a QDialog window
-            - get_new_test_project: create a temporary project that can
-              be safely modified
-            - restart_MIA: restarts MIA within a unit test.
-            - setUp: called automatically before each test method
-            - setUpClass: called before tests in the individual class
-            - tearDown: cleans up after each test method
-            - tearDownClass: called after tests in the individual class
-            - test_add_tab: adds tabs to the PipelineEditorTabs
-            - test_attributes_filter: displays an attributes filter and 
-              modifies it
-            - test_capsul_node_controller: adds, changes and deletes 
-              processes using the capsul node controller
-            - test_close_tab: closes a tab in the PipelineEditorTabs
-            - test_display_filter: displays node parameters and a plug 
-              filter
-            - test_drop_process: adds a Nipype SPM Smooth process to the
-              pipeline editor
-            - test_filter_widget: opens up the "FilterWidget()" to 
-              modify its parameters
-            - test_iteration_table: plays with the iteration table
-            - test_node_controller: adds, changes and deletes processes 
-              to the node controller
-            - test_plug_filter: displays a plug filter and modifies it
-            - test_process_library: install the brick_test and then 
-              remove it
-            - test_update_node_name: displays node parameters and 
-              updates its name
-            - test_update_plug_value: displays node parameters and 
-              updates a plug value
-            - test_z_get_editor: gets the instance of an editor
-            - test_z_get_filename: gets the relative path to a 
-              previously saved pipeline file
-            - test_z_get_index: gets the index of an editor
-            - test_z_get_tab_name: gets the tab name of the editor
-            - test_z_load_pipeline: loads a pipeline
-            - test_z_open_sub_pipeline: opens a sub_pipeline
-            - test_z_set_current_editor: sets the current editor
-            - test_zz_check_modif: opens a pipeline, opens it as a 
-              process in another tab, modifies it and check the 
-              modifications
-            - test_zz_del_pack(self): deletion of the brick created during UTs
-    """
-
-    def add_visualized_tag(self, tag):
-        """
-        With the "Visualized tags" pop-up open, selects a tag to display.
-
-        Parameters
-        ----------
-        tag: string
-          The tag to be displayed
-
-        Usage
-        -----
-        Should be called, with a delay, before opening the "Visualized tags"
-        pop-up:
-        QTimer.singleShot(1000,
-                          lambda:self.add_visualized_tag('AcquisitionDate'))
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            visualized_tags = w.layout().itemAt(0).widget()
-            tags_list = visualized_tags.list_widget_tags
-
-            if version.parse(QT_VERSION_STR) == version.parse('5.9.2'):
-                found_item = tags_list.findItems(tag, Qt.MatchExactly)
-
-            else:
-                found_item = tags_list.findItems(tag,
-                                                 Qt.MatchFlag.MatchExactly)
-
-            tags_list.setCurrentItem(found_item[0])
-            visualized_tags.click_select_tag()
-
-    def test_attributes_filter(self):
-        '''
-        Displays the parameters of a node, displays an attributes filter
-        and modifies it.
-
-        Notes:
-        -----
-        Tests AttributesFilter within the Node Controller V2
-        (CapsulNodeController()).
-        '''
-
-        # Opens project 8 and switches to it
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_8")
-
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        node_controller = self.main_window.pipeline_manager.nodeController
-
-        # Adds the process Smooth, creates a node called "smooth_1"
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the input plugs
-        ppl_edt_tabs.get_current_editor().current_node_name = 'smooth_1'
-        (ppl_edt_tabs.
-                 get_current_editor)().export_node_unconnected_mandatory_plugs()
-
-        # Displays parameters of 'inputs' node
-        input_process = pipeline.nodes[''].process
-        self.main_window.pipeline_manager.displayNodeParameters('inputs',
-                                                                input_process)
-
-        # Opens the attributes filter, selects item and closes it
-        node_controller.filter_attributes()
-        attributes_filter = node_controller.pop_up
-        attributes_filter.table_data.selectRow(0)
-        attributes_filter.ok_clicked()
-
-        # Opens the attributes filter, does not select an item and closes it
-        node_controller.filter_attributes()
-        attributes_filter = node_controller.pop_up
-        attributes_filter.search_str('!@#')
-        attributes_filter.ok_clicked()
-
+class TestMIANodeController(TestMIACase):
+    
     def test_capsul_node_controller(self):
         """
         Adds, changes and deletes processes using the capsul node
@@ -4999,6 +4889,146 @@ class TestMIAPipelineManager(TestMIACase):
         node_ctrler.release_process()
         node_ctrler.update_parameters()
 
+    def test_display_filter(self):
+        """
+        Displays parameters of a node and displays a plug filter
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        node_controller = self.main_window.pipeline_manager.nodeController
+
+        # Adding a process
+        process_class = Threshold
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        # Creates a node called "threshold_1"
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+                                                                  process_class)
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+        # Exporting the input plugs and modifying the "synchronize" input plug
+        (pipeline_editor_tabs.
+                         get_current_editor)().current_node_name = "threshold_1"
+        (pipeline_editor_tabs.
+                      get_current_editor)().export_node_all_unconnected_inputs()
+
+        input_process = pipeline.nodes[""].process
+        node_controller.display_parameters("inputs",
+                                           get_process_instance(input_process),
+                                           pipeline)
+
+        if hasattr(node_controller, 'get_index_from_plug_name'):
+            index = node_controller.get_index_from_plug_name("synchronize",
+                                                             "in")
+            node_controller.line_edit_input[index].setText("2")
+            # This calls "update_plug_value" method
+            node_controller.line_edit_input[index].returnPressed.emit()
+
+            # Calling the display_filter method
+            node_controller.display_filter("inputs", "synchronize", (),
+                                           input_process)
+            node_controller.pop_up.close()
+            self.assertEqual(2,
+                             pipeline.nodes["threshold_1"].get_plug_value(
+                                                                 "synchronize"))
+
+
+class TestMIAPipelineManager(TestMIACase):
+    """Tests for the pipeline manager tab.
+
+    :Contains:
+        :Method:
+            - add_visualized_tag: selects a tag to display with the
+              "Visualized tags" pop-up
+            - execute_QDialogAccept: accept (close) a QDialog window
+            - get_new_test_project: create a temporary project that can
+              be safely modified
+            - restart_MIA: restarts MIA within a unit test.
+            - setUp: called automatically before each test method
+            - setUpClass: called before tests in the individual class
+            - tearDown: cleans up after each test method
+            - tearDownClass: called after tests in the individual class
+            - test_add_tab: adds tabs to the PipelineEditorTabs
+            - test_attributes_filter: displays an attributes filter and 
+              modifies it
+            - test_capsul_node_controller: adds, changes and deletes 
+              processes using the capsul node controller
+            - test_close_tab: closes a tab in the PipelineEditorTabs
+            - test_display_filter: displays node parameters and a plug 
+              filter
+            - test_drop_process: adds a Nipype SPM Smooth process to the
+              pipeline editor
+            - test_filter_widget: opens up the "FilterWidget()" to 
+              modify its parameters
+            - test_iteration_table: plays with the iteration table
+            - test_node_controller: adds, changes and deletes processes 
+              to the node controller
+            - test_plug_filter: displays a plug filter and modifies it
+            - test_process_library: install the brick_test and then 
+              remove it
+            - test_update_node_name: displays node parameters and 
+              updates its name
+            - test_update_plug_value: displays node parameters and 
+              updates a plug value
+            - test_z_get_editor: gets the instance of an editor
+            - test_z_get_filename: gets the relative path to a 
+              previously saved pipeline file
+            - test_z_get_index: gets the index of an editor
+            - test_z_get_tab_name: gets the tab name of the editor
+            - test_z_load_pipeline: loads a pipeline
+            - test_z_open_sub_pipeline: opens a sub_pipeline
+            - test_z_set_current_editor: sets the current editor
+            - test_zz_check_modif: opens a pipeline, opens it as a 
+              process in another tab, modifies it and check the 
+              modifications
+            - test_zz_del_pack(self): deletion of the brick created during UTs
+    """
+
+    def test_attributes_filter(self):
+        '''
+        Displays the parameters of a node, displays an attributes filter
+        and modifies it.
+
+        Notes:
+        -----
+        Tests AttributesFilter within the Node Controller V2
+        (CapsulNodeController()).
+        '''
+
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
+
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        node_controller = self.main_window.pipeline_manager.nodeController
+
+        # Adds the process Smooth, creates a node called "smooth_1"
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
+
+        # Exports the input plugs
+        ppl_edt_tabs.get_current_editor().current_node_name = 'smooth_1'
+        (ppl_edt_tabs.
+                 get_current_editor)().export_node_unconnected_mandatory_plugs()
+
+        # Displays parameters of 'inputs' node
+        input_process = pipeline.nodes[''].process
+        self.main_window.pipeline_manager.displayNodeParameters('inputs',
+                                                                input_process)
+
+        # Opens the attributes filter, selects item and closes it
+        node_controller.filter_attributes()
+        attributes_filter = node_controller.pop_up
+        attributes_filter.table_data.selectRow(0)
+        attributes_filter.ok_clicked()
+
+        # Opens the attributes filter, does not select an item and closes it
+        node_controller.filter_attributes()
+        attributes_filter = node_controller.pop_up
+        attributes_filter.search_str('!@#')
+        attributes_filter.ok_clicked()
+    
     def test_close_tab(self):
         """
         Closes a tab in the pipeline editor tabs while mocking the
@@ -5073,53 +5103,7 @@ class TestMIAPipelineManager(TestMIACase):
         # Tries to close the modified tab and cancels saving
         ppl_edt_tabs.close_tab(0)
 
-    def test_display_filter(self):
-        """
-        Displays parameters of a node and displays a plug filter
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        node_controller = self.main_window.pipeline_manager.nodeController
-
-        # Adding a process
-        process_class = Threshold
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        # Creates a node called "threshold_1"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-
-        # Exporting the input plugs and modifying the "synchronize" input plug
-        (pipeline_editor_tabs.
-                         get_current_editor)().current_node_name = "threshold_1"
-        (pipeline_editor_tabs.
-                      get_current_editor)().export_node_all_unconnected_inputs()
-
-        input_process = pipeline.nodes[""].process
-        node_controller.display_parameters("inputs",
-                                           get_process_instance(input_process),
-                                           pipeline)
-
-        if hasattr(node_controller, 'get_index_from_plug_name'):
-            index = node_controller.get_index_from_plug_name("synchronize",
-                                                             "in")
-            node_controller.line_edit_input[index].setText("2")
-            # This calls "update_plug_value" method
-            node_controller.line_edit_input[index].returnPressed.emit()
-
-            # Calling the display_filter method
-            node_controller.display_filter("inputs", "synchronize", (),
-                                           input_process)
-            node_controller.pop_up.close()
-            self.assertEqual(2,
-                             pipeline.nodes["threshold_1"].get_plug_value(
-                                                                 "synchronize"))
-        # TODO 1: currently we do not enter in the last if statement (controller
-        #         v2). Implement the switch to V1 controller to enable the
-        #         last if
-        # TODO 2: open a project and modify the filter pop-up
-
+    
     def test_drop_process(self):
         """
         Adds a Nipype SPM's Smooth process to the pipeline editor
@@ -8364,9 +8348,6 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs.new_tab()
         self.assertEqual(pipeline_editor_tabs.count(), 4)
         self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
-
-class TestMIANodeController(TestMIACase):
-
 
 if __name__ == '__main__':
     unittest.main()
