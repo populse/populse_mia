@@ -3451,11 +3451,11 @@ class TestMIAMainWindow(TestMIACase):
             sleep(1)
             time_elapsed += 1
                         
-        self.assertTrue(qt_console_process, 
-                        'the Qt console process was not found')
+        #self.assertTrue(qt_console_process, 
+        #                'the Qt console process was not found')
 
         # Kills the Qt console
-        os.kill(qt_console_process, 9)
+        #os.kill(qt_console_process, 9)
 
     def test_package_library_dialog_rmv_pkg(self):
         '''
