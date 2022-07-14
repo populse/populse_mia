@@ -5572,46 +5572,6 @@ class TestMIAPipelineManager(TestMIACase):
 
             self.assertNotIn("brick_test", pro_dic["Packages"])
 
-    #pipeline editor
-    def test_z_get_editor(self):
-        """
-        Gets the instance of an editor (z to run at the end)
-
-        This tests:
-         - PipelineEditorTabs.get_editor_by_index
-         - PipelineEditorTabs.get_current_editor
-         - PipelineEditorTabs.get_editor_by_tab_name
-         - PipelineEditorTabs.get_editor_by_filename
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        config = Config(config_path=self.config_path)
-
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-
-        editor0 = pipeline_editor_tabs.get_current_editor()
-        # create new tab with new editor and make it current:
-        pipeline_editor_tabs.new_tab()
-        editor1 = pipeline_editor_tabs.get_current_editor()
-
-        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(0), editor0)
-        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(1), editor1)
-        self.assertEqual(pipeline_editor_tabs.get_current_editor(), editor1)
-        self.assertEqual(editor0,
-                         pipeline_editor_tabs.get_editor_by_tab_name(
-                                                            "test_pipeline.py"))
-        self.assertEqual(editor1,
-                         pipeline_editor_tabs.get_editor_by_tab_name(
-                                                              "New Pipeline 1"))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_editor_by_tab_name("dummy"))
-        self.assertEqual(editor0,
-                         pipeline_editor_tabs.get_editor_by_file_name(filename))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_editor_by_file_name("dummy"))
 
     def test_z_get_filename(self):
         """
@@ -5639,82 +5599,9 @@ class TestMIAPipelineManager(TestMIACase):
                          os.path.abspath(
                              pipeline_editor_tabs.get_current_filename()))
 
-    def test_z_get_index(self):
-        """
-        Gets the index of an editor. (z to run at the end)
-
-        This tests:
-         - PipelineEditorTabs.get_index_by_tab_name
-         - PipelineEditorTabs.get_index_by_filename
-         - PipelineEditorTabs.get_index_by_editor
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        config = Config(config_path=self.config_path)
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-        editor0 = pipeline_editor_tabs.get_current_editor()
-
-        # create new tab with new editor and make it current
-        pipeline_editor_tabs.new_tab()
-        editor1 = pipeline_editor_tabs.get_current_editor()
-
-        self.assertEqual(0,
-                         pipeline_editor_tabs.get_index_by_tab_name(
-                                                            "test_pipeline.py"))
-        self.assertEqual(1,
-                         pipeline_editor_tabs.get_index_by_tab_name(
-                                                              "New Pipeline 1"))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_index_by_tab_name("dummy"))
-
-        self.assertEqual(0,
-                         pipeline_editor_tabs.get_index_by_filename(filename))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_index_by_filename("dummy"))
-
-        self.assertEqual(0, pipeline_editor_tabs.get_index_by_editor(editor0))
-        self.assertEqual(1, pipeline_editor_tabs.get_index_by_editor(editor1))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_index_by_editor("dummy"))
-
-    def test_z_get_tab_name(self):
-        """
-        Gets the tab name of the editor. (z to run at the end)
-
-        This tests:
-         - PipelineEditorTabs.get_tab_name_by_index
-         - PipelineEditorTabs.get_current_tab_name
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-
-        self.assertEqual("New Pipeline",
-                         pipeline_editor_tabs.get_tab_name_by_index(0))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_tab_name_by_index(1))
-        self.assertEqual("New Pipeline",
-                         pipeline_editor_tabs.get_current_tab_name())
-
-    def test_z_load_pipeline(self):
-        """
-        Loads a pipeline (z to run at the end)
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        config = Config(config_path=self.config_path)
-
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-
+    
+    
+    
     def test_z_open_sub_pipeline(self):
         """
         Opens a sub_pipeline (z to run at the end)
@@ -8314,6 +8201,122 @@ class TestMIAPipelineEditor(TestMIACase):
             self.assertEqual(2,
                              pipeline.nodes["threshold_1"].get_plug_value(
                                                                  "synchronize"))
+
+    def test_z_get_editor(self):
+        """
+        Gets the instance of an editor (z to run at the end)
+
+        This tests:
+         - PipelineEditorTabs.get_editor_by_index
+         - PipelineEditorTabs.get_current_editor
+         - PipelineEditorTabs.get_editor_by_tab_name
+         - PipelineEditorTabs.get_editor_by_filename
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        config = Config(config_path=self.config_path)
+
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+
+        editor0 = pipeline_editor_tabs.get_current_editor()
+        # create new tab with new editor and make it current:
+        pipeline_editor_tabs.new_tab()
+        editor1 = pipeline_editor_tabs.get_current_editor()
+
+        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(0), editor0)
+        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(1), editor1)
+        self.assertEqual(pipeline_editor_tabs.get_current_editor(), editor1)
+        self.assertEqual(editor0,
+                         pipeline_editor_tabs.get_editor_by_tab_name(
+                                                            "test_pipeline.py"))
+        self.assertEqual(editor1,
+                         pipeline_editor_tabs.get_editor_by_tab_name(
+                                                              "New Pipeline 1"))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_editor_by_tab_name("dummy"))
+        self.assertEqual(editor0,
+                         pipeline_editor_tabs.get_editor_by_file_name(filename))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_editor_by_file_name("dummy"))
+
+    def test_z_get_index(self):
+        """
+        Gets the index of an editor. (z to run at the end)
+
+        This tests:
+         - PipelineEditorTabs.get_index_by_tab_name
+         - PipelineEditorTabs.get_index_by_filename
+         - PipelineEditorTabs.get_index_by_editor
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        config = Config(config_path=self.config_path)
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+        editor0 = pipeline_editor_tabs.get_current_editor()
+
+        # create new tab with new editor and make it current
+        pipeline_editor_tabs.new_tab()
+        editor1 = pipeline_editor_tabs.get_current_editor()
+
+        self.assertEqual(0,
+                         pipeline_editor_tabs.get_index_by_tab_name(
+                                                            "test_pipeline.py"))
+        self.assertEqual(1,
+                         pipeline_editor_tabs.get_index_by_tab_name(
+                                                              "New Pipeline 1"))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_index_by_tab_name("dummy"))
+
+        self.assertEqual(0,
+                         pipeline_editor_tabs.get_index_by_filename(filename))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_index_by_filename("dummy"))
+
+        self.assertEqual(0, pipeline_editor_tabs.get_index_by_editor(editor0))
+        self.assertEqual(1, pipeline_editor_tabs.get_index_by_editor(editor1))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_index_by_editor("dummy"))
+
+    def test_z_get_tab_name(self):
+        """
+        Gets the tab name of the editor. (z to run at the end)
+
+        This tests:
+         - PipelineEditorTabs.get_tab_name_by_index
+         - PipelineEditorTabs.get_current_tab_name
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+
+        self.assertEqual("New Pipeline",
+                         pipeline_editor_tabs.get_tab_name_by_index(0))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_tab_name_by_index(1))
+        self.assertEqual("New Pipeline",
+                         pipeline_editor_tabs.get_current_tab_name())
+
+    def test_z_load_pipeline(self):
+        """
+        Loads a pipeline (z to run at the end)
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        config = Config(config_path=self.config_path)
+
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        self.assertTrue("smooth_1" in pipeline.nodes.keys())
 
 if __name__ == '__main__':
     unittest.main()
