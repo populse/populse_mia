@@ -7869,30 +7869,29 @@ class TestMIAPipelineManagerTab(unittest.TestCase):
 
         # Creates a new project folder and adds one document to the 
         # project
-        test_proj_path = self.get_new_test_project()
-        folder = os.path.join(test_proj_path, 'data', 'raw_data')
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
-                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        #test_proj_path = self.get_new_test_project()
+        #folder = os.path.join(test_proj_path, 'data', 'raw_data')
+        #NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+        #              'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        #DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
 
         # Creates a project with another project already opened
-        self.main_window.data_browser.table_data.add_path()
+        #self.main_window.data_browser.table_data.add_path()
 
-        pop_up_add_path = self.main_window.data_browser.table_data.pop_up_add_path
+        #pop_up_add_path = self.main_window.data_browser.table_data.pop_up_add_path
 
-        pop_up_add_path.file_line_edit.setText(DOCUMENT_1)
-        pop_up_add_path.save_path()
+        #pop_up_add_path.file_line_edit.setText(DOCUMENT_1)
+        #pop_up_add_path.save_path()
 
-        self.main_window.undo()
+        #self.main_window.undo()
         
-        self.main_window.redo()
+        #self.main_window.redo()
 
         # Mocks not saving the pipeline
-        QMessageBox.exec = lambda self_, *arg: self_.buttons()[-1].clicked.emit()
-
+        #QMessageBox.exec = lambda self_, *arg: self_.buttons()[-1].clicked.emit()
 
         # Switches to pipeline manager
-        self.main_window.tabs.setCurrentIndex(2)
+        #self.main_window.tabs.setCurrentIndex(2)
 
         # Add a process => creates a node called "smooth_1",
         # test if Smooth_1 is a node in the current pipeline / editor
