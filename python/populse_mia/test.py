@@ -3299,10 +3299,10 @@ class TestMIAMainWindow(TestMIACase):
 
         # Deletes a scan from data browser
         self.main_window.data_browser.table_data.selectRow(0)
-        self.main_window.data_browser.table_data.remove_scan()
+        #self.main_window.data_browser.table_data.remove_scan()
 
         # Asserts that there are unsaved modificaiton
-        self.assertTrue(self.main_window.check_unsaved_modifications())
+        #self.assertTrue(self.main_window.check_unsaved_modifications())
 
         PopUpQuit.exec = lambda self_: self_.show()
 
