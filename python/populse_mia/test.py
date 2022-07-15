@@ -5577,10 +5577,13 @@ class TestMIAOthers(TestMIACase):
 
         brick = os.path.join(config.get_mia_path(), 'resources',
                              'mia', 'brick_test.zip')
-        pkg.path_edit.text = lambda: brick
+        pkg.path_edit.text = lambda *arg: brick
         pkg.install()
 
-        pkg = PackageLibraryDialog(self.main_window)
+        pkg.close()
+
+        #pkg = PackageLibraryDialog(self.main_window)
+        pkg = self.main_window.pipeline_manager.processLibrary.pkg_library
         pkg.save()
 
         with open(os.path.join(config.get_mia_path(), 'properties',
@@ -5614,6 +5617,8 @@ class TestMIAOthers(TestMIACase):
 
             self.assertNotIn("brick_test", pro_dic["Packages"])  
 
+        pkg.close()
+        
 class TestMIAPipelineEditor(TestMIACase):
     '''
     Tests for the pipeline editor, part of the pipeline manager tab.
@@ -5628,6 +5633,8 @@ class TestMIAPipelineEditor(TestMIACase):
             - test_export_plug: exports plugs and mocks dialog boxes.
             - test_update_plug_value: displays node parameters and 
               updates a plug value.
+            - test_z_check_modif: opens a pipeline, modifies it and 
+              check the modifications.
             - test_z_get_editor: gets the instance of an editor.
             - test_z_get_filename: gets the relative path to a 
               previously saved pipeline file.
@@ -5636,8 +5643,6 @@ class TestMIAPipelineEditor(TestMIACase):
             - test_z_load_pipeline: loads a pipeline.
             - test_z_open_sub_pipeline: opens a sub_pipeline.
             - test_z_set_current_editor: sets the current editor.
-            - test_zz_check_modif: opens a pipeline, modifies it and 
-              check the modifications.
             - test_zz_del_pack: deletes a brick created during UTs.
     '''
   
@@ -5918,6 +5923,82 @@ class TestMIAPipelineEditor(TestMIACase):
                              pipeline.nodes["threshold_1"].get_plug_value(
                                                                  "synchronize"))
 
+    def test_z_check_modif(self):
+        """
+        Opens a pipeline, opens it as a process in another tab, modifies it
+        and check the modifications
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        config = Config(config_path=self.config_path)
+
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        self.assertTrue("smooth_1" in pipeline.nodes.keys())
+
+        pipeline_editor_tabs.new_tab()
+        pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+
+        pipeline_editor_tabs.get_current_editor().drop_process(
+                                                 "User_processes.Test_pipeline")
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+        self.assertTrue("test_pipeline_1" in pipeline.nodes.keys())
+
+        pipeline_editor_tabs.get_current_editor().drop_process(
+                                                 "nipype.interfaces.spm.Smooth")
+        pipeline_editor_tabs.get_current_editor().drop_process(
+                                                 "nipype.interfaces.spm.Smooth")
+        self.assertTrue("smooth_1" in pipeline.nodes.keys())
+        self.assertTrue("smooth_2" in pipeline.nodes.keys())
+
+        pipeline_editor_tabs.get_current_editor().add_link(
+                                                ("smooth_1", "_smoothed_files"),
+                                                ("test_pipeline_1", "in_files"),
+                                                active=True, weak=False)
+
+        self.assertEqual(1,
+                         len(pipeline.nodes["test_pipeline_1"].plugs[
+                                                        "in_files"].links_from))
+        self.assertEqual(1,
+                         len(pipeline.nodes["smooth_1"].plugs[
+                                                   "_smoothed_files"].links_to))
+
+        pipeline_editor_tabs.get_current_editor().add_link(
+                                         ("test_pipeline_1", "_smoothed_files"),
+                                         ("smooth_2", "in_files"),
+                                         active=True, weak=False)
+
+        self.assertEqual(1,
+                         len(pipeline.nodes["smooth_2"].plugs[
+                                                        "in_files"].links_from))
+        self.assertEqual(1,
+                         len(pipeline.nodes["test_pipeline_1"].plugs[
+                                                   "_smoothed_files"].links_to))
+
+        pipeline_editor_tabs.set_current_editor_by_tab_name("test_pipeline.py")
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+
+        (pipeline_editor_tabs.
+                          get_current_editor)().export_node_plugs("smooth_1",
+                                                                  optional=True)
+        self.main_window.pipeline_manager.savePipeline(uncheck=True)
+
+        pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
+        pipeline_editor_tabs.get_current_editor().scene.pos[
+                                           "test_pipeline_1"] = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().check_modifications()
+
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        self.assertTrue("fwhm" in
+                                 pipeline.nodes["test_pipeline_1"].plugs.keys())
+
     def test_z_get_editor(self):
         """
         Gets the instance of an editor (z to run at the end)
@@ -6131,82 +6212,6 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertEqual(pipeline_editor_tabs.currentIndex(), 1)
         pipeline_editor_tabs.set_current_editor_by_editor(editor0)
         self.assertEqual(pipeline_editor_tabs.currentIndex(), 0)
-
-    def test_zz_check_modif(self):
-        """
-        Opens a pipeline, opens it as a process in another tab, modifies it
-        and check the modifications
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        config = Config(config_path=self.config_path)
-
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-
-        pipeline_editor_tabs.new_tab()
-        pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-
-        pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 "User_processes.Test_pipeline")
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-
-        self.assertTrue("test_pipeline_1" in pipeline.nodes.keys())
-
-        pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 "nipype.interfaces.spm.Smooth")
-        pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 "nipype.interfaces.spm.Smooth")
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertTrue("smooth_2" in pipeline.nodes.keys())
-
-        pipeline_editor_tabs.get_current_editor().add_link(
-                                                ("smooth_1", "_smoothed_files"),
-                                                ("test_pipeline_1", "in_files"),
-                                                active=True, weak=False)
-
-        self.assertEqual(1,
-                         len(pipeline.nodes["test_pipeline_1"].plugs[
-                                                        "in_files"].links_from))
-        self.assertEqual(1,
-                         len(pipeline.nodes["smooth_1"].plugs[
-                                                   "_smoothed_files"].links_to))
-
-        pipeline_editor_tabs.get_current_editor().add_link(
-                                         ("test_pipeline_1", "_smoothed_files"),
-                                         ("smooth_2", "in_files"),
-                                         active=True, weak=False)
-
-        self.assertEqual(1,
-                         len(pipeline.nodes["smooth_2"].plugs[
-                                                        "in_files"].links_from))
-        self.assertEqual(1,
-                         len(pipeline.nodes["test_pipeline_1"].plugs[
-                                                   "_smoothed_files"].links_to))
-
-        pipeline_editor_tabs.set_current_editor_by_tab_name("test_pipeline.py")
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-
-        (pipeline_editor_tabs.
-                          get_current_editor)().export_node_plugs("smooth_1",
-                                                                  optional=True)
-        self.main_window.pipeline_manager.savePipeline(uncheck=True)
-
-        pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
-        pipeline_editor_tabs.get_current_editor().scene.pos[
-                                           "test_pipeline_1"] = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().check_modifications()
-
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("fwhm" in
-                                 pipeline.nodes["test_pipeline_1"].plugs.keys())
 
     def test_zz_del_pack(self):
         """ We remove the brick created during the unit tests, and we take
