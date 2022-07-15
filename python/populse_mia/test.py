@@ -5831,13 +5831,12 @@ class TestMIAPipelineEditor(TestMIACase):
 
         # Sets often used shortcuts
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        
 
         # Switch to pipeline manager
         self.main_window.tabs.setCurrentIndex(2)
 
         # Tries to save a pipeline that is empty
-        res = self.main_window.pipeline_manager.pipelineEditorTabs.save_pipeline()
+        res = ppl_edt_tabs.save_pipeline()
         self.assertIsNone(res)
 
         # Adds a process
@@ -5845,7 +5844,7 @@ class TestMIAPipelineEditor(TestMIACase):
         ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
 
         # Exports the input plugs
-        ppl_edt_tabs.get_current_editor().current_node_name = "smooth_1"
+        ppl_edt_tabs.get_current_editor().current_node_name = 'smooth_1'
         (ppl_edt_tabs.get_current_editor().
          export_node_unconnected_mandatory_plugs())
         (ppl_edt_tabs.
@@ -5855,31 +5854,35 @@ class TestMIAPipelineEditor(TestMIACase):
         QMessageBox.exec = lambda *args: None
 
         # Tries to save the pipeline with the user cancelling it
-        QFileDialog.getSaveFileName = lambda self, *args: ['']
+        QFileDialog.getSaveFileName = lambda *args: ['']
         res = ppl_edt_tabs.save_pipeline()
         self.assertIsNone(res)
 
         # Mocks the execution of a QFileDialog
-        QFileDialog.getSaveFileName = lambda self, *args: ['1_filename']
+        config = Config(config_path=self.config_path)
+        usr_proc_folder = os.path.join(config.get_mia_path(), 
+                                       'processes', 'User_processes')
+        
+        filename = os.path.join(usr_proc_folder, '1_test_pipeline')
+        QFileDialog.getSaveFileName = lambda *args: [filename]
 
         # Removes the user processes tree to increase coverage
-        config = Config(config_path=self.config_path)
-        shutil.rmtree(os.path.abspath(os.path.join(config.get_mia_path(),
-                                                   'processes',
-                                                   'User_processes')))
+        shutil.rmtree(usr_proc_folder)
 
         # Tries to save the pipeline with a filename starting by a digit
         res = ppl_edt_tabs.save_pipeline()
         self.assertIsNone(res)
 
-        QFileDialog.getSaveFileName = lambda self, *args: ['filename']
+        filename = os.path.join(usr_proc_folder, 'test_pipeline')
+        QFileDialog.getSaveFileName = lambda *args: [filename]
 
         # Tries to save the pipeline with a filename without extension, 
         # which is automatically completed to .py
         res = ppl_edt_tabs.save_pipeline()
         self.assertTrue(res) # The resulting filename is not empty
 
-        QFileDialog.getSaveFileName = lambda self, *args: ['filename.c']
+        filename = os.path.join(usr_proc_folder, 'test_pipeline.c')
+        QFileDialog.getSaveFileName = lambda *args: [filename]
 
         # Save the pipeline with a filename with the wrong .c extension, 
         # which is automatically corrected to .py 
@@ -5898,9 +5901,8 @@ class TestMIAPipelineEditor(TestMIACase):
         Config(config_path=self.config_path).set_user_mode(True)
 
         # Saves a pipeliene by specifying a filename
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        res = ppl_edt_tabs.save_pipeline(new_file_name=filename)
+        filename = os.path.join(usr_proc_folder, 'test_pipeline.py')
+        res = ppl_edt_tabs.save_pipeline(new_file_name = filename)
         self.assertTrue(res) # The resulting filename is not empty
 
     def test_update_plug_value(self):
