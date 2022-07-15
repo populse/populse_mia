@@ -19,13 +19,12 @@
 ### General imports:
 
 #  PyQt5 import
-
 from PyQt5 import QtGui
-from PyQt5.QtCore import (QCoreApplication, QEvent, QPoint, Qt, QThread, QTimer,
-                          QModelIndex, QT_VERSION_STR)
+from PyQt5.QtCore import (QCoreApplication, QEvent, QModelIndex, QPoint, Qt,
+                          QThread, QTimer, QT_VERSION_STR)
 from PyQt5.QtTest import QTest
-from PyQt5.QtWidgets import (QApplication, QDialog, QMessageBox, QInputDialog,
-                             QTableWidgetItem, QFileDialog)
+from PyQt5.QtWidgets import (QApplication, QDialog, QFileDialog, QInputDialog,
+                             QMessageBox, QTableWidgetItem)
 
 # Nipype import
 from nipype.interfaces import Rename, Select
@@ -35,26 +34,25 @@ from nipype.interfaces.spm import Smooth, Threshold
 # other import
 import ast
 import copy
-from datetime import datetime
-from functools import partial
-from hashlib import sha256
 import os
-from packaging import version
-from pathlib import Path
 import platform
 import psutil
 import shutil
 import subprocess
-import sqlite3
 import sys
 import tempfile
 import threading
-from time import sleep
-from traits.api import Undefined, TraitListObject
 import unittest
 import uuid
-from unittest.mock import Mock, MagicMock
 import yaml
+from datetime import datetime
+from functools import partial
+from hashlib import sha256
+from packaging import version
+from pathlib import Path
+from time import sleep
+from traits.api import TraitListObject, Undefined
+from unittest.mock import MagicMock, Mock
 
 sys.settrace
 
@@ -124,14 +122,14 @@ if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
 # developer configuration:
 
 # capsul import
-from capsul.api import (get_process_instance, Process, ProcessNode,
-                        PipelineNode, Switch, capsul_engine)
+from capsul.api import (capsul_engine, get_process_instance, PipelineNode,
+                        Process, ProcessNode, Switch)
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import CapsulEngine, WorkflowExecutionError
 from capsul.pipeline.pipeline import Pipeline
 from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
-from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
+from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
 # mia_processes import
@@ -158,7 +156,9 @@ from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import (
 from populse_mia.user_interface.pipeline_manager.process_library import (
                                                            InstallProcesses,
                                                            PackageLibraryDialog)
-from populse_mia.user_interface.pop_ups import (PopUpAddPath,
+from populse_mia.user_interface.pop_ups import (DefaultValueListCreation,
+                                                DefaultValueQLineEdit,
+                                                PopUpAddPath,
                                                 PopUpAddTag,
                                                 PopUpClosePipeline,
                                                 PopUpDeletedProject,
@@ -169,12 +169,8 @@ from populse_mia.user_interface.pop_ups import (PopUpAddPath,
                                                 PopUpPreferences,
                                                 PopUpQuit,
                                                 PopUpRemoveScan,
-                                                PopUpSelectTag,
-                                                PopUpAddPath,
-                                                PopUpAddTag,
-                                                DefaultValueListCreation, 
-                                                DefaultValueQLineEdit,
                                                 PopUpSeeAllProjects,
+                                                PopUpSelectTag,
                                                 PopUpSelectTagCountTable)
 
 from populse_mia.utils.utils import check_value_type, table_to_database
@@ -3740,12 +3736,11 @@ class TestMIAMainWindow(TestMIACase):
         event.key = lambda: Qt.Key_Delete
         proc_lib_view.keyPressEvent(event)
 
-        pkg_lib_window.msg.close() # Closes the warning message
+        #pkg_lib_window.msg.close() # Closes the warning message
 
         # Tries to delete a package that cannot be deleted, calling the 
         # function
         pkg_lib_window.delete_package()
-        
         pkg_lib_window.msg.close() # Closes the warning message
 
         # Tries to delete a package corresponding to an empty string
