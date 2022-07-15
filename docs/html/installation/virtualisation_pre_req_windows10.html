@@ -4,21 +4,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>&lt;no title&gt; &#8212; populse_mia 2.2.1-dev+655e0d07 documentation</title>
-    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+554e91107 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+655e0d07 documentation</span></a></h1>
-        <h2 class="heading"><span>&lt;no title&gt;</span></h2>
+          <span>populse_mia 2.2.1-dev+554e91107 documentation</span></a></h1>
+        <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
       
@@ -47,7 +47,150 @@
 </tr>
 </tbody>
 </table>
-<p>In progress …</p>
+<p>Pre-requirements of windows installations are the same for <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html">windows host installation in user mode</a>.
+But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project under ubuntu.</p>
+<p>Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.</p>
+<section id="wsl2-windows-subsystem-linux-installation">
+<h1>1- WSL2 (Windows Subsystem Linux) installation<a class="headerlink" href="#wsl2-windows-subsystem-linux-installation" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><dl class="simple">
+<dt>In an administrator type Windows account:</dt><dd><ul>
+<li><p>Windows 10 must be up to date</p></li>
+<li><p>You need to have enough free space on your system disk : around 20 Gb</p></li>
+<li><p>Open a <strong>PowerShell as administrator</strong> (right clic on powershell icon)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>enter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wsl</span> <span class="o">--</span><span class="n">install</span> <span class="o">-</span><span class="n">d</span> <span class="n">Ubuntu</span><span class="o">-</span><span class="mf">20.04</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><img alt="../_images/Windows_10_PowerShell_WSL2.png" class="align-center" id="windows-10-powershell-wsl2" src="../_images/Windows_10_PowerShell_WSL2.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Reboot the computer</p></li>
+<li><p>Normally a linux ubuntu window is already available, enter it:</p></li>
+</ul>
+<ul>
+<li><p>enter a user / password who will be administrator of this linux (asked by the system)</p>
+<blockquote>
+<div><img alt="../_images/Windows_10_Ubuntu.png" class="align-center" id="windows-10-ubuntu" src="../_images/Windows_10_Ubuntu.png" />
+</div></blockquote>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>then you can write your first commands to make ubuntu up to date:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
+
+<span class="c1">#at this first sudo command, the system may ask you to enter the password you just enter before.</span>
+
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">upgrade</span> <span class="o">-</span><span class="n">y</span>
+
+<span class="n">exit</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>close this window</p></li>
+</ul>
+<p>Now you have WSL2 and an Ubuntu 20.04 linux.</p>
+<p>Before you install a new distribution using <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>,
+make sure that WSL is in 2 mode with: <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--set-default-version</span> <span class="pre">2</span></code> .
+The distribution is only available for the current Windows user.
+Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <code class="docutils literal notranslate"><span class="pre">/mnt/c/</span></code></p>
+<dl class="simple">
+<dt>To know more:</dt><dd><ul class="simple">
+<li><p>[Manual installation steps for older versions of WSL](<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-manual">https://docs.microsoft.com/en-us/windows/wsl/install-manual</a>)</p></li>
+<li><p>[Install WSL](<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">https://docs.microsoft.com/en-us/windows/wsl/install</a>)</p></li>
+<li><p>[Basic commands for WSL](<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/basic-commands">https://docs.microsoft.com/en-us/windows/wsl/basic-commands</a>)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="x-server-installation-in-windows-with-vcxsrv">
+<h1>2- X server installation in windows with VcXsrv<a class="headerlink" href="#x-server-installation-in-windows-with-vcxsrv" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>We also need a X windows server to allow linux applications graphic user interface (GUI) works.</p>
+<dl class="simple">
+<dt>Get [VcXsrv](<a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">https://sourceforge.net/projects/vcxsrv/files/latest/download</a>)</dt><dd><ul class="simple">
+<li><p>Execute it,</p></li>
+<li><p>click ‘next’ then ‘install’ to install it</p></li>
+</ul>
+</dd>
+</dl>
+<p>Looking for XLaunch application icon, launch it.</p>
+<p>Configure it like the screenshots below:</p>
+<blockquote>
+<div><img alt="../_images/Xlaunch_1.png" class="align-center" id="xlaunch-1" src="../_images/Xlaunch_1.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><img alt="../_images/Xlaunch_2.png" class="align-center" id="xlaunch-2" src="../_images/Xlaunch_2.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Disable <em>‘Native opengl’</em>
+Enable <em>‘Disable access control’</em></p>
+<blockquote>
+<div><img alt="../_images/Xlaunch_3.png" class="align-center" id="xlaunch-3" src="../_images/Xlaunch_3.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Do <em>‘Save Configuration’</em> in a file that allow you to launch it later (ie on the Desktop)</p>
+<blockquote>
+<div><img alt="../_images/Xlaunch_4.png" class="align-center" id="xlaunch-4" src="../_images/Xlaunch_4.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Allow access asked by Windows firewall.</p>
+<p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.</p>
+</section>
+<section id="dependencies-installation">
+<h1>3 - Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Open an Ubuntu session in Windows by:</p>
+<ul>
+<li><p>click on Ubuntu new icon</p>
+<p>or</p>
+</li>
+<li><p>open a normal Windows PowerShell,enter <code class="docutils literal notranslate"><span class="pre">ubuntu.20.04.exe</span></code></p></li>
+</ul>
+<p>In this Ubuntu window terminal, install the following dependencies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">uuid</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgpgme</span><span class="o">-</span><span class="n">dev</span> <span class="n">squashfs</span><span class="o">-</span><span class="n">tools</span> <span class="n">libseccomp</span><span class="o">-</span><span class="n">dev</span> <span class="n">wget</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> <span class="n">git</span> <span class="n">git</span><span class="o">-</span><span class="n">lfs</span> <span class="n">cryptsetup</span><span class="o">-</span><span class="nb">bin</span> <span class="n">python3</span><span class="o">-</span><span class="n">distutils</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span>
+<span class="c1"># Ubuntu 20.04</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">python3</span>
+<span class="c1"># Ubuntu 18.04</span>
+<span class="n">sudo</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="n">python3</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>You have completely installed a virtual Ubuntu which is now able to host mia.
+You can now follow steps from <strong>installation</strong> via <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html">populse mia installation in user mode</a>.</p>
+</section>
 
 
       </div>
@@ -61,7 +204,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
     </div>
   </body>
 </html>
