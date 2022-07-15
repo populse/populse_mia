@@ -5618,7 +5618,7 @@ class TestMIAOthers(TestMIACase):
             self.assertNotIn("brick_test", pro_dic["Packages"])  
 
         pkg.close()
-        
+
 class TestMIAPipelineEditor(TestMIACase):
     '''
     Tests for the pipeline editor, part of the pipeline manager tab.
@@ -5815,44 +5815,93 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertEqual(res, '_out_file') 
 
     def test_save_pipeline(self):
-        """
-        Saves a simple pipeline
-        """
+        '''
+        Creates a pipeline and tries to save it.
+        Tests
+        - PipelineEditor.save_pipeline
+        - PipelineEditorTabs.save_pipeline
+        - save_pipeline inside pipeline_editor.py
 
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        node_controller = self.main_window.pipeline_manager.nodeController
+        Notes
+        -----
+        Mocks
+        - QMessageBox.exec
+        - QFileDialog.getSaveFileName
+        '''
+
+        # Sets often used shortcuts
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        
+
+        # Switch to pipeline manager
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # Tries to save a pipeline that is empty
+        res = self.main_window.pipeline_manager.pipelineEditorTabs.save_pipeline()
+        self.assertIsNone(res)
+
+        # Adds a process
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
+
+        # Exports the input plugs
+        ppl_edt_tabs.get_current_editor().current_node_name = "smooth_1"
+        (ppl_edt_tabs.get_current_editor().
+         export_node_unconnected_mandatory_plugs())
+        (ppl_edt_tabs.
+         get_current_editor().export_node_all_unconnected_outputs())
+        
+        # Mocks the execution of a dialog box
+        QMessageBox.exec = lambda *args: None
+
+        # Tries to save the pipeline with the user cancelling it
+        QFileDialog.getSaveFileName = lambda self, *args: ['']
+        res = ppl_edt_tabs.save_pipeline()
+        self.assertIsNone(res)
+
+        # Mocks the execution of a QFileDialog
+        QFileDialog.getSaveFileName = lambda self, *args: ['1_filename']
+
+        # Removes the user processes tree to increase coverage
         config = Config(config_path=self.config_path)
+        shutil.rmtree(os.path.abspath(os.path.join(config.get_mia_path(),
+                                                   'processes',
+                                                   'User_processes')))
 
-        # Adding a process
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        # Tries to save the pipeline with a filename starting by a digit
+        res = ppl_edt_tabs.save_pipeline()
+        self.assertIsNone(res)
 
-        # Creates a node called "smooth_1"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
+        QFileDialog.getSaveFileName = lambda self, *args: ['filename']
 
-        # Displaying the node parameters
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        node_controller.display_parameters("smooth_1",
-                                           get_process_instance(process_class),
-                                           pipeline)
+        # Tries to save the pipeline with a filename without extension, 
+        # which is automatically completed to .py
+        res = ppl_edt_tabs.save_pipeline()
+        self.assertTrue(res) # The resulting filename is not empty
 
-        # Exporting the input plugs
-        pipeline_editor_tabs.get_current_editor().current_node_name = "smooth_1"
-        (pipeline_editor_tabs.
-                 get_current_editor)().export_node_unconnected_mandatory_plugs()
-        (pipeline_editor_tabs.
-                     get_current_editor)().export_node_all_unconnected_outputs()
+        QFileDialog.getSaveFileName = lambda self, *args: ['filename.c']
 
+        # Save the pipeline with a filename with the wrong .c extension, 
+        # which is automatically corrected to .py 
+        res = ppl_edt_tabs.save_pipeline()
+        self.assertTrue(res) # The resulting filename is not empty
+
+        # Sets user mode to true
+        Config(config_path=self.config_path).set_user_mode(True)
+
+        # Tries to overwrite the previously saved pipeline without 
+        # permissions
+        res = ppl_edt_tabs.save_pipeline()
+        self.assertIsNone(res)
+
+        # Sets user mode back to false
+        Config(config_path=self.config_path).set_user_mode(True)
+
+        # Saves a pipeliene by specifying a filename
         filename = os.path.join(config.get_mia_path(), 'processes',
                                 'User_processes', 'test_pipeline.py')
-        save_pipeline(pipeline, filename)
-        self.main_window.pipeline_manager.updateProcessLibrary(filename)
-        self.assertTrue(os.path.isfile(os.path.join(config.get_mia_path(),
-                                                    'processes',
-                                                    'User_processes',
-                                                    'test_pipeline.py')))
+        res = ppl_edt_tabs.save_pipeline(new_file_name=filename)
+        self.assertTrue(res) # The resulting filename is not empty
 
     def test_update_plug_value(self):
         """
