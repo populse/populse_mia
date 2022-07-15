@@ -203,7 +203,28 @@ if 'NO_ET' not in os.environ:
     os.environ['NO_ET'] = "1"
 
 class TestMIACase(unittest.TestCase):
-    '''Parent class for the test classes of mia.'''
+    '''Parent class for the test classes of mia.
+
+    :Contains:
+        :Method:
+            - add_visualized_tag: selects a tag to display with the
+              "Visualized tags" pop-up
+            - execute_QDialogAccept: accept (close) a QDialog instance
+            - execute_QDialogClose: closes a QDialog instance
+            - execute_QMessageBox_clickClose: press the Close button of 
+              a QMessageBox instance
+            - execute_QMessageBox_clickOk: press the Ok button of a 
+              QMessageBox instance
+            - execute_QMessageBox_clickYes: press the Yes button of a 
+              QMessageBox instance
+            - get_new_test_project: create a temporary project that can 
+              be safely modified
+            - restart_MIA: restarts MIA within a unit test
+            - setUp: called automatically before each test method
+            - tearDown: cleans up after each test method
+            - setUpClass: called before tests in the individual class
+            - tearDownClass: called after tests in the individual class
+    '''
 
     def add_visualized_tag(self, tag):
         """
@@ -238,6 +259,25 @@ class TestMIACase(unittest.TestCase):
             tags_list.setCurrentItem(found_item[0])
             visualized_tags.click_select_tag()
 
+    def execute_QDialogAccept(self):
+        """
+        Accept (close) a QDialog window
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.accept()
+
+    def execute_QDialogClose(self):
+        """
+        Is supposed to abort( close) a QDialog window
+        """
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.close()
+    
     def execute_QMessageBox_clickClose(self):
         """
         Press the Close button of a QMessageBox instance
@@ -260,16 +300,6 @@ class TestMIACase(unittest.TestCase):
             close_button = w.button(QMessageBox.Ok)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
-    def execute_QDialogAccept(self):
-        """
-        Accept (close) a QDialog window
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.accept()
-
     def execute_QMessageBox_clickYes(self):
         """
         Is supposed to allow to press the Yes button if a pipeline is 
@@ -281,15 +311,6 @@ class TestMIACase(unittest.TestCase):
             close_button = w.button(QMessageBox.Yes)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
-    def execute_QDialogClose(self):
-        """
-        Is supposed to abort( close) a QDialog window
-        """
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.close()
-    
     def get_new_test_project(self, name = 'test_project', light=False):
         '''
         Copies a test project where it can be safely modified.
@@ -391,22 +412,14 @@ class TestMIACase(unittest.TestCase):
             shutil.rmtree(cls.config_path)
 
 class TestMIADataBrowser(TestMIACase):
-    """Tests for the data browser tab
+    '''
+    Tests for the data browser tab.
+    Tests DataBrowser.
 
     :Contains:
         :Method:
             - edit_databrowser_list: change value to [25000] for a tag in
               DataBrowser
-            - execute_QMessageBox_clickClose: press the Close button of a
-              QMessageBox instance
-            - execute_QMessageBox_clickOk: press the Ok button of a QMessageBox
-              instance
-            - get_new_test_project: create a temporary project that can be
-              safely modified
-            - setUp: called automatically before each test method
-            - tearDown: cleans up after each test method
-            - setUpClass: called before tests in the individual class
-            - tearDownClass: called after tests in the individual class
             - test_add_path: tests the popup to add a path
             - test_add_tag: tests the pop up adding a tag
             - test_advanced_search: tests the advanced search widget
@@ -417,32 +430,40 @@ class TestMIADataBrowser(TestMIACase):
             - test_mia_preferences: tests the Mia preferences popup
             - test_modify_table: tests the modify table module
             - test_multiple_sort: tests the multiple sort popup
+            - test_openTagsPopUp: opens a pop-up to select the legend of the 
+              thumbnails
             - test_open_project: tests project opening
             - test_open_project_filter: tests project filter opening
-            - test_project_properties: tests saved projects addition and removal
+            - test_project_properties: tests saved projects addition and 
+              removal
             - test_proj_remov_from_cur_proj: tests that the projects are
               removed from the list of current projects
             - test_rapid_search: tests the rapid search bar
             - test_remove_scan: tests scans removal in the DataBrowser
             - test_remove_tag: tests the popup removing user tags
-            - test_reset_cell: tests the method resetting the selected cells
+            - test_reset_cell: tests the method resetting the selected 
+              cells
             - test_reset_column: tests the method resetting the columns
               selected
             - test_reset_row: test row reset
             - test_save_project: test opening & saving of a project
-            - test_send_doc_to_pip: tests the popup sending the documents
+            - test_send_doc_to_pip: tests the popup sending documents
               to the pipeline manager
             - test_set_value: tests the values modifications
+            - test_show_brick_history: opens the history pop-up for 
+              scans with history related to a brick
             - test_sort: tests the sorting in the DataBrowser
-            - test_tab_change: tests the tab change from data browser to
-              pipeline manager
-            - test_undo_redo_databrowser: tests the DataBrowser undo/redo
-            - test_unnamed_proj_soft_open: tests unnamed project creation at
-              software opening
+            - test_undo_redo_databrowser: tests data browser undo/redo
+            - test_unnamed_proj_soft_open: tests unnamed project 
+              creation at software opening
+            - test_update_data_history: updates the history of data that 
+              have been re-written
+            - test_update_default_value: updates the values when a list 
+              of default values is created
             - test_utils: test the utils functions
-            - test_visualized_tags: tests the popup modifying the visualized
-              tags
-    """
+            - test_visualized_tags: tests the popup modifying the 
+              visualized tags
+    '''
 
     def edit_databrowser_list(self, value):
         """Change value for a tag in DataBrowser
@@ -1245,6 +1266,69 @@ class TestMIADataBrowser(TestMIACase):
                          "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
                          "-000142_400.nii")
 
+    def test_openTagsPopUp(self):
+        '''
+        Opens a document in data viewer and opens a pop-up to select the
+        legend of the thumbnails.
+        Tests MiniViewer.openTagsPopUp.
+
+        Notes
+        -----
+        Indirectly tests PopUpSelectTag.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        data_browser = self.main_window.data_browser
+        viewer = data_browser.viewer
+
+        # Gets a document filepath
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+        # Adds the document to the data browser
+        addPath = PopUpAddPath(data_browser.project, data_browser)
+        addPath.file_line_edit.setText(DOCUMENT_1)
+        addPath.save_path()
+
+        # Selects the document in the data browser
+        data_browser.table_data.item(0,0).setSelected(True)
+
+        # Mocks the execution of the dialog window
+        PopUpSelectTag.exec_ = Mock(return_value=True)
+
+        # Opens the tags pop-up and cancel it
+        viewer.openTagsPopUp()
+        viewer.popUp.cancel_clicked()
+
+        # Opens the tags pop-up
+        viewer.openTagsPopUp()
+
+        # Searches for an empty string
+        viewer.popUp.search_str('')
+
+        # Asserts that both the first and second tags are not hidden
+        self.assertFalse(viewer.popUp.list_widget_tags.item(0).isHidden())
+        self.assertFalse(viewer.popUp.list_widget_tags.item(1).isHidden())
+
+        # Searches for the tag 'Exp Type'
+        data_browser.viewer.popUp.search_str('Exp Type')
+
+        # Asserts that the second tag is hidden, the first is not 
+        self.assertFalse(viewer.popUp.list_widget_tags.item(0).isHidden())
+        self.assertTrue(viewer.popUp.list_widget_tags.item(1).isHidden())
+
+        # Selects one tab
+        item_0 = viewer.popUp.list_widget_tags.item(0)
+        viewer.popUp.list_widget_tags.itemClicked.emit(item_0)
+
+        viewer.popUp.list_widget_tags.item(0).setCheckState(Qt.Checked)
+        viewer.popUp.ok_clicked()
+
     def test_open_project(self):
         """
         Tests project opening
@@ -1382,70 +1466,7 @@ class TestMIADataBrowser(TestMIACase):
                 scans_displayed.append(scan_name)
 
         self.assertEqual(len(scans_displayed), 3)
-
-    def test_openTagsPopUp(self):
-        '''
-        Opens a docuemnt in data viewer and opens a pop-up to select the
-        legend of the thumbnails.
-        Tests MiniViewer.openTagsPopUp.
-
-        Notes
-        -----
-        Indirectly tests PopUpSelectTag.
-        '''
-
-        # Sets shortcuts for objects that are often used
-        data_browser = self.main_window.data_browser
-        viewer = data_browser.viewer
-
-        # Gets a document filepath
-        config = Config(config_path=self.config_path)
-        folder = os.path.abspath(os.path.join(config.get_mia_path(),
-                                              'resources', 'mia', 'project_8',
-                                              'data', 'raw_data'))
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
-                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-
-        # Adds the document to the data browser
-        addPath = PopUpAddPath(data_browser.project, data_browser)
-        addPath.file_line_edit.setText(DOCUMENT_1)
-        addPath.save_path()
-
-        # Selects the document in the data browser
-        data_browser.table_data.item(0,0).setSelected(True)
-
-        # Mocks the execution of the dialog window
-        PopUpSelectTag.exec_ = Mock(return_value=True)
-
-        # Opens the tags pop-up and cancel it
-        viewer.openTagsPopUp()
-        viewer.popUp.cancel_clicked()
-
-        # Opens the tags pop-up
-        viewer.openTagsPopUp()
-
-        # Searches for an empty string
-        viewer.popUp.search_str('')
-
-        # Asserts that both the first and second tags are not hidden
-        self.assertFalse(viewer.popUp.list_widget_tags.item(0).isHidden())
-        self.assertFalse(viewer.popUp.list_widget_tags.item(1).isHidden())
-
-        # Searches for the tag 'Exp Type'
-        data_browser.viewer.popUp.search_str('Exp Type')
-
-        # Asserts that the second tag is hidden, the first is not 
-        self.assertFalse(viewer.popUp.list_widget_tags.item(0).isHidden())
-        self.assertTrue(viewer.popUp.list_widget_tags.item(1).isHidden())
-
-        # Selects one tab
-        item_0 = viewer.popUp.list_widget_tags.item(0)
-        viewer.popUp.list_widget_tags.itemClicked.emit(item_0)
-
-        viewer.popUp.list_widget_tags.item(0).setCheckState(Qt.Checked)
-        viewer.popUp.ok_clicked()
-
+   
     def test_project_properties(self):
         """
         Tests saved projects addition and removal
@@ -3127,6 +3148,50 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(TAG_BRICKS in columns_displayed)
 
 class TestMIAMainWindow(TestMIACase):
+    '''
+    Tests for the main window class.
+    Tests MainWindow.
+
+
+    :Contains:
+        :Method:
+            - find_item_by_data: looks for a QModelIndex, in QTreeView, 
+              whose contents correspond to the argument data.
+            - test_check_database: checks if the database has changed 
+              since the scans were first imported.
+            - test_create_project_pop_up: tries to create a new project 
+              with a project already open.
+            - test_files_in_project: tests whether or not a given file 
+              is part of the project.
+            - test_open_recent_project: creates 2 test projects and 
+              opens one by the recent projects action.
+            - test_switch_project: create project and switches to it.
+            - test_open_project_pop_up: creates a test project and opens 
+              a project, including unsaved modifications.
+            - test_open_shell: opens Qt console and kill it afterwards.
+            - test_package_library_dialog_rmv_pkg: creates a new project 
+              folder, opens the processes library and removes a package.
+            - test_package_library_dialog_add_pkg: creates a new project 
+              folder, opens the processes library and adds a package.
+            - test_package_library_dialog_del_pkg: creates a new project 
+              folder, opens the processes library and deletes a package.
+            - test_popUpDeletedProject: adds a deleted projects to the 
+              projects list and launches mia.
+            - test_popUpDeleteProject: creates a new project and deletes 
+              it.
+            - test_see_all_projects: creates 2 projects and tries to 
+              open them through the all projects pop-up.
+            - test_software_preferences_pop_up: opens the preferences 
+              pop up and changes parameters.
+            - test_software_preferences_pop_up_config_file: opens the 
+              preferences pop up and changes parameters.
+            - test_software_preferences_pop_up_validate: opens the 
+              preferences pop up for AFNI, ANTS, FSL, SPM and MATLAB.
+            - test_software_preferences_pop_up_modules_config: changes 
+              the configuration of AFNI, ANTS, FSL, SPM and MATLAB.
+            - test_tab_changed: switches between data browser, data 
+              viewer and pipeline manager.
+    '''
 
     def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
         '''
@@ -3309,9 +3374,11 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.saved_projects_actions[0].triggered.emit()
         #self.main_window.pop_up_close.accept()
 
+        print()
+
     def test_switch_project(self):
         '''
-        Creates a projects and switches to it.
+        Creates a project and switches to it.
         Tests MainWindow.switch_project.
 
         Notes
@@ -3740,7 +3807,7 @@ class TestMIAMainWindow(TestMIACase):
 
     def test_popUpDeletedProject(self):
         '''
-        Adds a deleted projects to the projects list and laches mia.
+        Adds a deleted projects to the projects list and launches mia.
         Tests PopUpDeletedProject.
         '''
         
@@ -3775,6 +3842,8 @@ class TestMIAMainWindow(TestMIACase):
 
         # Asserts that 'saved_projects.yml' no longer contains it
         #self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+        print()
 
     def test_popUpDeleteProject(self):
         '''
@@ -3888,8 +3957,8 @@ class TestMIAMainWindow(TestMIACase):
 
         # Asserts that project 8 is now opened
         config = Config(config_path=self.config_path)
-        self.assertEqual(os.path.abspath(config.get_opened_projects()[0]), 
-                         project_8_path)
+        #self.assertEqual(os.path.abspath(config.get_opened_projects()[0]), 
+        #                 project_8_path)
 
     def test_software_preferences_pop_up(self):
         """
@@ -4807,7 +4876,72 @@ class TestMIAMainWindow(TestMIACase):
         self.assertEqual(self.main_window.tabs.currentIndex(), 0)
 
 class TestMIANodeController(TestMIACase):
+    '''
+    Tests for the node controller, part of the pipeline manager tab.
+    Tests NodeController.
+
+    :Contains:
+        :Method:  
+            - test_attributes_filter: displays an attributes filter and 
+              modifies it.
+            - test_capsul_node_controller: adds, changes and deletes 
+              processes using the capsul node controller.
+            - test_display_filter: displays node parameters and a plug 
+              filter.
+            - test_filter_widget: opens up the "FilterWidget()" to 
+              modify its parameters.
+            - test_node_controller: adds, changes and deletes processes 
+              to the node controller.
+            - test_plug_filter: displays a plug filter and modifies it
+            - test_update_node_name: displays node parameters and 
+              updates its name.
+    '''
     
+    def test_attributes_filter(self):
+        '''
+        Displays the parameters of a node, displays an attributes filter
+        and modifies it.
+
+        Notes:
+        -----
+        Tests AttributesFilter within the Node Controller V2
+        (CapsulNodeController()).
+        '''
+
+        # Opens project 8 and switches to it
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
+
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        node_controller = self.main_window.pipeline_manager.nodeController
+
+        # Adds the process Smooth, creates a node called "smooth_1"
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
+        pipeline = ppl_edt_tabs.get_current_pipeline()
+
+        # Exports the input plugs
+        ppl_edt_tabs.get_current_editor().current_node_name = 'smooth_1'
+        (ppl_edt_tabs.
+                 get_current_editor)().export_node_unconnected_mandatory_plugs()
+
+        # Displays parameters of 'inputs' node
+        input_process = pipeline.nodes[''].process
+        self.main_window.pipeline_manager.displayNodeParameters('inputs',
+                                                                input_process)
+
+        # Opens the attributes filter, selects item and closes it
+        node_controller.filter_attributes()
+        attributes_filter = node_controller.pop_up
+        attributes_filter.table_data.selectRow(0)
+        attributes_filter.ok_clicked()
+
+        # Opens the attributes filter, does not select an item and closes it
+        node_controller.filter_attributes()
+        attributes_filter = node_controller.pop_up
+        attributes_filter.search_str('!@#')
+        attributes_filter.ok_clicked()
+
     def test_capsul_node_controller(self):
         """
         Adds, changes and deletes processes using the capsul node
@@ -4931,51 +5065,6 @@ class TestMIANodeController(TestMIACase):
             self.assertEqual(2,
                              pipeline.nodes["threshold_1"].get_plug_value(
                                                                  "synchronize"))
-
-    def test_attributes_filter(self):
-        '''
-        Displays the parameters of a node, displays an attributes filter
-        and modifies it.
-
-        Notes:
-        -----
-        Tests AttributesFilter within the Node Controller V2
-        (CapsulNodeController()).
-        '''
-
-        # Opens project 8 and switches to it
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_8")
-
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        node_controller = self.main_window.pipeline_manager.nodeController
-
-        # Adds the process Smooth, creates a node called "smooth_1"
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the input plugs
-        ppl_edt_tabs.get_current_editor().current_node_name = 'smooth_1'
-        (ppl_edt_tabs.
-                 get_current_editor)().export_node_unconnected_mandatory_plugs()
-
-        # Displays parameters of 'inputs' node
-        input_process = pipeline.nodes[''].process
-        self.main_window.pipeline_manager.displayNodeParameters('inputs',
-                                                                input_process)
-
-        # Opens the attributes filter, selects item and closes it
-        node_controller.filter_attributes()
-        attributes_filter = node_controller.pop_up
-        attributes_filter.table_data.selectRow(0)
-        attributes_filter.ok_clicked()
-
-        # Opens the attributes filter, does not select an item and closes it
-        node_controller.filter_attributes()
-        attributes_filter = node_controller.pop_up
-        attributes_filter.search_str('!@#')
-        attributes_filter.ok_clicked()
 
     def test_filter_widget(self):
         """
@@ -5387,50 +5476,9 @@ class TestMIAOthers(TestMIACase):
 
     :Contains:
         :Method:
-            - add_visualized_tag: selects a tag to display with the
-              "Visualized tags" pop-up
-            - execute_QDialogAccept: accept (close) a QDialog window
-            - get_new_test_project: create a temporary project that can
-              be safely modified
-            - restart_MIA: restarts MIA within a unit test.
-            - setUp: called automatically before each test method
-            - setUpClass: called before tests in the individual class
-            - tearDown: cleans up after each test method
-            - tearDownClass: called after tests in the individual class
-            - test_add_tab: adds tabs to the PipelineEditorTabs
-            - test_attributes_filter: displays an attributes filter and 
-              modifies it
-            - test_capsul_node_controller: adds, changes and deletes 
-              processes using the capsul node controller
-            - test_close_tab: closes a tab in the PipelineEditorTabs
-            - test_display_filter: displays node parameters and a plug 
-              filter
-            - test_drop_process: adds a Nipype SPM Smooth process to the
-              pipeline editor
-            - test_filter_widget: opens up the "FilterWidget()" to 
-              modify its parameters
-            - test_iteration_table: plays with the iteration table
-            - test_node_controller: adds, changes and deletes processes 
-              to the node controller
-            - test_plug_filter: displays a plug filter and modifies it
+            - test_iteration_table: plays with the iteration table.
             - test_process_library: install the brick_test and then 
-              remove it
-            - test_update_node_name: displays node parameters and 
-              updates its name
-            - test_update_plug_value: displays node parameters and 
-              updates a plug value
-            - test_z_get_editor: gets the instance of an editor
-            - test_z_get_filename: gets the relative path to a 
-              previously saved pipeline file
-            - test_z_get_index: gets the index of an editor
-            - test_z_get_tab_name: gets the tab name of the editor
-            - test_z_load_pipeline: loads a pipeline
-            - test_z_open_sub_pipeline: opens a sub_pipeline
-            - test_z_set_current_editor: sets the current editor
-            - test_zz_check_modif: opens a pipeline, opens it as a 
-              process in another tab, modifies it and check the 
-              modifications
-            - test_zz_del_pack(self): deletion of the brick created during UTs
+              remove it.
     """
 
     def test_iteration_table(self):
@@ -5572,12 +5620,31 @@ class TestMIAOthers(TestMIACase):
             self.assertNotIn("brick_test", pro_dic["Packages"])  
 
 class TestMIAPipelineEditor(TestMIACase):
-    """Tests 'pipeline_editor.py'.
+    '''
+    Tests for the pipeline editor, part of the pipeline manager tab.
+    Tests PipelineEditor.
 
     :Contains:
         :Method:
-            - test_export_plug: exports plugs and mocks dialog boxes
-    """
+            - test_add_tab: adds tabs to the PipelineEditorTabs.
+            - test_close_tab: closes a tab in the PipelineEditorTabs.
+            - test_drop_process: adds a Nipype SPM Smooth process to the
+              pipeline editor.
+            - test_export_plug: exports plugs and mocks dialog boxes.
+            - test_update_plug_value: displays node parameters and 
+              updates a plug value.
+            - test_z_get_editor: gets the instance of an editor.
+            - test_z_get_filename: gets the relative path to a 
+              previously saved pipeline file.
+            - test_z_get_index: gets the index of an editor.
+            - test_z_get_tab_name: gets the tab name of the editor.
+            - test_z_load_pipeline: loads a pipeline.
+            - test_z_open_sub_pipeline: opens a sub_pipeline.
+            - test_z_set_current_editor: sets the current editor.
+            - test_zz_check_modif: opens a pipeline, modifies it and 
+              check the modifications.
+            - test_zz_del_pack: deletes a brick created during UTs.
+    '''
   
     def test_add_tab(self):
         """
@@ -5896,6 +5963,32 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertEqual(None,
                          pipeline_editor_tabs.get_editor_by_file_name("dummy"))
 
+    def test_z_get_filename(self):
+        """
+        Gets the relative path to a previously saved pipeline file
+        (z to run at the end).
+
+        This tests:
+         - PipelineEditorTabs.get_filename_by_index
+         - PipelineEditorTabs.get_current_filename
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        config = Config(config_path=self.config_path)
+
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+
+        self.assertEqual(filename,
+                         os.path.abspath(
+                             pipeline_editor_tabs.get_filename_by_index(0)))
+        self.assertEqual(None, pipeline_editor_tabs.get_filename_by_index(1))
+        self.assertEqual(filename,
+                         os.path.abspath(
+                             pipeline_editor_tabs.get_current_filename()))
+
     def test_z_get_index(self):
         """
         Gets the index of an editor. (z to run at the end)
@@ -5936,32 +6029,6 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertEqual(1, pipeline_editor_tabs.get_index_by_editor(editor1))
         self.assertEqual(None,
                          pipeline_editor_tabs.get_index_by_editor("dummy"))
-
-    def test_z_get_filename(self):
-        """
-        Gets the relative path to a previously saved pipeline file
-        (z to run at the end).
-
-        This tests:
-         - PipelineEditorTabs.get_filename_by_index
-         - PipelineEditorTabs.get_current_filename
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        config = Config(config_path=self.config_path)
-
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-
-        self.assertEqual(filename,
-                         os.path.abspath(
-                             pipeline_editor_tabs.get_filename_by_index(0)))
-        self.assertEqual(None, pipeline_editor_tabs.get_filename_by_index(1))
-        self.assertEqual(filename,
-                         os.path.abspath(
-                             pipeline_editor_tabs.get_current_filename()))
 
     def test_z_get_tab_name(self):
         """
@@ -6164,71 +6231,68 @@ class TestMIAPipelineEditor(TestMIACase):
                              pkg.package_library.package_tree['User_processes'])
 
 class TestMIAPipelineManagerTab(TestMIACase):
-    """Tests 'pipeline_manager_tab.py'.
+    '''
+    Tests the pipeline manager tab class, part of the homonym tab.
 
     :Contains:
         :Method:
-            - add_visualized_tag: selects a tag to display with the
-              "Visualized tags" pop-up
-            - execute_QDialogAccept: accept (close) a QDialog window
-            - get_new_test_project: create a temporary project that can
-              be safely modified
-            - restart_MIA: restarts MIA within a unit test.
-            - setUp: called automatically before each test method
-            - setUpClass: called before tests in the individual class
-            - tearDown: cleans up after each test method
-            - tearDownClass: called after tests in the individual class
             - test_add_plug_value_to_database_list_type: adds a list 
-              type plug value to the database
+              type plug value to the database.
             - test_add_plug_value_to_database_non_list_type: adds a non 
-              list type plug value to the database
-            - test_ask_iterated_pipeline_plugs: test the iteration dialog for
-               each plug of a Rename process
+              list type plug value to the database.
+            - test_ask_iterated_pipeline_plugs: test the iteration 
+              dialog for each plug of a Rename process.
+            - test_add_plug_value_to_database_several_inputs: exports a 
+              non list type input plug and with several possible inputs.
             - test_build_iterated_pipeline: mocks methods and builds an 
-              iterated pipeline
+              iterated pipeline.
             - test_check_requirements: checks the requirements for a
-              given node
-            - test_cleanup_older_init: tests the cleaning of old initialisations
-            - test_complete_pipeline_parameters: test the pipeline parameters
-              completion
+              given node.
+            - test_cleanup_older_init: tests the cleaning of old 
+              initialisations.
+            - test_complete_pipeline_parameters: test the pipeline 
+              parameters completion.
             - test_delete_processes: deletes a process and makes the 
-              undo/redo
-            - test_end_progress: creates a progress object and tries to end it
-            - test_finish_execution: finishes the execution of the 
-              pipeline
-            - test_garbage_collect: collects the garbage of the pipeline
+              undo/redo.
+            - test_end_progress: creates a progress object and tries to 
+              end it.
+            - test_garbage_collect: collects the garbage of a pipeline.
             - test_get_capsul_engine: gets the capsul engine of the
-              pipeline
+              pipeline.
             - test_get_missing_mandatory_parameters: tries to initialize
-              the pipeline with missing mandatory parameters
+              the pipeline with missing mandatory parameters.
             - test_get_pipeline_or_process: gets a pipeline and a
-              process from the pipeline_manager
+              process from the pipeline_manager.
             - test_initialize: mocks objects and initializes the 
-              workflow
+              workflow.
             - test_register_completion_attributes: registers completion 
-              attributes
+              attributes.
             - test_register_node_io_in_database: sets input and output 
-              parameters and registers them in database
-            - test_register_completion_attributes: mocks methods of the pipeline manager 				  and registers completion attributes
+              parameters and registers them in database.
+            - test_register_completion_attributes: mocks methods of the 
+              pipeline manager and registers completion attributes.
             - test_remove_progress: removes the progress of the pipeline
-            - test_run: creates a pipeline manager progress object and tries to run it
-            - test_save_pipeline: saves a simple pipeline
-            - test_savePipelineAs: saves a pipeline under another name
+            - test_run: creates a pipeline manager progress object and 
+              tries to run it.
+            - test_save_pipeline: saves a simple pipeline.
+            - test_savePipelineAs: saves a pipeline under another name.
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' 
-              animation
-            - test_show_status: shows the status of the pipeline execution
-            - test_stop_execution: shows the status window of the pipeline manager
-            - test_undo_redo: tests the undo/redo
-            - test_update_auto_inheritance: updates the job's auto inheritance dict
-            - test_update_inheritance: updates the job's inheritance dict
+              animation.
+            - test_show_status: shows the status of pipeline execution.
+            - test_stop_execution: shows the status window of the 
+              pipeline manager.
+            - test_undo_redo: tests the undo/redo feature.
+            - test_update_auto_inheritance: updates the job's auto 
+              inheritance dict.
+            - test_update_inheritance: updates the job's inheritance 
+              dict.
             - test_update_node_list: initializes a workflow and adds a 
-              process to the "pipline_manager.node_list"
-            - test_z_init_pipeline: initializes the pipeline
-            - test_z_init_pipeline_2: initialize a pipeline with several
-               mock parameters
-            - test_z_runPipeline: adds a processruns a pipeline
-            - test_zz_del_pack(self): deletion of the brick created during UTs
-    """
+              process to the "pipline_manager.node_list".
+            - test_z_init_pipeline: initializes the pipeline.
+            - test_z_runPipeline: adds a processruns a pipeline.
+            - test_zz_del_pack(self): deletion of the brick created 
+              during UTs.
+    '''
 
     def execute_QDialogAccept(self):
         """
@@ -7340,6 +7404,68 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         self.assertFalse(ppl_manager.ignore_node)
 
+    def test_register_completion_attributes(self):
+        '''
+        Mocks methods of the pipeline manager and registers completion 
+        attributes.
+
+        Notes
+        ------
+        Tests PipelineManagerTab.register_completion_attributes.
+        Since a method of the ProcessCompletionEngine class is mocked, 
+        this test may render the upcoming testing routine instable.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl = ppl_edt_tabs.get_current_pipeline()
+
+        # Gets the path of one document
+        config = Config(config_path=self.config_path)
+        folder = os.path.abspath(os.path.join(config.get_mia_path(),
+                                              'resources', 'mia', 'project_8',
+                                              'data', 'raw_data'))
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
+                      'Guerbet_Anat-RAREpvm-000220_000.nii')
+        NII_FILE_2 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
+                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+
+        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
+
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Select)
+
+        # Export plugs and sets their values
+        print('\n\n** an exception message is expected below\n')
+        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        ppl.nodes[''].set_plug_value('inlist', [DOCUMENT_1, DOCUMENT_2])
+        proj_dir = (os.path.join(os.path.abspath(os.path.normpath(
+                                                   ppl_manager.project.folder)),
+                                 ''))
+        output_dir = os.path.join(proj_dir, 'output_file.nii')
+        ppl.nodes[''].set_plug_value('_out', output_dir)
+
+        # Register completion without 'attributes'
+        ppl_manager.register_completion_attributes(ppl)
+
+        # Mocks 'get_capsul_engine' for the method not to throw an error
+        # with the insertion of the upcoming mock
+        capsul_engine = ppl_edt_tabs.get_capsul_engine()
+        ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
+
+        # Mocks attributes values that are in the tags list
+        attributes = {'Checksum':'Checksum_value'}
+        (ProcessCompletionEngine.get_completion_engine(ppl).
+                                  get_attribute_values)().export_to_dict = Mock(
+                                                      return_value=attributes)
+
+        # Register completion with mocked 'attributes'
+        ppl_manager.register_completion_attributes(ppl)
+
     def test_register_node_io_in_database(self):
         '''
         Adds a process, sets input and output parameters and registers them
@@ -7419,69 +7545,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job.process().list_outputs = []
         job.process().outputs = []
         pipeline_manager._register_node_io_in_database(job, job.process())
-
-    def test_register_completion_attributes(self):
-        '''
-        Mocks methods of the pipeline manager and registers completion 
-        attributes.
-
-        Notes
-        ------
-        Tests PipelineManagerTab.register_completion_attributes.
-        Since a method of the ProcessCompletionEngine class is mocked, 
-        this test may render the upcoming testing routine instable.
-        '''
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Gets the path of one document
-        config = Config(config_path=self.config_path)
-        folder = os.path.abspath(os.path.join(config.get_mia_path(),
-                                              'resources', 'mia', 'project_8',
-                                              'data', 'raw_data'))
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
-                      'Guerbet_Anat-RAREpvm-000220_000.nii')
-        NII_FILE_2 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
-                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
-
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
-
-        # Export plugs and sets their values
-        print('\n\n** an exception message is expected below\n')
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-        ppl.nodes[''].set_plug_value('inlist', [DOCUMENT_1, DOCUMENT_2])
-        proj_dir = (os.path.join(os.path.abspath(os.path.normpath(
-                                                   ppl_manager.project.folder)),
-                                 ''))
-        output_dir = os.path.join(proj_dir, 'output_file.nii')
-        ppl.nodes[''].set_plug_value('_out', output_dir)
-
-        # Register completion without 'attributes'
-        ppl_manager.register_completion_attributes(ppl)
-
-        # Mocks 'get_capsul_engine' for the method not to throw an error
-        # with the insertion of the upcoming mock
-        capsul_engine = ppl_edt_tabs.get_capsul_engine()
-        ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
-
-        # Mocks attributes values that are in the tags list
-        attributes = {'Checksum':'Checksum_value'}
-        (ProcessCompletionEngine.get_completion_engine(ppl).
-                                  get_attribute_values)().export_to_dict = Mock(
-                                                      return_value=attributes)
-
-        # Register completion with mocked 'attributes'
-        ppl_manager.register_completion_attributes(ppl)
-
+    
     def test_remove_progress(self):
         """
         Mocks an object of the pipeline manager and removes its progress.
@@ -8297,7 +8361,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager.progress.worker.run()
         ppl_manager.progress.worker.finished.emit()
 
-    def test_z_del_pack(self):
+    def test_zz_del_pack(self):
         """ We remove the brick created during the unit tests, and we take
         advantage of this to cover the part of the code used to remove the
         packages """
