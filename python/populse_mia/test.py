@@ -5382,8 +5382,7 @@ class TestMIANodeController(TestMIACase):
                          len(pipeline.nodes["smooth_test_2"].plugs[
                                                    "_smoothed_files"].links_to))
 
-
-class TestMIAPipelineManager(TestMIACase):
+class TestMIAOthers(TestMIACase):
     """Tests for the pipeline manager tab.
 
     :Contains:
@@ -5570,8 +5569,373 @@ class TestMIAPipelineManager(TestMIACase):
             else:
                 pro_dic = yaml.load(stream)
 
-            self.assertNotIn("brick_test", pro_dic["Packages"])
+            self.assertNotIn("brick_test", pro_dic["Packages"])  
 
+class TestMIAPipelineEditor(TestMIACase):
+    """Tests 'pipeline_editor.py'.
+
+    :Contains:
+        :Method:
+            - test_export_plug: exports plugs and mocks dialog boxes
+    """
+  
+    def test_add_tab(self):
+        """
+        Adds tabs to the PipelineEditorTabs
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+
+        # Adding two new tabs
+        pipeline_editor_tabs.new_tab()
+        self.assertEqual(pipeline_editor_tabs.count(), 3)
+        self.assertEqual(pipeline_editor_tabs.tabText(1), "New Pipeline 1")
+        pipeline_editor_tabs.new_tab()
+        self.assertEqual(pipeline_editor_tabs.count(), 4)
+        self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
+
+    def test_close_tab(self):
+        """
+        Closes a tab in the pipeline editor tabs while mocking the
+        execution of the dialog boxes.
+        Tests PipelineEditor.close_tab.
+
+        Notes
+        -----
+        Indirectly tests PopUpClosePipeline.
+        """
+
+        # Sets shortcuts for objects that are often used
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+
+        # Adding a new tab and closing the first one
+        #ppl_edt_tabs.new_tab()
+
+        # Closes an unmodified tab 
+        ppl_edt_tabs.close_tab(0)
+
+        # Adds a process to modify the pipeline
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        self.assertEqual(ppl_edt_tabs.tabText(0)[-2:], " *")
+
+        # Mocks the execution of the 'QDialog'
+        # Instead of showing it, directly chooses 'save_as_clicked'
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.save_as_clicked())
+        ppl_edt_tabs.save_pipeline = Mock()
+
+        # Tries to close the modified tab and saves the pipeline as
+        ppl_edt_tabs.close_tab(0)
+
+        # Asserts that 'undos' and 'redos' were deleted
+        editor = ppl_edt_tabs.get_editor_by_index(0)
+        with self.assertRaises(KeyError):
+            ppl_edt_tabs.undos[editor]
+            ppl_edt_tabs.redos[editor]
+
+        # Directly chooses 'do_not_save_clicked'
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.do_not_save_clicked())
+
+        # Adds a new tab and a process
+        ppl_edt_tabs.new_tab()
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Tries to close the modified tab and cancels saving
+        ppl_edt_tabs.close_tab(0)
+
+        # Directly chooses 'cancel_clicked'
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.cancel_clicked())
+
+        # Adds a process
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Tries to close the modified tab and cancels saving
+        ppl_edt_tabs.close_tab(0)
+
+        # Directly chooses 'cancel_clicked'
+        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
+                                       .pop_up_close.cancel_clicked())
+
+        # Adds a new process
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Tries to close the modified tab and cancels saving
+        ppl_edt_tabs.close_tab(0)
+    
+    def test_drop_process(self):
+        """
+        Adds a Nipype SPM's Smooth process to the pipeline editor
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        pipeline_editor_tabs.get_current_editor().drop_process(
+                                                 'nipype.interfaces.spm.Smooth')
+        self.assertTrue('smooth_1' in
+                        (pipeline_editor_tabs.
+                                           get_current_pipeline)().nodes.keys())
+
+    def test_export_plug(self):
+        '''
+        Adds a process and exports plugs in the pipeline editor while 
+        mocking the execution of dialog boxes.
+        Tests PipelineEditor.test_export_plug.
+        '''
+
+        # Sets shortcuts for objects that are often used
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        ppl_edt = ppl_edt_tabs.get_current_editor()
+
+        # Mocks 'PipelineEditor' attributes
+        ppl_edt._temp_plug_name = ('','')
+        ppl_edt._temp_plug = Mock()
+        ppl_edt._temp_plug.optional = False
+
+        # Mocks the execution of a plug edit dialog
+        PipelineEditor._PlugEdit.exec_ = Mock()
+        
+        # Exports a plug with no parameters
+        ppl_edt._export_plug(pipeline_parameter=False, temp_plug_name=None)
+
+        PipelineEditor._PlugEdit.exec_.assert_called_once_with()
+
+        # Adds a Rename processes, creates the 'rename_1' node
+        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+        # Exports a plug value
+        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
+                                   pipeline_parameter='_out_file')
+        
+        self.assertIsNone(res)
+
+        # Mocks 'QMessageBox.question' to click accept
+        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
+
+        # Tries to export the same plug value, accepts overwriting it
+        # With 'multi_export' then the temp_plug_value will be returned
+        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
+                                   pipeline_parameter='_out_file', 
+                                   multi_export=True)
+
+        QMessageBox.question.assert_called_once()
+        self.assertEqual(res, '_out_file')
+
+        # Mocks again 'QMessageBox.question' to click reject
+        QMessageBox.question = Mock(return_value=QMessageBox.No)
+        QInputDialog.getText = Mock(return_value=('new_name', True))
+
+        # Mocks 'export_parameter' to throw a 'TraitError'
+        #from traits.api import TraitError
+        #ppl_edt.scene.pipeline.export_parameter = Mock(side_effect=TraitError())
+
+        # Tries to export the same plug value, denies overwriting it
+        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
+                                   pipeline_parameter='_out_file',
+                                   multi_export = True)
+
+        QMessageBox.question.assert_called_once()
+        QInputDialog.getText.assert_called_once()
+        #self.assertIsNone(res)
+        self.assertEqual(res, '_out_file') 
+
+    def test_save_pipeline(self):
+        """
+        Saves a simple pipeline
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        node_controller = self.main_window.pipeline_manager.nodeController
+        config = Config(config_path=self.config_path)
+
+        # Adding a process
+        process_class = Smooth
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+
+        # Creates a node called "smooth_1"
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+                                                                  process_class)
+
+        # Displaying the node parameters
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        node_controller.display_parameters("smooth_1",
+                                           get_process_instance(process_class),
+                                           pipeline)
+
+        # Exporting the input plugs
+        pipeline_editor_tabs.get_current_editor().current_node_name = "smooth_1"
+        (pipeline_editor_tabs.
+                 get_current_editor)().export_node_unconnected_mandatory_plugs()
+        (pipeline_editor_tabs.
+                     get_current_editor)().export_node_all_unconnected_outputs()
+
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        save_pipeline(pipeline, filename)
+        self.main_window.pipeline_manager.updateProcessLibrary(filename)
+        self.assertTrue(os.path.isfile(os.path.join(config.get_mia_path(),
+                                                    'processes',
+                                                    'User_processes',
+                                                    'test_pipeline.py')))
+
+    def test_update_plug_value(self):
+        """
+        Displays parameters of a node and updates a plug value
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        node_controller = self.main_window.pipeline_manager.nodeController
+
+        # Adding a process
+        process_class = Threshold
+        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+
+        # Creates a node called "threshold_1":
+        pipeline_editor_tabs.get_current_editor().add_named_process(
+                                                                  process_class)
+
+        # Displaying the node parameters
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        node_controller.display_parameters("threshold_1",
+                                           get_process_instance(process_class),
+                                           pipeline)
+
+        # Updating the value of the "synchronize" plug
+        if hasattr(node_controller, 'get_index_from_plug_name'):
+            index = node_controller.get_index_from_plug_name("synchronize",
+                                                             "in")
+            node_controller.line_edit_input[index].setText("1")
+
+            # This calls "update_plug_value" method:
+            node_controller.line_edit_input[index].returnPressed.emit()
+            self.assertEqual(1,
+                             pipeline.nodes["threshold_1"].get_plug_value(
+                                                                 "synchronize"))
+
+            # Updating the value of the "_activation_forced" plug
+            index = node_controller.get_index_from_plug_name(
+                                                           "_activation_forced",
+                                                           "out")
+            node_controller.line_edit_output[index].setText("True")
+
+            # This calls "update_plug_value" method:
+            node_controller.line_edit_output[index].returnPressed.emit()
+            self.assertEqual(True,
+                             pipeline.nodes["threshold_1"].get_plug_value(
+                                                          "_activation_forced"))
+
+        # Exporting the input plugs and modifying the "synchronize" input plug
+        (pipeline_editor_tabs.
+                         get_current_editor)().current_node_name = "threshold_1"
+        (pipeline_editor_tabs.
+                      get_current_editor)().export_node_all_unconnected_inputs()
+
+        input_process = pipeline.nodes[""].process
+        node_controller.display_parameters("inputs",
+                                           get_process_instance(input_process),
+                                           pipeline)
+
+        if hasattr(node_controller, 'get_index_from_plug_name'):
+            index = node_controller.get_index_from_plug_name("synchronize",
+                                                             "in")
+            node_controller.line_edit_input[index].setText("2")
+
+            # This calls "update_plug_value" method:
+            node_controller.line_edit_input[index].returnPressed.emit()
+            self.assertEqual(2,
+                             pipeline.nodes["threshold_1"].get_plug_value(
+                                                                 "synchronize"))
+
+    def test_z_get_editor(self):
+        """
+        Gets the instance of an editor (z to run at the end)
+
+        This tests:
+         - PipelineEditorTabs.get_editor_by_index
+         - PipelineEditorTabs.get_current_editor
+         - PipelineEditorTabs.get_editor_by_tab_name
+         - PipelineEditorTabs.get_editor_by_filename
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        config = Config(config_path=self.config_path)
+
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+
+        editor0 = pipeline_editor_tabs.get_current_editor()
+        # create new tab with new editor and make it current:
+        pipeline_editor_tabs.new_tab()
+        editor1 = pipeline_editor_tabs.get_current_editor()
+
+        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(0), editor0)
+        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(1), editor1)
+        self.assertEqual(pipeline_editor_tabs.get_current_editor(), editor1)
+        self.assertEqual(editor0,
+                         pipeline_editor_tabs.get_editor_by_tab_name(
+                                                            "test_pipeline.py"))
+        self.assertEqual(editor1,
+                         pipeline_editor_tabs.get_editor_by_tab_name(
+                                                              "New Pipeline 1"))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_editor_by_tab_name("dummy"))
+        self.assertEqual(editor0,
+                         pipeline_editor_tabs.get_editor_by_file_name(filename))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_editor_by_file_name("dummy"))
+
+    def test_z_get_index(self):
+        """
+        Gets the index of an editor. (z to run at the end)
+
+        This tests:
+         - PipelineEditorTabs.get_index_by_tab_name
+         - PipelineEditorTabs.get_index_by_filename
+         - PipelineEditorTabs.get_index_by_editor
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        config = Config(config_path=self.config_path)
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+        editor0 = pipeline_editor_tabs.get_current_editor()
+
+        # create new tab with new editor and make it current
+        pipeline_editor_tabs.new_tab()
+        editor1 = pipeline_editor_tabs.get_current_editor()
+
+        self.assertEqual(0,
+                         pipeline_editor_tabs.get_index_by_tab_name(
+                                                            "test_pipeline.py"))
+        self.assertEqual(1,
+                         pipeline_editor_tabs.get_index_by_tab_name(
+                                                              "New Pipeline 1"))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_index_by_tab_name("dummy"))
+
+        self.assertEqual(0,
+                         pipeline_editor_tabs.get_index_by_filename(filename))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_index_by_filename("dummy"))
+
+        self.assertEqual(0, pipeline_editor_tabs.get_index_by_editor(editor0))
+        self.assertEqual(1, pipeline_editor_tabs.get_index_by_editor(editor1))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_index_by_editor("dummy"))
 
     def test_z_get_filename(self):
         """
@@ -5599,9 +5963,41 @@ class TestMIAPipelineManager(TestMIACase):
                          os.path.abspath(
                              pipeline_editor_tabs.get_current_filename()))
 
-    
-    
-    
+    def test_z_get_tab_name(self):
+        """
+        Gets the tab name of the editor. (z to run at the end)
+
+        This tests:
+         - PipelineEditorTabs.get_tab_name_by_index
+         - PipelineEditorTabs.get_current_tab_name
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+
+        self.assertEqual("New Pipeline",
+                         pipeline_editor_tabs.get_tab_name_by_index(0))
+        self.assertEqual(None,
+                         pipeline_editor_tabs.get_tab_name_by_index(1))
+        self.assertEqual("New Pipeline",
+                         pipeline_editor_tabs.get_current_tab_name())
+
+    def test_z_load_pipeline(self):
+        """
+        Loads a pipeline (z to run at the end)
+        """
+
+        pipeline_editor_tabs = (self.main_window.pipeline_manager.
+                                                             pipelineEditorTabs)
+        config = Config(config_path=self.config_path)
+
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        pipeline_editor_tabs.load_pipeline(filename)
+
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        self.assertTrue("smooth_1" in pipeline.nodes.keys())
+
     def test_z_open_sub_pipeline(self):
         """
         Opens a sub_pipeline (z to run at the end)
@@ -7916,407 +8312,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # The Test_pipeline brick has been removed from the package library
         self.assertFalse("Test_pipeline_1" in
                          pkg.package_library.package_tree['User_processes'])
-
-class TestMIAPipelineEditor(TestMIACase):
-    """Tests 'pipeline_editor.py'.
-
-    :Contains:
-        :Method:
-            - test_export_plug: exports plugs and mocks dialog boxes
-    """
-  
-    def test_add_tab(self):
-        """
-        Adds tabs to the PipelineEditorTabs
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-
-        # Adding two new tabs
-        pipeline_editor_tabs.new_tab()
-        self.assertEqual(pipeline_editor_tabs.count(), 3)
-        self.assertEqual(pipeline_editor_tabs.tabText(1), "New Pipeline 1")
-        pipeline_editor_tabs.new_tab()
-        self.assertEqual(pipeline_editor_tabs.count(), 4)
-        self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
-
-    def test_close_tab(self):
-        """
-        Closes a tab in the pipeline editor tabs while mocking the
-        execution of the dialog boxes.
-        Tests PipelineEditor.close_tab.
-
-        Notes
-        -----
-        Indirectly tests PopUpClosePipeline.
-        """
-
-        # Sets shortcuts for objects that are often used
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-
-        # Adding a new tab and closing the first one
-        #ppl_edt_tabs.new_tab()
-
-        # Closes an unmodified tab 
-        ppl_edt_tabs.close_tab(0)
-
-        # Adds a process to modify the pipeline
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-        self.assertEqual(ppl_edt_tabs.tabText(0)[-2:], " *")
-
-        # Mocks the execution of the 'QDialog'
-        # Instead of showing it, directly chooses 'save_as_clicked'
-        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
-                                       .pop_up_close.save_as_clicked())
-        ppl_edt_tabs.save_pipeline = Mock()
-
-        # Tries to close the modified tab and saves the pipeline as
-        ppl_edt_tabs.close_tab(0)
-
-        # Asserts that 'undos' and 'redos' were deleted
-        editor = ppl_edt_tabs.get_editor_by_index(0)
-        with self.assertRaises(KeyError):
-            ppl_edt_tabs.undos[editor]
-            ppl_edt_tabs.redos[editor]
-
-        # Directly chooses 'do_not_save_clicked'
-        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
-                                       .pop_up_close.do_not_save_clicked())
-
-        # Adds a new tab and a process
-        ppl_edt_tabs.new_tab()
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        # Tries to close the modified tab and cancels saving
-        ppl_edt_tabs.close_tab(0)
-
-        # Directly chooses 'cancel_clicked'
-        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
-                                       .pop_up_close.cancel_clicked())
-
-        # Adds a process
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        # Tries to close the modified tab and cancels saving
-        ppl_edt_tabs.close_tab(0)
-
-        # Directly chooses 'cancel_clicked'
-        PopUpClosePipeline.exec = Mock(side_effect=lambda:ppl_edt_tabs
-                                       .pop_up_close.cancel_clicked())
-
-        # Adds a new process
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        # Tries to close the modified tab and cancels saving
-        ppl_edt_tabs.close_tab(0)
-    
-    def test_drop_process(self):
-        """
-        Adds a Nipype SPM's Smooth process to the pipeline editor
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().drop_process(
-                                                 'nipype.interfaces.spm.Smooth')
-        self.assertTrue('smooth_1' in
-                        (pipeline_editor_tabs.
-                                           get_current_pipeline)().nodes.keys())
-
-    def test_export_plug(self):
-        '''
-        Adds a process and exports plugs in the pipeline editor while 
-        mocking the execution of dialog boxes.
-        Tests PipelineEditor.test_export_plug.
-        '''
-
-        # Sets shortcuts for objects that are often used
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        ppl_edt = ppl_edt_tabs.get_current_editor()
-
-        # Mocks 'PipelineEditor' attributes
-        ppl_edt._temp_plug_name = ('','')
-        ppl_edt._temp_plug = Mock()
-        ppl_edt._temp_plug.optional = False
-
-        # Mocks the execution of a plug edit dialog
-        PipelineEditor._PlugEdit.exec_ = Mock()
-        
-        # Exports a plug with no parameters
-        ppl_edt._export_plug(pipeline_parameter=False, temp_plug_name=None)
-
-        PipelineEditor._PlugEdit.exec_.assert_called_once_with()
-
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        # Exports a plug value
-        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
-                                   pipeline_parameter='_out_file')
-        
-        self.assertIsNone(res)
-
-        # Mocks 'QMessageBox.question' to click accept
-        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
-
-        # Tries to export the same plug value, accepts overwriting it
-        # With 'multi_export' then the temp_plug_value will be returned
-        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
-                                   pipeline_parameter='_out_file', 
-                                   multi_export=True)
-
-        QMessageBox.question.assert_called_once()
-        self.assertEqual(res, '_out_file')
-
-        # Mocks again 'QMessageBox.question' to click reject
-        QMessageBox.question = Mock(return_value=QMessageBox.No)
-        QInputDialog.getText = Mock(return_value=('new_name', True))
-
-        # Mocks 'export_parameter' to throw a 'TraitError'
-        #from traits.api import TraitError
-        #ppl_edt.scene.pipeline.export_parameter = Mock(side_effect=TraitError())
-
-        # Tries to export the same plug value, denies overwriting it
-        res = ppl_edt._export_plug(temp_plug_name=('rename_1', '_out_file'),
-                                   pipeline_parameter='_out_file',
-                                   multi_export = True)
-
-        QMessageBox.question.assert_called_once()
-        QInputDialog.getText.assert_called_once()
-        #self.assertIsNone(res)
-        self.assertEqual(res, '_out_file') 
-
-    def test_save_pipeline(self):
-        """
-        Saves a simple pipeline
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        node_controller = self.main_window.pipeline_manager.nodeController
-        config = Config(config_path=self.config_path)
-
-        # Adding a process
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-
-        # Creates a node called "smooth_1"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
-
-        # Displaying the node parameters
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        node_controller.display_parameters("smooth_1",
-                                           get_process_instance(process_class),
-                                           pipeline)
-
-        # Exporting the input plugs
-        pipeline_editor_tabs.get_current_editor().current_node_name = "smooth_1"
-        (pipeline_editor_tabs.
-                 get_current_editor)().export_node_unconnected_mandatory_plugs()
-        (pipeline_editor_tabs.
-                     get_current_editor)().export_node_all_unconnected_outputs()
-
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        save_pipeline(pipeline, filename)
-        self.main_window.pipeline_manager.updateProcessLibrary(filename)
-        self.assertTrue(os.path.isfile(os.path.join(config.get_mia_path(),
-                                                    'processes',
-                                                    'User_processes',
-                                                    'test_pipeline.py')))
-
-    def test_update_plug_value(self):
-        """
-        Displays parameters of a node and updates a plug value
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        node_controller = self.main_window.pipeline_manager.nodeController
-
-        # Adding a process
-        process_class = Threshold
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-
-        # Creates a node called "threshold_1":
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-                                                                  process_class)
-
-        # Displaying the node parameters
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        node_controller.display_parameters("threshold_1",
-                                           get_process_instance(process_class),
-                                           pipeline)
-
-        # Updating the value of the "synchronize" plug
-        if hasattr(node_controller, 'get_index_from_plug_name'):
-            index = node_controller.get_index_from_plug_name("synchronize",
-                                                             "in")
-            node_controller.line_edit_input[index].setText("1")
-
-            # This calls "update_plug_value" method:
-            node_controller.line_edit_input[index].returnPressed.emit()
-            self.assertEqual(1,
-                             pipeline.nodes["threshold_1"].get_plug_value(
-                                                                 "synchronize"))
-
-            # Updating the value of the "_activation_forced" plug
-            index = node_controller.get_index_from_plug_name(
-                                                           "_activation_forced",
-                                                           "out")
-            node_controller.line_edit_output[index].setText("True")
-
-            # This calls "update_plug_value" method:
-            node_controller.line_edit_output[index].returnPressed.emit()
-            self.assertEqual(True,
-                             pipeline.nodes["threshold_1"].get_plug_value(
-                                                          "_activation_forced"))
-
-        # Exporting the input plugs and modifying the "synchronize" input plug
-        (pipeline_editor_tabs.
-                         get_current_editor)().current_node_name = "threshold_1"
-        (pipeline_editor_tabs.
-                      get_current_editor)().export_node_all_unconnected_inputs()
-
-        input_process = pipeline.nodes[""].process
-        node_controller.display_parameters("inputs",
-                                           get_process_instance(input_process),
-                                           pipeline)
-
-        if hasattr(node_controller, 'get_index_from_plug_name'):
-            index = node_controller.get_index_from_plug_name("synchronize",
-                                                             "in")
-            node_controller.line_edit_input[index].setText("2")
-
-            # This calls "update_plug_value" method:
-            node_controller.line_edit_input[index].returnPressed.emit()
-            self.assertEqual(2,
-                             pipeline.nodes["threshold_1"].get_plug_value(
-                                                                 "synchronize"))
-
-    def test_z_get_editor(self):
-        """
-        Gets the instance of an editor (z to run at the end)
-
-        This tests:
-         - PipelineEditorTabs.get_editor_by_index
-         - PipelineEditorTabs.get_current_editor
-         - PipelineEditorTabs.get_editor_by_tab_name
-         - PipelineEditorTabs.get_editor_by_filename
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        config = Config(config_path=self.config_path)
-
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-
-        editor0 = pipeline_editor_tabs.get_current_editor()
-        # create new tab with new editor and make it current:
-        pipeline_editor_tabs.new_tab()
-        editor1 = pipeline_editor_tabs.get_current_editor()
-
-        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(0), editor0)
-        self.assertEqual(pipeline_editor_tabs.get_editor_by_index(1), editor1)
-        self.assertEqual(pipeline_editor_tabs.get_current_editor(), editor1)
-        self.assertEqual(editor0,
-                         pipeline_editor_tabs.get_editor_by_tab_name(
-                                                            "test_pipeline.py"))
-        self.assertEqual(editor1,
-                         pipeline_editor_tabs.get_editor_by_tab_name(
-                                                              "New Pipeline 1"))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_editor_by_tab_name("dummy"))
-        self.assertEqual(editor0,
-                         pipeline_editor_tabs.get_editor_by_file_name(filename))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_editor_by_file_name("dummy"))
-
-    def test_z_get_index(self):
-        """
-        Gets the index of an editor. (z to run at the end)
-
-        This tests:
-         - PipelineEditorTabs.get_index_by_tab_name
-         - PipelineEditorTabs.get_index_by_filename
-         - PipelineEditorTabs.get_index_by_editor
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        config = Config(config_path=self.config_path)
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-        editor0 = pipeline_editor_tabs.get_current_editor()
-
-        # create new tab with new editor and make it current
-        pipeline_editor_tabs.new_tab()
-        editor1 = pipeline_editor_tabs.get_current_editor()
-
-        self.assertEqual(0,
-                         pipeline_editor_tabs.get_index_by_tab_name(
-                                                            "test_pipeline.py"))
-        self.assertEqual(1,
-                         pipeline_editor_tabs.get_index_by_tab_name(
-                                                              "New Pipeline 1"))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_index_by_tab_name("dummy"))
-
-        self.assertEqual(0,
-                         pipeline_editor_tabs.get_index_by_filename(filename))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_index_by_filename("dummy"))
-
-        self.assertEqual(0, pipeline_editor_tabs.get_index_by_editor(editor0))
-        self.assertEqual(1, pipeline_editor_tabs.get_index_by_editor(editor1))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_index_by_editor("dummy"))
-
-    def test_z_get_tab_name(self):
-        """
-        Gets the tab name of the editor. (z to run at the end)
-
-        This tests:
-         - PipelineEditorTabs.get_tab_name_by_index
-         - PipelineEditorTabs.get_current_tab_name
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-
-        self.assertEqual("New Pipeline",
-                         pipeline_editor_tabs.get_tab_name_by_index(0))
-        self.assertEqual(None,
-                         pipeline_editor_tabs.get_tab_name_by_index(1))
-        self.assertEqual("New Pipeline",
-                         pipeline_editor_tabs.get_current_tab_name())
-
-    def test_z_load_pipeline(self):
-        """
-        Loads a pipeline (z to run at the end)
-        """
-
-        pipeline_editor_tabs = (self.main_window.pipeline_manager.
-                                                             pipelineEditorTabs)
-        config = Config(config_path=self.config_path)
-
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        pipeline_editor_tabs.load_pipeline(filename)
-
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
 
 if __name__ == '__main__':
     unittest.main()
