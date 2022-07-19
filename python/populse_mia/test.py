@@ -5623,59 +5623,40 @@ class TestMIAOthers(TestMIACase):
         self.assertIsNone(iter_table.iteration_table.item(1,0))
 
     def test_process_library(self):
-        """
-        Install the brick_test and then remove it
-        """
+        '''
+        Doc
+        '''
 
-        config = Config(config_path=self.config_path)
-        QMessageBox.exec = lambda x: True
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        proc_lib = ppl_manager.processLibrary.process_library
 
-        self.main_window.install_processes_pop_up()
-        pkg = self.main_window.pop_up_install_processes
+        # Switches to pipeline manager
+        self.main_window.tabs.setCurrentIndex(2)
 
-        brick = os.path.join(config.get_mia_path(), 'resources',
-                             'mia', 'brick_test.zip')
-        pkg.path_edit.text = lambda *arg: brick
-        pkg.install()
+        # Adds a row to the process library
+        proc_lib._model.insertRow(0)
 
-        pkg.close()
+        # Gets its index and selects it
+        row_index = self.find_item_by_data(proc_lib, 'untitled101')
+        self.assertIsNotNone(row_index)
+        proc_lib.selectionModel().select(row_index, 
+                                         QItemSelectionModel.SelectCurrent)
 
-        #pkg = PackageLibraryDialog(self.main_window)
-        pkg = self.main_window.pipeline_manager.processLibrary.pkg_library
-        pkg.save()
+        # Mimes the data of the row widget
+        mime_data = proc_lib._model.mimeData([row_index])
+        self.assertEqual(mime_data.data('component/name'), b'untitled101')
 
-        with open(os.path.join(config.get_mia_path(), 'properties',
-                               'process_config.yml'),
-                  'r') as stream:
+        # Changes the data of the row
+        proc_lib._model.setData(row_index, 'untitled102')
+        self.assertEqual(row_index.data(), 'untitled102')
 
-            if verCmp(yaml.__version__, '5.1', 'sup'):
-                pro_dic = yaml.load(stream, Loader=yaml.FullLoader)
+        QMessageBox.question = lambda *args: QMessageBox.Yes
 
-            else:
-                pro_dic = yaml.load(stream)
-
-            self.assertIn("brick_test", pro_dic["Packages"])
-
-        pkg.remove_package("brick_test")
-        pkg.save_config()
-
-        process = os.path.join(config.get_mia_path(), 'processes',
-                               'brick_test')
-        shutil.rmtree(process)
-
-        with open(os.path.join(config.get_mia_path(), 'properties',
-                               'process_config.yml'),
-                  'r') as stream:
-
-            if verCmp(yaml.__version__, '5.1', 'sup'):
-                pro_dic = yaml.load(stream, Loader=yaml.FullLoader)
-
-            else:
-                pro_dic = yaml.load(stream)
-
-            self.assertNotIn("brick_test", pro_dic["Packages"])  
-
-        pkg.close()
+        # Deletes the row by pressing the del key
+        event = Mock()
+        event.key = lambda: Qt.Key_Delete
+        proc_lib.keyPressEvent(event)
 
 class TestMIAPipelineEditor(TestMIACase):
     '''
