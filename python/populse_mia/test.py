@@ -3626,6 +3626,7 @@ class TestMIAMainWindow(TestMIACase):
         # Mocks the execution of a dialog box
         QMessageBox.exec = lambda x: None
         QMessageBox.exec_ = lambda x: None
+        
 
         '''ADD PACKAGE'''
 
@@ -3651,6 +3652,9 @@ class TestMIAMainWindow(TestMIACase):
         
         pkg_lib_window.ok_clicked() # Apply changes
 
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+
         # Writes the name of an inexistant package on the line edit
         pkg_lib_window.line_edit.setText('inexistant')
 
@@ -3662,6 +3666,60 @@ class TestMIAMainWindow(TestMIACase):
         (pkg_lib_window.layout().children()[0].layout().itemAt(8).widget().
          layout().itemAt(1).widget().clicked.emit())
 
+        # Creates a copy of the folder (package) 'User_processes'
+        config = Config(config_path=self.config_path)
+        usr_proc_fldr = os.path.join(config.get_mia_path(), 
+                                       'processes', 'User_processes')
+        if os.path.exists(usr_proc_fldr + '_'):
+            shutil.rmtree(usr_proc_fldr + '_')
+        usr_proc_fldr_copy = shutil.copytree(usr_proc_fldr, usr_proc_fldr + '_')
+
+        # Opens the install packages pop up
+        folder_btn = (pkg_lib_window.layout().children()[0].layout().itemAt(1).
+                      itemAt(3).widget())
+        folder_btn.clicked.emit()
+
+        # Creates a file in the projects path
+        mock_file_path = os.path.join(new_proj_path, 'mock_file')
+        mock_file = open(mock_file_path, 'w')
+        mock_file.close()
+
+        # Sets the folder to an inexistant file path
+        (pkg_lib_window.pop_up_install_processes.path_edit.
+         setText(mock_file_path + '_'))
+
+        # Clicks on install package
+        instl_pkg_btn = (pkg_lib_window.pop_up_install_processes.layout().
+                         children()[1].itemAt(0).widget())
+        instl_pkg_btn.clicked.emit() # Displays an error dialog box
+
+        # Sets the folder to an existing file path, but not a .zip
+        (pkg_lib_window.pop_up_install_processes.path_edit.
+         setText(mock_file_path))
+
+        # Clicks on install package
+        instl_pkg_btn.clicked.emit() # Displays an error dialog box
+
+        # Sets the folder to be a valid package
+        (pkg_lib_window.pop_up_install_processes.path_edit.
+         setText(usr_proc_fldr_copy))
+
+        # Mocks the '__init__.py' file to raise an 'ImportError'
+        mock_init_file = open(os.path.join(usr_proc_fldr_copy, '__init__.py'), 
+                              'w')
+        mock_init_file.write("raise ImportError('mock_import_error')")
+        mock_init_file.close()
+
+        # Clicks on install package
+        instl_pkg_btn.clicked.emit()
+
+        # Removes the copy of the folder (package)
+        shutil.rmtree(usr_proc_fldr_copy)
+        
+        # Closes the install packages pop up
+        pkg_lib_window.pop_up_install_processes.close()
+
+        # Closes the package library pop-up
         pkg_lib_window.close()
 
     def test_package_library_dialog_del_pkg(self):
