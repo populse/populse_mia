@@ -3481,6 +3481,7 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.open_project_pop_up()
         self.main_window.pop_up_close.accept()
 
+    @unittest.skipUnless(sys.platform.startswith('linux'), 'requires linux')
     def test_open_shell(self):
         '''
         Opens a Qt console and kill it afterwards.
