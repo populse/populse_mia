@@ -3787,6 +3787,46 @@ class TestMIAMainWindow(TestMIACase):
 
         pkg_lib_window.close()
 
+    def test_package_library_others(self):
+        '''
+        Creates a new project folder, opens the processes library and 
+        adds a package.
+        Tests
+         - PackageLibraryDialog
+
+        Notes
+        -----
+        The package library object opens up as a pop-up when 
+        File > Package library manager is clicked.
+
+        Mocks
+         - QMessageBox.exec
+         - QMessageBox.exec_
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        pkg_lib = ppl_manager.processLibrary.pkg_library.package_library
+        pkg_lib_window = self.main_window.pop_up_package_library
+
+        # Mocks the package tree
+        mock_pkg_tree = [{'Double_rename': 'process_enabled'}, 
+                         [{'Double_rename': 'process_enabled'}], 
+                         ({'Double_rename': 'process_enabled'})]
+
+        # Mocks filling an item with the above item
+        pkg_lib.fill_item(pkg_lib.invisibleRootItem(), mock_pkg_tree)
+
+        # Closes the package library pop-up
+        pkg_lib_window.close()
+
     def test_package_library_dialog_rmv_pkg(self):
         '''
         Creates a new project folder, opens the processes library and 
