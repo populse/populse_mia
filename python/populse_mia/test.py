@@ -3556,12 +3556,10 @@ class TestMIAMainWindow(TestMIACase):
         QMessageBox.exec = lambda x: None
         QMessageBox.exec_ = lambda x: None
         
-
         '''ADD PACKAGE'''
 
         # Clicks on the add package button
         add_pkg_button.clicked.emit()
-        # FAILS IN WINDOWS BUILD
 
         QFileDialog.exec_ = lambda x: True
         ppl_manager.processLibrary.process_library.pkg_library.browse_package()
@@ -3569,6 +3567,9 @@ class TestMIAMainWindow(TestMIACase):
         # Resets the line edit back to 'PKG'
         pkg_lib_window.line_edit.setText(PKG)
         self.main_window.pipeline_manager.processLibrary.process_library.pkg_library.is_path = False
+
+        # Clicks on the add package button
+        add_pkg_button.clicked.emit()
 
         # Resets the previous action
         pkg_lib_window.add_list.selectAll()
