@@ -5624,7 +5624,14 @@ class TestMIAOthers(TestMIACase):
 
     def test_process_library(self):
         '''
-        Doc
+        Inserts a row, mimes and changes the data and deletes it.
+        Tests
+        - ProcessLibrary
+
+        Notes
+        -----
+        Mocks
+        - QMessageBox.question
         '''
 
         # Sets shortcuts for objects that are often used
@@ -5645,7 +5652,8 @@ class TestMIAOthers(TestMIACase):
 
         # Mimes the data of the row widget
         mime_data = proc_lib._model.mimeData([row_index])
-        self.assertEqual(mime_data.data('component/name'), b'untitled101')
+        self.assertEqual(mime_data.data('component/name').data(), 
+                         b'untitled101')
 
         # Changes the data of the row
         proc_lib._model.setData(row_index, 'untitled102')
@@ -5657,6 +5665,8 @@ class TestMIAOthers(TestMIACase):
         event = Mock()
         event.key = lambda: Qt.Key_Delete
         proc_lib.keyPressEvent(event)
+
+        # TODO: add tests to keyPressEvent
 
 class TestMIAPipelineEditor(TestMIACase):
     '''
