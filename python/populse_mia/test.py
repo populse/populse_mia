@@ -181,7 +181,8 @@ from populse_db.database import(FIELD_TYPE_STRING, FIELD_TYPE_FLOAT,
                                 FIELD_TYPE_TIME, FIELD_TYPE_LIST_DATE,
                                 FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_TIME, 
                                 FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_LIST_STRING, 
-                                FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_BOOLEAN)
+                                FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_BOOLEAN,
+                                FIELD_TYPE_INTEGER, FIELD_TYPE_BOOLEAN)
 
 # soma import
 from soma.qt_gui.qt_backend.Qt import QTreeView
