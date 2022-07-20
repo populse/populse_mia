@@ -3520,79 +3520,6 @@ class TestMIAMainWindow(TestMIACase):
         else:
             print('the Qt console process was not found')
 
-    def test_package_library_dialog_rmv_pkg(self):
-        '''
-        Creates a new project folder, opens the processes library and 
-        removes a package. Also saves the current configuration.
-        Tests
-         - PackageLibraryDialog
-
-        Notes
-        -----
-        Mocks
-         - QMessageBox.exec
-         - QMessageBox.exec_
-        '''
-
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, 'test_light_project')
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Opens the package library pop-up
-        self.main_window.package_library_pop_up()
-        pkg_lib_window = self.main_window.pop_up_package_library
-
-        rmv_pkg_button = (pkg_lib_window.layout().children()[0].layout().
-                          children()[3].itemAt(1).widget())
-
-        PKG = 'nipype.interfaces.DataGrabber'
-
-        # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda x: None
-        QMessageBox.exec_ = lambda x: None
-
-        '''REMOVE PACKAGE'''
-
-        # Mocks deleting a package that is not specified
-        pkg_lib_window.remove_package('')
-
-        # Clicks on the remove package button without selecting package
-        rmv_pkg_button.clicked.emit()
-
-        # Writes the name of an existing package on the line edit
-        pkg_lib_window.line_edit.setText(PKG)
-
-        rmv_pkg_button.clicked.emit()
-
-        # Resets the previous action
-        pkg_lib_window.remove_list.selectAll()
-        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
-         layout().itemAt(1).widget().clicked.emit())
-
-        rmv_pkg_button.clicked.emit()
-
-        pkg_lib_window.ok_clicked() # Apply changes
-
-        # Mocks removing a package with text and from the tree
-        pkg_lib_window.remove_dic[PKG] = 1
-        pkg_lib_window.add_dic[PKG] = 1
-        pkg_lib_window.delete_dic[PKG] = 1
-        pkg_lib_window.remove_package_with_text(_2rem = PKG, 
-                                                tree_remove = False)
-        
-        # Resets the process library to its original state
-        pkg_lib_window.remove_list.selectAll()
-        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
-         layout().itemAt(1).widget().clicked.emit())
-
-        # Saves the config to 'process_config.yml'
-        ppl_manager.processLibrary.save_config()
-
-        pkg_lib_window.close()
-
     def test_package_library_dialog_add_pkg(self):
         '''
         Creates a new project folder, opens the processes library and 
@@ -3857,6 +3784,85 @@ class TestMIAMainWindow(TestMIACase):
         proc_lib_view.keyPressEvent(event)
 
         pkg_lib_window.close()
+
+    def test_package_library_dialog_rmv_pkg(self):
+        '''
+        Creates a new project folder, opens the processes library and 
+        removes a package. Also saves the current configuration.
+        Tests
+         - PackageLibraryDialog
+
+        Notes
+        -----
+        Mocks
+         - QMessageBox.exec
+         - QMessageBox.exec_
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        pkg_lib_window = self.main_window.pop_up_package_library
+
+        # Does not open the packages library ito avoid thread deadlock
+        #ppl_manager.processLibrary.open_pkg_lib()
+
+        rmv_pkg_button = (pkg_lib_window.layout().children()[0].layout().
+                          children()[3].itemAt(1).widget())
+
+        PKG = 'nipype.interfaces.DataGrabber'
+
+        # Mocks the execution of a dialog box
+        QMessageBox.exec = lambda x: None
+        QMessageBox.exec_ = lambda x: None
+
+        '''REMOVE PACKAGE'''
+
+        # Mocks deleting a package that is not specified
+        res = pkg_lib_window.remove_package('')
+        self.assertFalse(res)
+
+        # Tries removing an inexistant package
+        res = pkg_lib_window.remove_package('inexistant_package')
+        self.assertIsNone(res)
+
+        # Clicks on the remove package button without selecting package
+        rmv_pkg_button.clicked.emit()
+
+        # Writes the name of an existing package on the line edit
+        pkg_lib_window.line_edit.setText(PKG)
+
+        rmv_pkg_button.clicked.emit()
+
+        # Resets the previous action
+        pkg_lib_window.remove_list.selectAll()
+        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
+         layout().itemAt(1).widget().clicked.emit())
+
+        rmv_pkg_button.clicked.emit()
+
+        pkg_lib_window.ok_clicked() # Apply changes
+
+        # Mocks removing a package with text and from the tree
+        pkg_lib_window.remove_dic[PKG] = 1
+        pkg_lib_window.add_dic[PKG] = 1
+        pkg_lib_window.delete_dic[PKG] = 1
+        pkg_lib_window.remove_package_with_text(_2rem = PKG, 
+                                                tree_remove = False)
+        
+        # Resets the process library to its original state
+        pkg_lib_window.remove_list.selectAll()
+        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
+         layout().itemAt(1).widget().clicked.emit())
+
+        # Saves the config to 'process_config.yml'
+        ppl_manager.processLibrary.save_config()
 
     def test_popUpDeletedProject(self):
         '''
