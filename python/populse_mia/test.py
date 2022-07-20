@@ -307,6 +307,21 @@ class TestMIACase(unittest.TestCase):
             close_button = w.button(QMessageBox.Yes)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
+    def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
+        '''
+        Looks for a QModelIndex, in a QTreeView, whose contents 
+        correspond to the argument data.
+        '''
+        assert isinstance(q_tree_view, QTreeView), 'first argment is not a QTreeView instance'
+
+        q_tree_view.expandAll()
+        index = q_tree_view.indexAt(QPoint(0,0))
+
+        while index.data() and index.data() != data:
+            index = q_tree_view.indexBelow(index)
+            
+        return index
+
     def get_new_test_project(self, name = 'test_project', light=False):
         '''
         Copies a test project where it can be safely modified.
@@ -3188,21 +3203,6 @@ class TestMIAMainWindow(TestMIACase):
             - test_tab_changed: switches between data browser, data 
               viewer and pipeline manager.
     '''
-
-    def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
-        '''
-        Looks for a QModelIndex, in a QTreeView, whose contents 
-        correspond to the argument data.
-        '''
-        assert isinstance(q_tree_view, QTreeView), 'first argment is not a QTreeView instance'
-
-        q_tree_view.expandAll()
-        index = q_tree_view.indexAt(QPoint(0,0))
-
-        while index.data() and index.data() != data:
-            index = q_tree_view.indexBelow(index)
-            
-        return index
 
     def test_check_database(self):
         '''
