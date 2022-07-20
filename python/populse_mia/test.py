@@ -190,6 +190,8 @@ from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
 # soma import
 from soma.qt_gui.qt_backend.Qt import QTreeView
 from soma.qt_gui.qt_backend.Qt import QItemSelectionModel
+from soma.qt_gui.qt_backend.QtWidgets import QMenu
+
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
