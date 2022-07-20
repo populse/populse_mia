@@ -2596,6 +2596,43 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(sorted(mixed_bandwidths, reverse=True),
                          down_bandwidths)
 
+    def test_table_data_context_menu(self):
+        '''
+        Right clicks a scan to show the context menu table, and choses 
+        one option.
+        Tests TableDataBrowser.context_menu_table.
+
+        Notes
+        -----
+        Mocks
+        - QMenu.exec_
+        - QMessageBox.exec
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for often used objects
+        table_data = self.main_window.data_browser.table_data
+
+        QMessageBox.exec = lambda *args: None
+
+        QMenu.exec_ = lambda *args: None
+        table_data.context_menu_table(QPoint(10, 10))
+
+
+        act_names = ['action_reset_cell', 'action_reset_column', 
+                    'action_reset_row', 'action_clear_cell', 'action_add_scan',
+                    'action_remove_scan', 'action_visualized_tags',
+                    'action_select_column', 'action_multiple_sort',
+                    'action_send_documents_to_pipeline', 
+                    'action_display_pdf_file']
+
+        for act_name in act_names:
+            QMenu.exec_ = lambda *args: getattr(table_data, act_name)
+            table_data.context_menu_table(QPoint(10, 10))
+
     def test_undo_redo_databrowser(self):
         """
         Tests the databrowser undo/redo
