@@ -2596,6 +2596,35 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(sorted(mixed_bandwidths, reverse=True),
                          down_bandwidths)
 
+    def test_table_data_add_columns(self):
+        '''
+        Adds tag columns to the table data window.
+        Tests TableDataBrowser.add_columns.
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for often used objects
+        table_data = self.main_window.data_browser.table_data
+
+        # Adds a tag, of the types float, datetime, date and time, to 
+        # the project session
+        tags = ['mock_tag_float', 'mock_tag_datetime', 'mock_tag_date', 
+                'mock_tag_time']
+        types = [FIELD_TYPE_FLOAT, FIELD_TYPE_DATETIME, FIELD_TYPE_DATE, 
+                 FIELD_TYPE_TIME]
+        for (tag, type) in zip(tags,types):
+            table_data.project.session.add_field(COLLECTION_CURRENT, tag, type, 
+                                                 '', True, '', '', '')
+
+        table_data.add_columns() # Adds the tags to table view
+
+        # Asserts that the tgs were added to the table view
+        for tag in tags:
+              self.assertIsNotNone(table_data.get_tag_column(tag))
+
     def test_table_data_context_menu(self):
         '''
         Right clicks a scan to show the context menu table, and choses 
