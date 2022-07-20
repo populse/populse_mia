@@ -5679,7 +5679,12 @@ class TestMIAOthers(TestMIACase):
 
         Notes
         -----
+        The process library is located at the left corner of the 
+        pipeline manager tab, where the list of available bricks is 
+        shown.
+
         Mocks
+        - QMessageBox.exec
         - QMessageBox.question
         '''
 
@@ -5690,11 +5695,15 @@ class TestMIAOthers(TestMIACase):
         # Switches to pipeline manager
         self.main_window.tabs.setCurrentIndex(2)
 
+        # Gets the child count
+        child_count = proc_lib._model.getNode(QModelIndex()).childCount()
+        row_data = 'untitled' + str(child_count)
+
         # Adds a row to the process library
         proc_lib._model.insertRow(0)
 
         # Gets its index and selects it
-        row_index = self.find_item_by_data(proc_lib, 'untitled101')
+        row_index = self.find_item_by_data(proc_lib, row_data)
         self.assertIsNotNone(row_index)
         proc_lib.selectionModel().select(row_index, 
                                          QItemSelectionModel.SelectCurrent)
@@ -5702,20 +5711,45 @@ class TestMIAOthers(TestMIACase):
         # Mimes the data of the row widget
         mime_data = proc_lib._model.mimeData([row_index])
         self.assertEqual(mime_data.data('component/name').data(), 
-                         b'untitled101')
+                         bytes(row_data, encoding = 'utf-8'))
 
         # Changes the data of the row
-        proc_lib._model.setData(row_index, 'untitled102')
-        self.assertEqual(row_index.data(), 'untitled102')
+        proc_lib._model.setData(row_index, 'untitled101')
+        self.assertEqual(row_index.data(), 'untitled101')
 
+        # Mocks the execution of a dialog box
+        QMessageBox.exec = lambda *args: None
         QMessageBox.question = lambda *args: QMessageBox.Yes
-
+        
         # Deletes the row by pressing the del key
         event = Mock()
-        event.key = lambda: Qt.Key_Delete
+        event.key = lambda *args: Qt.Key_Delete
         proc_lib.keyPressEvent(event)
 
-        # TODO: add tests to keyPressEvent
+        # Mocks a mouse press event of the first item of the process lib
+        mouse_event = QtGui.QMouseEvent
+        mouse_event.pos = lambda *args: QPoint(0,0)
+        mouse_event.button = lambda *args: Qt.RightButton
+
+        # Mocks the return value of 'mousePressEvent'
+        QTreeView.mousePressEvent = lambda *args: True
+
+        # Adds a row to the process library
+        proc_lib._model.insertRow(0)
+
+        # Mocks selecting 'Delete package'
+        QMenu.exec_ = lambda *args: proc_lib.remove
+
+        res = proc_lib.mousePressEvent(mouse_event)
+        self.assertTrue(res)
+
+        # Adds a row to the process library
+        proc_lib._model.insertRow(0)
+
+        # Mocks selecting 'Delete package'
+        QMenu.exec_ = lambda *args: proc_lib.action_delete
+
+        proc_lib.mousePressEvent(mouse_event)
 
 class TestMIAPipelineEditor(TestMIACase):
     '''
