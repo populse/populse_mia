@@ -1164,6 +1164,70 @@ class TestMIADataBrowser(TestMIACase):
 
         self.assertEqual(config.get_projects_save_path(), '')
 
+    def test_mini_viewer(self):
+        '''
+        Selects scans and display them in the mini viewer.
+        Tests MiniViewer.
+
+        Notes
+        -----
+        The mini viewer displays informations of the selected scan in a 
+        box under the scans list, in the data browser tab.
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for objects that are often used
+        data_browser = self.main_window.data_browser
+        viewer = self.main_window.data_browser.viewer
+
+        # Selects the first scan
+        data_browser.table_data.item(0,0).setSelected(True)
+
+        # Gets the 3D slider range
+        slider_3D_range = viewer.slider_3D[0].maximum()
+
+        # Moves the 3D slide to the middle of the range
+        viewer.slider_3D[0].setValue(int(slider_3D_range/2))
+
+        # Unselects the first scan
+        data_browser.table_data.item(0,0).setSelected(False) 
+
+        # Selects the fourth (4D) scan
+        data_browser.table_data.item(3,0).setSelected(True)
+
+        # Shows all slices
+        viewer.check_box_slices.setCheckState(Qt.Checked)
+
+        # Selects the first scan
+        data_browser.table_data.item(0,0).setSelected(True)
+
+        # Gets the 4D slider range
+        slider_3D_range = viewer.slider_3D[0].maximum()
+        slider_4D_range = viewer.slider_4D[0].maximum()
+
+        # Moves the 4D slide to the middle of the range
+        viewer.slider_4D[0].setValue(int(slider_4D_range/2))
+
+        # Checks the chain cursors
+        viewer.check_box_cursors.setCheckState(Qt.Checked)
+
+        # Moves the 3D slides to the lower limit
+        viewer.slider_3D[0].setValue(0)
+
+        # Moves the 3D slides to the middle of the range
+        viewer.slider_3D[0].setValue(int(slider_3D_range/2))
+
+        # Moves the 3D slides to the middle of the range
+        viewer.slider_3D[0].setValue(slider_3D_range)
+
+        # Unchecks the chain cursors
+        viewer.check_box_cursors.setCheckState(Qt.Unchecked)
+
+        viewer.update_nb_slices()
+
     def test_modify_table(self):
         """
         Test the modify table module
