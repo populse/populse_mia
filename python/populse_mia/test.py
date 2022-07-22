@@ -1331,6 +1331,43 @@ class TestMIADataBrowser(TestMIACase):
                          "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
                          "-000142_400.nii")
 
+    def test_multiple_sort_appendix(self):
+        '''
+        Adds and removes tags in the data browser.
+        Tests PopUpMultipleSort.
+
+        Notes
+        -----
+        Mocks PopUpSelectTagCountTable.exec_.
+        '''
+
+        table_data = self.main_window.data_browser.table_data
+
+        table_data.multiple_sort_pop_up()
+        self.assertTrue(hasattr(table_data, 'pop_up'))
+
+        # Adds a 3rd tag to the pop-up
+        table_data.pop_up.add_tag_label.clicked.emit()
+        self.assertEqual(len(table_data.pop_up.push_buttons), 3)
+
+        # Removes the tag
+        table_data.pop_up.remove_tag_label.clicked.emit()
+        self.assertEqual(len(table_data.pop_up.push_buttons), 2)
+
+        # Mocks the execution of 'PopUpSelectTagCountTable'
+        def mock_select_tags(self):
+            self.selected_tag = 'Exp Type'
+            return True
+        PopUpSelectTagCountTable.exec_ = mock_select_tags
+        
+        table_data.pop_up.select_tag(0)
+
+        # Adds a tag in place of 'Tag n1'
+        table_data.pop_up.select_tag(0)
+
+        # Closes the pop-up
+        table_data.pop_up.close()
+
     def test_openTagsPopUp(self):
         '''
         Opens a document in data viewer and opens a pop-up to select the
