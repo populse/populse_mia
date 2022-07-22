@@ -1193,27 +1193,17 @@ class TestMIADataBrowser(TestMIACase):
         # Moves the 3D slide to the middle of the range
         viewer.slider_3D[0].setValue(int(slider_3D_range/2))
 
-        # Unselects the first scan
-        data_browser.table_data.item(0,0).setSelected(False) 
-
-        # Selects the fourth (4D) scan
-        data_browser.table_data.item(3,0).setSelected(True)
-
         # Shows all slices
         viewer.check_box_slices.setCheckState(Qt.Checked)
 
-        # Selects the first scan
-        data_browser.table_data.item(0,0).setSelected(True)
-
-        # Gets the 4D slider range
-        slider_3D_range = viewer.slider_3D[0].maximum()
-        slider_4D_range = viewer.slider_4D[0].maximum()
-
-        # Moves the 4D slide to the middle of the range
-        viewer.slider_4D[0].setValue(int(slider_4D_range/2))
+        # Unchecks show all slices
+        viewer.check_box_slices.setCheckState(Qt.Checked)
 
         # Checks the chain cursors
         viewer.check_box_cursors.setCheckState(Qt.Checked)
+
+        # Selects the second scan
+        data_browser.table_data.item(1,0).setSelected(True)
 
         # Moves the 3D slides to the lower limit
         viewer.slider_3D[0].setValue(0)
