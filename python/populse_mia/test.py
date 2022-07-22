@@ -3627,6 +3627,9 @@ class TestMIAMainWindow(TestMIACase):
         
         QMessageBox.exec = lambda self_, *arg: self_.show()
 
+        # Resets the projects save directory
+        Config().set_projects_save_path(None)
+
         # Tries to open a project without setting the projects save dir
         self.main_window.open_project_pop_up()
         self.main_window.msg.accept()
