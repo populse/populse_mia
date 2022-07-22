@@ -3359,7 +3359,7 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.action_check_database.triggered.emit()
 
     def test_create_project_pop_up(self):
-        """
+        '''
         Tries to create a new project with a project already open and
         with and without setting the projects folder path.
 
@@ -3372,52 +3372,69 @@ class TestMIAMainWindow(TestMIACase):
         Mocks the objects
           - PopUpQuit.exec
           - QMessageBox.exec
-          - PopUpNewProject (several methods)
-        """
+          - PopUpNewProject.exec
+        '''
 
         # Sets shortcuts for often used objects
-        ppl_manager = self.main_window.pipeline_manager
         session = self.main_window.project.session
 
-        # Creates a new project folder and adds one document to the 
-        # project, sets the plug value that is added to the database
-        project_8_path = self.get_new_test_project()
-        folder = os.path.join(project_8_path, 'data', 'raw_data')
-        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_'
-                      'Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+        # Creates a new project folder and switcehs to it
+        new_proj_path = self.get_new_test_project(light=True)
+        folder = os.path.join(new_proj_path, 'data', 'downloaded_data')
+        NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_'
+                      'Guerbet_Anat-RAREpvm-000220_000.nii')
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
 
-        # Creates a project with another project already opened
+        # Adds a document to the collection
         session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
-        PopUpQuit.exec = lambda x: True # Mocks the execution of the popup
+
+        # Mocks the execution of the pop-up quit
+        PopUpQuit.exec = lambda self_, *args: self_.show()
+
+        # Tries to create a project with unsaved modifications
         self.main_window.create_project_pop_up()
+
+        # Closes the error dialog
+        self.assertTrue(hasattr(self.main_window, 'pop_up_close'))
+        self.main_window.pop_up_close.accept()
+
         session.remove_document(COLLECTION_CURRENT, DOCUMENT_1)
+
+        # Mocks the execution of a pop-up
+        QMessageBox.exec = lambda self_, *args: self_.show()
+
+        # Resets the projects folder
+        config = Config(config_path=self.config_path)
+        config.set_projects_save_path(None)
 
         # Tries to create a new project without setting the projects 
         # folder
-        QMessageBox.exec = lambda x: True
         self.main_window.create_project_pop_up()
 
-        # Asserts that a error message was created
         self.assertTrue(hasattr(self.main_window, 'msg'))
-        self.assertEqual(self.main_window.msg.icon(), QMessageBox.Critical)
+        self.main_window.msg.accept()
 
         # Sets the projects folder path
+        proj_folder = os.path.split(new_proj_path)[0]
         config = Config(config_path=self.config_path)
-        #config.set_projects_save_path(os.path.split(ppl_manager.project.folder)[0])
+        config.set_projects_save_path(proj_folder)
         # FIXME: triggers segmentation fault on windows build
 
-        # Mocks the execution of 'PopUpNewProject' and its attributes
-        NEW_PROJ_PATH = os.path.join(os.path.split(project_8_path)[0], 
-                                     'project_9')
-        PopUpNewProject.exec = lambda x: True
-        PopUpNewProject.selectedFiles = lambda x: (NEW_PROJ_PATH,)
-        PopUpNewProject.relative_path = NEW_PROJ_PATH
-        PopUpNewProject.path, PopUpNewProject.name = os.path.split(
-                                                                  NEW_PROJ_PATH)
+        # Mocks the execution of 'PopUpNewProject
+        PopUpNewProject.exec = lambda self_, *args: None
 
-        # Creates a project with the projects folder set
+        # Opens the create project pop-up
         self.main_window.create_project_pop_up()
+
+        # Mocks the execution of a pop-up
+        QMessageBox.exec = lambda *args: None
+
+        # Tries to create a new project in the same directory of an 
+        # existing one
+        self.main_window.exPopup.get_filename((os.path.join(folder, NII_FILE_1),))
+
+        # Creates a new project
+        self.main_window.exPopup.get_filename((os.path.join(folder, 'new_project'),))
 
     def test_files_in_project(self):
         '''
