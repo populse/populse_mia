@@ -1164,7 +1164,6 @@ class TestMIADataBrowser(TestMIACase):
 
         self.assertEqual(config.get_projects_save_path(), '')
 
-    @unittest.skip
     def test_mini_viewer(self):
         '''
         Selects scans and display them in the mini viewer.
