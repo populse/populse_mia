@@ -34,6 +34,7 @@ from nipype.interfaces.spm import Smooth, Threshold
 # other import
 import ast
 import copy
+import json
 import os
 import platform
 import psutil
@@ -3493,6 +3494,61 @@ class TestMIAMainWindow(TestMIACase):
         # Checks for a str type path within the project
         res = self.main_window.project.files_in_project(os.path.join(test_proj_path, 'mock_file'))
         self.assertTrue(res) # Asserts it is not empty
+
+    #@unittest.skip
+    def test_import(self):
+
+        # Opens a test project and switches to it
+        test_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        DOCUMENT_1 = (self.main_window.project.session.
+                                             get_documents_names)("current")[0]
+        DOCUMENT_1_NAME = os.path.split(DOCUMENT_1)[-1].split('.')[0]
+        RAW_DATA_FLDR = os.path.join(test_proj_path, 'data', 'raw_data')
+
+        #config = Config()
+        #MRI_CONV_PATH = os.path.join(os.path.split(config.get_mia_path())[0], 'mri_conv', 'MRIFileManager', 'MRIManager.jar')
+
+        #config.set_mri_conv_path(MRI_CONV_PATH)
+
+        #self.main_window.action_import.triggered.emit()
+
+        # Copies a scan to the raw data folder
+        shutil.copy(os.path.join(test_proj_path, DOCUMENT_1),
+                    os.path.join(RAW_DATA_FLDR, os.path.split(DOCUMENT_1)[-1]))
+
+        # Creates the .json with the tag values, in the raw data folder
+        JSON_TAG_DUMP = {'BandWidth':{'format':None,'description':'bandwidth','units':'MHz','type':'float','value':[[50000.0]]}}
+        JSON_TAG = os.path.join(RAW_DATA_FLDR, DOCUMENT_1_NAME + '.json')
+        with open(JSON_TAG, 'w') as file:
+            json.dump(JSON_TAG_DUMP, file)
+
+        # Creates the 'logExport*.json' file, in the raw data folder
+        JSON_EXPORT_DUMP = [{'StatusExport': 'Export ok', 'NameFile': DOCUMENT_1_NAME}]
+        JSON_EXPORT = os.path.join(test_proj_path, 'data', 'raw_data', 'logExport*.json')
+        with open(JSON_EXPORT, 'w') as file:
+            json.dump(JSON_EXPORT_DUMP, file)
+
+
+        from populse_mia.data_manager.data_loader import ImportProgress, ImportWorker, read_log
+
+        # Mocks the thread start to avoid thread deadlocking
+        ImportWorker.start = lambda self_, *args: None
+        ImportProgress.exec = lambda self_, *args: self_.worker.run()
+
+        # Reads the scans added to the project
+        scans_added = read_log(self.main_window.project, self.main_window)
+
+
+
+        
+
+        # copy a scan to the raw_data folder and pass its filename in the above 
+        # json
+        # dump the jason as 'logExport*.json' on the raw_data_folder
+
+        print()
 
     def test_open_recent_project(self):
         '''
