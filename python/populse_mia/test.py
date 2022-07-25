@@ -3507,19 +3507,25 @@ class TestMIAMainWindow(TestMIACase):
         DOCUMENT_1_NAME = os.path.split(DOCUMENT_1)[-1].split('.')[0]
         RAW_DATA_FLDR = os.path.join(test_proj_path, 'data', 'raw_data')
 
-        #config = Config()
-        #MRI_CONV_PATH = os.path.join(os.path.split(config.get_mia_path())[0], 'mri_conv', 'MRIFileManager', 'MRIManager.jar')
-
-        #config.set_mri_conv_path(MRI_CONV_PATH)
-
-        #self.main_window.action_import.triggered.emit()
-
         # Copies a scan to the raw data folder
         shutil.copy(os.path.join(test_proj_path, DOCUMENT_1),
                     os.path.join(RAW_DATA_FLDR, os.path.split(DOCUMENT_1)[-1]))
 
         # Creates the .json with the tag values, in the raw data folder
-        JSON_TAG_DUMP = {'BandWidth':{'format':None,'description':'bandwidth','units':'MHz','type':'float','value':[[50000.0]]}}
+        JSON_TAG_DUMP = {'AcquisitionTime':{
+                            'format': 'HH:mm:ss.SSS',
+                            'description':'The time the acquisition of data that resulted in this image started.',
+                            'units':'mock_unit',
+                            'type':'time',
+                            'value':['00:09:40.800']
+                        },
+                        'BandWidth':{
+                            'format': None,
+                            'description': '',
+                            'units': 'MHz',
+                            'type': 'float',
+                            'value':[[50000.0]]
+                        }}
         JSON_TAG = os.path.join(RAW_DATA_FLDR, DOCUMENT_1_NAME + '.json')
         with open(JSON_TAG, 'w') as file:
             json.dump(JSON_TAG_DUMP, file)
@@ -3530,7 +3536,6 @@ class TestMIAMainWindow(TestMIACase):
         with open(JSON_EXPORT, 'w') as file:
             json.dump(JSON_EXPORT_DUMP, file)
 
-
         from populse_mia.data_manager.data_loader import ImportProgress, ImportWorker, read_log
 
         # Mocks the thread start to avoid thread deadlocking
@@ -3539,6 +3544,8 @@ class TestMIAMainWindow(TestMIACase):
 
         # Reads the scans added to the project
         scans_added = read_log(self.main_window.project, self.main_window)
+
+        self.assertIn(DOCUMENT_1.replace('derived_data', 'raw_data'), scans_added)
 
 
 
