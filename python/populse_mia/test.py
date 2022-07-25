@@ -3526,7 +3526,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Creates the 'logExport*.json' file, in the raw data folder
         JSON_EXPORT_DUMP = [{'StatusExport': 'Export ok', 'NameFile': DOCUMENT_1_NAME}]
-        JSON_EXPORT = os.path.join(test_proj_path, 'data', 'raw_data', 'logExport*.json')
+        JSON_EXPORT = os.path.join(test_proj_path, 'data', 'raw_data', 'logExportMock.json')
         with open(JSON_EXPORT, 'w') as file:
             json.dump(JSON_EXPORT_DUMP, file)
 
