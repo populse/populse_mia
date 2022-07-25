@@ -3516,6 +3516,7 @@ class TestMIAMainWindow(TestMIACase):
         test_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(test_proj_path, 'test_project')
 
+        # Sets the 'MRIManager.jar' path to a mocked java executable
         config = Config()
         mock_mriconv_path = os.path.join(config.get_mia_path(), 'resources', 
                                          'mriconv', 'mockapp.jar')
@@ -3572,14 +3573,14 @@ class TestMIAMainWindow(TestMIACase):
 
         # Mocks importing a scan, runs a mocked java executable instead
         # of the 'MRIManager.jar'
-        self.main_window.import_data()
+        #self.main_window.import_data()
 
-        
         new_scan = os.path.normpath(DOCUMENT_1.replace('derived_data', 
                                                        'raw_data'))
-        table_data_scans = (self.main_window.data_browser.table_data.
-                            scans_to_visualize)
-        table_data_scans =[os.path.normpath(path) for path in table_data_scans]
+        #table_data_scans = (self.main_window.data_browser.table_data.
+        #                    scans_to_visualize)
+        #table_data_scans =[os.path.normpath(path) for path in table_data_scans]
+        table_data_scans = [os.path.normpath(path) for path in scans_added]
         
         # Asserts that the first scan was added to the 'raw_data' folder
         self.assertIn(new_scan, table_data_scans)
