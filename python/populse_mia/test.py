@@ -137,6 +137,8 @@ from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 from mia_processes.bricks.tools import Input_Filter
 
 # populse_mia import
+from populse_mia.data_manager.data_loader import (ImportProgress, ImportWorker, 
+                                                 read_log)
 from populse_mia.data_manager.project import (COLLECTION_BRICK,
                                               COLLECTION_CURRENT,
                                               COLLECTION_HISTORY,
@@ -3495,16 +3497,37 @@ class TestMIAMainWindow(TestMIACase):
         res = self.main_window.project.files_in_project(os.path.join(test_proj_path, 'mock_file'))
         self.assertTrue(res) # Asserts it is not empty
 
-    #@unittest.skip
     def test_import(self):
+        '''
+        Opens a project and simulates the importing a file from the
+        MriConv java executable.
+        Tests 
+         - read_log (data_loader.py)
+         - ImportProgress
+        
+        Notes
+        -----
+        Mocks
+         - ImportWorker.start
+         - ImportProgress.exec
+        '''
 
         # Opens a test project and switches to it
         test_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(test_proj_path, 'test_project')
 
+        config = Config()
+        mock_mriconv_path = os.path.join(config.get_mia_path(), 'resources', 
+                                         'mriconv', 'mockapp.jar')
+        config.set_mri_conv_path(mock_mriconv_path)
+
+        # Gets information regarding the fist scan, located in the 
+        # 'derived_data' of the project
         DOCUMENT_1 = (self.main_window.project.session.
                                              get_documents_names)("current")[0]
         DOCUMENT_1_NAME = os.path.split(DOCUMENT_1)[-1].split('.')[0]
+        
+        # Gets the 'raw_data' folder path, where the scan will be import
         RAW_DATA_FLDR = os.path.join(test_proj_path, 'data', 'raw_data')
 
         # Copies a scan to the raw data folder
@@ -3514,7 +3537,7 @@ class TestMIAMainWindow(TestMIACase):
         # Creates the .json with the tag values, in the raw data folder
         JSON_TAG_DUMP = {'AcquisitionTime':{
                             'format': 'HH:mm:ss.SSS',
-                            'description':'The time the acquisition of data that resulted in this image started.',
+                            'description':'The time the acquisition of data.',
                             'units':'mock_unit',
                             'type':'time',
                             'value':['00:09:40.800']
@@ -3531,12 +3554,14 @@ class TestMIAMainWindow(TestMIACase):
             json.dump(JSON_TAG_DUMP, file)
 
         # Creates the 'logExport*.json' file, in the raw data folder
-        JSON_EXPORT_DUMP = [{'StatusExport': 'Export ok', 'NameFile': DOCUMENT_1_NAME}]
-        JSON_EXPORT = os.path.join(test_proj_path, 'data', 'raw_data', 'logExportMock.json')
+        JSON_EXPORT_DUMP = [{
+                               'StatusExport': 'Export ok', 
+                               'NameFile': DOCUMENT_1_NAME
+                            }]
+        JSON_EXPORT = os.path.join(test_proj_path, 'data', 'raw_data', 
+                                   'logExportMock.json')
         with open(JSON_EXPORT, 'w') as file:
             json.dump(JSON_EXPORT_DUMP, file)
-
-        from populse_mia.data_manager.data_loader import ImportProgress, ImportWorker, read_log
 
         # Mocks the thread start to avoid thread deadlocking
         ImportWorker.start = lambda self_, *args: None
@@ -3545,7 +3570,19 @@ class TestMIAMainWindow(TestMIACase):
         # Reads the scans added to the project
         scans_added = read_log(self.main_window.project, self.main_window)
 
-        self.assertIn(DOCUMENT_1.replace('derived_data', 'raw_data'), scans_added)
+        # Mocks importing a scan, runs a mocked java executable instead
+        # of the 'MRIManager.jar'
+        self.main_window.import_data()
+
+        
+        new_scan = os.path.normpath(DOCUMENT_1.replace('derived_data', 
+                                                       'raw_data'))
+        table_data_scans = (self.main_window.data_browser.table_data.
+                            scans_to_visualize)
+        table_data_scans =[os.path.normpath(path) for path in table_data_scans]
+        
+        # Asserts that the first scan was added to the 'raw_data' folder
+        self.assertIn(new_scan, table_data_scans)
 
 
 
