@@ -3497,7 +3497,7 @@ class TestMIAMainWindow(TestMIACase):
         res = self.main_window.project.files_in_project(os.path.join(test_proj_path, 'mock_file'))
         self.assertTrue(res) # Asserts it is not empty
 
-    def test_import(self):
+    def test_import_data(self):
         '''
         Opens a project and simulates the importing a file from the
         MriConv java executable.
@@ -3569,31 +3569,20 @@ class TestMIAMainWindow(TestMIACase):
         ImportProgress.exec = lambda self_, *args: self_.worker.run()
 
         # Reads the scans added to the project
-        scans_added = read_log(self.main_window.project, self.main_window)
+        #scans_added = read_log(self.main_window.project, self.main_window)
 
         # Mocks importing a scan, runs a mocked java executable instead
         # of the 'MRIManager.jar'
-        #self.main_window.import_data()
-
+        self.main_window.import_data()
+        
         new_scan = os.path.normpath(DOCUMENT_1.replace('derived_data', 
                                                        'raw_data'))
-        #table_data_scans = (self.main_window.data_browser.table_data.
-        #                    scans_to_visualize)
-        #table_data_scans =[os.path.normpath(path) for path in table_data_scans]
-        table_data_scans = [os.path.normpath(path) for path in scans_added]
+        table_data_scans = (self.main_window.data_browser.table_data.
+                            scans_to_visualize)
+        table_data_scans =[os.path.normpath(path) for path in table_data_scans]
         
         # Asserts that the first scan was added to the 'raw_data' folder
         self.assertIn(new_scan, table_data_scans)
-
-
-
-        
-
-        # copy a scan to the raw_data folder and pass its filename in the above 
-        # json
-        # dump the jason as 'logExport*.json' on the raw_data_folder
-
-        print()
 
     def test_open_recent_project(self):
         '''
