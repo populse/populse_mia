@@ -3363,6 +3363,48 @@ class TestMIAMainWindow(TestMIACase):
               viewer and pipeline manager.
     '''
 
+    def create_mock_jar(self, path):
+        '''
+        Creates a mocked java (.jar) executable.
+        :param path: the full path of the executable, ending by '.jar'
+        :returns: 0 if success or 1 if failure
+        '''
+
+        (folder, name) = os.path.split(path)
+
+        CONTENT = ('public class MockApp {\n' + 
+                  '    public static void main(String[] args){\n' +
+                  '        System.out.println("Executed mock java app.");\n' +
+                  '    }\n' + 
+                  '}')
+
+        # Creates the .java source code
+
+        with open(os.path.join(folder, 'MockApp.java'), 'w') as file:
+            file.write(CONTENT)
+
+        # Creates the MANIFEST file
+        with open(os.path.join(folder, 'MANIFEST.MF'), 'w') as file:
+            file.write('Main-Class:  MockApp\n')
+        # The build only works with the '\n' at the end of the manifest
+
+        # Check if the OpenJDK Runtime (java) is installed
+        try:
+            subprocess.run(['java', '-version'])
+        except FileNotFoundError:
+            print('OpenJDK Runtime is not installed')
+            return 1
+
+        # Compile and pack
+        subprocess.run(['javac', '-d', '.', 'MockApp.java'], cwd=folder)
+        subprocess.run(['jar', 'cvmf', 'MANIFEST.MF', name, 'MockApp.class'], cwd=folder)
+
+        if not os.path.exists(path):
+            print('The java executable was not created')
+            return 1
+        
+        return 0
+
     def test_check_database(self):
         '''
         Checks if the database has changed since the scans were first 
@@ -3516,11 +3558,16 @@ class TestMIAMainWindow(TestMIACase):
         test_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(test_proj_path, 'test_project')
 
+        # Creates a mocked java executable
+        mock_mriconv_path = os.path.join(test_proj_path, 'mock_mriconv', 
+                                         'mockapp.jar')
+        os.mkdir(os.path.split(mock_mriconv_path)[0])
+        res = self.create_mock_jar(mock_mriconv_path)
+        self.assertEqual(res, 0)
+
         # Sets the 'MRIManager.jar' path to a mocked java executable
         config = Config()
-        mock_mriconv_path = os.path.join(config.get_mia_path(), 'resources', 
-                                         'mriconv', 'mockapp.jar')
-        config.set_mri_conv_path(mock_mriconv_path)
+        config.set_mri_conv_path(os.path.normpath(mock_mriconv_path))
 
         # Gets information regarding the fist scan, located in the 
         # 'derived_data' of the project
