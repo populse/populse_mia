@@ -3451,6 +3451,11 @@ class TestMIAMainWindow(TestMIACase):
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl_edt_tab = ppl_edt_tabs.get_current_editor()
+        data_browser = self.main_window.data_browser
+        session = self.main_window.project.session
+        ppl = ppl_edt_tabs.get_current_pipeline()
 
         # Gets the uid of the first brick from the bricks collection, which is 
         # composed of the bricks apperaing in the histories of the scans
@@ -3463,11 +3468,13 @@ class TestMIAMainWindow(TestMIACase):
         # Mocks having initialized the pipeline
         ppl_manager.init_clicked = True
 
-        # Closes the main window, calls 'closeEvent'
-        self.main_window.close()
+        # 'self.main_window.close()' is already called by 'tearDown' 
+        # after each test
 
         # No assertion is possible since the 'self.main_window.project'
         # was deleted
+
+        print()
     
     def test_create_project_pop_up(self):
         '''
