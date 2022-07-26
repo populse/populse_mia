@@ -24,7 +24,7 @@ Installation
 
 * Clone the source codes
 
-  * Get source codes from Github. Replace [populse_install_dir] with a directory of your choice ::
+  * Get source codes from Github. Replace [populse_install_dir] with a `directory <https://www.scaler.com/topics/directory-structure-in-os/>`_ of your choice ::
 
       git lfs clone https://github.com/populse/populse_mia.git [populse_install_dir]/populse_mia # "git lfs clone" has been deprecated since Git LFS 2.3.0. From this version, use "git clone" command directly ...
 
