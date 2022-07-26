@@ -3439,6 +3439,36 @@ class TestMIAMainWindow(TestMIACase):
         # Check if the files of the database have been modified
         self.main_window.action_check_database.triggered.emit()
 
+    def test_closeEvent(self):
+        '''
+        Opens a project and closes the main window.
+        Tests MainWindow.closeEvent.
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+
+        # Gets the uid of the first brick from the bricks collection, which is 
+        # composed of the bricks apperaing in the histories of the scans
+        bricks_coll = ppl_manager.project.session.get_documents(COLLECTION_BRICK)
+        brick = bricks_coll[0]
+
+        # Appends it to the 'brick_list'
+        ppl_manager.brick_list.append(brick.ID)
+
+        # Mocks having initialized the pipeline
+        ppl_manager.init_clicked = True
+
+        # Closes the main window, calls 'closeEvent'
+        self.main_window.close()
+
+        # No assertion is possible since the 'self.main_window.project'
+        # was deleted
+    
     def test_create_project_pop_up(self):
         '''
         Tries to create a new project with a project already open and
