@@ -2692,6 +2692,7 @@ class TestMIADataBrowser(TestMIACase):
         Opens a project and tests miscellaneous methods of the table 
         data view, in the data browser.
         Tests
+         - TableDataBrowser.change_cell_color
          - TableDataBrowser.section_moved
          - TableDataBrowser.selectColumn
 
@@ -2704,8 +2705,66 @@ class TestMIADataBrowser(TestMIACase):
         # Set often used shortcuts
         table_data = self.main_window.data_browser.table_data
 
+        '''TESTS CHANGE_CELL_COLOR'''
+
+        # Adds a new document to the collection
+        NEW_DOC = {'FileName': 'mock_file_name'}
+        self.main_window.project.session.add_document(COLLECTION_CURRENT, NEW_DOC)
+        self.main_window.project.session.add_document(COLLECTION_INITIAL, NEW_DOC)
+
+        # Selects the 'Filename' of the first scan and changes its value 
+        # to this document filename
+        table_data.item(0,0).setSelected(True)
+        table_data.item(0,0).setText(NEW_DOC['FileName'])
+        table_data.item(0,0).setSelected(False)
+
+        # Selects 'FOV' and changes its value
+        table_data.item(0,3).setSelected(True)
+        table_data.item(0,3).setText('[4.0, 4.0]')
+        table_data.item(0,3).setSelected(False)
+
+        # Creates a tag of type float and selects it
+        self.main_window.data_browser.add_tag_infos('mock_tag', 0.0, 
+                                                    FIELD_TYPE_FLOAT, '', '')
+        table_data.item(0,6).setSelected(True)
+
+        # Mocks the execution of a dialog box
+        QMessageBox.exec = lambda *args: None
+
+        # Tries setting an invalid string value to the tag
+        table_data.item(0,6).setText('invalid_string')
+        table_data.item(0,6).setSelected(False)
+
+        # Creates another tag of type float and selects it
+        self.main_window.data_browser.add_tag_infos('mock_tag_1', 0.0, 
+                                                    FIELD_TYPE_FLOAT, '', '')
+        table_data.item(0,7).setSelected(True)
+
+        # Sets a valid float value to the tag
+        table_data.item(0,7).setText('0.0')
+        # Changing the same tag does not trigger the 'valueChanged' and 
+        # thus not the 'change_cell_color' method
+
+        table_data.item(0,7).setSelected(False)
+
+        # Selects the 'Exp Type' and 'FOV' of the first scan, which have
+        # distinct data types
+        table_data.item(0,2).setSelected(True)
+        table_data.item(0,3).setSelected(True)
+
+        # Tries changing the value of 'Exp Type'
+        table_data.item(0,2).setText('RARE_B')
+
+        # Asserts that only 'Exp Type' changed
+        self.assertEqual(table_data.item(0,2).text(), 'RARE_B')
+        self.assertNotEqual(table_data.item(0,3).text(), 'RARE_B')
+
+        '''TESTS SELECTION_MOVED'''
+
         # Switch columns of the 2 first tags
         table_data.horizontalHeader().sectionMoved.emit(0,0,1)
+
+        '''TESTS SELECT_COLUMN'''
 
         # Selects the whole filename column
         table_data.selectColumn(0)
