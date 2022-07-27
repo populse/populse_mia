@@ -201,7 +201,8 @@ if 'NO_ET' not in os.environ:
     os.environ['NO_ET'] = "1"
 
 class TestMIACase(unittest.TestCase):
-    '''Parent class for the test classes of mia.
+    '''
+    Parent class for the test classes of mia.
 
     :Contains:
         :Method:
@@ -215,6 +216,8 @@ class TestMIACase(unittest.TestCase):
               QMessageBox instance
             - execute_QMessageBox_clickYes: press the Yes button of a 
               QMessageBox instance
+            - find_item_by_data: looks for a QModelIndex whose contents 
+              correspond to the argument data
             - get_new_test_project: create a temporary project that can 
               be safely modified
             - restart_MIA: restarts MIA within a unit test
@@ -441,8 +444,12 @@ class TestMIADataBrowser(TestMIACase):
             - test_clone_tag: tests the pop up cloning a tag
             - test_count_table: tests the count table popup
             - test_mia_preferences: tests the Mia preferences popup
+            - test_mini_viewer: selects scans and display them in the mini 
+              viewer
             - test_modify_table: tests the modify table module
             - test_multiple_sort: tests the multiple sort popup
+            - test_multiple_sort_appendix: adds and removes tags in the data 
+              browser
             - test_openTagsPopUp: opens a pop-up to select the legend of the 
               thumbnails
             - test_open_project: tests project opening
@@ -466,6 +473,11 @@ class TestMIADataBrowser(TestMIACase):
             - test_show_brick_history: opens the history pop-up for 
               scans with history related to a brick
             - test_sort: tests the sorting in the DataBrowser
+            - test_table_data_add_columns: adds tag columns to the table data 
+              window
+            - test_table_data_appendix: opens a project and tests miscellaneous 			  methods of the table data view, in the data browser
+            - test_table_data_context_menu: right clicks a scan to show the 
+              context menu table, and choses one option
             - test_undo_redo_databrowser: tests data browser undo/redo
             - test_unnamed_proj_soft_open: tests unnamed project 
               creation at software opening
@@ -2687,6 +2699,35 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(sorted(mixed_bandwidths, reverse=True),
                          down_bandwidths)
 
+    def test_table_data_add_columns(self):
+        '''
+        Adds tag columns to the table data window.
+        Tests TableDataBrowser.add_columns.
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for often used objects
+        table_data = self.main_window.data_browser.table_data
+
+        # Adds a tag, of the types float, datetime, date and time, to 
+        # the project session
+        tags = ['mock_tag_float', 'mock_tag_datetime', 'mock_tag_date', 
+                'mock_tag_time']
+        types = [FIELD_TYPE_FLOAT, FIELD_TYPE_DATETIME, FIELD_TYPE_DATE, 
+                 FIELD_TYPE_TIME]
+        for (tag, type) in zip(tags,types):
+            table_data.project.session.add_field(COLLECTION_CURRENT, tag, type, 
+                                                 '', True, '', '', '')
+
+        table_data.add_columns() # Adds the tags to table view
+
+        # Asserts that the tgs were added to the table view
+        for tag in tags:
+              self.assertIsNotNone(table_data.get_tag_column(tag))
+
     def test_table_data_appendix(self):
         '''
         Opens a project and tests miscellaneous methods of the table 
@@ -2773,35 +2814,6 @@ class TestMIADataBrowser(TestMIACase):
         selected_items = table_data.selectedItems()
         self.assertEqual(len(selected_items), len(table_data.scans))
         self.assertEqual(selected_items[0].text(), table_data.scans[0][0])
-
-    def test_table_data_add_columns(self):
-        '''
-        Adds tag columns to the table data window.
-        Tests TableDataBrowser.add_columns.
-        '''
-
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, 'test_light_project')
-
-        # Sets shortcuts for often used objects
-        table_data = self.main_window.data_browser.table_data
-
-        # Adds a tag, of the types float, datetime, date and time, to 
-        # the project session
-        tags = ['mock_tag_float', 'mock_tag_datetime', 'mock_tag_date', 
-                'mock_tag_time']
-        types = [FIELD_TYPE_FLOAT, FIELD_TYPE_DATETIME, FIELD_TYPE_DATE, 
-                 FIELD_TYPE_TIME]
-        for (tag, type) in zip(tags,types):
-            table_data.project.session.add_field(COLLECTION_CURRENT, tag, type, 
-                                                 '', True, '', '', '')
-
-        table_data.add_columns() # Adds the tags to table view
-
-        # Asserts that the tgs were added to the table view
-        for tag in tags:
-              self.assertIsNotNone(table_data.get_tag_column(tag))
 
     def test_table_data_context_menu(self):
         '''
@@ -3416,14 +3428,16 @@ class TestMIAMainWindow(TestMIACase):
 
     :Contains:
         :Method:
-            - find_item_by_data: looks for a QModelIndex, in QTreeView, 
-              whose contents correspond to the argument data.
+            - create_mock_jar: creates a mocked java (.jar) executable
             - test_check_database: checks if the database has changed 
-              since the scans were first imported.
+              since the scans were first imported
+            - test_closeEvent: opens a project and closes the main window
             - test_create_project_pop_up: tries to create a new project 
               with a project already open.
             - test_files_in_project: tests whether or not a given file 
               is part of the project.
+            - test_import_data: opens a project and simulates importing 
+              a file from the MriConv java executable
             - test_open_recent_project: creates 2 test projects and 
               opens one by the recent projects action.
             - test_switch_project: create project and switches to it.
@@ -3453,7 +3467,6 @@ class TestMIAMainWindow(TestMIACase):
             - test_tab_changed: switches between data browser, data 
               viewer and pipeline manager.
     '''
-
     def create_mock_jar(self, path):
         '''
         Creates a mocked java (.jar) executable.
@@ -3669,8 +3682,8 @@ class TestMIAMainWindow(TestMIACase):
 
     def test_import_data(self):
         '''
-        Opens a project and simulates the importing a file from the
-        MriConv java executable.
+        Opens a project and simulates importing a file from the MriConv
+        java executable.
         Tests 
          - read_log (data_loader.py)
          - ImportProgress
@@ -4498,8 +4511,6 @@ class TestMIAMainWindow(TestMIACase):
 
         # Asserts that project 8 is now opened
         config = Config(config_path=self.config_path)
-        #self.assertEqual(os.path.abspath(config.get_opened_projects()[0]), 
-        #                 project_8_path)
 
     def test_software_preferences_pop_up(self):
         """
@@ -6013,14 +6024,16 @@ class TestMIANodeController(TestMIACase):
                                                    "_smoothed_files"].links_to))
 
 class TestMIAOthers(TestMIACase):
-    """Tests for the pipeline manager tab.
+    '''
+    Tests for other parts of the MIA software that do not relate much 
+    with the other classes.
 
     :Contains:
         :Method:
-            - test_iteration_table: plays with the iteration table.
+            - test_iteration_table: plays with the iteration table
             - test_process_library: install the brick_test and then 
-              remove it.
-    """
+              remove it
+    '''
 
     def test_iteration_table(self):
         '''
@@ -6216,7 +6229,7 @@ class TestMIAPipelineEditor(TestMIACase):
             - test_z_set_current_editor: sets the current editor.
             - test_zz_del_pack: deletes a brick created during UTs.
     '''
-  
+
     def test_add_tab(self):
         """
         Adds tabs to the PipelineEditorTabs
@@ -6859,195 +6872,62 @@ class TestMIAPipelineManagerTab(TestMIACase):
     :Contains:
         :Method:
             - test_add_plug_value_to_database_list_type: adds a list 
-              type plug value to the database.
+              type plug value to the database
             - test_add_plug_value_to_database_non_list_type: adds a non 
-              list type plug value to the database.
-            - test_ask_iterated_pipeline_plugs: test the iteration 
-              dialog for each plug of a Rename process.
+              list type plug value to the database
             - test_add_plug_value_to_database_several_inputs: exports a 
-              non list type input plug and with several possible inputs.
+        	  non list type input plug and with several possible inputs
+            - test_ask_iterated_pipeline_plugs: test the iteration 
+              dialog for each plug of a Rename process
             - test_build_iterated_pipeline: mocks methods and builds an 
-              iterated pipeline.
+              iterated pipeline
             - test_check_requirements: checks the requirements for a
-              given node.
+              given node
             - test_cleanup_older_init: tests the cleaning of old 
-              initialisations.
+              initialisations
             - test_complete_pipeline_parameters: test the pipeline 
-              parameters completion.
+              parameters completion
             - test_delete_processes: deletes a process and makes the 
-              undo/redo.
+              undo/redo
             - test_end_progress: creates a progress object and tries to 
-              end it.
-            - test_garbage_collect: collects the garbage of a pipeline.
+              end it
+            - test_garbage_collect: collects the garbage of a pipeline
             - test_get_capsul_engine: gets the capsul engine of the
-              pipeline.
+              pipeline
             - test_get_missing_mandatory_parameters: tries to initialize
-              the pipeline with missing mandatory parameters.
+              the pipeline with missing mandatory parameters
             - test_get_pipeline_or_process: gets a pipeline and a
-              process from the pipeline_manager.
+              process from the pipeline_manager
             - test_initialize: mocks objects and initializes the 
-              workflow.
+              workflow
             - test_register_completion_attributes: registers completion 
-              attributes.
+              attributes
             - test_register_node_io_in_database: sets input and output 
-              parameters and registers them in database.
+              parameters and registers them in database
             - test_register_completion_attributes: mocks methods of the 
-              pipeline manager and registers completion attributes.
+              pipeline manager and registers completion attributes
             - test_remove_progress: removes the progress of the pipeline
             - test_run: creates a pipeline manager progress object and 
-              tries to run it.
-            - test_save_pipeline: saves a simple pipeline.
-            - test_savePipelineAs: saves a pipeline under another name.
+              tries to run it
+            - test_save_pipeline: saves a simple pipeline
+            - test_savePipelineAs: saves a pipeline under another name
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' 
-              animation.
-            - test_show_status: shows the status of pipeline execution.
+              animation
+            - test_show_status: shows the status of pipeline execution
             - test_stop_execution: shows the status window of the 
-              pipeline manager.
-            - test_undo_redo: tests the undo/redo feature.
+              pipeline manager
+            - test_undo_redo: tests the undo/redo feature
             - test_update_auto_inheritance: updates the job's auto 
-              inheritance dict.
+              inheritance dict
             - test_update_inheritance: updates the job's inheritance 
-              dict.
+              dict
             - test_update_node_list: initializes a workflow and adds a 
-              process to the "pipline_manager.node_list".
-            - test_z_init_pipeline: initializes the pipeline.
-            - test_z_runPipeline: adds a processruns a pipeline.
-            - test_zz_del_pack(self): deletion of the brick created 
-              during UTs.
+              process to the "pipline_manager.node_list"
+            - test_z_init_pipeline: initializes the pipeline
+            - test_z_runPipeline: adds a processruns a pipeline
+            - test_zz_del_pack: deletion of the brick created 
+              during UTs
     '''
-
-    def execute_QDialogAccept(self):
-        """
-        Accept (close) a QDialog window
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.accept()
-
-    def execute_QMessageBox_clickYes(self):
-        """
-        Is supposed to allow to press the Yes button if a pipeline is 
-        overwritten in the test_zz_check_modifications method
-        """
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Yes)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def execute_QDialogClose(self):
-        """
-        Is supposed to abort( close) a QDialog window
-        """
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.close()
-    
-    def get_new_test_project(self, name = 'test_project', light=False):
-        '''
-        Copies a test project where it can be safely modified.
-        The new project is created in the /tmp (/Temp) folder.
-
-        :param name: str, name of the directory containing the project
-        :param light: bool, True to copy a project with few documents
-
-        '''
-
-        new_test_proj = os.path.join(self.config_path, name)
-
-        if os.path.exists(new_test_proj):
-            shutil.rmtree(new_test_proj)
-
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-
-        test_proj = os.path.join(mia_path, 'resources', 'mia', 
-                                 'light_test_project' if light else 'project_8')
-        
-        shutil.copytree(test_proj, new_test_proj)
-        return new_test_proj
-
-    def restart_MIA(self):
-        """
-        Restarts MIA within a unit test.
-
-        Notes
-        -----
-        Can be used to restart MIA after changing the controller version in MIA
-        preferences.
-        """
-
-        self.main_window.close()
-
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-        self.app.exit()
-
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    def setUp(self):
-        """
-        Called before each test
-        """
-
-        # All the tests are run in admin mode
-        config = Config(config_path=self.config_path)
-        config.set_user_mode(False)
-
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
-        self.project = Project(None, True)
-        self.main_window = MainWindow(self.project, test=True)
-
-    @classmethod
-    def setUpClass(cls):
-        """
-        Called once at the beginning of the class
-        """
-
-        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
-        # hack the Config class to get config_path, because some Config
-        # instances are created out of our control in the code
-        Config.config_path = cls.config_path
-
-    def tearDown(self):
-        """
-        Called after each test
-        """
-
-        self.main_window.close()
-
-        # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
-        config.set_opened_projects([])
-        config.saveConfig()
-
-        self.app.exit()
-
-    @classmethod
-    def tearDownClass(cls):
-        """
-        Called once at the end of the class
-        """
-
-        if os.path.exists(cls.config_path):
-            shutil.rmtree(cls.config_path)
 
     def test_add_plug_value_to_database_list_type(self):
         """
