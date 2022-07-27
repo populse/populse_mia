@@ -8739,9 +8739,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager.workflow = workflow_from_pipeline(ppl,
                                                       complete_parameters=True)
         
+        # Mocks executing a dialog box, instead shows it
+        QMessageBox.exec = lambda self_, *args: self_.show()
+
         ppl_manager.update_node_list()
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
+        ppl_manager.msg.accept()
         self.assertFalse(init_result)
         
         # Sets the mandatory parameters
@@ -8754,13 +8758,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl.list_process_in_pipeline.append(process_it)
 
         # Initialize the pipeline with mandatory parameters set
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         #init_result = ppl_manager.init_pipeline(pipeline=ppl)
+        #ppl_manager.msg.accept()
 
         # Mocks null requirements and initializes the pipeline
         ppl_manager.check_requirements = Mock(return_value=None)
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
+        ppl_manager.msg.accept()
         self.assertFalse(init_result)
         ppl_manager.check_requirements.assert_called_once_with('global', 
                                                                message_list=[])
@@ -8776,8 +8782,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         req['capsul_engine']['uses'].get = Mock(return_value=1)
         ppl_manager.check_requirements = Mock(return_value=req)
 
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
+        ppl_manager.msg.accept()
         self.assertFalse(init_result)
 
         # Extra steps for SPM
@@ -8785,29 +8792,33 @@ class TestMIAPipelineManagerTab(TestMIACase):
         req['capsul.engine.module.spm']['standalone'] = True
         Config().set_matlab_standalone_path(None)
 
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
+        ppl_manager.msg.accept()
         self.assertFalse(init_result)
 
         req['capsul.engine.module.spm']['standalone'] = False
 
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
+        ppl_manager.msg.accept()
         self.assertFalse(init_result)
 
         # Deletes an attribute of each package requirement
         for pkg in pkgs:
             del req['capsul.engine.module.{}'.format(pkg)]
 
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
+        ppl_manager.msg.accept()
         self.assertFalse(init_result)
 
         # Mocks a 'ValueError' in 'workflow_from_pipeline'
         ppl.find_empty_parameters = Mock(side_effect=ValueError)
 
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
+        ppl_manager.msg.accept()
         self.assertFalse(init_result)
     
     def test_z_runPipeline(self):
