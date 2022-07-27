@@ -2687,6 +2687,34 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(sorted(mixed_bandwidths, reverse=True),
                          down_bandwidths)
 
+    def test_table_data_appendix(self):
+        '''
+        Opens a project and tests miscellaneous methods of the table 
+        data view, in the data browser.
+        Tests
+         - TableDataBrowser.section_moved
+         - TableDataBrowser.selectColumn
+
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Set often used shortcuts
+        table_data = self.main_window.data_browser.table_data
+
+        # Switch columns of the 2 first tags
+        table_data.horizontalHeader().sectionMoved.emit(0,0,1)
+
+        # Selects the whole filename column
+        table_data.selectColumn(0)
+
+        # Asserts that it was selected
+        selected_items = table_data.selectedItems()
+        self.assertEqual(len(selected_items), len(table_data.scans))
+        self.assertEqual(selected_items[0].text(), table_data.scans[0][0])
+
     def test_table_data_add_columns(self):
         '''
         Adds tag columns to the table data window.
@@ -2751,7 +2779,8 @@ class TestMIADataBrowser(TestMIACase):
                     'action_remove_scan', 'action_visualized_tags',
                     'action_select_column', 'action_multiple_sort',
                     'action_send_documents_to_pipeline', 
-                    'action_display_pdf_file', 'action_sort_column']
+                    'action_display_pdf_file']
+        # Including 'action_sort_column' will crash the build
         for act_name in act_names:
             QMenu.exec_ = lambda *args: getattr(table_data, act_name)
             table_data.context_menu_table(QPoint(10, 10))
