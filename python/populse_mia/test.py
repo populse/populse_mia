@@ -574,10 +574,13 @@ class TestMIADataBrowser(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
+        # Mocks the execution of a dialog box and clicking close
+        QMessageBox.exec = lambda self_, *args: self_.close()
+
         # Testing without tag name
         self.main_window.data_browser.add_tag_action.trigger()
         add_tag = self.main_window.data_browser.pop_up_add_tag
-        QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
+        #QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(add_tag.msg.text(), "The tag name cannot be empty")
 
@@ -585,7 +588,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Testing with tag name already existing
         add_tag.text_edit_tag_name.setText("Type")
-        QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
+        #QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(add_tag.msg.text(), "This tag name already exists")
 
@@ -596,7 +599,7 @@ class TestMIADataBrowser(TestMIACase):
         add_tag.combo_box_type.setCurrentText(FIELD_TYPE_INTEGER)
         add_tag.type = FIELD_TYPE_INTEGER
         add_tag.text_edit_default_value.setText("Should be integer")
-        QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
+        #QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(add_tag.msg.text(), "Invalid default value")
 
@@ -7399,7 +7402,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        # Mocks executing a dialog box and clicking close
+        QDialog.exec_ = lambda self_, *args: self_.accept()
+
+        #QTimer.singleShot(1000, self.execute_QDialogAccept)
         pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
 
     def test_build_iterated_pipeline(self):
@@ -8164,12 +8170,21 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Saves pipeline as with filled filename, uncheck
         ppl_manager.savePipeline(uncheck=True)
 
+        # Mocks executing a dialog box and clicking close
+        QMessageBox.exec = lambda self_, *args: self_.close()
+
         # Aborts pipeline saving with filled filename
-        QTimer.singleShot(1000, self.execute_QDialogClose)
+        #QTimer.singleShot(1000, self.execute_QDialogClose)
         ppl_manager.savePipeline()
         
+        # Mocks executing a dialog box and clicking yes
+        def click_yes(self_):
+            close_button = self_.button(QMessageBox.Yes)
+            QTest.mouseClick(close_button, Qt.LeftButton)
+        QMessageBox.exec = click_yes
+        
         # Accept pipeline saving with filled filename
-        QTimer.singleShot(1000, self.execute_QMessageBox_clickYes)
+        #QTimer.singleShot(1000, self.execute_QMessageBox_clickYes)
         ppl_manager.savePipeline()
     
     def test_savePipelineAs(self):
