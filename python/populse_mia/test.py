@@ -2736,19 +2736,22 @@ class TestMIADataBrowser(TestMIACase):
         # Sets shortcuts for often used objects
         table_data = self.main_window.data_browser.table_data
 
+        # Mocks the execution of a dialog box
         QMessageBox.exec = lambda *args: None
 
+        # Opens the context menu one time before cyclig through the 
+        # actions
         QMenu.exec_ = lambda *args: None
         table_data.context_menu_table(QPoint(10, 10))
 
-
+        # Cycles through the actions by opening the context menu and 
+        # clicking in each one of them
         act_names = ['action_reset_cell', 'action_reset_column', 
                     'action_reset_row', 'action_clear_cell', 'action_add_scan',
                     'action_remove_scan', 'action_visualized_tags',
                     'action_select_column', 'action_multiple_sort',
                     'action_send_documents_to_pipeline', 
-                    'action_display_pdf_file']
-
+                    'action_display_pdf_file', 'action_sort_column']
         for act_name in act_names:
             QMenu.exec_ = lambda *args: getattr(table_data, act_name)
             table_data.context_menu_table(QPoint(10, 10))
