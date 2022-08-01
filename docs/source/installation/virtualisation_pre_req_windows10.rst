@@ -69,9 +69,9 @@ The distribution is only available for the current Windows user.
 Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via ``/mnt/c/``  
 
 To know more:  
-   - [Manual installation steps for older versions of WSL](https://docs.microsoft.com/en-us/windows/wsl/install-manual)
-   - [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
-   - [Basic commands for WSL](https://docs.microsoft.com/en-us/windows/wsl/basic-commands)
+   - `[Manual installation steps for older versions of WSL] <https://docs.microsoft.com/en-us/windows/wsl/install-manual>`_.
+   - `[Install WSL] <https://docs.microsoft.com/en-us/windows/wsl/install>`_.
+   - `[Basic commands for WSL] <https://docs.microsoft.com/en-us/windows/wsl/basic-commands>`_.
 
 
 2- X server installation in windows with VcXsrv
@@ -80,7 +80,7 @@ To know more:
 
 We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
 
-Get [VcXsrv](https://sourceforge.net/projects/vcxsrv/files/latest/download)
+Get `[VcXsrv] <https://sourceforge.net/projects/vcxsrv/files/latest/download>`_.
   - Execute it, 
   - click 'next' then 'install' to install it 
 
@@ -144,6 +144,64 @@ In this Ubuntu window terminal, install the following dependencies: ::
    sudo ln -s python3 /usr/bin/python
 
 |
+
+4 - Singularity Installation
+---------------------------------------------------
+|
+
+Then to allow `singularity <https://apptainer.org/admin-docs/3.8/index.html>`_ installation we need go language and some dependancies for compilation.
+If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig.
+In that case Singularity can be uninstalled simply by deleting the parent directory.
+
+Here are commands : ::
+
+ #Ubuntu 20.04
+ sudo apt install -y golang
+
+ #Ubuntu 18.04, singularity need golang version >= 1.13 wich is not available on ubuntu 18.04 (1.10 only)
+ cd /tmp &&\
+ wget https://golang.org/dl/go1.17.linux-amd64.tar.gz &&\
+ tar -xzf go1.17.linux-amd64.tar.gz &&\
+ sudo chown -R root:root go &&\
+ sudo mv go /usr/local/ &&\
+ rm go1.17.linux-amd64.tar.gz
+
+ echo 'export GOPATH=${HOME}/go' >> ~/.bashrc &&\
+ echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc  &&\
+ source ~/.bashrc
+
+|
+
+See the section Prerequisites for Singularity on Linux.
+The 3.8.3 version link is https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb.
+You can install singularity like this : ::
+
+ #way1
+ wget https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb
+ sudo dpkg -i singularity-container-*.deb
+ sudo mkdir /opt/singularity
+ ./mconfig --prefix=/opt/singularity
+ cd builddir
+ make
+ sudo make install
+
+ #way2
+ export VERSION=3.8.3 && # adjust this as necessary \
+ wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
+ tar -xzf singularity-ce-${VERSION}.tar.gz && \
+ cd singularity-ce-${VERSION}
+ sudo mkdir /opt/singularity
+ ./mconfig --prefix=/opt/singularity
+ cd builddir
+ make
+ sudo make install
+|
+
+Test it with ``/opt/singularity/bin/singularity version``.
+
+Then remove installation files.
+Enter the repertory where you download the singularity install.
+Use the command ``rm -R singularity-ce_3.8.3~ubuntu-20.04_amd64.deb`` if you installed via Way 1 or ``rm -R singularity-ce-${VERSION}*`` if you installed via Way 2.
 
 You have completely installed a virtual Ubuntu which is now able to host mia.
 You can now follow steps from **installation** via `populse mia installation in user mode <https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html>`_.
