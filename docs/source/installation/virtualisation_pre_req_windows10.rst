@@ -173,7 +173,8 @@ Here are commands : ::
 |
 
 See the section Prerequisites for Singularity on Linux.
-The 3.8.3 version link is available ` here <https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb>`_.
+The 3.8.3 version link is available `here <https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb>`_.
+
 You can install singularity like this : ::
 
  #way1
