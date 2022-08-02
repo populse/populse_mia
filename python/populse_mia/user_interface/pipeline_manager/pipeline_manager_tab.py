@@ -1067,6 +1067,7 @@ class PipelineManagerTab(QWidget):
 
         :param signal_list: list of the needed parameters to update history
         """
+
         case = signal_list.pop(0)
         # For history
         history_maker = []
