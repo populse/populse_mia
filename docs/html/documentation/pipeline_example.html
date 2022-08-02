@@ -4,20 +4,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>A pipeline example with Populse_MIA’s &#8212; populse_mia 2.2.1-dev+554e91107 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A pipeline example with Populse_MIA’s &#8212; populse_mia 2.2.1-dev+e4dcd310b documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+554e91107 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+e4dcd310b documentation</span></a></h1>
         <h2 class="heading"><span>A pipeline example with Populse_MIA’s</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -47,16 +47,16 @@
 </tr>
 </tbody>
 </table>
-<section id="a-pipeline-example-with-populse-mia-s">
+<div class="section" id="a-pipeline-example-with-populse-mia-s">
 <h1>A pipeline example with Populse_MIA’s<a class="headerlink" href="#a-pipeline-example-with-populse-mia-s" title="Permalink to this headline">¶</a></h1>
 <p>This page gives a concrete example on how to create pipelines and how to iterate them correctly in Populse_MIA.</p>
-<section id="the-data">
+<div class="section" id="the-data">
 <h2>The data<a class="headerlink" href="#the-data" title="Permalink to this headline">¶</a></h2>
 <p>Let’s assume that the current project contains data from 7 patients as below (<a class="reference external" href="https://github.com/populse/populse_mia/tree/master/data_tests/Bruker_files/Guerbet-EB">small animal imaging data that can be retrieved directly from the populse_mia package</a>):</p>
 <img alt="../_images/data_browser.png" class="align-center" id="data-browser" src="../_images/data_browser.png" />
 <p>Note: thanks to the <a class="reference external" href="./data_browser.html#count-table">Count Table</a>, we know that they are some missing files for patients K49 and K51. For the other patients, three “Exp Type” are available : Anat, FLASH and MDEFT.</p>
-</section>
-<section id="requirements-specification-of-the-pipeline">
+</div>
+<div class="section" id="requirements-specification-of-the-pipeline">
 <h2>Requirements specification of the pipeline<a class="headerlink" href="#requirements-specification-of-the-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>The pipeline that will be created:</p>
 <blockquote>
@@ -68,8 +68,8 @@
 <li><p>Will perform smooth the MDEFT scan</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="pipeline-creation">
+</div>
+<div class="section" id="pipeline-creation">
 <h2>Pipeline creation<a class="headerlink" href="#pipeline-creation" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>First add the three SPM processes from mia_processes by dragging them from the process library (under mia_processes &gt; bricks &gt; preprocess &gt; spm) and dropping them into the pipeline editor:</p></li>
@@ -107,8 +107,8 @@
 <li><p>The pipeline is now stored in the process library under “User_processes”.</p></li>
 </ul>
 <img alt="../_images/pipeline_example_3.png" class="align-center" id="pipeline-example-3" src="../_images/pipeline_example_3.png" />
-</section>
-<section id="pipeline-iteration">
+</div>
+<div class="section" id="pipeline-iteration">
 <span id="pipeline-iter-filter-example-label"></span><h2>Pipeline iteration<a class="headerlink" href="#pipeline-iteration" title="Permalink to this headline">¶</a></h2>
 <p>There are several ways to iterate a pipeline (or a process). See <a class="reference internal" href="pipeline_manager.html#pipeline-iteration-label"><span class="std std-ref">Pipeline iteration</span></a> for details. Here we are using and detailing the <a class="reference internal" href="pipeline_manager.html#manually"><span class="std std-ref">via Input_Filter brick/process, with use of the iteration table</span></a> method.</p>
 <p>To be able to iterate the pipeline correctly, we will need a filter process/brick that is ready to use in the mia_processes package, since the 1.1.1 release (the Input_filter brick/process). The mia_processes package is available from the <a class="reference external" href="https://pypi.org/search/?q=mia_processes">Cheese Shop</a>.</p>
@@ -195,8 +195,8 @@
 <li><p>Click on “Initialize pipeline”. The Run button becomes enabled.</p></li>
 <li><p>Click on “Run pipeline”.</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
       </div>
@@ -210,7 +210,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>

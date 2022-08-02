@@ -4,20 +4,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Populse_MIA’s Data Viewer &#8212; populse_mia 2.2.1-dev+554e91107 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Populse_MIA’s Data Viewer &#8212; populse_mia 2.2.1-dev+e4dcd310b documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+554e91107 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+e4dcd310b documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s Data Viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -47,10 +47,10 @@
 </tr>
 </tbody>
 </table>
-<section id="populse-mia-s-data-viewer">
+<div class="section" id="populse-mia-s-data-viewer">
 <h1>Populse_MIA’s Data Viewer<a class="headerlink" href="#populse-mia-s-data-viewer" title="Permalink to this headline">¶</a></h1>
 <p>This page is a user guide for Mia’s Data Viewer, a tool to visualize medical images.</p>
-<section id="tab-presentation">
+<div class="section" id="tab-presentation">
 <h2>Tab presentation<a class="headerlink" href="#tab-presentation" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>The Data Viewer is composed of seven main elements:</dt><dd><ul class="simple">
@@ -66,8 +66,8 @@
 </dl>
 <p>Here is a global overview of the Data Viewer tab with some indications:</p>
 <img alt="../_images/data_viewer_bubbles.png" class="align-center" id="data-viewer-tab" src="../_images/data_viewer_bubbles.png" />
-</section>
-<section id="the-selector">
+</div>
+<div class="section" id="the-selector">
 <h2><strong>The selector</strong><a class="headerlink" href="#the-selector" title="Permalink to this headline">¶</a></h2>
 <img alt="../_images/selector.png" class="align-left" id="selector" src="../_images/selector.png" />
 <div class="line-block">
@@ -79,11 +79,11 @@ For now, Mia provides two viewers, anatomist and anatomist_2. Both viewers are b
 available <a class="reference external" href="https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#introduction">here</a>.</p>
 <p>Users own viewers can be simply added to the <a class="reference external" href="https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer">data_viewer folder</a>. The viewer will then be automatically detected and added to the drop-down menu.</p>
 <p>In the following section we will focuse on anatomist_2 viewer which is an improved version of anatomist simple viewer.</p>
-</section>
-<section id="the-toolbar">
+</div>
+<div class="section" id="the-toolbar">
 <h2><strong>The toolbar</strong><a class="headerlink" href="#the-toolbar" title="Permalink to this headline">¶</a></h2>
 <p>The toolbar contains several actions to interact with the objects (images).</p>
-<section id="open-file">
+<div class="section" id="open-file">
 <h3>Open file<a class="headerlink" href="#open-file" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/folder.png" id="id1"><img alt="../_images/folder.png" class="align-left" id="id1" src="../_images/folder.png" style="width: 20.48px; height: 20.48px;" /></a>
 <div class="line-block">
@@ -92,8 +92,8 @@ available <a class="reference external" href="https://brainvisa.info/anatomist-5
 <p>Open files from desktop directory. Files must have an image format (Dicom, NifTi, Bids …). All loaded objects will be displayed in the object box entitled “Objects”.
 Add a tag for all the documents in the database, specifying its name (mandatory), its default value, a short description, its unit and its type.</p>
 <a class="reference internal image-reference" href="../_images/file_open.png" id="filefromdd"><img alt="../_images/file_open.png" class="align-center" id="filefromdd" src="../_images/file_open.png" style="width: 496.8px; height: 356.8px;" /></a>
-</section>
-<section id="filter-object-from-data-browser">
+</div>
+<div class="section" id="filter-object-from-data-browser">
 <h3>Filter object from Data Browser<a class="headerlink" href="#filter-object-from-data-browser" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/database.png" id="database"><img alt="../_images/database.png" class="align-left" id="database" src="../_images/database.png" style="width: 19.6px; height: 19.6px;" /></a>
 <div class="line-block">
@@ -103,8 +103,8 @@ Add a tag for all the documents in the database, specifying its name (mandatory)
 If multiple objects are selected, all will be loaded in the object box but only the first of the list will be displayed in the main window.
 Objects cannot be imported twice.</p>
 <a class="reference internal image-reference" href="../_images/Filter_documents.png" id="filter-file"><img alt="../_images/Filter_documents.png" class="align-center" id="filter-file" src="../_images/Filter_documents.png" style="width: 801.5px; height: 373.09999999999997px;" /></a>
-</section>
-<section id="settings">
+</div>
+<div class="section" id="settings">
 <h3>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/settings.png" id="id2"><img alt="../_images/settings.png" class="align-left" id="id2" src="../_images/settings.png" style="width: 20.48px; height: 20.48px;" /></a>
 <div class="line-block">
@@ -120,37 +120,37 @@ Objects cannot be imported twice.</p>
 </dl>
 <p>Objects will be reloaded in the case where configuration or referential has changed.</p>
 <a class="reference internal image-reference" href="../_images/preferences.png" id="preferences"><img alt="../_images/preferences.png" class="align-center" id="preferences" src="../_images/preferences.png" style="width: 540.0px; height: 367.5px;" /></a>
-</section>
-<section id="plus-button">
+</div>
+<div class="section" id="plus-button">
 <h3>Plus button<a class="headerlink" href="#plus-button" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/plus.png" id="id3"><img alt="../_images/plus.png" class="align-left" id="id3" src="../_images/plus.png" style="width: 15.36px; height: 15.36px;" /></a>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>Displays selected object of the object box in the main window. If the object is already displayed, button will be disabled.</p>
-</section>
-<section id="minus-button">
+</div>
+<div class="section" id="minus-button">
 <h3>Minus button<a class="headerlink" href="#minus-button" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/signe-moins.png" id="id4"><img alt="../_images/signe-moins.png" class="align-left" id="id4" src="../_images/signe-moins.png" style="width: 15.36px; height: 15.36px;" /></a>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>Removes selected object of the object box from the main window. If the object is not displayed, button will be disabled. Objects will be removed from main window but won’t disappear from the object box.</p>
-</section>
-<section id="delete-button">
+</div>
+<div class="section" id="delete-button">
 <h3>Delete button<a class="headerlink" href="#delete-button" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/delete.png" id="id5"><img alt="../_images/delete.png" class="align-left" id="id5" src="../_images/delete.png" style="width: 15.36px; height: 15.36px;" /></a>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>Deletes selected object from Data Viewer tab. Objects will disappear from the object box and will be removed from main window but they will still be available in the Data Browser and thus from the filter action.</p>
-</section>
-<section id="capture-button">
+</div>
+<div class="section" id="capture-button">
 <h3>Capture button<a class="headerlink" href="#capture-button" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/camera.png" id="camera-button"><img alt="../_images/camera.png" class="align-left" id="camera-button" src="../_images/camera.png" style="width: 15.36px; height: 15.36px;" /></a>
 <p>Not available yet.</p>
-</section>
-<section id="view-buttons">
+</div>
+<div class="section" id="view-buttons">
 <h3>View buttons<a class="headerlink" href="#view-buttons" title="Permalink to this headline">¶</a></h3>
 <p>Manage the display of the views in the main window (more details in <a class="reference internal" href="#main-window-label"><span class="std std-ref">The main window</span></a> section). If no object is displayed, the views will appear empty.</p>
 <a class="reference internal image-reference" href="../_images/views.png" id="views"><img alt="../_images/views.png" class="align-center" id="views" src="../_images/views.png" style="width: 310.09999999999997px; height: 125.99999999999999px;" /></a>
@@ -172,13 +172,13 @@ Objects cannot be imported twice.</p>
 <p>Once an object has been loaded, at least one view will always be displayed.
 Here are two objects displayed in two views:</p>
 <a class="reference internal image-reference" href="../_images/2_views.png" id="id6"><img alt="../_images/2_views.png" class="align-center" id="id6" src="../_images/2_views.png" style="width: 1256.5px; height: 535.5px;" /></a>
-</section>
-<section id="palettes">
+</div>
+<div class="section" id="palettes">
 <h3>Palettes<a class="headerlink" href="#palettes" title="Permalink to this headline">¶</a></h3>
 <p>A drop-down menu is available showing several default color palettes. If an object is selected in the object box, its color palette can be changed in this menu. More palettes are available by right clicking on an object (described below in <a class="reference internal" href="#object-label"><span class="std std-ref">The object box</span></a> section).</p>
 <a class="reference internal image-reference" href="../_images/palette.png" id="color-palette"><img alt="../_images/palette.png" class="align-center" id="color-palette" src="../_images/palette.png" style="width: 335.29999999999995px; height: 39.199999999999996px;" /></a>
-</section>
-<section id="opacity">
+</div>
+<div class="section" id="opacity">
 <h3>Opacity<a class="headerlink" href="#opacity" title="Permalink to this headline">¶</a></h3>
 <p>In order to fully understand how to use this tool some basic notions of Anatomist renderings must be described.</p>
 <a class="reference internal image-reference" href="../_images/opacity.png" id="id7"><img alt="../_images/opacity.png" class="align-center" id="id7" src="../_images/opacity.png" style="width: 627.1999999999999px; height: 156.1px;" /></a>
@@ -208,17 +208,17 @@ Some more specific documentation is available on the <a class="reference externa
 </ul>
 </li>
 </ul>
-</section>
-<section id="play-button">
+</div>
+<div class="section" id="play-button">
 <span id="play-button-label"></span><h3>Play button<a class="headerlink" href="#play-button" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="../_images/play.png" id="id8"><img alt="../_images/play.png" class="align-left" id="id8" src="../_images/play.png" style="width: 413.0px; height: 155.39999999999998px;" /></a>
 <p>Allows automatic scrolling of dynamics for functional MRI data. The frame rate can be changed in the settings of the viewer. Time coordinates will appear in the coordinates box below. In order to start at a particular moment, the time moment in seconds can be entered manually in the coordinates box and then the play button can be pressed. Time cursors at the right of each view are not synchronized if used alone.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</section>
-</section>
-<section id="the-main-window">
+</div>
+</div>
+<div class="section" id="the-main-window">
 <span id="main-window-label"></span><h2><strong>The main window</strong><a class="headerlink" href="#the-main-window" title="Permalink to this headline">¶</a></h2>
 <p>The main window contains the views of the displayed objects. The display is in line and default one shows axial, sagittal and coronal view. Depending on which buttons are checked (described above), one to four views can be displayed. For anatomical images, a cursor will appear on the right of each view, enabling scrolling through the image set. For functional images, a second cursor will appear on the right of the first one the enable scrolling through time.</p>
 <dl class="simple">
@@ -230,31 +230,31 @@ Some more specific documentation is available on the <a class="reference externa
 </ul>
 </dd>
 </dl>
-</section>
-<section id="the-object-box">
+</div>
+<div class="section" id="the-object-box">
 <span id="object-label"></span><h2><strong>The object box</strong><a class="headerlink" href="#the-object-box" title="Permalink to this headline">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/Objects.png" id="object-box"><img alt="../_images/Objects.png" class="align-center" id="object-box" src="../_images/Objects.png" style="width: 825.3px; height: 168.0px;" /></a>
 <p>The object box contains all the loaded objects (from computer file browser or from Data Browser). The objects are not necessarily displayed. Displayed objects will appear on green background and with a check icon on the left. A selected object appears on blue background.
 Plus, minus and delete button manage the object display (described above).
 Right click on an object enables several options to change object display properties. For example, more color palettes are available than in the drop-down menu of the toolbar. New palettes will be automatically added to the drop-down menu. Material settings such as object properties of referential settings can also be accessed through this menu. For more information on object display properties, please consult the <a class="reference external" href="https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#objects-menu">documentation directly on the Anatomist website</a>.</p>
-</section>
-<section id="the-volume-box">
+</div>
+<div class="section" id="the-volume-box">
 <h2><strong>The volume box</strong><a class="headerlink" href="#the-volume-box" title="Permalink to this headline">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/Volumes.png" id="volumes-box"><img alt="../_images/Volumes.png" class="align-center" id="volumes-box" src="../_images/Volumes.png" style="width: 338.09999999999997px; height: 203.0px;" /></a>
 <p>The Volume Box displays the intensity values at the current location (defined as the centre of the red cross in three dimensions) for each visible image (object).</p>
-</section>
-<section id="the-coordinates-box">
+</div>
+<div class="section" id="the-coordinates-box">
 <h2><strong>The coordinates box</strong><a class="headerlink" href="#the-coordinates-box" title="Permalink to this headline">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/coordinates.png" id="coordinates-box"><img alt="../_images/coordinates.png" class="align-center" id="coordinates-box" src="../_images/coordinates.png" style="width: 338.09999999999997px; height: 203.0px;" /></a>
 <p>Display of space and time coordinates. Can be entered manually. Time values will only affect functional images and they are linked to the time cursor on the right of each view. Space coordinates will affect the red cross inside each view and image scrolling on space cursors (also on the right of each view).</p>
 <a class="reference internal image-reference" href="../_images/Cursors.png" id="cursors-image"><img alt="../_images/Cursors.png" class="align-center" id="cursors-image" src="../_images/Cursors.png" style="width: 289.5px; height: 359.0px;" /></a>
-</section>
-<section id="other-accessible-tools">
+</div>
+<div class="section" id="other-accessible-tools">
 <h2><strong>Other accessible tools</strong><a class="headerlink" href="#other-accessible-tools" title="Permalink to this headline">¶</a></h2>
 <p>Some other (more specific) tools are available thanks to right click on an object. Specific settings on file, color, referential and object properties are available. Moreover, the feature “Open in new view” enables opening the selected object in a new window. The new window (shown below) will stay in front of Mia’s main window. All views (Axial, Sagittal, Coronal and 3D views) are available, but one at a time. No overlays are enabled but controls work just like in the main window.</p>
 <a class="reference internal image-reference" href="../_images/new_view.png" id="new-view-popup"><img alt="../_images/new_view.png" class="align-center" id="new-view-popup" src="../_images/new_view.png" style="width: 407.4px; height: 429.9px;" /></a>
-</section>
-</section>
+</div>
+</div>
 
 
       </div>
@@ -268,7 +268,7 @@ Right click on an object enables several options to change object display proper
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
