@@ -69,9 +69,9 @@ The distribution is only available for the current Windows user.
 Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via ``/mnt/c/``  
 
 To know more:  
-   - `[Manual installation steps for older versions of WSL] <https://docs.microsoft.com/en-us/windows/wsl/install-manual>`_.
-   - `[Install WSL] <https://docs.microsoft.com/en-us/windows/wsl/install>`_.
-   - `[Basic commands for WSL] <https://docs.microsoft.com/en-us/windows/wsl/basic-commands>`_.
+   - `Manual installation steps for older versions of WSL <https://docs.microsoft.com/en-us/windows/wsl/install-manual>`_
+   - `Install WSL <https://docs.microsoft.com/en-us/windows/wsl/install>`_
+   - `Basic commands for WSL <https://docs.microsoft.com/en-us/windows/wsl/basic-commands>`_
 
 
 2- X server installation in windows with VcXsrv
@@ -80,7 +80,7 @@ To know more:
 
 We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
 
-Get `[VcXsrv] <https://sourceforge.net/projects/vcxsrv/files/latest/download>`_.
+Get `VcXsrv <https://sourceforge.net/projects/vcxsrv/files/latest/download>`_, then:
   - Execute it, 
   - click 'next' then 'install' to install it 
 

@@ -4,20 +4,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+33f31d9c8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+e4dcd310b documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+33f31d9c8 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+e4dcd310b documentation</span></a></h1>
         <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -50,7 +50,7 @@
 <p>Pre-requirements of windows installations are the same for <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html">windows host installation in user mode</a>.
 But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project under ubuntu.</p>
 <p>Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.</p>
-<section id="wsl2-windows-subsystem-linux-installation">
+<div class="section" id="wsl2-windows-subsystem-linux-installation">
 <h1>1- WSL2 (Windows Subsystem Linux) installation<a class="headerlink" href="#wsl2-windows-subsystem-linux-installation" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><dl class="simple">
@@ -113,21 +113,21 @@ The distribution is only available for the current Windows user.
 Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <code class="docutils literal notranslate"><span class="pre">/mnt/c/</span></code></p>
 <dl class="simple">
 <dt>To know more:</dt><dd><ul class="simple">
-<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-manual">[Manual installation steps for older versions of WSL]</a>.</p></li>
-<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">[Install WSL]</a>.</p></li>
-<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/basic-commands">[Basic commands for WSL]</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-manual">Manual installation steps for older versions of WSL</a></p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">Install WSL</a></p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/basic-commands">Basic commands for WSL</a></p></li>
 </ul>
 </dd>
 </dl>
-</section>
-<section id="x-server-installation-in-windows-with-vcxsrv">
+</div>
+<div class="section" id="x-server-installation-in-windows-with-vcxsrv">
 <h1>2- X server installation in windows with VcXsrv<a class="headerlink" href="#x-server-installation-in-windows-with-vcxsrv" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>We also need a X windows server to allow linux applications graphic user interface (GUI) works.</p>
 <dl class="simple">
-<dt>Get <a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">[VcXsrv]</a>.</dt><dd><ul class="simple">
+<dt>Get <a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">VcXsrv</a>, then:</dt><dd><ul class="simple">
 <li><p>Execute it,</p></li>
 <li><p>click ‘next’ then ‘install’ to install it</p></li>
 </ul>
@@ -164,8 +164,8 @@ Enable <em>‘Disable access control’</em></p>
 </div>
 <p>Allow access asked by Windows firewall.</p>
 <p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.</p>
-</section>
-<section id="dependencies-installation">
+</div>
+<div class="section" id="dependencies-installation">
 <h1>3 - Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -188,8 +188,8 @@ Enable <em>‘Disable access control’</em></p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</section>
-<section id="singularity-installation">
+</div>
+<div class="section" id="singularity-installation">
 <h1>4 - Singularity Installation<a class="headerlink" href="#singularity-installation" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -250,7 +250,7 @@ Enter the repertory where you download the singularity install.
 Use the command <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-R</span> <span class="pre">singularity-ce_3.8.3~ubuntu-20.04_amd64.deb</span></code> if you installed via Way 1 or <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-R</span> <span class="pre">singularity-ce-${VERSION}*</span></code> if you installed via Way 2.</p>
 <p>You have completely installed a virtual Ubuntu which is now able to host mia.
 You can now follow steps from <strong>installation</strong> via <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html">populse mia installation in user mode</a>.</p>
-</section>
+</div>
 
 
       </div>
@@ -264,7 +264,7 @@ You can now follow steps from <strong>installation</strong> via <a class="refere
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
