@@ -2,8 +2,12 @@
 
 :Contains:
     :Class:
+        - TestMIACase
         - TestMIADataBrowser
-        - TestMIAPipelineManager
+        - TestMIAMainWindow
+        - TestMIANodeController
+        - TestMIAOthers
+        - TestMIAPipelineEditor
         - TestMIAPipelineManagerTab
 
 """
@@ -21,7 +25,7 @@
 #  PyQt5 import
 from PyQt5 import QtGui
 from PyQt5.QtCore import (QCoreApplication, QEvent, QModelIndex, QPoint, Qt,
-                          QThread, QTimer, QT_VERSION_STR)
+                          QThread, QT_VERSION_STR)
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QDialog, QFileDialog, QInputDialog,
                              QMessageBox, QTableWidgetItem)
@@ -120,7 +124,7 @@ if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
         del soma_workflow_dev_dir
 
 ### Imports after defining the location of populse packages in the case of a
-# developer configuration:
+### developer configuration:
 
 # capsul import
 from capsul.api import (capsul_engine, get_process_instance, PipelineNode,
@@ -138,7 +142,7 @@ from mia_processes.bricks.tools import Input_Filter
 
 # populse_mia import
 from populse_mia.data_manager.data_loader import (ImportProgress, ImportWorker, 
-                                                 read_log)
+                                                  read_log)
 from populse_mia.data_manager.project import (COLLECTION_BRICK,
                                               COLLECTION_CURRENT,
                                               COLLECTION_HISTORY,
@@ -179,13 +183,13 @@ from populse_mia.user_interface.pop_ups import (DefaultValueListCreation,
 from populse_mia.utils.utils import check_value_type, table_to_database
 
 # populse_db import
-from populse_db.database import(FIELD_TYPE_STRING, FIELD_TYPE_FLOAT, 
-                                FIELD_TYPE_DATETIME, FIELD_TYPE_DATE, 
-                                FIELD_TYPE_TIME, FIELD_TYPE_LIST_DATE,
-                                FIELD_TYPE_LIST_DATETIME, FIELD_TYPE_LIST_TIME, 
-                                FIELD_TYPE_LIST_INTEGER, FIELD_TYPE_LIST_STRING, 
-                                FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_BOOLEAN,
-                                FIELD_TYPE_INTEGER, FIELD_TYPE_BOOLEAN)
+from populse_db.database import (FIELD_TYPE_BOOLEAN, FIELD_TYPE_DATE,
+                                 FIELD_TYPE_DATETIME, FIELD_TYPE_FLOAT,
+                                 FIELD_TYPE_INTEGER, FIELD_TYPE_STRING,
+                                 FIELD_TYPE_TIME, FIELD_TYPE_LIST_BOOLEAN,
+                                 FIELD_TYPE_LIST_DATE, FIELD_TYPE_LIST_DATETIME,
+                                 FIELD_TYPE_LIST_FLOAT, FIELD_TYPE_LIST_INTEGER,
+                                 FIELD_TYPE_LIST_STRING, FIELD_TYPE_LIST_TIME)
 
 # soma import
 from soma.qt_gui.qt_backend.Qt import QTreeView
@@ -201,8 +205,7 @@ if 'NO_ET' not in os.environ:
     os.environ['NO_ET'] = "1"
 
 class TestMIACase(unittest.TestCase):
-    '''
-    Parent class for the test classes of mia.
+    """Parent class for the test classes of mia.
 
     :Contains:
         :Method:
@@ -225,11 +228,10 @@ class TestMIACase(unittest.TestCase):
             - tearDown: cleans up after each test method
             - setUpClass: called before tests in the individual class
             - tearDownClass: called after tests in the individual class
-    '''
+    """
 
     def add_visualized_tag(self, tag):
-        """
-        With the "Visualized tags" pop-up open, selects a tag to display.
+        """With the "Visualized tags" pop-up open, selects a tag to display.
 
         Parameters
         ----------
@@ -261,9 +263,7 @@ class TestMIACase(unittest.TestCase):
             visualized_tags.click_select_tag()
 
     def execute_QDialogAccept(self):
-        """
-        Accept (close) a QDialog window
-        """
+        """Accept (close) a QDialog window"""
 
         w = QApplication.activeWindow()
 
@@ -271,18 +271,15 @@ class TestMIACase(unittest.TestCase):
             w.accept()
 
     def execute_QDialogClose(self):
-        """
-        Is supposed to abort( close) a QDialog window
-        """
+        """Is supposed to abort( close) a QDialog window"""
+
         w = QApplication.activeWindow()
 
         if isinstance(w, QDialog):
             w.close()
     
     def execute_QMessageBox_clickClose(self):
-        """
-        Press the Close button of a QMessageBox instance
-        """
+        """Press the Close button of a QMessageBox instance"""
 
         w = QApplication.activeWindow()
 
@@ -291,9 +288,7 @@ class TestMIACase(unittest.TestCase):
             QTest.mouseClick(close_button, Qt.LeftButton)
 
     def execute_QMessageBox_clickOk(self):
-        """
-        Press the Ok button of a QMessageBox instance
-        """
+        """Press the Ok button of a QMessageBox instance"""
 
         w = QApplication.activeWindow()
 
@@ -302,40 +297,38 @@ class TestMIACase(unittest.TestCase):
             QTest.mouseClick(close_button, Qt.LeftButton)
 
     def execute_QMessageBox_clickYes(self):
-        """
-        Is supposed to allow to press the Yes button if a pipeline is 
-        overwritten in the test_zz_check_modifications method
-        """
+        """Press the Yes button of a QMessageBox instance"""
+
         w = QApplication.activeWindow()
 
         if isinstance(w, QMessageBox):
             close_button = w.button(QMessageBox.Yes)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
-    def find_item_by_data(self, q_tree_view: QTreeView, data: str) -> QModelIndex:
-        '''
-        Looks for a QModelIndex, in a QTreeView, whose contents 
-        correspond to the argument data.
-        '''
-        assert isinstance(q_tree_view, QTreeView), 'first argment is not a QTreeView instance'
+    def find_item_by_data(self, q_tree_view: QTreeView,
+                          data: str) -> QModelIndex:
+        """Looks for a QModelIndex, in a QTreeView"""
+
+        assert isinstance(q_tree_view, QTreeView), ('first argment is not a '
+                                                    'QTreeView instance')
 
         q_tree_view.expandAll()
-        index = q_tree_view.indexAt(QPoint(0,0))
+        index = q_tree_view.indexAt(QPoint(0, 0))
 
         while index.data() and index.data() != data:
             index = q_tree_view.indexBelow(index)
             
         return index
 
-    def get_new_test_project(self, name = 'test_project', light=False):
-        '''
-        Copies a test project where it can be safely modified.
+    def get_new_test_project(self, name='test_project', light=False):
+        """Copies a test project where it can be safely modified.
+
         The new project is created in the /tmp (/Temp) folder.
 
         :param name: str, name of the directory containing the project
         :param light: bool, True to copy a project with few documents
 
-        '''
+        """
 
         new_test_proj = os.path.join(self.config_path, name)
 
@@ -380,9 +373,7 @@ class TestMIACase(unittest.TestCase):
         self.main_window = MainWindow(self.project, test=True)
 
     def setUp(self):
-        """
-        Called before each test
-        """
+        """Called before each test"""
 
         # All the tests are run in admin mode
         config = Config(config_path=self.config_path)
@@ -396,9 +387,7 @@ class TestMIACase(unittest.TestCase):
         self.main_window = MainWindow(self.project, test=True)
 
     def tearDown(self):
-        """
-        Called after each test
-        """
+        """Called after each test"""
 
         self.main_window.close()
         # Removing the opened projects (in CI, the tests are run twice)
@@ -409,9 +398,7 @@ class TestMIACase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """
-        Called once at the beginning of the class
-        """
+        """Called once at the beginning of the class"""
 
         cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
         # hack the Config class to get config_path, because some Config
@@ -420,17 +407,13 @@ class TestMIACase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """
-        Called once at the end of the class
-        """
+        """Called once at the end of the class"""
 
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
 class TestMIADataBrowser(TestMIACase):
-    '''
-    Tests for the data browser tab.
-    Tests DataBrowser.
+    """ Tests for the data browser tab (DataBrowser).
 
     :Contains:
         :Method:
@@ -475,7 +458,8 @@ class TestMIADataBrowser(TestMIACase):
             - test_sort: tests the sorting in the DataBrowser
             - test_table_data_add_columns: adds tag columns to the table data 
               window
-            - test_table_data_appendix: opens a project and tests miscellaneous 			  methods of the table data view, in the data browser
+            - test_table_data_appendix: opens a project and tests miscellaneous
+              methods of the table data view, in the data browser
             - test_table_data_context_menu: right clicks a scan to show the 
               context menu table, and choses one option
             - test_undo_redo_databrowser: tests data browser undo/redo
@@ -488,7 +472,7 @@ class TestMIADataBrowser(TestMIACase):
             - test_utils: test the utils functions
             - test_visualized_tags: tests the popup modifying the 
               visualized tags
-    '''
+    """
 
     def edit_databrowser_list(self, value):
         """Change value for a tag in DataBrowser
