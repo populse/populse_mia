@@ -4,20 +4,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+554e91107 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+e4dcd310b documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+554e91107 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+e4dcd310b documentation</span></a></h1>
         <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -50,7 +50,7 @@
 <p>Pre-requirements of windows installations are the same for <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html">windows host installation in user mode</a>.
 But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project under ubuntu.</p>
 <p>Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.</p>
-<section id="wsl2-windows-subsystem-linux-installation">
+<div class="section" id="wsl2-windows-subsystem-linux-installation">
 <h1>1- WSL2 (Windows Subsystem Linux) installation<a class="headerlink" href="#wsl2-windows-subsystem-linux-installation" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><dl class="simple">
@@ -113,21 +113,21 @@ The distribution is only available for the current Windows user.
 Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <code class="docutils literal notranslate"><span class="pre">/mnt/c/</span></code></p>
 <dl class="simple">
 <dt>To know more:</dt><dd><ul class="simple">
-<li><p>[Manual installation steps for older versions of WSL](<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-manual">https://docs.microsoft.com/en-us/windows/wsl/install-manual</a>)</p></li>
-<li><p>[Install WSL](<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">https://docs.microsoft.com/en-us/windows/wsl/install</a>)</p></li>
-<li><p>[Basic commands for WSL](<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/basic-commands">https://docs.microsoft.com/en-us/windows/wsl/basic-commands</a>)</p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-manual">Manual installation steps for older versions of WSL</a></p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">Install WSL</a></p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/basic-commands">Basic commands for WSL</a></p></li>
 </ul>
 </dd>
 </dl>
-</section>
-<section id="x-server-installation-in-windows-with-vcxsrv">
+</div>
+<div class="section" id="x-server-installation-in-windows-with-vcxsrv">
 <h1>2- X server installation in windows with VcXsrv<a class="headerlink" href="#x-server-installation-in-windows-with-vcxsrv" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>We also need a X windows server to allow linux applications graphic user interface (GUI) works.</p>
 <dl class="simple">
-<dt>Get [VcXsrv](<a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">https://sourceforge.net/projects/vcxsrv/files/latest/download</a>)</dt><dd><ul class="simple">
+<dt>Get <a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">VcXsrv</a>, then:</dt><dd><ul class="simple">
 <li><p>Execute it,</p></li>
 <li><p>click ‘next’ then ‘install’ to install it</p></li>
 </ul>
@@ -164,8 +164,8 @@ Enable <em>‘Disable access control’</em></p>
 </div>
 <p>Allow access asked by Windows firewall.</p>
 <p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.</p>
-</section>
-<section id="dependencies-installation">
+</div>
+<div class="section" id="dependencies-installation">
 <h1>3 - Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -188,9 +188,69 @@ Enable <em>‘Disable access control’</em></p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+</div>
+<div class="section" id="singularity-installation">
+<h1>4 - Singularity Installation<a class="headerlink" href="#singularity-installation" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Then to allow <a class="reference external" href="https://apptainer.org/admin-docs/3.8/index.html">singularity</a> installation we need go language and some dependancies for compilation.
+If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the –prefix option to mconfig.
+In that case Singularity can be uninstalled simply by deleting the parent directory.</p>
+<p>Here are commands :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ubuntu 20.04</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">golang</span>
+
+<span class="c1">#Ubuntu 18.04, singularity need golang version &gt;= 1.13 wich is not available on ubuntu 18.04 (1.10 only)</span>
+<span class="n">cd</span> <span class="o">/</span><span class="n">tmp</span> <span class="o">&amp;&amp;</span>\
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">golang</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dl</span><span class="o">/</span><span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
+<span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
+<span class="n">sudo</span> <span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">go</span> <span class="o">&amp;&amp;</span>\
+<span class="n">sudo</span> <span class="n">mv</span> <span class="n">go</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span> <span class="o">&amp;&amp;</span>\
+<span class="n">rm</span> <span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+
+<span class="n">echo</span> <span class="s1">&#39;export GOPATH=$</span><span class="si">{HOME}</span><span class="s1">/go&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span> <span class="o">&amp;&amp;</span>\
+<span class="n">echo</span> <span class="s1">&#39;export PATH=/usr/local/go/bin:$</span><span class="si">{PATH}</span><span class="s1">:$</span><span class="si">{GOPATH}</span><span class="s1">/bin&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span>  <span class="o">&amp;&amp;</span>\
+<span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>See the section Prerequisites for Singularity on Linux.
+The 3.8.3 version link is available <a class="reference external" href="https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb">here</a>.</p>
+<p>You can install singularity like this :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#way1
+wget https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb
+sudo dpkg -i singularity-container-*.deb
+sudo mkdir /opt/singularity
+./mconfig --prefix=/opt/singularity
+cd builddir
+make
+sudo make install
+
+#way2
+export VERSION=3.8.3 &amp;&amp; # adjust this as necessary \
+wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz &amp;&amp; \
+tar -xzf singularity-ce-${VERSION}.tar.gz &amp;&amp; \
+cd singularity-ce-${VERSION}
+sudo mkdir /opt/singularity
+./mconfig --prefix=/opt/singularity
+cd builddir
+make
+sudo make install
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Test it with <code class="docutils literal notranslate"><span class="pre">/opt/singularity/bin/singularity</span> <span class="pre">version</span></code>.</p>
+<p>Then remove installation files.
+Enter the repertory where you download the singularity install.
+Use the command <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-R</span> <span class="pre">singularity-ce_3.8.3~ubuntu-20.04_amd64.deb</span></code> if you installed via Way 1 or <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-R</span> <span class="pre">singularity-ce-${VERSION}*</span></code> if you installed via Way 2.</p>
 <p>You have completely installed a virtual Ubuntu which is now able to host mia.
 You can now follow steps from <strong>installation</strong> via <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html">populse mia installation in user mode</a>.</p>
-</section>
+</div>
 
 
       </div>
@@ -204,7 +264,7 @@ You can now follow steps from <strong>installation</strong> via <a class="refere
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
