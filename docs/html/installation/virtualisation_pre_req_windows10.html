@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+e4dcd310b documentation</title>
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+08ef7be8e documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+e4dcd310b documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+08ef7be8e documentation</span></a></h1>
         <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -203,11 +203,11 @@ In that case Singularity can be uninstalled simply by deleting the parent direct
 
 <span class="c1">#Ubuntu 18.04, singularity need golang version &gt;= 1.13 wich is not available on ubuntu 18.04 (1.10 only)</span>
 <span class="n">cd</span> <span class="o">/</span><span class="n">tmp</span> <span class="o">&amp;&amp;</span>\
-<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">golang</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dl</span><span class="o">/</span><span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
-<span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">golang</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dl</span><span class="o">/</span><span class="n">go1</span><span class="o">.</span><span class="mf">17.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
+<span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">go1</span><span class="o">.</span><span class="mf">17.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
 <span class="n">sudo</span> <span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">go</span> <span class="o">&amp;&amp;</span>\
 <span class="n">sudo</span> <span class="n">mv</span> <span class="n">go</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span> <span class="o">&amp;&amp;</span>\
-<span class="n">rm</span> <span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">rm</span> <span class="n">go1</span><span class="o">.</span><span class="mf">17.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 
 <span class="n">echo</span> <span class="s1">&#39;export GOPATH=$</span><span class="si">{HOME}</span><span class="s1">/go&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span> <span class="o">&amp;&amp;</span>\
 <span class="n">echo</span> <span class="s1">&#39;export PATH=/usr/local/go/bin:$</span><span class="si">{PATH}</span><span class="s1">:$</span><span class="si">{GOPATH}</span><span class="s1">/bin&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span>  <span class="o">&amp;&amp;</span>\
