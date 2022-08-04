@@ -329,17 +329,15 @@ class PackagesInstall:
             - add_package: provide recursive representation of a package
     """
 
-    _already_loaded = set([
-        # these classes should not appear in available processes
-        'mia_processes.process_matlab.ProcessMatlab',
-        'populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA',
-        'capsul.process.process.Process',
-        'capsul.process.process.NipypeProcess',
-        'capsul.process.process.FileCopyProcess',
-        'capsul.pipeline.pipeline_nodes.ProcessNode',
-        'capsul.pipeline.pipeline_nodes.PipelineNode',
-        'capsul.pipeline.pipeline_nodes.Node',
-    ])
+    _already_loaded = {# these classes should not appear in available processes
+           'mia_processes.process_matlab.ProcessMatlab',
+           'populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA',
+           'capsul.process.process.Process',
+           'capsul.process.process.NipypeProcess',
+           'capsul.process.process.FileCopyProcess',
+           'capsul.pipeline.pipeline_nodes.ProcessNode',
+           'capsul.pipeline.pipeline_nodes.PipelineNode',
+           'capsul.pipeline.pipeline_nodes.Node'}
 
     def __init__(self):
         """Initialise the packages instance attribute."""
