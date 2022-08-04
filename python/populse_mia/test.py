@@ -1,4 +1,4 @@
-"""Unitary tests.
+"""This module is dedicated to populse_mia unit tests.
 
 :Contains:
     :Class:
@@ -59,7 +59,9 @@ from time import sleep
 from traits.api import TraitListObject, Undefined
 from unittest.mock import MagicMock, Mock
 
-sys.settrace
+# The following statement is currently commented because it has no effect and
+# can be replaced by a function call to have an effect, e.g. sys.settrace()
+#sys.settrace
 
 if not os.path.dirname(os.path.dirname(os.path.realpath(__file__))) in sys.path:
     # "developer" mode
@@ -141,8 +143,7 @@ from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 from mia_processes.bricks.tools import Input_Filter
 
 # populse_mia import
-from populse_mia.data_manager.data_loader import (ImportProgress, ImportWorker, 
-                                                  read_log)
+from populse_mia.data_manager.data_loader import ImportProgress, ImportWorker
 from populse_mia.data_manager.project import (COLLECTION_BRICK,
                                               COLLECTION_CURRENT,
                                               COLLECTION_HISTORY,
@@ -152,7 +153,7 @@ from populse_mia.data_manager.project import (COLLECTION_BRICK,
                                               TAG_HISTORY, TAG_ORIGIN_USER,
                                               TAG_TYPE, TYPE_NII)
 from populse_mia.data_manager.project_properties import SavedProjects
-from populse_mia.software_properties import Config, verCmp
+from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.modify_table import ModifyTable
 from populse_mia.user_interface.main_window import MainWindow
 from populse_mia.user_interface.pipeline_manager.pipeline_editor import (
@@ -161,10 +162,8 @@ from populse_mia.user_interface.pipeline_manager.pipeline_editor import (
 from populse_mia.user_interface.pipeline_manager.pipeline_manager_tab import (
                                                                     RunProgress)
 from populse_mia.user_interface.pipeline_manager.process_library import (
-                                                           InstallProcesses,
                                                            PackageLibraryDialog)
 from populse_mia.user_interface.pop_ups import (DefaultValueListCreation,
-                                                DefaultValueQLineEdit,
                                                 PopUpAddPath,
                                                 PopUpAddTag,
                                                 PopUpClosePipeline,
@@ -173,7 +172,6 @@ from populse_mia.user_interface.pop_ups import (DefaultValueListCreation,
                                                 PopUpInheritanceDict,
                                                 PopUpNewProject,
                                                 PopUpOpenProject,
-                                                PopUpPreferences,
                                                 PopUpQuit,
                                                 PopUpRemoveScan,
                                                 PopUpSeeAllProjects,
@@ -211,6 +209,7 @@ class TestMIACase(unittest.TestCase):
         :Method:
             - add_visualized_tag: selects a tag to display with the
               "Visualized tags" pop-up
+            - edit_databrowser_list: change value for a tag in DataBrowser
             - execute_QDialogAccept: accept (close) a QDialog instance
             - execute_QDialogClose: closes a QDialog instance
             - execute_QMessageBox_clickClose: press the Close button of 
@@ -225,25 +224,22 @@ class TestMIACase(unittest.TestCase):
               be safely modified
             - restart_MIA: restarts MIA within a unit test
             - setUp: called automatically before each test method
-            - tearDown: cleans up after each test method
             - setUpClass: called before tests in the individual class
+            - tearDown: cleans up after each test method
             - tearDownClass: called after tests in the individual class
     """
 
     def add_visualized_tag(self, tag):
         """With the "Visualized tags" pop-up open, selects a tag to display.
 
-        Parameters
-        ----------
-        tag: string
-          The tag to be displayed
-
-        Usage
-        -----
         Should be called, with a delay, before opening the "Visualized tags"
-        pop-up:
-        QTimer.singleShot(1000,
-                          lambda:self.add_visualized_tag('AcquisitionDate'))
+        pop-up, i.e.:
+            QTimer.singleShot(1000, lambda:self.add_visualized_tag(
+            'AcquisitionDate'))
+        It's currently not the case
+        (see TestMIANodeController.test_filter_widget())
+
+        :param tag: the tag to be displayed (str)
         """
 
         w = QApplication.activeWindow()
@@ -262,8 +258,24 @@ class TestMIACase(unittest.TestCase):
             tags_list.setCurrentItem(found_item[0])
             visualized_tags.click_select_tag()
 
+    def edit_databrowser_list(self, value):
+        """Change value for a tag in DataBrowser.
+
+        :param value: the new value
+        """
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            item = w.table.item(0, 0)
+            item.setText(value)
+            w.update_table_values(True)
+
     def execute_QDialogAccept(self):
-        """Accept (close) a QDialog window"""
+        """Accept (close) a QDialog window.
+
+        Currently, this method is not used.
+        """
 
         w = QApplication.activeWindow()
 
@@ -271,7 +283,10 @@ class TestMIACase(unittest.TestCase):
             w.accept()
 
     def execute_QDialogClose(self):
-        """Is supposed to abort( close) a QDialog window"""
+        """Close a QDialog window.
+
+        Currently, this method is not used.
+        """
 
         w = QApplication.activeWindow()
 
@@ -279,7 +294,10 @@ class TestMIACase(unittest.TestCase):
             w.close()
     
     def execute_QMessageBox_clickClose(self):
-        """Press the Close button of a QMessageBox instance"""
+        """Press the Close button of a QMessageBox instance.
+
+        Currently, this method is not used.
+        """
 
         w = QApplication.activeWindow()
 
@@ -288,7 +306,7 @@ class TestMIACase(unittest.TestCase):
             QTest.mouseClick(close_button, Qt.LeftButton)
 
     def execute_QMessageBox_clickOk(self):
-        """Press the Ok button of a QMessageBox instance"""
+        """Press the Ok button of a QMessageBox instance."""
 
         w = QApplication.activeWindow()
 
@@ -297,7 +315,10 @@ class TestMIACase(unittest.TestCase):
             QTest.mouseClick(close_button, Qt.LeftButton)
 
     def execute_QMessageBox_clickYes(self):
-        """Press the Yes button of a QMessageBox instance"""
+        """Press the Yes button of a QMessageBox instance.
+
+        Currently, this method is not used.
+        """
 
         w = QApplication.activeWindow()
 
@@ -307,10 +328,10 @@ class TestMIACase(unittest.TestCase):
 
     def find_item_by_data(self, q_tree_view: QTreeView,
                           data: str) -> QModelIndex:
-        """Looks for a QModelIndex, in a QTreeView"""
+        """Looks for a QModelIndex, in a QTreeView instance."""
 
-        assert isinstance(q_tree_view, QTreeView), ('first argment is not a '
-                                                    'QTreeView instance')
+        assert isinstance(q_tree_view, QTreeView), ('first argument is not a '
+                                                    'QTreeView instance!')
 
         q_tree_view.expandAll()
         index = q_tree_view.indexAt(QPoint(0, 0))
@@ -325,9 +346,8 @@ class TestMIACase(unittest.TestCase):
 
         The new project is created in the /tmp (/Temp) folder.
 
-        :param name: str, name of the directory containing the project
-        :param light: bool, True to copy a project with few documents
-
+        :param name: name of the directory containing the project (str)
+        :param light: True to copy a project with few documents (bool)
         """
 
         new_test_proj = os.path.join(self.config_path, name)
@@ -345,11 +365,8 @@ class TestMIACase(unittest.TestCase):
         return new_test_proj
 
     def restart_MIA(self):
-        """
-        Restarts MIA within a unit test.
+        """Restarts MIA within a unit test.
 
-        Notes
-        -----
         Can be used to restart MIA after changing the controller version in MIA
         preferences.
         """
@@ -386,6 +403,15 @@ class TestMIACase(unittest.TestCase):
         self.project = Project(None, True)
         self.main_window = MainWindow(self.project, test=True)
 
+    @classmethod
+    def setUpClass(cls):
+        """Called once at the beginning of the class"""
+
+        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
+        # hack the Config class to get config_path, because some Config
+        # instances are created out of our control in the code
+        Config.config_path = cls.config_path
+
     def tearDown(self):
         """Called after each test"""
 
@@ -397,28 +423,18 @@ class TestMIACase(unittest.TestCase):
         self.app.exit()
 
     @classmethod
-    def setUpClass(cls):
-        """Called once at the beginning of the class"""
-
-        cls.config_path = tempfile.mkdtemp(prefix='mia_tests')
-        # hack the Config class to get config_path, because some Config
-        # instances are created out of our control in the code
-        Config.config_path = cls.config_path
-
-    @classmethod
     def tearDownClass(cls):
         """Called once at the end of the class"""
 
         if os.path.exists(cls.config_path):
             shutil.rmtree(cls.config_path)
 
+
 class TestMIADataBrowser(TestMIACase):
     """ Tests for the data browser tab (DataBrowser).
 
     :Contains:
         :Method:
-            - edit_databrowser_list: change value to [25000] for a tag in
-              DataBrowser
             - test_add_path: tests the popup to add a path
             - test_add_tag: tests the pop up adding a tag
             - test_advanced_search: tests the advanced search widget
@@ -436,7 +452,7 @@ class TestMIADataBrowser(TestMIACase):
             - test_openTagsPopUp: opens a pop-up to select the legend of the 
               thumbnails
             - test_open_project: tests project opening
-            - test_open_project_filter: tests project filter opening
+            - test_project_filter: tests project filter opening
             - test_project_properties: tests saved projects addition and 
               removal
             - test_proj_remov_from_cur_proj: tests that the projects are
@@ -474,26 +490,12 @@ class TestMIADataBrowser(TestMIACase):
               visualized tags
     """
 
-    def edit_databrowser_list(self, value):
-        """Change value for a tag in DataBrowser
-
-        :param value: the new value
-        """
-
-        w = QApplication.activeWindow()
-        item = w.table.item(0, 0)
-        item.setText(value)
-        w.update_table_values(True)
-
     def test_add_path(self):
-        '''
-        Tries import a document to the project.
-        Tests DataBrowser.add_path and PopUpAddPath.
+        """Tries import a document to the project.
 
-        Notes
-        -----
+        Tests DataBrowser.add_path and PopUpAddPath.
         Mocks the execution of QFileDialog and QMessageBox.
-        '''
+        """
 
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
@@ -526,22 +528,22 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
         self.assertEqual(add_path.msg.text(), "Invalid arguments")
 
-        # Adds a valid docuent
+        # Adds a valid document path
         add_path.file_line_edit.setText(DOCUMENT_1)
         add_path.type_line_edit.setText(TYPE_NII)
         QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
 
-        # Asserts that the document was added into the the data browser
+        # Asserts that the document was added into the data browser
         # A regular '.split('/')' will not work in Windows OS
         filename = (os.path.split(session
                     .get_documents_names(COLLECTION_CURRENT)[0])[-1])
         self.assertTrue(filename in DOCUMENT_1)
 
-        self.assertEqual(table_data.rowCount(),1)
-        
+        self.assertEqual(table_data.rowCount(), 1)
+
         # Mocks the execution of file dialog box and finds the file type
         for ext in ['nii', 'mat', 'txt']:
-            QFileDialog.getOpenFileName = Mock(return_value=['file.'+ext])
+            QFileDialog.getOpenFileName = Mock(return_value=['file.' + ext])
             add_path.file_to_choose()
 
         # Adds a document into the database and tries to save the same
@@ -551,9 +553,7 @@ class TestMIADataBrowser(TestMIACase):
         add_path.save_path()
 
     def test_add_tag(self):
-        """
-        Tests the pop-up adding a tag
-        """
+        """Tests the pop-up adding a tag."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -3406,6 +3406,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(TAG_EXP_TYPE in columns_displayed)
         self.assertTrue(TAG_TYPE in columns_displayed)
         self.assertTrue(TAG_BRICKS in columns_displayed)
+
 
 class TestMIAMainWindow(TestMIACase):
     '''
