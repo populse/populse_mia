@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.test &#8212; populse_mia 2.2.1-dev+08ef7be8e documentation</title>
+    <title>populse_mia.test &#8212; populse_mia 2.2.1-dev+a3087537f documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.2.1-dev+08ef7be8e documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+a3087537f documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -31,7 +31,7 @@
         
         
   <h1>Source code for populse_mia.test</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Unitary tests.</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module is dedicated to populse_mia unit tests.</span>
 
 <span class="sd">:Contains:</span>
 <span class="sd">    :Class:</span>
@@ -92,7 +92,9 @@
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
 <span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">Mock</span>
 
-<span class="n">sys</span><span class="o">.</span><span class="n">settrace</span>
+<span class="c1"># The following statement is currently commented because it has no effect and</span>
+<span class="c1"># can be replaced by a function call to have an effect, e.g. sys.settrace()</span>
+<span class="c1">#sys.settrace</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
     <span class="c1"># &quot;developer&quot; mode</span>
@@ -174,8 +176,7 @@
 <span class="kn">from</span> <span class="nn">mia_processes.bricks.tools</span> <span class="kn">import</span> <span class="n">Input_Filter</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.data_loader</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ImportProgress</span><span class="p">,</span> <span class="n">ImportWorker</span><span class="p">,</span> 
-                                                  <span class="n">read_log</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.data_loader</span> <span class="kn">import</span> <span class="n">ImportProgress</span><span class="p">,</span> <span class="n">ImportWorker</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span>
                                               <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                               <span class="n">COLLECTION_HISTORY</span><span class="p">,</span>
@@ -185,7 +186,7 @@
                                               <span class="n">TAG_HISTORY</span><span class="p">,</span> <span class="n">TAG_ORIGIN_USER</span><span class="p">,</span>
                                               <span class="n">TAG_TYPE</span><span class="p">,</span> <span class="n">TYPE_NII</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project_properties</span> <span class="kn">import</span> <span class="n">SavedProjects</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">verCmp</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="kn">import</span> <span class="n">ModifyTable</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.main_window</span> <span class="kn">import</span> <span class="n">MainWindow</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="kn">import</span> <span class="p">(</span>
@@ -194,10 +195,8 @@
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span> <span class="kn">import</span> <span class="p">(</span>
                                                                     <span class="n">RunProgress</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>
-                                                           <span class="n">InstallProcesses</span><span class="p">,</span>
                                                            <span class="n">PackageLibraryDialog</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DefaultValueListCreation</span><span class="p">,</span>
-                                                <span class="n">DefaultValueQLineEdit</span><span class="p">,</span>
                                                 <span class="n">PopUpAddPath</span><span class="p">,</span>
                                                 <span class="n">PopUpAddTag</span><span class="p">,</span>
                                                 <span class="n">PopUpClosePipeline</span><span class="p">,</span>
@@ -206,7 +205,6 @@
                                                 <span class="n">PopUpInheritanceDict</span><span class="p">,</span>
                                                 <span class="n">PopUpNewProject</span><span class="p">,</span>
                                                 <span class="n">PopUpOpenProject</span><span class="p">,</span>
-                                                <span class="n">PopUpPreferences</span><span class="p">,</span>
                                                 <span class="n">PopUpQuit</span><span class="p">,</span>
                                                 <span class="n">PopUpRemoveScan</span><span class="p">,</span>
                                                 <span class="n">PopUpSeeAllProjects</span><span class="p">,</span>
@@ -244,6 +242,7 @@
 <span class="sd">        :Method:</span>
 <span class="sd">            - add_visualized_tag: selects a tag to display with the</span>
 <span class="sd">              &quot;Visualized tags&quot; pop-up</span>
+<span class="sd">            - edit_databrowser_list: change value for a tag in DataBrowser</span>
 <span class="sd">            - execute_QDialogAccept: accept (close) a QDialog instance</span>
 <span class="sd">            - execute_QDialogClose: closes a QDialog instance</span>
 <span class="sd">            - execute_QMessageBox_clickClose: press the Close button of </span>
@@ -258,25 +257,22 @@
 <span class="sd">              be safely modified</span>
 <span class="sd">            - restart_MIA: restarts MIA within a unit test</span>
 <span class="sd">            - setUp: called automatically before each test method</span>
-<span class="sd">            - tearDown: cleans up after each test method</span>
 <span class="sd">            - setUpClass: called before tests in the individual class</span>
+<span class="sd">            - tearDown: cleans up after each test method</span>
 <span class="sd">            - tearDownClass: called after tests in the individual class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TestMIACase.add_visualized_tag"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.add_visualized_tag">[docs]</a>    <span class="k">def</span> <span class="nf">add_visualized_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;With the &quot;Visualized tags&quot; pop-up open, selects a tag to display.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        tag: string</span>
-<span class="sd">          The tag to be displayed</span>
-
-<span class="sd">        Usage</span>
-<span class="sd">        -----</span>
 <span class="sd">        Should be called, with a delay, before opening the &quot;Visualized tags&quot;</span>
-<span class="sd">        pop-up:</span>
-<span class="sd">        QTimer.singleShot(1000,</span>
-<span class="sd">                          lambda:self.add_visualized_tag(&#39;AcquisitionDate&#39;))</span>
+<span class="sd">        pop-up, i.e.:</span>
+<span class="sd">            QTimer.singleShot(1000, lambda:self.add_visualized_tag(</span>
+<span class="sd">            &#39;AcquisitionDate&#39;))</span>
+<span class="sd">        It&#39;s currently not the case</span>
+<span class="sd">        (see TestMIANodeController.test_filter_widget())</span>
+
+<span class="sd">        :param tag: the tag to be displayed (str)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
@@ -295,8 +291,24 @@
             <span class="n">tags_list</span><span class="o">.</span><span class="n">setCurrentItem</span><span class="p">(</span><span class="n">found_item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">visualized_tags</span><span class="o">.</span><span class="n">click_select_tag</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="TestMIACase.edit_databrowser_list"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.edit_databrowser_list">[docs]</a>    <span class="k">def</span> <span class="nf">edit_databrowser_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change value for a tag in DataBrowser.</span>
+
+<span class="sd">        :param value: the new value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">):</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">update_table_values</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="TestMIACase.execute_QDialogAccept"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.execute_QDialogAccept">[docs]</a>    <span class="k">def</span> <span class="nf">execute_QDialogAccept</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Accept (close) a QDialog window&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Accept (close) a QDialog window.</span>
+
+<span class="sd">        Currently, this method is not used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
 
@@ -304,7 +316,10 @@
             <span class="n">w</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIACase.execute_QDialogClose"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.execute_QDialogClose">[docs]</a>    <span class="k">def</span> <span class="nf">execute_QDialogClose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Is supposed to abort( close) a QDialog window&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Close a QDialog window.</span>
+
+<span class="sd">        Currently, this method is not used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
 
@@ -312,7 +327,10 @@
             <span class="n">w</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     
 <div class="viewcode-block" id="TestMIACase.execute_QMessageBox_clickClose"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.execute_QMessageBox_clickClose">[docs]</a>    <span class="k">def</span> <span class="nf">execute_QMessageBox_clickClose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Press the Close button of a QMessageBox instance&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Press the Close button of a QMessageBox instance.</span>
+
+<span class="sd">        Currently, this method is not used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
 
@@ -321,7 +339,7 @@
             <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">close_button</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIACase.execute_QMessageBox_clickOk"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.execute_QMessageBox_clickOk">[docs]</a>    <span class="k">def</span> <span class="nf">execute_QMessageBox_clickOk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Press the Ok button of a QMessageBox instance&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Press the Ok button of a QMessageBox instance.&quot;&quot;&quot;</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
 
@@ -330,7 +348,10 @@
             <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">close_button</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIACase.execute_QMessageBox_clickYes"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.execute_QMessageBox_clickYes">[docs]</a>    <span class="k">def</span> <span class="nf">execute_QMessageBox_clickYes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Press the Yes button of a QMessageBox instance&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Press the Yes button of a QMessageBox instance.</span>
+
+<span class="sd">        Currently, this method is not used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
 
@@ -340,10 +361,10 @@
 
 <div class="viewcode-block" id="TestMIACase.find_item_by_data"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.find_item_by_data">[docs]</a>    <span class="k">def</span> <span class="nf">find_item_by_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_tree_view</span><span class="p">:</span> <span class="n">QTreeView</span><span class="p">,</span>
                           <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QModelIndex</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Looks for a QModelIndex, in a QTreeView&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Looks for a QModelIndex, in a QTreeView instance.&quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q_tree_view</span><span class="p">,</span> <span class="n">QTreeView</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;first argment is not a &#39;</span>
-                                                    <span class="s1">&#39;QTreeView instance&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q_tree_view</span><span class="p">,</span> <span class="n">QTreeView</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;first argument is not a &#39;</span>
+                                                    <span class="s1">&#39;QTreeView instance!&#39;</span><span class="p">)</span>
 
         <span class="n">q_tree_view</span><span class="o">.</span><span class="n">expandAll</span><span class="p">()</span>
         <span class="n">index</span> <span class="o">=</span> <span class="n">q_tree_view</span><span class="o">.</span><span class="n">indexAt</span><span class="p">(</span><span class="n">QPoint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -358,9 +379,8 @@
 
 <span class="sd">        The new project is created in the /tmp (/Temp) folder.</span>
 
-<span class="sd">        :param name: str, name of the directory containing the project</span>
-<span class="sd">        :param light: bool, True to copy a project with few documents</span>
-
+<span class="sd">        :param name: name of the directory containing the project (str)</span>
+<span class="sd">        :param light: True to copy a project with few documents (bool)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">new_test_proj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -378,11 +398,8 @@
         <span class="k">return</span> <span class="n">new_test_proj</span></div>
 
 <div class="viewcode-block" id="TestMIACase.restart_MIA"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.restart_MIA">[docs]</a>    <span class="k">def</span> <span class="nf">restart_MIA</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Restarts MIA within a unit test.</span>
+        <span class="sd">&quot;&quot;&quot;Restarts MIA within a unit test.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
 <span class="sd">        Can be used to restart MIA after changing the controller version in MIA</span>
 <span class="sd">        preferences.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -419,6 +436,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="TestMIACase.setUpClass"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.setUpClass">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called once at the beginning of the class&quot;&quot;&quot;</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;mia_tests&#39;</span><span class="p">)</span>
+        <span class="c1"># hack the Config class to get config_path, because some Config</span>
+        <span class="c1"># instances are created out of our control in the code</span>
+        <span class="n">Config</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">config_path</span></div>
+
 <div class="viewcode-block" id="TestMIACase.tearDown"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.tearDown">[docs]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called after each test&quot;&quot;&quot;</span>
 
@@ -429,15 +455,6 @@
         <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestMIACase.setUpClass"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.setUpClass">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Called once at the beginning of the class&quot;&quot;&quot;</span>
-
-        <span class="bp">cls</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;mia_tests&#39;</span><span class="p">)</span>
-        <span class="c1"># hack the Config class to get config_path, because some Config</span>
-        <span class="c1"># instances are created out of our control in the code</span>
-        <span class="n">Config</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">config_path</span></div>
-
 <div class="viewcode-block" id="TestMIACase.tearDownClass"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.tearDownClass">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called once at the end of the class&quot;&quot;&quot;</span>
@@ -445,13 +462,12 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">config_path</span><span class="p">):</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span></div></div>
 
+
 <div class="viewcode-block" id="TestMIADataBrowser"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser">[docs]</a><span class="k">class</span> <span class="nc">TestMIADataBrowser</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Tests for the data browser tab (DataBrowser).</span>
 
 <span class="sd">    :Contains:</span>
 <span class="sd">        :Method:</span>
-<span class="sd">            - edit_databrowser_list: change value to [25000] for a tag in</span>
-<span class="sd">              DataBrowser</span>
 <span class="sd">            - test_add_path: tests the popup to add a path</span>
 <span class="sd">            - test_add_tag: tests the pop up adding a tag</span>
 <span class="sd">            - test_advanced_search: tests the advanced search widget</span>
@@ -469,7 +485,7 @@
 <span class="sd">            - test_openTagsPopUp: opens a pop-up to select the legend of the </span>
 <span class="sd">              thumbnails</span>
 <span class="sd">            - test_open_project: tests project opening</span>
-<span class="sd">            - test_open_project_filter: tests project filter opening</span>
+<span class="sd">            - test_project_filter: tests project filter opening</span>
 <span class="sd">            - test_project_properties: tests saved projects addition and </span>
 <span class="sd">              removal</span>
 <span class="sd">            - test_proj_remov_from_cur_proj: tests that the projects are</span>
@@ -507,26 +523,12 @@
 <span class="sd">              visualized tags</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TestMIADataBrowser.edit_databrowser_list"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.edit_databrowser_list">[docs]</a>    <span class="k">def</span> <span class="nf">edit_databrowser_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Change value for a tag in DataBrowser</span>
-
-<span class="sd">        :param value: the new value</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">w</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
-        <span class="n">item</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">w</span><span class="o">.</span><span class="n">update_table_values</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="TestMIADataBrowser.test_add_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_add_path">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Tries import a document to the project.</span>
-<span class="sd">        Tests DataBrowser.add_path and PopUpAddPath.</span>
+        <span class="sd">&quot;&quot;&quot;Tries import a document to the project.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
+<span class="sd">        Tests DataBrowser.add_path and PopUpAddPath.</span>
 <span class="sd">        Mocks the execution of QFileDialog and QMessageBox.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for often used objects</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
@@ -559,22 +561,22 @@
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">add_path</span><span class="o">.</span><span class="n">ok_button</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">add_path</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="s2">&quot;Invalid arguments&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Adds a valid docuent</span>
+        <span class="c1"># Adds a valid document path</span>
         <span class="n">add_path</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">DOCUMENT_1</span><span class="p">)</span>
         <span class="n">add_path</span><span class="o">.</span><span class="n">type_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">TYPE_NII</span><span class="p">)</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">add_path</span><span class="o">.</span><span class="n">ok_button</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
 
-        <span class="c1"># Asserts that the document was added into the the data browser</span>
+        <span class="c1"># Asserts that the document was added into the data browser</span>
         <span class="c1"># A regular &#39;.split(&#39;/&#39;)&#39; will not work in Windows OS</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">session</span>
                     <span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">filename</span> <span class="ow">in</span> <span class="n">DOCUMENT_1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">table_data</span><span class="o">.</span><span class="n">rowCount</span><span class="p">(),</span><span class="mi">1</span><span class="p">)</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">table_data</span><span class="o">.</span><span class="n">rowCount</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+
         <span class="c1"># Mocks the execution of file dialog box and finds the file type</span>
         <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nii&#39;</span><span class="p">,</span> <span class="s1">&#39;mat&#39;</span><span class="p">,</span> <span class="s1">&#39;txt&#39;</span><span class="p">]:</span>
-            <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;file.&#39;</span><span class="o">+</span><span class="n">ext</span><span class="p">])</span>
+            <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;file.&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">])</span>
             <span class="n">add_path</span><span class="o">.</span><span class="n">file_to_choose</span><span class="p">()</span>
 
         <span class="c1"># Adds a document into the database and tries to save the same</span>
@@ -584,9 +586,7 @@
         <span class="n">add_path</span><span class="o">.</span><span class="n">save_path</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_add_tag"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_add_tag">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the pop-up adding a tag</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the pop-up adding a tag.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -3439,6 +3439,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">TAG_EXP_TYPE</span> <span class="ow">in</span> <span class="n">columns_displayed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">TAG_TYPE</span> <span class="ow">in</span> <span class="n">columns_displayed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">TAG_BRICKS</span> <span class="ow">in</span> <span class="n">columns_displayed</span><span class="p">)</span></div></div>
+
 
 <div class="viewcode-block" id="TestMIAMainWindow"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow">[docs]</a><span class="k">class</span> <span class="nc">TestMIAMainWindow</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>

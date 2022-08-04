@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia package &#8212; populse_mia 2.2.1-dev+08ef7be8e documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.2.1-dev+a3087537f documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.2.1-dev+08ef7be8e documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+a3087537f documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1546,7 +1546,7 @@ list of integer</p></li>
 </div>
 <div class="section" id="module-populse_mia.test">
 <span id="populse-mia-test-module"></span><h2>populse_mia.test module<a class="headerlink" href="#module-populse_mia.test" title="Permalink to this headline">¶</a></h2>
-<p>Unitary tests.</p>
+<p>This module is dedicated to populse_mia unit tests.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Contains</dt>
 <dd class="field-odd"><dl class="field-list simple">
@@ -1576,6 +1576,7 @@ list of integer</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p>add_visualized_tag: selects a tag to display with the
 “Visualized tags” pop-up</p></li>
+<li><p>edit_databrowser_list: change value for a tag in DataBrowser</p></li>
 <li><p>execute_QDialogAccept: accept (close) a QDialog instance</p></li>
 <li><p>execute_QDialogClose: closes a QDialog instance</p></li>
 <li><p>execute_QMessageBox_clickClose: press the Close button of 
@@ -1590,8 +1591,8 @@ correspond to the argument data</p></li>
 be safely modified</p></li>
 <li><p>restart_MIA: restarts MIA within a unit test</p></li>
 <li><p>setUp: called automatically before each test method</p></li>
-<li><p>tearDown: cleans up after each test method</p></li>
 <li><p>setUpClass: called before tests in the individual class</p></li>
+<li><p>tearDown: cleans up after each test method</p></li>
 <li><p>tearDownClass: called after tests in the individual class</p></li>
 </ul>
 </dd>
@@ -1602,52 +1603,70 @@ be safely modified</p></li>
 <dt id="populse_mia.test.TestMIACase.add_visualized_tag">
 <code class="sig-name descname">add_visualized_tag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.add_visualized_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.add_visualized_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>With the “Visualized tags” pop-up open, selects a tag to display.</p>
-<dl class="simple">
-<dt>tag: string</dt><dd><p>The tag to be displayed</p>
+<p>Should be called, with a delay, before opening the “Visualized tags”
+pop-up, i.e.:</p>
+<blockquote>
+<div><p>QTimer.singleShot(1000, lambda:self.add_visualized_tag(
+‘AcquisitionDate’))</p>
+</div></blockquote>
+<p>It’s currently not the case
+(see TestMIANodeController.test_filter_widget())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tag</strong> – the tag to be displayed (str)</p>
 </dd>
 </dl>
-<p>Should be called, with a delay, before opening the “Visualized tags”
-pop-up:
-QTimer.singleShot(1000,</p>
-<blockquote>
-<div><p>lambda:self.add_visualized_tag(‘AcquisitionDate’))</p>
-</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="populse_mia.test.TestMIACase.edit_databrowser_list">
+<code class="sig-name descname">edit_databrowser_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.edit_databrowser_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.edit_databrowser_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change value for a tag in DataBrowser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> – the new value</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIACase.execute_QDialogAccept">
 <code class="sig-name descname">execute_QDialogAccept</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.execute_QDialogAccept"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.execute_QDialogAccept" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accept (close) a QDialog window</p>
+<dd><p>Accept (close) a QDialog window.</p>
+<p>Currently, this method is not used.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIACase.execute_QDialogClose">
 <code class="sig-name descname">execute_QDialogClose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.execute_QDialogClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.execute_QDialogClose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is supposed to abort( close) a QDialog window</p>
+<dd><p>Close a QDialog window.</p>
+<p>Currently, this method is not used.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIACase.execute_QMessageBox_clickClose">
 <code class="sig-name descname">execute_QMessageBox_clickClose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.execute_QMessageBox_clickClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.execute_QMessageBox_clickClose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Press the Close button of a QMessageBox instance</p>
+<dd><p>Press the Close button of a QMessageBox instance.</p>
+<p>Currently, this method is not used.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIACase.execute_QMessageBox_clickOk">
 <code class="sig-name descname">execute_QMessageBox_clickOk</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.execute_QMessageBox_clickOk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.execute_QMessageBox_clickOk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Press the Ok button of a QMessageBox instance</p>
+<dd><p>Press the Ok button of a QMessageBox instance.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIACase.execute_QMessageBox_clickYes">
 <code class="sig-name descname">execute_QMessageBox_clickYes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.execute_QMessageBox_clickYes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.execute_QMessageBox_clickYes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Press the Yes button of a QMessageBox instance</p>
+<dd><p>Press the Yes button of a QMessageBox instance.</p>
+<p>Currently, this method is not used.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIACase.find_item_by_data">
 <code class="sig-name descname">find_item_by_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_tree_view</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QTreeView</span></em>, <em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QModelIndex<a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.find_item_by_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.find_item_by_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Looks for a QModelIndex, in a QTreeView</p>
+<dd><p>Looks for a QModelIndex, in a QTreeView instance.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1658,8 +1677,8 @@ QTimer.singleShot(1000,</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – str, name of the directory containing the project</p></li>
-<li><p><strong>light</strong> – bool, True to copy a project with few documents</p></li>
+<li><p><strong>name</strong> – name of the directory containing the project (str)</p></li>
+<li><p><strong>light</strong> – True to copy a project with few documents (bool)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1709,8 +1728,6 @@ preferences.</p>
 <dd class="field-odd"><dl class="field-list simple">
 <dt class="field-odd">Method</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>edit_databrowser_list: change value to [25000] for a tag in
-DataBrowser</p></li>
 <li><p>test_add_path: tests the popup to add a path</p></li>
 <li><p>test_add_tag: tests the pop up adding a tag</p></li>
 <li><p>test_advanced_search: tests the advanced search widget</p></li>
@@ -1728,7 +1745,7 @@ browser</p></li>
 <li><p>test_openTagsPopUp: opens a pop-up to select the legend of the 
 thumbnails</p></li>
 <li><p>test_open_project: tests project opening</p></li>
-<li><p>test_open_project_filter: tests project filter opening</p></li>
+<li><p>test_project_filter: tests project filter opening</p></li>
 <li><p>test_project_properties: tests saved projects addition and 
 removal</p></li>
 <li><p>test_proj_remov_from_cur_proj: tests that the projects are
@@ -1770,28 +1787,17 @@ visualized tags</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="populse_mia.test.TestMIADataBrowser.edit_databrowser_list">
-<code class="sig-name descname">edit_databrowser_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.edit_databrowser_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.edit_databrowser_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change value for a tag in DataBrowser</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> – the new value</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_add_path">
 <code class="sig-name descname">test_add_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_add_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_add_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tries import a document to the project.
-Tests DataBrowser.add_path and PopUpAddPath.</p>
-<p>Mocks the execution of QFileDialog and QMessageBox.</p>
+<dd><p>Tries import a document to the project.</p>
+<p>Tests DataBrowser.add_path and PopUpAddPath.
+Mocks the execution of QFileDialog and QMessageBox.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_add_tag">
 <code class="sig-name descname">test_add_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_add_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_add_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the pop-up adding a tag</p>
+<dd><p>Tests the pop-up adding a tag.</p>
 </dd></dl>
 
 <dl class="py method">
