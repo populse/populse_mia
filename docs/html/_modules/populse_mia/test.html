@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.test &#8212; populse_mia 2.2.1-dev+a3087537f documentation</title>
+    <title>populse_mia.test &#8212; populse_mia 2.2.1-dev+dac10a261 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.2.1-dev+a3087537f documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+dac10a261 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -265,12 +265,12 @@
 <div class="viewcode-block" id="TestMIACase.add_visualized_tag"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.add_visualized_tag">[docs]</a>    <span class="k">def</span> <span class="nf">add_visualized_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;With the &quot;Visualized tags&quot; pop-up open, selects a tag to display.</span>
 
-<span class="sd">        Should be called, with a delay, before opening the &quot;Visualized tags&quot;</span>
-<span class="sd">        pop-up, i.e.:</span>
-<span class="sd">            QTimer.singleShot(1000, lambda:self.add_visualized_tag(</span>
-<span class="sd">            &#39;AcquisitionDate&#39;))</span>
-<span class="sd">        It&#39;s currently not the case</span>
-<span class="sd">        (see TestMIANodeController.test_filter_widget())</span>
+<span class="sd">        - Should be called, with a delay, before opening the &quot;Visualized tags&quot;</span>
+<span class="sd">          pop-up, i.e.:</span>
+<span class="sd">              QTimer.singleShot(1000, lambda:self.add_visualized_tag(</span>
+<span class="sd">              &#39;AcquisitionDate&#39;))</span>
+<span class="sd">          It&#39;s currently not the case</span>
+<span class="sd">          (see TestMIANodeController.test_filter_widget()).</span>
 
 <span class="sd">        :param tag: the tag to be displayed (str)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -377,7 +377,7 @@
 <div class="viewcode-block" id="TestMIACase.get_new_test_project"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.get_new_test_project">[docs]</a>    <span class="k">def</span> <span class="nf">get_new_test_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_project&#39;</span><span class="p">,</span> <span class="n">light</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Copies a test project where it can be safely modified.</span>
 
-<span class="sd">        The new project is created in the /tmp (/Temp) folder.</span>
+<span class="sd">        - The new project is created in the /tmp (/Temp) folder.</span>
 
 <span class="sd">        :param name: name of the directory containing the project (str)</span>
 <span class="sd">        :param light: True to copy a project with few documents (bool)</span>
@@ -400,8 +400,8 @@
 <div class="viewcode-block" id="TestMIACase.restart_MIA"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.restart_MIA">[docs]</a>    <span class="k">def</span> <span class="nf">restart_MIA</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Restarts MIA within a unit test.</span>
 
-<span class="sd">        Can be used to restart MIA after changing the controller version in MIA</span>
-<span class="sd">        preferences.</span>
+<span class="sd">        - Can be used to restart MIA after changing the controller version in MIA</span>
+<span class="sd">          preferences.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -499,8 +499,8 @@
 <span class="sd">              selected</span>
 <span class="sd">            - test_reset_row: test row reset</span>
 <span class="sd">            - test_save_project: test opening &amp; saving of a project</span>
-<span class="sd">            - test_send_doc_to_pip: tests the popup sending documents</span>
-<span class="sd">              to the pipeline manager</span>
+<span class="sd">            - test_send_doc_to_pipeline_manager: tests the popup sending</span>
+<span class="sd">              documents to the pipeline manager</span>
 <span class="sd">            - test_set_value: tests the values modifications</span>
 <span class="sd">            - test_show_brick_history: opens the history pop-up for </span>
 <span class="sd">              scans with history related to a brick</span>
@@ -526,8 +526,8 @@
 <div class="viewcode-block" id="TestMIADataBrowser.test_add_path"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_add_path">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tries import a document to the project.</span>
 
-<span class="sd">        Tests DataBrowser.add_path and PopUpAddPath.</span>
-<span class="sd">        Mocks the execution of QFileDialog and QMessageBox.</span>
+<span class="sd">        - Tests DataBrowser.add_path and PopUpAddPath.</span>
+<span class="sd">        - Mocks the execution of QFileDialog and QMessageBox.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for often used objects</span>
@@ -568,8 +568,8 @@
 
         <span class="c1"># Asserts that the document was added into the data browser</span>
         <span class="c1"># A regular &#39;.split(&#39;/&#39;)&#39; will not work in Windows OS</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">session</span>
-                    <span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
+                                                    <span class="n">COLLECTION_CURRENT</span><span class="p">)[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">filename</span> <span class="ow">in</span> <span class="n">DOCUMENT_1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">table_data</span><span class="o">.</span><span class="n">rowCount</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
@@ -627,7 +627,7 @@
         <span class="n">add_tag</span><span class="o">.</span><span class="n">text_edit_default_value</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;def_value&quot;</span><span class="p">)</span>
         <span class="n">add_tag</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">FIELD_TYPE_STRING</span>
 
-        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">add_tag</span><span class="o">.</span><span class="n">push_button_ok</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span> <span class="ow">in</span>
@@ -689,7 +689,7 @@
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
         <span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
-        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span>
                         <span class="n">add_tag</span><span class="o">.</span><span class="n">text_edit_default_value</span><span class="o">.</span><span class="n">list_creation</span><span class="o">.</span><span class="n">ok_button</span><span class="p">,</span>
@@ -698,7 +698,7 @@
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">add_tag</span><span class="o">.</span><span class="n">push_button_ok</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
 
         <span class="n">test_list_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
-                            <span class="n">get_tag_column</span><span class="p">(</span><span class="s2">&quot;Test_list&quot;</span><span class="p">))</span>
+                                                    <span class="n">get_tag_column</span><span class="p">(</span><span class="s2">&quot;Test_list&quot;</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()):</span>
@@ -710,9 +710,7 @@
         <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_advanced_search"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_advanced_search">[docs]</a>    <span class="k">def</span> <span class="nf">test_advanced_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the advanced search widget</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the advanced search widget.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -852,15 +850,13 @@
                         <span class="s2">&quot;pvm-000220_000.nii&quot;</span> <span class="ow">in</span> <span class="n">scans_displayed</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_brick_history"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_brick_history">[docs]</a>    <span class="k">def</span> <span class="nf">test_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the brick history popup</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the brick history popup.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
 
         <span class="n">bricks_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
-                         <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;History&quot;</span><span class="p">)</span>
+                                                      <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;History&quot;</span><span class="p">)</span>
         <span class="n">bricks_widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span>
                                                                   <span class="mi">0</span><span class="p">,</span>
                                                                   <span class="n">bricks_column</span><span class="p">)</span>
@@ -868,7 +864,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">smooth_button</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="s2">&quot;smooth_1&quot;</span><span class="p">)</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">smooth_button</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="n">brick_history</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
-                         <span class="n">brick_history_popup</span><span class="p">)</span>
+                                                            <span class="n">brick_history_popup</span><span class="p">)</span>
         <span class="n">brick_table</span> <span class="o">=</span> <span class="n">brick_history</span><span class="o">.</span><span class="n">table</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">brick_table</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="s2">&quot;Name&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">brick_table</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="s2">&quot;Init&quot;</span><span class="p">)</span>
@@ -907,9 +903,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">brick_table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_clear_cell"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_clear_cell">[docs]</a>    <span class="k">def</span> <span class="nf">test_clear_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the method clearing cells</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the method clearing cells.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -947,9 +941,7 @@
                              <span class="s2">&quot;BandWidth&quot;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_clone_tag"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_clone_tag">[docs]</a>    <span class="k">def</span> <span class="nf">test_clone_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the pop up cloning a tag</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the pop up cloning a tag.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -1049,9 +1041,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">item_bw</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="n">item_test</span><span class="o">.</span><span class="n">text</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_count_table"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_count_table">[docs]</a>    <span class="k">def</span> <span class="nf">test_count_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the count table popup</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the count table popup.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -1109,9 +1099,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">count_table</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="s2">&quot;5&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_mia_preferences"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_mia_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_mia_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the MIA preferences popup</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the MIA preferences popup.&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
         <span class="n">old_auto_save</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">isAutoSave</span><span class="p">()</span>
@@ -1165,8 +1153,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_max_projects</span><span class="p">(),</span> <span class="mi">7</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_max_projects</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
-        <span class="n">mia_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
-                                <span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
+        <span class="n">mia_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mia_path</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
@@ -1191,24 +1179,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">getThumbnailTag</span><span class="p">(),</span> <span class="s2">&quot;SequenceName&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span>
-                         <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
-                                                                         <span class="s2">&quot;9.1&quot;</span><span class="p">))</span>
+                         <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;9.1&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span>
-                         <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
-                                                                         <span class="s2">&quot;9.1&quot;</span><span class="p">))</span>
+                         <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;9.1&quot;</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_projects_save_path</span><span class="p">(),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_mini_viewer"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_mini_viewer">[docs]</a>    <span class="k">def</span> <span class="nf">test_mini_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Selects scans and display them in the mini viewer.</span>
-<span class="sd">        Tests MiniViewer.</span>
+        <span class="sd">&quot;&quot;&quot;Selects scans and display them in the mini viewer.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        The mini viewer displays informations of the selected scan in a </span>
-<span class="sd">        box under the scans list, in the data browser tab.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        - Tests MiniViewer.</span>
+<span class="sd">        - The mini viewer displays information of the selected scan in a</span>
+<span class="sd">          box under the scans list, in the data browser tab.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Creates a new project folder and switches to it</span>
         <span class="n">new_proj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1219,7 +1202,7 @@
         <span class="n">viewer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">viewer</span>
 
         <span class="c1"># Selects the first scan</span>
-        <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Gets the 3D slider range</span>
         <span class="n">slider_3D_range</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">maximum</span><span class="p">()</span>
@@ -1237,7 +1220,7 @@
         <span class="n">viewer</span><span class="o">.</span><span class="n">check_box_cursors</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">)</span>
 
         <span class="c1"># Selects the second scan</span>
-        <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Moves the 3D slides to the lower limit</span>
         <span class="n">viewer</span><span class="o">.</span><span class="n">slider_3D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -1254,9 +1237,7 @@
         <span class="n">viewer</span><span class="o">.</span><span class="n">update_nb_slices</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_modify_table"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_modify_table">[docs]</a>    <span class="k">def</span> <span class="nf">test_modify_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test the modify table module</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Test the modify_table module.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -1300,9 +1281,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_multiple_sort"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_multiple_sort">[docs]</a>    <span class="k">def</span> <span class="nf">test_multiple_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the multiple sort popup</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the multiple sort popup.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -1366,14 +1345,11 @@
                          <span class="s2">&quot;-000142_400.nii&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_multiple_sort_appendix"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_multiple_sort_appendix">[docs]</a>    <span class="k">def</span> <span class="nf">test_multiple_sort_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Adds and removes tags in the data browser.</span>
-<span class="sd">        Tests PopUpMultipleSort.</span>
+        <span class="sd">&quot;&quot;&quot;Adds and removes tags in the data browser.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks PopUpSelectTagCountTable.exec_.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        - Tests PopUpMultipleSort.</span>
+<span class="sd">        - Mocks PopUpSelectTagCountTable.exec_.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">table_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span>
 
@@ -1392,6 +1368,7 @@
         <span class="k">def</span> <span class="nf">mock_select_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">selected_tag</span> <span class="o">=</span> <span class="s1">&#39;Exp Type&#39;</span>
             <span class="k">return</span> <span class="kc">True</span>
+
         <span class="n">PopUpSelectTagCountTable</span><span class="o">.</span><span class="n">exec_</span> <span class="o">=</span> <span class="n">mock_select_tags</span>
         
         <span class="n">table_data</span><span class="o">.</span><span class="n">pop_up</span><span class="o">.</span><span class="n">select_tag</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -1403,15 +1380,12 @@
         <span class="n">table_data</span><span class="o">.</span><span class="n">pop_up</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_openTagsPopUp"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_openTagsPopUp">[docs]</a>    <span class="k">def</span> <span class="nf">test_openTagsPopUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Opens a document in data viewer and opens a pop-up to select the</span>
+        <span class="sd">&quot;&quot;&quot;Opens a document in data viewer and opens a pop-up to select the</span>
 <span class="sd">        legend of the thumbnails.</span>
-<span class="sd">        Tests MiniViewer.openTagsPopUp.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Indirectly tests PopUpSelectTag.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        - Tests MiniViewer.openTagsPopUp.</span>
+<span class="sd">        - Indirectly tests PopUpSelectTag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">data_browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span>
@@ -1432,7 +1406,7 @@
         <span class="n">addPath</span><span class="o">.</span><span class="n">save_path</span><span class="p">()</span>
 
         <span class="c1"># Selects the document in the data browser</span>
-        <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Mocks the execution of the dialog window</span>
         <span class="n">PopUpSelectTag</span><span class="o">.</span><span class="n">exec_</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1466,11 +1440,9 @@
         <span class="n">viewer</span><span class="o">.</span><span class="n">popUp</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_open_project"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_open_project">[docs]</a>    <span class="k">def</span> <span class="nf">test_open_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests project opening</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests project opening.&quot;&quot;&quot;</span>
 
-        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
+        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -1541,18 +1513,16 @@
                         <span class="s2">&quot;pvm-000220_000.nii&quot;</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_project_filter"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_project_filter">[docs]</a>    <span class="k">def</span> <span class="nf">test_project_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Creates a project, saves a filter and opens it.</span>
-<span class="sd">        Tests </span>
-<span class="sd">         - DataBrowser.open_popup</span>
-<span class="sd">         - Project.save_current_filter</span>
+        <span class="sd">&quot;&quot;&quot;Creates a project, saves a filter and opens it.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks</span>
-<span class="sd">         - QMessageBox.exec</span>
-<span class="sd">         - QInputDialog.getText</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        - Tests:</span>
+<span class="sd">            - DataBrowser.open_popup</span>
+<span class="sd">            - Project.save_current_filter</span>
+
+<span class="sd">        - Mocks:</span>
+<span class="sd">           - QMessageBox.exec</span>
+<span class="sd">           - QInputDialog.getText</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">test_project_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">test_project_path</span><span class="p">,</span> <span class="s1">&#39;test_project&#39;</span><span class="p">)</span>
@@ -1579,7 +1549,7 @@
         <span class="n">open_popup</span><span class="o">.</span><span class="n">search_str</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">open_popup</span><span class="o">.</span><span class="n">list_widget_filters</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">isHidden</span><span class="p">())</span>
 
-        <span class="c1"># Tries to search for an inexistant filter </span>
+        <span class="c1"># Tries to search for a non-existent filter</span>
         <span class="n">open_popup</span><span class="o">.</span><span class="n">search_str</span><span class="p">(</span><span class="s1">&#39;filter_2&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">open_popup</span><span class="o">.</span><span class="n">list_widget_filters</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">isHidden</span><span class="p">())</span>
 
@@ -1604,9 +1574,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">scans_displayed</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span></div>
    
 <div class="viewcode-block" id="TestMIADataBrowser.test_project_properties"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_project_properties">[docs]</a>    <span class="k">def</span> <span class="nf">test_project_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests saved projects addition and removal</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests saved projects addition and removal.&quot;&quot;&quot;</span>
 
         <span class="n">saved_projects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saved_projects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span><span class="p">,</span> <span class="p">[])</span>
@@ -1637,8 +1605,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span><span class="p">,</span> <span class="p">[])</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_proj_remov_from_cur_proj"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_proj_remov_from_cur_proj">[docs]</a>    <span class="k">def</span> <span class="nf">test_proj_remov_from_cur_proj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests that the projects are removed from the list of current projects</span>
+        <span class="sd">&quot;&quot;&quot;Tests that the projects are removed from the list of current</span>
+<span class="sd">        projects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
@@ -1647,9 +1615,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span> <span class="ow">in</span> <span class="n">projects</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_rapid_search"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_rapid_search">[docs]</a>    <span class="k">def</span> <span class="nf">test_rapid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the rapid search bar</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the rapid search bar.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -1778,18 +1744,14 @@
                           <span class="s2">&quot;pvm-000142_400.nii&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_remove_scan"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_remove_scan">[docs]</a>    <span class="k">def</span> <span class="nf">test_remove_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a new project, adds scans to the session and remove </span>
-<span class="sd">        them.</span>
-<span class="sd">        Tests</span>
-<span class="sd">         - PipelineManagerTab.remove_scan</span>
-<span class="sd">         - PopUpRemoveScan</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new project, adds scans to the session and remove them.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks PopUpRemoveScan.exec.</span>
-<span class="sd">        - </span>
-<span class="sd">         </span>
+<span class="sd">        - Tests</span>
+<span class="sd">            - PipelineManagerTab.remove_scan</span>
+<span class="sd">            - PopUpRemoveScan</span>
+
+<span class="sd">        - Mocks</span>
+<span class="sd">            - PopUpRemoveScan.exec</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
@@ -1857,12 +1819,7 @@
         <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">remove_scan</span><span class="p">()</span>
 
         <span class="c1"># Asserts that the scans were deleted</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tb_data</span><span class="o">.</span><span class="n">scans</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">()</span>
-
-        
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tb_data</span><span class="o">.</span><span class="n">scans</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span></div>
 
         <span class="c1">#project_8_path = self.get_new_test_project()</span>
         <span class="c1">#self.main_window.switch_project(project_8_path, &quot;project_8&quot;)</span>
@@ -1947,23 +1904,20 @@
         <span class="c1">#                &quot;-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm&quot;</span>
         <span class="c1">#                &quot;-000220_000.nii&quot; in scans_displayed)</span>
 
-        <span class="nb">print</span><span class="p">()</span></div>
-
 <div class="viewcode-block" id="TestMIADataBrowser.test_remove_tag"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_remove_tag">[docs]</a>    <span class="k">def</span> <span class="nf">test_remove_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the popup removing user tags</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the popup removing user tags.&quot;&quot;&quot;</span>
 
-        <span class="c1"># Adding a tag</span>
+        <span class="c1"># Adding a tag &quot;Test&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">add_tag_action</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
         <span class="n">add_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">pop_up_add_tag</span>
         <span class="n">add_tag</span><span class="o">.</span><span class="n">text_edit_tag_name</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">add_tag</span><span class="o">.</span><span class="n">push_button_ok</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
-
         <span class="n">old_tags_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
         <span class="n">old_tags_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_INITIAL</span><span class="p">)</span>
+
+        <span class="c1"># Open the &quot;Remove a tag&quot; pop-up but do nothing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">remove_tag_action</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
         <span class="n">remove_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">pop_up_remove_tag</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">remove_tag</span><span class="o">.</span><span class="n">push_button_ok</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
@@ -1971,6 +1925,8 @@
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
         <span class="n">new_tags_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_INITIAL</span><span class="p">)</span>
+
+        <span class="c1"># Check that the list of tags has not changed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">old_tags_current</span> <span class="o">==</span> <span class="n">new_tags_current</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">old_tags_initial</span> <span class="o">==</span> <span class="n">new_tags_initial</span><span class="p">)</span>
 
@@ -1978,8 +1934,11 @@
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
         <span class="n">old_tags_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_INITIAL</span><span class="p">)</span>
+        <span class="c1"># Check that &quot;Test&quot; tag is in the list of tags</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span> <span class="ow">in</span> <span class="n">old_tags_current</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span> <span class="ow">in</span> <span class="n">old_tags_initial</span><span class="p">)</span>
+
+        <span class="c1"># Open the &quot;Remove a tag&quot; pop-up and remove &quot;Test&quot; tag</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">remove_tag_action</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
         <span class="n">remove_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">pop_up_remove_tag</span>
         <span class="n">remove_tag</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">setCurrentRow</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Test tag selected</span>
@@ -1988,13 +1947,12 @@
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
         <span class="n">new_tags_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_INITIAL</span><span class="p">)</span>
+        <span class="c1"># Check that &quot;Test&quot; tag is no longer in the list of tags</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_tags_current</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_tags_initial</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_reset_cell"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_reset_cell">[docs]</a>    <span class="k">def</span> <span class="nf">test_reset_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the method resetting the selected cells</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the method resetting the selected cells.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -2004,7 +1962,7 @@
         <span class="n">scan_name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
         <span class="c1">### Test for a list:</span>
-        <span class="c1"># values in the db</span>
+        <span class="c1"># Values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name</span><span class="p">,</span>
@@ -2014,25 +1972,25 @@
                                                              <span class="n">scan_name</span><span class="p">,</span>
                                                              <span class="s2">&quot;BandWidth&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="c1"># value in the DataBrowser</span>
+        <span class="c1"># Value in the DataBrowser</span>
         <span class="n">bandwidth_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
                                                     <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;BandWidth&quot;</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                                                              <span class="n">bandwidth_column</span><span class="p">)</span>
         <span class="n">databrowser</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="c1"># we test equality between DataBrowser and db</span>
+        <span class="c1"># Check equality between DataBrowser and db</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">50000</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
 
-        <span class="c1"># we change the value</span>
+        <span class="c1"># Change the value</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
                         <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_databrowser_list</span><span class="p">,</span> <span class="s1">&#39;25000&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">edit_table_data_values</span><span class="p">()</span>
 
-        <span class="c1"># we test again the equality between DataBrowser and db</span>
+        <span class="c1"># Check again the equality between DataBrowser and db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name</span><span class="p">,</span>
@@ -2048,7 +2006,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value_initial</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">50000</span><span class="p">))</span>
 
-        <span class="c1"># we reset the current value to the initial value</span>
+        <span class="c1"># Reset the current value to the initial value</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                                                              <span class="n">bandwidth_column</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2058,7 +2016,7 @@
                      <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># we test whether the data has been reset</span>
+        <span class="c1"># Check whether the data has been reset</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name</span><span class="p">,</span>
@@ -2075,7 +2033,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
 
         <span class="c1">### Test for a string:</span>
-        <span class="c1"># values in the db</span>
+        <span class="c1"># Values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                            <span class="n">scan_name</span><span class="p">,</span>
                                                            <span class="s2">&quot;Type&quot;</span><span class="p">)</span>
@@ -2084,23 +2042,23 @@
                                                              <span class="n">scan_name</span><span class="p">,</span>
                                                              <span class="s2">&quot;Type&quot;</span><span class="p">)</span>
 
-        <span class="c1"># value in the DataBrowser</span>
+        <span class="c1"># Value in the DataBrowser</span>
         <span class="n">type_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
                                                          <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;Type&quot;</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">type_column</span><span class="p">)</span>
         <span class="n">databrowser</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
-        <span class="c1"># we test equality between DataBrowser and db</span>
+        <span class="c1"># Check equality between DataBrowser and db</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;Scan&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
 
-        <span class="c1"># we change the value</span>
+        <span class="c1"># Change the value</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># we test again the equality between DataBrowser and db</span>
+        <span class="c1"># Check again the equality between DataBrowser and db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                            <span class="n">scan_name</span><span class="p">,</span>
                                                            <span class="s2">&quot;Type&quot;</span><span class="p">)</span>
@@ -2116,16 +2074,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value_initial</span><span class="p">,</span> <span class="s2">&quot;Scan&quot;</span><span class="p">)</span>
 
-        <span class="c1"># we reset the current value to the initial value</span>
+        <span class="c1"># Reset the current value to the initial value</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">type_column</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">reset_cell</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># we test whether the data has been reset</span>
+        <span class="c1"># Check whether the data has been reset</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                            <span class="n">scan_name</span><span class="p">,</span>
                                                            <span class="s2">&quot;Type&quot;</span><span class="p">)</span>
@@ -2140,18 +2098,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_reset_column"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_reset_column">[docs]</a>    <span class="k">def</span> <span class="nf">test_reset_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the method resetting the columns selected</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests the method resetting the columns selected.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
 
-        <span class="c1"># second document; scan name</span>
+        <span class="c1"># Second document; scan name</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">scan_name2</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
-        <span class="c1"># second document; values in the db</span>
+        <span class="c1"># Second document; values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name2</span><span class="p">,</span>
@@ -2161,24 +2117,24 @@
                                                              <span class="n">scan_name2</span><span class="p">,</span>
                                                              <span class="s2">&quot;BandWidth&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="c1"># second document; value in the DataBrowser</span>
+        <span class="c1"># Second document; value in the DataBrowser</span>
         <span class="n">bandwidth_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
                                                     <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;BandWidth&quot;</span><span class="p">)</span>
         <span class="n">item2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                                                               <span class="n">bandwidth_column</span><span class="p">)</span>
         <span class="n">databrowser</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item2</span><span class="o">.</span><span class="n">text</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="c1"># we test equality between DataBrowser and db for second document</span>
+        <span class="c1"># Check equality between DataBrowser and db for second document</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">50000</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
         <span class="n">item2</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># third document; scan name</span>
+        <span class="c1"># Third document; scan name</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">scan_name3</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
-        <span class="c1"># third document; values in the db</span>
+        <span class="c1"># Third document; values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name3</span><span class="p">,</span>
@@ -2188,23 +2144,23 @@
                                                              <span class="n">scan_name3</span><span class="p">,</span>
                                                              <span class="s2">&quot;BandWidth&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="c1"># third document; value in the DataBrowser</span>
+        <span class="c1"># Third document; value in the DataBrowser</span>
         <span class="n">item3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
                                                               <span class="n">bandwidth_column</span><span class="p">)</span>
 
-        <span class="c1"># we test equality between DataBrowser and db for third document</span>
+        <span class="c1"># Check equality between DataBrowser and db for third document</span>
         <span class="n">databrowser</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item3</span><span class="o">.</span><span class="n">text</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">25000</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
         <span class="n">item3</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># we change the value to [70000] for the third and second documents</span>
+        <span class="c1"># Change the value to [70000] for the third and second documents</span>
         <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
                         <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_databrowser_list</span><span class="p">,</span> <span class="s1">&#39;70000&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">edit_table_data_values</span><span class="p">()</span>
 
-        <span class="c1"># second document; values in the db</span>
+        <span class="c1"># Second document; values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name2</span><span class="p">,</span>
@@ -2213,18 +2169,18 @@
                                                              <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
                                                              <span class="n">scan_name2</span><span class="p">,</span>
                                                              <span class="s2">&quot;BandWidth&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="c1"># second document; value in the DataBrowser</span>
+        <span class="c1"># Second document; value in the DataBrowser</span>
         <span class="n">item2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                                                               <span class="n">bandwidth_column</span><span class="p">)</span>
         <span class="n">databrowser</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item2</span><span class="o">.</span><span class="n">text</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="c1"># we test equality between DataBrowser and db for second document</span>
+        <span class="c1"># Check equality between DataBrowser and db for second document</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">70000</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="mi">50000</span><span class="p">),</span> <span class="n">value_initial</span><span class="p">)</span>
         <span class="n">item2</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># third document; values in the db</span>
+        <span class="c1"># Third document; values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name3</span><span class="p">,</span>
@@ -2234,24 +2190,24 @@
                                                              <span class="n">scan_name3</span><span class="p">,</span>
                                                              <span class="s2">&quot;BandWidth&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="c1"># third document; value in the DataBrowser</span>
+        <span class="c1"># Third document; value in the DataBrowser</span>
         <span class="n">item3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
                                                               <span class="n">bandwidth_column</span><span class="p">)</span>
         <span class="n">databrowser</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item3</span><span class="o">.</span><span class="n">text</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="c1"># we test value in database for the third document</span>
+        <span class="c1"># Check value in database for the third document</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">70000</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value_initial</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">25000</span><span class="p">))</span>
         <span class="n">item3</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># we reset the current value to the initial value</span>
+        <span class="c1"># Reset the current value to the initial value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">reset_column</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
 
-        <span class="c1"># we test the value in the db and DataBrowser for the second document</span>
+        <span class="c1"># Check the value in the db and DataBrowser for the second document</span>
         <span class="c1"># has been reset</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
@@ -2268,7 +2224,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
 
-        <span class="c1"># we test the value in the db and DataBrowser for the third document</span>
+        <span class="c1"># Check the value in the db and DataBrowser for the third document</span>
         <span class="c1"># has been reset</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
@@ -2286,34 +2242,32 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_reset_row"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_reset_row">[docs]</a>    <span class="k">def</span> <span class="nf">test_reset_row</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests row reset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tests row reset.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
 
-        <span class="c1"># value in DataBrowser for the second document</span>
+        <span class="c1"># Value in DataBrowser for the second document</span>
         <span class="n">type_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
                                                          <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;Type&quot;</span><span class="p">)</span>
         <span class="n">type_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                                                                   <span class="n">type_column</span><span class="p">)</span>
         <span class="n">old_type</span> <span class="o">=</span> <span class="n">type_item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
-        <span class="c1"># we test value in DataBrowser for the second document</span>
+        <span class="c1"># Check value in DataBrowser for the second document</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">old_type</span><span class="p">,</span> <span class="s2">&quot;Scan&quot;</span><span class="p">)</span>
 
-        <span class="c1"># we change the value</span>
+        <span class="c1"># Change the value</span>
         <span class="n">type_item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">type_item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
 
-        <span class="c1"># we test if value in DataBrowser as been changed</span>
+        <span class="c1"># Check if value in DataBrowser as been changed</span>
         <span class="n">set_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                                                                  <span class="n">type_column</span><span class="p">)</span>
         <span class="n">set_type</span> <span class="o">=</span> <span class="n">set_item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">set_type</span><span class="p">,</span> <span class="s2">&quot;Test&quot;</span><span class="p">)</span>
 
-        <span class="c1"># we reset row for second document</span>
+        <span class="c1"># Reset row for second document</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">clearSelection</span><span class="p">()</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2322,23 +2276,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
 
-        <span class="c1"># we test if value in DataBrowser as been reset</span>
+        <span class="c1"># Check if value in DataBrowser as been reset</span>
         <span class="n">type_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                                                                   <span class="n">type_column</span><span class="p">)</span>
         <span class="n">new_type</span> <span class="o">=</span> <span class="n">type_item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_type</span><span class="p">,</span> <span class="s2">&quot;Scan&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_save_project"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_save_project">[docs]</a>    <span class="k">def</span> <span class="nf">test_save_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test opening &amp; saving of a project</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Test opening &amp; saving of a project.&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
         <span class="n">projects_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span>
                                                        <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;projects_tests&#39;</span><span class="p">))</span>
 
         <span class="c1"># Instead of executing the pop-up, only shows it</span>
-        <span class="c1"># This avoid thread deadlocking</span>
+        <span class="c1"># This prevents thread deadlocking</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">self_</span><span class="p">:</span> <span class="n">self_</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
         <span class="c1"># Tries to open the project pop-up without the projects save dir</span>
@@ -2354,7 +2306,7 @@
         <span class="c1"># Sets the project save directory</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_projects_save_path</span><span class="p">(</span><span class="n">projects_dir</span><span class="p">)</span>
         <span class="n">something_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">projects_dir</span><span class="p">,</span> <span class="s1">&#39;something&#39;</span><span class="p">)</span>
-        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
+        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
 
         <span class="c1"># Saves the project &#39;something&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saveChoice</span><span class="p">()</span>
@@ -2395,10 +2347,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">something_path</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestMIADataBrowser.test_send_doc_to_pip"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_send_doc_to_pip">[docs]</a>    <span class="k">def</span> <span class="nf">test_send_doc_to_pip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the popup sending the documents to the pipeline manager</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestMIADataBrowser.test_send_doc_to_pipeline_manager"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_send_doc_to_pipeline_manager">[docs]</a>    <span class="k">def</span> <span class="nf">test_send_doc_to_pipeline_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tests the popup sending the documents to the pipeline manager.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -2412,20 +2362,20 @@
                 <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="n">send_popup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">show_selection</span>
 
-        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 
         <span class="n">send_popup</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="c1"># Checking that the list is stil empty</span>
+        <span class="c1"># Checking that the list is still empty</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">scan_list</span><span class="p">,</span> <span class="p">[])</span>
 
-        <span class="c1"># Sending the selection (all scans)</span>
+        <span class="c1"># Sending the selection (all scans), but hit the &quot;OK&quot; button</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">send_documents_to_pipeline_button</span><span class="p">,</span>
                 <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="n">send_popup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">show_selection</span>
 
-        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 
         <span class="n">send_popup</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
 
@@ -2465,8 +2415,8 @@
         <span class="n">item1</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">scan1</span> <span class="o">=</span> <span class="n">item1</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">item2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">scan2</span> <span class="o">=</span> <span class="n">item2</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">item2</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">scan2</span> <span class="o">=</span> <span class="n">item2</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
         <span class="c1"># Sending the selection (first 2 scans)</span>
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span>
@@ -2474,7 +2424,7 @@
                 <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="n">send_popup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">show_selection</span>
 
-        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 
         <span class="n">send_popup</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
 
@@ -2484,7 +2434,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">scan1</span> <span class="ow">in</span> <span class="n">scans</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">scan2</span> <span class="ow">in</span> <span class="n">scans</span><span class="p">)</span>
 
-        <span class="c1"># Testing with the rapid search</span>
+        <span class="c1"># Checking with the rapid search</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">clearSelection</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;G3&quot;</span><span class="p">)</span>
 
@@ -2494,7 +2444,7 @@
                 <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
         <span class="n">send_popup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">show_selection</span>
 
-        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 
         <span class="n">send_popup</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
 
@@ -2509,8 +2459,7 @@
                         <span class="s2">&quot;pvm-000940_800.nii&quot;</span> <span class="ow">in</span> <span class="n">scans</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_set_value"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_set_value">[docs]</a>    <span class="k">def</span> <span class="nf">test_set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tests the values modifications</span>
+        <span class="sd">&quot;&quot;&quot;Tests the values modifications.</span>
 
 <span class="sd">        This test is redundant with the first part of test_reset_cell.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2518,12 +2467,12 @@
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
 
-        <span class="c1"># scan name for the second document</span>
+        <span class="c1"># Scan name for the second document</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">scan_name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
         <span class="c1">### Test for a list:</span>
-        <span class="c1"># values in the db</span>
+        <span class="c1"># Values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name</span><span class="p">,</span>
@@ -2533,7 +2482,7 @@
                                                              <span class="n">scan_name</span><span class="p">,</span>
                                                              <span class="s2">&quot;BandWidth&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="c1"># value in the DataBrowser</span>
+        <span class="c1"># Value in the DataBrowser</span>
         <span class="n">bandwidth_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
                                                     <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;BandWidth&quot;</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
@@ -2543,13 +2492,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
 
-        <span class="c1"># we change the value</span>
+        <span class="c1"># Change the value</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
                         <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_databrowser_list</span><span class="p">,</span> <span class="s1">&#39;25000&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">edit_table_data_values</span><span class="p">()</span>
 
-        <span class="c1"># we test if value was changed in db and DataBrowser</span>
+        <span class="c1"># Check if value was changed in db and DataBrowser</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                              <span class="n">scan_name</span><span class="p">,</span>
@@ -2567,7 +2516,7 @@
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1">### Test for a string:</span>
-        <span class="c1"># values in the db</span>
+        <span class="c1"># Values in the db</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                            <span class="n">scan_name</span><span class="p">,</span>
                                                            <span class="s2">&quot;Type&quot;</span><span class="p">)</span>
@@ -2576,23 +2525,23 @@
                                                              <span class="n">scan_name</span><span class="p">,</span>
                                                              <span class="s2">&quot;Type&quot;</span><span class="p">)</span>
 
-        <span class="c1"># value in the DataBrowser</span>
+        <span class="c1"># Value in the DataBrowser</span>
         <span class="n">type_column</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
                                                          <span class="n">get_tag_column</span><span class="p">)(</span><span class="s2">&quot;Type&quot;</span><span class="p">)</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_column</span><span class="p">)</span>
         <span class="n">databrowser</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
-        <span class="c1"># we test equality between DataBrowser and db</span>
+        <span class="c1"># Check equality between DataBrowser and db</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;Scan&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_initial</span><span class="p">)</span>
 
-        <span class="c1"># we change the value</span>
+        <span class="c1"># Change the value</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># we test if value in DataBrowser and db as been changed</span>
+        <span class="c1"># Check if value in DataBrowser and db as been changed</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                                                            <span class="n">scan_name</span><span class="p">,</span>
                                                            <span class="s2">&quot;Type&quot;</span><span class="p">)</span>
@@ -2607,13 +2556,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">value_initial</span><span class="p">,</span> <span class="s2">&quot;Scan&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_show_brick_history"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_show_brick_history">[docs]</a>    <span class="k">def</span> <span class="nf">test_show_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Opens the history pop-up for scans with history related to </span>
-<span class="sd">        standard bricks and bricks contained by a subpipeline.</span>
-<span class="sd">        Tests</span>
-<span class="sd">         - TableDataBrowser.show_brick_history</span>
-<span class="sd">         - PopUpShowHistory</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Opens the history pop-up for scans with history related to</span>
+<span class="sd">        standard bricks and bricks contained by a sub-pipeline.</span>
+
+<span class="sd">        - Tests</span>
+<span class="sd">            - TableDataBrowser.show_brick_history</span>
+<span class="sd">            - PopUpShowHistory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Creates a new project folder and switches to it</span>
         <span class="n">new_project_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2628,21 +2577,20 @@
 
         <span class="c1"># Opens the history pop-up for the scan related to &#39;smooth_1&#39;</span>
         <span class="n">hist_index</span> <span class="o">=</span> <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="s1">&#39;History&#39;</span><span class="p">)</span>
-        <span class="n">hist_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">hist_index</span><span class="p">)</span><span class="o">.</span>
-                       <span class="n">children</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-
-        <span class="n">hist_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span> <span class="c1"># Opens the history window</span>
+        <span class="n">hist_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">hist_index</span><span class="p">)</span><span class="o">.</span>
+                                                                 <span class="n">children</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">hist_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>  <span class="c1"># Opens the history window</span>
 
         <span class="c1"># Asserts that a history pop-up was created</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="p">,</span> 
                                 <span class="s1">&#39;brick_history_popup&#39;</span><span class="p">))</span>
 
-        <span class="c1"># Clicks on the input button displayed on the history pop-up</span>
+        <span class="c1"># Clicks on the input button displayed on the history pop-up.</span>
         <span class="c1"># This shows the corresponding scan in the data browser</span>
-        <span class="n">input_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">brick_history_popup</span><span class="o">.</span>
-                        <span class="n">table</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">input_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">brick_history_popup</span><span class="o">.</span><span class="n">table</span><span class="o">.</span>
+                                                <span class="n">cellWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="n">input_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span> <span class="c1"># Clicks on the input button</span>
+        <span class="n">input_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>  <span class="c1"># Clicks on the input button</span>
 
         <span class="c1"># Asserts that &#39;INPUT_SCAN&#39; history pop-up was created</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
@@ -2650,10 +2598,10 @@
                          <span class="n">INPUT_SCAN</span><span class="p">)</span>
 
         <span class="c1"># Opens the history pop-up for the scan related to &#39;quad_smooth_1&#39;</span>
-        <span class="n">hist_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">hist_index</span><span class="p">)</span><span class="o">.</span>
-                       <span class="n">children</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">hist_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">hist_index</span><span class="p">)</span><span class="o">.</span>
+                                                                 <span class="n">children</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="n">hist_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span> <span class="c1"># Opens the history window</span>
+        <span class="n">hist_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>  <span class="c1"># Opens the history window</span>
         <span class="n">hist_button</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_sort"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_sort">[docs]</a>    <span class="k">def</span> <span class="nf">test_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
