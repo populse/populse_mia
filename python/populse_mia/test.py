@@ -232,12 +232,12 @@ class TestMIACase(unittest.TestCase):
     def add_visualized_tag(self, tag):
         """With the "Visualized tags" pop-up open, selects a tag to display.
 
-        Should be called, with a delay, before opening the "Visualized tags"
-        pop-up, i.e.:
-            QTimer.singleShot(1000, lambda:self.add_visualized_tag(
-            'AcquisitionDate'))
-        It's currently not the case
-        (see TestMIANodeController.test_filter_widget())
+        - Should be called, with a delay, before opening the "Visualized tags"
+          pop-up, i.e.:
+              QTimer.singleShot(1000, lambda:self.add_visualized_tag(
+              'AcquisitionDate'))
+          It's currently not the case
+          (see TestMIANodeController.test_filter_widget()).
 
         :param tag: the tag to be displayed (str)
         """
@@ -344,7 +344,7 @@ class TestMIACase(unittest.TestCase):
     def get_new_test_project(self, name='test_project', light=False):
         """Copies a test project where it can be safely modified.
 
-        The new project is created in the /tmp (/Temp) folder.
+        - The new project is created in the /tmp (/Temp) folder.
 
         :param name: name of the directory containing the project (str)
         :param light: True to copy a project with few documents (bool)
@@ -367,8 +367,8 @@ class TestMIACase(unittest.TestCase):
     def restart_MIA(self):
         """Restarts MIA within a unit test.
 
-        Can be used to restart MIA after changing the controller version in MIA
-        preferences.
+        - Can be used to restart MIA after changing the controller version in MIA
+          preferences.
         """
 
         self.main_window.close()
@@ -466,8 +466,8 @@ class TestMIADataBrowser(TestMIACase):
               selected
             - test_reset_row: test row reset
             - test_save_project: test opening & saving of a project
-            - test_send_doc_to_pip: tests the popup sending documents
-              to the pipeline manager
+            - test_send_doc_to_pipeline_manager: tests the popup sending
+              documents to the pipeline manager
             - test_set_value: tests the values modifications
             - test_show_brick_history: opens the history pop-up for 
               scans with history related to a brick
@@ -493,8 +493,8 @@ class TestMIADataBrowser(TestMIACase):
     def test_add_path(self):
         """Tries import a document to the project.
 
-        Tests DataBrowser.add_path and PopUpAddPath.
-        Mocks the execution of QFileDialog and QMessageBox.
+        - Tests DataBrowser.add_path and PopUpAddPath.
+        - Mocks the execution of QFileDialog and QMessageBox.
         """
 
         # Sets shortcuts for often used objects
@@ -1155,9 +1155,9 @@ class TestMIADataBrowser(TestMIACase):
     def test_mini_viewer(self):
         """Selects scans and display them in the mini viewer.
 
-        Tests MiniViewer.
-        The mini viewer displays information of the selected scan in a
-        box under the scans list, in the data browser tab.
+        - Tests MiniViewer.
+        - The mini viewer displays information of the selected scan in a
+          box under the scans list, in the data browser tab.
         """
 
         # Creates a new project folder and switches to it
@@ -1314,8 +1314,8 @@ class TestMIADataBrowser(TestMIACase):
     def test_multiple_sort_appendix(self):
         """Adds and removes tags in the data browser.
 
-        Tests PopUpMultipleSort.
-        Mocks PopUpSelectTagCountTable.exec_.
+        - Tests PopUpMultipleSort.
+        - Mocks PopUpSelectTagCountTable.exec_.
         """
 
         table_data = self.main_window.data_browser.table_data
@@ -1347,15 +1347,12 @@ class TestMIADataBrowser(TestMIACase):
         table_data.pop_up.close()
 
     def test_openTagsPopUp(self):
-        '''
-        Opens a document in data viewer and opens a pop-up to select the
+        """Opens a document in data viewer and opens a pop-up to select the
         legend of the thumbnails.
-        Tests MiniViewer.openTagsPopUp.
 
-        Notes
-        -----
-        Indirectly tests PopUpSelectTag.
-        '''
+        - Tests MiniViewer.openTagsPopUp.
+        - Indirectly tests PopUpSelectTag.
+        """
 
         # Sets shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
@@ -1376,7 +1373,7 @@ class TestMIADataBrowser(TestMIACase):
         addPath.save_path()
 
         # Selects the document in the data browser
-        data_browser.table_data.item(0,0).setSelected(True)
+        data_browser.table_data.item(0, 0).setSelected(True)
 
         # Mocks the execution of the dialog window
         PopUpSelectTag.exec_ = Mock(return_value=True)
@@ -1410,11 +1407,9 @@ class TestMIADataBrowser(TestMIACase):
         viewer.popUp.ok_clicked()
 
     def test_open_project(self):
-        """
-        Tests project opening
-        """
+        """Tests project opening."""
 
-        project_8_path = self.get_new_test_project(name = 'project_8')
+        project_8_path = self.get_new_test_project(name='project_8')
         self.main_window.switch_project(project_8_path, "project_8")
 
         self.assertEqual(self.main_window.project.getName(), "project_8")
@@ -1485,18 +1480,16 @@ class TestMIADataBrowser(TestMIACase):
                         "pvm-000220_000.nii" in documents)
 
     def test_project_filter(self):
-        '''
-        Creates a project, saves a filter and opens it.
-        Tests 
-         - DataBrowser.open_popup
-         - Project.save_current_filter
+        """Creates a project, saves a filter and opens it.
 
-        Notes
-        -----
-        Mocks
-         - QMessageBox.exec
-         - QInputDialog.getText
-        '''
+        - Tests:
+            - DataBrowser.open_popup
+            - Project.save_current_filter
+
+        - Mocks:
+           - QMessageBox.exec
+           - QInputDialog.getText
+        """
 
         test_project_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(test_project_path, 'test_project')
@@ -1523,7 +1516,7 @@ class TestMIADataBrowser(TestMIACase):
         open_popup.search_str('')
         self.assertFalse(open_popup.list_widget_filters.item(0).isHidden())
 
-        # Tries to search for an inexistant filter 
+        # Tries to search for a non-existent filter
         open_popup.search_str('filter_2')
         self.assertTrue(open_popup.list_widget_filters.item(0).isHidden())
 
@@ -1548,9 +1541,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(len(scans_displayed), 3)
    
     def test_project_properties(self):
-        """
-        Tests saved projects addition and removal
-        """
+        """Tests saved projects addition and removal."""
 
         saved_projects = self.main_window.saved_projects
         self.assertEqual(saved_projects.pathsList, [])
@@ -1581,8 +1572,8 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(saved_projects.pathsList, [])
 
     def test_proj_remov_from_cur_proj(self):
-        """
-        Tests that the projects are removed from the list of current projects
+        """Tests that the projects are removed from the list of current
+        projects.
         """
 
         config = Config(config_path=self.config_path)
@@ -1591,9 +1582,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(self.main_window.project.folder in projects)
 
     def test_rapid_search(self):
-        """
-        Tests the rapid search bar
-        """
+        """Tests the rapid search bar."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -1722,18 +1711,14 @@ class TestMIADataBrowser(TestMIACase):
                           "pvm-000142_400.nii"])
 
     def test_remove_scan(self):
-        """
-        Creates a new project, adds scans to the session and remove 
-        them.
-        Tests
-         - PipelineManagerTab.remove_scan
-         - PopUpRemoveScan
+        """Creates a new project, adds scans to the session and remove them.
 
-        Notes
-        -----
-        Mocks PopUpRemoveScan.exec.
-        - 
-         
+        - Tests
+            - PipelineManagerTab.remove_scan
+            - PopUpRemoveScan
+
+        - Mocks
+            - PopUpRemoveScan.exec
         """
 
         # Sets shortcuts for objects that are often used
@@ -1802,11 +1787,6 @@ class TestMIADataBrowser(TestMIACase):
 
         # Asserts that the scans were deleted
         self.assertEqual(len(tb_data.scans), 0)
-
-        print()
-
-        
-        
 
         #project_8_path = self.get_new_test_project()
         #self.main_window.switch_project(project_8_path, "project_8")
@@ -1891,23 +1871,20 @@ class TestMIADataBrowser(TestMIACase):
         #                "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
         #                "-000220_000.nii" in scans_displayed)
 
-        print()
-
     def test_remove_tag(self):
-        """
-        Tests the popup removing user tags
-        """
+        """Tests the popup removing user tags."""
 
-        # Adding a tag
+        # Adding a tag "Test"
         self.main_window.data_browser.add_tag_action.trigger()
         add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Test")
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-
         old_tags_current = self.main_window.project.session.get_fields_names(
                                                              COLLECTION_CURRENT)
         old_tags_initial = self.main_window.project.session.get_fields_names(
                                                              COLLECTION_INITIAL)
+
+        # Open the "Remove a tag" pop-up but do nothing
         self.main_window.data_browser.remove_tag_action.trigger()
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
@@ -1915,6 +1892,8 @@ class TestMIADataBrowser(TestMIACase):
                                                              COLLECTION_CURRENT)
         new_tags_initial = self.main_window.project.session.get_fields_names(
                                                              COLLECTION_INITIAL)
+
+        # Check that the list of tags has not changed
         self.assertTrue(old_tags_current == new_tags_current)
         self.assertTrue(old_tags_initial == new_tags_initial)
 
@@ -1922,8 +1901,11 @@ class TestMIADataBrowser(TestMIACase):
                                                              COLLECTION_CURRENT)
         old_tags_initial = self.main_window.project.session.get_fields_names(
                                                              COLLECTION_INITIAL)
+        # Check that "Test" tag is in the list of tags
         self.assertTrue("Test" in old_tags_current)
         self.assertTrue("Test" in old_tags_initial)
+
+        # Open the "Remove a tag" pop-up and remove "Test" tag
         self.main_window.data_browser.remove_tag_action.trigger()
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         remove_tag.list_widget_tags.setCurrentRow(0)  # Test tag selected
@@ -1932,13 +1914,12 @@ class TestMIADataBrowser(TestMIACase):
                                                              COLLECTION_CURRENT)
         new_tags_initial = self.main_window.project.session.get_fields_names(
                                                              COLLECTION_INITIAL)
+        # Check that "Test" tag is no longer in the list of tags
         self.assertTrue("Test" not in new_tags_current)
         self.assertTrue("Test" not in new_tags_initial)
 
     def test_reset_cell(self):
-        """
-        Tests the method resetting the selected cells
-        """
+        """Tests the method resetting the selected cells."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -1948,7 +1929,7 @@ class TestMIADataBrowser(TestMIACase):
         scan_name = item.text()
 
         ### Test for a list:
-        # values in the db
+        # Values in the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name,
@@ -1958,25 +1939,25 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name,
                                                              "BandWidth")[0])
 
-        # value in the DataBrowser
+        # Value in the DataBrowser
         bandwidth_column = (self.main_window.data_browser.table_data.
                                                     get_tag_column)("BandWidth")
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
         databrowser = float(item.text()[1:-1])
 
-        # we test equality between DataBrowser and db
+        # Check equality between DataBrowser and db
         self.assertEqual(value, float(50000))
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
-        # we change the value
+        # Change the value
         item.setSelected(True)
         threading.Timer(2,
                         partial(self.edit_databrowser_list, '25000')).start()
         self.main_window.data_browser.table_data.edit_table_data_values()
 
-        # we test again the equality between DataBrowser and db
+        # Check again the equality between DataBrowser and db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name,
@@ -1992,7 +1973,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, databrowser)
         self.assertEqual(value_initial, float(50000))
 
-        # we reset the current value to the initial value
+        # Reset the current value to the initial value
         item = self.main_window.data_browser.table_data.item(0,
                                                              bandwidth_column)
         item.setSelected(True)
@@ -2002,7 +1983,7 @@ class TestMIADataBrowser(TestMIACase):
                      self.main_window.data_browser.table_data.change_cell_color)
         item.setSelected(False)
 
-        # we test whether the data has been reset
+        # Check whether the data has been reset
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name,
@@ -2019,7 +2000,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, value_initial)
 
         ### Test for a string:
-        # values in the db
+        # Values in the db
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
                                                            scan_name,
                                                            "Type")
@@ -2028,23 +2009,23 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name,
                                                              "Type")
 
-        # value in the DataBrowser
+        # Value in the DataBrowser
         type_column = (self.main_window.data_browser.table_data.
                                                          get_tag_column)("Type")
         item = self.main_window.data_browser.table_data.item(0, type_column)
         databrowser = item.text()
 
-        # we test equality between DataBrowser and db
+        # Check equality between DataBrowser and db
         self.assertEqual(value, "Scan")
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
-        # we change the value
+        # Change the value
         item.setSelected(True)
         item.setText("Test")
         item.setSelected(False)
 
-        # we test again the equality between DataBrowser and db
+        # Check again the equality between DataBrowser and db
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
                                                            scan_name,
                                                            "Type")
@@ -2060,16 +2041,16 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, databrowser)
         self.assertEqual(value_initial, "Scan")
 
-        # we reset the current value to the initial value
+        # Reset the current value to the initial value
         item = self.main_window.data_browser.table_data.item(0, type_column)
         item.setSelected(True)
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_cell()
         self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color)
+                     self.main_window.data_browser.table_data.change_cell_color)
         item.setSelected(False)
 
-        # we test whether the data has been reset
+        # Check whether the data has been reset
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
                                                            scan_name,
                                                            "Type")
@@ -2084,18 +2065,16 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, value_initial)
 
     def test_reset_column(self):
-        """
-        Tests the method resetting the columns selected
-        """
+        """Tests the method resetting the columns selected."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # second document; scan name
+        # Second document; scan name
         item = self.main_window.data_browser.table_data.item(1, 0)
         scan_name2 = item.text()
 
-        # second document; values in the db
+        # Second document; values in the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name2,
@@ -2105,24 +2084,24 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name2,
                                                              "BandWidth")[0])
 
-        # second document; value in the DataBrowser
+        # Second document; value in the DataBrowser
         bandwidth_column = (self.main_window.data_browser.table_data.
                                                     get_tag_column)("BandWidth")
         item2 = self.main_window.data_browser.table_data.item(1,
                                                               bandwidth_column)
         databrowser = float(item2.text()[1:-1])
 
-        # we test equality between DataBrowser and db for second document
+        # Check equality between DataBrowser and db for second document
         self.assertEqual(value, float(50000))
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
         item2.setSelected(True)
 
-        # third document; scan name
+        # Third document; scan name
         item = self.main_window.data_browser.table_data.item(2, 0)
         scan_name3 = item.text()
 
-        # third document; values in the db
+        # Third document; values in the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name3,
@@ -2132,23 +2111,23 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name3,
                                                              "BandWidth")[0])
 
-        # third document; value in the DataBrowser
+        # Third document; value in the DataBrowser
         item3 = self.main_window.data_browser.table_data.item(2,
                                                               bandwidth_column)
 
-        # we test equality between DataBrowser and db for third document
+        # Check equality between DataBrowser and db for third document
         databrowser = float(item3.text()[1:-1])
         self.assertEqual(value, float(25000))
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
         item3.setSelected(True)
 
-        # we change the value to [70000] for the third and second documents
+        # Change the value to [70000] for the third and second documents
         threading.Timer(2,
                         partial(self.edit_databrowser_list, '70000')).start()
         self.main_window.data_browser.table_data.edit_table_data_values()
 
-        # second document; values in the db
+        # Second document; values in the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name2,
@@ -2157,18 +2136,18 @@ class TestMIADataBrowser(TestMIACase):
                                                              COLLECTION_INITIAL,
                                                              scan_name2,
                                                              "BandWidth")[0])
-        # second document; value in the DataBrowser
+        # Second document; value in the DataBrowser
         item2 = self.main_window.data_browser.table_data.item(1,
                                                               bandwidth_column)
         databrowser = float(item2.text()[1:-1])
 
-        # we test equality between DataBrowser and db for second document
+        # Check equality between DataBrowser and db for second document
         self.assertEqual(value, float(70000))
         self.assertEqual(value, databrowser)
         self.assertEqual(float(50000), value_initial)
         item2.setSelected(True)
 
-        # third document; values in the db
+        # Third document; values in the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name3,
@@ -2178,24 +2157,24 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name3,
                                                              "BandWidth")[0])
 
-        # third document; value in the DataBrowser
+        # Third document; value in the DataBrowser
         item3 = self.main_window.data_browser.table_data.item(2,
                                                               bandwidth_column)
         databrowser = float(item3.text()[1:-1])
 
-        # we test value in database for the third document
+        # Check value in database for the third document
         self.assertEqual(value, float(70000))
         self.assertEqual(value, databrowser)
         self.assertEqual(value_initial, float(25000))
         item3.setSelected(True)
 
-        # we reset the current value to the initial value
+        # Reset the current value to the initial value
         self.main_window.data_browser.table_data.itemChanged.disconnect()
         self.main_window.data_browser.table_data.reset_column()
         self.main_window.data_browser.table_data.itemChanged.connect(
                      self.main_window.data_browser.table_data.change_cell_color)
 
-        # we test the value in the db and DataBrowser for the second document
+        # Check the value in the db and DataBrowser for the second document
         # has been reset
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
@@ -2212,7 +2191,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
-        # we test the value in the db and DataBrowser for the third document
+        # Check the value in the db and DataBrowser for the third document
         # has been reset
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
@@ -2230,34 +2209,32 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, value_initial)
 
     def test_reset_row(self):
-        """
-        Tests row reset
-        """
+        """Tests row reset."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # value in DataBrowser for the second document
+        # Value in DataBrowser for the second document
         type_column = (self.main_window.data_browser.table_data.
                                                          get_tag_column)("Type")
         type_item = self.main_window.data_browser.table_data.item(1,
                                                                   type_column)
         old_type = type_item.text()
 
-        # we test value in DataBrowser for the second document
+        # Check value in DataBrowser for the second document
         self.assertEqual(old_type, "Scan")
 
-        # we change the value
+        # Change the value
         type_item.setSelected(True)
         type_item.setText("Test")
 
-        # we test if value in DataBrowser as been changed
+        # Check if value in DataBrowser as been changed
         set_item = self.main_window.data_browser.table_data.item(1,
                                                                  type_column)
         set_type = set_item.text()
         self.assertEqual(set_type, "Test")
 
-        # we reset row for second document
+        # Reset row for second document
         self.main_window.data_browser.table_data.clearSelection()
         item = self.main_window.data_browser.table_data.item(1, 0)
         item.setSelected(True)
@@ -2266,23 +2243,21 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.data_browser.table_data.itemChanged.connect(
                      self.main_window.data_browser.table_data.change_cell_color)
 
-        # we test if value in DataBrowser as been reset
+        # Check if value in DataBrowser as been reset
         type_item = self.main_window.data_browser.table_data.item(1,
                                                                   type_column)
         new_type = type_item.text()
         self.assertEqual(new_type, "Scan")
 
     def test_save_project(self):
-        """
-        Test opening & saving of a project
-        """
+        """Test opening & saving of a project."""
 
         config = Config(config_path=self.config_path)
         projects_dir = os.path.realpath(tempfile.mkdtemp(
                                                        prefix='projects_tests'))
 
         # Instead of executing the pop-up, only shows it
-        # This avoid thread deadlocking
+        # This prevents thread deadlocking
         QMessageBox.exec = lambda self_: self_.show()
 
         # Tries to open the project pop-up without the projects save dir
@@ -2298,7 +2273,7 @@ class TestMIADataBrowser(TestMIACase):
         # Sets the project save directory
         config.set_projects_save_path(projects_dir)
         something_path = os.path.join(projects_dir, 'something')
-        project_8_path = self.get_new_test_project(name = 'project_8')
+        project_8_path = self.get_new_test_project(name='project_8')
 
         # Saves the project 'something'
         self.main_window.saveChoice()
@@ -2339,10 +2314,8 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.switch_project(project_8_path, "project_8")
         shutil.rmtree(something_path)
 
-    def test_send_doc_to_pip(self):
-        """
-        Tests the popup sending the documents to the pipeline manager
-        """
+    def test_send_doc_to_pipeline_manager(self):
+        """Tests the popup sending the documents to the pipeline manager."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -2356,20 +2329,20 @@ class TestMIADataBrowser(TestMIACase):
                 Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
-        QTest.qWait(100)
+        QTest.qWait(500)
 
         send_popup.close()
 
-        # Checking that the list is stil empty
+        # Checking that the list is still empty
         self.assertEqual(self.main_window.pipeline_manager.scan_list, [])
 
-        # Sending the selection (all scans)
+        # Sending the selection (all scans), but hit the "OK" button
         QTest.mouseClick(
                 self.main_window.data_browser.send_documents_to_pipeline_button,
                 Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
-        QTest.qWait(100)
+        QTest.qWait(500)
 
         send_popup.ok_clicked()
 
@@ -2409,8 +2382,8 @@ class TestMIADataBrowser(TestMIACase):
         item1.setSelected(True)
         scan1 = item1.text()
         item2 = self.main_window.data_browser.table_data.item(1, 0)
-        scan2 = item2.text()
         item2.setSelected(True)
+        scan2 = item2.text()
 
         # Sending the selection (first 2 scans)
         QTest.mouseClick(
@@ -2418,7 +2391,7 @@ class TestMIADataBrowser(TestMIACase):
                 Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
-        QTest.qWait(100)
+        QTest.qWait(500)
 
         send_popup.ok_clicked()
 
@@ -2428,7 +2401,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(scan1 in scans)
         self.assertTrue(scan2 in scans)
 
-        # Testing with the rapid search
+        # Checking with the rapid search
         self.main_window.data_browser.table_data.clearSelection()
         self.main_window.data_browser.search_bar.setText("G3")
 
@@ -2438,7 +2411,7 @@ class TestMIADataBrowser(TestMIACase):
                 Qt.LeftButton)
         send_popup = self.main_window.data_browser.show_selection
 
-        QTest.qWait(100)
+        QTest.qWait(500)
 
         send_popup.ok_clicked()
 
@@ -2453,8 +2426,7 @@ class TestMIADataBrowser(TestMIACase):
                         "pvm-000940_800.nii" in scans)
 
     def test_set_value(self):
-        """
-        Tests the values modifications
+        """Tests the values modifications.
 
         This test is redundant with the first part of test_reset_cell.
         """
@@ -2462,12 +2434,12 @@ class TestMIADataBrowser(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # scan name for the second document
+        # Scan name for the second document
         item = self.main_window.data_browser.table_data.item(1, 0)
         scan_name = item.text()
 
         ### Test for a list:
-        # values in the db
+        # Values in the db
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name,
@@ -2477,7 +2449,7 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name,
                                                              "BandWidth")[0])
 
-        # value in the DataBrowser
+        # Value in the DataBrowser
         bandwidth_column = (self.main_window.data_browser.table_data.
                                                     get_tag_column)("BandWidth")
         item = self.main_window.data_browser.table_data.item(1,
@@ -2487,13 +2459,13 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
-        # we change the value
+        # Change the value
         item.setSelected(True)
         threading.Timer(2,
                         partial(self.edit_databrowser_list, '25000')).start()
         self.main_window.data_browser.table_data.edit_table_data_values()
 
-        # we test if value was changed in db and DataBrowser
+        # Check if value was changed in db and DataBrowser
         value = float(self.main_window.project.session.get_value(
                                                              COLLECTION_CURRENT,
                                                              scan_name,
@@ -2511,7 +2483,7 @@ class TestMIADataBrowser(TestMIACase):
         item.setSelected(False)
 
         ### Test for a string:
-        # values in the db
+        # Values in the db
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
                                                            scan_name,
                                                            "Type")
@@ -2520,23 +2492,23 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name,
                                                              "Type")
 
-        # value in the DataBrowser
+        # Value in the DataBrowser
         type_column = (self.main_window.data_browser.table_data.
                                                          get_tag_column)("Type")
         item = self.main_window.data_browser.table_data.item(1, type_column)
         databrowser = item.text()
 
-        # we test equality between DataBrowser and db
+        # Check equality between DataBrowser and db
         self.assertEqual(value, "Scan")
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
-        # we change the value
+        # Change the value
         item.setSelected(True)
         item.setText("Test")
         item.setSelected(False)
 
-        # we test if value in DataBrowser and db as been changed
+        # Check if value in DataBrowser and db as been changed
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
                                                            scan_name,
                                                            "Type")
@@ -2551,13 +2523,13 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value_initial, "Scan")
 
     def test_show_brick_history(self):
-        '''
-        Opens the history pop-up for scans with history related to 
-        standard bricks and bricks contained by a subpipeline.
-        Tests
-         - TableDataBrowser.show_brick_history
-         - PopUpShowHistory
-        '''
+        """Opens the history pop-up for scans with history related to
+        standard bricks and bricks contained by a sub-pipeline.
+
+        - Tests
+            - TableDataBrowser.show_brick_history
+            - PopUpShowHistory
+        """
 
         # Creates a new project folder and switches to it
         new_project_path = self.get_new_test_project(light=True)
@@ -2572,21 +2544,20 @@ class TestMIADataBrowser(TestMIACase):
 
         # Opens the history pop-up for the scan related to 'smooth_1'
         hist_index = data_browser.table_data.get_tag_column('History')
-        hist_button = (data_browser.table_data.cellWidget(0,hist_index).
-                       children()[-1])
-
-        hist_button.clicked.emit() # Opens the history window
+        hist_button = (data_browser.table_data.cellWidget(0, hist_index).
+                                                                 children()[-1])
+        hist_button.clicked.emit()  # Opens the history window
 
         # Asserts that a history pop-up was created
         self.assertTrue(hasattr(data_browser.table_data, 
                                 'brick_history_popup'))
 
-        # Clicks on the input button displayed on the history pop-up
+        # Clicks on the input button displayed on the history pop-up.
         # This shows the corresponding scan in the data browser
-        input_button = (data_browser.table_data.brick_history_popup.
-                        table.cellWidget(0,8).children()[-1])
+        input_button = (data_browser.table_data.brick_history_popup.table.
+                                                cellWidget(0, 8).children()[-1])
 
-        input_button.clicked.emit() # Clicks on the input button
+        input_button.clicked.emit()  # Clicks on the input button
 
         # Asserts that 'INPUT_SCAN' history pop-up was created
         self.assertNotEqual(data_browser.table_data.selectedItems(), 0)
@@ -2594,10 +2565,10 @@ class TestMIADataBrowser(TestMIACase):
                          INPUT_SCAN)
 
         # Opens the history pop-up for the scan related to 'quad_smooth_1'
-        hist_button = (data_browser.table_data.cellWidget(1,hist_index).
-                       children()[-1])
+        hist_button = (data_browser.table_data.cellWidget(1, hist_index).
+                                                                 children()[-1])
 
-        hist_button.clicked.emit() # Opens the history window
+        hist_button.clicked.emit()  # Opens the history window
         hist_button.close()
 
     def test_sort(self):

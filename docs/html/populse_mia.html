@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia package &#8212; populse_mia 2.2.1-dev+a3087537f documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.2.1-dev+dac10a261 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.2.1-dev+a3087537f documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+dac10a261 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1603,14 +1603,17 @@ be safely modified</p></li>
 <dt id="populse_mia.test.TestMIACase.add_visualized_tag">
 <code class="sig-name descname">add_visualized_tag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.add_visualized_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.add_visualized_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>With the “Visualized tags” pop-up open, selects a tag to display.</p>
-<p>Should be called, with a delay, before opening the “Visualized tags”
+<ul>
+<li><p>Should be called, with a delay, before opening the “Visualized tags”
 pop-up, i.e.:</p>
 <blockquote>
 <div><p>QTimer.singleShot(1000, lambda:self.add_visualized_tag(
 ‘AcquisitionDate’))</p>
 </div></blockquote>
 <p>It’s currently not the case
-(see TestMIANodeController.test_filter_widget())</p>
+(see TestMIANodeController.test_filter_widget()).</p>
+</li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tag</strong> – the tag to be displayed (str)</p>
@@ -1673,7 +1676,9 @@ pop-up, i.e.:</p>
 <dt id="populse_mia.test.TestMIACase.get_new_test_project">
 <code class="sig-name descname">get_new_test_project</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'test_project'</span></em>, <em class="sig-param"><span class="n">light</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.get_new_test_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.get_new_test_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copies a test project where it can be safely modified.</p>
-<p>The new project is created in the /tmp (/Temp) folder.</p>
+<ul class="simple">
+<li><p>The new project is created in the /tmp (/Temp) folder.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1688,8 +1693,10 @@ pop-up, i.e.:</p>
 <dt id="populse_mia.test.TestMIACase.restart_MIA">
 <code class="sig-name descname">restart_MIA</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIACase.restart_MIA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIACase.restart_MIA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restarts MIA within a unit test.</p>
-<p>Can be used to restart MIA after changing the controller version in MIA
-preferences.</p>
+<ul class="simple">
+<li><p>Can be used to restart MIA after changing the controller version in MIA
+preferences.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -1759,8 +1766,8 @@ cells</p></li>
 selected</p></li>
 <li><p>test_reset_row: test row reset</p></li>
 <li><p>test_save_project: test opening &amp; saving of a project</p></li>
-<li><p>test_send_doc_to_pip: tests the popup sending documents
-to the pipeline manager</p></li>
+<li><p>test_send_doc_to_pipeline_manager: tests the popup sending
+documents to the pipeline manager</p></li>
 <li><p>test_set_value: tests the values modifications</p></li>
 <li><p>test_show_brick_history: opens the history pop-up for 
 scans with history related to a brick</p></li>
@@ -1790,8 +1797,10 @@ visualized tags</p></li>
 <dt id="populse_mia.test.TestMIADataBrowser.test_add_path">
 <code class="sig-name descname">test_add_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_add_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_add_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tries import a document to the project.</p>
-<p>Tests DataBrowser.add_path and PopUpAddPath.
-Mocks the execution of QFileDialog and QMessageBox.</p>
+<ul class="simple">
+<li><p>Tests DataBrowser.add_path and PopUpAddPath.</p></li>
+<li><p>Mocks the execution of QFileDialog and QMessageBox.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -1803,192 +1812,213 @@ Mocks the execution of QFileDialog and QMessageBox.</p>
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_advanced_search">
 <code class="sig-name descname">test_advanced_search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_advanced_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_advanced_search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the advanced search widget</p>
+<dd><p>Tests the advanced search widget.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_brick_history">
 <code class="sig-name descname">test_brick_history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_brick_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_brick_history" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the brick history popup</p>
+<dd><p>Tests the brick history popup.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_clear_cell">
 <code class="sig-name descname">test_clear_cell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_clear_cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_clear_cell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the method clearing cells</p>
+<dd><p>Tests the method clearing cells.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_clone_tag">
 <code class="sig-name descname">test_clone_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_clone_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_clone_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the pop up cloning a tag</p>
+<dd><p>Tests the pop up cloning a tag.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_count_table">
 <code class="sig-name descname">test_count_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_count_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_count_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the count table popup</p>
+<dd><p>Tests the count table popup.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_mia_preferences">
 <code class="sig-name descname">test_mia_preferences</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_mia_preferences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_mia_preferences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the MIA preferences popup</p>
+<dd><p>Tests the MIA preferences popup.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_mini_viewer">
 <code class="sig-name descname">test_mini_viewer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_mini_viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_mini_viewer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Selects scans and display them in the mini viewer.
-Tests MiniViewer.</p>
-<p>The mini viewer displays informations of the selected scan in a 
-box under the scans list, in the data browser tab.</p>
+<dd><p>Selects scans and display them in the mini viewer.</p>
+<ul class="simple">
+<li><p>Tests MiniViewer.</p></li>
+<li><p>The mini viewer displays information of the selected scan in a
+box under the scans list, in the data browser tab.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_modify_table">
 <code class="sig-name descname">test_modify_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_modify_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_modify_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test the modify table module</p>
+<dd><p>Test the modify_table module.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_multiple_sort">
 <code class="sig-name descname">test_multiple_sort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_multiple_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_multiple_sort" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the multiple sort popup</p>
+<dd><p>Tests the multiple sort popup.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_multiple_sort_appendix">
 <code class="sig-name descname">test_multiple_sort_appendix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_multiple_sort_appendix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_multiple_sort_appendix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds and removes tags in the data browser.
-Tests PopUpMultipleSort.</p>
-<p>Mocks <a href="#id1"><span class="problematic" id="id2">PopUpSelectTagCountTable.exec_</span></a>.</p>
+<dd><p>Adds and removes tags in the data browser.</p>
+<ul class="simple">
+<li><p>Tests PopUpMultipleSort.</p></li>
+<li><p>Mocks <a href="#id1"><span class="problematic" id="id2">PopUpSelectTagCountTable.exec_</span></a>.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_openTagsPopUp">
 <code class="sig-name descname">test_openTagsPopUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_openTagsPopUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_openTagsPopUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a document in data viewer and opens a pop-up to select the
-legend of the thumbnails.
-Tests MiniViewer.openTagsPopUp.</p>
-<p>Indirectly tests PopUpSelectTag.</p>
+legend of the thumbnails.</p>
+<ul class="simple">
+<li><p>Tests MiniViewer.openTagsPopUp.</p></li>
+<li><p>Indirectly tests PopUpSelectTag.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_open_project">
 <code class="sig-name descname">test_open_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_open_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_open_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests project opening</p>
+<dd><p>Tests project opening.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_proj_remov_from_cur_proj">
 <code class="sig-name descname">test_proj_remov_from_cur_proj</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_proj_remov_from_cur_proj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_proj_remov_from_cur_proj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that the projects are removed from the list of current projects</p>
+<dd><p>Tests that the projects are removed from the list of current
+projects.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_project_filter">
 <code class="sig-name descname">test_project_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_project_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_project_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a project, saves a filter and opens it.
-Tests</p>
-<blockquote>
-<div><ul class="simple">
+<dd><p>Creates a project, saves a filter and opens it.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
 <li><p>DataBrowser.open_popup</p></li>
 <li><p>Project.save_current_filter</p></li>
 </ul>
-</div></blockquote>
-<dl class="simple">
-<dt>Mocks</dt><dd><ul class="simple">
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Mocks:</dt><dd><ul>
 <li><p>QMessageBox.exec</p></li>
 <li><p>QInputDialog.getText</p></li>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_project_properties">
 <code class="sig-name descname">test_project_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_project_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_project_properties" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests saved projects addition and removal</p>
+<dd><p>Tests saved projects addition and removal.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_rapid_search">
 <code class="sig-name descname">test_rapid_search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_rapid_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_rapid_search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the rapid search bar</p>
+<dd><p>Tests the rapid search bar.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_remove_scan">
 <code class="sig-name descname">test_remove_scan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_remove_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_remove_scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new project, adds scans to the session and remove 
-them.
-Tests</p>
-<blockquote>
-<div><ul class="simple">
+<dd><p>Creates a new project, adds scans to the session and remove them.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests</dt><dd><ul>
 <li><p>PipelineManagerTab.remove_scan</p></li>
 <li><p>PopUpRemoveScan</p></li>
 </ul>
-</div></blockquote>
-<p>Mocks PopUpRemoveScan.exec.
--</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Mocks</dt><dd><ul>
+<li><p>PopUpRemoveScan.exec</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_remove_tag">
 <code class="sig-name descname">test_remove_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_remove_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_remove_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the popup removing user tags</p>
+<dd><p>Tests the popup removing user tags.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_reset_cell">
 <code class="sig-name descname">test_reset_cell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_reset_cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_reset_cell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the method resetting the selected cells</p>
+<dd><p>Tests the method resetting the selected cells.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_reset_column">
 <code class="sig-name descname">test_reset_column</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_reset_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_reset_column" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the method resetting the columns selected</p>
+<dd><p>Tests the method resetting the columns selected.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_reset_row">
 <code class="sig-name descname">test_reset_row</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_reset_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_reset_row" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests row reset</p>
+<dd><p>Tests row reset.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_save_project">
 <code class="sig-name descname">test_save_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_save_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_save_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test opening &amp; saving of a project</p>
+<dd><p>Test opening &amp; saving of a project.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="populse_mia.test.TestMIADataBrowser.test_send_doc_to_pip">
-<code class="sig-name descname">test_send_doc_to_pip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_send_doc_to_pip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_send_doc_to_pip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the popup sending the documents to the pipeline manager</p>
+<dt id="populse_mia.test.TestMIADataBrowser.test_send_doc_to_pipeline_manager">
+<code class="sig-name descname">test_send_doc_to_pipeline_manager</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_send_doc_to_pipeline_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_send_doc_to_pipeline_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the popup sending the documents to the pipeline manager.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_set_value">
 <code class="sig-name descname">test_set_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_set_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the values modifications</p>
+<dd><p>Tests the values modifications.</p>
 <p>This test is redundant with the first part of test_reset_cell.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="populse_mia.test.TestMIADataBrowser.test_show_brick_history">
 <code class="sig-name descname">test_show_brick_history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIADataBrowser.test_show_brick_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.test.TestMIADataBrowser.test_show_brick_history" title="Permalink to this definition">¶</a></dt>
-<dd><p>Opens the history pop-up for scans with history related to 
-standard bricks and bricks contained by a subpipeline.
-Tests</p>
-<blockquote>
-<div><ul class="simple">
+<dd><p>Opens the history pop-up for scans with history related to
+standard bricks and bricks contained by a sub-pipeline.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests</dt><dd><ul>
 <li><p>TableDataBrowser.show_brick_history</p></li>
 <li><p>PopUpShowHistory</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
