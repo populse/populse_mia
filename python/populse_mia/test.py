@@ -1332,7 +1332,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(len(table_data.pop_up.push_buttons), 2)
 
         # Mocks the execution of 'PopUpSelectTagCountTable'
-        def mock_select_tags(_):
+        def mock_select_tags(self):
             self.selected_tag = 'Exp Type'
             return True
 
