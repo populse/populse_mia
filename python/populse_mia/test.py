@@ -535,8 +535,8 @@ class TestMIADataBrowser(TestMIACase):
 
         # Asserts that the document was added into the data browser
         # A regular '.split('/')' will not work in Windows OS
-        filename = (os.path.split(session
-                    .get_documents_names(COLLECTION_CURRENT)[0])[-1])
+        filename = (os.path.split(session.get_documents_names(
+                                                    COLLECTION_CURRENT)[0])[-1])
         self.assertTrue(filename in DOCUMENT_1)
 
         self.assertEqual(table_data.rowCount(), 1)
@@ -594,7 +594,7 @@ class TestMIADataBrowser(TestMIACase):
         add_tag.text_edit_default_value.setText("def_value")
         add_tag.type = FIELD_TYPE_STRING
 
-        QTest.qWait(100)
+        QTest.qWait(500)
 
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertTrue("Test" in
@@ -656,7 +656,7 @@ class TestMIADataBrowser(TestMIACase):
         item.setText(str(3))
         table.setItem(0, 2, item)
 
-        QTest.qWait(100)
+        QTest.qWait(500)
 
         QTest.mouseClick(
                         add_tag.text_edit_default_value.list_creation.ok_button,
@@ -665,7 +665,7 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
 
         test_list_column = (self.main_window.data_browser.table_data.
-                            get_tag_column("Test_list"))
+                                                    get_tag_column("Test_list"))
 
         for row in range(0,
                          self.main_window.data_browser.table_data.rowCount()):
@@ -677,9 +677,7 @@ class TestMIADataBrowser(TestMIACase):
         QApplication.processEvents()
 
     def test_advanced_search(self):
-        """
-        Tests the advanced search widget
-        """
+        """Tests the advanced search widget."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -819,15 +817,13 @@ class TestMIADataBrowser(TestMIACase):
                         "pvm-000220_000.nii" in scans_displayed)
 
     def test_brick_history(self):
-        """
-        Tests the brick history popup
-        """
+        """Tests the brick history popup."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         bricks_column = (self.main_window.data_browser.table_data.
-                         get_tag_column)("History")
+                                                      get_tag_column)("History")
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(
                                                                   0,
                                                                   bricks_column)
@@ -835,7 +831,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(smooth_button.text(), "smooth_1")
         QTest.mouseClick(smooth_button, Qt.LeftButton)
         brick_history = (self.main_window.data_browser.table_data.
-                         brick_history_popup)
+                                                            brick_history_popup)
         brick_table = brick_history.table
         self.assertEqual(brick_table.horizontalHeaderItem(0).text(), "Name")
         self.assertEqual(brick_table.horizontalHeaderItem(1).text(), "Init")
@@ -874,9 +870,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(brick_table.item(0, 10).text(), "True")
 
     def test_clear_cell(self):
-        """
-        Tests the method clearing cells
-        """
+        """Tests the method clearing cells."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -914,9 +908,7 @@ class TestMIADataBrowser(TestMIACase):
                              "BandWidth"))
 
     def test_clone_tag(self):
-        """
-        Tests the pop up cloning a tag
-        """
+        """Tests the pop up cloning a tag."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -1016,9 +1008,7 @@ class TestMIADataBrowser(TestMIACase):
             self.assertEqual(item_bw.text(), item_test.text())
 
     def test_count_table(self):
-        """
-        Tests the count table popup
-        """
+        """Tests the count table popup."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -1076,9 +1066,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(count_table.table.item(3, 3).text(), "5")
 
     def test_mia_preferences(self):
-        """
-        Tests the MIA preferences popup
-        """
+        """Tests the MIA preferences popup."""
 
         config = Config(config_path=self.config_path)
         old_auto_save = config.isAutoSave()
@@ -1132,8 +1120,8 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(config.get_max_projects(), 7)
         config.set_max_projects(5)
 
-        mia_path = os.path.join(config.get_mia_path(),
-                                "properties", "config.yml")
+        mia_path = os.path.join(config.get_mia_path(), "properties",
+                                "config.yml")
         self.assertEqual(os.path.exists(mia_path), True)
 
         self.assertEqual(config.get_user_mode(), True)
@@ -1158,24 +1146,19 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(config.getThumbnailTag(), "SequenceName")
 
         self.assertEqual(False,
-                         version.parse(yaml.__version__) > version.parse(
-                                                                         "9.1"))
+                         version.parse(yaml.__version__) > version.parse("9.1"))
         self.assertEqual(True,
-                         version.parse(yaml.__version__) < version.parse(
-                                                                         "9.1"))
+                         version.parse(yaml.__version__) < version.parse("9.1"))
 
         self.assertEqual(config.get_projects_save_path(), '')
 
     def test_mini_viewer(self):
-        '''
-        Selects scans and display them in the mini viewer.
-        Tests MiniViewer.
+        """Selects scans and display them in the mini viewer.
 
-        Notes
-        -----
-        The mini viewer displays informations of the selected scan in a 
+        Tests MiniViewer.
+        The mini viewer displays information of the selected scan in a
         box under the scans list, in the data browser tab.
-        '''
+        """
 
         # Creates a new project folder and switches to it
         new_proj_path = self.get_new_test_project(light=True)
@@ -1186,7 +1169,7 @@ class TestMIADataBrowser(TestMIACase):
         viewer = self.main_window.data_browser.viewer
 
         # Selects the first scan
-        data_browser.table_data.item(0,0).setSelected(True)
+        data_browser.table_data.item(0, 0).setSelected(True)
 
         # Gets the 3D slider range
         slider_3D_range = viewer.slider_3D[0].maximum()
@@ -1204,7 +1187,7 @@ class TestMIADataBrowser(TestMIACase):
         viewer.check_box_cursors.setCheckState(Qt.Checked)
 
         # Selects the second scan
-        data_browser.table_data.item(1,0).setSelected(True)
+        data_browser.table_data.item(1, 0).setSelected(True)
 
         # Moves the 3D slides to the lower limit
         viewer.slider_3D[0].setValue(0)
@@ -1221,9 +1204,7 @@ class TestMIADataBrowser(TestMIACase):
         viewer.update_nb_slices()
 
     def test_modify_table(self):
-        """
-        Test the modify table module
-        """
+        """Test the modify_table module."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -1267,9 +1248,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(value, new_value)
 
     def test_multiple_sort(self):
-        """
-        Tests the multiple sort popup
-        """
+        """Tests the multiple sort popup."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -1333,14 +1312,11 @@ class TestMIADataBrowser(TestMIACase):
                          "-000142_400.nii")
 
     def test_multiple_sort_appendix(self):
-        '''
-        Adds and removes tags in the data browser.
-        Tests PopUpMultipleSort.
+        """Adds and removes tags in the data browser.
 
-        Notes
-        -----
+        Tests PopUpMultipleSort.
         Mocks PopUpSelectTagCountTable.exec_.
-        '''
+        """
 
         table_data = self.main_window.data_browser.table_data
 
@@ -1356,9 +1332,10 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(len(table_data.pop_up.push_buttons), 2)
 
         # Mocks the execution of 'PopUpSelectTagCountTable'
-        def mock_select_tags(self):
+        def mock_select_tags(_):
             self.selected_tag = 'Exp Type'
             return True
+
         PopUpSelectTagCountTable.exec_ = mock_select_tags
         
         table_data.pop_up.select_tag(0)
