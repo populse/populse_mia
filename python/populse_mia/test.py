@@ -493,8 +493,9 @@ class TestMIADataBrowser(TestMIACase):
     def test_add_path(self):
         """Tries import a document to the project.
 
-        - Tests DataBrowser.add_path and PopUpAddPath.
-        - Mocks the execution of QFileDialog and QMessageBox.
+        - Tests: DataBrowser.add_path and PopUpAddPath
+
+        - Mocks: the execution of QFileDialog and QMessageBox
         """
 
         # Sets shortcuts for often used objects
@@ -1314,8 +1315,9 @@ class TestMIADataBrowser(TestMIACase):
     def test_multiple_sort_appendix(self):
         """Adds and removes tags in the data browser.
 
-        - Tests PopUpMultipleSort.
-        - Mocks PopUpSelectTagCountTable.exec_.
+        - Tests: PopUpMultipleSort
+
+        - Mocks: PopUpSelectTagCountTable.exec_
         """
 
         table_data = self.main_window.data_browser.table_data
@@ -1713,11 +1715,11 @@ class TestMIADataBrowser(TestMIACase):
     def test_remove_scan(self):
         """Creates a new project, adds scans to the session and remove them.
 
-        - Tests
+        - Tests:
             - PipelineManagerTab.remove_scan
             - PopUpRemoveScan
 
-        - Mocks
+        - Mocks:
             - PopUpRemoveScan.exec
         """
 
@@ -2751,8 +2753,9 @@ class TestMIADataBrowser(TestMIACase):
         """Right-click on a scan to display the context menu table, and choose
         an option.
 
-        - Tests TableDataBrowser.context_menu_table
-        - Mocks
+        - Tests: TableDataBrowser.context_menu_table
+
+        - Mocks:
             - QMenu.exec_
             - QMessageBox.exec
         """
@@ -2774,27 +2777,26 @@ class TestMIADataBrowser(TestMIACase):
 
         # Cycles through the actions by opening the context menu and 
         # clicking in each one of them
-        act_names = ['action_reset_cell', 'action_reset_column', 
-                    'action_reset_row', 'action_clear_cell', 'action_add_scan',
-                    'action_remove_scan', 'action_visualized_tags',
-                    'action_select_column', 'action_multiple_sort',
-                    'action_send_documents_to_pipeline', 
-                    'action_display_pdf_file']
+        act_names = ['action_reset_cell', 'action_reset_column',
+                     'action_reset_row', 'action_clear_cell', 'action_add_scan',
+                     'action_remove_scan', 'action_visualized_tags',
+                     'action_select_column', 'action_multiple_sort',
+                     'action_send_documents_to_pipeline',
+                     'action_display_pdf_file']
         # Including 'action_sort_column' will crash the build
+
         for act_name in act_names:
             QMenu.exec_ = lambda *args: getattr(table_data, act_name)
             table_data.context_menu_table(QPoint(10, 10))
 
     def test_undo_redo_databrowser(self):
-        """
-        Tests the databrowser undo/redo
-        """
+        """Tests the DataBrowser undo/redo."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         # 1. Tag value (list)
-        # we test undos and redos are empty
+        # Check undos and redos are empty
         self.assertEqual(self.main_window.project.undos, [])
         self.assertEqual(self.main_window.project.redos, [])
 
@@ -2804,15 +2806,15 @@ class TestMIADataBrowser(TestMIACase):
         bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
         bw_old = bw_item.text()
 
-        # we test the value is really 50000
+        # Check the value is really 50000
         self.assertEqual(float(bw_old[1:-1]), 50000)
 
-        # we change the value
+        # Change the value
         bw_item.setSelected(True)
         threading.Timer(2, partial(self.edit_databrowser_list, '0.0')).start()
         self.main_window.data_browser.table_data.edit_table_data_values()
 
-        # we test undos and redos have the right values.
+        # Check undos and redos have the right values.
         self.assertEqual(self.main_window.project.undos,
                          [["modified_values",
                            [["data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
@@ -2821,24 +2823,24 @@ class TestMIADataBrowser(TestMIACase):
                              "BandWidth",
                              [50000.0],
                              [0.0]
-                             ]]
-                           ]])
+                           ]]
+                         ]])
         self.assertEqual(self.main_window.project.redos, [])
 
-        # we test the value has really been changed to 0.0.
+        # Check the value has really been changed to 0.0.
         bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
         bw_set = bw_item.text()
         self.assertEqual(float(bw_set[1:-1]), 0)
 
-        # we undo
+        # Undo
         self.main_window.action_undo.trigger()
 
-        # we test the value has really been reset to 50000
+        # Check the value has really been reset to 50000
         bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
         bw_undo = bw_item.text()
         self.assertEqual(float(bw_undo[1:-1]), 50000)
 
-        # we test undos / redos have the right values
+        # Check undos / redos have the right values
         self.assertEqual(self.main_window.project.redos,
                          [["modified_values",
                            [["data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
@@ -2847,14 +2849,16 @@ class TestMIADataBrowser(TestMIACase):
                              "BandWidth",
                              [50000.0],
                              [0.0]
-                             ]]
-                           ]])
+                            ]
+                           ]
+                          ]
+                         ])
         self.assertEqual(self.main_window.project.undos, [])
 
-        # we redo
+        # Redo
         self.main_window.action_redo.trigger()
 
-        # we test the value has really been reset to 0.0
+        # Check the value has really been reset to 0.0
         bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
         bw_redo = bw_item.text()
         self.assertEqual(float(bw_redo[1:-1]), 0)
@@ -2868,12 +2872,14 @@ class TestMIADataBrowser(TestMIACase):
                              "BandWidth",
                              [50000.0],
                              [0.0]
-                             ]]
-                           ]])
+                            ]
+                           ]
+                          ]
+                         ])
         self.assertEqual(self.main_window.project.redos, [])
 
-        # 2. Remove a can (document)
-        # we test there are 9 documents in db (current and initial)
+        # 2. Remove a scan (document)
+        # Check there are 9 documents in db (current and initial)
         self.assertEqual(
                        9,
                        len(self.main_window.project.session.get_documents_names(
@@ -2883,11 +2889,11 @@ class TestMIADataBrowser(TestMIACase):
                        len(self.main_window.project.session.get_documents_names(
                                                            COLLECTION_INITIAL)))
 
-        # we remove the eighth document
+        # Remove the eighth document
         self.main_window.data_browser.table_data.selectRow(8)
         self.main_window.data_browser.table_data.remove_scan()
 
-        # we test if there are now 8 documents in db (current and initial)
+        # Check if there are now 8 documents in db (current and initial)
         self.assertEqual(
                        8,
                        len(self.main_window.project.session.get_documents_names(
@@ -2897,10 +2903,10 @@ class TestMIADataBrowser(TestMIACase):
                        len(self.main_window.project.session.get_documents_names(
                                                            COLLECTION_INITIAL)))
 
-        # we undo
+        # Undo
         self.main_window.action_undo.trigger()
 
-        # we test there are still only 8 documents in the database
+        # Check there are still only 8 documents in the database
         # (current and initial). In fact the document has been permanently
         # deleted and we cannot recover it in this case
         self.assertEqual(
@@ -2913,7 +2919,7 @@ class TestMIADataBrowser(TestMIACase):
                                                            COLLECTION_INITIAL)))
 
         # 3. Add a tag
-        # we test we don't have 'Test' tag in the db
+        # Check we don't have 'Test' tag in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -2921,13 +2927,13 @@ class TestMIADataBrowser(TestMIACase):
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_INITIAL))
 
-        # we add the Test tag
+        # Add the Test tag
         self.main_window.data_browser.add_tag_action.trigger()
         add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Test")
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
 
-        # we test we have the 'Test' tag in the db
+        # Check the 'Test' tag is in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -2935,10 +2941,10 @@ class TestMIADataBrowser(TestMIACase):
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_INITIAL))
 
-        # we undo
+        # Undo
         self.main_window.action_undo.trigger()
 
-        # we test we don't have 'Test' tag in the db
+        # Check 'Test' tag is not in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -2946,10 +2952,10 @@ class TestMIADataBrowser(TestMIACase):
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_INITIAL))
 
-        # we redo
+        # Redo
         self.main_window.action_redo.trigger()
 
-        # we test we have the 'Test' tag in the db
+        # Check the 'Test' tag is in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -2957,14 +2963,14 @@ class TestMIADataBrowser(TestMIACase):
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_INITIAL))
 
-        # 4. remove tag
-        # we remove the 'Test' tag
+        # 4. Remove tag
+        # Remove the 'Test' tag
         self.main_window.data_browser.remove_tag_action.trigger()
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         remove_tag.list_widget_tags.setCurrentRow(0)  # 'Test' tag selected
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
 
-        # we test we don't have 'Test' tag in the db
+        # Check 'Test' tag is not in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -2972,10 +2978,10 @@ class TestMIADataBrowser(TestMIACase):
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_INITIAL))
 
-        # we undo
+        # Undo
         self.main_window.action_undo.trigger()
 
-        # we test we have the 'Test' tag in the db
+        # Check 'Test' tag is in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -2983,10 +2989,10 @@ class TestMIADataBrowser(TestMIACase):
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_INITIAL))
 
-        # we redo
+        # Redo
         self.main_window.action_redo.trigger()
 
-        # we test we don't have 'Test' tag in the db
+        # Check 'Test' tag is not in the db
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -3008,7 +3014,7 @@ class TestMIADataBrowser(TestMIACase):
         clone_tag.line_edit_new_tag_name.setText('Test')
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
 
-        # we test we have the 'Test' tag in the db
+        # Check 'Test' tag is in the db
         self.assertTrue("Test" in
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
@@ -3016,7 +3022,7 @@ class TestMIADataBrowser(TestMIACase):
                         self.main_window.project.session.get_fields_names(
                                                             COLLECTION_INITIAL))
 
-        # value in the db
+        # Value in the db
         item = self.main_window.data_browser.table_data.item(1, 0)
         scan_name = item.text()
         value = self.main_window.project.session.get_value(COLLECTION_CURRENT,
@@ -3027,21 +3033,21 @@ class TestMIADataBrowser(TestMIACase):
                                                              scan_name,
                                                              "Test")
 
-        # value in the DataBrowser
+        # Value in the DataBrowser
         test_column = (self.main_window.data_browser.table_data.
                                                          get_tag_column)("Test")
         item = self.main_window.data_browser.table_data.item(1, test_column)
         databrowser = item.text()
 
-        # we test equality between DataBrowser and db
+        # Check equality between DataBrowser and db
         self.assertEqual(value, [3.0, 3.0])
         self.assertEqual(value, ast.literal_eval(databrowser))
         self.assertEqual(value, value_initial)
 
-        # we undo
+        # Undo
         self.main_window.action_undo.trigger()
 
-        # we test we don't have the 'Test' tag in the db and in the DataBrowser
+        # Check 'Test' tag is not in the db and not in the DataBrowser
         self.assertFalse("Test" in
                          self.main_window.project.session.get_fields_names(
                                                             COLLECTION_CURRENT))
