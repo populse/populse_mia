@@ -513,14 +513,13 @@ class CapsulNodeController(QWidget):
 
         self.layout().addWidget(self.process_widget)
         self.process.on_trait_change(self.parameters_changed, dispatch='ui')
-        self.process.on_trait_change(self.parameters_changed, remove=True)
         # this cannot be done in __del__ since the C++ part will be already
         # destroyed by then.
         # However this signal seems never to be emitted, and I don't understand
         # why. So release_process() has to be called manually from the
         # pipeline manager. Sigh.
-        #self.destroyed.connect(partial(self.static_release, process,
-        #                              self.parameters_changed))
+        self.destroyed.connect(partial(self.static_release, process,
+                                       self.parameters_changed))
 
     @staticmethod
     def static_release(process, param_changed):
