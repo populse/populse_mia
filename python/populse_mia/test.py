@@ -2572,9 +2572,7 @@ class TestMIADataBrowser(TestMIACase):
         hist_button.close()
 
     def test_sort(self):
-        """
-        Tests the sorting in the databrowser
-        """
+        """Tests the sorting in the DataBrowser."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
@@ -2635,10 +2633,10 @@ class TestMIADataBrowser(TestMIACase):
                          down_bandwidths)
 
     def test_table_data_add_columns(self):
-        '''
-        Adds tag columns to the table data window.
-        Tests TableDataBrowser.add_columns.
-        '''
+        """Adds tag columns to the table data window.
+
+        - Tests TableDataBrowser.add_columns.
+        """
 
         # Creates a new project folder and switches to it
         new_proj_path = self.get_new_test_project(light=True)
@@ -2653,26 +2651,25 @@ class TestMIADataBrowser(TestMIACase):
                 'mock_tag_time']
         types = [FIELD_TYPE_FLOAT, FIELD_TYPE_DATETIME, FIELD_TYPE_DATE, 
                  FIELD_TYPE_TIME]
-        for (tag, type) in zip(tags,types):
-            table_data.project.session.add_field(COLLECTION_CURRENT, tag, type, 
-                                                 '', True, '', '', '')
+        for (tag, tag_type) in zip(tags, types):
+            table_data.project.session.add_field(COLLECTION_CURRENT, tag,
+                                                 tag_type, '', True, '', '', '')
 
-        table_data.add_columns() # Adds the tags to table view
+        table_data.add_columns()  # Adds the tags to table view
 
-        # Asserts that the tgs were added to the table view
+        # Asserts that the tags were added to the table view
         for tag in tags:
-              self.assertIsNotNone(table_data.get_tag_column(tag))
+            self.assertIsNotNone(table_data.get_tag_column(tag))
 
     def test_table_data_appendix(self):
-        '''
-        Opens a project and tests miscellaneous methods of the table 
+        """Opens a project and tests miscellaneous methods of the table
         data view, in the data browser.
-        Tests
-         - TableDataBrowser.change_cell_color
-         - TableDataBrowser.section_moved
-         - TableDataBrowser.selectColumn
 
-        '''
+        -Tests
+            - TableDataBrowser.change_cell_color
+            - TableDataBrowser.section_moved
+            - TableDataBrowser.selectColumn
+        """
 
         # Creates a new project folder and switches to it
         new_proj_path = self.get_new_test_project(light=True)
@@ -2681,67 +2678,67 @@ class TestMIADataBrowser(TestMIACase):
         # Set often used shortcuts
         table_data = self.main_window.data_browser.table_data
 
-        '''TESTS CHANGE_CELL_COLOR'''
-
+        ### TESTS CHANGE_CELL_COLOR
         # Adds a new document to the collection
         NEW_DOC = {'FileName': 'mock_file_name'}
-        self.main_window.project.session.add_document(COLLECTION_CURRENT, NEW_DOC)
-        self.main_window.project.session.add_document(COLLECTION_INITIAL, NEW_DOC)
+        self.main_window.project.session.add_document(COLLECTION_CURRENT,
+                                                      NEW_DOC)
+        self.main_window.project.session.add_document(COLLECTION_INITIAL,
+                                                      NEW_DOC)
 
         # Selects the 'Filename' of the first scan and changes its value 
         # to this document filename
-        table_data.item(0,0).setSelected(True)
-        table_data.item(0,0).setText(NEW_DOC['FileName'])
-        table_data.item(0,0).setSelected(False)
+        table_data.item(0, 0).setSelected(True)
+        table_data.item(0, 0).setText(NEW_DOC['FileName'])
+        table_data.item(0, 0).setSelected(False)
 
         # Selects 'FOV' and changes its value
-        table_data.item(0,3).setSelected(True)
-        table_data.item(0,3).setText('[4.0, 4.0]')
-        table_data.item(0,3).setSelected(False)
+        table_data.item(0, 3).setSelected(True)
+        table_data.item(0, 3).setText('[4.0, 4.0]')
+        table_data.item(0, 3).setSelected(False)
 
         # Creates a tag of type float and selects it
         self.main_window.data_browser.add_tag_infos('mock_tag', 0.0, 
                                                     FIELD_TYPE_FLOAT, '', '')
-        table_data.item(0,6).setSelected(True)
+        table_data.item(0, 6).setSelected(True)
 
         # Mocks the execution of a dialog box
         QMessageBox.exec = lambda *args: None
 
         # Tries setting an invalid string value to the tag
-        table_data.item(0,6).setText('invalid_string')
-        table_data.item(0,6).setSelected(False)
+        table_data.item(0, 6).setText('invalid_string')
+        table_data.item(0, 6).setSelected(False)
 
         # Creates another tag of type float and selects it
         self.main_window.data_browser.add_tag_infos('mock_tag_1', 0.0, 
                                                     FIELD_TYPE_FLOAT, '', '')
-        table_data.item(0,7).setSelected(True)
+        table_data.item(0, 7).setSelected(True)
 
         # Sets a valid float value to the tag
-        table_data.item(0,7).setText('0.0')
+        table_data.item(0, 7).setText('0.0')
+
         # Changing the same tag does not trigger the 'valueChanged' and 
         # thus not the 'change_cell_color' method
-
-        table_data.item(0,7).setSelected(False)
+        table_data.item(0, 7).setSelected(False)
 
         # Selects the 'Exp Type' and 'FOV' of the first scan, which have
         # distinct data types
-        table_data.item(0,2).setSelected(True)
-        table_data.item(0,3).setSelected(True)
+        table_data.item(0, 2).setSelected(True)
+        table_data.item(0, 3).setSelected(True)
 
         # Tries changing the value of 'Exp Type'
-        table_data.item(0,2).setText('RARE_B')
+        table_data.item(0, 2).setText('RARE_B')
 
         # Asserts that only 'Exp Type' changed
-        self.assertEqual(table_data.item(0,2).text(), 'RARE_B')
-        self.assertNotEqual(table_data.item(0,3).text(), 'RARE_B')
+        self.assertEqual(table_data.item(0, 2).text(), 'RARE_B')
+        self.assertNotEqual(table_data.item(0, 3).text(), 'RARE_B')
 
-        '''TESTS SELECTION_MOVED'''
+        ### TESTS SELECTION_MOVED
 
         # Switch columns of the 2 first tags
-        table_data.horizontalHeader().sectionMoved.emit(0,0,1)
+        table_data.horizontalHeader().sectionMoved.emit(0, 0, 1)
 
-        '''TESTS SELECT_COLUMN'''
-
+        ### SELECT_COLUMN
         # Selects the whole filename column
         table_data.selectColumn(0)
 
@@ -2751,17 +2748,14 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(selected_items[0].text(), table_data.scans[0][0])
 
     def test_table_data_context_menu(self):
-        '''
-        Right clicks a scan to show the context menu table, and choses 
-        one option.
-        Tests TableDataBrowser.context_menu_table.
+        """Right-click on a scan to display the context menu table, and choose
+        an option.
 
-        Notes
-        -----
-        Mocks
-        - QMenu.exec_
-        - QMessageBox.exec
-        '''
+        - Tests TableDataBrowser.context_menu_table
+        - Mocks
+            - QMenu.exec_
+            - QMessageBox.exec
+        """
 
         # Creates a new project folder and switches to it
         new_proj_path = self.get_new_test_project(light=True)
@@ -2773,7 +2767,7 @@ class TestMIADataBrowser(TestMIACase):
         # Mocks the execution of a dialog box
         QMessageBox.exec = lambda *args: None
 
-        # Opens the context menu one time before cyclig through the 
+        # Opens the context menu one time before cycling through the
         # actions
         QMenu.exec_ = lambda *args: None
         table_data.context_menu_table(QPoint(10, 10))
