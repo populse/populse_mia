@@ -209,6 +209,7 @@ class TestMIACase(unittest.TestCase):
         :Method:
             - add_visualized_tag: selects a tag to display with the
               "Visualized tags" pop-up
+            - create_mock_jar: creates a mocked java (.jar) executable
             - edit_databrowser_list: change value for a tag in DataBrowser
             - execute_QDialogAccept: accept (close) a QDialog instance
             - execute_QDialogClose: closes a QDialog instance
@@ -257,6 +258,50 @@ class TestMIACase(unittest.TestCase):
 
             tags_list.setCurrentItem(found_item[0])
             visualized_tags.click_select_tag()
+
+    def create_mock_jar(self, path):
+        """Creates a mocked java (.jar) executable.
+
+        :param path: the full path of the executable, ending by '.jar'
+
+        :returns: 0 if success or 1 if failure
+        """
+
+        (folder, name) = os.path.split(path)
+
+        CONTENT = ('public class MockApp {\n' +
+                   '    public static void main(String[] args){\n' +
+                   '        System.out.println("Executed mock java app.");\n' +
+                   '    }\n' +
+                   '}')
+
+        # Creates the .java source code
+        with open(os.path.join(folder, 'MockApp.java'), 'w') as file:
+            file.write(CONTENT)
+
+        # Creates the MANIFEST file
+        with open(os.path.join(folder, 'MANIFEST.MF'), 'w') as file:
+            file.write('Main-Class:  MockApp\n')
+        # The build only works with the '\n' at the end of the manifest
+
+        # Check if the OpenJDK Runtime (java) is installed
+        try:
+            subprocess.run(['java', '-version'])
+
+        except FileNotFoundError:
+            print('OpenJDK Runtime is not installed')
+            return 1
+
+        # Compile and pack
+        subprocess.run(['javac', '-d', '.', 'MockApp.java'], cwd=folder)
+        subprocess.run(['jar', 'cvmf', 'MANIFEST.MF', name, 'MockApp.class'],
+                       cwd=folder)
+
+        if not os.path.exists(path):
+            print('The java executable was not created')
+            return 1
+
+        return 0
 
     def edit_databrowser_list(self, value):
         """Change value for a tag in DataBrowser.
@@ -3353,14 +3398,10 @@ class TestMIADataBrowser(TestMIACase):
 
 
 class TestMIAMainWindow(TestMIACase):
-    '''
-    Tests for the main window class.
-    Tests MainWindow.
-
+    """Tests for the main window class (MainWindow).
 
     :Contains:
         :Method:
-            - create_mock_jar: creates a mocked java (.jar) executable
             - test_check_database: checks if the database has changed 
               since the scans were first imported
             - test_closeEvent: opens a project and closes the main window
@@ -3370,76 +3411,39 @@ class TestMIAMainWindow(TestMIACase):
               is part of the project.
             - test_import_data: opens a project and simulates importing 
               a file from the MriConv java executable
+            - test_open_project_pop_up: creates a test project and opens
+              a project, including unsaved modifications.
             - test_open_recent_project: creates 2 test projects and 
               opens one by the recent projects action.
-            - test_switch_project: create project and switches to it.
-            - test_open_project_pop_up: creates a test project and opens 
-              a project, including unsaved modifications.
             - test_open_shell: opens Qt console and kill it afterwards.
-            - test_package_library_dialog_rmv_pkg: creates a new project 
-              folder, opens the processes library and removes a package.
-            - test_package_library_dialog_add_pkg: creates a new project 
+            - test_package_library_dialog_add_pkg: creates a new project
               folder, opens the processes library and adds a package.
-            - test_package_library_dialog_del_pkg: creates a new project 
+            - test_package_library_dialog_del_pkg: creates a new project
               folder, opens the processes library and deletes a package.
-            - test_popUpDeletedProject: adds a deleted projects to the 
+            - test_package_library_dialog_rmv_pkg: creates a new project
+              folder, opens the processes library and removes a package.
+            - test_package_library_others: Creates a new project folder, opens
+              the processes library and adds a package.
+            - test_popUpDeletedProject: adds a deleted projects to the
               projects list and launches mia.
-            - test_popUpDeleteProject: creates a new project and deletes 
+            - test_popUpDeleteProject: creates a new project and deletes
               it.
+            - test_switch_project: create project and switches to it.
             - test_see_all_projects: creates 2 projects and tries to 
               open them through the all projects pop-up.
             - test_software_preferences_pop_up: opens the preferences 
               pop up and changes parameters.
             - test_software_preferences_pop_up_config_file: opens the 
               preferences pop up and changes parameters.
+            - test_software_preferences_pop_up_modules_config: changes
+              the configuration of AFNI, ANTS, FSL, SPM and MATLAB.
             - test_software_preferences_pop_up_validate: opens the 
               preferences pop up for AFNI, ANTS, FSL, SPM and MATLAB.
-            - test_software_preferences_pop_up_modules_config: changes 
-              the configuration of AFNI, ANTS, FSL, SPM and MATLAB.
             - test_tab_changed: switches between data browser, data 
               viewer and pipeline manager.
-    '''
-    def create_mock_jar(self, path):
-        '''
-        Creates a mocked java (.jar) executable.
-        :param path: the full path of the executable, ending by '.jar'
-        :returns: 0 if success or 1 if failure
-        '''
+    """
 
-        (folder, name) = os.path.split(path)
 
-        CONTENT = ('public class MockApp {\n' + 
-                  '    public static void main(String[] args){\n' +
-                  '        System.out.println("Executed mock java app.");\n' +
-                  '    }\n' + 
-                  '}')
-
-        # Creates the .java source code
-
-        with open(os.path.join(folder, 'MockApp.java'), 'w') as file:
-            file.write(CONTENT)
-
-        # Creates the MANIFEST file
-        with open(os.path.join(folder, 'MANIFEST.MF'), 'w') as file:
-            file.write('Main-Class:  MockApp\n')
-        # The build only works with the '\n' at the end of the manifest
-
-        # Check if the OpenJDK Runtime (java) is installed
-        try:
-            subprocess.run(['java', '-version'])
-        except FileNotFoundError:
-            print('OpenJDK Runtime is not installed')
-            return 1
-
-        # Compile and pack
-        subprocess.run(['javac', '-d', '.', 'MockApp.java'], cwd=folder)
-        subprocess.run(['jar', 'cvmf', 'MANIFEST.MF', name, 'MockApp.class'], cwd=folder)
-
-        if not os.path.exists(path):
-            print('The java executable was not created')
-            return 1
-        
-        return 0
 
     def test_check_database(self):
         '''
@@ -3704,6 +3708,60 @@ class TestMIAMainWindow(TestMIACase):
         # Asserts that the first scan was added to the 'raw_data' folder
         self.assertIn(new_scan, table_data_scans)
 
+    def test_open_project_pop_up(self):
+        '''
+        Creates a test project and opens a project, including unsaved
+        modifications.
+        Tests MainWindow.open_project_pop_up.
+
+        Notes
+        -----
+        Mocks
+         - QMessageBox.exec
+         - PopUpOpenProject.exec
+         - PopUpQuit.exec
+        '''
+
+        # Creates a test project
+        test_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        # Sets shortcuts for objects that are often used
+        data_browser = self.main_window.data_browser
+
+        QMessageBox.exec = lambda self_, *arg: self_.show()
+
+        # Resets the projects save directory
+        Config().set_projects_save_path(None)
+
+        # Tries to open a project without setting the projects save dir
+        self.main_window.open_project_pop_up()
+        self.main_window.msg.accept()
+
+        # Sets the projects save dir
+        config = Config(config_path=self.config_path)
+        config.set_projects_save_path(os.path.split(test_proj_path)[0])
+
+        PopUpOpenProject.exec = lambda self_, *arg: self_.show()
+
+        # Opens a project
+        self.main_window.open_project_pop_up()
+
+        self.main_window.exPopup.get_filename((test_proj_path,))
+
+        # Deletes a scan from data browser
+        data_browser.table_data.selectRow(0)
+        self.main_window.data_browser.table_data.remove_scan()
+
+        # Asserts that there are unsaved modificaiton
+        self.assertTrue(self.main_window.check_unsaved_modifications())
+
+        PopUpQuit.exec = lambda self_: self_.show()
+
+        # Tries to open a project with unsaved modificaitons
+        self.main_window.open_project_pop_up()
+        self.main_window.pop_up_close.accept()
+
     def test_open_recent_project(self):
         '''
         Creates 2 test projects and opens one by the recent projects 
@@ -3754,6 +3812,530 @@ class TestMIAMainWindow(TestMIACase):
         #self.main_window.pop_up_close.accept()
 
         print()
+
+    @unittest.skipUnless(sys.platform.startswith('linux'), 'requires linux')
+    def test_open_shell(self):
+        '''
+        Opens a Qt console and kill it afterwards.
+        Tests MainWindow.open_shell.
+        '''
+
+        # Opens the Qt console
+        self.main_window.action_open_shell.triggered.emit()
+
+        qt_console_process = None
+
+        time_elapsed = 0
+        while time_elapsed < 5:
+
+            # Gets the current process
+            current_process = psutil.Process()
+            children = current_process.children(recursive=True)
+
+            # If qt_console_process os not none, the qt console process
+            # was found
+            if qt_console_process:
+                break
+
+            if children:
+                # Gets the process pid (process id)
+                for child in children:
+                    if child.name() == 'jupyter-qtconso':
+                        qt_console_process = child.pid
+
+            sleep(1)
+            time_elapsed += 1
+
+        if qt_console_process:
+            # Kills the Qt console
+            os.kill(qt_console_process, 9)
+        else:
+            print('the Qt console process was not found')
+
+    def test_package_library_dialog_add_pkg(self):
+        '''
+        Creates a new project folder, opens the processes library and
+        adds a package.
+        Tests
+         - PackageLibraryDialog
+
+        Notes
+        -----
+        Mocks
+         - QMessageBox.exec
+         - QMessageBox.exec_
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        pkg_lib_window = self.main_window.pop_up_package_library
+
+        add_pkg_button = (pkg_lib_window.layout().children()[0].layout().
+                          children()[3].itemAt(0).widget())
+
+        PKG = 'nipype.interfaces.DataGrabber'
+
+        # Mocks the execution of a dialog box
+        QMessageBox.exec = lambda x: None
+        QMessageBox.exec_ = lambda x: None
+
+        '''ADD PACKAGE'''
+
+        # Clicks on the add package button
+        add_pkg_button.clicked.emit()
+
+        QFileDialog.exec_ = lambda x: True
+        ppl_manager.processLibrary.process_library.pkg_library.browse_package()
+
+        # Resets the line edit back to 'PKG'
+        pkg_lib_window.line_edit.setText(PKG)
+        self.main_window.pipeline_manager.processLibrary.process_library.pkg_library.is_path = False
+
+        # Clicks on the add package button
+        add_pkg_button.clicked.emit()
+
+        # Resets the previous action
+        pkg_lib_window.add_list.selectAll()
+        pkg_lib_window.layout().children()[0].layout().itemAt(
+            8).widget().layout().itemAt(1).widget().clicked.emit()
+
+        pkg_lib_window.remove_dic[PKG] = 1
+        pkg_lib_window.add_dic[PKG] = 1
+
+        add_pkg_button.clicked.emit()
+
+        pkg_lib_window.ok_clicked()  # Apply changes
+
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+
+        # Writes the name of an inexistant package on the line edit
+        pkg_lib_window.line_edit.setText('inexistant')
+
+        add_pkg_button.clicked.emit()  # Clicks on the remove button
+        pkg_lib_window.ok_clicked()  # Apply changes
+
+        # Resets the process library to its original state
+        pkg_lib_window.add_list.selectAll()
+        (pkg_lib_window.layout().children()[0].layout().itemAt(8).widget().
+         layout().itemAt(1).widget().clicked.emit())
+
+        # Creates a copy of the folder (package) 'User_processes'
+        config = Config(config_path=self.config_path)
+        usr_proc_fldr = os.path.join(config.get_mia_path(),
+                                     'processes', 'User_processes')
+        if os.path.exists(usr_proc_fldr + '_'):
+            shutil.rmtree(usr_proc_fldr + '_')
+        usr_proc_fldr_copy = shutil.copytree(usr_proc_fldr,
+                                             usr_proc_fldr + '_')
+
+        # Opens the install packages pop up
+        folder_btn = (pkg_lib_window.layout().children()[0].layout().itemAt(1).
+                      itemAt(3).widget())
+        folder_btn.clicked.emit()
+
+        # Creates a file in the projects path
+        mock_file_path = os.path.join(new_proj_path, 'mock_file')
+        mock_file = open(mock_file_path, 'w')
+        mock_file.close()
+
+        # Sets the folder to an inexistant file path
+        (pkg_lib_window.pop_up_install_processes.path_edit.
+         setText(mock_file_path + '_'))
+
+        # Clicks on install package
+        instl_pkg_btn = (pkg_lib_window.pop_up_install_processes.layout().
+                         children()[1].itemAt(0).widget())
+        instl_pkg_btn.clicked.emit()  # Displays an error dialog box
+
+        # Sets the folder to an existing file path, but not a .zip
+        (pkg_lib_window.pop_up_install_processes.path_edit.
+         setText(mock_file_path))
+
+        # Clicks on install package
+        instl_pkg_btn.clicked.emit()  # Displays an error dialog box
+
+        # Sets the folder to be a valid package
+        (pkg_lib_window.pop_up_install_processes.path_edit.
+         setText(usr_proc_fldr_copy))
+
+        # Mocks the '__init__.py' file to raise an 'ImportError'
+        mock_init_file = open(os.path.join(usr_proc_fldr_copy, '__init__.py'),
+                              'w')
+        mock_init_file.write("raise ImportError('mock_import_error')")
+        mock_init_file.close()
+
+        # Clicks on install package
+        instl_pkg_btn.clicked.emit()
+
+        # Removes the copy of the folder (package)
+        shutil.rmtree(usr_proc_fldr_copy)
+
+        # Closes the install packages pop up
+        pkg_lib_window.pop_up_install_processes.close()
+
+        # Closes the package library pop-up
+        pkg_lib_window.close()
+
+    def test_package_library_dialog_del_pkg(self):
+        '''
+        Creates a new project folder, opens the processes library and
+        deletes a package.
+        Tests
+         - PackageLibraryDialog
+
+        Notes
+        -----
+        Mocks
+         - QMessageBox.exec
+         - QMessageBox.exec_
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl_edt_tab = ppl_edt_tabs.get_current_editor()
+        ppl = ppl_edt_tabs.get_current_pipeline()
+        proc_lib_view = ppl_manager.processLibrary.process_library
+        pkg_lib_window = proc_lib_view.pkg_library
+
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        pkg_lib_window = self.main_window.pop_up_package_library
+
+        del_pkg_button = (pkg_lib_window.layout().children()[0].layout().
+                          children()[3].itemAt(2).widget())
+
+        PKG = 'nipype.interfaces.DataGrabber'
+
+        # Mocks the execution of a dialog box
+        QMessageBox.exec = lambda x: None
+        QMessageBox.exec_ = lambda x: None
+
+        '''Delete package'''
+
+        # Tries to delete a package which is part of nipype
+        pkg_lib_window.line_edit.setText(PKG)
+
+        del_pkg_button.clicked.emit()  # Clicks on delete package
+
+        # Resets the previous action
+        pkg_lib_window.del_list.selectAll()
+        (pkg_lib_window.layout().children()[0].layout().itemAt(12).widget().
+         layout().itemAt(1).widget().clicked.emit())
+
+        del_pkg_button.clicked.emit()  # Clicks on delete package
+
+        QMessageBox.question = Mock(return_value=QMessageBox.No)
+        pkg_lib_window.ok_clicked()  # Apply changes
+
+        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
+        pkg_lib_window.ok_clicked()  # Apply changes
+
+        pkg_lib_window.line_edit.setText(PKG)
+
+        # Selects the 'DataGrabber' package
+        pkg_index = self.find_item_by_data(proc_lib_view, 'DataGrabber')
+        (proc_lib_view.selectionModel().
+         select(pkg_index, QItemSelectionModel.SelectCurrent))
+
+        # Tries to delete a package that cannot be deleted, selecting it
+        # and pressing the del key
+        event = Mock()
+        event.key = lambda: Qt.Key_Delete
+        proc_lib_view.keyPressEvent(event)
+
+        # pkg_lib_window.msg.close() # Closes the warning message
+
+        # Tries to delete a package that cannot be deleted, calling the
+        # function
+        pkg_lib_window.delete_package()
+        pkg_lib_window.msg.close()  # Closes the warning message
+
+        # Tries to delete a package corresponding to an empty string
+        pkg_lib_window.line_edit.setText('')
+        pkg_lib_window.delete_package()
+
+        pkg_lib_window.msg.close()  # Closes the warning message
+
+        # Switches to the pipeline manager tab
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # Adds the processes Rename, creates the "rename_1" node
+        ppl_edt_tab.click_pos = QPoint(450, 500)
+        ppl_edt_tab.add_named_process(Rename)
+
+        # Exports the mandatory input and output plugs for "rename_1"
+        ppl_edt_tab.current_node_name = 'rename_1'
+        ppl_edt_tab.export_unconnected_mandatory_inputs()
+        ppl_edt_tab.export_all_unconnected_outputs()
+
+        # Saves the pipeline as the package 'Test_pipeline'
+        config = Config(config_path=self.config_path)
+        filename = os.path.join(config.get_mia_path(), 'processes',
+                                'User_processes', 'test_pipeline.py')
+        save_pipeline(ppl, filename)
+        self.main_window.pipeline_manager.updateProcessLibrary(filename)
+
+        # Gets the mia path
+        config = Config(config_path=self.config_path)
+        mia_path = config.get_mia_path()
+
+        # Mocks 'InstallProcesses.show'
+        # InstallProcesses.show = lambda x: None
+
+        # Imports the user processes folder as a package
+        pkg_lib_window.install_processes_pop_up()
+        pkg_folder = os.path.join(mia_path, 'processes', 'User_processes')
+        pkg_lib_window.pop_up_install_processes.path_edit.setText(pkg_folder)
+        (pkg_lib_window.pop_up_install_processes.layout().children()[-1].
+         itemAt(0).widget().clicked.emit())
+        pkg_lib_window.pop_up_install_processes.close()
+
+        # Gets the 'test_pipeline' index and selects it
+        test_ppl_index = self.find_item_by_data(proc_lib_view, 'Test_pipeline')
+        (proc_lib_view.selectionModel().
+         select(test_ppl_index, QItemSelectionModel.SelectCurrent))
+
+        # Tries to delete the package 'test_pipeline', rejects the
+        # dialog box
+        QMessageBox.question = Mock(return_value=QMessageBox.No)
+        proc_lib_view.keyPressEvent(event)
+
+        # Effectively deletes the package 'test_pipeline', accepting the
+        # dialog box
+        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
+        proc_lib_view.keyPressEvent(event)
+
+        pkg_lib_window.close()
+
+    def test_package_library_dialog_rmv_pkg(self):
+        '''
+        Creates a new project folder, opens the processes library and
+        removes a package. Also saves the current configuration.
+        Tests
+         - PackageLibraryDialog
+
+        Notes
+        -----
+        Mocks
+         - QMessageBox.exec
+         - QMessageBox.exec_
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+        pkg_lib_window = self.main_window.pop_up_package_library
+
+        # Does not open the packages library ito avoid thread deadlock
+        # ppl_manager.processLibrary.open_pkg_lib()
+
+        rmv_pkg_button = (pkg_lib_window.layout().children()[0].layout().
+                          children()[3].itemAt(1).widget())
+
+        PKG = 'nipype.interfaces.DataGrabber'
+
+        # Mocks the execution of a dialog box
+        QMessageBox.exec = lambda x: None
+        QMessageBox.exec_ = lambda x: None
+
+        '''REMOVE PACKAGE'''
+
+        # Mocks deleting a package that is not specified
+        res = pkg_lib_window.remove_package('')
+        self.assertFalse(res)
+
+        # Tries removing an inexistant package
+        res = pkg_lib_window.remove_package('inexistant_package')
+        self.assertIsNone(res)
+
+        # Clicks on the remove package button without selecting package
+        rmv_pkg_button.clicked.emit()
+
+        # Writes the name of an existing package on the line edit
+        pkg_lib_window.line_edit.setText(PKG)
+
+        rmv_pkg_button.clicked.emit()
+
+        # Resets the previous action
+        pkg_lib_window.remove_list.selectAll()
+        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
+         layout().itemAt(1).widget().clicked.emit())
+
+        rmv_pkg_button.clicked.emit()
+
+        pkg_lib_window.ok_clicked()  # Apply changes
+
+        # Mocks removing a package with text and from the tree
+        pkg_lib_window.remove_dic[PKG] = 1
+        pkg_lib_window.add_dic[PKG] = 1
+        pkg_lib_window.delete_dic[PKG] = 1
+        pkg_lib_window.remove_package_with_text(_2rem=PKG,
+                                                tree_remove=False)
+
+        # Resets the process library to its original state
+        pkg_lib_window.remove_list.selectAll()
+        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
+         layout().itemAt(1).widget().clicked.emit())
+
+        # Saves the config to 'process_config.yml'
+        ppl_manager.processLibrary.save_config()
+
+    def test_package_library_others(self):
+        '''
+        Creates a new project folder, opens the processes library and
+        adds a package.
+        Tests
+         - PackageLibraryDialog
+
+        Notes
+        -----
+        The package library object opens up as a pop-up when
+        File > Package library manager is clicked.
+
+        Mocks
+         - QMessageBox.exec
+         - QMessageBox.exec_
+
+         +> docstring to check !!!!!!!
+        '''
+
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, 'test_light_project')
+
+        # Opens the package library pop-up
+        self.main_window.package_library_pop_up()
+
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        pkg_lib = ppl_manager.processLibrary.pkg_library.package_library
+        pkg_lib_window = self.main_window.pop_up_package_library
+
+        # Mocks the package tree
+        mock_pkg_tree = [{'Double_rename': 'process_enabled'},
+                         [{'Double_rename': 'process_enabled'}],
+                         ({'Double_rename': 'process_enabled'})]
+
+        # Mocks filling an item with the above item
+        pkg_lib.fill_item(pkg_lib.invisibleRootItem(), mock_pkg_tree)
+
+        # Closes the package library pop-up
+        pkg_lib_window.close()
+
+    def test_popUpDeletedProject(self):
+        '''
+        Adds a deleted projects to the projects list and launches mia.
+        Tests PopUpDeletedProject.
+        '''
+
+        # Sets a projects save directory
+        config = Config()
+        projects_save_path = os.path.join(config.get_mia_path(), 'projects')
+        config.set_projects_save_path(projects_save_path)
+
+        # Mocks a project filepath that does not exist in the filesystem
+        # Adds this filepath to 'saved_projects.yml'
+        savedProjects = SavedProjects()
+        del_prjct = os.path.join(projects_save_path, 'missing_project')
+        savedProjects.addSavedProject(del_prjct)
+
+        # Asserts that 'saved_projects.yml' contains the filepath
+        # self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+        # Mocks the execution of a dialog box
+        PopUpDeletedProject.exec = Mock()
+
+        # Adds code from the 'main.py', gets deleted projects
+        saved_projects_object = SavedProjects()
+        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
+        deleted_projects = []
+        for saved_project in saved_projects_list:
+            if not os.path.isdir(saved_project):
+                deleted_projects.append(os.path.abspath(saved_project))
+                saved_projects_object.removeSavedProject(saved_project)
+
+        if deleted_projects is not None and deleted_projects:
+            self.msg = PopUpDeletedProject(deleted_projects)
+
+        # Asserts that 'saved_projects.yml' no longer contains it
+        # self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+
+        print()
+
+    def test_popUpDeleteProject(self):
+        '''
+        Creates a new project and deletes it.
+        Tests
+         - MainWindow.delete_project
+         - PopUpDeleteProject.
+
+        Notes
+        -----
+        Not to be confused with PopUpDeletedProject.
+        '''
+
+        # Gets a new project
+        test_proj_path = self.get_new_test_project()
+        self.main_window.switch_project(test_proj_path, 'test_project')
+
+        # Instead of executing the pop-up, only shows it
+        # This avoid thread deadlocking
+        QMessageBox.exec = lambda self_: self_.show()
+
+        # Resets the projects folder
+        Config(config_path=self.config_path).set_projects_save_path('')
+
+        # Tries to delete a project without setting the projects folder
+        self.main_window.delete_project()
+        self.main_window.msg.accept()
+
+        # Sets a projects save directory
+        config = Config(config_path=self.config_path)
+        proj_save_path = os.path.join(config.get_mia_path(),
+                                      os.path.split(test_proj_path)[0])
+        config.set_projects_save_path(proj_save_path)
+
+        # Append 'test_proj_path' to 'saved_projects.pathsList' and
+        # 'opened_projects', to increase coverage
+        (self.main_window.saved_projects.pathsList.
+         append(os.path.relpath(test_proj_path)))
+        config.set_opened_projects([os.path.relpath(test_proj_path)])
+
+        # PopUpDeleteProject.exec = lambda self_: self_.show()
+        PopUpDeleteProject.exec = lambda self_: None
+
+        # Deletes a project with the projects folder set
+        self.main_window.delete_project()
+
+        exPopup = self.main_window.exPopup
+
+        # Checks the first project to be deleted
+        exPopup.check_boxes[0].setChecked(True)
+
+        # Mocks the dialog box to directly return 'YesToAll'
+        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
+        exPopup.ok_clicked()
+
+        print(5)
 
     def test_switch_project(self):
         '''
@@ -3813,583 +4395,9 @@ class TestMIAMainWindow(TestMIACase):
         res = self.main_window.switch_project(test_proj_path, 'test_project')
         self.assertFalse(res)
 
-    def test_open_project_pop_up(self):
-        '''
-        Creates a test project and opens a project, including unsaved 
-        modifications.
-        Tests MainWindow.open_project_pop_up.
-
-        Notes
-        -----
-        Mocks
-         - QMessageBox.exec
-         - PopUpOpenProject.exec
-         - PopUpQuit.exec 
-        '''
-
-        # Creates a test project
-        test_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(test_proj_path, 'test_project')
-
-        # Sets shortcuts for objects that are often used
-        data_browser = self.main_window.data_browser
-        
-        QMessageBox.exec = lambda self_, *arg: self_.show()
-
-        # Resets the projects save directory
-        Config().set_projects_save_path(None)
-
-        # Tries to open a project without setting the projects save dir
-        self.main_window.open_project_pop_up()
-        self.main_window.msg.accept()
-
-        # Sets the projects save dir
-        config = Config(config_path=self.config_path)
-        config.set_projects_save_path(os.path.split(test_proj_path)[0])
-
-        PopUpOpenProject.exec = lambda self_, *arg: self_.show()
-
-        # Opens a project
-        self.main_window.open_project_pop_up()
-
-        self.main_window.exPopup.get_filename((test_proj_path,))
-
-        # Deletes a scan from data browser
-        data_browser.table_data.selectRow(0)
-        self.main_window.data_browser.table_data.remove_scan()
-
-        # Asserts that there are unsaved modificaiton
-        self.assertTrue(self.main_window.check_unsaved_modifications())
-
-        PopUpQuit.exec = lambda self_: self_.show()
-
-        # Tries to open a project with unsaved modificaitons
-        self.main_window.open_project_pop_up()
-        self.main_window.pop_up_close.accept()
-
-    @unittest.skipUnless(sys.platform.startswith('linux'), 'requires linux')
-    def test_open_shell(self):
-        '''
-        Opens a Qt console and kill it afterwards.
-        Tests MainWindow.open_shell.
-        '''
-
-        # Opens the Qt console
-        self.main_window.action_open_shell.triggered.emit()
-
-        qt_console_process = None
-
-        time_elapsed = 0
-        while time_elapsed < 5:
-
-            # Gets the current process
-            current_process = psutil.Process()
-            children = current_process.children(recursive=True)
-
-            # If qt_console_process os not none, the qt console process 
-            # was found
-            if qt_console_process:
-                break
-
-            if children:
-                # Gets the process pid (process id)
-                for child in children:
-                    if child.name() == 'jupyter-qtconso':
-                        qt_console_process = child.pid
-
-            sleep(1)
-            time_elapsed += 1
-                               
-        if qt_console_process:
-            # Kills the Qt console
-            os.kill(qt_console_process, 9)
-        else:
-            print('the Qt console process was not found')
-
-    def test_package_library_dialog_add_pkg(self):
-        '''
-        Creates a new project folder, opens the processes library and 
-        adds a package.
-        Tests
-         - PackageLibraryDialog
-
-        Notes
-        -----
-        Mocks
-         - QMessageBox.exec
-         - QMessageBox.exec_
-        '''
-
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, 'test_light_project')
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Opens the package library pop-up
-        self.main_window.package_library_pop_up()
-        pkg_lib_window = self.main_window.pop_up_package_library
-
-        add_pkg_button = (pkg_lib_window.layout().children()[0].layout().
-                          children()[3].itemAt(0).widget())
-
-        PKG = 'nipype.interfaces.DataGrabber'
-
-        # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda x: None
-        QMessageBox.exec_ = lambda x: None
-        
-        '''ADD PACKAGE'''
-
-        # Clicks on the add package button
-        add_pkg_button.clicked.emit()
-
-        QFileDialog.exec_ = lambda x: True
-        ppl_manager.processLibrary.process_library.pkg_library.browse_package()
-
-        # Resets the line edit back to 'PKG'
-        pkg_lib_window.line_edit.setText(PKG)
-        self.main_window.pipeline_manager.processLibrary.process_library.pkg_library.is_path = False
-
-        # Clicks on the add package button
-        add_pkg_button.clicked.emit()
-
-        # Resets the previous action
-        pkg_lib_window.add_list.selectAll()
-        pkg_lib_window.layout().children()[0].layout().itemAt(8).widget().layout().itemAt(1).widget().clicked.emit()
-
-        pkg_lib_window.remove_dic[PKG] = 1
-        pkg_lib_window.add_dic[PKG] = 1
-
-        add_pkg_button.clicked.emit()
-        
-        pkg_lib_window.ok_clicked() # Apply changes
-
-        # Opens the package library pop-up
-        self.main_window.package_library_pop_up()
-
-        # Writes the name of an inexistant package on the line edit
-        pkg_lib_window.line_edit.setText('inexistant')
-
-        add_pkg_button.clicked.emit() # Clicks on the remove button
-        pkg_lib_window.ok_clicked() # Apply changes
-
-        # Resets the process library to its original state
-        pkg_lib_window.add_list.selectAll()
-        (pkg_lib_window.layout().children()[0].layout().itemAt(8).widget().
-         layout().itemAt(1).widget().clicked.emit())
-
-        # Creates a copy of the folder (package) 'User_processes'
-        config = Config(config_path=self.config_path)
-        usr_proc_fldr = os.path.join(config.get_mia_path(), 
-                                       'processes', 'User_processes')
-        if os.path.exists(usr_proc_fldr + '_'):
-            shutil.rmtree(usr_proc_fldr + '_')
-        usr_proc_fldr_copy = shutil.copytree(usr_proc_fldr, usr_proc_fldr + '_')
-
-        # Opens the install packages pop up
-        folder_btn = (pkg_lib_window.layout().children()[0].layout().itemAt(1).
-                      itemAt(3).widget())
-        folder_btn.clicked.emit()
-
-        # Creates a file in the projects path
-        mock_file_path = os.path.join(new_proj_path, 'mock_file')
-        mock_file = open(mock_file_path, 'w')
-        mock_file.close()
-
-        # Sets the folder to an inexistant file path
-        (pkg_lib_window.pop_up_install_processes.path_edit.
-         setText(mock_file_path + '_'))
-
-        # Clicks on install package
-        instl_pkg_btn = (pkg_lib_window.pop_up_install_processes.layout().
-                         children()[1].itemAt(0).widget())
-        instl_pkg_btn.clicked.emit() # Displays an error dialog box
-
-        # Sets the folder to an existing file path, but not a .zip
-        (pkg_lib_window.pop_up_install_processes.path_edit.
-         setText(mock_file_path))
-
-        # Clicks on install package
-        instl_pkg_btn.clicked.emit() # Displays an error dialog box
-
-        # Sets the folder to be a valid package
-        (pkg_lib_window.pop_up_install_processes.path_edit.
-         setText(usr_proc_fldr_copy))
-
-        # Mocks the '__init__.py' file to raise an 'ImportError'
-        mock_init_file = open(os.path.join(usr_proc_fldr_copy, '__init__.py'), 
-                              'w')
-        mock_init_file.write("raise ImportError('mock_import_error')")
-        mock_init_file.close()
-
-        # Clicks on install package
-        instl_pkg_btn.clicked.emit()
-
-        # Removes the copy of the folder (package)
-        shutil.rmtree(usr_proc_fldr_copy)
-        
-        # Closes the install packages pop up
-        pkg_lib_window.pop_up_install_processes.close()
-
-        # Closes the package library pop-up
-        pkg_lib_window.close()
-
-    def test_package_library_dialog_del_pkg(self):
-        '''
-        Creates a new project folder, opens the processes library and 
-        deletes a package.
-        Tests
-         - PackageLibraryDialog
-
-        Notes
-        -----
-        Mocks
-         - QMessageBox.exec
-         - QMessageBox.exec_
-        '''
-
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, 'test_light_project')
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl_edt_tab = ppl_edt_tabs.get_current_editor()
-        ppl = ppl_edt_tabs.get_current_pipeline()
-        proc_lib_view = ppl_manager.processLibrary.process_library
-        pkg_lib_window = proc_lib_view.pkg_library
-
-        # Opens the package library pop-up
-        self.main_window.package_library_pop_up()
-        pkg_lib_window = self.main_window.pop_up_package_library
-
-        del_pkg_button = (pkg_lib_window.layout().children()[0].layout().
-                          children()[3].itemAt(2).widget())
-
-        PKG = 'nipype.interfaces.DataGrabber'
-
-        # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda x: None
-        QMessageBox.exec_ = lambda x: None
-
-        '''Delete package'''
-
-        # Tries to delete a package which is part of nipype
-        pkg_lib_window.line_edit.setText(PKG)
-
-        del_pkg_button.clicked.emit() # Clicks on delete package
-
-        # Resets the previous action
-        pkg_lib_window.del_list.selectAll()
-        (pkg_lib_window.layout().children()[0].layout().itemAt(12).widget().
-         layout().itemAt(1).widget().clicked.emit())
-
-        del_pkg_button.clicked.emit() # Clicks on delete package
-
-        QMessageBox.question = Mock(return_value=QMessageBox.No)
-        pkg_lib_window.ok_clicked() # Apply changes
-
-        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
-        pkg_lib_window.ok_clicked() # Apply changes
-
-        pkg_lib_window.line_edit.setText(PKG)
-
-        # Selects the 'DataGrabber' package
-        pkg_index = self.find_item_by_data(proc_lib_view, 'DataGrabber')
-        (proc_lib_view.selectionModel().
-         select(pkg_index, QItemSelectionModel.SelectCurrent))
-
-        # Tries to delete a package that cannot be deleted, selecting it
-        # and pressing the del key
-        event = Mock()
-        event.key = lambda: Qt.Key_Delete
-        proc_lib_view.keyPressEvent(event)
-
-        #pkg_lib_window.msg.close() # Closes the warning message
-
-        # Tries to delete a package that cannot be deleted, calling the 
-        # function
-        pkg_lib_window.delete_package()
-        pkg_lib_window.msg.close() # Closes the warning message
-
-        # Tries to delete a package corresponding to an empty string
-        pkg_lib_window.line_edit.setText('')
-        pkg_lib_window.delete_package()
-
-        pkg_lib_window.msg.close() # Closes the warning message
-
-        # Switches to the pipeline manager tab
-        self.main_window.tabs.setCurrentIndex(2)
-
-        # Adds the processes Rename, creates the "rename_1" node
-        ppl_edt_tab.click_pos = QPoint(450, 500)
-        ppl_edt_tab.add_named_process(Rename)
-        
-        # Exports the mandatory input and output plugs for "rename_1"
-        ppl_edt_tab.current_node_name = 'rename_1'
-        ppl_edt_tab.export_unconnected_mandatory_inputs()
-        ppl_edt_tab.export_all_unconnected_outputs()
-
-        # Saves the pipeline as the package 'Test_pipeline'
-        config = Config(config_path=self.config_path)
-        filename = os.path.join(config.get_mia_path(), 'processes',
-                                'User_processes', 'test_pipeline.py')
-        save_pipeline(ppl, filename)
-        self.main_window.pipeline_manager.updateProcessLibrary(filename)
-
-        # Gets the mia path
-        config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
-
-        # Mocks 'InstallProcesses.show' 
-        #InstallProcesses.show = lambda x: None
-
-        # Imports the user processes folder as a package
-        pkg_lib_window.install_processes_pop_up()
-        pkg_folder = os.path.join(mia_path, 'processes', 'User_processes')
-        pkg_lib_window.pop_up_install_processes.path_edit.setText(pkg_folder)
-        (pkg_lib_window.pop_up_install_processes.layout().children()[-1].
-         itemAt(0).widget().clicked.emit())
-        pkg_lib_window.pop_up_install_processes.close()
-
-        # Gets the 'test_pipeline' index and selects it
-        test_ppl_index = self.find_item_by_data(proc_lib_view, 'Test_pipeline')
-        (proc_lib_view.selectionModel().
-         select(test_ppl_index, QItemSelectionModel.SelectCurrent))      
-
-        # Tries to delete the package 'test_pipeline', rejects the 
-        # dialog box
-        QMessageBox.question = Mock(return_value = QMessageBox.No)
-        proc_lib_view.keyPressEvent(event)
-
-        # Effectively deletes the package 'test_pipeline', accepting the 
-        # dialog box
-        QMessageBox.question = Mock(return_value = QMessageBox.Yes)
-        proc_lib_view.keyPressEvent(event)
-
-        pkg_lib_window.close()
-
-    def test_package_library_others(self):
-        '''
-        Creates a new project folder, opens the processes library and 
-        adds a package.
-        Tests
-         - PackageLibraryDialog
-
-        Notes
-        -----
-        The package library object opens up as a pop-up when 
-        File > Package library manager is clicked.
-
-        Mocks
-         - QMessageBox.exec
-         - QMessageBox.exec_
-        '''
-
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, 'test_light_project')
-
-        # Opens the package library pop-up
-        self.main_window.package_library_pop_up()
-        
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        pkg_lib = ppl_manager.processLibrary.pkg_library.package_library
-        pkg_lib_window = self.main_window.pop_up_package_library
-
-        # Mocks the package tree
-        mock_pkg_tree = [{'Double_rename': 'process_enabled'}, 
-                         [{'Double_rename': 'process_enabled'}], 
-                         ({'Double_rename': 'process_enabled'})]
-
-        # Mocks filling an item with the above item
-        pkg_lib.fill_item(pkg_lib.invisibleRootItem(), mock_pkg_tree)
-
-        # Closes the package library pop-up
-        pkg_lib_window.close()
-
-    def test_package_library_dialog_rmv_pkg(self):
-        '''
-        Creates a new project folder, opens the processes library and 
-        removes a package. Also saves the current configuration.
-        Tests
-         - PackageLibraryDialog
-
-        Notes
-        -----
-        Mocks
-         - QMessageBox.exec
-         - QMessageBox.exec_
-        '''
-
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, 'test_light_project')
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Opens the package library pop-up
-        self.main_window.package_library_pop_up()
-        pkg_lib_window = self.main_window.pop_up_package_library
-
-        # Does not open the packages library ito avoid thread deadlock
-        #ppl_manager.processLibrary.open_pkg_lib()
-
-        rmv_pkg_button = (pkg_lib_window.layout().children()[0].layout().
-                          children()[3].itemAt(1).widget())
-
-        PKG = 'nipype.interfaces.DataGrabber'
-
-        # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda x: None
-        QMessageBox.exec_ = lambda x: None
-
-        '''REMOVE PACKAGE'''
-
-        # Mocks deleting a package that is not specified
-        res = pkg_lib_window.remove_package('')
-        self.assertFalse(res)
-
-        # Tries removing an inexistant package
-        res = pkg_lib_window.remove_package('inexistant_package')
-        self.assertIsNone(res)
-
-        # Clicks on the remove package button without selecting package
-        rmv_pkg_button.clicked.emit()
-
-        # Writes the name of an existing package on the line edit
-        pkg_lib_window.line_edit.setText(PKG)
-
-        rmv_pkg_button.clicked.emit()
-
-        # Resets the previous action
-        pkg_lib_window.remove_list.selectAll()
-        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
-         layout().itemAt(1).widget().clicked.emit())
-
-        rmv_pkg_button.clicked.emit()
-
-        pkg_lib_window.ok_clicked() # Apply changes
-
-        # Mocks removing a package with text and from the tree
-        pkg_lib_window.remove_dic[PKG] = 1
-        pkg_lib_window.add_dic[PKG] = 1
-        pkg_lib_window.delete_dic[PKG] = 1
-        pkg_lib_window.remove_package_with_text(_2rem = PKG, 
-                                                tree_remove = False)
-        
-        # Resets the process library to its original state
-        pkg_lib_window.remove_list.selectAll()
-        (pkg_lib_window.layout().children()[0].layout().itemAt(10).widget().
-         layout().itemAt(1).widget().clicked.emit())
-
-        # Saves the config to 'process_config.yml'
-        ppl_manager.processLibrary.save_config()
-
-    def test_popUpDeletedProject(self):
-        '''
-        Adds a deleted projects to the projects list and launches mia.
-        Tests PopUpDeletedProject.
-        '''
-        
-        # Sets a projects save directory
-        config = Config()
-        projects_save_path = os.path.join(config.get_mia_path(), 'projects')
-        config.set_projects_save_path(projects_save_path)
-
-        # Mocks a project filepath that does not exist in the filesystem
-        # Adds this filepath to 'saved_projects.yml' 
-        savedProjects = SavedProjects()
-        del_prjct = os.path.join(projects_save_path, 'missing_project')
-        savedProjects.addSavedProject(del_prjct)
-
-        # Asserts that 'saved_projects.yml' contains the filepath
-        #self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
-
-        # Mocks the execution of a dialog box
-        PopUpDeletedProject.exec = Mock()
-
-        # Adds code from the 'main.py', gets deleted projects
-        saved_projects_object = SavedProjects()
-        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
-        deleted_projects = []
-        for saved_project in saved_projects_list:
-            if not os.path.isdir(saved_project):
-                deleted_projects.append(os.path.abspath(saved_project))
-                saved_projects_object.removeSavedProject(saved_project)
-
-        if deleted_projects is not None and deleted_projects:
-            self.msg = PopUpDeletedProject(deleted_projects)
-
-        # Asserts that 'saved_projects.yml' no longer contains it
-        #self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
-
-        print()
-
-    def test_popUpDeleteProject(self):
-        '''
-        Creates a new project and deletes it.
-        Tests
-         - MainWindow.delete_project
-         - PopUpDeleteProject.
-
-        Notes
-        -----
-        Not to be confused with PopUpDeletedProject.
-        '''
-
-        # Gets a new project
-        test_proj_path = self.get_new_test_project()
-        self.main_window.switch_project(test_proj_path, 'test_project')
-
-        # Instead of executing the pop-up, only shows it
-        # This avoid thread deadlocking
-        QMessageBox.exec = lambda self_: self_.show()
-
-        # Resets the projects folder
-        Config(config_path=self.config_path).set_projects_save_path('')
-
-        # Tries to delete a project without setting the projects folder
-        self.main_window.delete_project()
-        self.main_window.msg.accept()
-
-        # Sets a projects save directory
-        config = Config(config_path=self.config_path)
-        proj_save_path = os.path.join(config.get_mia_path(),
-                                      os.path.split(test_proj_path)[0])
-        config.set_projects_save_path(proj_save_path)
-
-        # Append 'test_proj_path' to 'saved_projects.pathsList' and 
-        # 'opened_projects', to increase coverage
-        (self.main_window.saved_projects.pathsList.
-         append(os.path.relpath(test_proj_path)))
-        config.set_opened_projects([os.path.relpath(test_proj_path)])
-
-        #PopUpDeleteProject.exec = lambda self_: self_.show()
-        PopUpDeleteProject.exec = lambda self_: None
-
-        # Deletes a project with the projects folder set
-        self.main_window.delete_project()
-
-        exPopup = self.main_window.exPopup
-
-        # Checks the first project to be deleted
-        exPopup.check_boxes[0].setChecked(True)
-
-        # Mocks the dialog box to directly return 'YesToAll'
-        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
-        exPopup.ok_clicked()
-
-        print(5)
-
     def test_see_all_projects(self):
         '''
-        Creates 2 projects and tries to open them through the all 
+        Creates 2 projects and tries to open them through the all
         projects pop-up.
         Tests
         - MainWindow.see_all_projects
@@ -4425,12 +4433,12 @@ class TestMIAMainWindow(TestMIACase):
         shutil.rmtree(project_9_path)
 
         # Show the projects pop-up
-        main_wnd.see_all_projects()  
+        main_wnd.see_all_projects()
 
         item_0 = self.main_window.exPopup.treeWidget.itemAt(0,0)
         self.assertEqual(item_0.text(0), 'project_8')
-        self.assertEqual(main_wnd.exPopup.treeWidget.itemBelow(item_0).text(0), 
-                         'project_9')    
+        self.assertEqual(main_wnd.exPopup.treeWidget.itemBelow(item_0).text(0),
+                         'project_9')
 
         # Tries to open a project with no projects selected
         main_wnd.exPopup.open_project()
@@ -4738,124 +4746,7 @@ class TestMIAMainWindow(TestMIACase):
 
         main_wnd.pop_up_preferences.close()
 
-    def test_software_preferences_pop_up_validate(self):
-        """
-        Opens the preferences pop up, sets the configuration of the 
-        modules AFNI, ANTS, FSL, SPM and MATLAB without pressing the OK 
-        button and switches the auto-save, controller version and radio 
-        view options.
 
-        Tests
-          - PopUpPreferences.validate_and_save
-
-        Notes
-        -----
-        Mocks
-          - PopUpPreferences.show
-          - QMessageBox.show
-        """
-        
-        '''Validates the Pipeline tab without pressing the 'OK' button'''
-
-        # Sets shortcuts for objects that are often used
-        main_wnd = self.main_window
-
-        # Mocks the execution of 'PopUpPreferences' to speed up the test
-        #PopUpPreferences.show = lambda x: None
-
-        # Creates a new project folder and adds one document to the 
-        # project, sets the plug value that is added to the database
-        project_8_path = self.get_new_test_project()
-        tmp_path = os.path.split(project_8_path)[0]
-
-        main_wnd.software_preferences_pop_up()
-
-        # Selects standalone modules
-        for module in ['matlab_standalone', 'spm_standalone']:
-            getattr(main_wnd.pop_up_preferences,
-                    'use_' + module + '_checkbox').setChecked(True)
-
-        # Validates the Pipeline tab without pressing the 'OK' button
-        main_wnd.pop_up_preferences.validate_and_save()
-
-        config = Config(config_path=self.config_path)
-        for module in ['matlab_standalone', 'spm_standalone']:
-            self.assertTrue(getattr(config, 'get_use_' + module)())
-
-        # Selects non standalone modules
-        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
-            getattr(main_wnd.pop_up_preferences,
-                    'use_' + module + '_checkbox').setChecked(True)
-
-        # Validates the Pipeline tab without pressing the 'OK' button
-        main_wnd.pop_up_preferences.validate_and_save()
-
-        config = Config(config_path=self.config_path)
-        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
-            self.assertTrue(getattr(config, 'get_use_' + module)())
-
-        '''Validates the Pipeline tab by pressing the 'OK' button'''
-
-        # Sets the projects folder for the preferences window to close 
-        # when pressing on 'OK'
-        (main_wnd.pop_up_preferences.projects_save_path_line_edit
-                                                             .setText(tmp_path))
-
-        # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
-        main_wnd.pop_up_preferences.wrong_path = lambda x, y: None
-        QMessageBox.show = lambda x: None
-
-        # Deselects non standalone modules
-        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
-            getattr(main_wnd.pop_up_preferences,
-                    'use_' + module + '_checkbox').setChecked(False)
-
-        # Deselects the 'radioView', 'adminMode' and 'clinicalMode' option
-        for opt in ['save', 'radioView', 'admin_mode', 'clinical_mode']:
-            (getattr(main_wnd.pop_up_preferences,
-                     opt + '_checkbox').setChecked(False))
-        # The options autoSave, radioView and controlV1 are not selected
-
-        # Sets the projects save path
-        Config(config_path=self.config_path).set_projects_save_path(tmp_path)
-
-        # Validates the all tab after pressing the 'OK' button
-        main_wnd.pop_up_preferences.ok_clicked()
-        
-        config = Config(config_path=self.config_path)
-        for opt in ['isAutoSave', 'isRadioView', 'isControlV1', 
-                    'get_use_clinical']:
-            self.assertFalse(getattr(config, opt)())
-        self.assertTrue(config.get_user_mode())
-
-        self.assertEqual(config.get_projects_save_path(), tmp_path)
-
-        # Deselects MATLAB and SPM modules from the config file
-        config = Config(config_path=self.config_path)
-        for module in ['matlab', 'spm']:
-            getattr(config, 'set_use_' + module)(False)
-        
-        main_wnd.software_preferences_pop_up() # Reopens the window
-
-        # Selects the autoSave, radioView and controlV1 options
-        for opt in ['save_checkbox', 'radioView_checkbox', 'control_checkbox',
-                    'admin_mode_checkbox', 'clinical_mode_checkbox']:
-            getattr(main_wnd.pop_up_preferences, opt).setChecked(True)
-
-        # Alternates to minimized mode
-        main_wnd.pop_up_preferences.fullscreen_cbox.setChecked(True)
-
-        # Sets an inexistant projects save path
-        (Config(config_path=self.config_path).
-         set_projects_save_path(os.path.join(tmp_path, 'inexistant')))
-
-        # Validates the all tab after pressing the 'OK' button
-        main_wnd.pop_up_preferences.ok_clicked()
-
-        # Asserts that the 'config' objects was not updated with the 
-        # inexistant projects folder
-        config = Config(config_path=self.config_path)
-        self.assertEqual(config.get_projects_save_path(), tmp_path)
 
     def test_software_preferences_pop_up_modules_config(self):
         """
@@ -5319,6 +5210,125 @@ class TestMIAMainWindow(TestMIACase):
         test_spm_matlab_config()
         test_matlab_config()
         test_matlab_mcr_spm_standalone()
+
+    def test_software_preferences_pop_up_validate(self):
+        """
+        Opens the preferences pop up, sets the configuration of the
+        modules AFNI, ANTS, FSL, SPM and MATLAB without pressing the OK
+        button and switches the auto-save, controller version and radio
+        view options.
+
+        Tests
+          - PopUpPreferences.validate_and_save
+
+        Notes
+        -----
+        Mocks
+          - PopUpPreferences.show
+          - QMessageBox.show
+        """
+
+        '''Validates the Pipeline tab without pressing the 'OK' button'''
+
+        # Sets shortcuts for objects that are often used
+        main_wnd = self.main_window
+
+        # Mocks the execution of 'PopUpPreferences' to speed up the test
+        # PopUpPreferences.show = lambda x: None
+
+        # Creates a new project folder and adds one document to the
+        # project, sets the plug value that is added to the database
+        project_8_path = self.get_new_test_project()
+        tmp_path = os.path.split(project_8_path)[0]
+
+        main_wnd.software_preferences_pop_up()
+
+        # Selects standalone modules
+        for module in ['matlab_standalone', 'spm_standalone']:
+            getattr(main_wnd.pop_up_preferences,
+                    'use_' + module + '_checkbox').setChecked(True)
+
+        # Validates the Pipeline tab without pressing the 'OK' button
+        main_wnd.pop_up_preferences.validate_and_save()
+
+        config = Config(config_path=self.config_path)
+        for module in ['matlab_standalone', 'spm_standalone']:
+            self.assertTrue(getattr(config, 'get_use_' + module)())
+
+        # Selects non standalone modules
+        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
+            getattr(main_wnd.pop_up_preferences,
+                    'use_' + module + '_checkbox').setChecked(True)
+
+        # Validates the Pipeline tab without pressing the 'OK' button
+        main_wnd.pop_up_preferences.validate_and_save()
+
+        config = Config(config_path=self.config_path)
+        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
+            self.assertTrue(getattr(config, 'get_use_' + module)())
+
+        '''Validates the Pipeline tab by pressing the 'OK' button'''
+
+        # Sets the projects folder for the preferences window to close
+        # when pressing on 'OK'
+        (main_wnd.pop_up_preferences.projects_save_path_line_edit
+         .setText(tmp_path))
+
+        # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
+        main_wnd.pop_up_preferences.wrong_path = lambda x, y: None
+        QMessageBox.show = lambda x: None
+
+        # Deselects non standalone modules
+        for module in ['afni', 'ants', 'fsl', 'matlab', 'spm']:
+            getattr(main_wnd.pop_up_preferences,
+                    'use_' + module + '_checkbox').setChecked(False)
+
+        # Deselects the 'radioView', 'adminMode' and 'clinicalMode' option
+        for opt in ['save', 'radioView', 'admin_mode', 'clinical_mode']:
+            (getattr(main_wnd.pop_up_preferences,
+                     opt + '_checkbox').setChecked(False))
+        # The options autoSave, radioView and controlV1 are not selected
+
+        # Sets the projects save path
+        Config(config_path=self.config_path).set_projects_save_path(tmp_path)
+
+        # Validates the all tab after pressing the 'OK' button
+        main_wnd.pop_up_preferences.ok_clicked()
+
+        config = Config(config_path=self.config_path)
+        for opt in ['isAutoSave', 'isRadioView', 'isControlV1',
+                    'get_use_clinical']:
+            self.assertFalse(getattr(config, opt)())
+        self.assertTrue(config.get_user_mode())
+
+        self.assertEqual(config.get_projects_save_path(), tmp_path)
+
+        # Deselects MATLAB and SPM modules from the config file
+        config = Config(config_path=self.config_path)
+        for module in ['matlab', 'spm']:
+            getattr(config, 'set_use_' + module)(False)
+
+        main_wnd.software_preferences_pop_up()  # Reopens the window
+
+        # Selects the autoSave, radioView and controlV1 options
+        for opt in ['save_checkbox', 'radioView_checkbox', 'control_checkbox',
+                    'admin_mode_checkbox', 'clinical_mode_checkbox']:
+            getattr(main_wnd.pop_up_preferences, opt).setChecked(True)
+
+        # Alternates to minimized mode
+        main_wnd.pop_up_preferences.fullscreen_cbox.setChecked(True)
+
+        # Sets an inexistant projects save path
+        (Config(config_path=self.config_path).
+         set_projects_save_path(os.path.join(tmp_path, 'inexistant')))
+
+        # Validates the all tab after pressing the 'OK' button
+        main_wnd.pop_up_preferences.ok_clicked()
+
+        # Asserts that the 'config' objects was not updated with the
+        # inexistant projects folder
+        config = Config(config_path=self.config_path)
+        self.assertEqual(config.get_projects_save_path(), tmp_path)
 
     def test_tab_changed(self):
         '''
