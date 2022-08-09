@@ -3058,9 +3058,7 @@ class TestMIADataBrowser(TestMIACase):
                                                         get_tag_column)("Test"))
 
     def test_unnamed_proj_soft_open(self):
-        """
-        Tests unnamed project creation at software opening
-        """
+        """Tests unnamed project creation at software opening."""
 
         self.assertIsInstance(self.project, Project)
         self.assertEqual(self.main_window.project.getName(),
@@ -3091,10 +3089,10 @@ class TestMIADataBrowser(TestMIACase):
                          "(Admin mode) - Unnamed project")
 
     def test_update_data_history(self):
-        '''
-        Updates the history of data that have been re-written.
-        Tests Project.update_data_history.
-        '''
+        """Updates the history of data that have been re-written.
+
+        - Tests: Project.update_data_history
+        """
 
         # Creates a test project
         test_proj_path = self.get_new_test_project(light=True)
@@ -3105,16 +3103,18 @@ class TestMIADataBrowser(TestMIACase):
                       'Guerbet_Anat-RAREpvm-000220_000.nii')
         DOCUMENT_3 = os.path.join('data', 'derived_data', NII_FILE_3)
 
-        self.main_window.project.update_data_history([DOCUMENT_3])
+        # Cleanup earlier history and check that no obsolete bricks is detected
+        obsolete_bricks = self.main_window.project.update_data_history(
+                                                                   [DOCUMENT_3])
+        self.assertEqual(obsolete_bricks, set())
 
     def test_update_default_value(self):
-        '''
-        Updates the values when a list of default values is created.
-        Tests DefaultValueListCreation.update_default_value.
-        '''
+        """Updates the values when a list of default values is created.
+
+        Tests: DefaultValueListCreation.update_default_value
+        """
         
-        # Sets shortcuts for objects that are often used
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        # Set shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
 
         # The objects are successively created in the following order:
@@ -3129,23 +3129,23 @@ class TestMIADataBrowser(TestMIACase):
         DefaultValueListCreation.show = Mock()
 
         # 'DefaultValueListCreation' can be instantiated with an empty
-        # string, non empty string or list
+        # string, non-empty string or list
         # Only a list leads to the table values being filled
-
         # Empty string
         text_edt.setText('')
         text_edt.mousePressEvent(None)
 
-        # Non empty string
+        # Non-empty string
         text_edt.setText('non_empty')
         text_edt.mousePressEvent(None)
-        self.assertEqual(text_edt.list_creation.table.itemAt(0,0).text(), '')
+        self.assertEqual(text_edt.list_creation.table.itemAt(0, 0).text(), '')
 
         # List of length = 2
-        text_edt.setText('[1,2]')
+        text_edt.setText('[1, 2]')
         text_edt.mousePressEvent(None)
 
-        self.assertEqual(text_edt.list_creation.table.itemAt(0,0).text(), '1')
+        self.assertEqual(text_edt.list_creation.table.item(0, 0).text(), '1')
+        self.assertEqual(text_edt.list_creation.table.item(0, 1).text(), '2')
         self.assertEqual(text_edt.list_creation.table.columnCount(), 2)
         # ''[1]'' will become '[1]' after being passed through s
         # 'ast.literal_eval()' 
@@ -3188,21 +3188,19 @@ class TestMIADataBrowser(TestMIACase):
         text_edt.list_creation.update_default_value()
 
     def test_utils(self):
-        """
-        Test the utils functions
-        """
+        """Test the utils functions."""
 
         self.assertEqual(table_to_database(True, FIELD_TYPE_BOOLEAN), True)
         self.assertEqual(table_to_database("False", FIELD_TYPE_BOOLEAN), False)
 
-        format = "%d/%m/%Y"
-        value = datetime.strptime("01/01/2019", format).date()
+        format_ = "%d/%m/%Y"
+        value = datetime.strptime("01/01/2019", format_).date()
         self.assertEqual(check_value_type("01/01/2019", FIELD_TYPE_DATE), True)
         self.assertEqual(table_to_database("01/01/2019", FIELD_TYPE_DATE),
                          value)
 
-        format = "%d/%m/%Y %H:%M:%S.%f"
-        value = datetime.strptime("15/7/2019 16:16:55.789643", format)
+        format_ = "%d/%m/%Y %H:%M:%S.%f"
+        value = datetime.strptime("15/7/2019 16:16:55.789643", format_)
         self.assertEqual(check_value_type("15/7/2019 16:16:55.789643",
                                           FIELD_TYPE_DATETIME),
                          True)
@@ -3210,17 +3208,15 @@ class TestMIADataBrowser(TestMIACase):
                                            FIELD_TYPE_DATETIME),
                          value)
 
-        format = "%H:%M:%S.%f"
-        value = datetime.strptime("16:16:55.789643", format).time()
+        format_ = "%H:%M:%S.%f"
+        value = datetime.strptime("16:16:55.789643", format_).time()
         self.assertEqual(check_value_type("16:16:55.789643", FIELD_TYPE_TIME),
                          True)
         self.assertEqual(table_to_database("16:16:55.789643", FIELD_TYPE_TIME),
                          value)
 
     def test_visualized_tags(self):
-        """
-        Tests the popup modifying the visualized tags
-        """
+        """Tests the popup modifying the visualized tags."""
 
         # Testing default tags visibility
         visibles = self.main_window.project.session.get_shown_tags()
@@ -3230,7 +3226,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(TAG_TYPE in visibles)
         self.assertTrue(TAG_EXP_TYPE in visibles)
 
-        # Testing columns displayed in the databrowser
+        # Testing columns displayed in the DataBrowser
         self.assertEqual(4,
                          self.main_window.data_browser.table_data.columnCount())
         columns_displayed = []
