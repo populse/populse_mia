@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- #
+# -*- coding: utf-8 -*-
 """Module that handle the filter class which contains the results of both
 rapid and advanced search
 
@@ -18,6 +18,7 @@ rapid and advanced search
 
 # Populse_MIA imports
 from populse_mia.user_interface import data_browser
+
 # don't import project here to avoid cyclic import
 # from populse_mia.data_manager import project
 
@@ -49,8 +50,9 @@ class Filter:
 
     """
 
-    def __init__(self, name, nots, values, fields, links, conditions,
-                 search_bar):
+    def __init__(
+        self, name, nots, values, fields, links, conditions, search_bar
+    ):
         """Initialization of the Filter class.
 
         :param name: filter's name
@@ -81,28 +83,31 @@ class Filter:
         from populse_mia.data_manager import project
 
         rapid_filter = data_browser.rapid_search.RapidSearch.prepare_filter(
-                                                                self.search_bar,
-                                                                tags, scans)
-        rapid_result = current_project.session.filter_documents(
-                                                     project.COLLECTION_CURRENT,
-                                                     rapid_filter)
-        rapid_list = [getattr(scan, project.TAG_FILENAME)
-                                                       for scan in rapid_result]
-        advanced_filter = (data_browser.advanced_search.AdvancedSearch
-                                               .prepare_filters(self.links,
-                                                                self.fields,
-                                                                self.conditions,
-                                                                self.values,
-                                                                self.nots,
-                                                                rapid_list)
+            self.search_bar, tags, scans
         )
-        advanced_result = (current_project.session
-                                   .filter_documents(project.COLLECTION_CURRENT,
-                                                     advanced_filter)
+        rapid_result = current_project.session.filter_documents(
+            project.COLLECTION_CURRENT, rapid_filter
+        )
+        rapid_list = [
+            getattr(scan, project.TAG_FILENAME) for scan in rapid_result
+        ]
+        advanced_filter = (
+            data_browser.advanced_search.AdvancedSearch.prepare_filters(
+                self.links,
+                self.fields,
+                self.conditions,
+                self.values,
+                self.nots,
+                rapid_list,
+            )
+        )
+        advanced_result = current_project.session.filter_documents(
+            project.COLLECTION_CURRENT, advanced_filter
         )
 
-        final_result = [getattr(scan, project.TAG_FILENAME)
-                                                    for scan in advanced_result]
+        final_result = [
+            getattr(scan, project.TAG_FILENAME) for scan in advanced_result
+        ]
         return final_result
 
     def json_format(self):
@@ -118,6 +123,6 @@ class Filter:
             "conditions": self.conditions,
             "values": self.values,
             "links": self.links,
-            "nots": self.nots
+            "nots": self.nots,
         }
         return data
