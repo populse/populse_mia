@@ -133,3 +133,22 @@ Pre-commit
       black....................................................................Passed
       [pre_commit c10882d05] Add features to data_viewer.
        1 file changed, 29 insertions(+), 24 deletions(-)
+
+  * The pre-commit feature is set to format python with the `PEP8 <https://peps.python.org/pep-0008/>`_ compliant code formatter `black <https://github.com/psf/black>`_. If the auto-formatting feature is not convenient in a particular piece of code, the auto-formatter can be turned of by writing #fmt: on/off: ::
+
+      # fmt: off
+
+      # The piece of code that will not be auto-formatted
+      np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, -1]])
+      
+      # fmt: on
+
+      # The piece of code that will be auto-formatted
+      np.array(
+          [
+              [1, 0, 0, 0],
+              [0, -1, 0, 0],
+              [0, 0, 1, 0],
+              [0, 0, 0, -1],
+          ]
+      )
