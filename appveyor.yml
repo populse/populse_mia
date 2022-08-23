@@ -43,7 +43,7 @@ install:
   - cmd: pip install pypiwin32
 
   - cmd: "pip install \"matplotlib<3.6\""
-  - sh: pip3 install 'scipy<3.6'
+  - sh: pip3 install 'matplotlib<3.6'
 
   - cmd: "pip install \"scipy<1.5\""
   - sh: pip3 install 'scipy<1.5'
