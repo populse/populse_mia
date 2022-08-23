@@ -3,15 +3,15 @@ environment:
   matrix:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      PYTHON: "C:\\Python37"
+      PYTHON: "C:\\Python38"
 #      APPVEYOR_RDP_PASSWORD: 5fh'D*
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
-      PYTHON: "$HOME/venv3.7"
+      PYTHON: "$HOME/venv3.8"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdDYk1yZyk/W/2UtL1oBEDzX9Mk6YUXJKS3gTrZaK+ScAzPUkm7UlXwwpzSYZjKIkYzpi3WKSRKuDc7VRVk43hIhmwaIzcmpHAXtbgxAGRYembgz+kLDGtkhlP4i8n5GfNWvkkfbS0pu2w2dZQB7EGFFtopfvzBokKltjAYOnP89GCAo4MTfx6kmv1tpm1SDbCAGHJPuN+81B47+v0uGw3KG+AX+1ezPv1MCBQl5V2J4MI6vomyaHz6/UNBZ6rpsrZBYRljwWbyH5E5fqLdep/kO9sEuiXxTrCTLnUPSrR0+h0f8HlgWCaqxO+OUyDoQMI3xsUn4sMpoASi8jkDgd51vGbzkQHyjy2hYzjs47GAvLLtGfTJYQBVcfXEoZaKQUJhqjR7TUdY4bSBOxIPR9qlA9fLFwlQsC3++0m4roM/0SyoDVTz0I6lp1TsYRMKxEJSM90ewCAK8UnN6gEqmOz5ezOFpVsnpz4bZ7vCGaJa/6ODfOhEvl5bFUK40+GxSk= otavio@otavio-UX430UAR
 
     - APPVEYOR_BUILD_WORKER_IMAGE: macos
-      PYTHON: "~/venv3.7"
+      PYTHON: "~/venv3.8"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdDYk1yZyk/W/2UtL1oBEDzX9Mk6YUXJKS3gTrZaK+ScAzPUkm7UlXwwpzSYZjKIkYzpi3WKSRKuDc7VRVk43hIhmwaIzcmpHAXtbgxAGRYembgz+kLDGtkhlP4i8n5GfNWvkkfbS0pu2w2dZQB7EGFFtopfvzBokKltjAYOnP89GCAo4MTfx6kmv1tpm1SDbCAGHJPuN+81B47+v0uGw3KG+AX+1ezPv1MCBQl5V2J4MI6vomyaHz6/UNBZ6rpsrZBYRljwWbyH5E5fqLdep/kO9sEuiXxTrCTLnUPSrR0+h0f8HlgWCaqxO+OUyDoQMI3xsUn4sMpoASi8jkDgd51vGbzkQHyjy2hYzjs47GAvLLtGfTJYQBVcfXEoZaKQUJhqjR7TUdY4bSBOxIPR9qlA9fLFwlQsC3++0m4roM/0SyoDVTz0I6lp1TsYRMKxEJSM90ewCAK8UnN6gEqmOz5ezOFpVsnpz4bZ7vCGaJa/6ODfOhEvl5bFUK40+GxSk= otavio@otavio-UX430UAR
 
 build: off
@@ -25,7 +25,7 @@ install:
 #  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
   - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  - sh: export PATH=~/venv3.7/bin:~/venv3.7/lib:$PATH
+  - sh: export PATH=~/venv3.8/bin:~/venv3.8/lib:$PATH
   
   - python --version
   - python -m pip install pip --upgrade
