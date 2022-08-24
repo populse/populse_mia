@@ -72,9 +72,9 @@ Set your WSL2 as default with ``wsl --install -d distribution``.
 
 
 To know more:  
-   - `[Manual installation steps for older versions of WSL] <https://docs.microsoft.com/en-us/windows/wsl/install-manual>`_.
-   - `[Install WSL] <https://docs.microsoft.com/en-us/windows/wsl/install>`_.
-   - `[Basic commands for WSL] <https://docs.microsoft.com/en-us/windows/wsl/basic-commands>`_.
+   - `Manual installation steps for older versions of WSL <https://docs.microsoft.com/en-us/windows/wsl/install-manual>`_.
+   - `Install WSL <https://docs.microsoft.com/en-us/windows/wsl/install>`_.
+   - `Basic commands for WSL <https://docs.microsoft.com/en-us/windows/wsl/basic-commands>`_.
 
 
 2- X server installation in windows with VcXsrv
@@ -146,51 +146,13 @@ In this Ubuntu window terminal, install the following dependencies: ::
 
 |
 
-4 - Singularity Installation
-----------------------------
-|
-
-Then to allow `singularity <https://apptainer.org/admin-docs/3.8/index.html>`_ installation we need go language and some dependancies for compilation.
-If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig.
-In that case Singularity can be uninstalled simply by deleting the parent directory.
-
-
-Here are commands : ::
-
- #Ubuntu 20.04
- sudo apt install -y golang
-
- echo 'export GOPATH=${HOME}/go' >> ~/.bashrc &&\
- echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc  &&\
- source ~/.bashrc
-
-|
-
-See the section Prerequisites for Singularity on Linux.
-The 3.8.3 version link is available `here <https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb>`_.
-
-You can install singularity like this : ::
-  
- sudo apt install make
- export VERSION=3.8.3 && # adjust this as necessary \
- wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
- tar -xzf singularity-ce-${VERSION}.tar.gz && \
- cd singularity-ce-${VERSION}
- sudo mkdir /opt/singularity
- ./mconfig --prefix=/opt/singularity
- cd builddir
- make
- sudo make install
-|
-
-Test it with ``/opt/singularity/bin/singularity version``.
-
-Then remove installation files.
-Enter the repertory where you download the singularity install with ``rm -R singularity-ce-${VERSION}*`` .
-
 4 - BrainVisa Installation
 ----------------------------
 |
+
+To install properly BrainVisa you have to refer to `prerequesites guidelines <https://brainvisa.info/web/download.html#prerequisites>`_ for Singularity on linux.
+
+Prerequisite are the software that need to be installed on your computer in order to be able to install and use BrainVISA. As we use her Ubuntu, we recommand to install Singularity. To do it so follow the steps below. 
 
 -Create an installation directory:
 
@@ -199,11 +161,12 @@ Enter the repertory where you download the singularity install with ``rm -R sing
 -Download the "casa-dev" image found here (https://brainvisa.info/download/), preferably into the $HOME/casa_distro directory. Download the lates "casa-dev" image.
 It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvisa.info/download/casa-dev-5.3-8.sif``
 
--Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: ``singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.0.sif branch=master distro=opensource``.
+-Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: ``singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-8.sif branch=master distro=opensource``.
 
 -Set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell: ::
 
-  echo	'export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH" >> ~/.bashrc   &&\
+  nano ~/.bashrc
+  export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"
   source ~/.bashrc
 
   # we get the ip address to allow X server access and this ip can change when Windows reboot
@@ -211,7 +174,7 @@ It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvi
   export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')
   source ~/.bashrc
   
-  nano brainvisa_ro/conf/bv_maker.cfg
+  nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
   [ build $CASA_BUILD ]
      cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
      cmake_options += -DDESIRED_QT_VERSION=5
