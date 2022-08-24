@@ -83,7 +83,7 @@ To know more:
 
 We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
 
-Get `[VcXsrv] <https://sourceforge.net/projects/vcxsrv/files/latest/download>`_.
+Get `VcXsrv <https://sourceforge.net/projects/vcxsrv/files/latest/download>`_.
   - Execute it, 
   - click 'next' then 'install' to install it 
 
