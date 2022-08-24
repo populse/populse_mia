@@ -42,7 +42,9 @@ Installation
 * Then download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
 
 * Unzip it and launch the following command in the extracted folder ("mia_install-main"): ::
-
+        
+	#update pip before installing mia
+	python3 -m pip install --upgrade pip
         python3 install_mia.py
 
 * If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia's installation. 
