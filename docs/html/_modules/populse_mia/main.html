@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.main &#8212; populse_mia 2.2.1-dev+dac10a261 documentation</title>
+    <title>populse_mia.main &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.2.1-dev+dac10a261 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -64,6 +64,7 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QDir</span><span class="p">,</span> <span class="n">QLockFile</span><span class="p">,</span> <span class="n">Qt</span>
@@ -251,7 +252,15 @@
                     <span class="s1">&#39;  . Using </span><span class="si">{0}</span><span class="s1"> package from </span><span class="si">{1}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">mia_proc</span><span class="p">))</span>
 
         <span class="k">del</span> <span class="n">mia_proc_dir</span>
-        <span class="k">del</span> <span class="n">elt</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">elt</span>
+
+        <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+            <span class="c1"># there is nothing in the &quot;processes&quot; directory!</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_proc</span><span class="p">,</span> <span class="s1">&#39;User_processes&#39;</span><span class="p">))</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_proc</span><span class="p">,</span> <span class="s1">&#39;User_processes&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;__init__.py&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
 
     <span class="k">del</span> <span class="n">mia_proc</span>
     <span class="k">del</span> <span class="n">root_dev_dir</span>

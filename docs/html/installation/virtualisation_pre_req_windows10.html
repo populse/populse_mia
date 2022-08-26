@@ -4,21 +4,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+50c1b86ea documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+50c1b86ea documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
         <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -34,6 +33,12 @@
   <div class="toctree-wrapper compound">
 </div>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 33%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
 <td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
@@ -45,8 +50,8 @@
 <p>Pre-requirements of windows installations are the same for <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html">windows host installation in user mode</a>.
 But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project under ubuntu.</p>
 <p>Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.</p>
-<section id="wsl2-windows-subsystem-linux-installation">
-<h1>1- WSL2 (Windows Subsystem Linux) installation<a class="headerlink" href="#wsl2-windows-subsystem-linux-installation" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="wsl2-windows-subsystem-linux-installation">
+<h1>1- WSL2 (Windows Subsystem Linux) installation<a class="headerlink" href="#wsl2-windows-subsystem-linux-installation" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><dl class="simple">
 <dt>In an administrator type Windows account:</dt><dd><ul>
@@ -85,7 +90,7 @@ But you can avoid numpy and PyQt5 install commands since they will be managed wh
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>then you can write your first commands to make ubuntu up to date:</p>
+<p>Then you can write your first commands to make ubuntu up to date:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
 
 <span class="c1">#at this first sudo command, the system may ask you to enter the password you just enter before.</span>
@@ -101,28 +106,28 @@ But you can avoid numpy and PyQt5 install commands since they will be managed wh
 <ul class="simple">
 <li><p>close this window</p></li>
 </ul>
-<p>Now you have WSL2 and an Ubuntu 20.04 linux.</p>
-<p>Before you install a new distribution using <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>,
-make sure that WSL is in 2 mode with: <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--set-default-version</span> <span class="pre">2</span></code> .
-The distribution is only available for the current Windows user.
-Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via <code class="docutils literal notranslate"><span class="pre">/mnt/c/</span></code></p>
+<p>You can open back Ubuntu to continue the installs.</p>
+<p>Open Powershell and type <code class="docutils literal notranslate"><span class="pre">ubuntu</span></code> to open you vitual ubuntu machine.</p>
+<p>Now you have WSL2 and an Ubuntu 20.04 linux.
+You can access Windows files via <code class="docutils literal notranslate"><span class="pre">/mnt/c/</span></code> in the Ubuntu WSL Windows terminal, we can access</p>
+<p>Set your WSL2 as default with <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">distribution</span></code>.</p>
 <dl class="simple">
 <dt>To know more:</dt><dd><ul class="simple">
-<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-manual">Manual installation steps for older versions of WSL</a></p></li>
-<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">Install WSL</a></p></li>
-<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/basic-commands">Basic commands for WSL</a></p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-manual">Manual installation steps for older versions of WSL</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">Install WSL</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/basic-commands">Basic commands for WSL</a>.</p></li>
 </ul>
 </dd>
 </dl>
-</section>
-<section id="x-server-installation-in-windows-with-vcxsrv">
-<h1>2- X server installation in windows with VcXsrv<a class="headerlink" href="#x-server-installation-in-windows-with-vcxsrv" title="Permalink to this heading">¶</a></h1>
+</div>
+<div class="section" id="x-server-installation-in-windows-with-vcxsrv">
+<h1>2- X server installation in windows with VcXsrv<a class="headerlink" href="#x-server-installation-in-windows-with-vcxsrv" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p>We also need a X windows server to allow linux applications graphic user interface (GUI) works.</p>
 <dl class="simple">
-<dt>Get <a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">VcXsrv</a>, then:</dt><dd><ul class="simple">
+<dt>Get <a class="reference external" href="https://sourceforge.net/projects/vcxsrv/files/latest/download">VcXsrv</a>.</dt><dd><ul class="simple">
 <li><p>Execute it,</p></li>
 <li><p>click ‘next’ then ‘install’ to install it</p></li>
 </ul>
@@ -159,9 +164,9 @@ Enable <em>‘Disable access control’</em></p>
 </div>
 <p>Allow access asked by Windows firewall.</p>
 <p>P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.</p>
-</section>
-<section id="dependencies-installation">
-<h1>3 - Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this heading">¶</a></h1>
+</div>
+<div class="section" id="dependencies-installation">
+<h1>3 - Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -176,76 +181,47 @@ Enable <em>‘Disable access control’</em></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">uuid</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgpgme</span><span class="o">-</span><span class="n">dev</span> <span class="n">squashfs</span><span class="o">-</span><span class="n">tools</span> <span class="n">libseccomp</span><span class="o">-</span><span class="n">dev</span> <span class="n">wget</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> <span class="n">git</span> <span class="n">git</span><span class="o">-</span><span class="n">lfs</span> <span class="n">cryptsetup</span><span class="o">-</span><span class="nb">bin</span> <span class="n">python3</span><span class="o">-</span><span class="n">distutils</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span>
 <span class="c1"># Ubuntu 20.04</span>
 <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">python3</span>
-<span class="c1"># Ubuntu 18.04</span>
-<span class="n">sudo</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="n">python3</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span>
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</section>
-<section id="singularity-installation">
-<h1>4 - Singularity Installation<a class="headerlink" href="#singularity-installation" title="Permalink to this heading">¶</a></h1>
+</div>
+<div class="section" id="brainvisa-installation">
+<h1>4 - BrainVisa Installation<a class="headerlink" href="#brainvisa-installation" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>Then to allow <a class="reference external" href="https://apptainer.org/admin-docs/3.8/index.html">singularity</a> installation we need go language and some dependancies for compilation.
-If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the –prefix option to mconfig.
-In that case Singularity can be uninstalled simply by deleting the parent directory.</p>
-<p>Here are commands :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ubuntu 20.04</span>
-<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">golang</span>
+<p>To install properly BrainVisa you have to refer to <a class="reference external" href="https://brainvisa.info/web/download.html#prerequisites">prerequesites guidelines</a> for Singularity on linux.</p>
+<p>Prerequisite are the software that need to be installed on your computer in order to be able to install and use BrainVISA. As we use her Ubuntu, we recommand to install Singularity. To do it so follow the steps below.</p>
+<p>-Create an installation directory:</p>
+<p><code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">-p</span> <span class="pre">$HOME/casa_distro/brainvisa-opensource-master</span></code> (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations - but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)</p>
+<p>-Download the “casa-dev” image found here (<a class="reference external" href="https://brainvisa.info/download/">https://brainvisa.info/download/</a>), preferably into the $HOME/casa_distro directory. Download the lates “casa-dev” image.
+It’s a .sif file, for instance casa-dev-5.3-8.sif. Type <code class="docutils literal notranslate"><span class="pre">wget</span> <span class="pre">https://brainvisa.info/download/casa-dev-5.3-8.sif</span></code></p>
+<p>-Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: <code class="docutils literal notranslate"><span class="pre">singularity</span> <span class="pre">run</span> <span class="pre">-B</span> <span class="pre">$HOME/casa_distro/brainvisa-opensource-master:/casa/setup</span> <span class="pre">$HOME/casa_distro/casa-dev-5.3-8.sif</span> <span class="pre">branch=master</span> <span class="pre">distro=opensource</span></code>.</p>
+<p>-Set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>nano ~/.bashrc
+export PATH=&quot;$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH&quot;
+source ~/.bashrc
 
-<span class="c1">#Ubuntu 18.04, singularity need golang version &gt;= 1.13 wich is not available on ubuntu 18.04 (1.10 only)</span>
-<span class="n">cd</span> <span class="o">/</span><span class="n">tmp</span> <span class="o">&amp;&amp;</span>\
-<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">golang</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dl</span><span class="o">/</span><span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
-<span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span>\
-<span class="n">sudo</span> <span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">go</span> <span class="o">&amp;&amp;</span>\
-<span class="n">sudo</span> <span class="n">mv</span> <span class="n">go</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span> <span class="o">&amp;&amp;</span>\
-<span class="n">rm</span> <span class="n">go1</span><span class="mf">.17</span><span class="o">.</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+# we get the ip address to allow X server access and this ip can change when Windows reboot
+nano ~/.bashrc
+export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk &#39;{print $2 &quot;:0.0&quot;}&#39;)
+source ~/.bashrc
 
-<span class="n">echo</span> <span class="s1">&#39;export GOPATH=$</span><span class="si">{HOME}</span><span class="s1">/go&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span> <span class="o">&amp;&amp;</span>\
-<span class="n">echo</span> <span class="s1">&#39;export PATH=/usr/local/go/bin:$</span><span class="si">{PATH}</span><span class="s1">:$</span><span class="si">{GOPATH}</span><span class="s1">/bin&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span>  <span class="o">&amp;&amp;</span>\
-<span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
+[ build $CASA_BUILD ]
+   cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
+   cmake_options += -DDESIRED_QT_VERSION=5
+
+bv_maker
+# it takes time to compile
 </pre></div>
 </div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-<p>See the section Prerequisites for Singularity on Linux.
-The 3.8.3 version link is available <a class="reference external" href="https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb">here</a>.</p>
-<p>You can install singularity like this :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#way1
-wget https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb
-sudo dpkg -i singularity-container-*.deb
-sudo mkdir /opt/singularity
-./mconfig --prefix=/opt/singularity
-cd builddir
-make
-sudo make install
-
-#way2
-export VERSION=3.8.3 &amp;&amp; # adjust this as necessary \
-wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz &amp;&amp; \
-tar -xzf singularity-ce-${VERSION}.tar.gz &amp;&amp; \
-cd singularity-ce-${VERSION}
-sudo mkdir /opt/singularity
-./mconfig --prefix=/opt/singularity
-cd builddir
-make
-sudo make install
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-<p>Test it with <code class="docutils literal notranslate"><span class="pre">/opt/singularity/bin/singularity</span> <span class="pre">version</span></code>.</p>
-<p>Then remove installation files.
-Enter the repertory where you download the singularity install.
-Use the command <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-R</span> <span class="pre">singularity-ce_3.8.3~ubuntu-20.04_amd64.deb</span></code> if you installed via Way 1 or <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-R</span> <span class="pre">singularity-ce-${VERSION}*</span></code> if you installed via Way 2.</p>
+<p>Now you can test if the brainvisa configuration GUI works well via the command: <code class="docutils literal notranslate"><span class="pre">bv</span></code>.</p>
 <p>You have completely installed a virtual Ubuntu which is now able to host mia.
 You can now follow steps from <strong>installation</strong> via <a class="reference external" href="https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html">populse mia installation in user mode</a>.</p>
-</section>
+</div>
 
 
       </div>
@@ -259,7 +235,7 @@ You can now follow steps from <strong>installation</strong> via <a class="refere
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>

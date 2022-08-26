@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.2.1-dev+dac10a261 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.1-dev+dac10a261 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -497,6 +497,8 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="p">:</span>
             <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">takeAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">static_release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="o">.</span><span class="n">attributed_process</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">parameters_changed</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
             <span class="k">del</span> <span class="n">item</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span> <span class="o">=</span> <span class="kc">None</span>
@@ -545,14 +547,14 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="o">.</span><span class="n">attrib_widget</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">insertWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">btn</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters_changed</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s1">&#39;ui&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters_changed</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s1">&#39;ui&#39;</span><span class="p">)</span></div>
         <span class="c1"># this cannot be done in __del__ since the C++ part will be already</span>
         <span class="c1"># destroyed by then.</span>
         <span class="c1"># However this signal seems never to be emitted, and I don&#39;t understand</span>
         <span class="c1"># why. So release_process() has to be called manually from the</span>
         <span class="c1"># pipeline manager. Sigh.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">destroyed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_release</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span>
-                                       <span class="bp">self</span><span class="o">.</span><span class="n">parameters_changed</span><span class="p">))</span></div>
+        <span class="c1">#self.process_widget.destroyed.connect(partial(self.static_release, process,</span>
+        <span class="c1">#                               self.parameters_changed))</span>
 
 <div class="viewcode-block" id="CapsulNodeController.static_release"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.static_release">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">static_release</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">param_changed</span><span class="p">):</span>
@@ -581,6 +583,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.parameters_changed"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed">[docs]</a>    <span class="k">def</span> <span class="nf">parameters_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Emit the value_changed signal.&quot;&quot;&quot;</span>
+
         <span class="n">plug_name_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_changed</span><span class="o">.</span><span class="n">emit</span><span class="p">([</span><span class="s2">&quot;plug_value&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span>
                                  <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_name_type</span><span class="p">,</span> <span class="n">new_value</span><span class="p">])</span></div>
@@ -1037,6 +1040,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up</span><span class="o">.</span><span class="n">plug_value_changed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_plug_value_from_filter</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">))</span></div>
 
+    <span class="c1">#def display_parameters(self, node_name: object, process: object, pipeline: object) -&gt; object:</span>
 <div class="viewcode-block" id="NodeController.display_parameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.display_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">display_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Display the parameters of the selected node.</span>
 

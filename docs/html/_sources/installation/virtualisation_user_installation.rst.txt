@@ -37,10 +37,14 @@ Pre-requirements
 Installation
 ------------
 
-* First download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
+* First enter in the container by typing the command :``bv bash``.
+
+* Then download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
 
 * Unzip it and launch the following command in the extracted folder ("mia_install-main"): ::
-
+        
+	#update pip before installing mia
+	python3 -m pip install --upgrade pip
         python3 install_mia.py
 
 * If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia's installation. 
@@ -57,6 +61,8 @@ Installation
 
 |
 
+
+
 * The Mia installation is now launched and you have to select four mandatory parameters:
 
   * Mia installation path: the folder where to install few directories and files necessary for the operation of populse_mia, set by default to ".populse_mia" in the current user's directory. Two folders will be created in the selected folder
@@ -72,7 +78,30 @@ Installation
   * Operating mode: Choose between clinical and research mode (more information about `operating mode <../documentation/documentation.html#operating-mode>`_).
 
 |
+      
+SPM and MATLAB installs:
+------------------------
+      
+Before following the steps, make sure your are on your root directory ( /home ) and outside the container . This allows to avoid root accesses issues. Chose the user account folder on your host to make the installations : /home/<your_lacal_user_account>/ .
 
+1- Download the `version r7487 of spm <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip>_` and unzip it
+
+2-Create a folder MCR in /home/<your_lacal_user_account>/, download the corresponding MCR for linux ' <https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip>_`  and unzip it in a MCR/ folder.
+
+3- Install it `following these steps: <https://fr.mathworks.com/help/compiler/install-the-matlab-runtime.html>_`
+
+4- On your host append the following to your LD_LIBRARY_PATH environment variable: /usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/extern/bin/glnxa64 with the command: ::
+	
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/extern/bin/glnxa64
+		 
+
+5- Create a .conf file in the /etc/ld.so.conf.d/ folder and add those previous paths in the file: /etc/ld.so.conf.d/your_lib.conf
+
+6- Run ldconfig to update the cache: sudo ldconfig
+
+7- Go back to spm12 folder Execute SPM12, the second path being the path of the MCR (that has been chosen during the installation): ./run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v95
+
+	
 * If you already want to configure the use of Matlab and SPM (in license or standalone mode), you can also specify these several paths:
 
   * Matlab path:
@@ -106,6 +135,7 @@ Installation
       * e.g. for linux - macOS: /usr/local/SPM/spm12_standalone (folder containing run_spm12.sh)
 
       * e.g. for Windows 10: C:/Program Files/Matlab/spm12_r7771/spm12 (with Windows 10, it is not necessary to declare the above Matlab standalone path in this case!)
+      
 
 .. image:: ../images/mia_install_2.png
    :align: center

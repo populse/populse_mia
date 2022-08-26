@@ -4,21 +4,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>Mia’s user installation - Using virtualisation &#8212; populse_mia 2.2.1-dev+50c1b86ea documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mia’s user installation - Using virtualisation &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+50c1b86ea documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
         <h2 class="heading"><span>Mia’s user installation - Using virtualisation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -34,6 +33,12 @@
   <div class="toctree-wrapper compound">
 </div>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 33%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
 <td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
@@ -42,26 +47,29 @@
 </tr>
 </tbody>
 </table>
-<section id="mia-s-user-installation-using-virtualisation">
-<h1>Mia’s user installation - Using virtualisation<a class="headerlink" href="#mia-s-user-installation-using-virtualisation" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="mia-s-user-installation-using-virtualisation">
+<h1>Mia’s user installation - Using virtualisation<a class="headerlink" href="#mia-s-user-installation-using-virtualisation" title="Permalink to this headline">¶</a></h1>
 <p>The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see <a class="reference internal" href="#prerequirements"><span class="std std-ref">Pre-requirements</span></a>).
 Then, the installation will be almost identical to the one done directly on the host (see <a class="reference internal" href="#id1"><span class="std std-ref">Installation</span></a>).</p>
 <p>You can perform the installation by <a class="reference external" href="https://brainvisa.info/web/download.html">following the detailed instruction provided by BrainVisa team</a>. In this case, skip the <a class="reference internal" href="#prerequirements"><span class="std std-ref">Pre-requirements</span></a> below and proceed directly to the <a class="reference internal" href="#id1"><span class="std std-ref">Installation</span></a>. Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the <a class="reference internal" href="#id1"><span class="std std-ref">Installation</span></a> section below</p>
 <p>Or you can follow the full procedure below which uses Singularity virtualization technology.</p>
-<section id="pre-requirements">
-<span id="prerequirements"></span><h2>Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="pre-requirements">
+<span id="prerequirements"></span><h2>Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="./virtualisation_pre_req_linux.html">For linux</a></p></li>
 <li><p><a class="reference external" href="./virtualisation_pre_req_macos.html">For macos</a></p></li>
 <li><p><a class="reference external" href="./virtualisation_pre_req_windows10.html">For Windows 10</a></p></li>
 </ul>
-</section>
-<section id="id1">
-<span id="id2"></span><h2>Installation<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="id1">
+<span id="id2"></span><h2>Installation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p>First download the archive <a class="reference external" href="https://github.com/populse/mia_install/archive/master.zip">here</a>.</p></li>
+<li><p>First enter in the container by typing the command :<code class="docutils literal notranslate"><span class="pre">bv</span> <span class="pre">bash</span></code>.</p></li>
+<li><p>Then download the archive <a class="reference external" href="https://github.com/populse/mia_install/archive/master.zip">here</a>.</p></li>
 <li><p>Unzip it and launch the following command in the extracted folder (“mia_install-main”):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">install_mia</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#update pip before installing mia</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+<span class="n">python3</span> <span class="n">install_mia</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 </li>
@@ -99,6 +107,20 @@ Then, the installation will be almost identical to the one done directly on the 
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+</div>
+<div class="section" id="spm-and-matlab-installs">
+<h2>SPM and MATLAB installs:<a class="headerlink" href="#spm-and-matlab-installs" title="Permalink to this headline">¶</a></h2>
+<p>Before following the steps, make sure your are on your root directory ( /home ) and outside the container . This allows to avoid root accesses issues. Chose the user account folder on your host to make the installations : /home/&lt;your_lacal_user_account&gt;/ .</p>
+<p>1- Download the <cite>version r7487 of spm &lt;https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip&gt;_</cite> and unzip it</p>
+<p>2-Create a folder MCR in /home/&lt;your_lacal_user_account&gt;/, download the corresponding MCR for linux ‘ &lt;<a class="reference external" href="https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip">https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip</a>&gt;_`  and unzip it in a MCR/ folder.</p>
+<p>3- Install it <cite>following these steps: &lt;https://fr.mathworks.com/help/compiler/install-the-matlab-runtime.html&gt;_</cite></p>
+<p>4- On your host append the following to your LD_LIBRARY_PATH environment variable: /usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/extern/bin/glnxa64 with the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/extern/bin/glnxa64
+</pre></div>
+</div>
+<p>5- Create a .conf file in the /etc/ld.so.conf.d/ folder and add those previous paths in the file: /etc/ld.so.conf.d/your_lib.conf</p>
+<p>6- Run ldconfig to update the cache: sudo ldconfig</p>
+<p>7- Go back to spm12 folder Execute SPM12, the second path being the path of the MCR (that has been chosen during the installation): ./run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v95</p>
 <ul class="simple">
 <li><p>If you already want to configure the use of Matlab and SPM (in license or standalone mode), you can also specify these several paths:</p>
 <ul>
@@ -172,8 +194,8 @@ Then, the installation will be almost identical to the one done directly on the 
 <ul class="simple">
 <li><p>See the <a class="reference external" href="https://github.com/populse/populse_mia#usage">Usage chapter on the GitHub page</a> to launch populse_mia.</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
       </div>
@@ -187,7 +209,7 @@ Then, the installation will be almost identical to the one done directly on the 
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>

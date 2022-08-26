@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 2.2.1-dev+dac10a261 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.1-dev+dac10a261 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -425,7 +425,7 @@
                     <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                     <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
                     <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">((</span><span class="s1">&#39;During the installation of </span><span class="si">{0}</span><span class="s1">, &#39;</span>
-                                 <span class="s1">&#39;the folllowing exception was raised:&#39;</span>
+                                 <span class="s1">&#39;the following exception was raised:&#39;</span>
                                  <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{1}</span><span class="s1">: </span><span class="si">{2}</span><span class="s1">.</span><span class="se">\n</span><span class="s1">This exception maybe &#39;</span>
                                  <span class="s1">&#39;prevented the installation ...&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">module_name</span><span class="p">,</span> <span class="n">er</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">er</span><span class="p">))</span>
@@ -648,11 +648,15 @@
                                              <span class="s1">&#39;processes&#39;</span><span class="p">),</span> <span class="n">members_to_extract</span><span class="p">)</span>
 
                     <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-                        <span class="n">distutils</span><span class="o">.</span><span class="n">dir_util</span><span class="o">.</span><span class="n">copy_tree</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
-                                                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                                         <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
-                                                         <span class="s1">&#39;processes&#39;</span><span class="p">,</span>
-                                                         <span class="n">package_name</span><span class="p">))</span>
+                        <span class="c1">#distutils.dir_util.copy_tree(os.path.join(filename),</span>
+                        <span class="c1">#                             os.path.join(</span>
+                        <span class="c1">#                                 config.get_mia_path(),</span>
+                        <span class="c1">#                                 &#39;processes&#39;,</span>
+                        <span class="c1">#                                 package_name))</span>
+                        <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+                                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
+                                                     <span class="s1">&#39;processes&#39;</span><span class="p">,</span>
+                                                     <span class="n">package_name</span><span class="p">))</span>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
@@ -1759,7 +1763,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">is_path</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PackageLibraryDialog.delete_package"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.delete_package">[docs]</a>    <span class="k">def</span> <span class="nf">delete_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">to_delete</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="PackageLibraryDialog.delete_package"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.delete_package">[docs]</a>    <span class="k">def</span> <span class="nf">delete_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">to_delete</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">from_pipeline_manager</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a package, only available to administrators.</span>
 
 <span class="sd">        Remove the package from the package library tree, update the</span>
@@ -1798,13 +1803,23 @@
             <span class="k">return</span> <span class="n">deleted_packages</span>
 
         <span class="k">if</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;nipype&quot;</span><span class="p">,</span> <span class="s2">&quot;mia_processes&quot;</span><span class="p">,</span> <span class="s2">&quot;capsul&quot;</span><span class="p">]:</span>
+
+            <span class="k">if</span> <span class="n">from_pipeline_manager</span><span class="p">:</span>
+                <span class="n">inform_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;This package belongs to &quot;</span> <span class="o">+</span>
+                               <span class="n">to_delete</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; which is required &quot;</span>
+                               <span class="s2">&quot;by populse mia.</span><span class="se">\n</span><span class="s2"> You can still hide it in the &quot;</span>
+                               <span class="s2">&quot;package library manager.&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">inform_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;This package belongs to &quot;</span> <span class="o">+</span>
+                               <span class="n">to_delete</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; which is required &quot;</span>
+                               <span class="s2">&quot;by populse_mia.</span><span class="se">\n</span><span class="s2">Therefore, it has only been &quot;</span>
+                               <span class="s2">&quot;hidden (removed).&quot;</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;This package can not be deleted.&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span>
-                <span class="s2">&quot;This package belongs to &quot;</span> <span class="o">+</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; which&quot;</span>
-                <span class="s2">&quot; is required by populse mia.</span><span class="se">\n</span><span class="s2"> You can still hide it in the &quot;</span>
-                <span class="s2">&quot;package library manager.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span><span class="n">inform_text</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
@@ -1829,8 +1844,10 @@
                 <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
                                                     <span class="s1">&#39;processes&#39;</span><span class="p">,</span>
                                                     <span class="o">*</span><span class="n">pkg_list</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">index</span><span class="p">]))</span>
-                <span class="n">sub_deleted_packages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_package</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                                                           <span class="n">to_delete</span><span class="p">)</span>
+                <span class="n">sub_deleted_packages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_package</span><span class="p">(</span>
+                                    <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                    <span class="n">to_delete</span><span class="p">,</span>
+                                    <span class="n">from_pipeline_manager</span><span class="o">=</span><span class="n">from_pipeline_manager</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">sub_pkg</span> <span class="ow">in</span> <span class="n">sub_deleted_packages</span><span class="p">:</span>
 
@@ -2479,7 +2496,9 @@
                              <span class="n">package_library</span><span class="o">.</span>
                                  <span class="n">package_tree</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span>
                                                       <span class="n">load_config</span><span class="p">)()[</span><span class="s1">&#39;Packages&#39;</span><span class="p">]</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span><span class="n">delete_package</span><span class="p">(</span><span class="n">to_delete</span><span class="o">=</span><span class="n">txt</span><span class="p">)</span></div>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span><span class="n">delete_package</span><span class="p">(</span>
+                                                     <span class="n">to_delete</span><span class="o">=</span><span class="n">txt</span><span class="p">,</span>
+                                                     <span class="n">from_pipeline_manager</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProcessLibrary.load_dictionary"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary.load_dictionary">[docs]</a>    <span class="k">def</span> <span class="nf">load_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load a dictionary to the tree.</span>
@@ -2542,7 +2561,9 @@
                          <span class="n">package_library</span><span class="o">.</span>
                          <span class="n">package_tree</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span><span class="n">load_config</span><span class="p">()[</span>
                                                                      <span class="s1">&#39;Packages&#39;</span><span class="p">]</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span><span class="n">delete_package</span><span class="p">(</span><span class="n">to_delete</span><span class="o">=</span><span class="n">txt</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span><span class="n">delete_package</span><span class="p">(</span>
+                                                     <span class="n">to_delete</span><span class="o">=</span><span class="n">txt</span><span class="p">,</span>
+                                                     <span class="n">from_pipeline_manager</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="c1"># print(&#39;dictionary &#39;,path.decode(&#39;utf8&#39;))</span>
                 <span class="c1"># self.item_library_clicked.emit(model.itemData(idx)[0])</span>
 

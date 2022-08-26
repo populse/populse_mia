@@ -4,21 +4,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>populse_mia.utils package &#8212; populse_mia 2.2.1-dev+50c1b86ea documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/haiku.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>populse_mia.utils package &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.2.1-dev+50c1b86ea documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -31,8 +30,8 @@
       <div class="content" role="main">
         
         
-  <section id="module-populse_mia.utils">
-<span id="populse-mia-utils-package"></span><h1>populse_mia.utils package<a class="headerlink" href="#module-populse_mia.utils" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="module-populse_mia.utils">
+<span id="populse-mia-utils-package"></span><h1>populse_mia.utils package<a class="headerlink" href="#module-populse_mia.utils" title="Permalink to this headline">¶</a></h1>
 <p>Utilities and tools used across Mia</p>
 <dl class="simple">
 <dt>Contains:</dt><dd><dl class="simple">
@@ -43,13 +42,116 @@
 </dl>
 </dd>
 </dl>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
-</section>
-<section id="populse-mia-utils-utils-module">
-<h2>populse_mia.utils.utils module<a class="headerlink" href="#populse-mia-utils-utils-module" title="Permalink to this heading">¶</a></h2>
-</section>
-</section>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-populse_mia.utils.utils">
+<span id="populse-mia-utils-utils-module"></span><h2>populse_mia.utils.utils module<a class="headerlink" href="#module-populse_mia.utils.utils" title="Permalink to this headline">¶</a></h2>
+<p>Module that contains multiple functions used across Mia.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Contains</dt>
+<dd class="field-odd"><dl class="field-list simple">
+<dt class="field-odd">Functions</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>check_python_version</p></li>
+<li><p>check_value_type</p></li>
+<li><p>message_already_exists</p></li>
+<li><p>set_filters_directory_as_default</p></li>
+<li><p>set_item_data</p></li>
+<li><p>set_projects_directory_as_default</p></li>
+<li><p>table_to_database</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="populse_mia.utils.utils.check_python_version">
+<code class="sig-prename descclassname">populse_mia.utils.utils.</code><code class="sig-name descname">check_python_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#check_python_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.check_python_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check Python version used.</p>
+<p>Returns an AssertionError exception if the version is lower than 3.5.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="populse_mia.utils.utils.check_value_type">
+<code class="sig-prename descclassname">populse_mia.utils.utils.</code><code class="sig-name descname">check_value_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">value_type</span></em>, <em class="sig-param"><span class="n">is_subvalue</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#check_value_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.check_value_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the type of new value in a table cell (QTableWidget).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – Value of the cell</p></li>
+<li><p><strong>value_type</strong> – Type expected</p></li>
+<li><p><strong>is_subvalue</strong> – To know if the value is a subvalue of a list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the value is valid to replace the old one, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="populse_mia.utils.utils.message_already_exists">
+<code class="sig-prename descclassname">populse_mia.utils.utils.</code><code class="sig-name descname">message_already_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#message_already_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.message_already_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a message box to tell that a project name already exists.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="populse_mia.utils.utils.set_filters_directory_as_default">
+<code class="sig-prename descclassname">populse_mia.utils.utils.</code><code class="sig-name descname">set_filters_directory_as_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dialog</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_filters_directory_as_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.set_filters_directory_as_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the filters directory as default (Json files)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dialog</strong> – current file dialog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="populse_mia.utils.utils.set_item_data">
+<code class="sig-prename descclassname">populse_mia.utils.utils.</code><code class="sig-name descname">set_item_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">value_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_item_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.set_item_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the item data in the data browser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> – item to set</p></li>
+<li><p><strong>value</strong> – new item value</p></li>
+<li><p><strong>value_type</strong> – new value type</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="populse_mia.utils.utils.set_projects_directory_as_default">
+<code class="sig-prename descclassname">populse_mia.utils.utils.</code><code class="sig-name descname">set_projects_directory_as_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dialog</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_projects_directory_as_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.set_projects_directory_as_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the projects directory as default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dialog</strong> – current file dialog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="populse_mia.utils.utils.table_to_database">
+<code class="sig-prename descclassname">populse_mia.utils.utils.</code><code class="sig-name descname">table_to_database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">value_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#table_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#populse_mia.utils.utils.table_to_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the value to the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – Value to convert</p></li>
+<li><p><strong>value_type</strong> – Value type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value converted for the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
 
 
       </div>
@@ -63,7 +165,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
