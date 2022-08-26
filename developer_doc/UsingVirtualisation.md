@@ -224,7 +224,7 @@ We also need a X windows server to allow linux applications graphic user interfa
 
 In the aim to install Populse_MIA with anatomist viewer, we need the Brainvisa dev singularity image compatible with python 3, QT5
 
-- #### 6 - 1 - Brainvisa Installation
+- #### 5 - 1 - Brainvisa Installation
 
 
 To install properly BrainVisa you have to refer to [prerequesites guidelines](https://brainvisa.info/web/download.html#prerequisites) for Singularity on linux.
@@ -264,7 +264,7 @@ It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvi
 Now you can test if the brainvisa configuration GUI works well via the command: ``bv``.
 
 
-- #### 6 - 2 - Populse_MIA Installation
+- #### 5 - 2 - Populse_MIA Installation
 
 For the purpose of the container is to make profit of its ressources,
 you will install populse_mia, mri_conv and mia_processes in the container repertory.
