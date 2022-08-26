@@ -5,19 +5,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.test &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
-    <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <title>populse_mia.test &#8212; populse_mia 2.2.1-dev+88d0dc98d documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/haiku.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+88d0dc98d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -260,6 +259,9 @@
 <span class="sd">              correspond to the argument data</span>
 <span class="sd">            - get_new_test_project: create a temporary project that can </span>
 <span class="sd">              be safely modified</span>
+<span class="sd">            - proclibview_nipype_state: give the state of nipype in the process</span>
+<span class="sd">            - proclibview_nipype_reset_state: reset nipype to its initial state</span>
+<span class="sd">              (before the start of the current test) in the process library view</span>
 <span class="sd">            - restart_MIA: restarts MIA within a unit test</span>
 <span class="sd">            - setUp: called automatically before each test method</span>
 <span class="sd">            - setUpClass: called before tests in the individual class</span>
@@ -469,6 +471,93 @@
         
         <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">test_proj</span><span class="p">,</span> <span class="n">new_test_proj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_test_proj</span></div>
+
+<div class="viewcode-block" id="TestMIACase.proclibview_nipype_state"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.proclibview_nipype_state">[docs]</a>    <span class="k">def</span> <span class="nf">proclibview_nipype_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc_lib_view</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Give the state of nipype proc_lib_view.</span>
+
+<span class="sd">        :param proc_lib_view: the process library view object</span>
+
+<span class="sd">        :returns: the state of nipype proc_lib_view:</span>
+<span class="sd">                  - None: proc_lib_view is empty or nipype is not loaded.</span>
+<span class="sd">                  - &#39;nipype&#39;: &#39;nipype&#39; is loaded but &#39;interfaces&#39; not.</span>
+<span class="sd">                  - &#39;nipype.interface&#39;: &#39;nipype.interface&#39; is loaded but</span>
+<span class="sd">                                        &#39;DataGrabber&#39; not.</span>
+<span class="sd">                  - &#39;process_enabled&#39;: &#39;nipype.interface.DataGrabber&#39; is loaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nipype&#39;</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nipype&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;interfaces&#39;</span><span class="p">):</span>
+
+                    <span class="k">if</span> <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                                 <span class="s1">&#39;nipype&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                                       <span class="s1">&#39;interfaces&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                                                 <span class="s1">&#39;DataGrabber&#39;</span><span class="p">):</span>
+                        <span class="n">state</span> <span class="o">=</span> <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                                     <span class="s1">&#39;nipype&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                                         <span class="s1">&#39;interfaces&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                                                  <span class="s1">&#39;DataGrabber&#39;</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">state</span> <span class="o">=</span> <span class="s1">&#39;nipype.interfaces&#39;</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">state</span> <span class="o">=</span> <span class="s1">&#39;nipype&#39;</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">state</span></div>
+
+<div class="viewcode-block" id="TestMIACase.proclibview_nipype_reset_state"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.proclibview_nipype_reset_state">[docs]</a>    <span class="k">def</span> <span class="nf">proclibview_nipype_reset_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">,</span> <span class="n">ppl_manager</span><span class="p">,</span>
+                                       <span class="n">init_state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reset the process library view to its initial state.</span>
+
+<span class="sd">         :param main_window: the main window object</span>
+<span class="sd">         :param ppl_manager: the pipeline manager object</span>
+<span class="sd">         :param init_state: the initial state of nipype proc_lib_view:</span>
+<span class="sd">                            - None: proc_lib_view is empty or nipype is not</span>
+<span class="sd">                                    loaded.</span>
+<span class="sd">                            - &#39;nipype&#39;: &#39;nipype&#39; is loaded but &#39;interfaces&#39; not.</span>
+<span class="sd">                            - &#39;nipype.interface&#39;: &#39;nipype.interface&#39; is loaded</span>
+<span class="sd">                                                  but &#39;DataGrabber&#39; not.</span>
+<span class="sd">                            - &#39;process_enabled&#39;: &#39;nipype.interface.DataGrabber&#39;</span>
+<span class="sd">                                                 is loaded.</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
+        <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
+        <span class="n">ppl_manager</span><span class="o">.</span><span class="n">processLibrary</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span><span class="n">is_path</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">init_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;nipype&#39;</span><span class="p">)</span>
+            <span class="c1"># Clicks on remove package</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">(</span>
+            <span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">init_state</span> <span class="o">==</span> <span class="s1">&#39;nipype&#39;</span><span class="p">:</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;nipype.interfaces&#39;</span><span class="p">)</span>
+            <span class="c1"># Clicks on remove package</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">(</span>
+            <span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">init_state</span> <span class="o">==</span> <span class="s1">&#39;nipype.interfaces&#39;</span><span class="p">:</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;nipype.interfaces.DataGrabber&#39;</span><span class="p">)</span>
+            <span class="c1"># Clicks on remove package</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">(</span>
+            <span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;nipype.interfaces.DataGrabber&#39;</span><span class="p">)</span>
+            <span class="c1"># Clicks on add package</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">(</span>
+            <span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+
+        <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIACase.restart_MIA"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.restart_MIA">[docs]</a>    <span class="k">def</span> <span class="nf">restart_MIA</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Restarts MIA within a unit test.</span>
@@ -3932,7 +4021,10 @@
 <span class="sd">        - Mocks:</span>
 <span class="sd">            - QMessageBox.exec</span>
 <span class="sd">            - QMessageBox.exec_</span>
+<span class="sd">            - QFileDialog.exec_</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">PKG</span> <span class="o">=</span> <span class="s1">&#39;nipype.interfaces.DataGrabber&#39;</span>
 
         <span class="c1"># Creates a new project folder and switches to it</span>
         <span class="n">new_proj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3948,8 +4040,6 @@
         <span class="c1"># Opens the package library pop-up</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
         <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
-
-        <span class="n">PKG</span> <span class="o">=</span> <span class="s1">&#39;nipype.interfaces.DataGrabber&#39;</span>
 
         <span class="c1"># Clicks on the add package button without selecting anything</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span>
@@ -4117,7 +4207,7 @@
 
 <span class="sd">        - Mocks:</span>
 <span class="sd">            - QMessageBox.exec</span>
-<span class="sd">            - QMessageBox.exec_</span>
+<span class="sd">            - QMessageBox.question</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">PKG</span> <span class="o">=</span> <span class="s1">&#39;nipype.interfaces.DataGrabber&#39;</span>
@@ -4133,20 +4223,23 @@
         <span class="n">ppl</span> <span class="o">=</span> <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
         <span class="n">proc_lib_view</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">processLibrary</span><span class="o">.</span><span class="n">process_library</span>
 
+        <span class="c1"># Takes the initial state of nipype proc_lib_view and makes sure that</span>
+        <span class="c1"># PKG is already installed</span>
+
+        <span class="n">init_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proclibview_nipype_state</span><span class="p">(</span><span class="n">proc_lib_view</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">init_state</span> <span class="o">!=</span> <span class="s1">&#39;process_enabled&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
+            <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">PKG</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">ppl_manager</span><span class="o">.</span><span class="n">processLibrary</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span>
+                                                    <span class="n">pkg_library</span><span class="o">.</span><span class="n">is_path</span><span class="p">)</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># Clicks on add package</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span>
+                                                      <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
+
         <span class="c1"># Opens the package library pop-up</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
-        <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
-
-        <span class="c1"># Make sure that PKG is already installed</span>
-        <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">PKG</span><span class="p">)</span>
-        <span class="n">ppl_manager</span><span class="o">.</span><span class="n">processLibrary</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span><span class="n">pkg_library</span><span class="o">.</span><span class="n">is_path</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span>
-                             <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>  <span class="c1"># Clicks on add package</span>
-
-        <span class="c1"># Apply changes, close the package library pop-up</span>
-        <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
-
-        <span class="c1"># Opens again the package library pop-up</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
         <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
 
@@ -4287,23 +4380,29 @@
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">)</span>
         <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">keyPressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
+        <span class="c1"># Resets the process library to its original state for nipype</span>
+        <span class="n">cur_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proclibview_nipype_state</span><span class="p">(</span><span class="n">proc_lib_view</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cur_state</span> <span class="o">!=</span> <span class="n">init_state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proclibview_nipype_reset_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="p">,</span> <span class="n">ppl_manager</span><span class="p">,</span>
+                                                <span class="n">init_state</span><span class="p">)</span>
+
         <span class="c1"># Cleaning the process library in pipeline manager tab (deleting the</span>
         <span class="c1"># package added in this test, or old one still existing)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clean_uts_packages</span><span class="p">(</span><span class="n">proc_lib_view</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_package_library_dialog_rmv_pkg"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_package_library_dialog_rmv_pkg">[docs]</a>    <span class="k">def</span> <span class="nf">test_package_library_dialog_rmv_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Creates a new project folder, opens the processes library and</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new project folder, opens the processes library and</span>
 <span class="sd">        removes a package. Also saves the current configuration.</span>
-<span class="sd">        Tests</span>
-<span class="sd">         - PackageLibraryDialog</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks</span>
-<span class="sd">         - QMessageBox.exec</span>
-<span class="sd">         - QMessageBox.exec_</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        - Tests: PackageLibraryDialog</span>
+
+<span class="sd">        - Mocks:</span>
+<span class="sd">            - QMessageBox.exec</span>
+<span class="sd">            - QMessageBox.exec_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">PKG</span> <span class="o">=</span> <span class="s1">&#39;nipype.interfaces.DataGrabber&#39;</span>
 
         <span class="c1"># Creates a new project folder and switches to it</span>
         <span class="n">new_proj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -4311,39 +4410,47 @@
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
+        <span class="n">proc_lib_view</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">processLibrary</span><span class="o">.</span><span class="n">process_library</span>
+
+        <span class="c1"># Takes the initial state of nipype proc_lib_view and makes sure that</span>
+        <span class="c1"># PKG is already installed</span>
+        <span class="n">init_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proclibview_nipype_state</span><span class="p">(</span><span class="n">proc_lib_view</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">init_state</span> <span class="o">!=</span> <span class="s1">&#39;process_enabled&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
+            <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">PKG</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">ppl_manager</span><span class="o">.</span><span class="n">processLibrary</span><span class="o">.</span><span class="n">process_library</span><span class="o">.</span>
+                                                    <span class="n">pkg_library</span><span class="o">.</span><span class="n">is_path</span><span class="p">)</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># Clicks on add package</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span>
+                                                      <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+            <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
 
         <span class="c1"># Opens the package library pop-up</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
         <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
 
-        <span class="c1"># Does not open the packages library ito avoid thread deadlock</span>
-        <span class="c1"># ppl_manager.processLibrary.open_pkg_lib()</span>
-
-        <span class="n">rmv_pkg_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span>
-                          <span class="n">children</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">())</span>
-
-        <span class="n">PKG</span> <span class="o">=</span> <span class="s1">&#39;nipype.interfaces.DataGrabber&#39;</span>
-
         <span class="c1"># Mocks the execution of a dialog box</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec_</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span>
-
-        <span class="sd">&#39;&#39;&#39;REMOVE PACKAGE&#39;&#39;&#39;</span>
 
         <span class="c1"># Mocks deleting a package that is not specified</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">remove_package</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 
-        <span class="c1"># Tries removing an inexistant package</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">remove_package</span><span class="p">(</span><span class="s1">&#39;inexistant_package&#39;</span><span class="p">)</span>
+        <span class="c1"># Tries removing a non-existent package</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">remove_package</span><span class="p">(</span><span class="s1">&#39;non_existent_package&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 
         <span class="c1"># Clicks on the remove package button without selecting package</span>
+        <span class="n">rmv_pkg_button</span> <span class="o">=</span> <span class="p">(</span><span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span>
+                                               <span class="n">children</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">())</span>
         <span class="n">rmv_pkg_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
-        <span class="c1"># Writes the name of an existing package on the line edit</span>
+        <span class="c1"># Writes the name of an existing package on the line edit and clicks on</span>
+        <span class="c1"># the remove package button</span>
         <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">PKG</span><span class="p">)</span>
-
         <span class="n">rmv_pkg_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
         <span class="c1"># Resets the previous action</span>
@@ -4351,9 +4458,11 @@
         <span class="p">(</span><span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span>
          <span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">())</span>
 
+        <span class="c1"># Click again on the remove package button</span>
         <span class="n">rmv_pkg_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
-        <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Apply changes</span>
+        <span class="c1"># Apply changes</span>
+        <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
 
         <span class="c1"># Mocks removing a package with text and from the tree</span>
         <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">remove_dic</span><span class="p">[</span><span class="n">PKG</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -4362,32 +4471,29 @@
         <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">remove_package_with_text</span><span class="p">(</span><span class="n">_2rem</span><span class="o">=</span><span class="n">PKG</span><span class="p">,</span>
                                                 <span class="n">tree_remove</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># Resets the process library to its original state</span>
-        <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">remove_list</span><span class="o">.</span><span class="n">selectAll</span><span class="p">()</span>
-        <span class="p">(</span><span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span>
-         <span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">())</span>
+        <span class="c1"># Resets the process library to its original state for nipype</span>
+        <span class="n">cur_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proclibview_nipype_state</span><span class="p">(</span><span class="n">proc_lib_view</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cur_state</span> <span class="o">!=</span> <span class="n">init_state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proclibview_nipype_reset_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="p">,</span> <span class="n">ppl_manager</span><span class="p">,</span>
+                                                <span class="n">init_state</span><span class="p">)</span>
 
         <span class="c1"># Saves the config to &#39;process_config.yml&#39;</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">processLibrary</span><span class="o">.</span><span class="n">save_config</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_package_library_others"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_package_library_others">[docs]</a>    <span class="k">def</span> <span class="nf">test_package_library_others</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Creates a new project folder, opens the processes library and</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new project folder, opens the processes library and</span>
 <span class="sd">        adds a package.</span>
-<span class="sd">        Tests</span>
-<span class="sd">         - PackageLibraryDialog</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
 <span class="sd">        The package library object opens up as a pop-up when</span>
 <span class="sd">        File &gt; Package library manager is clicked.</span>
 
-<span class="sd">        Mocks</span>
-<span class="sd">         - QMessageBox.exec</span>
-<span class="sd">         - QMessageBox.exec_</span>
+<span class="sd">        - Tests: PackageLibraryDialog</span>
 
-<span class="sd">         +&gt; docstring to check !!!!!!!</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        - Mocks:</span>
+<span class="sd">            - QMessageBox.exec</span>
+<span class="sd">            - QMessageBox.exec_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Creates a new project folder and switches to it</span>
         <span class="n">new_proj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -4413,14 +4519,15 @@
         <span class="n">pkg_lib_window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_popUpDeletedProject"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_popUpDeletedProject">[docs]</a>    <span class="k">def</span> <span class="nf">test_popUpDeletedProject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Adds a deleted projects to the projects list and launches mia.</span>
-<span class="sd">        Tests PopUpDeletedProject.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Adds a deleted projects to the projects list and launches mia.</span>
+
+<span class="sd">        - Tests: PopUpDeletedProject.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets a projects save directory</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="n">projects_save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;projects&#39;</span><span class="p">)</span>
+        <span class="c1">#config = Config()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="n">projects_save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;projects&#39;</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_projects_save_path</span><span class="p">(</span><span class="n">projects_save_path</span><span class="p">)</span>
 
         <span class="c1"># Mocks a project filepath that does not exist in the filesystem</span>
@@ -4430,7 +4537,10 @@
         <span class="n">savedProjects</span><span class="o">.</span><span class="n">addSavedProject</span><span class="p">(</span><span class="n">del_prjct</span><span class="p">)</span>
 
         <span class="c1"># Asserts that &#39;saved_projects.yml&#39; contains the filepath</span>
-        <span class="c1"># self.assertIn(del_prjct, savedProjects.loadSavedProjects()[&#39;paths&#39;])</span>
+        <span class="c1"># FIXME: The following line does not seem to be supported by the</span>
+        <span class="c1">#        appveyor version, while it works fine on my station...</span>
+        <span class="c1">#        For now I comment ...</span>
+        <span class="c1">#self.assertIn(del_prjct, savedProjects.loadSavedProjects()[&#39;paths&#39;])</span>
 
         <span class="c1"># Mocks the execution of a dialog box</span>
         <span class="n">PopUpDeletedProject</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
@@ -4445,31 +4555,29 @@
                 <span class="n">saved_projects_object</span><span class="o">.</span><span class="n">removeSavedProject</span><span class="p">(</span><span class="n">saved_project</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">deleted_projects</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">deleted_projects</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">PopUpDeletedProject</span><span class="p">(</span><span class="n">deleted_projects</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">PopUpDeletedProject</span><span class="p">(</span><span class="n">deleted_projects</span><span class="p">)</span></div>
 
         <span class="c1"># Asserts that &#39;saved_projects.yml&#39; no longer contains it</span>
-        <span class="c1"># self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()[&#39;paths&#39;])</span>
-
-        <span class="nb">print</span><span class="p">()</span></div>
+        <span class="c1"># FIXME: Since the previous FIXME, and comment, the following line is</span>
+        <span class="c1">#        also commented</span>
+        <span class="c1">#self.assertNotIn(del_prjct, savedProjects.loadSavedProjects()[&#39;paths&#39;])</span>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_popUpDeleteProject"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_popUpDeleteProject">[docs]</a>    <span class="k">def</span> <span class="nf">test_popUpDeleteProject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Creates a new project and deletes it.</span>
-<span class="sd">        Tests</span>
-<span class="sd">         - MainWindow.delete_project</span>
-<span class="sd">         - PopUpDeleteProject.</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new project and deletes it.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Not to be confused with PopUpDeletedProject.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Not to be confused with test_PopUpDeletedProject!</span>
+
+<span class="sd">        - Tests:</span>
+<span class="sd">            - MainWindow.delete_project</span>
+<span class="sd">            - PopUpDeleteProject.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Gets a new project</span>
         <span class="n">test_proj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">,</span> <span class="s1">&#39;test_project&#39;</span><span class="p">)</span>
 
         <span class="c1"># Instead of executing the pop-up, only shows it</span>
-        <span class="c1"># This avoid thread deadlocking</span>
+        <span class="c1"># This avoids thread deadlocking</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">self_</span><span class="p">:</span> <span class="n">self_</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
         <span class="c1"># Resets the projects folder</span>
@@ -4481,14 +4589,13 @@
 
         <span class="c1"># Sets a projects save directory</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
-        <span class="n">proj_save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
-                                      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">proj_save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_projects_save_path</span><span class="p">(</span><span class="n">proj_save_path</span><span class="p">)</span>
 
         <span class="c1"># Append &#39;test_proj_path&#39; to &#39;saved_projects.pathsList&#39; and</span>
         <span class="c1"># &#39;opened_projects&#39;, to increase coverage</span>
-        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span><span class="o">.</span>
-         <span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span>
+                                                                <span class="n">test_proj_path</span><span class="p">))</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">)])</span>
 
         <span class="c1"># PopUpDeleteProject.exec = lambda self_: self_.show()</span>
@@ -4504,35 +4611,30 @@
 
         <span class="c1"># Mocks the dialog box to directly return &#39;YesToAll&#39;</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">YesToAll</span><span class="p">)</span>
-        <span class="n">exPopup</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span></div>
+        <span class="n">exPopup</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_see_all_projects"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_see_all_projects">[docs]</a>    <span class="k">def</span> <span class="nf">test_see_all_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Creates 2 projects and tries to open them through the all</span>
-<span class="sd">        projects pop-up.</span>
-<span class="sd">        Tests</span>
-<span class="sd">        - MainWindow.see_all_projects</span>
-<span class="sd">        - PopUpSeeAllProjects</span>
+        <span class="sd">&quot;&quot;&quot;Creates 2 projects and tries to open them through the all projects pop-up.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks</span>
-<span class="sd">        - PopUpSeeAllProjects.exec</span>
-<span class="sd">        - QMessageBox.exec</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        - Tests:</span>
+<span class="sd">            - MainWindow.see_all_projects</span>
+<span class="sd">            - PopUpSeeAllProjects</span>
+
+<span class="sd">        - Mocks:</span>
+<span class="sd">            - PopUpSeeAllProjects.exec</span>
+<span class="sd">            - QMessageBox.exec</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">main_wnd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span>
 
         <span class="c1"># Creates 2 new project folders</span>
-        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
-        <span class="n">project_9_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;project_9&#39;</span><span class="p">)</span>
+        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
+        <span class="n">project_9_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;project_9&#39;</span><span class="p">)</span>
 
         <span class="c1"># Sets the projects save path</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_projects_save_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_projects_save_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
 
         <span class="c1"># Adds the projects to the &#39;pathsList&#39;</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">)</span>
@@ -4548,10 +4650,15 @@
         <span class="c1"># Show the projects pop-up</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">see_all_projects</span><span class="p">()</span>
 
-        <span class="n">item_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">treeWidget</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">item_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">treeWidget</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">item_0</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">treeWidget</span><span class="o">.</span><span class="n">itemBelow</span><span class="p">(</span><span class="n">item_0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
                          <span class="s1">&#39;project_9&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Asserts that project 8 is not opened:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()[</span><span class="mi">0</span><span class="p">]),</span>
+                            <span class="n">project_8_path</span><span class="p">)</span>
 
         <span class="c1"># Tries to open a project with no projects selected</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">open_project</span><span class="p">()</span>
@@ -4563,35 +4670,35 @@
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">exPopup</span><span class="o">.</span><span class="n">open_project</span><span class="p">()</span>
 
         <span class="c1"># Asserts that project 8 is now opened</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span></div>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()[</span><span class="mi">0</span><span class="p">]),</span>
+                         <span class="n">project_8_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_software_preferences_pop_up"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_software_preferences_pop_up">[docs]</a>    <span class="k">def</span> <span class="nf">test_software_preferences_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Opens the preferences pop up and changes parameters.</span>
-<span class="sd">        Tests</span>
-<span class="sd">          - MainWindow.software_preferences_pop_up</span>
-<span class="sd">          - PopUpPreferences</span>
+        <span class="sd">&quot;&quot;&quot;Opens the preferences pop up and changes parameters.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks</span>
-<span class="sd">          - QFileDialog.getOpenFileName</span>
-<span class="sd">          - QFileDialog.getExistingDirectory</span>
-<span class="sd">          - QLineEdit.text</span>
-<span class="sd">          - QDialog.exec</span>
-<span class="sd">          - QMessageBox.exec</span>
-<span class="sd">          - QPlainTextEdit.toPlainText</span>
+<span class="sd">        - Tests:</span>
+<span class="sd">            - MainWindow.software_preferences_pop_up</span>
+<span class="sd">            - PopUpPreferences</span>
+
+<span class="sd">        - Mocks</span>
+<span class="sd">            - QFileDialog.getOpenFileName</span>
+<span class="sd">            - QFileDialog.getExistingDirectory</span>
+<span class="sd">            - QLineEdit.text</span>
+<span class="sd">            - QDialog.exec</span>
+<span class="sd">            - QMessageBox.exec</span>
+<span class="sd">            - QPlainTextEdit.toPlainText</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">main_wnd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="n">main_wnd</span><span class="o">.</span><span class="n">pipeline_manager</span>
 
-        <span class="c1"># Creates a new project folder and adds one document to the </span>
-        <span class="c1"># project, sets the plug value that is added to the database</span>
+        <span class="c1"># Creates a new project folder and adds one document to the project</span>
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="n">project_8_path</span>
 
+        <span class="c1"># Modification of some configuration parameters</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setControlV1</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setAutoSave</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -4601,49 +4708,63 @@
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_ants</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_mainwindow_size</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
 
+        <span class="c1"># Open and close the software preferences window</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
-        
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
+        <span class="c1"># Activate the V1 controller GUI and the user mode</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setControlV1</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
-        <span class="c1"># Enables the user mode</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         
-        <span class="c1"># Enables Matbalb Standalone</span>
+        <span class="c1"># Enables Matlab MCR</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Check that matlab MCR is selected</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
-                        <span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+                                    <span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="c1"># Enables Matbalb</span>
+        <span class="c1"># Enables Matlab</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Check that matlab is selected and matlab MCR not</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
-                        <span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+                                               <span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
+                                    <span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="c1"># Enables SPM</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Check that SPM and matlab are selected</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
-                        <span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+                                               <span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
-                        <span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+                                               <span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="c1"># Enables SPM standalone</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1">#if &#39;Windows&#39; not in architecture()[1]: </span>
-        <span class="c1">#    self.assertTrue(main_wnd.pop_up_preferences</span>
-        <span class="c1">#                    .use_matlab_standalone_checkbox.isChecked())</span>
-        <span class="c1">#self.assertTrue(main_wnd.pop_up_preferences</span>
-        <span class="c1">#                .use_spm_standalone_checkbox.isChecked())</span>
+
+        <span class="c1"># Check that SPM standalone and matlab MCR are selected,</span>
+        <span class="c1"># SPM and matlab not</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
+                                    <span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
+                                       <span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
+                                               <span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
+                                                  <span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="c1"># Mocks &#39;QFileDialog.getOpenFileName&#39; (returns an exising file)</span>
+        <span class="c1"># Mocks &#39;QFileDialog.getOpenFileName&#39; (returns an existing file)</span>
         <span class="c1"># This method returns a tuple (filename, file_types), where file_types</span>
         <span class="c1"># is the allowed file type (eg. &#39;All Files (*)&#39;)</span>
         <span class="n">mock_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -4652,6 +4773,7 @@
         <span class="c1"># Mocks &#39;QFileDialog.getExistingDirectory&#39;</span>
         <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">mock_path</span>
 
+        <span class="c1"># Open the software preferences window</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
 
         <span class="c1"># Browses the FSL path</span>
@@ -4674,9 +4796,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
                          <span class="n">mock_path</span><span class="p">)</span>
 
-        <span class="c1"># Browses the MATLAB Standalone path</span>
+        <span class="c1"># Browses the MATLAB MCR path</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">browse_matlab_standalone</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span>
+                                                                         <span class="n">text</span><span class="p">(),</span>
+                         <span class="n">mock_path</span><span class="p">)</span>
+
+        <span class="c1"># Browses the SPM path</span>
+        <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">browse_spm</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_choice</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+                         <span class="n">mock_path</span><span class="p">)</span>
+
+        <span class="c1"># Browses the SPM Standalone path</span>
+        <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">browse_spm_standalone</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span>
                                                                          <span class="n">text</span><span class="p">(),</span>
                          <span class="n">mock_path</span><span class="p">)</span>
 
@@ -4690,17 +4823,6 @@
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">browse_projects_save_path</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span>
                                             <span class="n">projects_save_path_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
-                         <span class="n">mock_path</span><span class="p">)</span>
-
-        <span class="c1"># Browses the SPM path</span>
-        <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">browse_spm</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_choice</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> 
-                         <span class="n">mock_path</span><span class="p">)</span>
-
-        <span class="c1"># Browses the SPM Standalone path</span>
-        <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">browse_spm_standalone</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span>
-                                                                         <span class="n">text</span><span class="p">(),</span>
                          <span class="n">mock_path</span><span class="p">)</span>
 
         <span class="c1"># Sets the admin password to be &#39;mock_admin_password&#39;</span>
@@ -4717,7 +4839,7 @@
         <span class="n">QInputDialog</span><span class="o">.</span><span class="n">getText</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">admin_mode_switch</span><span class="p">()</span>
 
-        <span class="c1"># Tries to activates admin mode with the wrong password</span>
+        <span class="c1"># Tries to activate admin mode with the wrong password</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">QInputDialog</span><span class="o">.</span><span class="n">getText</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;mock_wrong_password&#39;</span><span class="p">,</span>
                                                      <span class="kc">True</span><span class="p">)</span>
@@ -4730,7 +4852,7 @@
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">admin_mode_switch</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">change_psswd</span><span class="o">.</span><span class="n">isVisible</span><span class="p">())</span>
 
-        <span class="c1"># Mocks the old passowd text field to be &#39;mock_admin_password&#39;</span>
+        <span class="c1"># Mocks the old passwd text field to be &#39;mock_admin_password&#39;</span>
         <span class="c1"># (and the other textfields too!)</span>
         <span class="c1">#QLineEdit.text = lambda x: admin_password</span>
 
@@ -4748,13 +4870,13 @@
                          <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="c1"># Sets the mainwindow size</span>
+        <span class="c1"># Sets the main window size</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_current_mainwindow_size</span><span class="p">(</span><span class="n">main_wnd</span><span class="p">)</span>
 
         <span class="c1"># Mocks the click of the OK button on &#39;QMessageBox.exec&#39; </span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span>
 
-        <span class="c1"># Programs the controler version to change to V1</span>
+        <span class="c1"># Programs the controller version to change to V1</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">control_checkbox_toggled</span><span class="p">(</span><span class="n">main_wnd</span><span class="p">)</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">control_checkbox_changed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">get_controller_version</span><span class="p">())</span>
@@ -4780,23 +4902,22 @@
         <span class="c1">#main_wnd.pop_up_preferences.edit_capsul_config()</span>
         <span class="c1"># FIXME: failing in MacOS build</span>
 
+        <span class="c1"># Close the software preferences window</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_software_preferences_pop_up_config_file"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_software_preferences_pop_up_config_file">[docs]</a>    <span class="k">def</span> <span class="nf">test_software_preferences_pop_up_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Opens the preferences pop up and changes parameters to edit the</span>
+        <span class="sd">&quot;&quot;&quot;Opens the preferences pop up and changes parameters to edit the</span>
 <span class="sd">        config file and capsul config file.</span>
-<span class="sd">        Tests</span>
-<span class="sd">          - PopUpPreferences.edit_config_file</span>
-<span class="sd">          - PopUpPreferences.findChar</span>
-<span class="sd">          - PopUpPreferences.edit_capsul_config</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks</span>
-<span class="sd">          - Config.set_capsul_config</span>
-<span class="sd">          - QDialog.exec</span>
-<span class="sd">          - SettingsEditor.update_gui</span>
+<span class="sd">        -Tests:</span>
+<span class="sd">            - PopUpPreferences.edit_config_file</span>
+<span class="sd">            - PopUpPreferences.findChar</span>
+<span class="sd">            - PopUpPreferences.edit_capsul_config</span>
+
+<span class="sd">        - Mocks</span>
+<span class="sd">            - Config.set_capsul_config</span>
+<span class="sd">            - QDialog.exec</span>
+<span class="sd">            - SettingsEditor.update_gui</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
@@ -4805,20 +4926,14 @@
         <span class="c1"># Mocks the execution of &#39;PopUpPreferences&#39; to speed up the test</span>
         <span class="c1">#PopUpPreferences.show = lambda x: None</span>
 
-        <span class="c1"># Creates a new project folder and adds one document to the </span>
-        <span class="c1"># project, sets the plug value that is added to the database</span>
-        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
-        <span class="c1">#ppl_manager.project.folder = project_8_path      </span>
-
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
         
-        <span class="c1"># Tries do edit the config file, mocks failure in &#39;QDialog.exec&#39;</span>
+        <span class="c1"># Tries to edit the config file, mocks failure in &#39;QDialog.exec&#39;</span>
         <span class="n">QDialog</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">edit_config_file</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="p">,</span> <span class="s1">&#39;editConf&#39;</span><span class="p">))</span>
         
-        <span class="c1"># Mocks the execution to change &#39;user_mode&#39; from &#39;false&#39; to</span>
-        <span class="c1"># &#39;true&#39;</span>
+        <span class="c1"># Mocks the execution to change &#39;user_mode&#39; from &#39;false&#39; to &#39;true&#39;</span>
         <span class="k">def</span> <span class="nf">mock_exec</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="n">config_file</span> <span class="o">=</span> <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">toPlainText</span><span class="p">()</span>
             <span class="n">config_file</span> <span class="o">=</span> <span class="n">config_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;user_mode: false&#39;</span><span class="p">,</span>
@@ -4851,7 +4966,7 @@
         <span class="n">Config</span><span class="o">.</span><span class="n">set_capsul_config</span> <span class="o">=</span> <span class="n">mock_exc</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">edit_capsul_config</span><span class="p">()</span>
 
-        <span class="n">QDialog</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="n">mock_exc</span>
+        <span class="n">QDialog</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="p">())</span><span class="o">.</span><span class="n">throw</span><span class="p">(</span><span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;mock_except&#39;</span><span class="p">))</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">edit_capsul_config</span><span class="p">()</span>
 
         <span class="n">QDialog</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span>
@@ -4860,22 +4975,19 @@
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_software_preferences_pop_up_modules_config"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_software_preferences_pop_up_modules_config">[docs]</a>    <span class="k">def</span> <span class="nf">test_software_preferences_pop_up_modules_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Opens the preferences pop up and sets configuration of the </span>
-<span class="sd">        modules AFNI, ANTS, FSL, SPM and MATLAB in the preferences </span>
-<span class="sd">        window.</span>
-<span class="sd">        Tests</span>
-<span class="sd">          - PopUpPreferences.validate_and_save</span>
+        <span class="sd">&quot;&quot;&quot;Opens the preferences pop up and sets the configuration of modules.</span>
 
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Mocks</span>
-<span class="sd">          - PopUpPreferences.show</span>
-<span class="sd">          - QMessageBox.show</span>
-<span class="sd">          - QLineEdit.text</span>
-<span class="sd">          - QDialog.exec</span>
-<span class="sd">          - QMessageBox.exec</span>
-<span class="sd">          - QPlainTextEdit.toPlainText</span>
+<span class="sd">        For AFNI, ANTS, FSL, SPM and MATLAB.</span>
+
+<span class="sd">        -Tests: PopUpPreferences.validate_and_save</span>
+
+<span class="sd">        - Mocks:</span>
+<span class="sd">            - PopUpPreferences.show</span>
+<span class="sd">            - QMessageBox.show</span>
+<span class="sd">            - QLineEdit.text</span>
+<span class="sd">            - QDialog.exec</span>
+<span class="sd">            - QMessageBox.exec</span>
+<span class="sd">            - QPlainTextEdit.toPlainText</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
@@ -4884,25 +4996,21 @@
         <span class="c1"># Mocks the execution of &#39;PopUpPreferences&#39; to speed up the test</span>
         <span class="c1">#PopUpPreferences.show = lambda x: None</span>
 
-        <span class="c1"># Mocks the execution of &#39;wrong_path&#39; and &#39;QMessageBox.show&#39;</span>
-        <span class="c1">#QMessageBox.show = lambda x: None</span>
+        <span class="c1"># Mocks &#39;QMessageBox.show&#39;</span>
+        <span class="n">QMessageBox</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span>
 
-        <span class="c1"># Creates a new project folder and adds one document to the </span>
-        <span class="c1"># project, sets the plug value that is added to the database</span>
-        <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
-        <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">tmp_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_path</span>
 
-        <span class="c1"># Temporary solution that allows test on Linux and MacOS</span>
+        <span class="c1"># Temporary solution that allows test only on Linux and MacOS</span>
         <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="c1"># Mocks executables to be used as the afni, ants, fslm, matlab </span>
         <span class="c1"># and spm cmds</span>
-        <span class="k">def</span> <span class="nf">mock_executable</span><span class="p">(</span><span class="n">exc_dir</span><span class="p">,</span> <span class="n">exc_name</span><span class="p">,</span> <span class="n">failing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+        <span class="k">def</span> <span class="nf">mock_executable</span><span class="p">(</span><span class="n">exc_dir</span><span class="p">,</span> <span class="n">exc_name</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                             <span class="n">output</span><span class="o">=</span><span class="s1">&#39;mock executable&#39;</span><span class="p">,</span>
                             <span class="n">err_msg</span><span class="o">=</span><span class="s1">&#39;mock_error&#39;</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Creates a working or failing mocked executable, optionally </span>
+            <span class="sd">&quot;&quot;&quot;Creates a working or failing mocked executable, optionally</span>
 <span class="sd">            setting the output and error messages,</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
@@ -4936,16 +5044,14 @@
         <span class="c1"># of the code</span>
 
         <span class="k">def</span> <span class="nf">test_afni_config</span><span class="p">():</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Tests the AFNI configuration.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Tests the AFNI configuration.&quot;&quot;&quot;</span>
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Reopens the window</span>
 
             <span class="c1"># Enables AFNI</span>
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="c1"># Sets a directory that does not exists</span>
+            <span class="c1"># Sets a directory that does not exist</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
                           <span class="o">.</span><span class="n">afni_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">+</span> <span class="s1">&#39;mock&#39;</span><span class="p">)))</span>
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
@@ -4962,10 +5068,10 @@
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">afni_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
 
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;afni&#39;</span><span class="p">)</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Closes the window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Closes the window</span>
 
             <span class="c1"># Disables AFNI</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
@@ -4973,16 +5079,14 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set_afni_path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">test_ants_config</span><span class="p">():</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Tests the ANTS configuration.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Tests the ANTS configuration.&quot;&quot;&quot;</span>
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Reopens the window</span>
 
             <span class="c1"># Enables ANTS</span>
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_ants_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="c1"># Sets a directory that does not exists</span>
+            <span class="c1"># Sets a directory that does not exist</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
                           <span class="o">.</span><span class="n">ants_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">+</span> <span class="s1">&#39;mock&#39;</span><span class="p">)))</span>
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
@@ -5010,9 +5114,7 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set_ants_path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">test_fsl_config</span><span class="p">():</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Tests the FSL configuration.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Tests the FSL configuration.&quot;&quot;&quot;</span>
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Reopens the window</span>
 
@@ -5061,9 +5163,7 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set_fsl_config</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">test_spm_matlab_config</span><span class="p">():</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Tests the SPM and MATLAB (licence) configuration.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Tests the SPM and MATLAB (licence) configuration.&quot;&quot;&quot;</span>
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Reopens the window</span>
 
@@ -5085,7 +5185,7 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">))</span>
             <span class="c1">#main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog</span>
 
-            <span class="c1"># Also sets the same SPM directory in the preferenes window and </span>
+            <span class="c1"># Also sets the same SPM directory in the preferences window and</span>
             <span class="c1"># in the config object, and a &#39;tmp_path&#39; as the MATLAB directory</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_spm_path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
@@ -5118,12 +5218,12 @@
             <span class="c1"># call on &#39;ok_clicked&#39;)</span>
             <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Case where SPM directory is not valid</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_choice</span>
-             <span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;not_existing&#39;</span><span class="p">)))</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+                               <span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;not_existing&#39;</span><span class="p">)))</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -5135,16 +5235,14 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">test_matlab_config</span><span class="p">():</span>
-            <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            Tests the MATLAB (license) configuration.</span>
-<span class="sd">            &#39;&#39;&#39;</span>
+            <span class="sd">&quot;&quot;&quot;Tests the MATLAB (license) configuration.&quot;&quot;&quot;</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span> <span class="c1"># Reopens the window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Reopens the window</span>
 
             <span class="c1"># Sets the projects folder for the preferences window to close </span>
             <span class="c1"># when pressing on &#39;OK&#39;</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">projects_save_path_line_edit</span>
-             <span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
+                                                             <span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
 
             <span class="c1"># Enables MATLAB</span>
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -5154,7 +5252,7 @@
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
             <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Closes the window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Closes the window</span>
 
             <span class="c1"># Asserts that MATLAB was enabled and MATLAB standalone </span>
             <span class="c1"># remains disabled</span>
@@ -5162,27 +5260,27 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span> <span class="c1"># Reopens the window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Reopens the window</span>
 
             <span class="c1"># Resets the &#39;config&#39; object</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="c1"># Resets the MATLAB directory</span>
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Creates a failing MATLAB executable</span>
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="c1"># Sets the MATLAB directory to this executable</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span>
-             <span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">)))</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+                       <span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">)))</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Restricts the permission required to run the MATLAB </span>
             <span class="c1"># executable to induce an exception on &#39;subprocess.Popen&#39;</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;chmod&#39;</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">)])</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Asserts that MATLAB was still not enabled</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
@@ -5190,7 +5288,7 @@
 
             <span class="c1"># Creates a working MATLAB executable</span>
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">)</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Closes window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Closes window</span>
 
             <span class="c1"># Asserts that MATLAB was enabled and MATLAB standalone </span>
             <span class="c1"># remains disabled</span>
@@ -5204,113 +5302,112 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">test_matlab_mcr_spm_standalone</span><span class="p">():</span>
-            <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            Tests the Matlab MCR and SPM standalone configuration&#39;&#39;&#39;</span>
+            <span class="sd">&quot;&quot;&quot;Tests the Matlab MCR and SPM standalone configuration&quot;&quot;&quot;</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span> <span class="c1"># Opens the window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Opens the window</span>
 
             <span class="c1"># Sets the projects folder for the preferences window to close </span>
             <span class="c1"># when pressing on &#39;OK&#39;</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">projects_save_path_line_edit</span><span class="o">.</span>
-             <span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
+                                                              <span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
 
             <span class="c1"># Enables SPM standalone</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span>
-             <span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+                                                               <span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
 
-            <span class="sd">&#39;&#39;&#39;Failing configurations for SPM standalone + MATLAB MCR&#39;&#39;&#39;</span>
+            <span class="c1">#Failing configurations for SPM standalone + MATLAB MCR</span>
 
-            <span class="c1"># Sets a non exixting directory for MATLAB MCR</span>
+            <span class="c1"># Sets a non-existing directory for MATLAB MCR</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span>
-             <span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;non_existing&#39;</span><span class="p">)))</span>
+                                <span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;non_existing&#39;</span><span class="p">)))</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error message</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error message</span>
 
-            <span class="c1"># Sets an existing directory for MATLAB MCR, non existing </span>
+            <span class="c1"># Sets an existing directory for MATLAB MCR, non-existing</span>
             <span class="c1"># directory for SPM standalone</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span>
-             <span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
+                                                              <span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span>
-             <span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;non_existing&#39;</span><span class="p">)))</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+                                <span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;non_existing&#39;</span><span class="p">)))</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Sets existing directories for both MATLAB MCR and SPM </span>
             <span class="c1"># standalone</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span>
-             <span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+                                                              <span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">))</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Does not find a SPM standalone executable</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Creates a failing SPM standalone executable</span>
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-                            <span class="n">err_msg</span> <span class="o">=</span> <span class="s1">&#39;shared libraries&#39;</span><span class="p">)</span>
+                            <span class="n">err_msg</span><span class="o">=</span><span class="s1">&#39;shared libraries&#39;</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="c1"># Restricts the permission required to run the MATLAB </span>
             <span class="c1"># executable to induce an exception on &#39;subprocess.Popen&#39;</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;chmod&#39;</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">)])</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Opens error dialog</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;chmod&#39;</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span>
+                                                        <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">)])</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())</span>
           
-            <span class="sd">&#39;&#39;&#39;Passing configurations for SPM standalone + MATLAB MCR&#39;&#39;&#39;</span>
+            <span class="c1">#Passing configurations for SPM standalone + MATLAB MCR</span>
 
-            <span class="c1"># Creates an SPM standalone executable that throws a non</span>
-            <span class="c1"># critical error</span>
+            <span class="c1"># Creates an SPM standalone executable that throws a non-critical</span>
+            <span class="c1"># error</span>
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-                            <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;_ _ version (standalone)&#39;</span><span class="p">)</span>
+                            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;_ _ version (standalone)&#39;</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Closes window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Closes window</span>
 
-            
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
-            <span class="c1">#self.assertTrue(config.get_use_spm_standalone())</span>
-            <span class="c1">#self.assertTrue(config.get_use_matlab_standalone())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())</span>
 
             <span class="c1"># Resets the &#39;config&#39; object</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_spm_standalone_path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span> <span class="c1"># Opens the window </span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Opens the window</span>
 
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span>
-             <span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+                                                               <span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
 
             <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Closes the window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Closes the window</span>
 
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
-            <span class="c1">#self.assertTrue(config.get_use_spm_standalone())</span>
-            <span class="c1">#self.assertTrue(config.get_use_matlab_standalone())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())</span>
 
             <span class="c1"># Resets the &#39;config&#39; object</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span> <span class="c1"># Opens the window </span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>  <span class="c1"># Opens the window</span>
             <span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span>
-             <span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+                                                               <span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
 
             <span class="c1"># The same MATLAB directory is already the same on both the </span>
             <span class="c1"># preferences window and &#39;config&#39; object, same for SPM </span>
             <span class="c1"># standalone</span>
-            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span> <span class="c1"># Closes the window</span>
+            <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Closes the window</span>
 
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
-            <span class="c1">#self.assertTrue(config.get_use_spm_standalone())</span>
-            <span class="c1">#self.assertTrue(config.get_use_matlab_standalone())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())</span>
 
         <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">set_projects_save_path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
 
@@ -9032,7 +9129,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
     </div>
   </body>
 </html>
