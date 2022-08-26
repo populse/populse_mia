@@ -207,135 +207,64 @@ We also need a X windows server to allow linux applications graphic user interfa
    - click on Ubuntu new icon  
   or 
    - open a normal Windows PowerShell,  
-  enter `ubuntu.20.04.exe`
+  enter `ubuntu.22.04.exe`
 
 - In this Ubuntu window terminal, install the following dependencies:  
 
 ```bash
    sudo apt install -y build-essential uuid-dev libgpgme-dev squashfs-tools libseccomp-dev wget pkg-config git git-lfs cryptsetup-bin python3-distutils python3-dev 
-   # Ubuntu 20.04
+   # Ubuntu 22.04 & 20.04
    sudo apt install python-is-python3
    # Ubuntu 18.04
    sudo ln -s python3 /usr/bin/python
 ```
 
 
-### 5 - Singularity Installation 
-
-On ubuntu, at this time (27-08-2021) there is no package for singularity  
-
-Then to allow [singularity installation](https://singularity.hpcng.org/admin-docs/3.8/) we need go language and some dependances for compilation.  
-If you anticipate needing to remove Singularity, it might be easier to install it in a custom directory using the --prefix option to mconfig. In that case Singularity can be uninstalled simply by deleting the parent directory.  
-
-
-```bash
-#Ubuntu 20.04
-	sudo apt install -y golang 
-
-#Ubuntu 18.04, singularity need golang version >= 1.13 wich is not available on ubuntu 18.04 (1.10 only)		
-	cd /tmp &&\
-	wget https://golang.org/dl/go1.17.linux-amd64.tar.gz &&\
-	tar -xzf go1.17.linux-amd64.tar.gz &&\
-	sudo chown -R root:root go &&\
-	sudo mv go /usr/local/ &&\
-	rm go1.17.linux-amd64.tar.gz 
- 
-echo 'export GOPATH=${HOME}/go' >> ~/.bashrc &&\
-echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc  &&\
-source ~/.bashrc
-```
-
-Get singularity:
-
-Ubuntu 22.04 is recommanded for developpers. The latest version of singularity is the 3.8.3 which is compatible with Ubuntu 22.04.
-Regarding your Ubuntu version get the right download link of the singularity version you need here https://brainvisa.info/web/download.html#prerequisites.
-See the section **Prerequisites for Singularity on Linux**
-The 3.8.3 version link is https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb
-You can install singularity either like 
-
-- Way 1
-``` 
-wget https://brainvisa.info/download/singularity-ce_3.8.3~ubuntu-20.04_amd64.deb
-sudo dpkg -i singularity-container-*.deb
-sudo mkdir /opt/singularity
-./mconfig --prefix=/opt/singularity
-cd builddir
-make
-sudo make install
-```
-or - Way 2
-
-```bash
-export VERSION=3.8.3 && # adjust this as necessary \
-	wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
-	tar -xzf singularity-ce-${VERSION}.tar.gz && \
-	cd singularity-ce-${VERSION}
-sudo mkdir /opt/singularity
-./mconfig --prefix=/opt/singularity
-cd builddir
-make
-sudo make install
-```
-
-Test it with :  
-```bash
-/opt/singularity/bin/singularity version
-```
-Then remove installation files. Enter the reportory where you donwload the singularity install.
-Use the command ```rm -R singularity-ce_3.8.3~ubuntu-20.04_amd64.deb``` if you installed via Way 1 or ```rm -R singularity-ce-${VERSION}*``` if you installed via Way 2.
-
-
-
-
 ### 6 - Populse_MIA with BrainVisa Singularity image installation
 
 In the aim to install Populse_MIA with anatomist viewer, we need the Brainvisa dev singularity image compatible with python 3, QT5
 
-- #### 5 - 1 - Brainvisa Installation
-P.S: Choose your BrainVisa install according to your Ubuntu version. Go to https://brainvisa.info/web/download.html#prerequisites.
-See the section **Installing a Singularity developer environment** and follow the steps.
+- #### 6 - 1 - Brainvisa Installation
 
 
-- Create an installation directory:
+To install properly BrainVisa you have to refer to [prerequesites guidelines](https://brainvisa.info/web/download.html#prerequisites) for Singularity on linux.
 
-`mkdir -p $HOME/casa_distro/brainvisa-opensource-master`
-(note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations - but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
+Prerequisite are the software that need to be installed on your computer in order to be able to install and use BrainVISA. As we use her Ubuntu, we recommand to install Singularity. To do it so follow the steps below. 
 
-- Download the "casa-dev" image found here (https://brainvisa.info/download/), preferably into the $HOME/casa_distro directory. It’s a .sif file, for instance casa-dev-5.3-6.sif.
+-Create an installation directory:
 
-``` cd /$HOME/casa_distro 
-wget https://brainvisa.info/download/casa-dev-5.3-6.sif
-```
-Note that you don’t need to download an image built for your host system, the virtualization allows precisely to run, for instance, an Ubuntu-18.04 image, on any host system (Linux, Windows, or Mac).
+``mkdir -p $HOME/casa_distro/brainvisa-opensource-master`` (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations  but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
 
-- Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional:
-`singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.0.sif branch=master distro=opensource`
+ -Download the "casa-dev" image found [here](https://brainvisa.info/download/), preferably into the $HOME/casa_distro directory. Download the lates "casa-dev" image.
+It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvisa.info/download/casa-dev-5.3-8.sif``
 
-- set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell:
+ -Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: ``singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-8.sif branch=master distro=opensource``.
 
-```
-echo	'export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH" >> ~/.bashrc &&\
-source ~/.bashrc
+ -Set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell:
+  ```   
+  nano ~/.bashrc
+  export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"
+  source ~/.bashrc
 
-# we get the ip address to allow X server access and this ip can change when Windows reboot
-nano ~/.bashrc
-	export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')
-source ~/.bashrc
-
-nano brainvisa_ro/conf/bv_maker.cfg
+  # we get the ip address to allow X server access and this ip can change when Windows reboot.
+   
+  nano ~/.bashrc
+  export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')
+  source ~/.bashrc
+  
+  nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
   [ build $CASA_BUILD ]
      cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
      cmake_options += -DDESIRED_QT_VERSION=5
 
-bv_maker 
-# it takes time to compile
-```
+  bv_maker 
+  # it takes time to compile.
+  ```
 
-Now you can test if the brainvisa configuration GUI works well via the command:
-`bv`
+Now you can test if the brainvisa configuration GUI works well via the command: ``bv``.
 
 
-- #### 5 - 2 - Populse_MIA Installation
+- #### 6 - 2 - Populse_MIA Installation
 
 For the purpose of the container is to make profit of its ressources,
 you will install populse_mia, mri_conv and mia_processes in the container repertory.
