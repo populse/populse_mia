@@ -84,11 +84,11 @@ SPM and MATLAB installs:
       
 Before following the steps, make sure your are on your root directory ( /home ) and outside the container . This allows to avoid root accesses issues. Chose the user account folder on your host to make the installations : /home/<your_lacal_user_account>/ .
 
-1- Download the `version r7487 of spm <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip>_` and unzip it
+1- Download the `version r7487 of spm <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip>`_ and unzip it.
 
-2-Create a folder MCR in /home/<your_lacal_user_account>/, download the corresponding MCR for linux ' <https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip>_`  and unzip it in a MCR/ folder.
+2-Create a folder MCR in /home/<your_lacal_user_account>/, download the corresponding `MCR for linux <https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip>`_  and unzip it in a MCR/ folder.
 
-3- Install it `following these steps: <https://fr.mathworks.com/help/compiler/install-the-matlab-runtime.html>_`
+3- Install it following the steps described `here <https://fr.mathworks.com/help/compiler/install-the-matlab-runtime.html>`_.
 
 4- On your host append the following to your LD_LIBRARY_PATH environment variable: /usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/extern/bin/glnxa64 with the command: ::
 	
