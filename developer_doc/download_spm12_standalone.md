@@ -3,7 +3,7 @@ Linux
 
 Before following the steps, make sure your are on your root directory ( /home ) and outside the container .
 This allows to avoid root accesses issues.
-Chose the user account folder on your host to make the installations : /home/<your_lacal_user_account>/ . 
+Chose the user account folder on your host to make the installations : /home/<your_local_user_account>/ . 
 
 
 1- Download the desired version of spm: https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/
