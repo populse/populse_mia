@@ -20,9 +20,9 @@ Once pre-requirements are acquired, you will need to install Wsl2 to host a virt
 
 * In an administrator type Windows account:
 
-      - Windows 10 must be up to date
-      - You need to have enough free space on your system disk : around 20 Gb
-      - Open a **PowerShell as administrator** (right clic on powershell icon) and enter: ::
+   - Windows 10 must be up to date
+   - You need to have enough free space on your system disk : around 20 Gb
+   - Open a **PowerShell as administrator** (right clic on powershell icon) and enter: ::
 
   wsl --install -d Ubuntu-20.04
 
@@ -165,22 +165,22 @@ It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvi
 
 - Set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell: ::
 
-  nano ~/.bashrc
-  export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"
-  source ~/.bashrc
+   nano ~/.bashrc
+   export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"
+   source ~/.bashrc
 
-  # we get the ip address to allow X server access and this ip can change when Windows reboot
-  nano ~/.bashrc
-  export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')
-  source ~/.bashrc
+   # we get the ip address to allow X server access and this ip can change when Windows reboot
+   nano ~/.bashrc
+   export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')
+   source ~/.bashrc
   
-  nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
-  [ build $CASA_BUILD ]
-     cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
-     cmake_options += -DDESIRED_QT_VERSION=5
+   nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
+   [ build $CASA_BUILD ]
+      cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
+      cmake_options += -DDESIRED_QT_VERSION=5
 
-  bv_maker 
-  # it takes time to compile
+   bv_maker
+   # it takes time to compile
 
 
 Now you can test if the BrainVISA configuration GUI works well via the command: ``bv``.

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+7a555e571 documentation</title>
+    <title>1- WSL2 (Windows Subsystem Linux) installation &#8212; populse_mia 2.2.1-dev+6c41fe550 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+7a555e571 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+6c41fe550 documentation</span></a></h1>
         <h2 class="heading"><span>1- WSL2 (Windows Subsystem Linux) installation</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -206,21 +206,24 @@ Enable <em>‘Disable access control’</em></p>
 <ul>
 <li><p>Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: <code class="docutils literal notranslate"><span class="pre">singularity</span> <span class="pre">run</span> <span class="pre">-B</span> <span class="pre">$HOME/casa_distro/brainvisa-opensource-master:/casa/setup</span> <span class="pre">$HOME/casa_distro/casa-dev-5.3-8.sif</span> <span class="pre">branch=master</span> <span class="pre">distro=opensource</span></code>.</p></li>
 <li><p>Set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell:</p>
-<p>nano ~/.bashrc
-export PATH=”$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH”
-source ~/.bashrc</p>
-<p># we get the ip address to allow X server access and this ip can change when Windows reboot
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>nano ~/.bashrc
+export PATH=&quot;$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH&quot;
+source ~/.bashrc
+
+# we get the ip address to allow X server access and this ip can change when Windows reboot
 nano ~/.bashrc
-export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk ‘{print $2 “:0.0”}’)
-source ~/.bashrc</p>
-<p>nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
-[ build $CASA_BUILD ]</p>
-<blockquote>
-<div><p>cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
-cmake_options += -DDESIRED_QT_VERSION=5</p>
-</div></blockquote>
-<p>bv_maker
-# it takes time to compile</p>
+export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk &#39;{print $2 &quot;:0.0&quot;}&#39;)
+source ~/.bashrc
+
+nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
+[ build $CASA_BUILD ]
+   cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3
+   cmake_options += -DDESIRED_QT_VERSION=5
+
+bv_maker
+# it takes time to compile
+</pre></div>
+</div>
 </li>
 </ul>
 <p>Now you can test if the BrainVISA configuration GUI works well via the command: <code class="docutils literal notranslate"><span class="pre">bv</span></code>.</p>
