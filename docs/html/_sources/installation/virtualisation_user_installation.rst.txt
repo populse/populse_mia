@@ -9,7 +9,7 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Mia's user installation - Using virtualisation
+Mia's user installation - Using virtualization
 ==============================================
 
 The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements`).
@@ -81,9 +81,9 @@ Make sure to type the command ``bv bash`` if not.
 
 |
 
-* If you already want to configure the use of Matlab and SPM (in license or standalone mode), you can also specify these several paths:
+You can install SPM and Matlab via :ref:`Third party software installations` if those are not installed yet.
 
-Here is the `link <https://populse.github.io/populse_mia/html/installation/3rd-party_installations.html>`_ to install SPM and Matlab if those are not installed yet.
+* If you already want to configure the use of Matlab and SPM (in license or standalone mode), you can also specify these several paths:
 
   * Matlab path:
 
