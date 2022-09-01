@@ -15,13 +15,14 @@ But you can avoid numpy and PyQt5 install commands since they will be managed wh
 Once pre-requirements are acquired, you will need to install Wsl2 to host a virtual machine of ubuntu to install mia.
 
 1- WSL2 (Windows Subsystem Linux) installation
--------------------------------------------
+----------------------------------------------
+|
 
 * In an administrator type Windows account:
+
       - Windows 10 must be up to date
       - You need to have enough free space on your system disk : around 20 Gb
-      - Open a **PowerShell as administrator** (right clic on powershell icon)
-enter: ::
+      - Open a **PowerShell as administrator** (right clic on powershell icon) and enter: ::
 
   wsl --install -d Ubuntu-20.04
 
@@ -38,7 +39,7 @@ enter: ::
 
 * Normally a linux ubuntu window is already available, enter it:
 
-- enter a user / password who will be administrator of this linux (asked by the system)
+* Enter a user / password who will be administrator of this linux (asked by the system)
 
 
     .. image:: ../../../developer_doc/images/screenshots/Windows_10_Ubuntu.png
@@ -47,7 +48,7 @@ enter: ::
 
 |
 
-Then you can write your first commands to make ubuntu up to date: ::
+* Then you can write your first commands to make ubuntu up to date: ::
 
    sudo apt update
 
@@ -58,20 +59,19 @@ Then you can write your first commands to make ubuntu up to date: ::
    exit
 |
 
-- close this window
+* Close this window
 
 You can open back Ubuntu to continue the installs.
 
-Open Powershell and type ``ubuntu`` to open you vitual ubuntu machine.
+Open Powershell and type ``ubuntu`` to open you virtual ubuntu machine.
 
 Now you have WSL2 and an Ubuntu 20.04 linux.
 You can access Windows files via ``/mnt/c/`` in the Ubuntu WSL Windows terminal, we can access   
 
 Set your WSL2 as default with ``wsl --install -d distribution``.
 
+To know more:
 
-
-To know more:  
    - `Manual installation steps for older versions of WSL <https://docs.microsoft.com/en-us/windows/wsl/install-manual>`_.
    - `Install WSL <https://docs.microsoft.com/en-us/windows/wsl/install>`_.
    - `Basic commands for WSL <https://docs.microsoft.com/en-us/windows/wsl/basic-commands>`_.
@@ -84,6 +84,7 @@ To know more:
 We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
 
 Get `VcXsrv <https://sourceforge.net/projects/vcxsrv/files/latest/download>`_.
+
   - Execute it, 
   - click 'next' then 'install' to install it 
 
@@ -113,7 +114,6 @@ Enable *'Disable access control'*
 |
 
 Do *'Save Configuration'* in a file that allow you to launch it later (ie on the Desktop)
-
 
    .. image:: ../../../developer_doc/images/screenshots/Xlaunch_4.png
       :align: center
@@ -150,20 +150,20 @@ In this Ubuntu window terminal, install the following dependencies: ::
 ----------------------------
 |
 
-To install properly BrainVisa you have to refer to `prerequesites guidelines <https://brainvisa.info/web/download.html#prerequisites>`_ for Singularity on linux.
+To install properly BrainVisa you have to refer to `prerequisites guidelines <https://brainvisa.info/web/download.html#prerequisites>`_ for Singularity on linux.
 
-Prerequisite are the software that need to be installed on your computer in order to be able to install and use BrainVISA. As we use her Ubuntu, we recommand to install Singularity. To do it so follow the steps below. 
+Prerequisite are the software that need to be installed on your computer in order to be able to install and use BrainVISA. As we use her Ubuntu, we recommend to install Singularity. To do it so follow the steps below.
 
--Create an installation directory:
+- Create an installation directory:
 
 ``mkdir -p $HOME/casa_distro/brainvisa-opensource-master`` (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations - but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
 
--Download the "casa-dev" image found here (https://brainvisa.info/download/), preferably into the $HOME/casa_distro directory. Download the lates "casa-dev" image.
+- Download the "casa-dev" image found `here <https://brainvisa.info/download/>`_, preferably into the $HOME/casa_distro directory. Download the latest "casa-dev" image.
 It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvisa.info/download/casa-dev-5.3-8.sif``
 
--Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: ``singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-8.sif branch=master distro=opensource``.
+- Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: ``singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-8.sif branch=master distro=opensource``.
 
--Set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell: ::
+- Set the bin/ directory of the installation directory in the PATH environment variable of your host system config, typically in $HOME/.bashrc or $HOME/.bash_profile if you are using a Unix Bash shell: ::
 
   nano ~/.bashrc
   export PATH="$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH"
@@ -183,7 +183,7 @@ It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvi
   # it takes time to compile
 
 
-Now you can test if the brainvisa configuration GUI works well via the command: ``bv``.
+Now you can test if the BrainVISA configuration GUI works well via the command: ``bv``.
 
 
 You have completely installed a virtual Ubuntu which is now able to host mia.

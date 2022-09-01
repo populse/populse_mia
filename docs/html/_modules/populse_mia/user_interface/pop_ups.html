@@ -5,19 +5,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.2.1-dev+0e6da2bac documentation</title>
-    <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.2.1-dev+273536e83 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.2.1-dev+0e6da2bac documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+273536e83 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1209,7 +1208,7 @@
 
 
 <div class="viewcode-block" id="PopUpDeleteProject"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpDeleteProject">[docs]</a><span class="k">class</span> <span class="nc">PopUpDeleteProject</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Is called when the user wants to run an delete a project.</span>
+    <span class="sd">&quot;&quot;&quot;Is called when the user wants to delete a project.</span>
 
 <span class="sd">    .. Methods:</span>
 <span class="sd">        - ok_clicked: delete the selected projects after confirmation</span>
@@ -3377,11 +3376,11 @@
                                     <span class="n">err</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 
                                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Warning: The configuration for Matlab&quot;</span>
-                                      <span class="s2">&quot;MCR and SPM standalone as defined in&quot;</span>
-                                      <span class="s2">&quot;Mia&#39;s preferences seems to be valid but &quot;</span>
-                                      <span class="s2">&quot;the following issue has been detected:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                                      <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">Please fix this problem to avoid a &quot;</span>
-                                      <span class="s2">&quot;malfunction ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+                                      <span class="s2">&quot; MCR and SPM standalone as defined in&quot;</span>
+                                      <span class="s2">&quot; Mia&#39;s preferences seems to be valid &quot;</span>
+                                      <span class="s2">&quot;but the following issue has been &quot;</span>
+                                      <span class="s2">&quot;detected:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">Please fix this issue&quot;</span>
+                                      <span class="s2">&quot; to avoid a malfunction ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
 
                             <span class="k">elif</span> <span class="n">err</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
 
@@ -5602,7 +5601,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
     </div>
   </body>
 </html>

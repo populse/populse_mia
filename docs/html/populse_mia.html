@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>populse_mia package &#8212; populse_mia 2.2.1-dev+822967545 documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.2.1-dev+273536e83 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.2.1-dev+822967545 documentation</span></a></h1>
+          <span>populse_mia 2.2.1-dev+273536e83 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -114,7 +114,7 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#module-populse_mia.user_interface.data_viewer.data_viewer_tab">populse_mia.user_interface.data_viewer.data_viewer_tab module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#module-populse_mia.user_interface.data_viewer.anatomist.mia_anatomist">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#populse-mia-user-interface-data-viewer-anatomist-mia-anatomist-module">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist module</a></li>
 </ul>
 </li>
 </ul>
@@ -2569,39 +2569,40 @@ config file and capsul config file.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAMainWindow.test_software_preferences_pop_up_validate">
 <span class="sig-name descname"><span class="pre">test_software_preferences_pop_up_validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAMainWindow.test_software_preferences_pop_up_validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAMainWindow.test_software_preferences_pop_up_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Opens the preferences pop up, sets the configuration of the
-modules AFNI, ANTS, FSL, SPM and MATLAB without pressing the OK
+<dd><p>Opens the preferences pop up, sets the configuration.</p>
+<p>For modules AFNI, ANTS, FSL, SPM and MATLAB without pressing the OK
 button and switches the auto-save, controller version and radio
 view options.</p>
-<dl class="simple">
-<dt>Tests</dt><dd><ul class="simple">
-<li><p>PopUpPreferences.validate_and_save</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Mocks</dt><dd><ul class="simple">
+<ul class="simple">
+<li><p>Tests: PopUpPreferences.validate_and_save</p></li>
+<li><dl class="simple">
+<dt>Mocks:</dt><dd><ul>
 <li><p>PopUpPreferences.show</p></li>
 <li><p>QMessageBox.show</p></li>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAMainWindow.test_switch_project">
 <span class="sig-name descname"><span class="pre">test_switch_project</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAMainWindow.test_switch_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAMainWindow.test_switch_project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a project and switches to it.
-Tests MainWindow.switch_project.</p>
-<p>Mocks QMessageBox.exec.</p>
+<dd><p>Creates a project and switches to it.</p>
+<ul class="simple">
+<li><p>Tests: MainWindow.switch_project</p></li>
+<li><p>Mocks: QMessageBox.exec</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAMainWindow.test_tab_changed">
 <span class="sig-name descname"><span class="pre">test_tab_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAMainWindow.test_tab_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAMainWindow.test_tab_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switches between data browser, data viewer and pipeline manager.
-Tests MainWindow.tab_changed.</p>
-<p>Mocks QMessageBox.exec.</p>
+<dd><p>Switches between tabs.</p>
+<p>Data browser, data viewer and pipeline manager.</p>
+<p>Tests: MainWindow.tab_changed.</p>
+<p>Mocks: QMessageBox.exec.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2610,8 +2611,10 @@ Tests MainWindow.tab_changed.</p>
 <dt class="sig sig-object py" id="populse_mia.test.TestMIANodeController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.test.</span></span><span class="sig-name descname"><span class="pre">TestMIANodeController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIANodeController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIANodeController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.test.TestMIACase" title="populse_mia.test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">populse_mia.test.TestMIACase</span></code></a></p>
-<p>Tests for the node controller, part of the pipeline manager tab.
-Tests NodeController.</p>
+<p>Tests for the node controller, part of the pipeline manager tab.</p>
+<ul class="simple">
+<li><p>Tests: NodeController.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Contains</dt>
 <dd class="field-odd"><dl class="field-list simple">
@@ -2640,22 +2643,23 @@ updates its name.</p></li>
 <span class="sig-name descname"><span class="pre">test_attributes_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIANodeController.test_attributes_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIANodeController.test_attributes_filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Displays the parameters of a node, displays an attributes filter
 and modifies it.</p>
-<p>Tests AttributesFilter within the Node Controller V2
-(CapsulNodeController()).</p>
+<ul class="simple">
+<li><p>Tests: AttributesFilter in V2 controller GUI (CapsulNodeController).</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIANodeController.test_capsul_node_controller">
 <span class="sig-name descname"><span class="pre">test_capsul_node_controller</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIANodeController.test_capsul_node_controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIANodeController.test_capsul_node_controller" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds, changes and deletes processes using the capsul node
-controller, displays the attributes filter.</p>
-<p>Tests the class CapsulNodeController().</p>
+<dd><p>Adds, changes and deletes processes using the capsul node controller.</p>
+<p>Displays the attributes filter.</p>
+<p>Tests: CapsulNodeController</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIANodeController.test_display_filter">
 <span class="sig-name descname"><span class="pre">test_display_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIANodeController.test_display_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIANodeController.test_display_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Displays parameters of a node and displays a plug filter</p>
+<dd><p>Displays parameters of a node and displays a plug filter.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2680,8 +2684,8 @@ display the attributes filter.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIANodeController.test_plug_filter">
 <span class="sig-name descname"><span class="pre">test_plug_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIANodeController.test_plug_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIANodeController.test_plug_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Displays the parameters of a node, displays a plug filter
-and modifies it.</p>
+<dd><p>Displays the parameters of a node, displays a plug filter and
+modifies it.</p>
 <p>Tests the class PlugFilter() within the Node Controller V1
 (class NodeController()).</p>
 </dd></dl>
@@ -2689,7 +2693,7 @@ and modifies it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIANodeController.test_update_node_name">
 <span class="sig-name descname"><span class="pre">test_update_node_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIANodeController.test_update_node_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIANodeController.test_update_node_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Displays parameters of a node and updates its name</p>
+<dd><p>Displays parameters of a node and updates its name.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2698,7 +2702,7 @@ and modifies it.</p>
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAOthers">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.test.</span></span><span class="sig-name descname"><span class="pre">TestMIAOthers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAOthers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAOthers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.test.TestMIACase" title="populse_mia.test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">populse_mia.test.TestMIACase</span></code></a></p>
-<p>Tests for other parts of the MIA software that do not relate much 
+<p>Tests for other parts of the MIA software that do not relate much
 with the other classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Contains</dt>
@@ -2706,8 +2710,7 @@ with the other classes.</p>
 <dt class="field-odd">Method</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>test_iteration_table: plays with the iteration table</p></li>
-<li><p>test_process_library: install the brick_test and then 
-remove it</p></li>
+<li><p>test_process_library: install the brick_test and then remove it</p></li>
 </ul>
 </dd>
 </dl>
@@ -2716,24 +2719,30 @@ remove it</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAOthers.test_iteration_table">
 <span class="sig-name descname"><span class="pre">test_iteration_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAOthers.test_iteration_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAOthers.test_iteration_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Opens a new project, initializes the pipeline iteration and 
-changes its parameters.
-Tests IterationTable.</p>
-<p>Mocks the execution of a PopUpSelectTagCountTable and a QDialog.</p>
+<dd><p>Opens a new project, initializes the pipeline iteration and changes
+its parameters.</p>
+<ul class="simple">
+<li><p>Tests: IterationTable</p></li>
+<li><p>Mocks: the execution of a PopUpSelectTagCountTable and a QDialog</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAOthers.test_process_library">
 <span class="sig-name descname"><span class="pre">test_process_library</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAOthers.test_process_library"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAOthers.test_process_library" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inserts a row, mimes and changes the data and deletes it.
-Tests
-- ProcessLibrary</p>
-<p>The process library is located at the left corner of the 
-pipeline manager tab, where the list of available bricks is 
-shown.</p>
-<p>Mocks
-- QMessageBox.exec
-- QMessageBox.question</p>
+<dd><p>Inserts a row, mimes and changes the data and deletes it.</p>
+<ul class="simple">
+<li><p>Tests: ProcessLibrary</p></li>
+</ul>
+<dl class="simple">
+<dt>-Mocks:</dt><dd><ul class="simple">
+<li><p>QMessageBox.exec</p></li>
+<li><p>QMessageBox.question</p></li>
+</ul>
+</dd>
+</dl>
+<p>The process library is located at the left corner of the pipeline
+manager tab, where the list of available bricks is shown.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2742,31 +2751,32 @@ shown.</p>
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.test.</span></span><span class="sig-name descname"><span class="pre">TestMIAPipelineEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.test.TestMIACase" title="populse_mia.test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">populse_mia.test.TestMIACase</span></code></a></p>
-<p>Tests for the pipeline editor, part of the pipeline manager tab.
-Tests PipelineEditor.</p>
+<p>Tests for the pipeline editor, part of the pipeline manager tab.</p>
+<p>Tests PipelineEditor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Contains</dt>
 <dd class="field-odd"><dl class="field-list simple">
 <dt class="field-odd">Method</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>test_add_tab: adds tabs to the PipelineEditorTabs.</p></li>
-<li><p>test_close_tab: closes a tab in the PipelineEditorTabs.</p></li>
+<li><p>test_add_tab: adds tabs to the PipelineEditorTabs</p></li>
+<li><p>test_close_tab: closes a tab in the PipelineEditorTabs</p></li>
 <li><p>test_drop_process: adds a Nipype SPM Smooth process to the
-pipeline editor.</p></li>
-<li><p>test_export_plug: exports plugs and mocks dialog boxes.</p></li>
+pipeline editor</p></li>
+<li><p>test_export_plug: exports plugs and mocks dialog boxes</p></li>
+<li><p>test_save_pipeline: creates a pipeline and tries to save it</p></li>
 <li><p>test_update_plug_value: displays node parameters and 
-updates a plug value.</p></li>
+updates a plug value</p></li>
 <li><p>test_z_check_modif: opens a pipeline, modifies it and 
-check the modifications.</p></li>
-<li><p>test_z_get_editor: gets the instance of an editor.</p></li>
+check the modifications</p></li>
+<li><p>test_z_get_editor: gets the instance of an editor</p></li>
 <li><p>test_z_get_filename: gets the relative path to a 
-previously saved pipeline file.</p></li>
-<li><p>test_z_get_index: gets the index of an editor.</p></li>
-<li><p>test_z_get_tab_name: gets the tab name of the editor.</p></li>
-<li><p>test_z_load_pipeline: loads a pipeline.</p></li>
-<li><p>test_z_open_sub_pipeline: opens a sub_pipeline.</p></li>
-<li><p>test_z_set_current_editor: sets the current editor.</p></li>
-<li><p>test_zz_del_pack: deletes a brick created during UTs.</p></li>
+previously saved pipeline file</p></li>
+<li><p>test_z_get_index: gets the index of an editor</p></li>
+<li><p>test_z_get_tab_name: gets the tab name of the editor</p></li>
+<li><p>test_z_load_pipeline: loads a pipeline</p></li>
+<li><p>test_z_open_sub_pipeline: opens a sub_pipeline</p></li>
+<li><p>test_z_set_current_editor: sets the current editor</p></li>
+<li><p>test_zz_del_pack: deletes a brick created during UTs</p></li>
 </ul>
 </dd>
 </dl>
@@ -2775,64 +2785,88 @@ previously saved pipeline file.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_add_tab">
 <span class="sig-name descname"><span class="pre">test_add_tab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_add_tab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_add_tab" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds tabs to the PipelineEditorTabs</p>
+<dd><p>Adds tabs to the PipelineEditorTabs.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_close_tab">
 <span class="sig-name descname"><span class="pre">test_close_tab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_close_tab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_close_tab" title="Permalink to this definition">¶</a></dt>
-<dd><p>Closes a tab in the pipeline editor tabs while mocking the
-execution of the dialog boxes.
-Tests PipelineEditor.close_tab.</p>
+<dd><p>Closes a tab in the pipeline editor tabs.</p>
 <p>Indirectly tests PopUpClosePipeline.</p>
+<ul class="simple">
+<li><p>Tests: PipelineEditor.close_tab</p></li>
+<li><p>Mocks: PopUpClosePipeline.exec</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_drop_process">
 <span class="sig-name descname"><span class="pre">test_drop_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_drop_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_drop_process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Nipype SPM’s Smooth process to the pipeline editor</p>
+<dd><p>Adds a Nipype SPM’s Smooth process to the pipeline editor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_export_plug">
 <span class="sig-name descname"><span class="pre">test_export_plug</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_export_plug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_export_plug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a process and exports plugs in the pipeline editor while 
-mocking the execution of dialog boxes.
-Tests PipelineEditor.test_export_plug.</p>
+<dd><p>Adds a process and exports plugs in the pipeline editor.</p>
+<p>-Tests: PipelineEditor.test_export_plug</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Mocks:</dt><dd><ul>
+<li><p>QMessageBox.question</p></li>
+<li><p>QInputDialog.getText</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_save_pipeline">
 <span class="sig-name descname"><span class="pre">test_save_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_save_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_save_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a pipeline and tries to save it.
-Tests
-- PipelineEditor.save_pipeline
-- PipelineEditorTabs.save_pipeline
-- save_pipeline inside pipeline_editor.py</p>
-<p>Mocks
-- QMessageBox.exec
-- QFileDialog.getSaveFileName</p>
+<dd><p>Creates a pipeline and tries to save it.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
+<li><p>PipelineEditor.save_pipeline</p></li>
+<li><p>PipelineEditorTabs.save_pipeline</p></li>
+<li><p>save_pipeline inside pipeline_editor.py</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Mocks:</dt><dd><ul>
+<li><p>QMessageBox.exec</p></li>
+<li><p>QFileDialog.getSaveFileName</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_update_plug_value">
 <span class="sig-name descname"><span class="pre">test_update_plug_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_update_plug_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_update_plug_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Displays parameters of a node and updates a plug value</p>
+<dd><p>Displays parameters of a node and updates a plug value.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_check_modif">
 <span class="sig-name descname"><span class="pre">test_z_check_modif</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_check_modif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_check_modif" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a pipeline, opens it as a process in another tab, modifies it
-and check the modifications</p>
+and check the modifications.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_get_editor">
 <span class="sig-name descname"><span class="pre">test_z_get_editor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_get_editor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_get_editor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the instance of an editor (z to run at the end)</p>
-<dl class="simple">
-<dt>This tests:</dt><dd><ul class="simple">
+<dd><p>Gets the instance of an editor.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
 <li><p>PipelineEditorTabs.get_editor_by_index</p></li>
 <li><p>PipelineEditorTabs.get_current_editor</p></li>
 <li><p>PipelineEditorTabs.get_editor_by_tab_name</p></li>
@@ -2840,81 +2874,94 @@ and check the modifications</p>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_get_filename">
 <span class="sig-name descname"><span class="pre">test_z_get_filename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_get_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_get_filename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the relative path to a previously saved pipeline file
-(z to run at the end).</p>
-<dl class="simple">
-<dt>This tests:</dt><dd><ul class="simple">
+<dd><p>Gets the relative path to a previously saved pipeline file.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
 <li><p>PipelineEditorTabs.get_filename_by_index</p></li>
 <li><p>PipelineEditorTabs.get_current_filename</p></li>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_get_index">
 <span class="sig-name descname"><span class="pre">test_z_get_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_get_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_get_index" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the index of an editor. (z to run at the end)</p>
-<dl class="simple">
-<dt>This tests:</dt><dd><ul class="simple">
+<dd><p>Gets the index of an editor.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
 <li><p>PipelineEditorTabs.get_index_by_tab_name</p></li>
 <li><p>PipelineEditorTabs.get_index_by_filename</p></li>
 <li><p>PipelineEditorTabs.get_index_by_editor</p></li>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_get_tab_name">
 <span class="sig-name descname"><span class="pre">test_z_get_tab_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_get_tab_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_get_tab_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the tab name of the editor. (z to run at the end)</p>
-<dl class="simple">
-<dt>This tests:</dt><dd><ul class="simple">
+<dd><p>Gets the tab name of the editor.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
 <li><p>PipelineEditorTabs.get_tab_name_by_index</p></li>
 <li><p>PipelineEditorTabs.get_current_tab_name</p></li>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_load_pipeline">
 <span class="sig-name descname"><span class="pre">test_z_load_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_load_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_load_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads a pipeline (z to run at the end)</p>
+<dd><p>Loads a pipeline.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_open_sub_pipeline">
 <span class="sig-name descname"><span class="pre">test_z_open_sub_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_open_sub_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_open_sub_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Opens a sub_pipeline (z to run at the end)</p>
+<dd><p>Opens a sub_pipeline.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_z_set_current_editor">
 <span class="sig-name descname"><span class="pre">test_z_set_current_editor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_z_set_current_editor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_z_set_current_editor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the current editor (z to run at the end)</p>
-<dl class="simple">
-<dt>This tests:</dt><dd><ul class="simple">
+<dd><p>Sets the current editor.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
 <li><p>PipelineEditorTabs.set_current_editor_by_tab_name</p></li>
 <li><p>PipelineEditorTabs.set_current_editor_by_file_name</p></li>
 <li><p>PipelineEditorTabs.set_current_editor_by_editor</p></li>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineEditor.test_zz_del_pack">
 <span class="sig-name descname"><span class="pre">test_zz_del_pack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineEditor.test_zz_del_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineEditor.test_zz_del_pack" title="Permalink to this definition">¶</a></dt>
-<dd><p>We remove the brick created during the unit tests, and we take
-advantage of this to cover the part of the code used to remove the
-packages</p>
+<dd><p>Remove the bricks created during the unit tests.</p>
+<p>Take advantage of this to cover the part of the code used to remove the
+packages.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2929,65 +2976,51 @@ packages</p>
 <dd class="field-odd"><dl class="field-list simple">
 <dt class="field-odd">Method</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>test_add_plug_value_to_database_list_type: adds a list 
+<li><p>test_add_plug_value_to_database_list_type: adds a list type plug
+value to the database</p></li>
+<li><p>test_add_plug_value_to_database_non_list_type: adds a non list
 type plug value to the database</p></li>
-<li><p>test_add_plug_value_to_database_non_list_type: adds a non 
-list type plug value to the database</p></li>
-<li><dl class="simple">
-<dt>test_add_plug_value_to_database_several_inputs: exports a </dt><dd><p>non list type input plug and with several possible inputs</p>
-</dd>
-</dl>
-</li>
+<li><p>test_add_plug_value_to_database_several_inputs: exports a non list
+type input plug and with several possible inputs</p></li>
 <li><p>test_ask_iterated_pipeline_plugs: test the iteration 
 dialog for each plug of a Rename process</p></li>
 <li><p>test_build_iterated_pipeline: mocks methods and builds an 
 iterated pipeline</p></li>
-<li><p>test_check_requirements: checks the requirements for a
-given node</p></li>
-<li><p>test_cleanup_older_init: tests the cleaning of old 
-initialisations</p></li>
+<li><p>test_check_requirements: checks the requirements for a given node</p></li>
+<li><p>test_cleanup_older_init: tests the cleaning of old initialisations</p></li>
 <li><p>test_complete_pipeline_parameters: test the pipeline 
 parameters completion</p></li>
-<li><p>test_delete_processes: deletes a process and makes the 
-undo/redo</p></li>
-<li><p>test_end_progress: creates a progress object and tries to 
-end it</p></li>
+<li><p>test_delete_processes: deletes a process and makes the undo/redo</p></li>
+<li><p>test_end_progress: creates a progress object and tries to end it</p></li>
 <li><p>test_garbage_collect: collects the garbage of a pipeline</p></li>
-<li><p>test_get_capsul_engine: gets the capsul engine of the
-pipeline</p></li>
+<li><p>test_get_capsul_engine: gets the capsul engine of the pipeline</p></li>
 <li><p>test_get_missing_mandatory_parameters: tries to initialize
 the pipeline with missing mandatory parameters</p></li>
-<li><p>test_get_pipeline_or_process: gets a pipeline and a
-process from the pipeline_manager</p></li>
-<li><p>test_initialize: mocks objects and initializes the 
-workflow</p></li>
-<li><p>test_register_completion_attributes: registers completion 
-attributes</p></li>
+<li><p>test_get_pipeline_or_process: gets a pipeline and a process from
+the pipeline_manager</p></li>
+<li><p>test_initialize: mocks objects and initializes the workflow</p></li>
+<li><p>test_register_completion_attributes: mocks methods of the
+pipeline manager and registers completion attributes</p></li>
 <li><p>test_register_node_io_in_database: sets input and output 
 parameters and registers them in database</p></li>
-<li><p>test_register_completion_attributes: mocks methods of the 
-pipeline manager and registers completion attributes</p></li>
 <li><p>test_remove_progress: removes the progress of the pipeline</p></li>
 <li><p>test_run: creates a pipeline manager progress object and 
 tries to run it</p></li>
 <li><p>test_save_pipeline: saves a simple pipeline</p></li>
 <li><p>test_savePipelineAs: saves a pipeline under another name</p></li>
-<li><p>test_set_anim_frame: runs the ‘rotatingBrainVISA.gif’ 
-animation</p></li>
+<li><p>test_set_anim_frame: runs the ‘rotatingBrainVISA.gif’ animation</p></li>
 <li><p>test_show_status: shows the status of pipeline execution</p></li>
-<li><p>test_stop_execution: shows the status window of the 
-pipeline manager</p></li>
+<li><p>test_stop_execution: shows the status window of the pipeline
+manager</p></li>
 <li><p>test_undo_redo: tests the undo/redo feature</p></li>
-<li><p>test_update_auto_inheritance: updates the job’s auto 
-inheritance dict</p></li>
-<li><p>test_update_inheritance: updates the job’s inheritance 
+<li><p>test_update_auto_inheritance: updates the job’s auto inheritance
 dict</p></li>
+<li><p>test_update_inheritance: updates the job’s inheritance dict</p></li>
 <li><p>test_update_node_list: initializes a workflow and adds a 
 process to the “pipline_manager.node_list”</p></li>
 <li><p>test_z_init_pipeline: initializes the pipeline</p></li>
 <li><p>test_z_runPipeline: adds a processruns a pipeline</p></li>
-<li><p>test_zz_del_pack: deletion of the brick created 
-during UTs</p></li>
+<li><p>test_zz_del_pack: deletion of the brick created during UTs</p></li>
 </ul>
 </dd>
 </dl>
@@ -2998,7 +3031,9 @@ during UTs</p></li>
 <span class="sig-name descname"><span class="pre">test_add_plug_value_to_database_list_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_add_plug_value_to_database_list_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_list_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a project, adds a ‘Select’ process, exports a list type
 input plug and adds it to the database.</p>
-<p>Tests the PipelineManagerTab(QWidget).add_plug_value_to_database().</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab(QWidget).add_plug_value_to_database().</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -3006,45 +3041,62 @@ input plug and adds it to the database.</p>
 <span class="sig-name descname"><span class="pre">test_add_plug_value_to_database_non_list_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_add_plug_value_to_database_non_list_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_non_list_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a project, adds a ‘Rename’ process, exports a non list type
 input plug and adds it to the database.</p>
-<p>Tests the PipelineManagerTab(QWidget).add_plug_value_to_database().</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_several_inputs">
 <span class="sig-name descname"><span class="pre">test_add_plug_value_to_database_several_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_add_plug_value_to_database_several_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_several_inputs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new project folder, adds a ‘Rename’ process, exports a 
-non list type input plug and with several possible inputs.
-Independently opens a inheritance dict pop-up.</p>
-<dl class="simple">
-<dt>Tests the objects</dt><dd><ul class="simple">
+<dd><p>Creates a new project folder, adds a ‘Rename’ process, exports a
+non list type input plug and with several possible inputs.</p>
+<p>Independently opens an inheritance dict pop-up.</p>
+<p>The test cases are divided into:
+- 1) ‘parent_files’ is a dict with 2 keys and identical values
+- 2) ‘parent_files’ is a dict with 2 keys and distinct values
+- 3) ‘mock_key_2’ is in ‘ppl_manager.key’ indexed by the node name
+- 4) ‘mock_key_2’ is in ‘ppl_manager.key’ indexed by the node name +</p>
+<blockquote>
+<div><p>plug value</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Tests:</dt><dd><ul>
 <li><p>PipelineManagerTab.add_plug_value_to_database</p></li>
 <li><p>PopUpInheritanceDict.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="simple">
-<dt>Mocks the object</dt><dd><ul class="simple">
+</li>
+<li><dl class="simple">
+<dt>Mocks:</dt><dd><ul>
 <li><p>PopUpInheritanceDict.exec</p></li>
 </ul>
 </dd>
 </dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_ask_iterated_pipeline_plugs">
 <span class="sig-name descname"><span class="pre">test_ask_iterated_pipeline_plugs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_ask_iterated_pipeline_plugs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_ask_iterated_pipeline_plugs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the process ‘Rename’, export mandatory input and output plug 
+<dd><p>Adds the process ‘Rename’, export mandatory input and output plug
 and opens an iteration dialog for each plug.</p>
-<p>Tests the PipelineManagerTab.ask_iterated_pipeline_plugs.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.ask_iterated_pipeline_plugs</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_build_iterated_pipeline">
 <span class="sig-name descname"><span class="pre">test_build_iterated_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_build_iterated_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_build_iterated_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a ‘Select’ process, exports its mandatory inputs, mocks 
-some methods of the pipeline manager and builds an iterated 
-pipeline.</p>
-<p>Tests the method ‘PipelineManagerTab.build_iterated_pipeline’.</p>
+<dd><p>Adds a ‘Select’ process, exports its mandatory inputs, mocks
+some methods of the pipeline manager and builds an iterated pipeline.</p>
+<ul class="simple">
+<li><p>Tests:’PipelineManagerTab.build_iterated_pipeline’</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -3052,15 +3104,19 @@ pipeline.</p>
 <span class="sig-name descname"><span class="pre">test_check_requirements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_check_requirements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_check_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a ‘Select’ process, appends it to the nodes list and checks
 the requirements for the given node.</p>
-<p>Tests PipelineManagerTab.check_requirements.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.check_requirements</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_cleanup_older_init">
 <span class="sig-name descname"><span class="pre">test_cleanup_older_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_cleanup_older_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_cleanup_older_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mocks a brick list, mocks some methods from the pipeline manager
-and cleans older inits.</p>
-<p>Tests PipelineManagerTab.cleanup_older_init.</p>
+and cleans up old initialization results.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.cleanup_older_init</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -3068,28 +3124,34 @@ and cleans older inits.</p>
 <span class="sig-name descname"><span class="pre">test_complete_pipeline_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_complete_pipeline_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_complete_pipeline_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mocks a method of pipeline manager and completes the pipeline
 parameters.</p>
-<p>Tests PipelineManagerTab.complete_pipeline_parameters.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.complete_pipeline_parameters</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_delete_processes">
 <span class="sig-name descname"><span class="pre">test_delete_processes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_delete_processes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_delete_processes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes a process and makes the undo/redo action</p>
+<dd><p>Deletes a process and makes the undo/redo action.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_end_progress">
 <span class="sig-name descname"><span class="pre">test_end_progress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_end_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_end_progress" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a pipeline manager progress object and tries to end it.
-Tests RunProgress.end_progress.</p>
+<dd><p>Creates a pipeline manager progress object and tries to end it.</p>
+<ul class="simple">
+<li><p>Tests RunProgress.end_progress</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_garbage_collect">
 <span class="sig-name descname"><span class="pre">test_garbage_collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_garbage_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_garbage_collect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mocks several objects of the pipeline manager and collects the 
+<dd><p>Mocks several objects of the pipeline manager and collects the
 garbage of the pipeline.</p>
-<p>Tests PipelineManagerTab.test_garbage_collect.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.test_garbage_collect</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -3097,7 +3159,9 @@ garbage of the pipeline.</p>
 <span class="sig-name descname"><span class="pre">test_get_capsul_engine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_get_capsul_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_get_capsul_engine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mocks an object in the pipeline manager and gets the capsul engine
 of the pipeline.</p>
-<p>Tests PipelineManagerTab.get_capsul_engine.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.get_capsul_engine</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -3105,7 +3169,7 @@ of the pipeline.</p>
 <span class="sig-name descname"><span class="pre">test_get_missing_mandatory_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_get_missing_mandatory_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_get_missing_mandatory_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a process, exports input and output plugs and tries to initialize
 the pipeline with missing mandatory parameters.</p>
-<p>Tests PipelineManagerTab.get_missing_mandatory_parameters.</p>
+<p>-Tests: PipelineManagerTab.get_missing_mandatory_parameters</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3113,25 +3177,31 @@ the pipeline with missing mandatory parameters.</p>
 <span class="sig-name descname"><span class="pre">test_get_pipeline_or_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_get_pipeline_or_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_get_pipeline_or_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a process and gets a pipeline and a process from the pipeline
 manager.</p>
-<p>Tests PipelineManagerTab.get_pipeline_or_process.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.get_pipeline_or_process</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_initialize">
 <span class="sig-name descname"><span class="pre">test_initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds Select process, exports its plugs, mocks objects from the 
+<dd><p>Adds Select process, exports its plugs, mocks objects from the
 pipeline manager and initializes the workflow.</p>
-<p>Tests the PipelineManagerTab.initialize.</p>
+<ul class="simple">
+<li><p>Tests: the PipelineManagerTab.initialize</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_register_completion_attributes">
 <span class="sig-name descname"><span class="pre">test_register_completion_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_register_completion_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_register_completion_attributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mocks methods of the pipeline manager and registers completion 
+<dd><p>Mocks methods of the pipeline manager and registers completion
 attributes.</p>
-<p>Tests PipelineManagerTab.register_completion_attributes.
-Since a method of the ProcessCompletionEngine class is mocked, 
-this test may render the upcoming testing routine instable.</p>
+<p>Since a method of the ProcessCompletionEngine class is mocked,
+this test may render the upcoming test routine unstable.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.register_completion_attributes</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -3139,30 +3209,36 @@ this test may render the upcoming testing routine instable.</p>
 <span class="sig-name descname"><span class="pre">test_register_node_io_in_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_register_node_io_in_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_register_node_io_in_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a process, sets input and output parameters and registers them
 in database.</p>
-<p>Tests PipelineManagerTab._register_node_io_in_database.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab._register_node_io_in_database</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_remove_progress">
 <span class="sig-name descname"><span class="pre">test_remove_progress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_remove_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_remove_progress" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mocks an object of the pipeline manager and removes its progress.</p>
-<p>Tests the method PipelineManagerTab.remove_progress.</p>
+<ul class="simple">
+<li><p>Tests: PipelineManagerTab.remove_progress</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_run">
 <span class="sig-name descname"><span class="pre">test_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a process, creates a pipeline manager progress object and 
-tries to run it while mocking methods of the pipeline manager.
-Tests RunWorker.run.</p>
+<dd><p>Adds a process, creates a pipeline manager progress object and
+tries to run it while mocking methods of the pipeline manager.</p>
+<ul class="simple">
+<li><p>Tests: RunWorker.run</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.test.TestMIAPipelineManagerTab.test_savePipeline">
 <span class="sig-name descname"><span class="pre">test_savePipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/test.html#TestMIAPipelineManagerTab.test_savePipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.test.TestMIAPipelineManagerTab.test_savePipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mocks methods of the pipeline manager and tries to save the 
-pipeline over several conditions.</p>
-<p>Tests PipelineManagerTab.savePipeline.</p>
+<dd><p>Mocks methods of the pipeline manager and tries to save the pipeline
+over several conditions.</p>
+<p>-Tests: PipelineManagerTab.savePipeline</p>
 </dd></dl>
 
 <dl class="py method">
