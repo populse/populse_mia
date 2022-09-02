@@ -39,6 +39,10 @@ install:
   - pip install psutil
   - pip install qtconsole
   - pip install jupyter_core
+  - cmd: "pip install \"nipype==6.3.2\""
+
+
+  - sh: pip3 install 'nipype==6.3.2'
 
   - cmd: pip install pypiwin32
 
