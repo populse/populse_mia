@@ -1,9 +1,9 @@
 .. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/documentation/data_browser.rst: WARNING: document isn't included in any toctree
-   
+
 :orphan:
-   
+
 .. toctree::
-  
+
 +-----------------------+---------------------------------------+---------------------------------------------------+--------------------------------------------------+
 |`Home <../index.html>`_|`Documentation <./documentation.html>`_|`Installation <../installation/installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+---------------------------------------+---------------------------------------------------+--------------------------------------------------+
@@ -18,7 +18,7 @@ Tab presentation
 ----------------
 
 The Data Browser tab is composed of three main elements:
-  * A toolbar on the top which contains tools to interact with the database 
+  * A toolbar on the top which contains tools to interact with the database
   * A table which displays the content of the database
   * An image viewer which displays the files contained in the database
 
@@ -76,9 +76,9 @@ Open a filter contained in the "filters" folder of the current project.
 
 Visualized tags
 ^^^^^^^^^^^^^^^
-Update the tags that are visualized in the table, which can also be changed in the Project properties. 
+Update the tags that are visualized in the table, which can also be changed in the Project properties.
 
-The widget is composed of two lists. The one on the left contains the tags of the database that are not displayed in the table. To make one tag visible, select it in the list and press on the middle cross "-->" to pass it to the list on the right, that contains the visualized tags. Save your changes by pressing "OK". 
+The widget is composed of two lists. The one on the left contains the tags of the database that are not displayed in the table. To make one tag visible, select it in the list and press on the middle cross "-->" to pass it to the list on the right, that contains the visualized tags. Save your changes by pressing "OK".
 
 .. image:: ../images/visualized_tags.png
    :align: center
@@ -86,7 +86,7 @@ The widget is composed of two lists. The one on the left contains the tags of th
 
 Count table
 ^^^^^^^^^^^
-Count and verify the scans in the current project. 
+Count and verify the scans in the current project.
 
 It is composed of push buttons on its top, each one corresponding to a tag selected by the user.
 When, the "Count scans" button is clicked, a table is created with all the combinations possible
@@ -168,7 +168,7 @@ Create a complex filter to extract the information in the table.
 The advanced search creates a complex query to the database and is a combination of several "query lines" which are linked with AND or OR and all composed of:
   * A negation or not
   * A tag name or all visible tags
-  * A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN) 
+  * A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN)
   * A value
 
 Advanced search example:
@@ -182,8 +182,8 @@ The table
 
 The table displays the documents contained in the database and their associated tags. Some information about it:
 
-  * Any cell can be selected and modified (except the FileName column). 
-  * To select several cells, drag onto them or use Ctrl or Shift. 
+  * Any cell can be selected and modified (except the FileName column).
+  * To select several cells, drag onto them or use Ctrl or Shift.
   * A red cell means that the tag is a cloned or a user tag.
   * A blue cell means that the original value of the tag has been modified.
   * To sort the table depending a column, click one time on its header.
@@ -298,4 +298,3 @@ The visualized tag has been updated in the image viewer:
 .. image:: ../images/viewer_tag_selection_result.png
    :align: center
    :name: Viewer tag selection result example
-

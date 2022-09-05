@@ -56,4 +56,3 @@ populse\_mia.user\_interface.pipeline\_manager.process\_mia module
    :members:
    :undoc-members:
    :show-inheritance:
-

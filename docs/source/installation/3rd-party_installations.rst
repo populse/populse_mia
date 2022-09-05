@@ -12,10 +12,10 @@
 Populse_mia's 3rd party installations
 =====================================
 
- * This installations notes are based on Ubuntu 20.04 which use Python3 as default (when you type 'python' in a command line). 
- * '/pathto/softs' is the destination folder where you want to have the softwares installed, ie: /opt, /home/APPS or what you want. 
- * A Python3 virtual environment is used. How to do that ? See below at Populse installation in python3 virtual environment. 
- * Lines with '#' are comments. 
+ * This installations notes are based on Ubuntu 20.04 which use Python3 as default (when you type 'python' in a command line).
+ * '/pathto/softs' is the destination folder where you want to have the softwares installed, ie: /opt, /home/APPS or what you want.
+ * A Python3 virtual environment is used. How to do that ? See below at Populse installation in python3 virtual environment.
+ * Lines with '#' are comments.
 
 Installation of FSL 6
 ---------------------
@@ -42,7 +42,7 @@ Installation of FSL 6
  * log out and log in for changes take effect
 
  * Test it: ::
- 
+
      fsleyes
 
 |
@@ -51,10 +51,10 @@ Installation of MRtrix 3
 ------------------------
 
  * From `MRtrix documentation <http://userdocs.mrtrix.org/en/3.0.1/installation/build_from_source.html>`_: ::
-	
+
      sudo apt-get install git g++ python-is-python3 libeigen3-dev zlib1g-dev libqt5opengl5-dev libqt5svg5-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev libpng-dev
 
-     cd ~/Downloads   
+     cd ~/Downloads
      git clone https://github.com/MRtrix3/mrtrix3.git
      cd mrtrix3
      ./configure
@@ -62,8 +62,8 @@ Installation of MRtrix 3
      cd ..
      mv mrtrix3 /pathto/softs/                 # don't forget to put the / at the end of the path
      cd /pathto/softs/mrtrix3
-     ./set_path                   
-     # to have new path activated to launch mrtrix commands 
+     ./set_path
+     # to have new path activated to launch mrtrix commands
      bash
 
  * Test if it works: ::
@@ -82,15 +82,15 @@ Installation of SPM 12 Standalone and Matlab Runtime
 -----------------------------------------------------
 
  * `Download <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/>`_ the desired version of standalone SPM 12.
-   
+
    Unzip it. For example: ::
-	
+
 	cd ~/Downloads/
 	unzip spm12_r7771_Linux_R2019b.zip
 
 
  * Download and install the corresponding R20xxa/b Matlab Runtime installation for linux `here <https://uk.mathworks.com/products/compiler/matlab-runtime.html>`_.
-   
+
    Unzip it in a matlabRT/ folder: ::
 
 	cd ~/Downloads
@@ -100,7 +100,7 @@ Installation of SPM 12 Standalone and Matlab Runtime
 
    * After the installation, you get the following message (ex. for R2019b (9.7) Matlab Runtime):
 
-     "On the target computer, append the following to your LD_LIBRARY_PATH environment variable: 
+     "On the target computer, append the following to your LD_LIBRARY_PATH environment variable:
      /usr/local/MATLAB/MATLAB_Runtime/v97/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/extern/bin/glnxa64
      If MATLAB Runtime is to be used with MATLAB Production Server, you do not need to modify the above environment variable."
 
@@ -121,13 +121,13 @@ Installation of SPM 12 Standalone and Matlab Runtime
 
        spm12/./run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v97
 
-| 
+|
 
 Installation of Cuda 11.1
 -------------------------
 
  * Install NVidia driver 455 metapackage from Ubuntu 'Software Update Manager' icon -> 'Settings & Livepatch ...' button -> 'Additional Drivers' tab.
-	
+
  * From	`NVidia documentation <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html>`_: ::
 
      get https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
@@ -137,7 +137,7 @@ Installation of Cuda 11.1
      sudo apt update
      sudo apt install cuda
      sudo nvidia-modprobe
-	
+
  * To compile samples: ::
 
      sudo apt install freeglut3-dev
@@ -147,19 +147,19 @@ Installation of Cuda 11.1
      make
      # try it
      ../../bin/x86_64/linux/release/./deviceQuery
-	
+
 |
 
 Installation of Populse in python3 virtual environment
 ------------------------------------------------------
 
- * From `documentation populse_mia installation for developper <https://populse.github.io/populse_mia/html/installation/developer_installation.html>`_: :: 
+ * From `documentation populse_mia installation for developper <https://populse.github.io/populse_mia/html/installation/developer_installation.html>`_: ::
 
      # require for mri_conv
      sudo apt install openjdk-14-jre-headless
      # to use a python3 virtual environment
      sudo apt install python3-venv
- 
+
      mkdir ~/DEV
      mkdir ~/DEV/populse_dev
      cd ~/DEV/populse_dev
@@ -190,7 +190,7 @@ Installation of Populse in python3 virtual environment
 
 |
 
-Installation of PyTorch 
+Installation of PyTorch
 -----------------------
 
  * Simply: ::
@@ -235,7 +235,7 @@ Installation of TractSeg
 Installation of MRIcroGL12 (dcm2nniix, 2d-3d viewer, manual ROI)
 ----------------------------------------------------------------
 
- * References: 
+ * References:
 	`Original website <https://www.mccauslandcenter.sc.edu/mricrogl/source>`_ &
 	`Github website <https://github.com/rordenlab/MRIcroGL12>`_
 
@@ -266,16 +266,15 @@ Installation of ITKsnap 3 (auto/semi-automatic ROI)
     nano ~/.profile
 	PATH=${PATH}:/pathto/softs/itksnap-3.8.0/bin
 
- * To solve the libpng12.so.0 requirement: 
+ * To solve the libpng12.so.0 requirement:
     * See `help <https://www.linuxuprising.com/2018/05/fix-libpng12-0-missing-in-ubuntu-1804.html>`_
     * `Download the library package <http://ppa.launchpad.net/linuxuprising/libpng12/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1.1+1~ppa0~focal_amd64.deb>`_ installer for Focal Ubuntu 20.04, then : ::
 
         cd ~/Downloads
         sudo dpkg -i libpng12-0_1.2.54-1ubuntu1.1+1~ppa0~focal_amd64.deb
- 
+
  * Finaly: ::
- 
+
     sudo apt install libcanberra-gtk-module
     # launch it
     itksnap
-
