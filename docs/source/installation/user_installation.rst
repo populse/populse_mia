@@ -17,16 +17,3 @@ Since version 2.0.0, Mia can be installed directly on the host or using virtuali
 Thus, by installing a container or a virtual machine, the user has access to all the stuffs already made available by the BrainVisa developers, such as Anatomist.
 
 In a nutshell, it is possible `to install a light version of Mia on the host <./host_user_installation.html>`_, without DataViewer, or `to use virtualisation to install Mia <./virtualisation_user_installation.html>`_, with the DataViewer access (with an additional cost for hard disk space).
-
-
-
-
-
-
-
-
-
-
-
-
-

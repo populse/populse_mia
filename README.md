@@ -32,15 +32,15 @@
         python3 -m populse_mia
 
   * After an [installation in developer mode](https://populse.github.io/populse_mia/html/installation/developer_installation.html), interprets the main.py file from the source code directory:
-  
-        cd [populse_install_dir]/populse_mia/python/populse_mia  
-        python3 main.py  
+
+        cd [populse_install_dir]/populse_mia/python/populse_mia
+        python3 main.py
 
   * Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:
 
         python3 -m pip install --force-reinstall pyqt5==5.14.0
         python3 -m pip install --force-reinstall PyQt5-sip==5.0.1
-	
+
 # Contributing to the project
 
 If you'd like to contribute to the project please read our [developer documentation page](https://populse.github.io/populse_mia/html/documentation/developer_documentation.html). Please also read through [our code of conduct](https://github.com/populse/populse_mia/blob/master/CODE_OF_CONDUCT.md).

@@ -121,11 +121,10 @@ Appearance
    :align: center
    :name: Preferences appearance
 
-| 
+|
 
   * Background color
       * Changes the Populse_MIA's background color.
 
   * Text color
       * Changes the Populse_MIA's text color.
-

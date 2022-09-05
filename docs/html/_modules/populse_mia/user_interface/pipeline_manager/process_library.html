@@ -13,22 +13,22 @@
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
           <span>populse_mia 2.2.1-dev+273536e83 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
-      
+
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
         </p>
 
       </div>
       <div class="content" role="main">
-        
-        
+
+
   <h1>Source code for populse_mia.user_interface.pipeline_manager.process_library</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*- #</span>
 <span class="sd">&quot;&quot;&quot;Module that contains class and methods to process the different libraries of</span>
@@ -129,18 +129,18 @@
 
 <div class="viewcode-block" id="DictionaryTreeModel.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the DictionaryTreeModel class.&quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">(</span><span class="n">DictionaryTreeModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span> <span class="o">=</span> <span class="n">root</span></div>
 
 <div class="viewcode-block" id="DictionaryTreeModel.columnCount"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.columnCount">[docs]</a>    <span class="k">def</span> <span class="nf">columnCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Number of columns is always 1.&quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="DictionaryTreeModel.data"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the data requested by the view.&quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -154,7 +154,7 @@
 <span class="sd">        dragged.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">node</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">childCount</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEnabled</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsSelectable</span>
@@ -164,7 +164,7 @@
 
 <div class="viewcode-block" id="DictionaryTreeModel.getNode"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.getNode">[docs]</a>    <span class="k">def</span> <span class="nf">getNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a Node() from given index.&quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
@@ -174,7 +174,7 @@
 
 <div class="viewcode-block" id="DictionaryTreeModel.headerData"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.headerData">[docs]</a>    <span class="k">def</span> <span class="nf">headerData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the name of the requested column.&quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">section</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="s2">&quot;Packages&quot;</span>
@@ -183,7 +183,7 @@
 
 <div class="viewcode-block" id="DictionaryTreeModel.index"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return an index from given row, column and parent.&quot;&quot;&quot;</span>
-        
+
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="n">childItem</span> <span class="o">=</span> <span class="n">parentNode</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
@@ -194,7 +194,7 @@
 
 <div class="viewcode-block" id="DictionaryTreeModel.insertRows"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.insertRows">[docs]</a>    <span class="k">def</span> <span class="nf">insertRows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">QModelIndex</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;Insert rows from starting position and number given by rows.&quot;&quot;&quot;</span>
-        
+
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">beginInsertRows</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">position</span> <span class="o">+</span> <span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -213,7 +213,7 @@
 <span class="sd">        :return: QMimeData object</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">mimedata</span> <span class="o">=</span> <span class="n">QMimeData</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">idx</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
@@ -224,7 +224,7 @@
 
 <div class="viewcode-block" id="DictionaryTreeModel.mimeTypes"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.mimeTypes">[docs]</a>    <span class="k">def</span> <span class="nf">mimeTypes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a constant.&quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;component/name&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="DictionaryTreeModel.parent"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.parent">[docs]</a>    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
@@ -233,7 +233,7 @@
 <span class="sd">        :param index: index</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">parentNode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span><span class="p">:</span>
@@ -249,7 +249,7 @@
 <span class="sd">        :param parent: the parent node</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">beginRemoveRows</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">position</span> <span class="o">+</span> <span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -265,7 +265,7 @@
 <span class="sd">        :param parent: the parent of the node</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">parent</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
             <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span>
         <span class="k">else</span><span class="p">:</span>
@@ -282,7 +282,7 @@
 <span class="sd">        :return: boolean</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">:</span>
                 <span class="n">node</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span>
@@ -296,7 +296,7 @@
 <span class="sd">        :return: dictionary</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div></div>
 
 
@@ -328,7 +328,7 @@
 <span class="sd">        :param folder: boolean, True if folder, False if zip</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">(</span><span class="n">InstallProcesses</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">main_window</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Install processes&#39;</span><span class="p">)</span>
@@ -373,7 +373,7 @@
 <span class="sd">                       from zip file</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;Select a directory&#39;</span><span class="p">,</span>
@@ -493,7 +493,7 @@
 <span class="sd">            :param new_pattern: new pattern</span>
 
 <span class="sd">            &quot;&quot;&quot;</span>
-            
+
             <span class="k">for</span> <span class="n">dname</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 
                 <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
@@ -794,7 +794,7 @@
 
                 <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">messg</span><span class="p">)</span>
-    
+
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Installation completed&quot;</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;The &quot;</span><span class="si">{0}</span><span class="s1">&quot; package has been correctly &#39;</span>
@@ -812,7 +812,7 @@
 
                 <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">messg</span><span class="p">)</span>
-                    
+
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Installation completed with error(s)&quot;</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;The &quot;</span><span class="si">{0}</span><span class="s1">&quot; package has not been correctly &#39;</span>
@@ -853,7 +853,7 @@
 
 <div class="viewcode-block" id="Node.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.Node.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of the Node class.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_children</span> <span class="o">=</span> <span class="p">[]</span>
@@ -867,7 +867,7 @@
 <span class="sd">        :return: the logs</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_recurse_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
@@ -876,7 +876,7 @@
 <span class="sd">        :param d: dictionary</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
@@ -890,7 +890,7 @@
 <span class="sd">        :param child: child to add</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Node.attrs"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.Node.attrs">[docs]</a>    <span class="k">def</span> <span class="nf">attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -899,7 +899,7 @@
 <span class="sd">        :return:</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__mro__</span>
         <span class="n">keyvalued</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
@@ -915,7 +915,7 @@
 <span class="sd">        :return: child</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">[</span><span class="n">row</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Node.childCount"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.Node.childCount">[docs]</a>    <span class="k">def</span> <span class="nf">childCount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -932,7 +932,7 @@
 <span class="sd">        :return: string</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span>
             <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
@@ -952,7 +952,7 @@
 <span class="sd">        :return: boolean, True if the insertion was successful</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">position</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
 
@@ -967,7 +967,7 @@
 <span class="sd">        :return: string</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">tabLevel</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -989,7 +989,7 @@
 <span class="sd">        :return: name</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">def</span> <span class="nf">fget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
@@ -1006,7 +1006,7 @@
 <span class="sd">        :return: parent</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span></div>
 
 <div class="viewcode-block" id="Node.removeChild"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.Node.removeChild">[docs]</a>    <span class="k">def</span> <span class="nf">removeChild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">child</span><span class="p">):</span>
@@ -1017,7 +1017,7 @@
 <span class="sd">        :return: boolean, True if the child was removed</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">position</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
 
@@ -1031,7 +1031,7 @@
 <span class="sd">        :return: index</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -1042,7 +1042,7 @@
 <span class="sd">        :return: dictionary of children</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
             <span class="n">child</span><span class="o">.</span><span class="n">_recurse_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">d</span></div>
@@ -1053,7 +1053,7 @@
 <span class="sd">        :return: list</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
@@ -1068,7 +1068,7 @@
 <span class="sd">        :return: value</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">def</span> <span class="nf">fget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
 
@@ -1086,7 +1086,7 @@
 <span class="sd">        :param value: new value</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1098,7 +1098,7 @@
 <span class="sd">        :return: None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="kc">None</span></div></div>
 
 
@@ -1141,7 +1141,7 @@
 <span class="sd">        :param value: value of the item in the tree</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">item</span><span class="o">.</span><span class="n">setExpanded</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
@@ -1192,7 +1192,7 @@
 <span class="sd">        :param parent: parent item</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">check_state</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">checkState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">childCount</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1208,7 +1208,7 @@
 <span class="sd">        :param child: child item</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">check_state</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">checkState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">childCount</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1244,7 +1244,7 @@
 <span class="sd">                      val == 2 -&gt; checkbox is checked, and if</span>
 <span class="sd">                      val == 0 -&gt; checkbox is not checked)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;process_enabled&#39;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1279,7 +1279,7 @@
 <span class="sd">        :param column: column from the check (should always be 0)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="c1"># Checked state is stored on column 0</span>
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
@@ -1885,7 +1885,7 @@
                     <span class="k">if</span> <span class="n">del_path</span><span class="p">:</span>
                         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> was &#39;</span>
-                                <span class="s1">&#39;deleted (</span><span class="si">{1}</span><span class="s1"> library) ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> 
+                                <span class="s1">&#39;deleted (</span><span class="si">{1}</span><span class="s1"> library) ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span>
                                                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Deleting </span><span class="si">{0}</span><span class="s1"> &#39;</span>
                               <span class="s1">&#39;...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span>
@@ -2117,7 +2117,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_list</span><span class="o">.</span><span class="n">takeItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">_2del</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">_2del</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">:</span>
-                    
+
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
 
@@ -2142,7 +2142,7 @@
 <span class="sd">        :param folder: boolean, True if installing from a folder</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_install_processes</span> <span class="o">=</span> <span class="n">InstallProcesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="n">folder</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_install_processes</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="c1"># self.pop_up_install_processes.process_installed.connect(</span>
@@ -2157,7 +2157,7 @@
 <span class="sd">        :return: the config as a dictionary</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s1">&#39;properties&#39;</span><span class="p">,</span>
@@ -2175,7 +2175,7 @@
 
 <div class="viewcode-block" id="PackageLibraryDialog.load_packages"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.load_packages">[docs]</a>    <span class="k">def</span> <span class="nf">load_packages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the tree of the process library.&quot;&quot;&quot;</span>
-        
+
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">packages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -2352,7 +2352,7 @@
 <span class="sd">        :param add: boolean to know which list to update</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itemlist</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">add</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">in_config</span> <span class="o">=</span> <span class="kc">True</span>
@@ -2373,7 +2373,7 @@
 
 <div class="viewcode-block" id="PackageLibraryDialog.save"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save the tree to the process_config.yml file.&quot;&quot;&quot;</span>
-        
+
         <span class="c1"># Updating the packages and the paths according to the</span>
         <span class="c1"># package library tree</span>
 
@@ -2401,10 +2401,10 @@
             <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_config</span><span class="p">,</span> <span class="n">configfile</span><span class="p">,</span>
                       <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">signal_save</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
-    
+
         <span class="k">if</span> <span class="n">close</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-            
+
 <div class="viewcode-block" id="PackageLibraryDialog.save_config"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.save_config">[docs]</a>    <span class="k">def</span> <span class="nf">save_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save the current config to process_config.yml.&quot;&quot;&quot;</span>
 
@@ -2422,7 +2422,7 @@
 
 <div class="viewcode-block" id="PackageLibraryDialog.update_config"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.update_config">[docs]</a>    <span class="k">def</span> <span class="nf">update_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the process_config and package_library attributes.&quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_packages</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">package_library</span><span class="o">.</span><span class="n">package_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packages</span>
@@ -2443,7 +2443,7 @@
 <span class="sd">         :param process: selected process</span>
 
 <span class="sd">         &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">(</span><span class="n">ProcessHelp</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
@@ -2471,7 +2471,7 @@
 <span class="sd">        :param d: dictionary: dictionary corresponding to the tree</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">(</span><span class="n">ProcessLibrary</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_dictionary</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pkg_library</span> <span class="o">=</span> <span class="n">pkg_lib</span></div>
@@ -2506,7 +2506,7 @@
 <span class="sd">                  ProcessLibraryWidget class</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="n">node_structure_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">DictionaryTreeModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span><span class="p">)</span>
@@ -2517,7 +2517,7 @@
 
 <div class="viewcode-block" id="ProcessLibrary.mousePressEvent"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Event when the mouse is pressed.&quot;&quot;&quot;</span>
-        
+
         <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexAt</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
         <span class="c1"># print(&#39;idx&#39;,dir(idx.model()))</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
@@ -2574,7 +2574,7 @@
 <span class="sd">        :return: the dictionary of the tree</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div></div>
 
 
@@ -2742,7 +2742,7 @@
 <span class="sd">    :return: the corresponding module</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">util</span>
 
     <span class="n">spec</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
@@ -2867,7 +2867,7 @@
 
       </div>
       <div class="bottomnav" role="navigation" aria-label="bottom navigation">
-      
+
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
         </p>

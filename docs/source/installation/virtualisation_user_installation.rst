@@ -44,19 +44,19 @@ Make sure to type the command ``bv bash`` if not.
 * Then download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
 
 * Unzip it and launch the following command in the extracted folder ("mia_install-main"): ::
-        
+
 	#update pip before installing mia
 	python3 -m pip install --upgrade pip
         python3 install_mia.py
 
-* If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia's installation. 
+* If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia's installation.
 
 .. image:: ../images/mia_install_1.png
    :align: center
    :name: PyQt5 and pyyaml
 
 |
-	  
+
 * An error can sometimes occur, depending on your OS, after the installation of both packages, the Python environment not being correctly updated. If this error occurs launch the same command again to install populse_mia: ::
 
         python3 install_mia.py
@@ -116,7 +116,7 @@ You can install SPM and Matlab via :ref:`Third party software installations` if 
       * e.g. for linux - macOS: /usr/local/SPM/spm12_standalone (folder containing run_spm12.sh)
 
       * e.g. for Windows 10: C:/Program Files/Matlab/spm12_r7771/spm12 (with Windows 10, it is not necessary to declare the above Matlab standalone path in this case!)
-      
+
 
 .. image:: ../images/mia_install_2.png
    :align: center
@@ -145,18 +145,3 @@ You can install SPM and Matlab via :ref:`Third party software installations` if 
 |
 
 * See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia#usage>`_ to launch populse_mia.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

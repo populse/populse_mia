@@ -13,22 +13,22 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
           <span>populse_mia 2.2.1-dev+273536e83 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
-      
+
         <p>
         <a class="uplink" href="../../index.html">Contents</a>
         </p>
 
       </div>
       <div class="content" role="main">
-        
-        
+
+
   <h1>Source code for populse_mia.test</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;This module is dedicated to populse_mia unit tests.</span>
 
@@ -404,7 +404,7 @@
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">):</span>
             <span class="n">w</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-    
+
 <div class="viewcode-block" id="TestMIACase.execute_QMessageBox_clickClose"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIACase.execute_QMessageBox_clickClose">[docs]</a>    <span class="k">def</span> <span class="nf">execute_QMessageBox_clickClose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Press the Close button of a QMessageBox instance.</span>
 
@@ -469,9 +469,9 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
         <span class="n">mia_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">()</span>
 
-        <span class="n">test_proj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_path</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">,</span> <span class="s1">&#39;mia&#39;</span><span class="p">,</span> 
+        <span class="n">test_proj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_path</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">,</span> <span class="s1">&#39;mia&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;light_test_project&#39;</span> <span class="k">if</span> <span class="n">light</span> <span class="k">else</span> <span class="s1">&#39;project_8&#39;</span><span class="p">)</span>
-        
+
         <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">test_proj</span><span class="p">,</span> <span class="n">new_test_proj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_test_proj</span></div>
 
@@ -1537,7 +1537,7 @@
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="n">PopUpSelectTagCountTable</span><span class="o">.</span><span class="n">exec_</span> <span class="o">=</span> <span class="n">mock_select_tags</span>
-        
+
         <span class="n">table_data</span><span class="o">.</span><span class="n">pop_up</span><span class="o">.</span><span class="n">select_tag</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Adds a tag in place of &#39;Tag n1&#39;</span>
@@ -1739,7 +1739,7 @@
                 <span class="n">scans_displayed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scan_name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">scans_displayed</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span></div>
-   
+
 <div class="viewcode-block" id="TestMIADataBrowser.test_project_properties"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIADataBrowser.test_project_properties">[docs]</a>    <span class="k">def</span> <span class="nf">test_project_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tests saved projects addition and removal.&quot;&quot;&quot;</span>
 
@@ -1991,7 +1991,7 @@
         <span class="c1">#project_8_path = self.get_new_test_project()</span>
         <span class="c1">#self.main_window.switch_project(project_8_path, &quot;project_8&quot;)</span>
 <span class="c1">#</span>
-        
+
 
         <span class="c1">#scans_displayed = []</span>
 <span class="c1">#</span>
@@ -2749,7 +2749,7 @@
         <span class="n">hist_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>  <span class="c1"># Opens the history window</span>
 
         <span class="c1"># Asserts that a history pop-up was created</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="p">,</span>
                                 <span class="s1">&#39;brick_history_popup&#39;</span><span class="p">))</span>
 
         <span class="c1"># Clicks on the input button displayed on the history pop-up.</span>
@@ -2761,7 +2761,7 @@
 
         <span class="c1"># Asserts that &#39;INPUT_SCAN&#39; history pop-up was created</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
                          <span class="n">INPUT_SCAN</span><span class="p">)</span>
 
         <span class="c1"># Opens the history pop-up for the scan related to &#39;quad_smooth_1&#39;</span>
@@ -2847,9 +2847,9 @@
 
         <span class="c1"># Adds a tag, of the types float, datetime, date and time, to </span>
         <span class="c1"># the project session</span>
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mock_tag_float&#39;</span><span class="p">,</span> <span class="s1">&#39;mock_tag_datetime&#39;</span><span class="p">,</span> <span class="s1">&#39;mock_tag_date&#39;</span><span class="p">,</span> 
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mock_tag_float&#39;</span><span class="p">,</span> <span class="s1">&#39;mock_tag_datetime&#39;</span><span class="p">,</span> <span class="s1">&#39;mock_tag_date&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;mock_tag_time&#39;</span><span class="p">]</span>
-        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span> 
+        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span>
                  <span class="n">FIELD_TYPE_TIME</span><span class="p">]</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag_type</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">types</span><span class="p">):</span>
             <span class="n">table_data</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span>
@@ -2898,7 +2898,7 @@
         <span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Creates a tag of type float and selects it</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">add_tag_infos</span><span class="p">(</span><span class="s1">&#39;mock_tag&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">add_tag_infos</span><span class="p">(</span><span class="s1">&#39;mock_tag&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
                                                     <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -2910,7 +2910,7 @@
         <span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Creates another tag of type float and selects it</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">add_tag_infos</span><span class="p">(</span><span class="s1">&#39;mock_tag_1&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">add_tag_infos</span><span class="p">(</span><span class="s1">&#39;mock_tag_1&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
                                                     <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -3311,7 +3311,7 @@
 
 <span class="sd">        Tests: DefaultValueListCreation.update_default_value</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="c1"># Set shortcuts for objects that are often used</span>
         <span class="n">data_browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span>
 
@@ -3364,12 +3364,12 @@
         <span class="n">text_edt</span><span class="o">.</span><span class="n">list_creation</span><span class="o">.</span><span class="n">resize_table</span><span class="p">()</span>
 
         <span class="c1"># The default value can be updated with several types of data</span>
-        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span> 
+        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
                  <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
-                 <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span> 
+                 <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
                  <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">]</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;[1]&#39;</span><span class="p">,</span> <span class="s1">&#39;[1.1]&#39;</span><span class="p">,</span> <span class="s1">&#39;[True]&#39;</span><span class="p">,</span> <span class="s1">&#39;[False]&#39;</span><span class="p">,</span> <span class="s1">&#39;[&quot;str&quot;]&#39;</span><span class="p">,</span> 
-                  <span class="s1">&#39;[&quot;11/11/1111&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;[&quot;11/11/1111 11:11:11.11&quot;]&#39;</span><span class="p">,</span> 
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;[1]&#39;</span><span class="p">,</span> <span class="s1">&#39;[1.1]&#39;</span><span class="p">,</span> <span class="s1">&#39;[True]&#39;</span><span class="p">,</span> <span class="s1">&#39;[False]&#39;</span><span class="p">,</span> <span class="s1">&#39;[&quot;str&quot;]&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;[&quot;11/11/1111&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;[&quot;11/11/1111 11:11:11.11&quot;]&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;[&quot;11:11:11.11&quot;]&#39;</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -3664,7 +3664,7 @@
         <span class="c1"># was deleted</span>
 
         <span class="nb">print</span><span class="p">()</span></div>
-    
+
 <div class="viewcode-block" id="TestMIAMainWindow.test_create_project_pop_up"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAMainWindow.test_create_project_pop_up">[docs]</a>    <span class="k">def</span> <span class="nf">test_create_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tries to create a new project with an already open project, with and</span>
 <span class="sd">        without setting the projects folder path.</span>
@@ -3782,7 +3782,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">,</span> <span class="s1">&#39;test_project&#39;</span><span class="p">)</span>
 
         <span class="c1"># Creates a mocked java executable</span>
-        <span class="n">mock_mriconv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">,</span> <span class="s1">&#39;mock_mriconv&#39;</span><span class="p">,</span> 
+        <span class="n">mock_mriconv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">,</span> <span class="s1">&#39;mock_mriconv&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;mockapp.jar&#39;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">mock_mriconv_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_mock_jar</span><span class="p">(</span><span class="n">mock_mriconv_path</span><span class="p">)</span>
@@ -3797,7 +3797,7 @@
         <span class="n">DOCUMENT_1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span>
                                               <span class="n">get_documents_names</span><span class="p">)(</span><span class="s2">&quot;current&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">DOCUMENT_1_NAME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">DOCUMENT_1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        
+
         <span class="c1"># Gets the &#39;raw_data&#39; folder path, where the scan will be import</span>
         <span class="n">RAW_DATA_FLDR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;raw_data&#39;</span><span class="p">)</span>
 
@@ -3829,7 +3829,7 @@
         <span class="n">JSON_EXPORT_DUMP</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;StatusExport&#39;</span><span class="p">:</span> <span class="s1">&#39;Export ok&#39;</span><span class="p">,</span>
                              <span class="s1">&#39;NameFile&#39;</span><span class="p">:</span> <span class="n">DOCUMENT_1_NAME</span>
                              <span class="p">}]</span>
-        <span class="n">JSON_EXPORT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;raw_data&#39;</span><span class="p">,</span> 
+        <span class="n">JSON_EXPORT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_proj_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;raw_data&#39;</span><span class="p">,</span>
                                    <span class="s1">&#39;logExportMock.json&#39;</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">JSON_EXPORT</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -3847,12 +3847,12 @@
         <span class="c1"># of the &#39;MRIManager.jar&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">import_data</span><span class="p">()</span>
 
-        <span class="n">new_scan</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">DOCUMENT_1</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;derived_data&#39;</span><span class="p">,</span> 
+        <span class="n">new_scan</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">DOCUMENT_1</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;derived_data&#39;</span><span class="p">,</span>
                                                        <span class="s1">&#39;raw_data&#39;</span><span class="p">))</span>
         <span class="n">table_data_scans</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span>
                             <span class="n">scans_to_visualize</span><span class="p">)</span>
         <span class="n">table_data_scans</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">table_data_scans</span><span class="p">]</span>
-        
+
         <span class="c1"># Asserts that the first scan was added to the &#39;raw_data&#39; folder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">new_scan</span><span class="p">,</span> <span class="n">table_data_scans</span><span class="p">)</span></div>
 
@@ -3919,7 +3919,7 @@
                                                      <span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">proj_test_2_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_project_2&#39;</span><span class="p">,</span>
                                                      <span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="c1"># Switches to the first one</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">proj_test_1_path</span><span class="p">,</span> <span class="s1">&#39;test_project_1&#39;</span><span class="p">)</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
@@ -3934,7 +3934,7 @@
 
         <span class="c1"># Asserts that test project 1 is shown in recent projects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isVisible</span><span class="p">())</span>
-        
+
         <span class="c1"># Clicks on it</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">saved_projects_actions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
@@ -4718,7 +4718,7 @@
         <span class="c1"># Activate the V1 controller GUI and the user mode</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setControlV1</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="c1"># Enables Matlab MCR</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -4869,7 +4869,7 @@
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="s1">&#39;/mock_path&#39;</span><span class="p">,</span> <span class="s1">&#39;mock_tool&#39;</span><span class="p">,</span>
                                                <span class="n">extra_mess</span><span class="o">=</span><span class="s1">&#39;mock_msg&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">icon</span><span class="p">(),</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">icon</span><span class="p">(),</span>
                          <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -4930,12 +4930,12 @@
         <span class="c1">#PopUpPreferences.show = lambda x: None</span>
 
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
-        
+
         <span class="c1"># Tries to edit the config file, mocks failure in &#39;QDialog.exec&#39;</span>
         <span class="n">QDialog</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">edit_config_file</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="p">,</span> <span class="s1">&#39;editConf&#39;</span><span class="p">))</span>
-        
+
         <span class="c1"># Mocks the execution to change &#39;user_mode&#39; from &#39;false&#39; to &#39;true&#39;</span>
         <span class="k">def</span> <span class="nf">mock_exec</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="n">config_file</span> <span class="o">=</span> <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">toPlainText</span><span class="p">()</span>
@@ -4952,7 +4952,7 @@
 
         <span class="c1"># Tries to find an empty string of characters in the config file</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">findChar</span><span class="p">()</span>
-        
+
         <span class="c1"># Highlights the string &#39;user_mode&#39; in the config file</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">findChar_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;user_mode&#39;</span><span class="p">)</span>
         <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">findChar</span><span class="p">()</span>
@@ -5021,7 +5021,7 @@
 
             <span class="k">if</span> <span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;Linux&#39;</span><span class="p">:</span>
                 <span class="n">exc_content</span> <span class="o">=</span> <span class="s1">&#39;#!/bin/bash</span><span class="se">\n</span><span class="s1">echo &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">failing</span><span class="p">:</span> 
+                <span class="k">if</span> <span class="n">failing</span><span class="p">:</span>
                     <span class="n">exc_content</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">echo &quot;</span><span class="si">{}</span><span class="s1">&quot; 1&gt;&amp;2</span><span class="se">\n</span><span class="s1">exit 1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
                 <span class="n">exc_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exc_dir</span><span class="p">,</span> <span class="n">exc_name</span><span class="p">)</span>
                 <span class="n">exc</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">exc_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
@@ -5031,7 +5031,7 @@
 
             <span class="k">elif</span> <span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;Darwin&#39;</span><span class="p">:</span>
                 <span class="n">exc_content</span> <span class="o">=</span> <span class="s1">&#39;#!/usr/bin/env bash</span><span class="se">\n</span><span class="s1">echo &quot;mock executable&quot;&#39;</span>
-                <span class="k">if</span> <span class="n">failing</span><span class="p">:</span> 
+                <span class="k">if</span> <span class="n">failing</span><span class="p">:</span>
                     <span class="n">exc_content</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">echo &quot;</span><span class="si">{}</span><span class="s1">&quot; 1&gt;&amp;2</span><span class="se">\n</span><span class="s1">exit 1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
                 <span class="n">exc_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exc_dir</span><span class="p">,</span> <span class="n">exc_name</span><span class="p">)</span>
                 <span class="n">exc</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">exc_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
@@ -5348,7 +5348,7 @@
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
 
-            <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+            <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                             <span class="n">err_msg</span><span class="o">=</span><span class="s1">&#39;shared libraries&#39;</span><span class="p">)</span>
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Opens error dialog</span>
@@ -5362,12 +5362,12 @@
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">())</span>
-          
+
             <span class="c1">#Passing configurations for SPM standalone + MATLAB MCR</span>
 
             <span class="c1"># Creates an SPM standalone executable that throws a non-critical</span>
             <span class="c1"># error</span>
-            <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+            <span class="n">mock_executable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;run_spm.sh&#39;</span><span class="p">,</span> <span class="n">failing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                             <span class="n">output</span><span class="o">=</span><span class="s1">&#39;_ _ version (standalone)&#39;</span><span class="p">)</span>
 
             <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">()</span>  <span class="c1"># Closes window</span>
@@ -5660,7 +5660,7 @@
 <span class="sd">            - test_update_node_name: displays node parameters and </span>
 <span class="sd">              updates its name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="TestMIANodeController.test_attributes_filter"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIANodeController.test_attributes_filter">[docs]</a>    <span class="k">def</span> <span class="nf">test_attributes_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Displays the parameters of a node, displays an attributes filter</span>
 <span class="sd">        and modifies it.</span>
@@ -5956,7 +5956,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">controlV1_ver</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">setControlV1</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
-  
+
 <div class="viewcode-block" id="TestMIANodeController.test_node_controller"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIANodeController.test_node_controller">[docs]</a>    <span class="k">def</span> <span class="nf">test_node_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds, changes and deletes processes to the node controller,</span>
 <span class="sd">        display the attributes filter.</span>
@@ -6300,7 +6300,7 @@
 
         <span class="c1"># Allows for the iteration of the pipeline</span>
         <span class="n">iter_table</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="c1"># Adds a tag and asserts that a tag button was added</span>
         <span class="n">iter_table</span><span class="o">.</span><span class="n">add_tag</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iter_table</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
@@ -6393,12 +6393,12 @@
         <span class="c1"># Gets its index and selects it</span>
         <span class="n">row_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_item_by_data</span><span class="p">(</span><span class="n">proc_lib</span><span class="p">,</span> <span class="n">row_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">row_index</span><span class="p">)</span>
-        <span class="n">proc_lib</span><span class="o">.</span><span class="n">selectionModel</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">row_index</span><span class="p">,</span> 
+        <span class="n">proc_lib</span><span class="o">.</span><span class="n">selectionModel</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">row_index</span><span class="p">,</span>
                                          <span class="n">QItemSelectionModel</span><span class="o">.</span><span class="n">SelectCurrent</span><span class="p">)</span>
 
         <span class="c1"># Mimes the data of the row widget</span>
         <span class="n">mime_data</span> <span class="o">=</span> <span class="n">proc_lib</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">mimeData</span><span class="p">([</span><span class="n">row_index</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mime_data</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s1">&#39;component/name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mime_data</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s1">&#39;component/name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span>
                          <span class="nb">bytes</span><span class="p">(</span><span class="n">row_data</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
 
         <span class="c1"># Changes the data of the row</span>
@@ -6550,7 +6550,7 @@
 
         <span class="c1"># Tries to close the modified tab and cancels saving</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">close_tab</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
-    
+
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_drop_process"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAPipelineEditor.test_drop_process">[docs]</a>    <span class="k">def</span> <span class="nf">test_drop_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds a Nipype SPM&#39;s Smooth process to the pipeline editor.&quot;&quot;&quot;</span>
 
@@ -6585,7 +6585,7 @@
 
         <span class="c1"># Mocks the execution of a plug edit dialog</span>
         <span class="n">PipelineEditor</span><span class="o">.</span><span class="n">_PlugEdit</span><span class="o">.</span><span class="n">exec_</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
-        
+
         <span class="c1"># Exports a plug with no parameters</span>
         <span class="n">ppl_edt</span><span class="o">.</span><span class="n">_export_plug</span><span class="p">(</span><span class="n">pipeline_parameter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">temp_plug_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
@@ -6598,7 +6598,7 @@
         <span class="c1"># Exports a plug value</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">ppl_edt</span><span class="o">.</span><span class="n">_export_plug</span><span class="p">(</span><span class="n">temp_plug_name</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;rename_1&#39;</span><span class="p">,</span> <span class="s1">&#39;_out_file&#39;</span><span class="p">),</span>
                                    <span class="n">pipeline_parameter</span><span class="o">=</span><span class="s1">&#39;_out_file&#39;</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 
         <span class="c1"># Mocks &#39;QMessageBox.question&#39; to click accept</span>
@@ -6607,7 +6607,7 @@
         <span class="c1"># Tries to export the same plug value, accepts overwriting it</span>
         <span class="c1"># With &#39;multi_export&#39; then the temp_plug_value will be returned</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">ppl_edt</span><span class="o">.</span><span class="n">_export_plug</span><span class="p">(</span><span class="n">temp_plug_name</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;rename_1&#39;</span><span class="p">,</span> <span class="s1">&#39;_out_file&#39;</span><span class="p">),</span>
-                                   <span class="n">pipeline_parameter</span><span class="o">=</span><span class="s1">&#39;_out_file&#39;</span><span class="p">,</span> 
+                                   <span class="n">pipeline_parameter</span><span class="o">=</span><span class="s1">&#39;_out_file&#39;</span><span class="p">,</span>
                                    <span class="n">multi_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
@@ -6676,7 +6676,7 @@
                                       <span class="n">export_node_unconnected_mandatory_plugs</span><span class="p">())</span>
         <span class="p">(</span><span class="n">ppl_edt_tabs</span><span class="o">.</span>
                      <span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">export_node_all_unconnected_outputs</span><span class="p">())</span>
-        
+
         <span class="c1"># Mocks the execution of a dialog box</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="kc">None</span>
 
@@ -7107,7 +7107,7 @@
 <span class="sd">        Take advantage of this to cover the part of the code used to remove the</span>
 <span class="sd">        packages.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-         
+
         <span class="n">pkg</span> <span class="o">=</span> <span class="n">PackageLibraryDialog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="p">)</span>
 
         <span class="c1"># The Test_pipeline brick was added in the package library</span>
@@ -7519,7 +7519,7 @@
                       <span class="s1">&#39;Guerbet_MDEFT-MDEFTpvm-000940_800.nii&#39;</span><span class="p">)</span>
         <span class="n">DOCUMENT_1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">NII_FILE_1</span><span class="p">))</span>
         <span class="n">P_VALUE</span> <span class="o">=</span> <span class="n">DOCUMENT_1</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
-        
+
         <span class="n">session</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">DOCUMENT_1</span><span class="p">)</span>
 
         <span class="c1"># Adds the processes Rename, creates the &quot;rename_1&quot; node</span>
@@ -7598,7 +7598,7 @@
 
         <span class="n">reset_inheritance_dicts</span><span class="p">()</span>
         <span class="n">reset_collections</span><span class="p">()</span>
-        
+
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">add_plug_value_to_database</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
         <span class="c1"># 3) &#39;mock_key_2&#39; is in &#39;ppl_manager.key&#39; indexed by the node name</span>
@@ -7699,7 +7699,7 @@
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">ask_iterated_pipeline_plugs</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span>
                                                                        <span class="n">pipeline</span><span class="p">)</span>
         <span class="n">pipeline</span><span class="o">.</span><span class="n">update_nodes_and_plugs_activation</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">()</span></div>
-    
+
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_check_requirements"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAPipelineManagerTab.test_check_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">test_check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds a &#39;Select&#39; process, appends it to the nodes list and checks</span>
 <span class="sd">        the requirements for the given node.</span>
@@ -7896,7 +7896,7 @@
         <span class="n">engine</span><span class="o">.</span><span class="n">raise_for_status</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span>
                                             <span class="n">ppl_manager</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                                             <span class="n">ppl_manager</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">exec_id</span><span class="p">)</span>
-        
+
         <span class="c1"># Mocks a &#39;WorkflowExecutionError&#39; exception</span>
         <span class="n">engine</span><span class="o">.</span><span class="n">raise_for_status</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">side_effect</span><span class="o">=</span><span class="n">WorkflowExecutionError</span><span class="p">(</span>
                                                                  <span class="p">{},</span> <span class="p">{},</span>
@@ -7993,7 +7993,7 @@
 
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
         <span class="n">ppl_edt_tabs</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>
-        
+
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span><span class="n">Rename</span><span class="p">)</span>
         <span class="n">pipeline</span> <span class="o">=</span> <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
@@ -8068,7 +8068,7 @@
         <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
                                               <span class="s1">&#39;resources&#39;</span><span class="p">,</span> <span class="s1">&#39;mia&#39;</span><span class="p">,</span> <span class="s1">&#39;project_8&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;raw_data&#39;</span><span class="p">))</span>
-        
+
         <span class="n">NII_FILE_1</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_&#39;</span>
                       <span class="s1">&#39;Guerbet_MDEFT-MDEFTpvm-000940_800.nii&#39;</span><span class="p">)</span>
 
@@ -8077,7 +8077,7 @@
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
         <span class="n">ppl_edt_tabs</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>
-        
+
         <span class="c1"># Adds the process &#39;Rename&#39; as the node &#39;rename_1&#39;</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span><span class="n">Rename</span><span class="p">)</span>
@@ -8265,7 +8265,7 @@
         <span class="n">job</span><span class="o">.</span><span class="n">process</span><span class="p">()</span><span class="o">.</span><span class="n">list_outputs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">job</span><span class="o">.</span><span class="n">process</span><span class="p">()</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">pipeline_manager</span><span class="o">.</span><span class="n">_register_node_io_in_database</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">process</span><span class="p">())</span></div>
-    
+
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_remove_progress"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAPipelineManagerTab.test_remove_progress">[docs]</a>    <span class="k">def</span> <span class="nf">test_remove_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Mocks an object of the pipeline manager and removes its progress.</span>
 
@@ -8393,11 +8393,11 @@
 
         <span class="c1"># Mocks executing a dialog box and clicking yes</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="n">click_yes</span>
-        
+
         <span class="c1"># Accept pipeline saving with filled filename</span>
         <span class="c1">#QTimer.singleShot(1000, self.execute_QMessageBox_clickYes)</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">savePipeline</span><span class="p">()</span></div>
-    
+
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_savePipelineAs"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAPipelineManagerTab.test_savePipelineAs">[docs]</a>    <span class="k">def</span> <span class="nf">test_savePipelineAs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Mocks a method from pipeline manager and saves a pipeline under</span>
@@ -8427,7 +8427,7 @@
 <span class="sd">      &quot;&quot;&quot;</span>
 
       <span class="n">pipeline_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
-      
+
       <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
       <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sources_images_dir</span><span class="p">)</span>  <span class="c1"># if the string is not empty</span>
@@ -8523,7 +8523,7 @@
         <span class="c1">#pop_up_add_path.save_path()</span>
 
         <span class="c1">#self.main_window.undo()</span>
-        
+
         <span class="c1">#self.main_window.redo()</span>
 
         <span class="c1"># Mocks not saving the pipeline</span>
@@ -8538,7 +8538,7 @@
         <span class="n">pipeline_editor_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">pipeline_editor_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span>
                                                                   <span class="n">process_class</span><span class="p">)</span>
-        
+
         <span class="n">pipeline</span> <span class="o">=</span> <span class="n">pipeline_editor_tabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;smooth_1&quot;</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -8786,7 +8786,7 @@
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
         <span class="n">ppl_edt_tabs</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>
         <span class="n">ppl</span> <span class="o">=</span> <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
-        
+
         <span class="c1"># Adds a Rename processes, creates the &#39;rename_1&#39; node</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span><span class="n">Rename</span><span class="p">)</span>
@@ -8847,7 +8847,7 @@
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
         <span class="n">ppl_edt_tabs</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>
         <span class="n">ppl</span> <span class="o">=</span> <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
-        
+
         <span class="c1"># Adds a Rename processes, creates the &#39;rename_1&#39; node</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span><span class="n">Rename</span><span class="p">)</span>
@@ -8869,7 +8869,7 @@
         <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">inheritance_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">}</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">node_inheritance_history</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">update_inheritance</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">})</span>
 
         <span class="c1"># Node&#39;s name contains &#39;Pipeline&#39;</span>
@@ -8898,7 +8898,7 @@
         <span class="c1"># Sets shortcuts for often used objects</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
         <span class="n">ppl_edt_tabs</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>
-        
+
 
         <span class="n">process_class</span> <span class="o">=</span> <span class="n">Rename</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
@@ -8951,21 +8951,21 @@
                       <span class="s1">&#39;Guerbet_Anat-RAREpvm-000220_000.nii&#39;</span><span class="p">)</span>
 
         <span class="n">DOCUMENT_1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">NII_FILE_1</span><span class="p">))</span>
-        
+
         <span class="c1"># Adds a Rename processes, creates the &#39;rename_1&#39; node</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span><span class="n">Rename</span><span class="p">)</span>
 
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">export_unconnected_mandatory_inputs</span><span class="p">()</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">export_all_unconnected_outputs</span><span class="p">()</span>
-        
+
         <span class="c1"># Verifies that all the processes were added</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;rename_1&#39;</span><span class="p">],</span> <span class="n">ppl</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        
+
         <span class="c1"># Initialize the pipeline with missing mandatory parameters</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">workflow</span> <span class="o">=</span> <span class="n">workflow_from_pipeline</span><span class="p">(</span><span class="n">ppl</span><span class="p">,</span>
                                                       <span class="n">complete_parameters</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="c1"># Mocks executing a dialog box, instead shows it</span>
         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">exec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">self_</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">self_</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
@@ -8974,7 +8974,7 @@
         <span class="n">init_result</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">init_pipeline</span><span class="p">()</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">init_result</span><span class="p">)</span>
-        
+
         <span class="c1"># Sets the mandatory parameters</span>
         <span class="n">ppl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="s1">&#39;in_file&#39;</span><span class="p">,</span> <span class="n">DOCUMENT_1</span><span class="p">)</span>
         <span class="n">ppl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="s1">&#39;format_string&#39;</span><span class="p">,</span> <span class="s1">&#39;new_name.nii&#39;</span><span class="p">)</span>
@@ -8995,7 +8995,7 @@
         <span class="n">init_result</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">init_pipeline</span><span class="p">()</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">init_result</span><span class="p">)</span>
-        <span class="n">ppl_manager</span><span class="o">.</span><span class="n">check_requirements</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s1">&#39;global&#39;</span><span class="p">,</span> 
+        <span class="n">ppl_manager</span><span class="o">.</span><span class="n">check_requirements</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s1">&#39;global&#39;</span><span class="p">,</span>
                                                                <span class="n">message_list</span><span class="o">=</span><span class="p">[])</span>
 
         <span class="c1"># Mocks external packages as requirements and initializes the </span>
@@ -9003,7 +9003,7 @@
         <span class="n">pkgs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fsl&#39;</span><span class="p">,</span> <span class="s1">&#39;afni&#39;</span><span class="p">,</span> <span class="s1">&#39;ants&#39;</span><span class="p">,</span> <span class="s1">&#39;matlab&#39;</span><span class="p">,</span> <span class="s1">&#39;spm&#39;</span><span class="p">]</span>
         <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">:{</span><span class="s1">&#39;uses&#39;</span><span class="p">:</span> <span class="n">Mock</span><span class="p">()}}</span>
 
-        <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">pkgs</span><span class="p">:</span>                
+        <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">pkgs</span><span class="p">:</span>
             <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul.engine.module.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pkg</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;directory&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
 
         <span class="n">req</span><span class="p">[</span><span class="s1">&#39;capsul_engine&#39;</span><span class="p">][</span><span class="s1">&#39;uses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -9047,7 +9047,7 @@
         <span class="n">init_result</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">init_pipeline</span><span class="p">()</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">init_result</span><span class="p">)</span></div>
-    
+
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_z_runPipeline"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.test.TestMIAPipelineManagerTab.test_z_runPipeline">[docs]</a>    <span class="k">def</span> <span class="nf">test_z_runPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Adds a process, export plugs and runs a pipeline.</span>
@@ -9078,14 +9078,14 @@
 
         <span class="c1"># Switches to pipeline manager tab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-        
+
         <span class="c1"># Adds a Rename processes, creates the &#39;rename_1&#39; node</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">click_pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">add_named_process</span><span class="p">(</span><span class="n">Rename</span><span class="p">)</span>
 
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">export_unconnected_mandatory_inputs</span><span class="p">()</span>
         <span class="n">ppl_edt_tabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">export_all_unconnected_outputs</span><span class="p">()</span>
-        
+
         <span class="c1"># Sets the mandatory parameters</span>
         <span class="n">ppl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="s1">&#39;in_file&#39;</span><span class="p">,</span> <span class="n">DOCUMENT_1</span><span class="p">)</span>
         <span class="n">ppl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="s1">&#39;format_string&#39;</span><span class="p">,</span> <span class="s1">&#39;new_name.nii&#39;</span><span class="p">)</span>
@@ -9107,8 +9107,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ppl_manager</span><span class="o">.</span><span class="n">last_run_pipeline</span><span class="p">,</span> <span class="n">ppl</span><span class="p">)</span>
         <span class="n">QThread</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
-        
-        
+
+
         <span class="c1"># Pipeline is stopped by the user, the pipeline fails before</span>
         <span class="c1"># running</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">runPipeline</span><span class="p">()</span>
@@ -9138,7 +9138,7 @@
 
       </div>
       <div class="bottomnav" role="navigation" aria-label="bottom navigation">
-      
+
         <p>
         <a class="uplink" href="../../index.html">Contents</a>
         </p>

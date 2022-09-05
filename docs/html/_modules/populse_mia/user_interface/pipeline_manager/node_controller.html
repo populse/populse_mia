@@ -13,22 +13,22 @@
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
           <span>populse_mia 2.2.1-dev+273536e83 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
-      
+
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
         </p>
 
       </div>
       <div class="content" role="main">
-        
-        
+
+
   <h1>Source code for populse_mia.user_interface.pipeline_manager.node_controller</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*- #</span>
 <span class="sd">&quot;&quot;&quot; Module to handle the node of a pipeline and its plugs.</span>
@@ -533,7 +533,7 @@
                        <span class="s1">&#39;connected_inputs&#39;</span><span class="p">:</span> <span class="n">connected_inputs</span><span class="p">},</span>
             <span class="n">scroll</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">userlevel</span><span class="o">=</span><span class="n">userlevel</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s1">&#39;completion_engine&#39;</span><span class="p">):</span>
             <span class="n">compl</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">completion_engine</span>
             <span class="n">atts</span> <span class="o">=</span> <span class="n">compl</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span>
@@ -644,12 +644,12 @@
 
                 <span class="c1">#TODO: next line is strange!</span>
                 <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span>
-                  
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">new_node_name</span><span class="p">])</span>
                 <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_node_name</span><span class="p">)</span>
                 <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">old_node_name</span><span class="p">)</span>
-                
+
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span>
                     <span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">update_history</span><span class="p">)(</span><span class="n">history_maker</span><span class="p">,</span>
                                                          <span class="n">from_undo</span><span class="p">,</span>
@@ -737,7 +737,7 @@
 <span class="sd">        :param node: instance of the corresponding Input_Filter node</span>
 <span class="sd">        :param main_window: parent main window</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="nb">super</span><span class="p">(</span><span class="n">FilterWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Filter - &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
@@ -1436,7 +1436,7 @@
 
       </div>
       <div class="bottomnav" role="navigation" aria-label="bottom navigation">
-      
+
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
         </p>

@@ -66,7 +66,7 @@ You can open back Ubuntu to continue the installs.
 Open Powershell and type ``ubuntu`` to open you virtual ubuntu machine.
 
 Now you have WSL2 and an Ubuntu 20.04 linux.
-You can access Windows files via ``/mnt/c/`` in the Ubuntu WSL Windows terminal, we can access   
+You can access Windows files via ``/mnt/c/`` in the Ubuntu WSL Windows terminal, we can access
 
 Set your WSL2 as default with ``wsl --install -d distribution``.
 
@@ -81,17 +81,17 @@ To know more:
 -----------------------------------------------
 |
 
-We also need a X windows server to allow linux applications graphic user interface (GUI) works.  
+We also need a X windows server to allow linux applications graphic user interface (GUI) works.
 
 Get `VcXsrv <https://sourceforge.net/projects/vcxsrv/files/latest/download>`_.
 
-  - Execute it, 
-  - click 'next' then 'install' to install it 
+  - Execute it,
+  - click 'next' then 'install' to install it
 
 Looking for XLaunch application icon, launch it.
 
 Configure it like the screenshots below:
-  
+
    .. image:: ../../../developer_doc/images/screenshots/Xlaunch_1.png
       :align: center
       :name: Xlaunch_1
@@ -106,7 +106,7 @@ Configure it like the screenshots below:
 
 Disable *'Native opengl'*
 Enable *'Disable access control'*
-     
+
    .. image:: ../../../developer_doc/images/screenshots/Xlaunch_3.png
       :align: center
       :name: Xlaunch_3
@@ -122,9 +122,9 @@ Do *'Save Configuration'* in a file that allow you to launch it later (ie on the
 |
 
 Allow access asked by Windows firewall.
- 
+
 P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.
-  
+
 3 - Dependencies Installation
 -----------------------------
 |
@@ -173,7 +173,7 @@ It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvi
    nano ~/.bashrc
    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2 ":0.0"}')
    source ~/.bashrc
-  
+
    nano casa_distro/brainvisa-opensource-master/conf/bv_maker.cfg
    [ build $CASA_BUILD ]
       cmake_options += -DPYTHON_EXECUTABLE=/usr/bin/python3

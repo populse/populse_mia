@@ -33,4 +33,3 @@ populse\_mia.user\_interface.pop\_ups module
    :members:
    :undoc-members:
    :show-inheritance:
-

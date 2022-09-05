@@ -58,9 +58,9 @@ Ubuntu
 ======
 
 To date, no suitable version of Singularity is available as system package for Ubuntu.
- 
+
 You can `install it yourself <https://docs.sylabs.io/guides/latest/admin-guide/installation.html#install-from-source>`_.
- 
+
 However, `we advise you to use the package provided by BrainVisa <https://brainvisa.info/download/>`_, corresponding to your OS, For example download singularity-ce_3.8.3~ubuntu-20.04_amd64.deb then
 
 .. code-block:: bash
@@ -108,4 +108,3 @@ Then open an interactive shell in the container:
    bv bash
 
 And continue with the `Installation part <./virtualisation_user_installation.html#Installation>`_ ...
-

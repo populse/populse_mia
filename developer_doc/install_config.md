@@ -1,10 +1,10 @@
-# Install/config 
+# Install/config
 # Ubuntu 16.04 - Python3 - Git/GitLab - Pycharm
 
 # INSTALLING AND CONFIGURATE GIT/GITLAB
 
 sudo apt-get install git
-cat ~/.ssh/id_rsa.pub 
+cat ~/.ssh/id_rsa.pub
 
 #If no result: create a ssh key
 ssh-keygen -t rsa -C your_adress@example.com -b 4096
@@ -28,5 +28,3 @@ sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make
 sudo apt-get update
 sudo apt-get install ubuntu-make
 umake ide pycharm
-
-

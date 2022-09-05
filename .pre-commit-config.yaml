@@ -13,6 +13,7 @@ repos:
     -   id: end-of-file-fixer
     -   id: fix-encoding-pragma
     -   id: name-tests-test
+    -   id: trailing-whitespace
 
 -   repo: https://github.com/psf/black
     rev: 22.6.0

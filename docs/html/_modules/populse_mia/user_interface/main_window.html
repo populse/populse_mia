@@ -13,22 +13,22 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
           <span>populse_mia 2.2.1-dev+273536e83 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.main_window</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
-      
+
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
         </p>
 
       </div>
       <div class="content" role="main">
-        
-        
+
+
   <h1>Source code for populse_mia.user_interface.main_window</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*- #</span>
 <span class="sd">&quot;&quot;&quot;Module to define main window appearance, functions and settings.</span>
@@ -383,7 +383,7 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
 
             <span class="c1"># Change controller version if needed</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_version_changed</span><span class="p">:</span>                
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_version_changed</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Controller version change&quot;</span><span class="p">)</span>
@@ -633,7 +633,7 @@
 
 <div class="viewcode-block" id="MainWindow.del_clinical_tags"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.del_clinical_tags">[docs]</a>    <span class="k">def</span> <span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remove the clinical tags to the database and the data browser&quot;&quot;&quot;</span>
-        
+
         <span class="n">removed_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">del_clinical_tags</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">removed_tags</span><span class="p">:</span>
@@ -1655,7 +1655,7 @@
 
       </div>
       <div class="bottomnav" role="navigation" aria-label="bottom navigation">
-      
+
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
         </p>
