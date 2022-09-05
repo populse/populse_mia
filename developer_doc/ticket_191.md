@@ -3,8 +3,8 @@ _________________________________
 
 **In python/populse_mia:**
 - '#image_viewer' directory includig:
-  -  -rw-rw-r--. 1 econdami econdami 29771 Feb  8 12:03 image_viewer.py  
-     -rw-rw-r--. 1 econdami econdami     0 Feb  8 12:03 \_\_init__.py  
+  -  -rw-rw-r--. 1 econdami econdami 29771 Feb  8 12:03 image_viewer.py
+     -rw-rw-r--. 1 econdami econdami     0 Feb  8 12:03 \_\_init__.py
   is deleted (08/03/2022)
 
 - '#install_processes.py' file is deleted (10/03/2022)

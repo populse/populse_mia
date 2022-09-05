@@ -148,7 +148,7 @@ To be able to iterate the pipeline correctly, we will need a filter process/bric
 |
 
   * Click on the OK button, the "Select" button changes its name to the name of the selected tag ("PatientName").
-      
+
   * Click on the "Filter" button to select on which values of the tag the pipeline will be iterated (reminder: patients K49 and K51 got missing files):
 
 .. image:: ../images/pipeline_example_9.png

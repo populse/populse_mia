@@ -36,7 +36,7 @@ Here is an overview of the Pipeline Manager tab:
 The process library
 -------------------
 
-The process library contains all the available pipeline processes. 
+The process library contains all the available pipeline processes.
 
 When Populse_MIA is launched for the first time, Nipype's interfaces are stored in the process library.
 
@@ -97,24 +97,24 @@ The pipeline edtior uses the PipelineDevelopperView tool from `Capsul <http://br
 
 |
 
-- Export the input and output plug(s) we want to be able to modify by right-clicking on them and click on "export plug", rename it if we want and click on "OK". 
+- Export the input and output plug(s) we want to be able to modify by right-clicking on them and click on "export plug", rename it if we want and click on "OK".
 
 Note 1: a plug is either mandatory or optional. When it is mandatory, it is represented as a triangle and has to be exported or connected to another plug to run the pipeline. When it is optional, it is represented as a rectangle and can be exported or connected or not. Usually optional plugs have default values, e.g. "fwhm" plug from SPM's smooth is [6, 6, 6], so do not need to be exported and/or modified. It all depends if we want to have access to this plug when the pipeline will be used as a process.
 
 Note 2: to make a pipeline valid, we have to export plugs that are the pipeline global input/outputs. In this example, the "in_files" plug needs to be exported because it is mandatory. The only output plug has to be also exported. The node will then be activated and its color become lighter. It is also possible to export optional plug such as "fwhm" and "output_directory" even if they already have default value.
 
-Note 3: Nipype's processes needs values for "output_directory", "use_mcr", "paths", "matlab_cmd" and "mfile" plugs. These are updated from Populse_MIA's during pipeline initialization. 
+Note 3: Nipype's processes needs values for "output_directory", "use_mcr", "paths", "matlab_cmd" and "mfile" plugs. These are updated from Populse_MIA's during pipeline initialization.
 
-Note 4: if we right-click on a node or on the pipeline editor background, we can also export plugs (mandatory or not, input, output or both). This method is usually faster to export plugs. 
+Note 4: if we right-click on a node or on the pipeline editor background, we can also export plugs (mandatory or not, input, output or both). This method is usually faster to export plugs.
 
 .. image:: ../images/pipeline_tuto_2.png
    :align: center
    :name: Pipeline tutorial 2
 
-Now the pipeline is only composed of one process with exported inputs/output. It is still possible to add another process to modify it. 
+Now the pipeline is only composed of one process with exported inputs/output. It is still possible to add another process to modify it.
 
-- Add another SPM smooth process and make it follow the first one. 
-      - Right-click on the link between the output of the "smooth1" node and the pipeline output and select "remove link". The pipeline is disabled. 
+- Add another SPM smooth process and make it follow the first one.
+      - Right-click on the link between the output of the "smooth1" node and the pipeline output and select "remove link". The pipeline is disabled.
       - Connect the "_smoothed_files" plug of the "smooth1" node to the "in_files" plug of the "smooth2" node by dragging from "_smoothed_files" and dropping to "in_files".
       - Connect the "_smoothed_files" plug of the "smooth2" node to the "_smoothed_files" global output by dragging from "_smoothed_files" and dropping to "in_files". The pipeline in enabled.
       - Connect the "output_directory" global input to the "output_directory" plug of the "smooth2" node by dragging from "output_directory" and dropping to "output_directory".
@@ -177,7 +177,7 @@ The node controller is a controller that updates pipeline nodes and is located o
 
      The controller in V1 (left) and V2 (right) mode
 
-How to use the node controller 
+How to use the node controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This part is based on the Double_smooth.py file created in :ref:`pipeline-editor-label`.
@@ -256,7 +256,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 * Use the "capsul > pipeline > custom_nodes > reduce_node > ReduceNode" or the "mia_processes > bricks > tools > Files_To_List" brick.
 
   * In case of the ReduceNode brick:
-    
+
     * Validate the default node parameters (just click on OK button). The ReduceNode appears in the pipeline editor.
 
     * Connect the ``outputs`` plug of the ReduceNode to the ``func_files`` plug of the Spatial_preprocessing_1 node.
@@ -268,7 +268,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
     * Connect the ``file_list`` plug of the Files_To_List node to the ``func_files`` plug of the Spatial_preprocessing_1 node.
 
     * Export the ``file1`` plug of the Files_To_List node (right click on the ``file1`` plug then select export plug), renamed as ``func_files`` (for clarity).
-    
+
 
 * export all unconnected plugs of the Spatial_preprocessing_1 node (right click on the node then select "export all unconnected plugs")
 
@@ -404,7 +404,7 @@ With use of the iteration table
   * So below the "iterate over" part there is now a "PatientName" part (in place of "select a tag", before).
 
     * The first button on this "PatientName" part is a Combobox where it is possible to see all the values of the selected tags used to iterate.
-    
+
     .. image:: ../images/PatientName_Combobox.png
       :align: center
       :name: iteration_PatientName_combobox
@@ -466,6 +466,3 @@ Assume that the current project contains several patients, so several "PatientNa
    :name: Iterate pipeline
 
 .. _`Cheese Shop`: https://pypi.org/search/?q=mia_processes
-
-
-

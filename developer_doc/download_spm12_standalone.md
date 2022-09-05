@@ -3,20 +3,20 @@ Linux
 
 Before following the steps, make sure your are on your root directory ( /home ) and outside the container .
 This allows to avoid root accesses issues.
-Chose the user account folder on your host to make the installations : /home/<your_local_user_account>/ . 
+Chose the user account folder on your host to make the installations : /home/<your_local_user_account>/ .
 
 
 1- Download the desired version of spm: https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/
 Unzip it
 
 2- Download the corresponding MCR for linux: https://uk.mathworks.com/products/compiler/matlab-runtime.html
-Unzip it in a MCR/ folder 
+Unzip it in a MCR/ folder
 
 3- Install it following these steps:
 https://fr.mathworks.com/help/compiler/install-the-matlab-runtime.html
 
 4- After the installation, you get the following message (ex. for R2018b (9.5) MCR):
-On the target computer, append the following to your LD_LIBRARY_PATH environment variable: 
+On the target computer, append the following to your LD_LIBRARY_PATH environment variable:
 /usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/extern/bin/glnxa64
 If MATLAB Runtime is to be used with MATLAB Production Server, you do not need to modify the above environment variable.
 
@@ -30,7 +30,7 @@ sudo ldconfig
 Execute SPM12, the second path being the path of the MCR (that has been chosen during the installation):
 ./run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v93
 
-P.S. Tested on linux with http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip (part 1 above), https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip (part 2 above) and without using parts 5 and 6 above: It works! We can now launch Mia. 
+P.S. Tested on linux with http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_r7487_Linux_R2018b.zip (part 1 above), https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip (part 2 above) and without using parts 5 and 6 above: It works! We can now launch Mia.
 
 8- Setting MIA with smp12 and MATLAB paths.
 In **MIA** go to:
@@ -38,21 +38,21 @@ In **MIA** go to:
 File> MIA preferences > Pipelines:
 
 In the **MATLAB section**:
-   
+
    -Check on the box use Matlab standalone.
-  
+
    -Click on browse and add the installation path of your MATLAB Runtime supposed to look like:
        /usr/local/MATLAB/MATLAB_Runtime/v95.
 
 
 In the **SMP section** :
-  
+
    -Check on the box use SPM standalone.
-  
+
    -Click on browse and add the path of the unzip file of spm12 supposed to look like:
        /home/<your_lacal_user_account>/smp12.
 
-Then validate your changes by clicking on **OK button** 
+Then validate your changes by clicking on **OK button**
 
 You can now use MATLAB and SPM with MIA!
 
@@ -77,4 +77,3 @@ The Java for OS X 2017-001installer starts, it displays a dialog box. Answer the
 6- `./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri` works fine now !!!
 
 P.S. Tested on macOS 10.13.6. The run_spm12.sh fle for this version is not compatible with mia. While `./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri` works fine in a terminal, using this version of spm standalone results in an error with this message: `/Volumes/Users/econdami/Documents/spm/spm12Standalone/spm12Stndalone_r7771/run_spm12. sh: line 60: ./spm12.app/Contents/MacOS/spm12_maci64: No such file or directory`. We need a run_spm12.sh like as in spm12_r7532_BI_macOS_R2018b.zip (https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/dev/) with MCR_R2018b_maci64_installer.dmg.zip (https://fr.mathworks.com/products/compiler/matlab-runtime.html). With the last two, mia works fine !
-

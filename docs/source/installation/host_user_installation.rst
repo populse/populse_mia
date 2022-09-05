@@ -28,14 +28,14 @@ Installation
 
         python3 install_mia.py
 
-* If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia's installation. 
+* If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia's installation.
 
 .. image:: ../images/mia_install_1.png
    :align: center
    :name: PyQt5 and pyyaml
 
 |
-	  
+
 * An error can sometimes occur, depending on your OS, after the installation of both packages, the Python environment not being correctly updated. If this error occurs launch the same command again to install populse_mia: ::
 
         python3 install_mia.py
@@ -119,17 +119,3 @@ Installation
 |
 
 * See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia#usage>`_ to launch populse_mia.
-
-
-
-
-
-
-
-
-
-
-
-
-
-

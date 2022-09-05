@@ -4,21 +4,21 @@ matrix:
       language: generic
     #- os: linux
     #  dist: xenial
-    #  language: python  
+    #  language: python
     #  python:
     #    - "3.6"
     #  services:
     #    - xvfb
     - os: linux
       dist: xenial
-      language: python  
+      language: python
       python:
         - "3.7"
       services:
         - xvfb
     #- os: linux
     #  dist: xenial
-    #  language: python  
+    #  language: python
     #  python:
     #    - "3.8"
     #  services:

@@ -15,7 +15,7 @@ Non-Populse member
 ------------------
 
 * `Fork <https://help.github.com/articles/fork-a-repo/>`_ Populse_mia on GitHub and clone your Populse_mia repository
-  
+
 * Get source code from Github using HTTPS or SSH. Replace [populse_install_dir] with a directory of your choice ::
 
         git lfs clone https://github.com/your_user_name/populse_mia.git [mia_install_dir]/populse_mia # using HTTPS
@@ -31,7 +31,7 @@ Populse member
 --------------
 
 * `Make a populse_mia's developer installation <https://populse.github.io/populse_mia/html/installation/developer_installation.html>`_
-  
+
 * Make sure to work on your own branch ::
 
     git checkout -b your_branch_name # creates your own branch locally
@@ -73,7 +73,7 @@ Pre-commit
 * Usage
 
   * If a commit passes the pre-commit feature, it can be then normally pushed to the origin.
-  
+
   * An example of a passing commit: ::
 
       # INPUT
@@ -88,7 +88,7 @@ Pre-commit
         1 file changed, 29 insertions(+), 24 deletions(-)
 
   * On the other hand, if a commit fails the pre-commit (eg. for containing a file not formatted according to `PEP8 <https://peps.python.org/pep-0008/>`_), failing file will be fixed and recreated as an unstaged file. Those files should be then added and commited again. In the case where the pre-commit feature cannot fix the error by itself, the developer should modify the accordingly and recommit the changes.
-  
+
   * An example of a failing commit: ::
 
       # INPUT
@@ -101,23 +101,23 @@ Pre-commit
       black....................................................................Failed
       - hook id: black
       - files were modified by this hook
-      
+
       reformatted python/populse_mia/user_interface/data_viewer/data_viewer.py
-      
+
       All done! ✨ 🍰 ✨
       1 file reformatted.
-    
+
       # INPUT
       git status
 
       # OUTPUT
       On branch pre_commit
       Your branch is up to date with 'origin/pre_commit'.
-      
+
       Changes to be committed:
         (use "git restore --staged <file>..." to unstage)
                     modified:   user_interface/data_viewer/data_viewer.py
-      
+
       Changes not staged for commit:
         (use "git add <file>..." to update what will be committed)
         (use "git restore <file>..." to discard changes in working directory)
@@ -126,7 +126,7 @@ Pre-commit
       # INPUT
       git add user_interface/data_viewer/data_viewer.py
       git commit
-    
+
       # OUTPUT
       check python ast.........................................................Passed
       check json...........................................(no files to check)Skipped
@@ -140,7 +140,7 @@ Pre-commit
 
       # The piece of code that will not be auto-formatted
       np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, -1]])
-      
+
       # fmt: on
 
       # The piece of code that will be auto-formatted

@@ -48,4 +48,3 @@ populse\_mia.data\_manager.project\_properties module
    :members:
    :undoc-members:
    :show-inheritance:
-

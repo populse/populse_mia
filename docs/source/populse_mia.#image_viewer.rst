@@ -16,4 +16,3 @@ populse\_mia.\#image\_viewer.image\_viewer module
    :members:
    :undoc-members:
    :show-inheritance:
-

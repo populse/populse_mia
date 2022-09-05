@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import os
+
 from setuptools import find_packages, setup
 
 # Select modules to include in distribution
-modules = find_packages('python')
-print('\nmodules found: ', modules)
+modules = find_packages("python")
+print("\nmodules found: ", modules)
 
 # Additional script files to include in distribution
 scripts = []
@@ -13,13 +15,13 @@ pkgdata = {
     # format is:
     # <python module>: <file extensions list>
     # e.g:
-    'populse_mia.sources_images': ['*.png', '*.jpeg', '*.jpg']
+    "populse_mia.sources_images": ["*.png", "*.jpeg", "*.jpg"]
 }
 
 # Read the info.py file in populse_mia module
 release_info = {}
-python_dir = os.path.join(os.path.dirname(__file__), 'python')
-with open(os.path.join(python_dir, 'populse_mia', 'info.py')) as f:
+python_dir = os.path.join(os.path.dirname(__file__), "python")
+with open(os.path.join(python_dir, "populse_mia", "info.py")) as f:
     code = f.read()
     exec(code, release_info)
 
@@ -34,11 +36,11 @@ setup(
     author_email=release_info["AUTHOR_EMAIL"],
     version=release_info["VERSION"],
     url=release_info["URL"],
-    package_dir={'': 'python'},
+    package_dir={"": "python"},
     packages=modules,
     package_data=pkgdata,
     platforms=release_info["PLATFORMS"],
     install_requires=release_info["REQUIRES"],
     extras_require=release_info["EXTRA_REQUIRES"],
-    scripts=scripts
+    scripts=scripts,
 )
