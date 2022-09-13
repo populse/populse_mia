@@ -27,6 +27,8 @@ Populse_MIA is composed of three main tabs:
 
 Populse_MIA uses a Populse third party software called `MRI File Manager <./mri_file_manager.html>`_) to import MRI data and convert them to Nifti/JSON format.
 
+Remote parallel computing: see :doc:`the remote computing documentation <remote_computing>`.
+
 Menu bar actions
 ----------------
 
@@ -68,3 +70,11 @@ Menu bar actions
             * Installs processes to the Process Library from a folder
         * From zip file
             * Installs processes to the Process Library from a zip file
+
+.. toctree::
+    :hidden:
+
+    data_browser
+    data_viewer
+    pipeline_manager
+    remote_computing
