@@ -89,6 +89,11 @@ install:
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/capsul.git /home/appveyor/projects/capsul; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=master https://github.com/populse/capsul.git /Users/appveyor/projects/capsul; fi
 
+# Download data for unit tests
+  - cmd: git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata.git C:\\projects\\populse-mia\\miautdata
+  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata.git /home/appveyor/projects/populse-mia/miautdata; fi
+  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata.git /Users/appveyor/projects/populse-mia/miautdata; fi
+
   - cd populse-mia
 
   - sh: if [[ $(uname -s) == Linux ]]; then Xvfb & fi
