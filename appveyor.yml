@@ -8,7 +8,7 @@ environment:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       PYTHON: "$HOME/venv3.7"
-#      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdDYk1yZyk/W/2UtL1oBEDzX9Mk6YUXJKS3gTrZaK+ScAzPUkm7UlXwwpzSYZjKIkYzpi3WKSRKuDc7VRVk43hIhmwaIzcmpHAXtbgxAGRYembgz+kLDGtkhlP4i8n5GfNWvkkfbS0pu2w2dZQB7EGFFtopfvzBokKltjAYOnP89GCAo4MTfx6kmv1tpm1SDbCAGHJPuN+81B47+v0uGw3KG+AX+1ezPv1MCBQl5V2J4MI6vomyaHz6/UNBZ6rpsrZBYRljwWbyH5E5fqLdep/kO9sEuiXxTrCTLnUPSrR0+h0f8HlgWCaqxO+OUyDoQMI3xsUn4sMpoASi8jkDgd51vGbzkQHyjy2hYzjs47GAvLLtGfTJYQBVcfXEoZaKQUJhqjR7TUdY4bSBOxIPR9qlA9fLFwlQsC3++0m4roM/0SyoDVTz0I6lp1TsYRMKxEJSM90ewCAK8UnN6gEqmOz5ezOFpVsnpz4bZ7vCGaJa/6ODfOhEvl5bFUK40+GxSk= otavio@otavio-UX430UAR
+#      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBPta1n4K1qUHAEoGUpBbH9cAppZggBnWA9TnK/UpKCUWZ433VYC2KX8Ji0IoUMTDsAhYR36/hdQYN9gjLiuR65uLb2r8ZacIriTPiW+Ba/y9pUBuc/SlBj15eRtpmL0DMqLlqTJ+D6B1ZTB4e8tXPYLMxHosEtAJclxZXWWTOByxVeXkdMX4fP7dtnCQUcusVqaO1s9yvWdnfLonuQbcY+x5N9X0gsrCgCyDmKtXaeY/8B5rOwmaD9HAeh6GSM+2sA3/cVIyGBAdIfeM1qaZsKjhAr6bbWpxfm+g0letRI2w7C0f4nW+ZNuPUeD3ZUgatTp8UPrhOyXmY3duyJfvptSgekacYqck3YDd8opNndkIoW2jz+rvIwkSzepWu+4O4V09KRvfhuxYi8lO5jSKfaGofm9ZKw+AUyB4Ma1Q1SsHWmVrH+CIdqup3XLG1Rp+edbL7aWkhfcn2zFHRbOdH4ibzmpTKApBzkzfAPAjERwbfVPpqJXMTHOu203hzswM= econdami@irmage-pteric
 
     - APPVEYOR_BUILD_WORKER_IMAGE: macos
       PYTHON: "~/venv3.7"
@@ -26,7 +26,7 @@ install:
 
   - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - sh: export PATH=~/venv3.7/bin:~/venv3.7/lib:$PATH
-  
+
   - python --version
   - python -m pip install pip --upgrade
   - pip -V
@@ -39,7 +39,7 @@ install:
   - pip install psutil
   - pip install qtconsole
   - pip install jupyter_core
-  
+
   - cmd: "pip install \"traits==6.3.2\""
   - sh: pip3 install 'traits==6.3.2'
 
