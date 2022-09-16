@@ -41,6 +41,8 @@
         python3 -m pip install --force-reinstall pyqt5==5.14.0
         python3 -m pip install --force-reinstall PyQt5-sip==5.0.1
 
+  * A minimal data set (~500 MB, zip file with Bruker, Philips and NIfTI data) can be downloaded [here](https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers/-/archive/main/miadatausers-main.zip) to allow users to quickly start using and testing Mia.
+
 # Contributing to the project
 
 If you'd like to contribute to the project please read our [developer documentation page](https://populse.github.io/populse_mia/html/documentation/developer_documentation.html). Please also read through [our code of conduct](https://github.com/populse/populse_mia/blob/master/CODE_OF_CONDUCT.md).
