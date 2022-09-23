@@ -94,6 +94,6 @@ If you'd like to contribute to the project please read our [developer documentat
 
 # Support and Communication
 
-In case of a problem or to ask a question about how to do something in populse_mia, please [open an issue](https://github.com/populse/populse_mia/issues).
+All bugs, concerns and enhancement requests for populse_mia can be submitted [here](https://github.com/populse/populse_mia/issues).
 
 The developer team can even be contacted using populse-support@univ-grenoble-alpes.fr.
