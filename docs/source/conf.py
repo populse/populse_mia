@@ -143,9 +143,9 @@ try:
 except ImportError:
     # oh well... no schemas then.
     print('sphinxcontrib.mermaid is not present on your system. Schemas will '
-          'not be rendered in docs. You probably should consider installing it '
-          'using:\n\n''
-          pip install sphinxcontrib.mermaid\n', file=sys.stderr)
+          'not be rendered in docs. You probably should consider installing '
+          'it using:\n\n'
+          'pip install sphinxcontrib.mermaid\n', file=sys.stderr)
     pass
 
 # Add any paths that contain templates here, relative to this directory.
