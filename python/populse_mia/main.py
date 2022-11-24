@@ -38,8 +38,12 @@ from PyQt5.QtCore import QDir, QLockFile, Qt
 from PyQt5.QtWidgets import (QApplication, QDialog, QPushButton, QLabel,
                              QFileDialog, QVBoxLayout, QHBoxLayout, QLineEdit)
 
-if 'NO_ET' not in os.environ:
-    os.environ['NO_ET'] = "1" # disables any etelemetry check.
+# Disables any etelemetry check.
+if "NO_ET" not in os.environ:
+    os.environ["NO_ET"] = "1"
+
+if "NIPYPE_NO_ET" not in os.environ:
+    os.environ["NIPYPE_NO_ET"] = "1"
 
 # Adding populse_mia path to the sys.path if in developer mode
 if not os.path.dirname(os.path.dirname(
