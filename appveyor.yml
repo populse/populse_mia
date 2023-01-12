@@ -40,6 +40,9 @@ install:
   - pip install qtconsole
   - pip install jupyter_core
 
+  - cmd: "pip install \"nibabel==4.0.2\""
+  - sh: pip3 install 'nibabel==4.0.2'
+
   - cmd: "pip install \"traits==6.3.2\""
   - sh: pip3 install 'traits==6.3.2'
 
