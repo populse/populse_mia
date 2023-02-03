@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Remote computing with Popluse-MIA &#8212; populse_mia 2.2.1-dev+caa571504 documentation</title>
+    <title>Remote computing with Popluse-MIA &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,11 +15,29 @@
     <script src="../_static/language_data.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.1-dev+caa571504 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
         <h2 class="heading"><span>Remote computing with Popluse-MIA</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -132,14 +150,14 @@ git clone https://github.com/populse/soma-workflow.git
 <p>The configuration file <code class="docutils literal notranslate"><span class="pre">$HOME/.soma-workflow.cfg</span></code> has to be created or edited on the computing resource side, on the user account. It needs to declare the computing resource, with an identifier.</p>
 <p>If the computing server will run jobs inside a container, then each command has to be prefixed with the container run command, such as <code class="docutils literal notranslate"><span class="pre">singularity</span> <span class="pre">run</span> <span class="pre">/home/myself/container.sif</span></code>, or <code class="docutils literal notranslate"><span class="pre">/home/myself/brainvisa/bin/bv</span></code> for a <a class="reference external" href="https://brainvisa.github.io/casa-distro/index.html">Casa-Distro container</a> like a <a class="reference external" href="https://brainvisa.info">BrainVisa distribution</a>. This is done using the <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#container-command">CONTAINER_COMMAND option</a>, as explained <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#running-servers-and-jobs-in-a-container">in this documentation</a>.</p>
 <p>Ex - <strong>On the remote computing login node</strong>:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[dr144257@alambic-py3]</span><span class="w"></span>
-<span class="na">SERVER_NAME</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s">dr144257@alambic-py3</span><span class="w"></span>
-<span class="c1"># optional limitation of the jobs in various queues</span><span class="w"></span>
-<span class="na">MAX_JOB_IN_QUEUE</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">{15} test{50} Nspin_long{15}</span><span class="w"></span>
-<span class="na">MAX_JOB_RUNNING</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">{100} test{500} Nspin_long{50}</span><span class="w"></span>
-<span class="na">container_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;/home/dr144257/brainvisa-cea-master/bin/bv&#39;]</span><span class="w"></span>
-<span class="na">scheduler_type</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">pbspro</span><span class="w"></span>
-<span class="c1"># native_specification = -l walltime=96:00:00</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[dr144257@alambic-py3]</span>
+<span class="na">SERVER_NAME</span>       <span class="o">=</span> <span class="s">dr144257@alambic-py3</span>
+<span class="c1"># optional limitation of the jobs in various queues</span>
+<span class="na">MAX_JOB_IN_QUEUE</span>  <span class="o">=</span> <span class="s">{15} test{50} Nspin_long{15}</span>
+<span class="na">MAX_JOB_RUNNING</span>   <span class="o">=</span> <span class="s">{100} test{500} Nspin_long{50}</span>
+<span class="na">container_command</span> <span class="o">=</span> <span class="s">[&#39;/home/dr144257/brainvisa-cea-master/bin/bv&#39;]</span>
+<span class="na">scheduler_type</span>    <span class="o">=</span> <span class="s">pbspro</span>
+<span class="c1"># native_specification = -l walltime=96:00:00</span>
 </pre></div>
 </div>
 </div>
