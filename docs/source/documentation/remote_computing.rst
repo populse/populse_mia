@@ -256,5 +256,3 @@ File transfers limitations
 
 - File transfers are using network bandwidth. For large data, it can be slow enough to forbid any execution.
 - Transfers are working well as long as they are correctly and fully described in processes input and output parameters. If a process takes a directory as input, **the full contents of that directory will be sent to the server**. So if the directory contains more than the needed data, it will involve unnecessary, and possibly huge data transfers. In some cases it will simply be impossible to use. An interesting example is SPM / nipype processes which take the output directory as an input parameter: it will likely trigger the transfer of the **full database**, which is certainly not good.
-
-
