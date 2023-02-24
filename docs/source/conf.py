@@ -135,18 +135,22 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
-    "sphinxcontrib.mermaid"
+    "sphinxcontrib.mermaid",
 ]
 
 try:
     import sphinxcontrib.mermaid
+
     extensions.append("sphinxcontrib.mermaid")
 except ImportError:
     # oh well... no schemas then.
-    print('sphinxcontrib.mermaid is not present on your system. Schemas will '
-          'not be rendered in docs. You probably should consider installing '
-          'it using:\n\n'
-          'pip install sphinxcontrib.mermaid\n', file=sys.stderr)
+    print(
+        "sphinxcontrib.mermaid is not present on your system. Schemas will "
+        "not be rendered in docs. You probably should consider installing "
+        "it using:\n\n"
+        "pip install sphinxcontrib.mermaid\n",
+        file=sys.stderr,
+    )
     pass
 
 # Add any paths that contain templates here, relative to this directory.
@@ -304,25 +308,28 @@ autodoc_default_options = {
 # -- Intersphinx configuration -----------------------------------------------
 
 extlinks = {
-  'somabase': ('https://populse.github.io/soma-base/%s',
-    'somabase '),
-  'somaworkflow': ('https://populse.github.io/soma-workflow/%s',
-    'somaworkflow '),
-  'casadistro': ('https://brainvisa.github.io/casa-distro/%s',
-    'casadistro '),
+    "somabase": ("https://populse.github.io/soma-base/%s", "somabase "),
+    "somaworkflow": (
+        "https://populse.github.io/soma-workflow/%s",
+        "somaworkflow ",
+    ),
+    "casadistro": (
+        "https://brainvisa.github.io/casa-distro/%s",
+        "casadistro ",
+    ),
 }
 
 
-pyversion = '%d.%d' % sys.version_info[:2]
+pyversion = "%d.%d" % sys.version_info[:2]
 
 intersphinx_mapping = {
-  'somabase': ('https://populse.github.io/soma-base', None),
-  'somaworkflow': ('https://populse.github.io/soma-workflow', None),
-  'python': ('https://docs.python.org/%s' % pyversion, None),
-  'traits': ('https://docs.enthought.com/traits', None),
+    "somabase": ("https://populse.github.io/soma-base", None),
+    "somaworkflow": ("https://populse.github.io/soma-workflow", None),
+    "python": ("https://docs.python.org/%s" % pyversion, None),
+    "traits": ("https://docs.enthought.com/traits", None),
 }
 
 
 # -- mermaid configuration ---------------------------------------------------
 
-mermaid_output_format = 'raw'
+mermaid_output_format = "raw"
