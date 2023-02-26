@@ -38,7 +38,7 @@ repos:
         name: isort (python)
 
 -   repo: https://github.com/PyCQA/flake8
-    rev: 3.9.2
+    rev: 6.0.0
     hooks:
     -   id: flake8
         name: flake8 under python3
