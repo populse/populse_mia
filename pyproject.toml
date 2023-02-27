@@ -14,3 +14,14 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.flake8]
+max-line-length = 79
+exclude = [".git", "__pycache__", "dist"]
+max-complexity = 10
+
+[tool.isort]
+atomic = true
+profile = "black"
+line_length = 79
+skip_gitignore = true
