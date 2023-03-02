@@ -25,13 +25,6 @@ repos:
         language: python
         args: ["--line-length=79"]
 
-#-   repo: https://github.com/PyCQA/flake8
-#    rev: 6.0.0
-#    hooks:
-#    -   id: flake8
-#        name: flake8 under python3
-#        language_version: python3
-
 -   repo: https://github.com/pycqa/isort
     rev: 5.12.0
     hooks: # imports sorting
@@ -43,3 +36,10 @@ repos:
     hooks: # documentation checker
     -   id: interrogate
         args: [--fail-under=80, -vv]
+
+-   repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+    -   id: flake8
+        name: flake8 under python3
+        language_version: python3
