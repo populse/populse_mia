@@ -141,8 +141,8 @@ extensions = [
 try:
     import sphinxcontrib.mermaid
 
+    # flake8 ignore F401
     extensions.append("sphinxcontrib.mermaid")
-    _ = sphinxcontrib.mermaid
 
 except ImportError:
     # oh well... no schemas then.
