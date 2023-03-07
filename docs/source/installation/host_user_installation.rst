@@ -22,7 +22,7 @@ Pre-requirements
 Installation
 ------------
 
-* First download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
+* First download the archive `here <https://github.com/populse/mia_install/archive/refs/heads/main.zip>`_.
 
 * Unzip it and launch the following command in the extracted folder ("mia_install-main"): ::
 
