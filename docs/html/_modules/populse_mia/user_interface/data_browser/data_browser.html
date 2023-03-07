@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -107,7 +107,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -152,47 +152,92 @@
 <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">platform</span>
 
 <span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span><span class="n">FIELD_TYPE_DATE</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtWidgets</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QAbstractItemView</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span>
-                             <span class="n">QDateEdit</span><span class="p">,</span> <span class="n">QDateTimeEdit</span><span class="p">,</span> <span class="n">QDoubleSpinBox</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span>
-                             <span class="n">QGridLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QItemDelegate</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span>
-                             <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QProgressDialog</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span>
-                             <span class="n">QSplitter</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">,</span>
-                             <span class="n">QTimeEdit</span><span class="p">,</span> <span class="n">QToolBar</span><span class="p">,</span> <span class="n">QToolButton</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span>
-                             <span class="n">QWidget</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QAbstractItemView</span><span class="p">,</span>
+    <span class="n">QAction</span><span class="p">,</span>
+    <span class="n">QApplication</span><span class="p">,</span>
+    <span class="n">QDateEdit</span><span class="p">,</span>
+    <span class="n">QDateTimeEdit</span><span class="p">,</span>
+    <span class="n">QDoubleSpinBox</span><span class="p">,</span>
+    <span class="n">QFrame</span><span class="p">,</span>
+    <span class="n">QGridLayout</span><span class="p">,</span>
+    <span class="n">QHBoxLayout</span><span class="p">,</span>
+    <span class="n">QItemDelegate</span><span class="p">,</span>
+    <span class="n">QMenu</span><span class="p">,</span>
+    <span class="n">QMessageBox</span><span class="p">,</span>
+    <span class="n">QProgressDialog</span><span class="p">,</span>
+    <span class="n">QPushButton</span><span class="p">,</span>
+    <span class="n">QSplitter</span><span class="p">,</span>
+    <span class="n">QTableWidget</span><span class="p">,</span>
+    <span class="n">QTableWidgetItem</span><span class="p">,</span>
+    <span class="n">QTimeEdit</span><span class="p">,</span>
+    <span class="n">QToolBar</span><span class="p">,</span>
+    <span class="n">QToolButton</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span>
-                                                   <span class="n">TAG_ORIGIN_USER</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BRICK_NAME</span><span class="p">,</span> <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">,</span>
-                                              <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span>
-                                              <span class="n">TAG_HISTORY</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span>
+    <span class="n">TAG_ORIGIN_USER</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BRICK_NAME</span><span class="p">,</span>
+    <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
+    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+    <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
+    <span class="n">TAG_BRICKS</span><span class="p">,</span>
+    <span class="n">TAG_CHECKSUM</span><span class="p">,</span>
+    <span class="n">TAG_FILENAME</span><span class="p">,</span>
+    <span class="n">TAG_HISTORY</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> \
-    <span class="n">AdvancedSearch</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AdvancedSearch</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.count_table</span> <span class="kn">import</span> <span class="n">CountTable</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.mini_viewer</span> <span class="kn">import</span> <span class="n">MiniViewer</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="kn">import</span> <span class="n">ModifyTable</span>
+
 <span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ClickableLabel</span><span class="p">,</span> <span class="n">PopUpAddPath</span><span class="p">,</span> <span class="n">PopUpAddTag</span><span class="p">,</span> <span class="n">PopUpCloneTag</span><span class="p">,</span>
-    <span class="n">PopUpDataBrowserCurrentSelection</span><span class="p">,</span> <span class="n">PopUpMultipleSort</span><span class="p">,</span> <span class="n">PopUpProperties</span><span class="p">,</span>
-    <span class="n">PopUpRemoveScan</span><span class="p">,</span> <span class="n">PopUpRemoveTag</span><span class="p">,</span> <span class="n">PopUpSelectFilter</span><span class="p">,</span> <span class="n">PopUpShowHistory</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">check_value_type</span><span class="p">,</span> <span class="n">set_item_data</span><span class="p">,</span>
-                                     <span class="n">table_to_database</span><span class="p">)</span>
+    <span class="n">ClickableLabel</span><span class="p">,</span>
+    <span class="n">PopUpAddPath</span><span class="p">,</span>
+    <span class="n">PopUpAddTag</span><span class="p">,</span>
+    <span class="n">PopUpCloneTag</span><span class="p">,</span>
+    <span class="n">PopUpDataBrowserCurrentSelection</span><span class="p">,</span>
+    <span class="n">PopUpMultipleSort</span><span class="p">,</span>
+    <span class="n">PopUpProperties</span><span class="p">,</span>
+    <span class="n">PopUpRemoveScan</span><span class="p">,</span>
+    <span class="n">PopUpRemoveTag</span><span class="p">,</span>
+    <span class="n">PopUpSelectFilter</span><span class="p">,</span>
+    <span class="n">PopUpShowHistory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">check_value_type</span><span class="p">,</span>
+    <span class="n">set_item_data</span><span class="p">,</span>
+    <span class="n">table_to_database</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># Variable shown everywhere when no value for the tag</span>
 <span class="n">not_defined_value</span> <span class="o">=</span> <span class="s2">&quot;*Not Defined*&quot;</span>
@@ -445,7 +490,6 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">unsavedModifications</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">):</span>
-
             <span class="c1"># If the tag to clone has a value, we add this value with the</span>
             <span class="c1"># new tag name in the Database</span>
             <span class="n">cloned_cur_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
@@ -1094,11 +1138,9 @@
         <span class="c1"># Adding missing columns</span>
 
         <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
-
             <span class="c1"># Tag added only if it&#39;s not already in the table</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
                 <span class="n">column_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_index_insertion</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">insertColumn</span><span class="p">(</span><span class="n">column_index</span><span class="p">)</span>
 
@@ -1238,7 +1280,6 @@
 
                 <span class="c1"># Columns filled for the row being added</span>
                 <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
-
                     <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
                     <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
@@ -1423,7 +1464,6 @@
 
         <span class="c1"># Otherwise we update the values</span>
         <span class="k">else</span><span class="p">:</span>
-
             <span class="c1"># For history</span>
             <span class="n">history_maker</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;modified_values&quot;</span><span class="p">)</span>
@@ -1443,7 +1483,6 @@
 
                 <span class="c1"># We only set the cell if it&#39;s not the tag name</span>
                 <span class="k">if</span> <span class="n">tag_name</span> <span class="o">!=</span> <span class="n">TAG_FILENAME</span><span class="p">:</span>
-
                     <span class="n">old_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">,</span> <span class="n">tag_name</span>
                     <span class="p">)</span>
@@ -1556,9 +1595,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">action_send_documents_to_pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span>
             <span class="s2">&quot;Send documents to the Pipeline Manager&quot;</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">action_display_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span>
-            <span class="s2">&quot;Tries to read a file&quot;</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_display_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="s2">&quot;Tries to read a file&quot;</span><span class="p">)</span>
 
         <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapToGlobal</span><span class="p">(</span><span class="n">position</span><span class="p">))</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
@@ -1712,8 +1749,9 @@
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
             <span class="n">scan_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-            <span class="n">full_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
-                                                     <span class="n">scan_path</span><span class="p">))</span>
+            <span class="n">full_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">)</span>
+            <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
                 <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;xdg-open&quot;</span><span class="p">,</span> <span class="n">full_name</span><span class="p">])</span>
@@ -1739,7 +1777,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of table tags</span>
 
         <span class="k">try</span><span class="p">:</span>
-
             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
                 <span class="n">column</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">column</span><span class="p">()</span>
                 <span class="n">row</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
@@ -1764,7 +1801,6 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag_type</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">tag_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;list_&quot;</span><span class="p">):</span>
-
                     <span class="n">database_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span>
                     <span class="p">)</span>
@@ -1795,7 +1831,6 @@
 
             <span class="c1"># Ok</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_table_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lengths</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -2220,9 +2255,7 @@
             <span class="n">old_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">old_row</span> <span class="o">!=</span> <span class="n">row</span><span class="p">:</span>
-
                 <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
-
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">column</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="n">TAG_BRICKS</span><span class="p">:</span>
                         <span class="n">widget_to_move</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="n">old_row</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
                         <span class="n">item_to_move</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">takeItem</span><span class="p">(</span><span class="n">old_row</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
@@ -2252,7 +2285,6 @@
                                 <span class="n">bricks_copy</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">}</span>
 
                                 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">bricks_copy</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
                                     <span class="k">if</span> <span class="p">(</span>
                                         <span class="n">value</span> <span class="o">==</span> <span class="n">brick_uuid</span>
                                         <span class="ow">and</span> <span class="n">key</span>
@@ -2308,7 +2340,6 @@
                                 <span class="n">bricks_copy</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">bricks</span><span class="p">}</span>
 
                                 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">bricks_copy</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
                                     <span class="k">if</span> <span class="p">(</span>
                                         <span class="n">value</span> <span class="o">==</span> <span class="n">brick_uuid</span>
                                         <span class="ow">and</span> <span class="n">key</span>
@@ -2384,11 +2415,9 @@
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">scan_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="p">(</span><span class="n">scan_path</span> <span class="ow">in</span> <span class="n">scan_list</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">data_sent</span> <span class="ow">is</span> <span class="kc">True</span>
                 <span class="p">):</span>
-
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">repeat_pop_up</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">pop</span> <span class="o">=</span> <span class="n">PopUpRemoveScan</span><span class="p">(</span><span class="n">scan_path</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
@@ -2404,7 +2433,6 @@
                 <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                     <span class="n">COLLECTION_CURRENT</span>
                 <span class="p">):</span>
-
                     <span class="k">if</span> <span class="n">tag</span> <span class="o">!=</span> <span class="n">TAG_FILENAME</span><span class="p">:</span>
                         <span class="n">current_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                             <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">,</span> <span class="n">tag</span>
@@ -2436,7 +2464,6 @@
                     <span class="n">full_scan_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_scan_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">full_scan_path</span> <span class="ow">in</span> <span class="n">full_scan_paths</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">full_scan_path</span><span class="p">):</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">full_scan_path</span><span class="p">)</span>
 
@@ -2758,7 +2785,6 @@
         <span class="sd">&quot;&quot;&quot;Update the background of all the cells.&quot;&quot;&quot;</span>
 
         <span class="c1"># itemChanged signal is always disconnected when calling this method</span>
-
         <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">column</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()))</span>
@@ -2767,12 +2793,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())</span>
         <span class="p">]</span>
-
         <span class="n">dbs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span>
         <span class="n">collection_row</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
         <span class="n">primary_key</span> <span class="o">=</span> <span class="n">collection_row</span><span class="o">.</span><span class="n">primary_key</span>
-        <span class="n">collection_init</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">COLLECTION_INITIAL</span><span class="p">)</span>
-        <span class="n">primary_key_init</span> <span class="o">=</span> <span class="n">collection_row</span><span class="o">.</span><span class="n">primary_key</span>
+
         <span class="k">if</span> <span class="n">scans</span><span class="p">:</span>
             <span class="n">req</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> IN [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">primary_key</span><span class="p">,</span>
@@ -2791,7 +2815,6 @@
             <span class="n">documents_init</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">field_name</span><span class="p">:</span> <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">dbs</span><span class="o">.</span><span class="n">get_fields</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)}</span>
-
         <span class="n">table_scans</span> <span class="o">=</span> <span class="p">{</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">():</span> <span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())</span>
         <span class="p">}</span>
@@ -2804,8 +2827,10 @@
         <span class="c1"># count visible rows odd/even</span>
         <span class="n">row_even</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">even</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="k">for</span> <span class="n">ro</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()):</span>
             <span class="n">row_even</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">even</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isRowHidden</span><span class="p">(</span><span class="n">ro</span><span class="p">):</span>
                 <span class="n">even</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even</span>
 
@@ -2834,32 +2859,39 @@
                 <span class="k">for</span> <span class="n">column</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">table_tags</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isColumnHidden</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
                         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
-
                         <span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
 
                         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>  <span class="c1"># White</span>
+
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">230</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">230</span><span class="p">)</span>  <span class="c1"># Grey</span>
+
                         <span class="c1"># Avoid issues after switching tab and not saving</span>
                         <span class="k">elif</span> <span class="n">scan</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">245</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">215</span><span class="p">)</span>  <span class="c1"># Pink</span>
+
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">245</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>  <span class="c1"># Red</span>
+
                         <span class="c1"># Raw tag</span>
                         <span class="k">elif</span> <span class="n">fields</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">:</span>
                             <span class="n">current_value</span> <span class="o">=</span> <span class="n">scan</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
                             <span class="n">initial_value</span> <span class="o">=</span> <span class="n">scan_init</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
+
                             <span class="k">if</span> <span class="n">current_value</span> <span class="o">!=</span> <span class="n">initial_value</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
                                     <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">245</span><span class="p">)</span>  <span class="c1"># Cyan</span>
+
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">230</span><span class="p">)</span>  <span class="c1"># Blue</span>
+
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
                                     <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>  <span class="c1"># White</span>
+
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">230</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">230</span><span class="p">)</span>  <span class="c1"># Grey</span>
 
@@ -2867,6 +2899,7 @@
                         <span class="k">else</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">245</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">215</span><span class="p">)</span>  <span class="c1"># Pink</span>
+
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">color</span><span class="o">.</span><span class="n">setRgb</span><span class="p">(</span><span class="mi">245</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>  <span class="c1"># Red</span>
 
@@ -2874,6 +2907,7 @@
 
         <span class="c1"># Auto-save</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">isAutoSave</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">saveModifications</span><span class="p">()</span></div>
 

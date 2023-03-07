@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -127,7 +127,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -166,72 +166,100 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">import</span> <span class="nn">six</span>
+
 <span class="c1"># Soma_workflow import</span>
 <span class="kn">import</span> <span class="nn">soma_workflow.constants</span> <span class="k">as</span> <span class="nn">swconstants</span>
 <span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
+
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NipypeProcess</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span>
-                        <span class="n">ProcessNode</span><span class="p">,</span> <span class="n">Switch</span><span class="p">,</span> <span class="n">get_process_instance</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NipypeProcess</span><span class="p">,</span>
+    <span class="n">Pipeline</span><span class="p">,</span>
+    <span class="n">PipelineNode</span><span class="p">,</span>
+    <span class="n">Process</span><span class="p">,</span>
+    <span class="n">ProcessNode</span><span class="p">,</span>
+    <span class="n">get_process_instance</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
 <span class="kn">from</span> <span class="nn">capsul.engine</span> <span class="kn">import</span> <span class="n">WorkflowExecutionError</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="kn">import</span> <span class="n">pipeline_tools</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_workflow</span> <span class="kn">import</span> <span class="n">workflow_from_pipeline</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
-<span class="c1"># MIA processes imports</span>
-<span class="kn">from</span> <span class="nn">mia_processes.bricks.tools.tools</span> <span class="kn">import</span> <span class="n">Input_Filter</span>
+
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">Signal</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QMovie</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QAction</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span>
-                             <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QProgressDialog</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span>
-                             <span class="n">QScrollArea</span><span class="p">,</span> <span class="n">QSplitter</span><span class="p">,</span> <span class="n">QToolBar</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span>
-                             <span class="n">QWidget</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QAction</span><span class="p">,</span>
+    <span class="n">QApplication</span><span class="p">,</span>
+    <span class="n">QHBoxLayout</span><span class="p">,</span>
+    <span class="n">QMenu</span><span class="p">,</span>
+    <span class="n">QMessageBox</span><span class="p">,</span>
+    <span class="n">QScrollArea</span><span class="p">,</span>
+    <span class="n">QSplitter</span><span class="p">,</span>
+    <span class="n">QToolBar</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="c1"># Soma_base import</span>
 <span class="kn">from</span> <span class="nn">soma.controller.trait_utils</span> <span class="kn">import</span> <span class="n">is_file_trait</span>
 <span class="kn">from</span> <span class="nn">soma.qt_gui.qtThread</span> <span class="kn">import</span> <span class="n">QtThreadCall</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
-<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BRICK_EXEC</span><span class="p">,</span> <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
-                                              <span class="n">BRICK_INIT</span><span class="p">,</span> <span class="n">BRICK_INIT_TIME</span><span class="p">,</span>
-                                              <span class="n">BRICK_INPUTS</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">,</span>
-                                              <span class="n">BRICK_OUTPUTS</span><span class="p">,</span> <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_HISTORY</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
-                                              <span class="n">HISTORY_BRICKS</span><span class="p">,</span> <span class="n">HISTORY_PIPELINE</span><span class="p">,</span>
-                                              <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">TAG_CHECKSUM</span><span class="p">,</span>
-                                              <span class="n">TAG_FILENAME</span><span class="p">,</span> <span class="n">TAG_HISTORY</span><span class="p">,</span>
-                                              <span class="n">TAG_TYPE</span><span class="p">,</span> <span class="n">TYPE_MAT</span><span class="p">,</span> <span class="n">TYPE_NII</span><span class="p">,</span>
-                                              <span class="n">TYPE_TXT</span><span class="p">,</span> <span class="n">TYPE_UNKNOWN</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BRICK_EXEC</span><span class="p">,</span>
+    <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
+    <span class="n">BRICK_INIT</span><span class="p">,</span>
+    <span class="n">BRICK_INIT_TIME</span><span class="p">,</span>
+    <span class="n">BRICK_INPUTS</span><span class="p">,</span>
+    <span class="n">BRICK_NAME</span><span class="p">,</span>
+    <span class="n">BRICK_OUTPUTS</span><span class="p">,</span>
+    <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
+    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+    <span class="n">COLLECTION_HISTORY</span><span class="p">,</span>
+    <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
+    <span class="n">HISTORY_BRICKS</span><span class="p">,</span>
+    <span class="n">HISTORY_PIPELINE</span><span class="p">,</span>
+    <span class="n">TAG_BRICKS</span><span class="p">,</span>
+    <span class="n">TAG_CHECKSUM</span><span class="p">,</span>
+    <span class="n">TAG_FILENAME</span><span class="p">,</span>
+    <span class="n">TAG_HISTORY</span><span class="p">,</span>
+    <span class="n">TAG_TYPE</span><span class="p">,</span>
+    <span class="n">TYPE_MAT</span><span class="p">,</span>
+    <span class="n">TYPE_NII</span><span class="p">,</span>
+    <span class="n">TYPE_TXT</span><span class="p">,</span>
+    <span class="n">TYPE_UNKNOWN</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span> <span class="kn">import</span> \
-    <span class="n">IterationTable</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IterationTable</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">CapsulNodeController</span><span class="p">,</span> <span class="n">NodeController</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="kn">import</span> \
-    <span class="n">PipelineEditorTabs</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> \
-    <span class="n">ProcessLibraryWidget</span>
+    <span class="n">CapsulNodeController</span><span class="p">,</span>
+    <span class="n">NodeController</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PipelineEditorTabs</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ProcessLibraryWidget</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PopUpInheritanceDict</span><span class="p">,</span>
-                                                <span class="n">PopUpSelectIteration</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
 
 
 <div class="viewcode-block" id="PipelineManagerTab"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab">[docs]</a><span class="k">class</span> <span class="nc">PipelineManagerTab</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
@@ -247,7 +275,7 @@
 <span class="sd">        - add_process_to_preview: add a process to the pipeline</span>
 <span class="sd">        - build_iterated_pipeline:</span>
 <span class="sd">        - cleanup_older_init:</span>
-<span class="sd">        - complete_pipeline_parameters</span>
+<span class="sd">        - complete_pipeline_parameters:</span>
 <span class="sd">        - controller_value_changed: update history when a pipeline node is</span>
 <span class="sd">          changed</span>
 <span class="sd">        - displayNodeParameters: display the node controller when a node is</span>
@@ -552,7 +580,6 @@
 
         <span class="c1"># Adding I/O to database history</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
-
             <span class="c1"># filter Undefined / temp</span>
             <span class="c1"># this is an overhead since we convert to/from json, and it will</span>
             <span class="c1"># be converted again in the database. But the &quot;default&quot; function</span>
@@ -561,7 +588,6 @@
             <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
-
             <span class="c1"># filter Undefined / temp</span>
             <span class="c1"># this is an overhead since we convert to/from json, and it will</span>
             <span class="c1"># be converted again in the database.</span>
@@ -577,14 +603,11 @@
         <span class="n">notInDb</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;notInDb&quot;</span><span class="p">,</span> <span class="p">[]))</span>
 
         <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">process</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
                 <span class="k">continue</span>
 
             <span class="k">if</span> <span class="n">plug_value</span> <span class="o">!=</span> <span class="s2">&quot;&lt;undefined&gt;&quot;</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notInDb</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="n">pipeline_name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                         <span class="n">full_name</span> <span class="o">=</span> <span class="n">pipeline_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">node_name</span>
 
@@ -780,9 +803,10 @@
 
         <span class="c1"># get all tags values for inputs</span>
         <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">parent_file</span> <span class="ow">in</span> <span class="n">parent_files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">database_parent_file</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># database_parent_file = None</span>
             <span class="n">relfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">parent_file</span><span class="p">))[</span>
-                                                                   <span class="nb">len</span><span class="p">(</span><span class="n">db_dir</span><span class="p">):]</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">db_dir</span><span class="p">)</span> <span class="p">:</span>
+            <span class="p">]</span>
 
             <span class="k">if</span> <span class="n">relfile</span> <span class="o">==</span> <span class="n">p_value</span><span class="p">:</span>
                 <span class="c1"># output is one of the inputs: OK nothing to be done.</span>
@@ -795,7 +819,7 @@
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">scan</span><span class="p">:</span>
-                <span class="n">database_parent_file</span> <span class="o">=</span> <span class="n">scan</span>
+                <span class="c1"># database_parent_file = scan</span>
                 <span class="c1"># banished_tags = set([TAG_TYPE, TAG_EXP_TYPE, TAG_BRICKS,</span>
                 <span class="c1">#                TAG_CHECKSUM, TAG_FILENAME])</span>
                 <span class="n">banished_tags</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
@@ -826,7 +850,6 @@
             <span class="ow">and</span> <span class="p">(</span><span class="n">node_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore</span><span class="p">)</span>
             <span class="ow">and</span> <span class="p">(</span><span class="n">node_name</span> <span class="o">+</span> <span class="n">plug_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore</span><span class="p">)</span>
         <span class="p">):</span>
-
             <span class="c1"># if all inputs have the same tags set: then pick either of them,</span>
             <span class="c1"># they are all the same, there is no ambiguity</span>
             <span class="n">eq</span> <span class="o">=</span> <span class="kc">True</span>
@@ -855,7 +878,6 @@
                 <span class="n">all_ivalues</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
 
             <span class="k">else</span><span class="p">:</span>
-
                 <span class="c1"># ambiguous inputs -&gt; output</span>
                 <span class="c1"># ask the user, or use previously setup answers.</span>
 
@@ -939,10 +961,8 @@
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">own_tags</span><span class="p">:</span>
-
             <span class="c1"># own_tags may insert new fields in the database</span>
             <span class="k">for</span> <span class="n">tag_to_add</span> <span class="ow">in</span> <span class="n">own_tags</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">tag_to_add</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">field_names</span><span class="p">:</span>
                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add_field</span><span class="p">)(</span>
                         <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
@@ -1081,17 +1101,22 @@
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
             <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span>
+
             <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">forbidden</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="n">trait</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug</span><span class="p">)</span>
+
                 <span class="n">it_btn</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">()</span>
                 <span class="n">db_btn</span> <span class="o">=</span> <span class="kc">None</span>
+
                 <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">db_btn</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">()</span>
+
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">check_db_compat</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">plug</span><span class="p">):</span>
                         <span class="n">db_btn</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
                     <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span>
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">c</span> <span class="o">=</span> <span class="mi">4</span>
 
@@ -1100,18 +1125,22 @@
                 <span class="p">)</span>
 
                 <span class="n">param_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">it_btn</span><span class="p">,</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+
                 <span class="k">if</span> <span class="n">db_btn</span><span class="p">:</span>
                     <span class="n">param_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">db_btn</span><span class="p">,</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
                     <span class="n">db_btn</span><span class="o">.</span><span class="n">toggled</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
                         <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">db_clicked</span><span class="p">,</span> <span class="n">param_btns</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">p</span><span class="p">)</span>
                     <span class="p">)</span>
+
                 <span class="n">param_lay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">plug</span><span class="p">),</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
                 <span class="n">param_btns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">plug</span><span class="p">,</span> <span class="n">it_btn</span><span class="p">,</span> <span class="n">db_btn</span><span class="p">])</span>
                 <span class="n">it_btn</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                 <span class="n">p</span> <span class="o">+=</span> <span class="mi">1</span>
+
         <span class="n">param_lay</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">res</span> <span class="o">!=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -1235,15 +1264,18 @@
         <span class="c1"># Input_Filter nodes for them, and connect them to the special</span>
         <span class="c1"># database_scans input</span>
         <span class="n">in_filter_not_found</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">database_plugs</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">in_filter</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_process_instance</span><span class="p">(</span>
                     <span class="s2">&quot;mia_processes.bricks.tools.Input_Filter&quot;</span>
                 <span class="p">)</span>
+
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">in_filter_not_found</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Input filter not found in library.&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
+
             <span class="n">node_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_filter&quot;</span> <span class="o">%</span> <span class="n">plug</span>
             <span class="n">it_pipeline</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">in_filter</span><span class="p">)</span>
             <span class="n">it_pipeline</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span>
@@ -1255,6 +1287,7 @@
             <span class="c1"># and the input of the filter.</span>
             <span class="k">if</span> <span class="s2">&quot;database_scans&quot;</span> <span class="ow">in</span> <span class="n">it_pipeline</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
                 <span class="n">it_pipeline</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="s2">&quot;database_scans-&gt;</span><span class="si">%s</span><span class="s2">.input&quot;</span> <span class="o">%</span> <span class="n">node_name</span><span class="p">)</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">old_traits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">it_pipeline</span><span class="o">.</span><span class="n">user_traits</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
                 <span class="n">it_pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
@@ -1264,7 +1297,8 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">in_filter_not_found</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">iterated</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">compl</span> <span class="o">=</span> <span class="n">ProcessCompletionEngine</span><span class="o">.</span><span class="n">get_completion_engine</span><span class="p">(</span><span class="n">it_pipeline</span><span class="p">)</span>
+
+        <span class="c1"># compl = ProcessCompletionEngine.get_completion_engine(it_pipeline)</span>
         <span class="k">return</span> <span class="n">it_pipeline</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.check_requirements"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.check_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="n">message_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1275,7 +1309,6 @@
         <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.cleanup_older_init"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.cleanup_older_init">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup_older_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brick_list</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cleanup brick&quot;</span><span class="p">,</span> <span class="n">brick</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">delete_from_brick</span><span class="p">(</span><span class="n">brick</span><span class="p">)</span>
@@ -1294,13 +1327,17 @@
 <span class="sd">        the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># get a working / configured CapsulEngine</span>
-        <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
+        <span class="c1"># FIXME: It seems that the following line is only used for UTs (test.</span>
+        <span class="c1">#        testMIAPipelineManageTab.test_complete_pipeline_parameters).</span>
+        <span class="c1">#        I think we could find a cleaner way ...</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="p">:</span>
             <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pipeline_or_process</span><span class="p">()</span>
+
         <span class="n">completion</span> <span class="o">=</span> <span class="n">ProcessCompletionEngine</span><span class="o">.</span><span class="n">get_completion_engine</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">completion</span><span class="p">:</span>
-            <span class="n">attributes</span> <span class="o">=</span> <span class="n">completion</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span>
             <span class="n">completion</span><span class="o">.</span><span class="n">complete_parameters</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.controller_value_changed"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.controller_value_changed">[docs]</a>    <span class="k">def</span> <span class="nf">controller_value_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_list</span><span class="p">):</span>
@@ -1330,7 +1367,6 @@
             <span class="n">editor</span><span class="o">.</span><span class="n">setTransform</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="s2">&quot;plug_value&quot;</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">signal_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
                 <span class="ow">in</span> <span class="p">[</span>
@@ -1348,7 +1384,6 @@
             <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;update_plug_value&quot;</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">signal_list</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">]:</span>
                     <span class="n">element</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
@@ -1597,7 +1632,6 @@
         <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">setOverrideCursor</span><span class="p">(</span><span class="n">QCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">WaitCursor</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_clicked</span><span class="p">:</span>
-
             <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_older_init</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ignore_node</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1682,7 +1716,6 @@
 
         <span class="c1"># completion / retrieve workflow</span>
         <span class="k">try</span><span class="p">:</span>
-
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Completion / workflow...&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pipeline:&quot;</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">workflow</span> <span class="o">=</span> <span class="n">workflow_from_pipeline</span><span class="p">(</span>
@@ -1752,7 +1785,6 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;capsul.engine.module.fsl&quot;</span> <span class="ow">in</span> <span class="n">requirements</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul.engine.module.&quot;</span> <span class="s2">&quot;fsl&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                         <span class="s2">&quot;directory&quot;</span><span class="p">,</span> <span class="kc">False</span>
                     <span class="p">):</span>
@@ -1788,7 +1820,6 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;capsul.engine.module.afni&quot;</span> <span class="ow">in</span> <span class="n">requirements</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul.engine.module.&quot;</span> <span class="s2">&quot;afni&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                         <span class="s2">&quot;directory&quot;</span><span class="p">,</span> <span class="kc">False</span>
                     <span class="p">):</span>
@@ -1824,7 +1855,6 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;capsul.engine.module.ants&quot;</span> <span class="ow">in</span> <span class="n">requirements</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul.engine.module.&quot;</span> <span class="s2">&quot;ants&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                         <span class="s2">&quot;directory&quot;</span><span class="p">,</span> <span class="kc">False</span>
                     <span class="p">):</span>
@@ -1846,7 +1876,6 @@
 
             <span class="c1"># Matlab:</span>
             <span class="k">try</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="p">(</span>
                     <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul_engine&quot;</span><span class="p">][</span><span class="s2">&quot;uses&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                         <span class="s2">&quot;capsul.engine.module.&quot;</span> <span class="s2">&quot;matlab&quot;</span>
@@ -1861,9 +1890,7 @@
                 <span class="k">pass</span>
 
             <span class="k">else</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="s2">&quot;capsul.engine.module.matlab&quot;</span> <span class="ow">in</span> <span class="n">requirements</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul.engine.module.&quot;</span> <span class="s2">&quot;matlab&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                         <span class="s2">&quot;executable&quot;</span><span class="p">,</span> <span class="kc">False</span>
                     <span class="p">):</span>
@@ -1898,9 +1925,7 @@
                 <span class="k">pass</span>
 
             <span class="k">else</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="s2">&quot;capsul.engine.module.spm&quot;</span> <span class="ow">in</span> <span class="n">requirements</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul.engine.module.spm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                         <span class="s2">&quot;directory&quot;</span><span class="p">,</span> <span class="kc">False</span>
                     <span class="p">):</span>
@@ -1915,7 +1940,6 @@
                     <span class="k">elif</span> <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul.engine.module.spm&quot;</span><span class="p">][</span>
                         <span class="s2">&quot;standalone&quot;</span>
                     <span class="p">]:</span>
-
                         <span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                             <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
                             <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1929,7 +1953,6 @@
                             <span class="p">)</span>
 
                     <span class="k">else</span><span class="p">:</span>
-
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">requirements</span><span class="p">[</span><span class="s2">&quot;capsul.engine.module.matlab&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                                 <span class="s2">&quot;executable&quot;</span>
@@ -2119,7 +2142,6 @@
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">init_result</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">init_messages</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The pipeline could not be initialised properly:&quot;</span>
 
@@ -2127,10 +2149,12 @@
                         <span class="n">message</span> <span class="o">=</span> <span class="n">message</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">- &quot;</span> <span class="o">+</span> <span class="n">mssg</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The pipeline could not be initialised &quot;</span>
-                               <span class="s2">&quot;correctly, for an unknown reason!&quot;</span><span class="p">)</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;The pipeline could not be initialised &quot;</span>
+                        <span class="s2">&quot;correctly, for an unknown reason!&quot;</span>
+                    <span class="p">)</span>
 
-                <span class="n">lineCnt</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">lineCnt</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;MIA configuration warning!&quot;</span><span class="p">)</span>
 
@@ -2142,12 +2166,15 @@
                     <span class="n">layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
                     <span class="n">tmpLabel</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                     <span class="n">tmpLabel</span><span class="o">.</span><span class="n">setTextInteractionFlags</span><span class="p">(</span>
-                                                <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">TextSelectableByMouse</span><span class="p">)</span>
+                        <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">TextSelectableByMouse</span>
+                    <span class="p">)</span>
                     <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">tmpLabel</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">scroll</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-                                                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">columnCount</span><span class="p">())</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;QScrollArea{min-width:550 px; &quot;</span>
-                                           <span class="s2">&quot;min-height: 300px}&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span>
+                        <span class="n">scroll</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span>
+                        <span class="s2">&quot;QScrollArea{min-width:550 px; &quot;</span> <span class="s2">&quot;min-height: 300px}&quot;</span>
+                    <span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -2161,8 +2188,9 @@
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">clickedButton</span><span class="p">()</span> <span class="o">==</span> <span class="n">yes_button</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">software_preferences_pop_up</span><span class="p">()</span>
-                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span>
-                                                  <span class="n">tab_widget</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">)(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">tab_widget</span><span class="o">.</span><span class="n">setCurrentIndex</span>
+                    <span class="p">)(</span><span class="mi">1</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
                     <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; was not initialised successfully.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -2319,8 +2347,6 @@
         <span class="n">to_upate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">finished_bricks</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">(),</span> <span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">include_done</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
-
-        <span class="n">outputs</span> <span class="o">=</span> <span class="n">to_upate</span><span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
         <span class="n">bricks</span> <span class="o">=</span> <span class="n">to_upate</span><span class="p">[</span><span class="s2">&quot;bricks&quot;</span><span class="p">]</span>
 
         <span class="c1"># set state of bricks: done + exec date</span>
@@ -2485,9 +2511,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">update_parameters</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.register_completion_attributes"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.register_completion_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">register_completion_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
-        <span class="c1"># get a working / configured CapsulEngine</span>
+        <span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
 
-        <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
         <span class="n">completion</span> <span class="o">=</span> <span class="n">ProcessCompletionEngine</span><span class="o">.</span><span class="n">get_completion_engine</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">completion</span><span class="p">:</span>
             <span class="k">return</span>
@@ -2505,6 +2530,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">attributes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attributes</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tag_list</span><span class="p">}</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">attributes</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -2513,14 +2539,19 @@
             <span class="n">todo</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">todo</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
+
             <span class="k">while</span> <span class="n">todo</span><span class="p">:</span>
                 <span class="n">item</span> <span class="o">=</span> <span class="n">todo</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="n">todo</span> <span class="o">+=</span> <span class="n">item</span>
+
                 <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                     <span class="n">apath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+
                     <span class="k">if</span> <span class="n">apath</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
                         <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apath</span><span class="p">[</span><span class="n">pl</span><span class="p">:])</span>
+
             <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_values</span><span class="p">(</span>
@@ -2529,6 +2560,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_values</span><span class="p">(</span>
                         <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attributes</span>
                     <span class="p">)</span>
+
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                     <span class="k">pass</span>  <span class="c1"># outputs not used / inactivated</span></div>
 
@@ -2610,43 +2642,49 @@
             <span class="c1"># else:</span>
 
             <span class="c1"># soma-workflow remote credentials</span>
-            <span class="kn">from</span> <span class="nn">soma_workflow.gui.workflowGui</span> <span class="kn">import</span> <span class="n">ConnectionDialog</span>
             <span class="kn">from</span> <span class="nn">soma_workflow</span> <span class="kn">import</span> <span class="n">configuration</span>
+            <span class="kn">from</span> <span class="nn">soma_workflow.gui.workflowGui</span> <span class="kn">import</span> <span class="n">ConnectionDialog</span>
+
             <span class="n">config_file</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">search_config_path</span><span class="p">()</span>
-            <span class="n">resource_list</span> \
-                <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_configured_resources</span><span class="p">(</span>
-                    <span class="n">config_file</span><span class="p">)</span>
+            <span class="n">resource_list</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_configured_resources</span><span class="p">(</span>
+                    <span class="n">config_file</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">login_list</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_logins</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
             <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
             <span class="n">swf_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span>
-                <span class="s1">&#39;global&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;somaworkflow&#39;</span><span class="p">:</span> <span class="s1">&#39;config_id==&quot;somaworkflow&quot;&#39;</span><span class="p">})</span>
-            <span class="k">if</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;somaworkflow&quot;</span><span class="p">:</span> <span class="s1">&#39;config_id==&quot;somaworkflow&quot;&#39;</span><span class="p">}</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
                 <span class="n">cd</span> <span class="o">=</span> <span class="n">ConnectionDialog</span><span class="p">(</span><span class="n">login_list</span><span class="p">,</span> <span class="n">resource_list</span><span class="p">)</span>
-                <span class="n">sel_resource</span> <span class="o">=</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;computing_resource&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">sel_resource</span> <span class="o">=</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;computing_resource&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">sel_resource</span> <span class="ow">and</span> <span class="n">sel_resource</span> <span class="ow">in</span> <span class="n">resource_list</span><span class="p">:</span>
                     <span class="n">cd</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">combo_resources</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">sel_resource</span><span class="p">)</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">return</span>
                 <span class="n">resource</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">combo_resources</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
-                <span class="n">login</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lineEdit_login</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                <span class="c1"># login = cd.ui.lineEdit_login.text()</span>
                 <span class="n">passwd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lineEdit_password</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="n">rsa_key</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lineEdit_rsa_password</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">resource</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span>
-                    <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
-                    <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_local_resource_id</span><span class="p">()):</span>
+                    <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+                    <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_local_resource_id</span><span class="p">(),</span>
+                <span class="p">):</span>
                     <span class="n">sc</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span>
-                    <span class="k">if</span> <span class="s1">&#39;SomaWorkflowConfig&#39;</span> <span class="ow">in</span> <span class="n">sc</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;SomaWorkflowConfig&quot;</span> <span class="ow">in</span> <span class="n">sc</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
                         <span class="c1"># not sure this is needed...</span>
                         <span class="n">sc</span><span class="o">.</span><span class="n">somaworkflow_computing_resource</span> <span class="o">=</span> <span class="n">resource</span>
-                        <span class="c1">#setattr(sc.somaworkflow_computing_resources_config,</span>
-                                <span class="c1">#resource, {})</span>
-                        <span class="n">swc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;SomaWorkflowConfig&#39;</span><span class="p">]</span>
-                        <span class="n">swc</span><span class="o">.</span><span class="n">set_computing_resource_password</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">passwd</span><span class="p">,</span>
-                                                            <span class="n">rsa_key</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CONNECT TO:&#39;</span><span class="p">,</span> <span class="n">resource</span><span class="p">)</span>
+                        <span class="c1"># setattr(sc.somaworkflow_computing_resources_config,</span>
+                        <span class="c1"># resource, {})</span>
+                        <span class="n">swc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;SomaWorkflowConfig&quot;</span><span class="p">]</span>
+                        <span class="n">swc</span><span class="o">.</span><span class="n">set_computing_resource_password</span><span class="p">(</span>
+                            <span class="n">resource</span><span class="p">,</span> <span class="n">passwd</span><span class="p">,</span> <span class="n">rsa_key</span>
+                        <span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONNECT TO:&quot;</span><span class="p">,</span> <span class="n">resource</span><span class="p">)</span>
                     <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-
 
             <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">RunProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span>
@@ -2779,7 +2817,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;show_status&quot;</span><span class="p">)</span>
-        <span class="n">log</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;last_run_log&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">status_widget</span> <span class="o">=</span> <span class="n">StatusWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">status_widget</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status_widget</span> <span class="o">=</span> <span class="n">status_widget</span></div>
@@ -2838,7 +2875,6 @@
                 <span class="n">temp_plug_name</span> <span class="o">=</span> <span class="p">[]</span>
 
                 <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="n">c_e</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">plugs</span><span class="p">[</span><span class="n">parameter</span><span class="p">]</span><span class="o">.</span><span class="n">links_to</span><span class="p">:</span>
                         <span class="n">pip_plug_name</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
 
@@ -3020,7 +3056,6 @@
 
         <span class="c1"># retrieve inputs and outputs keys in process,</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Process</span><span class="p">):</span>
-
             <span class="n">inputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">()</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
             <span class="c1"># ProcessMIA / Process_Mia specific</span>
@@ -3066,7 +3101,6 @@
 
         <span class="n">values</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="n">trait</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">is_file_trait</span><span class="p">(</span><span class="n">trait</span><span class="p">):</span>
                 <span class="k">continue</span>
@@ -3107,7 +3141,6 @@
         <span class="n">auto_inheritance_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">in</span> <span class="n">notInDb</span><span class="p">:</span>
                 <span class="k">continue</span>
 
@@ -3410,7 +3443,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RunProgress.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
         <span class="nb">super</span><span class="p">(</span><span class="n">RunProgress</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span> <span class="o">=</span> <span class="n">pipeline_manager</span>
@@ -3439,7 +3471,7 @@
         <span class="c1"># self.hide()</span>
 
 <div class="viewcode-block" id="RunProgress.end_progress"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.end_progress">[docs]</a>    <span class="k">def</span> <span class="nf">end_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
 
@@ -3457,7 +3489,7 @@
                 <span class="n">engine</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">exec_id</span>
                 <span class="p">)</span>
-            <span class="k">except</span> <span class="n">WorkflowExecutionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">except</span> <span class="n">WorkflowExecutionError</span><span class="p">:</span>
                 <span class="n">mbox_icon</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span>
                 <span class="n">mbox_title</span> <span class="o">=</span> <span class="s2">&quot;Failure&quot;</span>
                 <span class="n">mbox_text</span> <span class="o">=</span> <span class="p">(</span>
@@ -3469,16 +3501,14 @@
                 <span class="n">mbox_title</span> <span class="o">=</span> <span class="s2">&quot;Success&quot;</span>
                 <span class="n">mbox_text</span> <span class="o">=</span> <span class="s2">&quot;Pipeline execution was OK.&quot;</span>
         <span class="n">mbox</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="n">mbox_icon</span><span class="p">,</span> <span class="n">mbox_title</span><span class="p">,</span> <span class="n">mbox_text</span><span class="p">)</span>
-        <span class="n">timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">mbox</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
+        <span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">mbox</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
         <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RunProgress.start"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
         <span class="c1"># self.progressbar.setValue(20)</span>
 
 <div class="viewcode-block" id="RunProgress.stop_execution"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.stop_execution">[docs]</a>    <span class="k">def</span> <span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** CANCEL ***&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">interrupt_request</span> <span class="o">=</span> <span class="kc">True</span></div></div>
@@ -3500,7 +3530,6 @@
 
 <div class="viewcode-block" id="RunWorker.run"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">_check_nipype_processes</span><span class="p">(</span><span class="n">pplne</span><span class="p">):</span>
-
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pplne</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pplne</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">):</span>
@@ -3526,10 +3555,6 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** INTERRUPT ***&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
 
-        <span class="c1"># Reading config</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="n">capsul_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
-
         <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
@@ -3554,14 +3579,16 @@
         <span class="c1"># rebuild the workflow, because it has not been made with them.</span>
         <span class="n">resource_id</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">connected_to</span><span class="p">()</span>
         <span class="n">resource_conf</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span>
-            <span class="n">resource_id</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;somaworkflow&#39;</span><span class="p">:</span> <span class="s1">&#39;config_id==&quot;somaworkflow&quot;&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s1">&#39;capsul.engine.module.somaworkflow&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="k">if</span> <span class="n">resource_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;transfer_paths&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> \
-                <span class="ow">or</span> <span class="n">resource_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path_translations&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;rebuilding workflow for file transfers / translations...&#39;</span><span class="p">)</span>
+            <span class="n">resource_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;somaworkflow&quot;</span><span class="p">:</span> <span class="s1">&#39;config_id==&quot;somaworkflow&quot;&#39;</span><span class="p">}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capsul.engine.module.somaworkflow&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="n">resource_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transfer_paths&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">resource_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;path_translations&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rebuilding workflow for file transfers / translations...&quot;</span><span class="p">)</span>
             <span class="n">workflow</span> <span class="o">=</span> <span class="n">workflow_from_pipeline</span><span class="p">(</span>
-                <span class="n">pipeline</span><span class="p">,</span> <span class="n">complete_parameters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">resource_id</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;running now...&#39;</span><span class="p">)</span>
+                <span class="n">pipeline</span><span class="p">,</span> <span class="n">complete_parameters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">resource_id</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running now...&quot;</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">exec_id</span><span class="p">,</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
@@ -3607,7 +3634,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StatusWidget.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
-
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span> <span class="o">=</span> <span class="n">pipeline_manager</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
@@ -3641,15 +3667,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Execution status&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StatusWidget.toggle_soma_workflow"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.toggle_soma_workflow">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_soma_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swf_widget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">swf_widget</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="n">checked</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">checked</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">soma_workflow.gui.workflowGui</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ApplicationModel</span><span class="p">,</span>
-                                                       <span class="n">MainWindow</span><span class="p">,</span>
-                                                       <span class="n">SomaWorkflowWidget</span><span class="p">)</span>
+            <span class="kn">from</span> <span class="nn">soma_workflow.gui.workflowGui</span> <span class="kn">import</span> <span class="p">(</span>
+                <span class="n">ApplicationModel</span><span class="p">,</span>
+                <span class="n">MainWindow</span><span class="p">,</span>
+            <span class="p">)</span>
 
             <span class="n">model</span> <span class="o">=</span> <span class="n">ApplicationModel</span><span class="p">()</span>
             <span class="n">sw_widget</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">(</span>

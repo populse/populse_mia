@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -121,7 +121,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.iteration_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -158,17 +158,28 @@
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QCheckBox</span><span class="p">,</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span>
-                             <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">,</span>
-                             <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QCheckBox</span><span class="p">,</span>
+    <span class="n">QComboBox</span><span class="p">,</span>
+    <span class="n">QHBoxLayout</span><span class="p">,</span>
+    <span class="n">QLabel</span><span class="p">,</span>
+    <span class="n">QPushButton</span><span class="p">,</span>
+    <span class="n">QTableWidget</span><span class="p">,</span>
+    <span class="n">QTableWidgetItem</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+
 <span class="c1"># MIA imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ClickableLabel</span><span class="p">,</span>
-                                                <span class="n">PopUpSelectIteration</span><span class="p">,</span>
-                                                <span class="n">PopUpSelectTagCountTable</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ClickableLabel</span><span class="p">,</span>
+    <span class="n">PopUpSelectIteration</span><span class="p">,</span>
+    <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="IterationTable"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable">[docs]</a><span class="k">class</span> <span class="nc">IterationTable</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
@@ -417,7 +428,6 @@
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ui_select</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
-
             <span class="k">if</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">iterated_tag</span>
                 <span class="ow">is</span> <span class="kc">None</span>

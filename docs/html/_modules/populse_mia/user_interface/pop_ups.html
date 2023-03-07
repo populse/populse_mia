@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -133,7 +133,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -204,53 +204,96 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
+
 <span class="c1"># Capsul imports</span>
 <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">capsul_engine</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">ProcessNode</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">PipelineNode</span>
 <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developer_view</span> <span class="kn">import</span> <span class="n">PipelineDeveloperView</span>
 <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.settings_editor</span> <span class="kn">import</span> <span class="n">SettingsEditor</span>
+
 <span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span><span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span> <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_INTEGER</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span>
-                                 <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_DATE</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_DATETIME</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_FLOAT</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_INTEGER</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">pyqtSignal</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QApplication</span><span class="p">,</span> <span class="n">QCheckBox</span><span class="p">,</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span>
-                             <span class="n">QDialogButtonBox</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> <span class="n">QFormLayout</span><span class="p">,</span>
-                             <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QHeaderView</span><span class="p">,</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span>
-                             <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QPlainTextEdit</span><span class="p">,</span>
-                             <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QRadioButton</span><span class="p">,</span> <span class="n">QScrollArea</span><span class="p">,</span> <span class="n">QSplitter</span><span class="p">,</span>
-                             <span class="n">QTableWidget</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">,</span> <span class="n">QTreeWidget</span><span class="p">,</span>
-                             <span class="n">QTreeWidgetItem</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QApplication</span><span class="p">,</span>
+    <span class="n">QCheckBox</span><span class="p">,</span>
+    <span class="n">QComboBox</span><span class="p">,</span>
+    <span class="n">QDialog</span><span class="p">,</span>
+    <span class="n">QDialogButtonBox</span><span class="p">,</span>
+    <span class="n">QFileDialog</span><span class="p">,</span>
+    <span class="n">QFormLayout</span><span class="p">,</span>
+    <span class="n">QHBoxLayout</span><span class="p">,</span>
+    <span class="n">QHeaderView</span><span class="p">,</span>
+    <span class="n">QInputDialog</span><span class="p">,</span>
+    <span class="n">QLabel</span><span class="p">,</span>
+    <span class="n">QLineEdit</span><span class="p">,</span>
+    <span class="n">QMessageBox</span><span class="p">,</span>
+    <span class="n">QPlainTextEdit</span><span class="p">,</span>
+    <span class="n">QPushButton</span><span class="p">,</span>
+    <span class="n">QRadioButton</span><span class="p">,</span>
+    <span class="n">QScrollArea</span><span class="p">,</span>
+    <span class="n">QSplitter</span><span class="p">,</span>
+    <span class="n">QTableWidget</span><span class="p">,</span>
+    <span class="n">QTableWidgetItem</span><span class="p">,</span>
+    <span class="n">QTreeWidget</span><span class="p">,</span>
+    <span class="n">QTreeWidgetItem</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># Populse_mia imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TAG_ORIGIN_USER</span><span class="p">,</span>
-                                                   <span class="n">TAG_UNIT_DEGREE</span><span class="p">,</span>
-                                                   <span class="n">TAG_UNIT_HZPIXEL</span><span class="p">,</span>
-                                                   <span class="n">TAG_UNIT_MHZ</span><span class="p">,</span> <span class="n">TAG_UNIT_MM</span><span class="p">,</span>
-                                                   <span class="n">TAG_UNIT_MS</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BRICK_EXEC</span><span class="p">,</span> <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
-                                              <span class="n">BRICK_INIT</span><span class="p">,</span> <span class="n">BRICK_INIT_TIME</span><span class="p">,</span>
-                                              <span class="n">BRICK_INPUTS</span><span class="p">,</span> <span class="n">BRICK_NAME</span><span class="p">,</span>
-                                              <span class="n">BRICK_OUTPUTS</span><span class="p">,</span> <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_HISTORY</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
-                                              <span class="n">HISTORY_BRICKS</span><span class="p">,</span> <span class="n">HISTORY_PIPELINE</span><span class="p">,</span>
-                                              <span class="n">TAG_CHECKSUM</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">,</span>
-                                              <span class="n">TAG_HISTORY</span><span class="p">,</span> <span class="n">TAG_TYPE</span><span class="p">,</span> <span class="n">TYPE_MAT</span><span class="p">,</span>
-                                              <span class="n">TYPE_NII</span><span class="p">,</span> <span class="n">TYPE_TXT</span><span class="p">,</span> <span class="n">TYPE_UNKNOWN</span><span class="p">,</span>
-                                              <span class="n">Project</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TAG_ORIGIN_USER</span><span class="p">,</span>
+    <span class="n">TAG_UNIT_DEGREE</span><span class="p">,</span>
+    <span class="n">TAG_UNIT_HZPIXEL</span><span class="p">,</span>
+    <span class="n">TAG_UNIT_MHZ</span><span class="p">,</span>
+    <span class="n">TAG_UNIT_MM</span><span class="p">,</span>
+    <span class="n">TAG_UNIT_MS</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BRICK_EXEC</span><span class="p">,</span>
+    <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
+    <span class="n">BRICK_INIT</span><span class="p">,</span>
+    <span class="n">BRICK_INIT_TIME</span><span class="p">,</span>
+    <span class="n">BRICK_INPUTS</span><span class="p">,</span>
+    <span class="n">BRICK_NAME</span><span class="p">,</span>
+    <span class="n">BRICK_OUTPUTS</span><span class="p">,</span>
+    <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
+    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+    <span class="n">COLLECTION_HISTORY</span><span class="p">,</span>
+    <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
+    <span class="n">HISTORY_BRICKS</span><span class="p">,</span>
+    <span class="n">HISTORY_PIPELINE</span><span class="p">,</span>
+    <span class="n">TAG_CHECKSUM</span><span class="p">,</span>
+    <span class="n">TAG_FILENAME</span><span class="p">,</span>
+    <span class="n">TAG_HISTORY</span><span class="p">,</span>
+    <span class="n">TAG_TYPE</span><span class="p">,</span>
+    <span class="n">TYPE_MAT</span><span class="p">,</span>
+    <span class="n">TYPE_NII</span><span class="p">,</span>
+    <span class="n">TYPE_TXT</span><span class="p">,</span>
+    <span class="n">TYPE_UNKNOWN</span><span class="p">,</span>
+    <span class="n">Project</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">verCmp</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser</span> <span class="kn">import</span> <span class="n">data_browser</span>
 <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">utils</span>
@@ -321,10 +364,9 @@
         <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">list_value</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">list_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-
                     <span class="c1"># If the previous value was already a list, we fill it</span>
-
                     <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_value</span><span class="p">))</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
@@ -335,8 +377,9 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">default_init_table</span><span class="p">()</span>
 
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">default_init_table</span><span class="p">()</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">default_init_table</span><span class="p">()</span>
 
@@ -631,7 +674,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
         <span class="k">elif</span> <span class="n">path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path_type</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-
             <span class="c1"># For history</span>
             <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;add_scans&quot;</span><span class="p">)</span>
@@ -1940,7 +1982,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">itemText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combo_box</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span>
 
         <span class="k">for</span> <span class="n">push_button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="n">push_button</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_fields_names</span><span class="p">(</span>
                 <span class="n">COLLECTION_CURRENT</span>
             <span class="p">):</span>
@@ -2862,7 +2903,6 @@
         <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">resources_path_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="PopUpPreferences.browse_spm"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_spm">[docs]</a>    <span class="k">def</span> <span class="nf">browse_spm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called when spm browse button is clicked.&quot;&quot;&quot;</span>
 
@@ -3281,7 +3321,6 @@
 
         <span class="c1"># complete backup and testing</span>
         <span class="k">else</span><span class="p">:</span>
-
             <span class="c1"># Auto-save</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">setAutoSave</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -3470,7 +3509,6 @@
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">spm_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
             <span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab&quot;</span><span class="p">)</span>
                     <span class="n">QApplication</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
@@ -3480,7 +3518,6 @@
                     <span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">()</span>
                     <span class="ow">and</span> <span class="n">spm_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_path</span><span class="p">()</span>
                 <span class="p">):</span>
-
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -3488,7 +3525,6 @@
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
                 <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_input</span><span class="p">):</span>
-
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">matlab_cmd</span> <span class="o">=</span> <span class="p">(</span>
                             <span class="s2">&quot;restoredefaultpath; &quot;</span>
@@ -3545,18 +3581,17 @@
 
             <span class="c1"># Matlab alone config test</span>
             <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-
                 <span class="k">if</span> <span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_path</span><span class="p">():</span>
-
-                    <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span> <span class="ow">and</span>
-                            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()):</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+                    <span class="p">):</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
                 <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
-
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">matlab_cmd</span> <span class="o">=</span> <span class="s2">&quot;ver; exit&quot;</span>
                         <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
@@ -3606,7 +3641,6 @@
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">spm_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
             <span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
-
                 <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span>
                     <span class="ow">not</span> <span class="s2">&quot;Windows&quot;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="p">):</span>
@@ -3617,7 +3651,6 @@
                 <span class="k">if</span> <span class="p">(</span><span class="n">matlab_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_matlab_standalone_path</span><span class="p">())</span> <span class="ow">and</span> <span class="p">(</span>
                     <span class="n">spm_input</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">get_spm_standalone_path</span><span class="p">()</span>
                 <span class="p">):</span>
-
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -3629,7 +3662,6 @@
                             <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
                 <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spm_input</span><span class="p">):</span>
-
                     <span class="k">if</span> <span class="s2">&quot;Windows&quot;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                         <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
                             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;spm*_win*.exe&quot;</span><span class="p">)</span>
@@ -3652,9 +3684,7 @@
                         <span class="n">mcr</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;run_spm*.sh&quot;</span><span class="p">))</span>
 
                     <span class="k">if</span> <span class="n">mcr</span><span class="p">:</span>
-
                         <span class="k">try</span><span class="p">:</span>
-
                             <span class="k">if</span> <span class="s2">&quot;Windows&quot;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                                 <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
                                     <span class="p">[</span><span class="n">mcr</span><span class="p">[</span><span class="n">pos</span><span class="p">],</span> <span class="s2">&quot;--version&quot;</span><span class="p">],</span>
@@ -3695,7 +3725,6 @@
                                 <span class="ow">and</span> <span class="p">(</span><span class="sa">b</span><span class="s2">&quot;version&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">:])</span>
                                 <span class="ow">and</span> <span class="p">(</span><span class="sa">b</span><span class="s2">&quot;(standalone)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">:])</span>
                             <span class="p">):</span>
-
                                 <span class="k">if</span> <span class="p">(</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
                                 <span class="p">):</span>
@@ -3717,7 +3746,6 @@
                                 <span class="p">)</span>
 
                             <span class="k">elif</span> <span class="n">err</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
-
                                 <span class="k">if</span> <span class="s2">&quot;shared libraries&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">):</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span>
                                         <span class="n">matlab_input</span><span class="p">,</span> <span class="s2">&quot;Matlab standalone&quot;</span>
@@ -3737,7 +3765,7 @@
                                 <span class="n">QApplication</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
                                 <span class="k">return</span> <span class="kc">False</span>
 
-                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">wrong_path</span><span class="p">(</span><span class="n">spm_input</span><span class="p">,</span> <span class="s2">&quot;SPM standalone&quot;</span><span class="p">)</span>
                             <span class="n">QApplication</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
                             <span class="k">return</span> <span class="kc">False</span>
@@ -3757,7 +3785,6 @@
                 <span class="n">matlab_input</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
                 <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
             <span class="p">):</span>
-
                 <span class="k">if</span> <span class="s2">&quot;Windows&quot;</span> <span class="ow">in</span> <span class="n">archi</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="nb">print</span><span class="p">(</span>
                         <span class="s2">&quot;WARNING: Matlab Standalone Path enter, this &quot;</span>
@@ -3768,9 +3795,10 @@
                     <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
 
                 <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">):</span>
-
-                    <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span> <span class="ow">and</span>
-                            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()):</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+                    <span class="p">):</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab_standalone</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_standalone_path</span><span class="p">(</span><span class="n">matlab_input</span><span class="p">)</span>
                         <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -3838,8 +3866,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Empty MRIFileManager.jar path&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span>
-                    <span class="s2">&quot;No path has been entered for &quot;</span>
-                    <span class="s2">&quot;MRIFileManager.jar.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mri_conv_path</span><span class="p">)</span>
+                    <span class="s2">&quot;No path has been entered for &quot;</span> <span class="s2">&quot;MRIFileManager.jar.&quot;</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
@@ -3895,12 +3922,10 @@
         <span class="n">c_e</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">c_c</span> <span class="ow">and</span> <span class="n">c_e</span><span class="p">:</span>
-
             <span class="c1"># sync capsul config from mia config, if module is not used:</span>
 
             <span class="c1"># AFNI CapsulConfig</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_afni</span><span class="p">():</span>
-
                 <span class="c1"># TODO: We only deal here with the global environment</span>
                 <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
 
@@ -3923,7 +3948,6 @@
 
             <span class="c1"># ANTS CapsulConfig</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_ants</span><span class="p">():</span>
-
                 <span class="c1"># TODO: We only deal here with the global environment</span>
                 <span class="n">cif</span> <span class="o">=</span> <span class="n">c_e</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_id_field</span>
 
@@ -3976,7 +4000,6 @@
 
             <span class="c1"># SPM standalone CapsulConfig</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm_standalone</span><span class="p">():</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">keys</span> <span class="o">=</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                         <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
@@ -3989,14 +4012,12 @@
                     <span class="n">dict4clean</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="s2">&quot;standalone&quot;</span>
                             <span class="ow">in</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                 <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
                             <span class="p">][</span><span class="n">i</span><span class="p">]</span>
                         <span class="p">):</span>
-
                             <span class="k">if</span> <span class="p">(</span>
                                 <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                     <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
@@ -4010,14 +4031,12 @@
                             <span class="k">pass</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dict4clean</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="n">dict4clean</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                             <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                 <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
                             <span class="p">][</span><span class="n">i</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_spm</span><span class="p">():</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">keys</span> <span class="o">=</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                         <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
@@ -4030,14 +4049,12 @@
                     <span class="n">dict4clean</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="s2">&quot;standalone&quot;</span>
                             <span class="ow">in</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                 <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
                             <span class="p">][</span><span class="n">i</span><span class="p">]</span>
                         <span class="p">):</span>
-
                             <span class="k">if</span> <span class="p">(</span>
                                 <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                     <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
@@ -4047,7 +4064,6 @@
                                 <span class="n">dict4clean</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dict4clean</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="n">dict4clean</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                             <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                 <span class="s2">&quot;capsul.engine.module.spm&quot;</span>
@@ -4061,7 +4077,6 @@
                 <span class="k">pass</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab</span><span class="p">():</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">keys</span> <span class="o">=</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                         <span class="s2">&quot;capsul.engine.module.matlab&quot;</span>
@@ -4074,7 +4089,6 @@
                     <span class="n">dict4clean</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="s2">&quot;executable&quot;</span>
                             <span class="ow">in</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
@@ -4084,14 +4098,12 @@
                             <span class="n">dict4clean</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dict4clean</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="n">dict4clean</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                             <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                 <span class="s2">&quot;capsul.engine.module.matlab&quot;</span>
                             <span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;executable&quot;</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_use_matlab_standalone</span><span class="p">():</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">keys</span> <span class="o">=</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                         <span class="s2">&quot;capsul.engine.module.matlab&quot;</span>
@@ -4104,7 +4116,6 @@
                     <span class="n">dict4clean</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="s2">&quot;mcr_directory&quot;</span>
                             <span class="ow">in</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
@@ -4114,7 +4125,6 @@
                             <span class="n">dict4clean</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dict4clean</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="n">dict4clean</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                             <span class="k">del</span> <span class="n">c_c</span><span class="p">[</span><span class="s2">&quot;engine&quot;</span><span class="p">][</span><span class="s2">&quot;global&quot;</span><span class="p">][</span>
                                 <span class="s2">&quot;capsul.engine.module.matlab&quot;</span>
@@ -4860,7 +4870,6 @@
 
         <span class="c1"># Label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Projects list:&quot;</span><span class="p">)</span>
-        <span class="n">h_box</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
 
         <span class="n">project_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">project_list</span><span class="p">)):</span>
@@ -5134,7 +5143,6 @@
         <span class="sd">&quot;&quot;&quot;Saves the modifications and updates the data browser.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_filters</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
-
             <span class="c1"># Current filter updated</span>
             <span class="n">filter_name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
             <span class="n">filter_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">getFilter</span><span class="p">(</span><span class="n">filter_name</span><span class="p">)</span>
@@ -5513,7 +5521,7 @@
                 <span class="n">engine</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">pipeline</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_process_instance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline_xml</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                     <span class="n">pipeline</span> <span class="o">=</span> <span class="kc">None</span>
 
                 <span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -5528,8 +5536,9 @@
                                     <span class="n">pipeline</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">process</span>
                                     <span class="n">full_brick_name</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">unitary_pipeline</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="c1"># handle cases of named pipeline/brick without being a single Pipeline node</span>
-                    <span class="c1"># (e.g. a pipeline alone without exporting plugs)</span>
+                    <span class="c1"># handle cases of named pipeline/brick without being a</span>
+                    <span class="c1"># single Pipeline node (e.g. a pipeline alone without</span>
+                    <span class="c1"># exporting plugs)</span>
                     <span class="k">if</span> <span class="p">(</span>
                         <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitary_pipeline</span>
                         <span class="ow">and</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;CustomPipeline&quot;</span>
@@ -5565,9 +5574,10 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">node_selected</span><span class="p">(</span>
                             <span class="n">selected_name</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">selected_name</span><span class="p">]</span>
                         <span class="p">)</span>
-                    <span class="k">except</span><span class="p">:</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span>
-                            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">error in naming association brick</span><span class="se">\\</span><span class="s2">pipeline, cannot select node&quot;</span>
+                            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">error in naming association brick</span><span class="se">\\</span><span class="s2">pipeline, &quot;</span>
+                            <span class="s2">&quot;cannot select node ...&quot;</span>
                         <span class="p">)</span>
                         <span class="k">pass</span>
 
@@ -5605,7 +5615,6 @@
         <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_documents_names</span><span class="p">(</span>
             <span class="n">COLLECTION_CURRENT</span>
         <span class="p">):</span>
-
             <span class="k">if</span> <span class="n">scan</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="n">value_scan</span> <span class="o">=</span> <span class="n">scan</span>
 
@@ -6064,7 +6073,7 @@
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="PopUpVisualizedTags.click_unselect_tag"><a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpVisualizedTags.click_unselect_tag">[docs]</a>    <span class="k">def</span> <span class="nf">click_unselect_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Removes the unselected tags from populse_mia.e &quot;selected tag&quot; table.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Removes the unselected tags from populse_mia table.&quot;&quot;&quot;</span>
 
         <span class="n">rows</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">[</span>

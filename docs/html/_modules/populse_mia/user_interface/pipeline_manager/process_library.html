@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -129,7 +129,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -179,7 +179,6 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pkgutil</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
@@ -190,22 +189,43 @@
 <span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span><span class="p">,</span> <span class="n">is_zipfile</span>
 
 <span class="kn">import</span> <span class="nn">yaml</span>
+
 <span class="c1"># capsul import</span>
 <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">get_process_instance</span>
+
 <span class="c1"># PyQt5 import</span>
 <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span>
+
 <span class="c1"># QAbstractItemView is not available from soma (see in PackageLibraryDialog)</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QAbstractItemView</span>
+
 <span class="c1"># PyQt / PySide import, via soma</span>
 <span class="kn">from</span> <span class="nn">soma.qt_gui</span> <span class="kn">import</span> <span class="n">qt_backend</span>
 <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">QtGui</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.Qt</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QApplication</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span>
-                                       <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span>
-                                       <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QSplitter</span><span class="p">,</span>
-                                       <span class="n">QTreeView</span><span class="p">,</span> <span class="n">QTreeWidget</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">,</span>
-                                       <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.QtCore</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QAbstractItemModel</span><span class="p">,</span> <span class="n">QByteArray</span><span class="p">,</span>
-                                           <span class="n">QMimeData</span><span class="p">,</span> <span class="n">QModelIndex</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">Signal</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.Qt</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QApplication</span><span class="p">,</span>
+    <span class="n">QDialog</span><span class="p">,</span>
+    <span class="n">QFileDialog</span><span class="p">,</span>
+    <span class="n">QHBoxLayout</span><span class="p">,</span>
+    <span class="n">QLabel</span><span class="p">,</span>
+    <span class="n">QLineEdit</span><span class="p">,</span>
+    <span class="n">QMessageBox</span><span class="p">,</span>
+    <span class="n">QPushButton</span><span class="p">,</span>
+    <span class="n">QSplitter</span><span class="p">,</span>
+    <span class="n">QTreeView</span><span class="p">,</span>
+    <span class="n">QTreeWidget</span><span class="p">,</span>
+    <span class="n">QTreeWidgetItem</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.QtCore</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QAbstractItemModel</span><span class="p">,</span>
+    <span class="n">QByteArray</span><span class="p">,</span>
+    <span class="n">QMimeData</span><span class="p">,</span>
+    <span class="n">QModelIndex</span><span class="p">,</span>
+    <span class="n">Qt</span><span class="p">,</span>
+    <span class="n">Signal</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.QtWidgets</span> <span class="kn">import</span> <span class="n">QGroupBox</span><span class="p">,</span> <span class="n">QListWidget</span><span class="p">,</span> <span class="n">QMenu</span>
 
 <span class="c1"># Populse_MIA import</span>
@@ -525,7 +545,6 @@
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">if</span> <span class="n">module_name</span><span class="p">:</span>
-
                 <span class="c1"># Reloading the package</span>
                 <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="k">del</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
@@ -561,7 +580,6 @@
                 <span class="k">for</span> <span class="n">importer</span><span class="p">,</span> <span class="n">modname</span><span class="p">,</span> <span class="n">ispkg</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span>
                     <span class="n">pkg</span><span class="o">.</span><span class="n">__path__</span>
                 <span class="p">):</span>
-
                     <span class="k">if</span> <span class="n">ispkg</span><span class="p">:</span>
                         <span class="n">_add_package</span><span class="p">(</span>
                             <span class="n">proc_dic</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">module_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">modname</span><span class="p">)</span>
@@ -570,7 +588,6 @@
                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">())):</span>
                     <span class="c1"># Checking each class of in the package</span>
                     <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-
                         <span class="k">try</span><span class="p">:</span>
                             <span class="nb">print</span><span class="p">(</span>
                                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Installing </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> ...&quot;</span>
@@ -585,12 +602,10 @@
                             <span class="n">pkg_iter</span> <span class="o">=</span> <span class="n">proc_dic</span>
 
                             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">path_list</span><span class="p">:</span>
-
                                 <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">pkg_iter</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                                     <span class="n">pkg_iter</span> <span class="o">=</span> <span class="n">pkg_iter</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
 
                                 <span class="k">else</span><span class="p">:</span>
-
                                     <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">path_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
                                         <span class="n">pkg_iter</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;process_enabled&quot;</span>
 
@@ -623,7 +638,6 @@
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">for</span> <span class="n">dname</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-
                 <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
                     <span class="c1"># Modifying only .py files (pipelines are saved with</span>
                     <span class="c1"># this extension)</span>
@@ -640,20 +654,21 @@
                             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;Package installation, &quot;</span>
-                                                     <span class="s2">&quot;please wait ...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                <span class="s2">&quot;Package installation, &quot;</span> <span class="s2">&quot;please wait ...&quot;</span>
+            <span class="p">)</span>
             <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
 
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Package installation, &quot;</span>
-                                                  <span class="s2">&quot;please wait ...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+                <span class="s2">&quot;Package installation, &quot;</span> <span class="s2">&quot;please wait ...&quot;</span>
+            <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">result_add_package</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
@@ -675,7 +690,6 @@
                 <span class="k">return</span>
 
         <span class="k">try</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
@@ -709,7 +723,6 @@
                 <span class="p">),</span>
                 <span class="s2">&quot;r&quot;</span><span class="p">,</span>
             <span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;5.1&quot;</span><span class="p">,</span> <span class="s2">&quot;sup&quot;</span><span class="p">):</span>
                         <span class="n">process_dic</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
@@ -756,10 +769,8 @@
             <span class="p">]</span>
 
             <span class="k">if</span> <span class="n">is_zipfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-
                 <span class="c1"># Extraction of the zipped content</span>
                 <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
-
                     <span class="n">packages_name</span> <span class="o">=</span> <span class="p">[</span>
                         <span class="n">member</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                         <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">zip_ref</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
@@ -783,7 +794,6 @@
                 <span class="p">):</span>
                     <span class="c1"># Copy MIA_processes in a temporary folder</span>
                     <span class="k">if</span> <span class="n">mia_processes_not_found</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="p">(</span><span class="n">package_name</span> <span class="o">==</span> <span class="s2">&quot;mia_processes&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
                             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
                                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -805,7 +815,6 @@
                             <span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">is_zipfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-
                         <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
                             <span class="n">members_to_extract</span> <span class="o">=</span> <span class="p">[</span>
                                 <span class="n">member</span>
@@ -838,7 +847,6 @@
                     <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">is_zipfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-
                         <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
                             <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
                             <span class="n">members_to_extract</span> <span class="o">=</span> <span class="p">[</span>
@@ -1007,7 +1015,6 @@
                 <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_add_package</span><span class="p">:</span>
                 <span class="n">messg</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="s1">&#39;The &quot;</span><span class="si">{0}</span><span class="s1">&quot; library has been &#39;</span> <span class="s2">&quot;correctly installed.&quot;</span>
@@ -1761,7 +1768,6 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">module_name</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
@@ -1786,11 +1792,9 @@
 
                 <span class="c1"># Checking if there are subpackages</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span> <span class="s2">&quot;__path__&quot;</span><span class="p">):</span>
-
                     <span class="k">for</span> <span class="n">importer</span><span class="p">,</span> <span class="n">modname</span><span class="p">,</span> <span class="n">ispkg</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span>
                         <span class="n">pkg</span><span class="o">.</span><span class="n">__path__</span>
                     <span class="p">):</span>
-
                         <span class="k">if</span> <span class="n">ispkg</span> <span class="ow">and</span> <span class="n">modname</span> <span class="o">!=</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
                             <span class="n">err_msg</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_package</span><span class="p">(</span>
                                 <span class="nb">str</span><span class="p">(</span><span class="n">module_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">modname</span><span class="p">),</span>
@@ -1799,10 +1803,8 @@
                             <span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">())):</span>
-
                     <span class="c1"># Checking each class of in the package</span>
                     <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">get_process_instance</span><span class="p">(</span>
                                 <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -1827,7 +1829,6 @@
                             <span class="n">recurs</span> <span class="o">=</span> <span class="kc">False</span>
 
                             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">path_list</span><span class="p">:</span>
-
                                 <span class="k">if</span> <span class="n">element</span> <span class="o">==</span> <span class="n">class_name</span><span class="p">:</span>
                                     <span class="n">recurs</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1838,9 +1839,7 @@
                                     <span class="n">pkg_iter</span> <span class="o">=</span> <span class="n">pkg_iter</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
 
                                 <span class="k">else</span><span class="p">:</span>
-
                                     <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">path_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-
                                         <span class="k">if</span> <span class="p">(</span>
                                             <span class="n">element</span> <span class="o">==</span> <span class="n">class_name</span>
                                             <span class="ow">or</span> <span class="n">recurs</span> <span class="ow">is</span> <span class="kc">True</span>
@@ -1938,7 +1937,6 @@
                         <span class="nb">__import__</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
 
                     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -2080,7 +2078,6 @@
             <span class="k">return</span> <span class="n">deleted_packages</span>
 
         <span class="k">if</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;nipype&quot;</span><span class="p">,</span> <span class="s2">&quot;mia_processes&quot;</span><span class="p">,</span> <span class="s2">&quot;capsul&quot;</span><span class="p">]:</span>
-
             <span class="k">if</span> <span class="n">from_pipeline_manager</span><span class="p">:</span>
                 <span class="n">inform_text</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="s2">&quot;This package belongs to &quot;</span>
@@ -2138,7 +2135,6 @@
                 <span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">sub_pkg</span> <span class="ow">in</span> <span class="n">sub_deleted_packages</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="n">sub_pkg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deleted_packages</span><span class="p">:</span>
                         <span class="n">deleted_packages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub_pkg</span><span class="p">)</span>
 
@@ -2154,16 +2150,13 @@
                         <span class="n">is_import</span> <span class="o">=</span> <span class="kc">False</span>
 
                         <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-
                             <span class="k">if</span> <span class="s2">&quot;__init__.py&quot;</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-
                                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
                                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span>
                                 <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                                     <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
 
                                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-
                                     <span class="k">if</span> <span class="p">(</span>
                                         <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span>
                                         <span class="ow">and</span> <span class="s2">&quot;import&quot;</span> <span class="ow">in</span> <span class="n">line</span>
@@ -2212,7 +2205,6 @@
                     <span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">init</span><span class="p">):</span>
-
                         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                             <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
 
@@ -2221,7 +2213,6 @@
                         <span class="n">imports_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
                         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-
                             <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
                                 <span class="s2">&quot;import&quot;</span> <span class="ow">in</span> <span class="n">line</span>
                             <span class="p">):</span>
@@ -2230,11 +2221,9 @@
                                 <span class="n">imports_in_init</span><span class="p">[</span><span class="n">from_package</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
                         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-
                             <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
                                 <span class="p">(</span><span class="s2">&quot;import&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">import_line</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">)</span>
                             <span class="p">):</span>
-
                                 <span class="k">if</span> <span class="s2">&quot;from&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                                     <span class="n">from_package</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
                                     <span class="n">from_package</span> <span class="o">=</span> <span class="n">from_package</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -2276,7 +2265,6 @@
                             <span class="p">)</span>
 
                         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">imports_in_init</span><span class="p">:</span>
-
                             <span class="k">if</span> <span class="n">pkg_list</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">imports_in_init</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
                                 <span class="n">filename</span> <span class="o">=</span> <span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;.py&quot;</span>
                                 <span class="n">delete_all</span> <span class="o">=</span> <span class="kc">True</span>
@@ -2361,7 +2349,6 @@
                                         <span class="p">)</span>
 
                                     <span class="k">if</span> <span class="n">remove</span><span class="p">:</span>
-
                                         <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">deleted_packages</span><span class="p">:</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">remove_package_with_text</span><span class="p">(</span>
                                                 <span class="n">pkg</span><span class="p">,</span> <span class="kc">False</span>
@@ -2371,16 +2358,12 @@
                                     <span class="n">import_line</span> <span class="o">=</span> <span class="kc">False</span>
 
                                     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-
                                         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-
                                             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-
                                                 <span class="k">if</span> <span class="s2">&quot;(&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                                                     <span class="n">import_line</span> <span class="o">=</span> <span class="kc">True</span>
 
                                             <span class="k">elif</span> <span class="n">import_line</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-
                                                 <span class="k">if</span> <span class="s2">&quot;)&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                                                     <span class="n">import_line</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -2395,7 +2378,6 @@
                                     <span class="n">is_import</span> <span class="o">=</span> <span class="kc">False</span>
 
                                     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-
                                         <span class="k">if</span> <span class="p">(</span>
                                             <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span>
                                             <span class="ow">and</span> <span class="s2">&quot;import&quot;</span> <span class="ow">in</span> <span class="n">line</span>
@@ -2409,7 +2391,6 @@
                                         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
 
                                         <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_init</span><span class="p">):</span>
-
                                             <span class="k">if</span> <span class="n">elt</span> <span class="o">==</span> <span class="s2">&quot;__pycache__&quot;</span><span class="p">:</span>
                                                 <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span>
                                                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -2453,9 +2434,7 @@
             <span class="n">package_removed</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="n">package_removed</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="n">update_view</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">_2del</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_dic</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">del_list</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">_2del</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">delete_dic</span><span class="p">[</span><span class="n">_2del</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_list</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
@@ -2465,7 +2444,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_list</span><span class="o">.</span><span class="n">takeItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">_2del</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">_2del</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
 
@@ -2474,7 +2452,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove_list</span><span class="o">.</span><span class="n">takeItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">remove_dic</span><span class="p">[</span><span class="n">_2del</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove_dic</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">_2del</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_dic</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">remove_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
 
@@ -2516,7 +2493,6 @@
             <span class="p">),</span>
             <span class="s2">&quot;r&quot;</span><span class="p">,</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;5.1&quot;</span><span class="p">,</span> <span class="s2">&quot;sup&quot;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
@@ -2595,7 +2571,6 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">package</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
@@ -2618,9 +2593,7 @@
                 <span class="n">check_flag</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">path_list</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">pkg_iter</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-
                     <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">path_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
                         <span class="n">pkg_iter</span> <span class="o">=</span> <span class="n">pkg_iter</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
 
@@ -2757,7 +2730,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">package_library</span><span class="o">.</span><span class="n">paths</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Packages&quot;</span><span class="p">):</span>
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">]</span>
 
@@ -2872,11 +2844,8 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="o">==</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Key_Delete</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
-
             <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectedIndexes</span><span class="p">():</span>
-
                 <span class="k">if</span> <span class="n">idx</span><span class="o">.</span><span class="n">isValid</span><span class="p">:</span>
-                    <span class="n">model</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
                     <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">sibling</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
                     <span class="n">node</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span>
 
@@ -2913,7 +2882,6 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">idx</span><span class="o">.</span><span class="n">isValid</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">sibling</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span>
 
@@ -3066,7 +3034,6 @@
             <span class="p">),</span>
             <span class="s2">&quot;r&quot;</span><span class="p">,</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;5.1&quot;</span><span class="p">,</span> <span class="s2">&quot;sup&quot;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
@@ -3174,9 +3141,7 @@
         <span class="n">parent</span> <span class="o">=</span> <span class="n">root_node</span>
 
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">datadict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-
             <span class="k">if</span> <span class="kc">True</span> <span class="ow">in</span> <span class="p">[</span>
                 <span class="kc">True</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;process_enabled&quot;</span>
             <span class="p">]:</span>
@@ -3187,7 +3152,6 @@
                 <span class="p">]</span>
 
             <span class="k">else</span><span class="p">:</span>
-
                 <span class="n">list_name</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">list_values</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
@@ -3197,7 +3161,6 @@
                     <span class="n">value</span> <span class="o">=</span> <span class="n">list_values</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-
                         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                             <span class="n">list_name</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 

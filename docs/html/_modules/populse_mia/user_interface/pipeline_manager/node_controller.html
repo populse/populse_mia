@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -123,7 +123,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -163,39 +163,60 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
 <span class="kn">import</span> <span class="nn">sip</span>
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
+
 <span class="c1"># capsul imports</span>
+<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">PipelineNode</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
-<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.attributed_process_widget</span> <span class="kn">import</span> \
-    <span class="n">AttributedProcessWidget</span>
+<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.attributed_process_widget</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AttributedProcessWidget</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QApplication</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QDialogButtonBox</span><span class="p">,</span>
-                             <span class="n">QGroupBox</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span>
-                             <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QToolButton</span><span class="p">,</span>
-                             <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QApplication</span><span class="p">,</span>
+    <span class="n">QDialog</span><span class="p">,</span>
+    <span class="n">QDialogButtonBox</span><span class="p">,</span>
+    <span class="n">QGroupBox</span><span class="p">,</span>
+    <span class="n">QHBoxLayout</span><span class="p">,</span>
+    <span class="n">QLabel</span><span class="p">,</span>
+    <span class="n">QLineEdit</span><span class="p">,</span>
+    <span class="n">QMessageBox</span><span class="p">,</span>
+    <span class="n">QPushButton</span><span class="p">,</span>
+    <span class="n">QToolButton</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="c1"># soma-base imports</span>
 <span class="kn">from</span> <span class="nn">soma.controller</span> <span class="kn">import</span> <span class="n">trait_ids</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">Undefined</span>
 
 <span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.data_manager.filter</span> <span class="kn">import</span> <span class="n">Filter</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span>
-                                              <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
+    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+    <span class="n">TAG_FILENAME</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> \
-    <span class="n">AdvancedSearch</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AdvancedSearch</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">TableDataBrowser</span><span class="p">,</span> <span class="n">not_defined_value</span><span class="p">)</span>
+    <span class="n">TableDataBrowser</span><span class="p">,</span>
+    <span class="n">not_defined_value</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
-                                                <span class="n">PopUpVisualizedTags</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
+    <span class="n">PopUpVisualizedTags</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">type_editors</span>
 
@@ -253,8 +274,9 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PlugFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
         <span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> \
-            <span class="n">RapidSearch</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="p">(</span>
+            <span class="n">RapidSearch</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span> <span class="o">=</span> <span class="n">node_controller</span>
@@ -627,6 +649,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">node_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">pipeline</span>
+
         <span class="c1"># The pipeline global inputs and outputs node name cannot be modified</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">)</span>
@@ -639,12 +662,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setReadOnly</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="p">:</span>
-            <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">takeAt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># item = self.layout().takeAt(1)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">static_release</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="o">.</span><span class="n">attributed_process</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters_changed</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
-            <span class="k">del</span> <span class="n">item</span>
+            <span class="c1"># del item</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process_widget</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># get the list of inputs connected from outputs of upstream nodes</span>
@@ -771,9 +794,6 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">old_node_name</span><span class="p">:</span>
             <span class="n">old_node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span>
 
-        <span class="c1"># Copying the old node</span>
-        <span class="n">old_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">old_node_name</span><span class="p">]</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="n">ProcessIteration</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">new_node_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;iterated_&quot;</span><span class="p">):</span>
                 <span class="n">new_node_name</span> <span class="o">=</span> <span class="s2">&quot;iterated_&quot;</span> <span class="o">+</span> <span class="n">new_node_name</span>
@@ -811,7 +831,6 @@
             <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;update_node_name&quot;</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">from_undo</span><span class="p">:</span>
-
                 <span class="c1"># TODO: next line is strange!</span>
                 <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span>
 
@@ -873,7 +892,6 @@
         <span class="n">atts</span> <span class="o">=</span> <span class="n">compl</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span>
         <span class="n">num_set</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">attributes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="k">if</span> <span class="n">atts</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">atts</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="nb">setattr</span><span class="p">(</span><span class="n">atts</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -891,7 +909,7 @@
                 <span class="s2">&quot;attributes set for process parameters completion&quot;</span>
             <span class="p">)</span>
             <span class="n">mbox</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="n">mbox_icon</span><span class="p">,</span> <span class="n">mbox_title</span><span class="p">,</span> <span class="n">mbox_text</span><span class="p">)</span>
-            <span class="n">timer</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">mbox</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
+            <span class="n">Qt</span><span class="o">.</span><span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">mbox</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
             <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div></div>
 
 
@@ -1351,7 +1369,6 @@
                 <span class="c1"># inputs except if the input is &quot;database_scans&quot;</span>
                 <span class="c1"># which means that the scans will be filtered with InputFilter</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="o">==</span> <span class="s2">&quot;inputs&quot;</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;database_scans&quot;</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="s2">&quot;File&quot;</span> <span class="ow">in</span> <span class="n">trait_type</span> <span class="ow">or</span> <span class="s2">&quot;List_File&quot;</span> <span class="ow">in</span> <span class="n">trait_type</span><span class="p">:</span>
                         <span class="n">parameters</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
                         <span class="n">push_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Filter&quot;</span><span class="p">)</span>
@@ -1488,7 +1505,6 @@
 <span class="sd">                              is called from an undo/redo)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Copying the old node</span>
-        <span class="n">old_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">]</span>
         <span class="n">old_node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">new_node_name</span><span class="p">:</span>
@@ -1606,7 +1622,6 @@
 
         <span class="c1"># Reading the value from the plug&#39;s line edit</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">new_value</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="n">in_or_out</span> <span class="o">==</span> <span class="s2">&quot;in&quot;</span><span class="p">:</span>
                 <span class="n">new_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_input</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
@@ -1622,7 +1637,7 @@
             <span class="c1"># We try to handle the undefined value with the eval() function</span>
             <span class="c1"># See FixME below.</span>
             <span class="k">except</span> <span class="ne">SyntaxError</span><span class="p">:</span>
-                <span class="n">new_value</span> <span class="o">=</span> <span class="n">new_value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&lt;undefined&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&lt;undefined&gt;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="n">new_value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&lt;undefined&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&lt;undefined&gt;&#39;&quot;</span><span class="p">)</span>
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">new_value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">new_value</span><span class="p">)</span>
@@ -1654,14 +1669,15 @@
         <span class="n">old_value</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_plug_value</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-
-            <span class="c1">#FIXME:Since we replace, above, &quot;&lt;undefined&gt;&quot; with &quot;&lt;undefined&gt;&quot;</span>
+            <span class="c1"># FIXME:Since we replace, above, &quot;&lt;undefined&gt;&quot; with &quot;&lt;undefined&gt;&quot;</span>
             <span class="c1"># in order to handle syntax error with eval() we should handle</span>
             <span class="c1"># all cases here (big job).</span>
             <span class="c1"># For the moment we manage only the dictionary</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="n">new_value</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">Undefined</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="s1">&#39;&lt;undefined&gt;&#39;</span> <span class="k">else</span>
-                                <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">new_value</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">Undefined</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="s2">&quot;&lt;undefined&gt;&quot;</span> <span class="k">else</span> <span class="n">v</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">new_value</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">}</span>
             <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">(</span><span class="n">plug_name</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
@@ -1714,17 +1730,19 @@
 <span class="sd">        :param filter_res_list: list of the filtered files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">index</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">pipeline</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">value_type</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
         <span class="c1"># If the list contains only one element, setting</span>
         <span class="c1"># this element as the plug value</span>
         <span class="n">len_list</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filter_res_list</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">len_list</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">filter_res_list</span>
+
         <span class="k">elif</span> <span class="n">len_list</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">filter_res_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
 

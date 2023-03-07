@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,7 +125,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_editor</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -164,32 +164,42 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
+
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Node</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Switch</span><span class="p">,</span> <span class="n">capsul_engine</span><span class="p">,</span>
-                        <span class="n">get_process_instance</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Node</span><span class="p">,</span>
+    <span class="n">PipelineNode</span><span class="p">,</span>
+    <span class="n">Process</span><span class="p">,</span>
+    <span class="n">Switch</span><span class="p">,</span>
+    <span class="n">get_process_instance</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">ProcessNode</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.python_export</span> <span class="kn">import</span> <span class="n">save_py_pipeline</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.xml</span> <span class="kn">import</span> <span class="n">save_xml_pipeline</span>
 <span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.pipeline_developer_view</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">NodeGWidget</span><span class="p">,</span> <span class="n">PipelineDeveloperView</span><span class="p">)</span>
+    <span class="n">NodeGWidget</span><span class="p">,</span>
+    <span class="n">PipelineDeveloperView</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QMessageBox</span>
+
 <span class="c1"># soma-base imports</span>
 <span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="kn">import</span> <span class="n">weak_proxy</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">verCmp</span>
+
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="kn">import</span> \
-    <span class="n">FilterWidget</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FilterWidget</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">PopUpClosePipeline</span>
 
 <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
@@ -362,7 +372,6 @@
                 <span class="n">plug_name</span> <span class="o">=</span> <span class="n">pipeline_parameter</span>
 
             <span class="k">while</span> <span class="n">check_plug</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline_node</span><span class="o">.</span><span class="n">plugs</span><span class="p">:</span>
                     <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                     <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
@@ -411,7 +420,6 @@
             <span class="n">pipeline_parameter</span> <span class="o">=</span> <span class="n">plug_name</span>
 
             <span class="k">if</span> <span class="n">optional</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">optional</span> <span class="o">=</span> <span class="n">dial</span><span class="o">.</span><span class="n">optional</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
 
@@ -419,7 +427,6 @@
                     <span class="k">pass</span>
 
             <span class="k">if</span> <span class="n">weak_link</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">weak_link</span> <span class="o">=</span> <span class="n">dial</span><span class="o">.</span><span class="n">weak</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
 
@@ -529,7 +536,6 @@
             <span class="n">_temp_plug_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">_temp_plug_name</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">pip_plug_name</span> <span class="ow">in</span> <span class="n">_temp_plug_name</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="n">pip_plug_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">):</span>
                 <span class="n">plug_name</span> <span class="o">=</span> <span class="n">pip_plug_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">plug</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline_node</span><span class="o">.</span><span class="n">plugs</span><span class="p">[</span><span class="n">plug_name</span><span class="p">]</span>
@@ -710,7 +716,6 @@
 
             <span class="k">if</span> <span class="n">node_name</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">):</span>
                 <span class="n">sub_pipeline_process</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span>
-                <span class="n">current_process_id</span> <span class="o">=</span> <span class="n">sub_pipeline_process</span><span class="o">.</span><span class="n">id</span>
 
                 <span class="c1"># Reading the process configuration file</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
@@ -721,7 +726,6 @@
                     <span class="p">),</span>
                     <span class="s2">&quot;r&quot;</span><span class="p">,</span>
                 <span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-
                     <span class="k">try</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;5.1&quot;</span><span class="p">,</span> <span class="s2">&quot;sup&quot;</span><span class="p">):</span>
                             <span class="n">dic</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
@@ -791,7 +795,6 @@
                     <span class="ow">or</span> <span class="n">removed_inputs</span>
                     <span class="ow">or</span> <span class="n">removed_outputs</span>
                 <span class="p">):</span>
-
                     <span class="c1"># Checking the links of the node</span>
                     <span class="n">link_to_del</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
                     <span class="k">for</span> <span class="n">link</span><span class="p">,</span> <span class="n">glink</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">glinks</span><span class="p">):</span>
@@ -909,9 +912,7 @@
         <span class="c1"># Collecting the links from the node that is being deleted</span>
         <span class="n">links</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="k">if</span> <span class="n">plug</span><span class="o">.</span><span class="n">output</span> <span class="ow">or</span> <span class="p">(</span><span class="n">invert_io</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">plug</span><span class="o">.</span><span class="n">output</span><span class="p">):</span>
-
                 <span class="k">for</span> <span class="n">link_to</span> <span class="ow">in</span> <span class="n">plug</span><span class="o">.</span><span class="n">links_to</span><span class="p">:</span>
                     <span class="p">(</span>
                         <span class="n">dest_node_name</span><span class="p">,</span>
@@ -926,7 +927,6 @@
                     <span class="n">dest_plug_name</span> <span class="o">=</span> <span class="kc">None</span>
 
                     <span class="k">for</span> <span class="n">plug_name_d</span><span class="p">,</span> <span class="n">plug_d</span> <span class="ow">in</span> <span class="n">dest_node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
                         <span class="k">if</span> <span class="n">plug_d</span> <span class="o">==</span> <span class="n">dest_plug</span><span class="p">:</span>
                             <span class="n">dest_plug_name</span> <span class="o">=</span> <span class="n">plug_name_d</span>
                             <span class="k">break</span>
@@ -939,7 +939,6 @@
                     <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link_to_add</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
-
                 <span class="k">for</span> <span class="n">link_from</span> <span class="ow">in</span> <span class="n">plug</span><span class="o">.</span><span class="n">links_from</span><span class="p">:</span>
                     <span class="p">(</span>
                         <span class="n">source_node_name</span><span class="p">,</span>
@@ -954,7 +953,6 @@
                     <span class="n">source_plug_name</span> <span class="o">=</span> <span class="kc">None</span>
 
                     <span class="k">for</span> <span class="n">plug_name_d</span><span class="p">,</span> <span class="n">plug_d</span> <span class="ow">in</span> <span class="n">source_node</span><span class="o">.</span><span class="n">plugs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
                         <span class="k">if</span> <span class="n">plug_d</span> <span class="o">==</span> <span class="n">source_plug</span><span class="p">:</span>
                             <span class="n">source_plug_name</span> <span class="o">=</span> <span class="n">plug_name_d</span>
                             <span class="k">break</span>
@@ -1026,7 +1024,6 @@
         <span class="n">parameter_list</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">parameter_name</span><span class="p">,</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">plugs</span><span class="p">):</span>
-
             <span class="k">if</span> <span class="n">parameter_name</span> <span class="ow">in</span> <span class="p">(</span>
                 <span class="s2">&quot;nodes_activation&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;selection_changed&quot;</span><span class="p">,</span>
@@ -1047,7 +1044,6 @@
                 <span class="p">)</span>
                 <span class="ow">and</span> <span class="p">(</span><span class="n">optional</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">get_trait</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span><span class="o">.</span><span class="n">optional</span><span class="p">)</span>
             <span class="p">):</span>
-
                 <span class="n">p_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export_plug</span><span class="p">(</span>
                     <span class="n">parameter_name</span><span class="p">,</span>
                     <span class="n">temp_plug_name</span><span class="o">=</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">parameter_name</span><span class="p">),</span>
@@ -1113,7 +1109,6 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">))</span>
             <span class="p">):</span>
-
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)),</span> <span class="s2">&quot;w&quot;</span>
                 <span class="p">):</span>
@@ -1326,7 +1321,6 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">undos</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">redos</span><span class="p">):</span>
-
                     <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">to_redo</span> <span class="ow">and</span> <span class="n">history_maker</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">redos</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
@@ -1355,8 +1349,7 @@
         <span class="c1"># Removing links of the selected node and copy the origin/destination</span>
         <span class="n">links_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">for</span> <span class="p">(</span><span class="n">source_parameter</span><span class="p">,</span> <span class="n">source_plug</span><span class="p">)</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">old_node</span><span class="o">.</span><span class="n">plugs</span><span class="p">):</span>
-
+        <span class="k">for</span> <span class="n">source_parameter</span><span class="p">,</span> <span class="n">source_plug</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">old_node</span><span class="o">.</span><span class="n">plugs</span><span class="p">):</span>
             <span class="k">for</span> <span class="p">(</span>
                 <span class="n">dest_node_name</span><span class="p">,</span>
                 <span class="n">dest_parameter</span><span class="p">,</span>
@@ -1403,7 +1396,6 @@
 
         <span class="c1"># Setting the same links as the original node</span>
         <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links_to_copy</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;to&quot;</span><span class="p">:</span>
                 <span class="n">pipeline</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span>
                     <span class="n">new_node_name</span>
@@ -2064,7 +2056,6 @@
             <span class="p">),</span>
             <span class="s2">&quot;r&quot;</span><span class="p">,</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;5.1&quot;</span><span class="p">,</span> <span class="s2">&quot;sup&quot;</span><span class="p">):</span>
                     <span class="n">dic</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
@@ -2296,7 +2287,7 @@
             <span class="k">if</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s2">&quot;database_scans&quot;</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="nb">setattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s2">&quot;database_scans&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                     <span class="kn">import</span> <span class="nn">traceback</span>
 
                     <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
@@ -2318,7 +2309,6 @@
     <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_name</span> <span class="o">+</span> <span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
-
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths_list</span><span class="p">:</span>
             <span class="n">new_path</span> <span class="o">=</span> <span class="n">path</span>
 
@@ -2328,7 +2318,6 @@
             <span class="c1"># Making sure that the filename is found (has somme issues</span>
             <span class="c1"># with case sensitivity)</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
-
                 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
                     <span class="n">new_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_path</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 
@@ -2363,7 +2352,6 @@
         <span class="c1"># so the key is a module name.</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-
             <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">new_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">new_paths</span>
@@ -2396,7 +2384,6 @@
     <span class="n">saved</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">writer</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">formats</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
             <span class="n">writer</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">saved</span> <span class="o">=</span> <span class="kc">True</span>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -131,7 +131,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -166,26 +166,27 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="c1"># Capsul imports</span>
-<span class="kn">import</span> <span class="nn">copy</span>
 <span class="c1"># Other imports</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">import</span> <span class="nn">weakref</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
 <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">capsul_engine</span>
 <span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ProcessCompletionEngine</span><span class="p">,</span> <span class="n">ProcessCompletionEngineFactory</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine_factory</span> <span class="kn">import</span> \
-    <span class="n">BuiltinProcessCompletionEngineFactory</span>
+    <span class="n">ProcessCompletionEngine</span><span class="p">,</span>
+    <span class="n">ProcessCompletionEngineFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine_factory</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BuiltinProcessCompletionEngineFactory</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">ProcessNode</span>
 <span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
 <span class="kn">from</span> <span class="nn">capsul.process.process</span> <span class="kn">import</span> <span class="n">NipypeProcess</span>
+
 <span class="c1"># nipype imports</span>
 <span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">InputMultiObject</span><span class="p">,</span> <span class="n">traits_extension</span>
+
 <span class="c1"># Soma-base import</span>
 <span class="kn">from</span> <span class="nn">soma.controller.trait_utils</span> <span class="kn">import</span> <span class="n">relax_exists_constraint</span>
 <span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="kn">import</span> <span class="n">get_ref</span>
@@ -226,7 +227,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.__init__"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback_engine</span><span class="p">):</span>
-
         <span class="nb">super</span><span class="p">(</span><span class="n">MIAProcessCompletionEngine</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span> <span class="o">=</span> <span class="n">fallback_engine</span>
@@ -267,7 +267,6 @@
         <span class="n">pl</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">par_value</span> <span class="ow">in</span> <span class="n">process</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="c1"># update value from given forced input</span>
             <span class="n">par_value</span> <span class="o">=</span> <span class="n">process_inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">par_value</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -347,7 +346,6 @@
         <span class="n">project</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">study_config</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">project</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;use_project&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">use_project</span><span class="p">:</span>
                 <span class="n">process</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
 
@@ -385,7 +383,6 @@
                     <span class="n">tname</span> <span class="o">=</span> <span class="s2">&quot;spm_script_file&quot;</span>
 
                 <span class="k">if</span> <span class="n">tname</span><span class="p">:</span>
-
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;_nipype_interface&quot;</span><span class="p">):</span>
                         <span class="n">iscript</span> <span class="o">=</span> <span class="p">(</span>
                             <span class="n">process</span><span class="o">.</span><span class="n">_nipype_interface</span><span class="o">.</span><span class="n">mlab</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">script_file</span>
@@ -417,7 +414,6 @@
                 <span class="n">process</span><span class="o">.</span><span class="n">mfile</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">complete_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="p">{},</span> <span class="n">complete_iterations</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">completion_progress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">completion_progress_total</span>
@@ -437,9 +433,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">complete_nipype_common</span><span class="p">(</span><span class="n">in_process</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="n">ProcessMIA</span><span class="p">):</span>
-
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
-
                 <span class="k">if</span> <span class="n">in_process</span><span class="o">.</span><span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Pipeline&quot;</span><span class="p">:</span>
                     <span class="n">node_name</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                         <span class="n">in_process</span><span class="o">.</span><span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
@@ -711,7 +705,6 @@
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="n">NipypeProcess</span>
         <span class="p">):</span>
-
             <span class="k">for</span> <span class="n">mia_output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
                 <span class="n">wrapped_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">mia_output</span><span class="p">)</span><span class="o">.</span><span class="n">nipype_process_name</span>
 
@@ -735,7 +728,6 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;spm&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="s2">&quot;use_mcr&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span>
                     <span class="s2">&quot;use_mcr&quot;</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">userlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -861,7 +853,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;spm&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spm_script_file</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_spm_script_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spm_script_file</span>
 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 2.2.2-dev+e4522b29 documentation</title>
+    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 2.2.2-dev+5b4caf0e documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -109,7 +109,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.2.2-dev+e4522b29 documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+5b4caf0e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.mini_viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -146,16 +146,28 @@
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># a N-dimensional array object</span>
 <span class="kn">import</span> <span class="nn">skimage</span> <span class="k">as</span> <span class="nn">sk</span>
+
 <span class="c1"># Populse_MIA imports</span>
 <span class="c1"># from populse_mia.software_properties import verCmp</span>
 <span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
 <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span>
+
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QFont</span><span class="p">,</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QCheckBox</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span>
-                             <span class="n">QScrollArea</span><span class="p">,</span> <span class="n">QSizePolicy</span><span class="p">,</span> <span class="n">QSlider</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span>
-                             <span class="n">QWidget</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QCheckBox</span><span class="p">,</span>
+    <span class="n">QFrame</span><span class="p">,</span>
+    <span class="n">QHBoxLayout</span><span class="p">,</span>
+    <span class="n">QLabel</span><span class="p">,</span>
+    <span class="n">QLineEdit</span><span class="p">,</span>
+    <span class="n">QScrollArea</span><span class="p">,</span>
+    <span class="n">QSizePolicy</span><span class="p">,</span>
+    <span class="n">QSlider</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="c1"># from scipy.ndimage import rotate  # to work with NumPy arrays</span>
 <span class="kn">from</span> <span class="nn">skimage.transform</span> <span class="kn">import</span> <span class="n">resize</span>
 
@@ -579,7 +591,6 @@
         <span class="c1">#      defined in skimage since version 0.14.0</span>
 
         <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sk</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">version</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="s2">&quot;0.14.0&quot;</span><span class="p">):</span>
-
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span>
                     <span class="n">im2D</span><span class="p">,</span> <span class="n">display_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">anti_aliasing</span><span class="o">=</span><span class="kc">False</span>
@@ -593,7 +604,6 @@
                     <span class="n">anti_aliasing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">im2D</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">im2D</span><span class="p">,</span> <span class="n">display_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">)</span>
 
@@ -775,7 +785,6 @@
 
             <span class="c1"># Reading the images from the file paths</span>
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_paths</span><span class="o">.</span><span class="n">copy</span><span class="p">()):</span>
-
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">chk</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">as_closest_canonical</span><span class="p">(</span>
                         <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">mmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -795,7 +804,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">file_paths</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
                     <span class="n">chk</span> <span class="o">=</span> <span class="kc">False</span>
 
-                <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span>
                         <span class="s2">&quot;File &quot;</span>
                         <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -805,7 +814,6 @@
                     <span class="n">chk</span> <span class="o">=</span> <span class="kc">False</span>
 
                 <span class="k">if</span> <span class="n">chk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">chk</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)</span>
 
@@ -826,14 +834,12 @@
 
             <span class="c1"># If we are in the &quot;cursors&quot; display mode</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_box_slices</span><span class="o">.</span><span class="n">checkState</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">:</span>
-
                 <span class="c1"># Layout to aligne each thumbnail (image + cursors)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">h_box_thumb</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
 
                 <span class="c1"># idx represents the index of the selected image</span>
                 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_scans</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_paths</span><span class="p">))):</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_nothing</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
-
                         <span class="c1"># Creating sliders and labels</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">boxSlider</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">enableSliders</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -920,7 +926,6 @@
 
             <span class="c1"># If we are in the &quot;all slices&quot; display mode</span>
             <span class="k">else</span><span class="p">:</span>
-
                 <span class="bp">self</span><span class="o">.</span><span class="n">h_box_images</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">h_box_images</span><span class="o">.</span><span class="n">setSpacing</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">v_box_scans</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
