@@ -15,12 +15,6 @@ exclude = '''
 )/
 '''
 
-#[tool.flake8]
-#max-line-length = 79
-#exclude = [".git", "__pycache__", "dist"]
-#extend-ignore = ["E203", "E266", "E501", "W503", "F403", "F401"]
-#max-complexity = 10
-
 [tool.isort]
 atomic = true
 profile = "black"
