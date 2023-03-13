@@ -21,3 +21,9 @@ profile = "black"
 line_length = 79
 skip_gitignore = true
 known_first_party = ['python']
+
+[tool.coverage.run]
+omit = [
+    "python/populse_mia/user_interface/data_viewer/anatomist_2/*",
+    "python/populse_mia/user_interface/data_viewer/anatomist/*"
+]
