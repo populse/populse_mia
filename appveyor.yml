@@ -103,6 +103,7 @@ install:
   - cd populse-mia
 
   - sh: if [[ $(uname -s) == Linux ]]; then Xvfb & fi
+  - sh: if [[ $(uname -s) == Linux ]]; then pip3 install coverage[toml]; fi # Fix: Can't read 'pyproject.toml' without TOML support. Install with [toml] extra
   - sh: if [[ $(uname -s) == Linux ]]; then sleep 3; fi # give xvfb some time to start
 
 #  - sh: export APPVEYOR_SSH_BLOCK=true
