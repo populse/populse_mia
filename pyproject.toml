@@ -20,7 +20,7 @@ atomic = true
 profile = "black"
 line_length = 79
 skip_gitignore = true
-known_first_party = ['python']
+# known_first_party = ['python']
 
 [tool.coverage.run]
 omit = [
