@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+"""Building, distributing, and installing modules using the Distutils"""
+
 import os
 
 from setuptools import find_packages, setup
