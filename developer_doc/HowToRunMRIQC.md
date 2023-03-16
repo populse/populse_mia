@@ -9,8 +9,13 @@
 -	nipy (tested with 0.5.0)
 -	nitime (tested with 0.9)
 -	nilearn (tested with 0.9.1) – remark: You might need to manually desinstall joblib (in the casa container) with command 'pip install --ignore-installed' joblib to install nilearn
+- reportlab
+- statsmodels >= 0.13.5
 
-# 3. Install ANTS inside the singularity container:
+# 3. Install ANTS 
+
+Inside the singularity container:
+
 Last versions of ANTs (that can be compiled on Ubuntu 20.04) require glibc 2.28. When running on casa-distro, MIA uses the glibc library of casa-distro, which is 2.27 version. Moreover, glibc 2.28 or higher cannot be installed on Ubuntu 18.04. That is why ANTS must be installed inside the container.
 Install ANTs version 2.2.0 from neuro-debian (https://neuro.debian.net/pkgs/ants.html) using apt-get in the casa-distro image.
 !!Warning: there is an error in the tag version of ANTs 2.2.0:
@@ -28,6 +33,10 @@ To:
 
 This is not a neat solution, but it does the job until we can use casa-distro 5.3 based on Ubuntu 22.04 (as a reminder, the issue with 5.3 is that it’s based on python 3.10 which is not yet supported by dipy, also needed for MRIQC - https://github.com/populse/capsul/issues/207)
 
+Outside the container : 
+It is also possible to install ANTs outside the container. 
+
+
 # 4. Install AFNI (only tested outside the container)
 Following these instructions step-by-step:
 https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/index.html
@@ -36,6 +45,15 @@ https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instru
 Following these instructions step-by-step:
 https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
 
-# 6. Your install is ready...
-Launch MIA and configure libraries (AFNI, ANTS and FSL) in preferences.
+# 6. Install Freesurfer (only tested outside the container)
+For Linux, following the instruction here : https://surfer.nmr.mgh.harvard.edu/fswiki//FS7_linux 
+
+Easier to use the tar archive. 
+
+Get the Freesurfer License here: https://surfer.nmr.mgh.harvard.edu/registration.html 
+Copy the license received in the freesurfer folder.
+
+
+# 7. Your install is ready...
+Launch MIA and configure libraries (AFNI, ANTS, Freesurfer and FSL) in preferences.
 Run the mia_processes.pipelines.preprocess.anat_mriqc_pipeline or mia_processes.pipelines.preprocess.bold_mriqc_pipeline on your file !
