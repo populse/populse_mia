@@ -53,6 +53,8 @@ Easier to use the tar archive.
 Get the Freesurfer License here: https://surfer.nmr.mgh.harvard.edu/registration.html 
 Copy the license received in the freesurfer folder.
 
+`Fedora 33`: freesurfer-linux-centos8_x86_64-7.3.2.tar.gz (CentOS 8 x86_64 (64b) tar archive) worked fine.
+
 
 # 7. Your install is ready...
 Launch MIA and configure libraries (AFNI, ANTS, Freesurfer and FSL) in preferences.
