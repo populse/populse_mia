@@ -12,7 +12,7 @@
 - reportlab
 - statsmodels >= 0.13.5
 
-# 3. Install ANTS 
+# 3. Install ANTS
 
 Inside the singularity container:
 
@@ -33,8 +33,8 @@ To:
 
 This is not a neat solution, but it does the job until we can use casa-distro 5.3 based on Ubuntu 22.04 (as a reminder, the issue with 5.3 is that it’s based on python 3.10 which is not yet supported by dipy, also needed for MRIQC - https://github.com/populse/capsul/issues/207)
 
-Outside the container : 
-It is also possible to install ANTs outside the container. 
+Outside the container :
+It is also possible to install ANTs outside the container.
 
 
 # 4. Install AFNI (only tested outside the container)
@@ -46,11 +46,11 @@ Following these instructions step-by-step:
 https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
 
 # 6. Install Freesurfer (only tested outside the container)
-For Linux, following the instruction here : https://surfer.nmr.mgh.harvard.edu/fswiki//FS7_linux 
+For Linux, following the instruction here : https://surfer.nmr.mgh.harvard.edu/fswiki//FS7_linux
 
-Easier to use the tar archive. 
+Easier to use the tar archive.
 
-Get the Freesurfer License here: https://surfer.nmr.mgh.harvard.edu/registration.html 
+Get the Freesurfer License here: https://surfer.nmr.mgh.harvard.edu/registration.html
 Copy the license received in the freesurfer folder.
 
 `Fedora 33`: freesurfer-linux-centos8_x86_64-7.3.2.tar.gz (CentOS 8 x86_64 (64b) tar archive) worked fine.
