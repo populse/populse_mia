@@ -57,7 +57,9 @@ install:
   - cmd: "pip install \"scikit-image==0.19.3\""
   - sh: pip3 install 'scikit-image==0.19.3'
 
-  - pip install codecov
+# On April 12, 2023, Codecov removed the codecov package from PyPI
+#  - pip install codecov
+#  - pip install coverage
   - pip install --upgrade --force-reinstall pyparsing==2.4.7
 # This is a patch to avoid the "AttributeError: 'PathMetadata' object has no attribute 'isdir'" observed since pip-22.0.2 (see for example UT for commit 50187200b6):
   - pip install capsul soma-workflow
@@ -123,8 +125,8 @@ test_script:
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python3 ./python/populse_mia/test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./python/populse_mia/test.py -v; fi
 
-after_test:
-  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
+#after_test:
+#  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
 
 notifications:
   - provider: Email
