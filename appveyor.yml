@@ -124,9 +124,14 @@ test_script:
   - sh: if [[ $(uname -s) == Linux ]]; then if [ -z $XDG_RUNTIME_DIR ]; then export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"; if [ ! -d "/tmp/runtime-$(id -un)" ]; then mkdir "/tmp/runtime-$(id -un)"; chmod 0700 "/tmp/runtime-$(id -un)"; fi; fi; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python3 ./python/populse_mia/test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./python/populse_mia/test.py -v; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then coverage xml; fi
 
-#after_test:
+
+after_test:
 #  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then curl -Os https://uploader.codecov.io/latest/linux/codecov; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then chmod +x codecov; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -t ${CODECOV_TOKEN}; fi
 
 notifications:
   - provider: Email
