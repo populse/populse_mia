@@ -10,8 +10,10 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    populse_mia.data_manager
+   populse_mia.sources_images
    populse_mia.user_interface
    populse_mia.utils
 

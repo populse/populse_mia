@@ -10,3 +10,6 @@
 
 
 In progress ...
+
+
+You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_. 

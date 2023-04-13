@@ -9,6 +9,14 @@ populse\_mia.data\_manager package
 Submodules
 ----------
 
+populse\_mia.data\_manager.data\_history\_inspect module
+--------------------------------------------------------
+
+.. automodule:: populse_mia.data_manager.data_history_inspect
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 populse\_mia.data\_manager.data\_loader module
 ----------------------------------------------
 

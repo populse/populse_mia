@@ -15,9 +15,11 @@ Mia's user installation - Using virtualization
 The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements`).
 Then, the installation will be almost identical to the one done directly on the host (see :ref:`installation`).
 
-You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_. In this case, skip the :ref:`prerequirements` below and proceed directly to the :ref:`installation`. Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation` section below
+You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_. 
+In this case, skip the :ref:`prerequirements` below and proceed directly to the :ref:`installation`. 
+Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation` section below
 
-Or you can follow the full procedure below which uses Singularity virtualization technology.
+You can also follow the full procedure below which uses Singularity virtualization technology.
 
 
 .. _prerequirements:
@@ -36,7 +38,6 @@ Pre-requirements
 
 Installation
 ------------
-|
 
 * If you followed `BrainVisa installation <https://brainvisa.info/web/download.html>`_ you should be in the container.
 Make sure to type the command ``bv bash`` if not.
@@ -62,8 +63,6 @@ Make sure to type the command ``bv bash`` if not.
         python3 install_mia.py
 
 |
-
-
 
 * The Mia installation is now launched and you have to select four mandatory parameters:
 
@@ -144,4 +143,6 @@ You can install SPM and Matlab via :ref:`Third party software installations` if 
 
 |
 
-* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia#usage>`_ to launch populse_mia.
+* * To launch populse_mia: ::
+
+        python3 -m populse_mia

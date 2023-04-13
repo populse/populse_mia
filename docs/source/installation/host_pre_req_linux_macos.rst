@@ -38,9 +38,3 @@ Populse_mia's linux - macOS installation, pre-requirements
 * Make sure to have git installed. You can verify it by typing the following in a command line: ::
 
         git --version
-
-|
-
-* Make sure to have git-lfs installed. You can verify it by typing the following in a command line: ::
-
-        git-lfs -v

@@ -9,28 +9,25 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 
-Populse_mia's 3rd party installations
-=====================================
+Populse_mia's 3rd party installations on Linux
+=================================================
 
- * This installations notes are based on Ubuntu 20.04 which use Python3 as default (when you type 'python' in a command line).
+ * This installations notes are based on Ubuntu 22.04.02 which use Python3 as default (when you type 'python' in a command line).
  * '/pathto/softs' is the destination folder where you want to have the softwares installed, ie: /opt, /home/APPS or what you want.
- * A Python3 virtual environment is used. How to do that ? See below at Populse installation in python3 virtual environment.
  * Lines with '#' are comments.
 
-Installation of FSL 6
----------------------
+Installation of `FSL v6.0.6.4 <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
+-------------------------------
 
- * Download `fslinstaller.py <https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/>`_ then: ::
+ * Download `fslinstaller.py <https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/>`_ then launch the installer: ::
 
-     # fsl installer needs python2
-     sudo apt install python
-     # the destination folder where put FSL, do right access with chown
-     mkdir /pathto/softs/FSL
-     mkdir /pathto/softs/FSL/6.04
-     # launch the installer
-     python2 fslinstaller.py
+     python fslinstaller.py
 
- * In ~/.profile file check if this lines includes (if not, put it): ::
+ * The installer will ask you where do you want to install FSL, you can either keep the default location or indicate a folder: ::
+
+    FSL installation directory [/home/username/fsl]: /pathto/softs/fsl-6.0.6.4/
+
+ * populse_mia do not need environment variables, however if you want to test FSL outside populse_mia you need to check if the following lines are included in your ./bashrc (if not, put it): ::
 
      FSLDIR=/pathto/softs/FSL/6.04
      PATH=${FSLDIR}/bin:${PATH}
@@ -39,42 +36,9 @@ Installation of FSL 6
 
    fsl.sh defines other environment variables for FSL like FSLOUTPUTTYPE=NIFTI-GZ
 
- * log out and log in for changes take effect
+ * Test FSL on a new terminal : ::
 
- * Test it: ::
-
-     fsleyes
-
-|
-
-Installation of MRtrix 3
-------------------------
-
- * From `MRtrix documentation <http://userdocs.mrtrix.org/en/3.0.1/installation/build_from_source.html>`_: ::
-
-     sudo apt-get install git g++ python-is-python3 libeigen3-dev zlib1g-dev libqt5opengl5-dev libqt5svg5-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev libpng-dev
-
-     cd ~/Downloads
-     git clone https://github.com/MRtrix3/mrtrix3.git
-     cd mrtrix3
-     ./configure
-     ./build
-     cd ..
-     mv mrtrix3 /pathto/softs/                 # don't forget to put the / at the end of the path
-     cd /pathto/softs/mrtrix3
-     ./set_path
-     # to have new path activated to launch mrtrix commands
-     bash
-
- * Test if it works: ::
-
-     mrview
-
- * Notes:
-
-   * dwipreproc has changed name to dwifslpreproc
-
-   * mrresize, mrpad, mrcrop commands has been reunified in unique mrgrid command
+     flirt -version
 
 |
 
@@ -123,6 +87,37 @@ Installation of SPM 12 Standalone and Matlab Runtime
 
 |
 
+Installation of MRtrix 3
+------------------------
+
+ * From `MRtrix documentation <http://userdocs.mrtrix.org/en/3.0.1/installation/build_from_source.html>`_: ::
+
+     sudo apt-get install git g++ python-is-python3 libeigen3-dev zlib1g-dev libqt5opengl5-dev libqt5svg5-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev libpng-dev
+
+     cd ~/Downloads
+     git clone https://github.com/MRtrix3/mrtrix3.git
+     cd mrtrix3
+     ./configure
+     ./build
+     cd ..
+     mv mrtrix3 /pathto/softs/                 # don't forget to put the / at the end of the path
+     cd /pathto/softs/mrtrix3
+     ./set_path
+     # to have new path activated to launch mrtrix commands
+     bash
+
+ * Test if it works: ::
+
+     mrview
+
+ * Notes:
+
+   * dwipreproc has changed name to dwifslpreproc
+
+   * mrresize, mrpad, mrcrop commands has been reunified in unique mrgrid command
+
+|
+
 Installation of Cuda 11.1
 -------------------------
 
@@ -147,46 +142,6 @@ Installation of Cuda 11.1
      make
      # try it
      ../../bin/x86_64/linux/release/./deviceQuery
-
-|
-
-Installation of Populse in python3 virtual environment
-------------------------------------------------------
-
- * From `documentation populse_mia installation for developper <https://populse.github.io/populse_mia/html/installation/developer_installation.html>`_: ::
-
-     # require for mri_conv
-     sudo apt install openjdk-14-jre-headless
-     # to use a python3 virtual environment
-     sudo apt install python3-venv
-
-     mkdir ~/DEV
-     mkdir ~/DEV/populse_dev
-     cd ~/DEV/populse_dev
-     git clone https://github.com/populse/populse_mia.git
-     git clone https://github.com/populse/capsul
-     git clone https://github.com/populse/mia_processes
-     git clone https://github.com/populse/mri_conv
-     git clone https://github.com/populse/populse_db
-     git clone https://github.com/populse/soma-base
-     git clone https://github.com/populse/soma-workflow
-
-     # create and activate the python3 virtual environment
-     python -m venv ~/DEV/py3env
-     source ~/DEV/py3env/bin/activate
-     # For python modules requirements look at https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py of populse_mia
-     pip install wheel pyyaml traits==5.2.0 lark-parser nibabel scikit-image nipype
-     # if you want an enhanced python editor/debugger, ie spyder
-     pip install spyder
-     # to launch it
-     cd ~/DEV/populse_dev/populse_mia/python/populse_mia
-     python main.py
-     # or
-     python ~/DEV/populse_dev/populse_mia/python/populse_mia/main.py
-
- * quit/exit the python3 virtual environment: ::
-
-     deactivate
 
 |
 

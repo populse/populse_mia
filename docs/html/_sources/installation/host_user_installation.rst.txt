@@ -12,12 +12,16 @@
 Mia's user installation - on the host (without virtualisation)
 ==============================================================
 
+.. _pre-requirements:
+
 Pre-requirements
 ----------------
 
 * `For linux - macOS <./host_pre_req_linux_macos.html>`_
 
 * `For Windows 10 <./host_pre_req_windows10.html>`_
+
+.. _installation:
 
 Installation
 ------------
@@ -118,4 +122,6 @@ Installation
 
 |
 
-* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia#usage>`_ to launch populse_mia.
+* * To launch populse_mia: ::
+
+        python3 -m populse_mia
