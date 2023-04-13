@@ -25,7 +25,8 @@ skip_gitignore = true
 [tool.coverage.run]
 omit = [
     "python/populse_mia/user_interface/data_viewer/anatomist_2/*",
-    "python/populse_mia/user_interface/data_viewer/anatomist/*"
+    "python/populse_mia/user_interface/data_viewer/anatomist/*",
+    "processes/*"
 ]
 
 [tool.interrogate]
