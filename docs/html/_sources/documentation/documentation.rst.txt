@@ -13,20 +13,16 @@ Populse_MIA's documentation
 ===========================
 
 * `User documentation <./user_documentation.html>`_
+
+    * `Software presentation <./user_documentation.html>`_
+
+    * `MRI data conversion <./mri_file_manager.html>`_
+
+    * `Metadata enhancement <./data_browser.html>`_
+
+    * `Pipeline manager <./pipeline_manager.html>`_
+
+    * `Data visualization <./data_viewer.html>`_
+
 * `Developer documentation <./developer_documentation.html>`_
 * `Create and install a pipeline process <./create_process.html>`_
-
-Operating mode
---------------
-
-Populse_MIA has two operating modes:
-
-  * Clinical mode
-      * When creating a project, more default tags are stored in the database (ex. Age, Sex, Pathologie, etc.)
-      * Process library disabled (no pipeline creation)
-
-  * Research mode
-      * When creating a project, Mia's default tags are stored in the database
-      * Process library enabled
-
-To modify it, go to the software preferences (File > MIA preferences) and disable/enable “Clinical mode”.

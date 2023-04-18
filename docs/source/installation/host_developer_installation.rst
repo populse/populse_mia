@@ -31,6 +31,7 @@ Installation
 `populse_mia <https://github.com/populse/populse_mia>`_ sources can be found on gihub. 
 
 To use the whole populse project in developer mode on host (and have the latest versions available), it will be necessary to clone all this projects: 
+    |   - `populse_mia <https://github.com/populse/populse_mia>`_ 
     |   - `capsul <https://github.com/populse/capsul>`_
     |   - `mia_processes <https://github.com/populse/mia_processes>`_
     |   - `mri_conv <https://github.com/populse/mri_conv>`_
@@ -113,4 +114,6 @@ All the dependencies should be install with populse_mia project.
 * To launch populse_mia: ::
 
       python '[populse_install_dir]/populse_mia/python/populse_mia/main.py' 
+
+* Set `populse_mia preferences <../documentations/preferenceshtml>`_
 

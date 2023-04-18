@@ -19,7 +19,17 @@ Therefore, on the host, the user will not have access to the data viewer.
 
 In order to acess to the data viewer, it is possible to use virtualization by using `BrainVISA <https://brainvisa.info/web/>`_ images which are available for two free and open source virtualisation technologies: `Singularity <https://en.wikipedia.org/wiki/Singularity_(software)>`_ and `VirtualBox <https://en.wikipedia.org/wiki/VirtualBox>`_.
 
-**Installation** :
-
 - `Install a light version of Mia on the host <./host_user_installation.html>`_ (without data viewer)
-- `Use virtualisation to install Mia <./virtualisation_user_installation.html>`_ (with a data viewer access but with an additional cost for hard disk space).
+
+    `Pre-requirements <./host_user_installation.html#pre-requirements>`_ 
+        * `For linux - macOS <./host_pre_req_linux_macos.html>`_
+        * `For Windows 10 <./host_pre_req_windows10.html>`_
+    `Installation <./host_user_installation.html#isntallation>`_ 
+
+- `Use virtualisation to install Mia <./virtualisation_user_installation.html>`_ (with a data viewer access but with an additional cost for hard disk space)
+
+    `Pre-requirements <./virtualisation_user_installation.html#pre-requirements>`_ 
+        * `For linux <./virtualisation_pre_req_linux.html>`_
+        * `For macos <./virtualisation_pre_req_macos.html>`_
+        * `For Windows 10 <./virtualisation_pre_req_windows10.html>`_
+    `Installation <./virtualisation_user_installation.html#isntallation>`_ 

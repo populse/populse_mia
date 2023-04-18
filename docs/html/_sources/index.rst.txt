@@ -53,9 +53,9 @@ Main features
 Installation / Configuration
 ============================
 
-* `User installation <./installation/user_installation.html>`_, from PyPi
-* `Developer installation <./installation/developer_installation.html>`_, by cloning the package
-* `Uses the latest version of populse_mia <./installation/from_source_installation.html>`_, from source installation
+* `User installation <./installation/user_installation.html>`_
+* `Developer installation <./installation/developer_installation.html>`_
+* `Uses the latest version of populse_mia <./installation/from_source_installation.html>`_ (from source installation)
 * `Populse_mia’s preferences <./documentation/preferences.html>`_
 * `Third party software installations <./installation/3rd-party_installations.html>`_
 

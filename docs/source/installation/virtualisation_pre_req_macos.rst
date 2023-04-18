@@ -8,7 +8,8 @@
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
-
+Pre-requirements for virtualization using Brainvisa - MacOS 
+=============================================================
 In progress ...
 
 

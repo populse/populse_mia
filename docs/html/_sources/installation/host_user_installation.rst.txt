@@ -122,6 +122,8 @@ Installation
 
 |
 
-* * To launch populse_mia: ::
+* To launch populse_mia: ::
 
         python3 -m populse_mia
+
+* Set `populse_mia preferences <../documentations/preferenceshtml>`_

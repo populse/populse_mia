@@ -39,8 +39,7 @@ Pre-requirements
 Installation
 ------------
 
-* If you followed `BrainVisa installation <https://brainvisa.info/web/download.html>`_ you should be in the container.
-Make sure to type the command ``bv bash`` if not.
+* If you followed `BrainVisa installation <https://brainvisa.info/web/download.html>`_ you should be in the container. Make sure to type the command ``bv bash`` if not.
 
 * Then download the archive `here <https://github.com/populse/mia_install/archive/master.zip>`_.
 
@@ -79,8 +78,6 @@ Make sure to type the command ``bv bash`` if not.
   * Operating mode: Choose between clinical and research mode (more information about `operating mode <../documentation/documentation.html#operating-mode>`_).
 
 |
-
-You can install SPM and Matlab via :ref:`Third party software installations` if those are not installed yet.
 
 * If you already want to configure the use of Matlab and SPM (in license or standalone mode), you can also specify these several paths:
 
@@ -121,7 +118,7 @@ You can install SPM and Matlab via :ref:`Third party software installations` if 
    :align: center
    :name: Populse_MIA install widge
 
-|
+| You can install SPM and Matlab via `Third party software installations <./3rd-party_installations.html>`_ if those are not installed yet.
 
 * Click on "Install" to install populse_mia with the selected parameters.
 
@@ -143,6 +140,8 @@ You can install SPM and Matlab via :ref:`Third party software installations` if 
 
 |
 
-* * To launch populse_mia: ::
+* To launch populse_mia: ::
 
         python3 -m populse_mia
+
+* Set `populse_mia preferences <../documentations/preferenceshtml>`_
