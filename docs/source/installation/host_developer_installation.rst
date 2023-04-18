@@ -115,5 +115,7 @@ All the dependencies should be install with populse_mia project.
 
       python '[populse_install_dir]/populse_mia/python/populse_mia/main.py' 
 
-* Set `populse_mia preferences <../documentations/preferenceshtml>`_
+|
+
+* Set `populse_mia preferences <../documentation/preferences.html>`_
 

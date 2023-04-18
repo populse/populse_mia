@@ -126,4 +126,6 @@ Installation
 
         python3 -m populse_mia
 
-* Set `populse_mia preferences <../documentations/preferenceshtml>`_
+| 
+
+* Set `populse_mia preferences <../documentation/preferences.html>`_
