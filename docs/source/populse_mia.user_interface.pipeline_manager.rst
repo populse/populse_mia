@@ -56,3 +56,11 @@ populse\_mia.user\_interface.pipeline\_manager.process\_mia module
    :members:
    :undoc-members:
    :show-inheritance:
+
+populse\_mia.user\_interface.pipeline\_manager.type\_editors module
+-------------------------------------------------------------------
+
+.. automodule:: populse_mia.user_interface.pipeline_manager.type_editors
+   :members:
+   :undoc-members:
+   :show-inheritance:

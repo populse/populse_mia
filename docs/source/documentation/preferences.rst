@@ -45,8 +45,20 @@ Global preferences
   * Auto save
       * When auto save is enabled, the project is saved after each actions done in the Data Browser.
 
-  * User mode
-      * When user mode is enabled, more default tags are stored in the database and the process library is disabled (no pipeline creation).
+  * Clinical mode
+      * When user mode is enabled, more default tags (ex. Age, Sex, Pathologie, etc.) are stored in the database and the process library is disabled (no pipeline creation).
+
+  * Admin mode
+      * Get extended rights (delete projects, processes, etc.).
+
+  * Version 1 controller
+      * Use Capsul controler version 1 (Should be soon delated)
+
+  * Number of thumbnails in Data Browser
+      * Set number of thumbnails wanted in Data Browser
+
+  * Radiological orientation in miniviewer (data browser)
+      * Use radiological orientation in MRIConv (data browser)
 
 
 Projects preferences
@@ -65,6 +77,13 @@ POPULSE third party preferences
       * Sets the path to the executable file of MRI File Manager (usually stored in the "MRIFileManager" folder next to "populse_mia" install path, `if populse_mia was installed in user mode <../installation/user_installation.html>`_).
 	 * e.g.  /home/ArthurBlair/.populse_mia/MRIFileManager/MRIManager.jar
 
+External ressources preferences
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  * Absolute path to the external resources data: some processes may require external data to function properly (as TPM.nii for SPM or template): 
+    * `MiaResources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_  folder that contains the resources needeed to use populse_mia and mia_processes in some cas( ROI, templates, ect ..)
+    * Sets the path to the external resources data (MiaResources)
+
 .. _pipeline-label:
 
 Pipeline
@@ -74,6 +93,7 @@ Pipeline
    :align: center
    :name: Preferences pipeline
 
+Third-party softwares configuration. If you want to use thrid-party softwares, we nee to `install them first <../installation/3rd-party_installations.html>`_. 
 
 Matlab
 ^^^^^^
@@ -88,7 +108,7 @@ Matlab
 
   * Matlab standalone path
       * Sets the path to Matlab's compiled version folder
-	  * e.g. for linux - macOS: ``/usr/local/MATLAB/MATLAB_Runtime/v93/``
+	  * e.g. for linux - macOS: ``/usr/local/MATLAB/MATLAB_Runtime/v97/``
 	  * e.g. for Windows 10: Nothing to declare here if you use spm standalone!
 
 SPM
@@ -110,7 +130,41 @@ SPM
 	  * e.g. for linux - macOS: ``/usr/local/SPM/spm12_standalone`` (folder containing run_spm12.sh)
 	  * e.g. for Windows 10: ``C:/Program Files/Matlab/spm12_r7771/spm12`` (with Windows 10, it is not necessary to declare the above Matlab standalone path in this case!)
 
-To use SPM standalone, please make sure to have it installed. To install it, please follow this `manual <https://en.wikibooks.org/wiki/SPM/Standalone>`_.
+FSL
+^^^
+
+  * Use FSL
+      * Enable it if you want to use FSL.
+
+  * FSL path
+      * Sets the path to the FSL config file (/fsl_directory/etc/fslconf/fsl.sh).
+
+AFNI
+^^^^
+
+  * Use AFNI
+      * Enable it if you want to use AFNI.
+
+  * AFNI path
+      * Sets the path to the AFNI abin folder (/dir_contening_abin/abin).
+
+ANTS
+^^^^
+
+  * Use ANTS
+      * Enable it if you want to use ANTS.
+
+  * ANTS path
+      * Sets the path to the ANTS bin folder (/ants_dir/bin).
+
+freesurfer
+^^^^^^^^^^
+
+  * Use freesurfer
+      * Enable it if you want to use freesurfer.
+
+  * freesurfer path
+      * Sets the path to the FreeSurferEnv.sh file (/freesurfer_dir/FreeSurferEnv.sh).
 
 .. _appearance-label:
 
@@ -128,3 +182,10 @@ Appearance
 
   * Text color
       * Changes the Populse_MIA's text color.
+
+  * Use full screen
+      * Use full screen.
+
+  * Main window size
+      * Change main window size
+
