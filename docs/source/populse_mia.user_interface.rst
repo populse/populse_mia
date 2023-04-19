@@ -10,10 +10,11 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    populse_mia.user_interface.data_browser
-   populse_mia.user_interface.pipeline_manager
    populse_mia.user_interface.data_viewer
+   populse_mia.user_interface.pipeline_manager
 
 Submodules
 ----------

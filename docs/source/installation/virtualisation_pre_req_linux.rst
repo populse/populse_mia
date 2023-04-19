@@ -1,4 +1,3 @@
-.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/user_installation.rst: WARNING: document isn't included in any toctree
 
 :orphan:
 
@@ -8,15 +7,21 @@
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
+Pre-requirements for virtualization using Brainvisa - Linux
+============================================================
 
 With Linux, `Singularity <https://sylabs.io/singularity/>`_ seems to work perfectly well.
 
-Given the characteristics of the 2 proposed technologies (`container or virtual machine <https://www.geeksforgeeks.org/difference-between-virtual-machines-and-containers/>`_) it is clear that it is better to use a container for performance reasons.
+Given the characteristics of the 2 proposed technologies (`singularity container or virtual machine <https://www.geeksforgeeks.org/difference-between-virtual-machines-and-containers/>`_) it is clear that it is better to use a container for performance reasons.
 
-In the following we propose exclusively for linux the use of a Singularity container.
+In the following we propose exclusively for Linux the use of a Singularity container.
 
-Fedora
-======
+.. _singularity_installation:
+
+Install Singularity
+-------------------
+
+**Fedora**
 
 Singularity is available in the Fedora repositories.
 
@@ -54,14 +59,14 @@ If Singularity is not already installed:
    % sudo dnf install singularity
 
 
-Ubuntu
-======
+**Ubuntu**
 
 To date, no suitable version of Singularity is available as system package for Ubuntu.
 
 You can `install it yourself <https://docs.sylabs.io/guides/latest/admin-guide/installation.html#install-from-source>`_.
 
-However, `we advise you to use the package provided by BrainVisa <https://brainvisa.info/download/>`_, corresponding to your OS, For example download singularity-ce_3.8.3~ubuntu-20.04_amd64.deb then
+However, `we advise you to use the package provided by BrainVisa <https://brainvisa.info/download/>`_, corresponding to your OS.
+For example download singularity-ce_3.8.3~ubuntu-20.04_amd64.deb then :
 
 .. code-block:: bash
 
@@ -76,7 +81,7 @@ Then, check that Singularity is well installed on your station:
 
 
 After installing singularity in your station
-============================================
+----------------------------------------------
 
 `Reminder: Two softwares must be installed: Python (version >= 3.7) and Singularity (version > 3.6).`
 
