@@ -54,6 +54,9 @@ Global preferences
   * Version 1 controller
       * Use Capsul controler version 1 (Should be soon delated)
 
+  * Number of thumbnails in Data Browser
+      * Set number of thumbnails wanted in Data Browser
+
   * Radiological orientation in miniviewer (data browser)
       * Use radiological orientation in MRIConv (data browser)
 
@@ -78,8 +81,8 @@ External ressources preferences
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   * Absolute path to the external resources data: some processes may require external data to function properly (as TPM.nii for SPM or template): 
-    * ???
-    * Sets the path to the external resources data
+    * `MiaResources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_  folder that contains the resources needeed to use populse_mia and mia_processes in some cas( ROI, templates, ect ..)
+    * Sets the path to the external resources data (MiaResources)
 
 .. _pipeline-label:
 

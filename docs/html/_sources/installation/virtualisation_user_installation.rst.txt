@@ -71,6 +71,9 @@ Installation
 
     * MRIFileManager: containing the file converter used in Mia.
 
+    * MiaResources (external resources): containing resources needed to use populse_mia and mia_processes in some cases (references data as ROI, templates, ect...)
+
+
   * Mia projects path: the folder containing the analysis projects saved in Mia. A "projects" folder will be created in the selected folder.
 
   * Installation target: Check **Casa_distro** for installation on virtualized BrainVisa.
@@ -147,3 +150,10 @@ Installation
 |
 
 * Set `populse_mia preferences <../documentation/preferences.html>`_
+
+|
+
+* You can also download the following folders: 
+
+      * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
+

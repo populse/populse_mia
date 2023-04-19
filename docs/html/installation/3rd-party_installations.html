@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Populse_mia’s third-party softwares installations &#8212; populse_mia 2.2.2-dev+776e249c documentation</title>
+    <title>Populse_mia’s third-party softwares installations &#8212; populse_mia 2.2.2-dev+2a5e9e91 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -19,7 +19,7 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.2-dev+776e249c documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+2a5e9e91 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_mia’s third-party softwares installations</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -59,7 +59,6 @@ The softwares paths should be configure in preferences.</p>
 <li><p>This installations notes are based on Ubuntu 22.04.02 which use Python3 as default (when you type ‘python’ in a command line).</p></li>
 <li><p>‘/path/to/softs’ is the destination folder where you want to have the softwares installed, ie: /opt, /home/APPS or what you want.</p></li>
 <li><p>If you installed populse_mia in a container using <a class="reference external" href="./virtualisation_user_installation.html">brainvisa Singulary image</a>, you do not need to be in the continer to install third-party softwares.</p></li>
-<li><p>Lines with ‘#’ are comments.</p></li>
 </ul>
 </div></blockquote>
 <section id="installation-of-fsl-v6-0-6-4">
@@ -159,34 +158,74 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </section>
 <section id="installation-of-afni">
 <h2>Installation of <a class="reference external" href="https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html">AFNI</a><a class="headerlink" href="#installation-of-afni" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li><p>Follow the <a class="reference external" href="https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup">quick setup</a> of the AFNI’s team.</p></li>
 <li><p>It will download all AFNI in your home. If you want you can move AFNI folders (abin, AFNI_data5, AFNI_data6, AFNI_demos, afni_handouts, CD, std_leshes, suma_demo, .afni) in an other folder (for e.g /path/to/folder/afni). In this case, change the afni paths set in your bashrc.</p></li>
 </ul>
+</div></blockquote>
 </section>
 <section id="installation-of-ants">
 <h2>Installation of <a class="reference external" href="http://stnava.github.io/ANTs/">ANTs</a><a class="headerlink" href="#installation-of-ants" title="Permalink to this headline">¶</a></h2>
-<p>You can install ANTs via pre-built releases :</p>
+<blockquote>
+<div><p>You can install ANTs via pre-built releases :</p>
 <ul class="simple">
 <li><p>Dowloand pre-built releases <a class="reference external" href="https://github.com/ANTsX/ANTs/tags">here</a> and unzip it. Please note that if you want to use mriqc pipeline on populse_mia you need to choose v2.3.4.</p></li>
 <li><p>populse_mia do not need environment variables, however if you want to test ANTs outside populse_mia you need to add ANTs path in your .bashr.</p></li>
 </ul>
+</div></blockquote>
 </section>
 <section id="installation-of-freesurfer">
 <h2>Installation of <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/">freesurfer</a><a class="headerlink" href="#installation-of-freesurfer" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li><p>Follow the installation instruction <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki//FS7_linux">here</a>. For Ubuntu systeme it is easier to use the tar archive. For Fedora, centos8 tar archive works fine</p></li>
 <li><p>Get the freesurfer License <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/registration.html">here</a>. Copy the license received in the freesurfer folder.</p></li>
 <li><p>populse_mia do not need environment variables, however if you want to testfFreesurfer outside populse_mia you need to add freesurfer path in your .bashr.</p></li>
 </ul>
+</div></blockquote>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </section>
 </section>
-<section id="installation-on-macos-and-windows">
-<h1>Installation on Macos and Windows<a class="headerlink" href="#installation-on-macos-and-windows" title="Permalink to this headline">¶</a></h1>
-<p>Please follow the instruction in the documentation of each third-party software.</p>
+<section id="installation-on-macos">
+<h1>Installation on Macos<a class="headerlink" href="#installation-on-macos" title="Permalink to this headline">¶</a></h1>
+<section id="id5">
+<h2>Installation of <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/software/spm12/">SPM 12</a> Standalone and Matlab Runtime<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul>
+<li><p>Download the spm12_r7532_BI_macOS_R2018b.zip <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/">file</a>. Unzip it. In the same directory where run_spm12.sh can be found unzip spm12_maci64.zip</p></li>
+<li><p>Download the corresponding MCR for MATLAB Compiler Runtime (MCR) MCR_R2018b_maci64_installer.dmg.zip <a class="reference external" href="https://fr.mathworks.com/products/compiler/matlab-runtime.html">file</a></p></li>
+<li><p>Start the MATLAB Runtime installer: double click in MCRInstaller.dmg then right click on MCRInstaller.pkg, then choose Open with &gt; Installer (default). The MATLAB Runtime installer starts, it displays a dialog box. Read the information and then click Next (or continue) to proceed with the installation. Then click Install. The default MATLAB Runtime installation directory is now in /Applications/MATLAB/MATLAB_Compiler_Runtime/vXX.</p></li>
+<li><p>Usage: Go where run_spm12.sh file can be found, then just type: ::
+./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/vXX/</p>
+<p>If No Java runtime is already installed, a pop-up is opened with a <cite>No Java runtime present, requesting install</cite> message.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Download Java for OS X 2017-001: <a class="reference external" href="https://support.apple.com/kb/DL1572?locale=en_US">https://support.apple.com/kb/DL1572?locale=en_US</a></p></li>
+</ul>
+<p>Click on Download then Open with &gt; DiskImageMounter (default) &gt; Ok.
+Right click on the JavaForOSX.pkg then choose Open with Installer (default).
+The Java for OS X 2017-001installer starts, it displays a dialog box. Answer the questions  then install.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>P.S. Tested on macOS 10.13.6. The spm12_r7771.zip <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/">file</a> and MCR v4.13 (MATLAB R2010a) MCRInstaller.dmg <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/MCR/maci64/">file</a> are not compatible with mia (while <cite>./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri</cite> works fine in a terminal). Using this version of spm standalone results in an error with this message in MIA: <cite>/Volumes/Users/econdami/Documents/spm/spm12Standalone/spm12Stndalone_r7771/run_spm12. sh: line 60: ./spm12.app/Contents/MacOS/spm12_maci64: No such file or directory</cite>.</p>
+</div></blockquote>
+</section>
+<section id="installation-of-others-software">
+<h2>Installation of others software<a class="headerlink" href="#installation-of-others-software" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Please follow the instruction in the documentation of each third-party software.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="installation-on-windows">
+<h1>Installation on Windows<a class="headerlink" href="#installation-on-windows" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Please follow the instruction in the documentation of each third-party software.</p>
+</div></blockquote>
 </section>
 
 

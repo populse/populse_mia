@@ -54,6 +54,16 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 |
 
+* You can also download the following folders: 
+
+      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains usefull resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
+     
+      * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
+
+      * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
+
+|
+
 * To launch populse_mia: ::
 
       python '[populse_install_dir]/populse_mia/python/populse_mia/main.py' 
@@ -117,5 +127,15 @@ All the dependencies should be install with populse_mia project.
 
 |
 
-* Set `populse_mia preferences <../documentation/preferences.html>`_
+* On first launch after a developer installation, please `refer to the preferences page <../documentation/preferences.html>`_ to configure populse_mia.
+
+|
+
+* You can also download the following folders: 
+
+      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains usefull resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
+     
+      * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
+
+      * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
 
