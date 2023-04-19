@@ -8,6 +8,8 @@
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
+Pre-requirements for virtualization using Brainvisa - Windows10
+================================================================
 
 Pre-requirements of windows installations are the same for `windows host installation in user mode <https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html>`_.
 But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project under ubuntu.

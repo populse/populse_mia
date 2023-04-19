@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>populse_mia.user_interface.data_viewer.anatomist_2 package &#8212; populse_mia 2.2.2-dev+2a5e9e91 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/haiku.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>populse_mia 2.2.2-dev+2a5e9e91 documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2 package</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="module-populse_mia.user_interface.data_viewer.anatomist_2">
+<span id="populse-mia-user-interface-data-viewer-anatomist-2-package"></span><h1>populse_mia.user_interface.data_viewer.anatomist_2 package<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist_2" title="Permalink to this headline">¶</a></h1>
+<p>Blabla</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2">
+<span id="populse-mia-user-interface-data-viewer-anatomist-2-anasimpleviewer2-module"></span><h2>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 module<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2" title="Permalink to this headline">¶</a></h2>
+<p>AnaSimpleViewer2</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.</span></span><span class="sig-name descname"><span class="pre">AnaSimpleViewer2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtCore.QObject</span></code></p>
+<p>AnaSimpleViewer is a “simple viewer” application and widget, which can be
+used using the “anasimpleviewer.py” command, or included in a custom widget
+as a library module.</p>
+<p>It includes an objects list and 4 3D views (anatomist windows). Objects
+loaded are added in all views, and can be hidden or shown using the “add”
+and “remove” buttons.</p>
+<p>The AnaSimpleViewer class holds methods for menu/actions callbacks, and
+utility functions like load/view objects, remove/delete, etc.</p>
+<p>It is a QObject, but not a QWidget. The widget can be accessed as the
+<code class="docutils literal notranslate"><span class="pre">awidget</span></code> attribute in the AnaSimpleViewer instance.</p>
+<p>As it is more intended to be used as a complete application, and it is
+simpler to handle in Anatomist, some global Anatomist config variables and
+controls may be set within AnaSimpleViewer. This is done optionally using
+the <a class="reference internal" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.init_global_handlers" title="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.init_global_handlers"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_global_handlers()</span></code></a> method, which is called by the constructor
+if the argument <cite>init_global_handlers</cite> is not set to False when calling it.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addMesh">
+<span class="sig-name descname"><span class="pre">addMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.addMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addNewView">
+<span class="sig-name descname"><span class="pre">addNewView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.addNewView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addNewView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a popup with a view of the object
+Default display is axial view but can be changed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addObject">
+<span class="sig-name descname"><span class="pre">addObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.addObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display an object in all windows</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addVolume">
+<span class="sig-name descname"><span class="pre">addVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.addVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addVolume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a volume in all windows.
+If several volumes are displayed, a Fusion2D will be built to wrap all
+of them.
+If volume rendering is allowed, 3D views will display a clipped volume
+rendering of either the single volume (if only one is present), or of
+the 2D fusion.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.automaticRunning">
+<span class="sig-name descname"><span class="pre">automaticRunning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.automaticRunning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.automaticRunning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable automatic running of functionnal images
+frame rate can be changed in preferences by the user</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeConfig">
+<span class="sig-name descname"><span class="pre">changeConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.changeConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>change config depending on user settings
+config : string “neuro” or “radio”</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeIcon">
+<span class="sig-name descname"><span class="pre">changeIcon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">icon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.changeIcon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeIcon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds empty icon if object is not displayed and check icon if displayed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeOpacity">
+<span class="sig-name descname"><span class="pre">changeOpacity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.changeOpacity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeOpacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes opacity of selected object (to be more precise it changes the
+mixing rate between objects when multiple ones are displayed)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeRef">
+<span class="sig-name descname"><span class="pre">changeRef</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.changeRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>change referential
+ref : Boolean
+0 : World coordinates
+1 : Image referential</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.checkviews">
+<span class="sig-name descname"><span class="pre">checkviews</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.checkviews"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.checkviews" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevent from closing the last view opened
+Checks how many views button are enabled and if only one is,
+it disables the button</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.clickHandler">
+<span class="sig-name descname"><span class="pre">clickHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.clickHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.clickHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback for linked cursor. In volume rendering mode, it will sync
+the VR slice to the linked cursor.
+It also updates the volumes values view</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.closeAll">
+<span class="sig-name descname"><span class="pre">closeAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">close_ana</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.closeAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.closeAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exit</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.colorBackgroundList">
+<span class="sig-name descname"><span class="pre">colorBackgroundList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.colorBackgroundList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.colorBackgroundList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Color the background of displayed objects in objectlist and call
+changeIcon to add the right icon</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.coordsChanged">
+<span class="sig-name descname"><span class="pre">coordsChanged</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.coordsChanged"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.coordsChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the cursor on the position entered in the coords fields</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createTotalWindow">
+<span class="sig-name descname"><span class="pre">createTotalWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">views</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.createTotalWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createTotalWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the windows which will contain the views.</p>
+<dl class="simple">
+<dt>views<span class="classifier">array containing strings “axial”, “sagittal”, “coronal”</span></dt><dd><p>and/or “3D”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createWindow">
+<span class="sig-name descname"><span class="pre">createWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wintype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Axial'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.createWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a new window in the windows grid layout.
+The new window will be set in MNI referential (except 3D for now
+because of a buf in volume rendering in direct referentials), will be
+assigned the custom control, and have no menu/toolbars.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjects">
+<span class="sig-name descname"><span class="pre">deleteObjects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.deleteObjects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the given objects</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjectsFromFiles">
+<span class="sig-name descname"><span class="pre">deleteObjectsFromFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.deleteObjectsFromFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjectsFromFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the given objects given by their file names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteTotalWindow">
+<span class="sig-name descname"><span class="pre">deleteTotalWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.deleteTotalWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteTotalWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear windows and fusions in order to enable new display</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.disableButtons">
+<span class="sig-name descname"><span class="pre">disableButtons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.disableButtons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.disableButtons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable plus or minus button depending on the selected object’s display</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dragEnterEvent">
+<span class="sig-name descname"><span class="pre">dragEnterEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">win</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.dragEnterEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dragEnterEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dropEvent">
+<span class="sig-name descname"><span class="pre">dropEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">win</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.dropEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dropEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editAdd">
+<span class="sig-name descname"><span class="pre">editAdd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.editAdd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editAdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display selected objects</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editDelete">
+<span class="sig-name descname"><span class="pre">editDelete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.editDelete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editDelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete selected objects</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editRemove">
+<span class="sig-name descname"><span class="pre">editRemove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.editRemove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editRemove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hide selected objects</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.enableVolumeRendering">
+<span class="sig-name descname"><span class="pre">enableVolumeRendering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">on</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.enableVolumeRendering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.enableVolumeRendering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable volume rendering in 3D views</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.fileOpen">
+<span class="sig-name descname"><span class="pre">fileOpen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.fileOpen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.fileOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>File browser + load object(s)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.findChild">
+<span class="sig-name descname"><span class="pre">findChild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.findChild"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.findChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.getViewsToDisplay">
+<span class="sig-name descname"><span class="pre">getViewsToDisplay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.getViewsToDisplay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.getViewsToDisplay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check which views must be displayed
+return : array with strings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.get_new_mesh2d_color">
+<span class="sig-name descname"><span class="pre">get_new_mesh2d_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.get_new_mesh2d_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.get_new_mesh2d_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.init_global_handlers">
+<span class="sig-name descname"><span class="pre">init_global_handlers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.init_global_handlers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.init_global_handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set some global controls / settings in Anatomist application object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.loadObject">
+<span class="sig-name descname"><span class="pre">loadObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.loadObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.loadObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load objects in files and display
+Only the first object of files is displayed, the others are loaded and
+added to objectlist but not displayed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newDisplay">
+<span class="sig-name descname"><span class="pre">newDisplay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.newDisplay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newDisplay" title="Permalink to this definition">¶</a></dt>
+<dd><p>New display of windows, objects and views</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newPalette">
+<span class="sig-name descname"><span class="pre">newPalette</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.newPalette"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newPalette" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets chosen color palette in the toolbar drop down menu to
+selected object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.objectLoaded">
+<span class="sig-name descname"><span class="pre">objectLoaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.objectLoaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.objectLoaded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.object_properties">
+<span class="sig-name descname"><span class="pre">object_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.object_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.object_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display selected objects properties in a browser window</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.open_anatomist_main_window">
+<span class="sig-name descname"><span class="pre">open_anatomist_main_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.open_anatomist_main_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.open_anatomist_main_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.popup_objects">
+<span class="sig-name descname"><span class="pre">popup_objects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.popup_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.popup_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Right-click popup on objects list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.registerObject">
+<span class="sig-name descname"><span class="pre">registerObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.registerObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.registerObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register an object in anasimpleviewer objects list, and display it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeMesh">
+<span class="sig-name descname"><span class="pre">removeMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.removeMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeObject">
+<span class="sig-name descname"><span class="pre">removeObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.removeObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hides an object from views</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeVolume">
+<span class="sig-name descname"><span class="pre">removeVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.removeVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeVolume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hides a volume from views (low-level function: use removeObject)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.selectedObjects">
+<span class="sig-name descname"><span class="pre">selectedObjects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.selectedObjects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.selectedObjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of objects selected in the list box on the upper left panel</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setColorPalette">
+<span class="sig-name descname"><span class="pre">setColorPalette</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.setColorPalette"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setColorPalette" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks color palette of a selected object, displays it in the toolbar
+drop-down menu and adds it if it isn’t already stored in
+self.available_palettes. If corresponding palette image exists it is
+added, otherwise only the name of the palette appears.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setComboBox">
+<span class="sig-name descname"><span class="pre">setComboBox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.setComboBox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setComboBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts a drop down menu in the toolbar. This menu contains defined
+available color palettes. The default color palettes are in
+self.available_palettes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setSlider">
+<span class="sig-name descname"><span class="pre">setSlider</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.setSlider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setSlider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts opacity slider in the toolbar
+Minimum returned value is 0 and maximum value is 100</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.startVolumeRendering">
+<span class="sig-name descname"><span class="pre">startVolumeRendering</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.startVolumeRendering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.startVolumeRendering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable volume rendering in 3D views</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.stopVolumeRendering">
+<span class="sig-name descname"><span class="pre">stopVolumeRendering</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.stopVolumeRendering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.stopVolumeRendering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable volume rendering: show a slice instead</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.viewReferential">
+<span class="sig-name descname"><span class="pre">viewReferential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.viewReferential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.viewReferential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set referential at the object center to visualize it</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.</span></span><span class="sig-name descname"><span class="pre">LeftSimple3DControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LeftSimple3DControl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#LeftSimple3DControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">anatomist.cpp.simplecontrols.Simple2DControl</span></code></p>
+<p>define another control where rotation is with the left mouse button
+(useful for touch devices)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LeftSimple3DControl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#LeftSimple3DControl.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.eventAutoSubscription">
+<span class="sig-name descname"><span class="pre">eventAutoSubscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#LeftSimple3DControl.eventAutoSubscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.eventAutoSubscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>blabla</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.</span></span><span class="sig-name descname"><span class="pre">VolRenderControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VolRenderControl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#VolRenderControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl" title="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl</span></code></a></p>
+<p>define another control where cut slice rotation is with the middle mouse
+button</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VolRenderControl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#VolRenderControl.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>blabla</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.eventAutoSubscription">
+<span class="sig-name descname"><span class="pre">eventAutoSubscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#VolRenderControl.eventAutoSubscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.eventAutoSubscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>blabla</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist">
+<span id="populse-mia-user-interface-data-viewer-anatomist-2-mia-anatomist-module"></span><h2>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist module<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist" title="Permalink to this headline">¶</a></h2>
+<p>MIA data viewer implementation based on
+<a class="reference external" href="http://brainvisa.info/anatomist/user_doc/index.html">Anatomist</a></p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>MiaViewer</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">MiaViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QWidget</span></code>, <a class="reference internal" href="populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">populse_mia.user_interface.data_viewer.data_viewer.DataViewer</span></code></a></p>
+<dl class="simple">
+<dt>:class:<a href="#id1"><span class="problematic" id="id2">`</span></a>MIA data viewer</dt><dd><p>&lt;populse_mia.user_interface.data_viewer.data_viewer.DataViewer&gt;`
+implementation based on
+<a class="reference external" href="http://brainvisa.info/pyanatomist/sphinx/index.html">PyAnatomist</a></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exit</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.display_files">
+<span class="sig-name descname"><span class="pre">display_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.display_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.display_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load objects in files and display</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.displayed_files">
+<span class="sig-name descname"><span class="pre">displayed_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.displayed_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.displayed_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of displayed files</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.filter_documents">
+<span class="sig-name descname"><span class="pre">filter_documents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.filter_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.filter_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter documents already loaded in the Databrowser</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.preferences">
+<span class="sig-name descname"><span class="pre">preferences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.preferences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preferences for the dataviewer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.remove_files">
+<span class="sig-name descname"><span class="pre">remove_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.remove_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.remove_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the given objects given by their file names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.reset_search_bar">
+<span class="sig-name descname"><span class="pre">reset_search_bar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.reset_search_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.reset_search_bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the rapid search bar</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.screenshot">
+<span class="sig-name descname"><span class="pre">screenshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.screenshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.screenshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>The screenshot of mia_anatomist_2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.search_str">
+<span class="sig-name descname"><span class="pre">search_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_search</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.search_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.search_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search a string in the table and updates the
+not_defined_value = “<em>Not Defined</em>” in visualized documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>str_search</strong> – string to search</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.set_documents">
+<span class="sig-name descname"><span class="pre">set_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.set_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.set_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise current documents in the viewer</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_viewer.anatomist_2.resources">
+<span id="populse-mia-user-interface-data-viewer-anatomist-2-resources-module"></span><h2>populse_mia.user_interface.data_viewer.anatomist_2.resources module<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist_2.resources" title="Permalink to this headline">¶</a></h2>
+<p>Resource object code.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.resources.qCleanupResources">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.resources.</span></span><span class="sig-name descname"><span class="pre">qCleanupResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/resources.html#qCleanupResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources.qCleanupResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.resources.qInitResources">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.resources.</span></span><span class="sig-name descname"><span class="pre">qInitResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/resources.html#qInitResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources.qInitResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window">
+<span id="populse-mia-user-interface-data-viewer-anatomist-2-resources-snd-window-module"></span><h2>populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window module<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window" title="Permalink to this headline">¶</a></h2>
+<p>Resource object code.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qCleanupResources">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.</span></span><span class="sig-name descname"><span class="pre">qCleanupResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/resources_snd_window.html#qCleanupResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qCleanupResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qInitResources">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.</span></span><span class="sig-name descname"><span class="pre">qInitResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/resources_snd_window.html#qInitResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qInitResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blabla</p>
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_viewer.anatomist_2.snd_window">
+<span id="populse-mia-user-interface-data-viewer-anatomist-2-snd-window-module"></span><h2>populse_mia.user_interface.data_viewer.anatomist_2.snd_window module<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist_2.snd_window" title="Permalink to this headline">¶</a></h2>
+<p>Open a new window for a selected object with only one view possible.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.snd_window.</span></span><span class="sig-name descname"><span class="pre">NewWindowViewer</span></span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
+<p>Class defined to open a new window for a selected object with only one
+view possible. The user will be able to choose which view he wants to
+display (axial, sagittal, coronal view or 3D view)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.changeDisplay">
+<span class="sig-name descname"><span class="pre">changeDisplay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.changeDisplay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.changeDisplay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes display on user’s demand
+index : int between 0 and 3
+object : object to display</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close properly objects before exiting Mia</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.createNewWindow">
+<span class="sig-name descname"><span class="pre">createNewWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wintype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Axial'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.createNewWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.createNewWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a new window in the vertical layout
+Function is nearly the same as createWindow in AnaSimpleViewer2
+Default display each time a new popup opens is ‘Axial’ view</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.disableButton">
+<span class="sig-name descname"><span class="pre">disableButton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.disableButton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.disableButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manages button availability and whether they should be checked or not
+depending on which view is displayed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.setObject">
+<span class="sig-name descname"><span class="pre">setObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.setObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.setObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store object to display</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.showPopup">
+<span class="sig-name descname"><span class="pre">showPopup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.showPopup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.showPopup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the dimensions of the popup which is a QWidget
+QWidget is added to self.popups in order to keep the widget
+but beeing able to replace the object inside</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

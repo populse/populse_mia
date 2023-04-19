@@ -25,3 +25,7 @@ Populse_MIA's installation
 |
 
 * `Third party software installations <./3rd-party_installations.html>`_
+
+|
+
+* `Populse_mia’s preferences configuration <../documentation/preferences.html>`_

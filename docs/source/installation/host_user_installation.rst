@@ -12,12 +12,16 @@
 Mia's user installation - on the host (without virtualisation)
 ==============================================================
 
+.. _pre-requirements:
+
 Pre-requirements
 ----------------
 
 * `For linux - macOS <./host_pre_req_linux_macos.html>`_
 
 * `For Windows 10 <./host_pre_req_windows10.html>`_
+
+.. _installation:
 
 Installation
 ------------
@@ -49,6 +53,8 @@ Installation
     * populse_mia: containing Mia's configuration and resources files.
 
     * MRIFileManager: containing the file converter used in Mia.
+
+    * MiaResources (external resources): containing resources needed to use populse_mia and mia_processes in some cases (references data as ROI, templates, ect...)
 
   * Mia projects path: the folder containing the analysis projects saved in Mia. A "projects" folder will be created in the selected folder.
 
@@ -118,4 +124,17 @@ Installation
 
 |
 
-* See the `Usage chapter on the GitHub page <https://github.com/populse/populse_mia#usage>`_ to launch populse_mia.
+* To launch populse_mia: ::
+
+        python3 -m populse_mia
+
+| 
+
+* Set `populse_mia preferences <../documentation/preferences.html>`_
+
+|
+
+* You can also download the following folders: 
+
+      * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
+

@@ -12,8 +12,24 @@
 Mia's user installation
 =======================
 
-Since version 2.0.0, Mia can be installed directly on the host or using virtualisation. On the host, the user will not have access to the `DataViewer <../documentation/data_viewer.html>`_  because the one currently available by default in Mia is based on `Anatomist <https://brainvisa.info/web/anatomist.html>`_, which should be compiled. We therefore propose to use the `BrainVISA <https://brainvisa.info/web/>`_ images which are available for two free and open source virtualisation technologies: `Singularity <https://en.wikipedia.org/wiki/Singularity_(software)>`_ and `VirtualBox <https://en.wikipedia.org/wiki/VirtualBox>`_.
+Populse_MIA can be installed either directly on host or using virtualisation (container or virtual machine). 
 
-Thus, by installing a container or a virtual machine, the user has access to all the stuffs already made available by the BrainVisa developers, such as Anatomist.
+The `data viewer <../documentation/data_viewer.html>`_ currently available by default in Mia is based on `Anatomist <https://brainvisa.info/web/anatomist.html>`_, which should be compiled. 
+Therefore, on the host, the user will not have access to the data viewer. 
 
-In a nutshell, it is possible `to install a light version of Mia on the host <./host_user_installation.html>`_, without DataViewer, or `to use virtualisation to install Mia <./virtualisation_user_installation.html>`_, with the DataViewer access (with an additional cost for hard disk space).
+In order to acess to the data viewer, it is possible to use virtualization by using `BrainVISA <https://brainvisa.info/web/>`_ images which are available for two free and open source virtualisation technologies: `Singularity <https://en.wikipedia.org/wiki/Singularity_(software)>`_ and `VirtualBox <https://en.wikipedia.org/wiki/VirtualBox>`_.
+
+- `Install a light version of Mia on the host <./host_user_installation.html>`_ (without data viewer)
+
+    `Pre-requirements <./host_user_installation.html#pre-requirements>`_ 
+        * `For linux - macOS <./host_pre_req_linux_macos.html>`_
+        * `For Windows 10 <./host_pre_req_windows10.html>`_
+    `Installation <./host_user_installation.html#isntallation>`_ 
+
+- `Use virtualisation to install Mia <./virtualisation_user_installation.html>`_ (with a data viewer access but with an additional cost for hard disk space)
+
+    `Pre-requirements <./virtualisation_user_installation.html#pre-requirements>`_ 
+        * `For linux <./virtualisation_pre_req_linux.html>`_
+        * `For macos <./virtualisation_pre_req_macos.html>`_
+        * `For Windows 10 <./virtualisation_pre_req_windows10.html>`_
+    `Installation <./virtualisation_user_installation.html#isntallation>`_ 

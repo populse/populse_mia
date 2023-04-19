@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Mia’s developer installation - Using virtualization &#8212; populse_mia 2.2.2-dev+2a5e9e91 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 2.2.2-dev+2a5e9e91 documentation</span></a></h1>
+        <h2 class="heading"><span>Mia’s developer installation - Using virtualization</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <div class="toctree-wrapper compound">
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 33%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
+<td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
+<td><p><a class="reference external" href="./installation.html">Installation</a></p></td>
+<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+</tr>
+</tbody>
+</table>
+<section id="mia-s-developer-installation-using-virtualization">
+<h1>Mia’s developer installation - Using virtualization<a class="headerlink" href="#mia-s-developer-installation-using-virtualization" title="Permalink to this headline">¶</a></h1>
+<p>The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see <a class="reference internal" href="virtualisation_user_installation.html#prerequirements"><span class="std std-ref">Pre-requirements</span></a>).
+Then, the installation will be almost identical to the one done directly on the host (see <a class="reference internal" href="virtualisation_user_installation.html#id1"><span class="std std-ref">Installation</span></a>).</p>
+<p>You can perform the installation by following the detailed instruction provided by <a class="reference external" href="https://brainvisa.info/web/download.html#developer-environment-installation">BrainVisa team (Developer environment installation section)</a>.
+In this case, skip the <a class="reference internal" href="virtualisation_user_installation.html#prerequirements"><span class="std std-ref">Pre-requirements</span></a> below and proceed directly to the <a class="reference internal" href="virtualisation_user_installation.html#id1"><span class="std std-ref">Installation</span></a>.
+Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the <a class="reference internal" href="virtualisation_user_installation.html#id1"><span class="std std-ref">Installation</span></a> section below.
+For developer, it is recommended to use the Brainvisa developer image (casa_dev) in order to get the last version available of each project used in populse.</p>
+<p>You can also follow the full procedure below which uses Singularity virtualization technology.</p>
+<section id="pre-requirements">
+<span id="prerequirements"></span><h2>Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="./virtualisation_pre_req_linux_developer.html">For linux</a></p></li>
+<li><p>For macos, please follow the detailed instruction provided by <a class="reference external" href="https://brainvisa.info/web/download.html#developer-environment-installation">BrainVisa team (Developer environment installation section)</a>.</p></li>
+<li><p>For Windows 10, please follow the detailed instruction provided by <a class="reference external" href="https://brainvisa.info/web/download.html#developer-environment-installation">BrainVisa team (Developer environment installation section)</a>.</p></li>
+</ul>
+</section>
+<section id="id3">
+<span id="id4"></span><h2>Installation<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>If you followed <a class="reference external" href="https://brainvisa.info/web/download.html">BrainVisa installation</a> you should be in the container. Make sure to type the command <code class="docutils literal notranslate"><span class="pre">bv</span> <span class="pre">bash</span></code> if not.</p></li>
+<li><p>Inside the container, get the sources code by following the instructions detailed in the <a class="reference external" href="./host_developer_installation.html#installation">installation part on host</a>. As capsul, populse_db, soma-base and soma-workflow are already in the Brainvisa developer image, it is not necessary to clone these projects.</p></li>
+</ul>
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

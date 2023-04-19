@@ -5,119 +5,148 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 2.2.1-dev+88d0dc98d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 2.2.2-dev+6103c458 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/haiku.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
     <script src="../../../../../_static/jquery.js"></script>
     <script src="../../../../../_static/underscore.js"></script>
     <script src="../../../../../_static/doctools.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../../index.html">
-          <span>populse_mia 2.2.1-dev+88d0dc98d documentation</span></a></h1>
+          <span>populse_mia 2.2.2-dev+6103c458 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
-
+      
         <p>
         <a class="uplink" href="../../../../../index.html">Contents</a>
         </p>
 
       </div>
       <div class="content" role="main">
-
-
+        
+        
   <h1>Source code for populse_mia.user_interface.data_viewer.anatomist.mia_anatomist</h1><div class="highlight"><pre>
-<span></span>
-<span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">MIA data viewer implementation based on `Anatomist &lt;http://brainvisa.info/anatomist/user_doc/index.html&gt;`_</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">MIA data viewer implementation based on `Anatomist</span>
+<span class="sd">&lt;http://brainvisa.info/anatomist/user_doc/index.html&gt;`_</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">..data_viewer</span> <span class="kn">import</span> <span class="n">DataViewer</span>
-<span class="kn">from</span> <span class="nn">anatomist.simpleviewer.anasimpleviewer</span> <span class="kn">import</span> <span class="n">AnaSimpleViewer</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> \
-    <span class="kn">import</span> <span class="nn">TableDataBrowser</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">TAG_FILENAME</span><span class="p">,</span> <span class="n">COLLECTION_CURRENT</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+
 <span class="kn">import</span> <span class="nn">os</span>
 
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">anatomist.simpleviewer.anasimpleviewer</span> <span class="kn">import</span> <span class="n">AnaSimpleViewer</span>
 
-<div class="viewcode-block" id="MiaViewer"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer">[docs]</a><span class="k">class</span> <span class="nc">MiaViewer</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QWidget</span><span class="p">,</span> <span class="n">DataViewer</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    :class:`MIA data viewer &lt;populse_mia.user_interface.data_viewer.data_viewer.DataViewer&gt;`</span>
-<span class="sd">    implementation based on `PyAnatomist &lt;http://brainvisa.info/pyanatomist/sphinx/index.html&gt;`_</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Anatomist seems not to be installed. The data_viewer anatomist &quot;</span>
+        <span class="s2">&quot;and anatomist_2 will not work...</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
 
-<div class="viewcode-block" id="MiaViewer.__init__"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_global_handlers</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TableDataBrowser</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">..data_viewer</span> <span class="kn">import</span> <span class="n">DataViewer</span>
+
+
+<div class="viewcode-block" id="MiaViewer"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer">[docs]</a><span class="k">class</span> <span class="nc">MiaViewer</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QWidget</span><span class="p">,</span> <span class="n">DataViewer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :class:`MIA data viewer</span>
+<span class="sd">           &lt;populse_mia.user_interface.data_viewer.data_viewer.DataViewer&gt;`</span>
+<span class="sd">    implementation based on `PyAnatomist</span>
+<span class="sd">    &lt;http://brainvisa.info/pyanatomist/sphinx/index.html&gt;`_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MiaViewer.__init__"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_global_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">MiaViewer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span> <span class="o">=</span> <span class="n">AnaSimpleViewer</span><span class="p">(</span><span class="n">init_global_handlers</span><span class="p">)</span>
 
         <span class="c1"># count global number of viewers using anatomist, in order to close it</span>
         <span class="c1"># nicely</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DataViewer</span><span class="p">,</span> <span class="s1">&#39;mia_viewers&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DataViewer</span><span class="p">,</span> <span class="s2">&quot;mia_viewers&quot;</span><span class="p">):</span>
             <span class="n">DataViewer</span><span class="o">.</span><span class="n">mia_viewers</span> <span class="o">=</span> <span class="mi">0</span>
+
         <span class="n">DataViewer</span><span class="o">.</span><span class="n">mia_viewers</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">findChild</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QObject</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">findChild</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QObject</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
         <span class="n">awidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span>
-        <span class="n">toolbar</span> <span class="o">=</span> <span class="n">findChild</span><span class="p">(</span><span class="n">awidget</span><span class="p">,</span> <span class="s1">&#39;toolBar&#39;</span><span class="p">)</span>
-        <span class="n">open_action</span> <span class="o">=</span> <span class="n">findChild</span><span class="p">(</span><span class="n">awidget</span><span class="p">,</span> <span class="s1">&#39;fileOpenAction&#39;</span><span class="p">)</span>
-        <span class="n">db_action</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QAction</span><span class="p">(</span><span class="n">open_action</span><span class="o">.</span><span class="n">icon</span><span class="p">(),</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="n">awidget</span><span class="p">)</span>
+        <span class="n">toolbar</span> <span class="o">=</span> <span class="n">findChild</span><span class="p">(</span><span class="n">awidget</span><span class="p">,</span> <span class="s2">&quot;toolBar&quot;</span><span class="p">)</span>
+        <span class="n">open_action</span> <span class="o">=</span> <span class="n">findChild</span><span class="p">(</span><span class="n">awidget</span><span class="p">,</span> <span class="s2">&quot;fileOpenAction&quot;</span><span class="p">)</span>
+        <span class="n">db_action</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QAction</span><span class="p">(</span><span class="n">open_action</span><span class="o">.</span><span class="n">icon</span><span class="p">(),</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="n">awidget</span><span class="p">)</span>
         <span class="n">toolbar</span><span class="o">.</span><span class="n">insertAction</span><span class="p">(</span><span class="n">open_action</span><span class="p">,</span> <span class="n">db_action</span><span class="p">)</span>
         <span class="n">db_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">)</span>
 
         <span class="n">layout</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Expanding</span><span class="p">,</span>
-                                          <span class="n">Qt</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Expanding</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span>
+            <span class="n">Qt</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Expanding</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Expanding</span>
+        <span class="p">)</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">documents</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="MiaViewer.display_files"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.display_files">[docs]</a>    <span class="k">def</span> <span class="nf">display_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<div class="viewcode-block" id="MiaViewer.display_files"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.display_files">[docs]</a>    <span class="k">def</span> <span class="nf">display_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="o">+=</span> <span class="n">files</span>
         <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">loadObject</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MiaViewer.displayed_files"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.displayed_files">[docs]</a>    <span class="k">def</span> <span class="nf">displayed_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MiaViewer.displayed_files"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.displayed_files">[docs]</a>    <span class="k">def</span> <span class="nf">displayed_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span></div>
 
-<div class="viewcode-block" id="MiaViewer.remove_files"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.remove_files">[docs]</a>    <span class="k">def</span> <span class="nf">remove_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<div class="viewcode-block" id="MiaViewer.remove_files"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.remove_files">[docs]</a>    <span class="k">def</span> <span class="nf">remove_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">deleteObjectsFromFiles</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span>
-                      <span class="k">if</span> <span class="n">doc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="k">if</span> <span class="n">doc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="MiaViewer.set_documents"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.set_documents">[docs]</a>    <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+<div class="viewcode-block" id="MiaViewer.set_documents"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.set_documents">[docs]</a>    <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">project</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">documents</span> <span class="o">=</span> <span class="n">documents</span></div>
 
-<div class="viewcode-block" id="MiaViewer.filter_documents"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.filter_documents">[docs]</a>    <span class="k">def</span> <span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MiaViewer.filter_documents"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.filter_documents">[docs]</a>    <span class="k">def</span> <span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
         <span class="n">dialog</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QDialog</span><span class="p">()</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">dialog</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
         <span class="n">table_data</span> <span class="o">=</span> <span class="n">TableDataBrowser</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">(),</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="kc">True</span><span class="p">,</span> <span class="n">link_viewer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">(),</span>
+            <span class="kc">False</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="n">link_viewer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">table_data</span><span class="p">)</span>
         <span class="n">hlay</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hlay</span><span class="p">)</span>
-        <span class="n">ok</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Display&#39;</span><span class="p">)</span>
+        <span class="n">ok</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Display&quot;</span><span class="p">)</span>
         <span class="n">hlay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span>
         <span class="n">ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
         <span class="n">ok</span><span class="o">.</span><span class="n">setDefault</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">cancel</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Cancel&#39;</span><span class="p">)</span>
+        <span class="n">cancel</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
         <span class="n">hlay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">cancel</span><span class="p">)</span>
         <span class="n">cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">reject</span><span class="p">)</span>
         <span class="n">hlay</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -136,17 +165,20 @@
                 <span class="n">row</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
                 <span class="c1"># We get the FileName of the scan from the first row</span>
                 <span class="n">scan_name</span> <span class="o">=</span> <span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                                                       <span class="n">scan_name</span><span class="p">,</span> <span class="n">TAG_FILENAME</span><span class="p">)</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
-                                                     <span class="n">value</span><span class="p">))</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
+                    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
+                <span class="p">)</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="p">)</span>
                 <span class="n">result_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">display_files</span><span class="p">(</span><span class="n">result_names</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MiaViewer.close"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MiaViewer.close"><a class="viewcode-back" href="../../../../../populse_mia.user_interface.data_viewer.anatomist.html#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;blabla&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MiaViewer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">close_ana</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">DataViewer</span><span class="o">.</span><span class="n">mia_viewers</span> <span class="o">-=</span> <span class="mi">1</span> <span class="c1"># dec count</span>
+        <span class="n">DataViewer</span><span class="o">.</span><span class="n">mia_viewers</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># dec count</span>
         <span class="k">if</span> <span class="n">DataViewer</span><span class="o">.</span><span class="n">mia_viewers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">close_ana</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">closeAll</span><span class="p">(</span><span class="n">close_ana</span><span class="p">)</span></div></div>
@@ -154,7 +186,7 @@
 
       </div>
       <div class="bottomnav" role="navigation" aria-label="bottom navigation">
-
+      
         <p>
         <a class="uplink" href="../../../../../index.html">Contents</a>
         </p>

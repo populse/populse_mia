@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Pre-requirements for virtualization developer- Linux &#8212; populse_mia 2.2.2-dev+2a5e9e91 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 2.2.2-dev+2a5e9e91 documentation</span></a></h1>
+        <h2 class="heading"><span>Pre-requirements for virtualization developer- Linux</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <div class="toctree-wrapper compound">
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 33%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
+<td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
+<td><p><a class="reference external" href="./installation.html">Installation</a></p></td>
+<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+</tr>
+</tbody>
+</table>
+<section id="pre-requirements-for-virtualization-developer-linux">
+<h1>Pre-requirements for virtualization developer- Linux<a class="headerlink" href="#pre-requirements-for-virtualization-developer-linux" title="Permalink to this headline">¶</a></h1>
+<p>With Linux, <a class="reference external" href="https://sylabs.io/singularity/">Singularity</a> seems to work perfectly well.</p>
+<p>Given the characteristics of the 2 proposed technologies (<a class="reference external" href="https://www.geeksforgeeks.org/difference-between-virtual-machines-and-containers/">singularity container or virtual machine</a>) it is clear that it is better to use a container for performance reasons.</p>
+<p>In the following we propose exclusively for Linux the use of a Singularity container.</p>
+<section id="install-singularity">
+<h2>Install Singularity<a class="headerlink" href="#install-singularity" title="Permalink to this headline">¶</a></h2>
+<p>Install singularity <a class="reference external" href="./virtualisation_pre_req_linux.html#singularity_installation">as for user installation</a></p>
+</section>
+<section id="after-installing-singularity-in-your-station">
+<h2>After installing singularity in your station<a class="headerlink" href="#after-installing-singularity-in-your-station" title="Permalink to this headline">¶</a></h2>
+<p><cite>Reminder: Two softwares must be installed: Python (version &gt;= 3.7) and Singularity (version &gt; 3.6).</cite></p>
+<p><strong>Install Read only_container</strong></p>
+<p>Open a shell, then:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$HOME</span>/casa_distro/brainvisa-opensource-master<span class="w"> </span><span class="c1"># create an installation directory</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://brainvisa.info/download/">Download the latest BrainVISA developer image (casa-dev)</a> found in brainvisa site into this new directory (ex. casa-dev-5.4.4.sif).</p>
+<p>In the opened shell, execute the container image:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>singularity<span class="w"> </span>run<span class="w"> </span>-c<span class="w"> </span>-B<span class="w"> </span><span class="nv">$HOME</span>/casa_distro/brainvisa-opensource-master:/casa/setup<span class="w"> </span><span class="nv">$HOME</span>/casa_distro/casa-dev-5.4.4.sif<span class="w"> </span><span class="nv">branch</span><span class="o">=</span>master<span class="w"> </span><span class="nv">distro</span><span class="o">=</span>opensource<span class="w"> </span><span class="c1"># Run Singularity using the downloaded image</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$HOME/casa_distro/brainvisa-opensource-master/bin:$PATH&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="nv">$HOME</span>/.bashrc<span class="w"> </span><span class="c1"># set the bin/ directory of the installation directory in the PATH environment variable</span>
+</pre></div>
+</div>
+<p>Optionally, you can launch the graphical configuration interface, e.g. to define mounting points, etc:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bv
+</pre></div>
+</div>
+<p>Then open an interactive shell in the container:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bv<span class="w"> </span>bash
+</pre></div>
+</div>
+<p>And build from within the terminal (it may take some time ):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bv_maker
+</pre></div>
+</div>
+<p>And continue with the <a class="reference external" href="./virtualisation_developer_installation.html#Installation">Installation part</a></p>
+<p><strong>Create a container within a writable directory</strong></p>
+<dl class="simple">
+<dt>Only if you need to add librairies with apt in your container.</dt><dd><ul class="simple">
+<li><p>sudo singularity build –sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)</p></li>
+<li><p>sudo singularity run –writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image</p></li>
+<li><p>“It is now possible to modify the image. For example let’s update all packages and install emacs:”</p></li>
+<li><p>Singularity&gt; apt update  # Singularity&gt; is the prompt</p></li>
+<li><p>Singularity&gt; apt-get install -y software-properties-common</p></li>
+<li><p>Singularity&gt; add-apt-repository ppa:kelleyk/emacs</p></li>
+<li><p>Singularity&gt; apt install emacs26</p></li>
+<li><p>“Edit the $HOME/casa_distro/brainvisa-opensource-master/conf/casa_distro.json file and change the value of the <cite>image</cite> key (ex. “image”: “/home/econdami/casa_distro/casa-dev-5.3-6_wr” in place of “image”: “/home/econdami/casa_distro/casa-dev-5.3-6.sif”)”</p></li>
+<li><p>“Then using <cite>bv</cite> or <cite>bv bash</cite> will use the casa-dev-5.3-6_wr image”</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>
