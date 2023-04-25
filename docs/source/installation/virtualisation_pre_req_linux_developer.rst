@@ -61,12 +61,12 @@ And build from within the terminal (it may take some time ):
 
    bv_maker
 
-And continue with the `Installation part <./virtualisation_developer_installation.html#Installation>`_ 
+And continue with the `Installation part <./virtualisation_developer_installation.html#Installation>`_
 
 
 **Create a container within a writable directory**
 
-Only if you need to add librairies with apt in your container. 
+Only if you need to add librairies with apt in your container.
   - sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)
   - sudo singularity run --writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image
   - "It is now possible to modify the image. For example let's update all packages and install emacs:"

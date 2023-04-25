@@ -128,13 +128,12 @@ Installation
 
         python3 -m populse_mia
 
-| 
+|
 
 * Set `populse_mia preferences <../documentation/preferences.html>`_
 
 |
 
-* You can also download the following folders: 
+* You can also download the following folders:
 
       * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
-
