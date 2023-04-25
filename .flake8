@@ -7,8 +7,8 @@ ignore =
 exclude =
     .git,
     __pycache__,
-    docs/source/conf.py,
     build,
-    dist
+    dist,
+    docs/source/conf.py,
 max-complexity = 10
 max-line-length = 79

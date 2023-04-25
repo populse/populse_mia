@@ -28,10 +28,10 @@ Installation
 
 **Installation by cloning the source codes**
 
-`populse_mia <https://github.com/populse/populse_mia>`_ sources can be found on gihub. 
+`populse_mia <https://github.com/populse/populse_mia>`_ sources can be found on gihub.
 
-To use the whole populse project in developer mode on host (and have the latest versions available), it will be necessary to clone all this projects: 
-    |   - `populse_mia <https://github.com/populse/populse_mia>`_ 
+To use the whole populse project in developer mode on host (and have the latest versions available), it will be necessary to clone all this projects:
+    |   - `populse_mia <https://github.com/populse/populse_mia>`_
     |   - `capsul <https://github.com/populse/capsul>`_
     |   - `mia_processes <https://github.com/populse/mia_processes>`_
     |   - `mri_conv <https://github.com/populse/mri_conv>`_
@@ -54,10 +54,10 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 |
 
-* You can also download the following folders: 
+* You can also download the following folders:
 
       * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains usefull resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
-     
+
       * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
 
       * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
@@ -66,7 +66,7 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 * To launch populse_mia: ::
 
-      python '[populse_install_dir]/populse_mia/python/populse_mia/main.py' 
+      python '[populse_install_dir]/populse_mia/python/populse_mia/main.py'
 
 |
 
@@ -99,9 +99,9 @@ To use the whole populse project in developer mode on host (and have the latest 
 **Installation by using mia_install project**
 
 In order to avoid dependencies issues, it is possible to first install populse_mia as an user by using `mia_install project <https://github.com/populse/mia_install>`_, then remove all the populse_mia projects and finally clone the sources to have the latest version available.
-All the dependencies should be install with populse_mia project. 
+All the dependencies should be install with populse_mia project.
 
-* Install populse_mia with mia_install project following `user installation <./host_user_installation.html>`_. This step will allow the installation of all the dependencies needed. 
+* Install populse_mia with mia_install project following `user installation <./host_user_installation.html>`_. This step will allow the installation of all the dependencies needed.
 
 |
 
@@ -117,13 +117,13 @@ All the dependencies should be install with populse_mia project.
 
 |
 
-* Clone sources as described in the "Installation by cloning the source codes" part above. 
+* Clone sources as described in the "Installation by cloning the source codes" part above.
 
 |
 
 * To launch populse_mia: ::
 
-      python '[populse_install_dir]/populse_mia/python/populse_mia/main.py' 
+      python '[populse_install_dir]/populse_mia/python/populse_mia/main.py'
 
 |
 
@@ -131,11 +131,10 @@ All the dependencies should be install with populse_mia project.
 
 |
 
-* You can also download the following folders: 
+* You can also download the following folders:
 
       * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains usefull resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
-     
+
       * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
 
       * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
-

@@ -15,8 +15,8 @@ Mia's user installation - Using virtualization
 The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements`).
 Then, the installation will be almost identical to the one done directly on the host (see :ref:`installation`).
 
-You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_. 
-In this case, skip the :ref:`prerequirements` below and proceed directly to the :ref:`installation`. 
+You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_.
+In this case, skip the :ref:`prerequirements` below and proceed directly to the :ref:`installation`.
 Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation` section below
 
 You can also follow the full procedure below which uses Singularity virtualization technology.
@@ -153,7 +153,6 @@ Installation
 
 |
 
-* You can also download the following folders: 
+* You can also download the following folders:
 
       * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
-
