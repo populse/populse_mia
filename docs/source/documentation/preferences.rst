@@ -80,7 +80,7 @@ POPULSE third party preferences
 External ressources preferences
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  * Absolute path to the external resources data: some processes may require external data to function properly (as TPM.nii for SPM or template): 
+  * Absolute path to the external resources data: some processes may require external data to function properly (as TPM.nii for SPM or template):
     * `MiaResources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_  folder that contains the resources needeed to use populse_mia and mia_processes in some cas( ROI, templates, ect ..)
     * Sets the path to the external resources data (MiaResources)
 
@@ -93,7 +93,7 @@ Pipeline
    :align: center
    :name: Preferences pipeline
 
-Third-party softwares configuration. If you want to use thrid-party softwares, we nee to `install them first <../installation/3rd-party_installations.html>`_. 
+Third-party softwares configuration. If you want to use thrid-party softwares, we nee to `install them first <../installation/3rd-party_installations.html>`_.
 
 Matlab
 ^^^^^^
@@ -188,4 +188,3 @@ Appearance
 
   * Main window size
       * Change main window size
-
