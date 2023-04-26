@@ -66,8 +66,9 @@ install:
 #  This is a patch to avoid the error: importlib-metadata 6.1.0 is installed but importlib-metadata<5.0.0,>=4.0.0 is required by {'rdflib'}
   - cmd: "pip install \"importlib-metadata==4.13.0\""
   - sh: pip3 install 'importlib-metadata==4.13.0'
-
-  - python setup.py install
+# The execution of setup.py gives unpredictable results and since April 2023 leads to issues in requirements management
+#  - python setup.py install
+  - pip install .
   - git lfs install
   - git lfs pull
   - echo y | pip uninstall PyQt5
