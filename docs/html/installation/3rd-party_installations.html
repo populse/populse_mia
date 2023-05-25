@@ -4,22 +4,28 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Populse_mia’s third-party softwares installations &#8212; populse_mia 2.2.2-dev+2a5e9e91 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Populse_mia’s third-party softwares installations &#8212; populse_mia 2.3.1-dev+c99279bd documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/language_data.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script >mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.2.2-dev+2a5e9e91 documentation</span></a></h1>
+          <span>populse_mia 2.3.1-dev+c99279bd documentation</span></a></h1>
         <h2 class="heading"><span>Populse_mia’s third-party softwares installations</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -47,21 +53,21 @@
 </tr>
 </tbody>
 </table>
-<section id="populse-mia-s-third-party-softwares-installations">
+<div class="section" id="populse-mia-s-third-party-softwares-installations">
 <h1>Populse_mia’s third-party softwares installations<a class="headerlink" href="#populse-mia-s-third-party-softwares-installations" title="Permalink to this headline">¶</a></h1>
-<p>To use bricks and pipelines from <a class="reference external" href="https://populse.github.io/mia_processes/html/index.html">mia_processes</a> in populse_mia, it is necessary to install softwares as FSL, SPM, Freesurfer, ANTs..
-The softwares paths should be configure in preferences.</p>
-</section>
-<section id="installation-on-linux">
+<p>To use bricks and pipelines from <a class="reference external" href="https://populse.github.io/mia_processes/html/index.html">mia_processes</a> in populse_mia, it is necessary to install softwares as FSL, SPM, Freesurfer, ANTs…
+The softwares paths should be configure in Mia preferences.</p>
+</div>
+<div class="section" id="installation-on-linux">
 <h1>Installation on Linux<a class="headerlink" href="#installation-on-linux" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div><ul class="simple">
-<li><p>This installations notes are based on Ubuntu 22.04.02 which use Python3 as default (when you type ‘python’ in a command line).</p></li>
-<li><p>‘/path/to/softs’ is the destination folder where you want to have the softwares installed, ie: /opt, /home/APPS or what you want.</p></li>
-<li><p>If you installed populse_mia in a container using <a class="reference external" href="./virtualisation_user_installation.html">brainvisa Singulary image</a>, you do not need to be in the continer to install third-party softwares.</p></li>
+<li><p>These installation notes are based on Ubuntu 22.04.02 which use Python3 as default (when you type <code class="docutils literal notranslate"><span class="pre">python</span></code> in a command line).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">path/to/softs</span></code> is the destination folder where you want to have the softwares installed, i.e.: <code class="docutils literal notranslate"><span class="pre">/opt</span></code>, <code class="docutils literal notranslate"><span class="pre">/home/APPS</span></code> or what you want.</p></li>
+<li><p>If you installed populse_mia in a container using <a class="reference external" href="./virtualisation_user_installation.html">brainvisa Singulary image</a>, it is generally not necessary to be in the container to install third-party software (in fact, this will depend on the operating system in the container and the host).</p></li>
 </ul>
 </div></blockquote>
-<section id="installation-of-fsl-v6-0-6-4">
+<div class="section" id="installation-of-fsl-v6-0-6-4">
 <h2>Installation of <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/">FSL v6.0.6.4</a><a class="headerlink" href="#installation-of-fsl-v6-0-6-4" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
@@ -75,14 +81,14 @@ The softwares paths should be configure in preferences.</p>
 </pre></div>
 </div>
 </li>
-<li><p>populse_mia do not need environment variables, however if you want to test FSL outside populse_mia you need to check if the following lines are included in your ./bashrc (if not, put it):</p>
+<li><p>populse_mia do not need environment variables, however if you want to test FSL outside populse_mia you need to check if the following lines are included in your <code class="docutils literal notranslate"><span class="pre">~/bashrc</span></code> (if not, put it):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>FSLDIR=/pathto/softs/FSL/6.04
 PATH=${FSLDIR}/bin:${PATH}
 export FSLDIR PATH
 . ${FSLDIR}/etc/fslconf/fsl.sh
 </pre></div>
 </div>
-<p>fsl.sh defines other environment variables for FSL like FSLOUTPUTTYPE=NIFTI-GZ</p>
+<p><code class="docutils literal notranslate"><span class="pre">fsl.sh</span></code> defines other environment variables for FSL like <code class="docutils literal notranslate"><span class="pre">FSLOUTPUTTYPE=NIFTI-GZ</span></code></p>
 </li>
 <li><p>Test FSL on a new terminal :</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flirt</span> <span class="o">-</span><span class="n">version</span>
@@ -91,8 +97,8 @@ export FSLDIR PATH
 </li>
 </ul>
 </div></blockquote>
-</section>
-<section id="installation-of-spm-12-standalone-and-matlab-runtime">
+</div>
+<div class="section" id="installation-of-spm-12-standalone-and-matlab-runtime">
 <h2>Installation of <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/software/spm12/">SPM 12</a> Standalone and Matlab Runtime<a class="headerlink" href="#installation-of-spm-12-standalone-and-matlab-runtime" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
@@ -111,32 +117,27 @@ export FSLDIR PATH
 </pre></div>
 </div>
 </li>
-<li><p>And then install it (sudo is only required if you install to a directory that you do not have write access to.):</p></li>
-</ul>
-<blockquote>
-<div><dl class="simple">
-<dt>cd MATLAB_Runtime_R2019b_Update_3_glnxa64</dt><dd><p>sudo ./install</p>
-</dd>
-</dl>
-</div></blockquote>
-<ul>
-<li><p>After the installation, you get the following message (ex. for R2019b (9.7) Matlab Runtime):</p>
-<p>“On the target computer, append the following to your LD_LIBRARY_PATH environment variable:
-/usr/local/MATLAB/MATLAB_Runtime/v97/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v97/extern/bin/glnxa64
-If MATLAB Runtime is to be used with MATLAB Production Server, you do not need to modify the above environment variable.”</p>
+<li><p>And then install it (sudo is only required if you install to a directory that you do not have write access to.):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">MATLAB_Runtime_R2019b_Update_3_glnxa64</span>
+<span class="n">sudo</span> <span class="o">./</span><span class="n">install</span>
+</pre></div>
+</div>
 </li>
-</ul>
-<blockquote>
-<div><p>Click on “next” in order to finish the installation.</p>
-</div></blockquote>
-<ul>
+<li><p>After the installation, you get the following message (ex. for R2019b (9.7) Matlab Runtime):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">On</span> <span class="n">the</span> <span class="n">target</span> <span class="n">computer</span><span class="p">,</span> <span class="n">append</span> <span class="n">the</span> <span class="n">following</span> <span class="n">to</span> <span class="n">your</span> <span class="n">LD_LIBRARY_PATH</span> <span class="n">environment</span> <span class="n">variable</span><span class="p">:</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">runtime</span><span class="o">/</span><span class="n">glnxa64</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glnxa64</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">os</span><span class="o">/</span><span class="n">glnxa64</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">extern</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glnxa64</span>
+<span class="n">If</span> <span class="n">MATLAB</span> <span class="n">Runtime</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="k">with</span> <span class="n">MATLAB</span> <span class="n">Production</span> <span class="n">Server</span><span class="p">,</span> <span class="n">you</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">need</span> <span class="n">to</span> <span class="n">modify</span> <span class="n">the</span> <span class="n">above</span> <span class="n">environment</span> <span class="n">variable</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Click on <code class="docutils literal notranslate"><span class="pre">next</span></code> in order to finish the installation.</p>
+</li>
 <li><p>Then if necessary, create a .conf file in the /etc/ld.so.conf.d/ folder and add those previous paths in the file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ld</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">your_lib</span><span class="o">.</span><span class="n">conf</span>
-    <span class="c1"># Matlab 2019b Runtine Library</span>
-    <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">runtime</span><span class="o">/</span><span class="n">glnxa64</span>
-    <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glnxa64</span>
-    <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">os</span><span class="o">/</span><span class="n">glnxa64</span>
-    <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">extern</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glnxa64</span>
+<span class="c1"># Matlab 2019b Runtine Library</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">runtime</span><span class="o">/</span><span class="n">glnxa64</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glnxa64</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">os</span><span class="o">/</span><span class="n">glnxa64</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span><span class="o">/</span><span class="n">extern</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glnxa64</span>
 </pre></div>
 </div>
 </li>
@@ -148,34 +149,34 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 </ul>
 </li>
 <li><p>Check installation by exectuting SPM12, the second path being the path to the Matlab Runtime:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spm12</span><span class="o">/./</span><span class="n">run_spm12</span><span class="o">.</span><span class="n">sh</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spm12</span><span class="o">/</span><span class="n">run_spm12</span><span class="o">.</span><span class="n">sh</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span>
 </pre></div>
 </div>
 </li>
 <li><p>Check this <a class="reference external" href="https://en.wikibooks.org/wiki/SPM/Standalone">manual</a> if you have trouble during installation.</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="installation-of-afni">
+</div>
+<div class="section" id="installation-of-afni">
 <h2>Installation of <a class="reference external" href="https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html">AFNI</a><a class="headerlink" href="#installation-of-afni" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p>Follow the <a class="reference external" href="https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup">quick setup</a> of the AFNI’s team.</p></li>
-<li><p>It will download all AFNI in your home. If you want you can move AFNI folders (abin, AFNI_data5, AFNI_data6, AFNI_demos, afni_handouts, CD, std_leshes, suma_demo, .afni) in an other folder (for e.g /path/to/folder/afni). In this case, change the afni paths set in your bashrc.</p></li>
+<li><p>It will download all AFNI in your home. If you want you can move AFNI folders (abin, AFNI_data5, AFNI_data6, AFNI_demos, afni_handouts, CD, std_leshes, suma_demo, .afni) in an other folder (for e.g <code class="docutils literal notranslate"><span class="pre">/path/to/folder/afni</span></code>). In this case, change the afni paths set in your bashrc.</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="installation-of-ants">
+</div>
+<div class="section" id="installation-of-ants">
 <h2>Installation of <a class="reference external" href="http://stnava.github.io/ANTs/">ANTs</a><a class="headerlink" href="#installation-of-ants" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>You can install ANTs via pre-built releases :</p>
 <ul class="simple">
-<li><p>Dowloand pre-built releases <a class="reference external" href="https://github.com/ANTsX/ANTs/tags">here</a> and unzip it. Please note that if you want to use mriqc pipeline on populse_mia you need to choose v2.3.4.</p></li>
+<li><p>Dowloand pre-built releases <a class="reference external" href="https://github.com/ANTsX/ANTs/tags">here</a> and unzip it. Please note that if you want to use mriqc pipeline on populse_mia you need to choose <code class="docutils literal notranslate"><span class="pre">v2.3.4</span></code>.</p></li>
 <li><p>populse_mia do not need environment variables, however if you want to test ANTs outside populse_mia you need to add ANTs path in your .bashr.</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="installation-of-freesurfer">
+</div>
+<div class="section" id="installation-of-freesurfer">
 <h2>Installation of <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/">freesurfer</a><a class="headerlink" href="#installation-of-freesurfer" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
@@ -184,49 +185,65 @@ If MATLAB Runtime is to be used with MATLAB Production Server, you do not need t
 <li><p>populse_mia do not need environment variables, however if you want to testfFreesurfer outside populse_mia you need to add freesurfer path in your .bashr.</p></li>
 </ul>
 </div></blockquote>
-<div class="line-block">
-<div class="line"><br /></div>
 </div>
-</section>
-</section>
-<section id="installation-on-macos">
+</div>
+<div class="section" id="installation-on-macos">
 <h1>Installation on Macos<a class="headerlink" href="#installation-on-macos" title="Permalink to this headline">¶</a></h1>
-<section id="id5">
+<div class="section" id="id5">
 <h2>Installation of <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/software/spm12/">SPM 12</a> Standalone and Matlab Runtime<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
 <li><p>Download the spm12_r7532_BI_macOS_R2018b.zip <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/">file</a>. Unzip it. In the same directory where run_spm12.sh can be found unzip spm12_maci64.zip</p></li>
 <li><p>Download the corresponding MCR for MATLAB Compiler Runtime (MCR) MCR_R2018b_maci64_installer.dmg.zip <a class="reference external" href="https://fr.mathworks.com/products/compiler/matlab-runtime.html">file</a></p></li>
-<li><p>Start the MATLAB Runtime installer: double click in MCRInstaller.dmg then right click on MCRInstaller.pkg, then choose Open with &gt; Installer (default). The MATLAB Runtime installer starts, it displays a dialog box. Read the information and then click Next (or continue) to proceed with the installation. Then click Install. The default MATLAB Runtime installation directory is now in /Applications/MATLAB/MATLAB_Compiler_Runtime/vXX.</p></li>
-<li><p>Usage: Go where run_spm12.sh file can be found, then just type: ::
-./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/vXX/</p>
-<p>If No Java runtime is already installed, a pop-up is opened with a <cite>No Java runtime present, requesting install</cite> message.</p>
+<li><dl class="simple">
+<dt>Start the MATLAB Runtime installer:</dt><dd><ul class="simple">
+<li><p>double click in MCRInstaller.dmg</p></li>
+<li><p>then right click on MCRInstaller.pkg</p></li>
+<li><p>then choose Open with &gt; Installer (default).
+The MATLAB Runtime installer starts, it displays a dialog box.
+Read the information and then click <code class="docutils literal notranslate"><span class="pre">Next</span></code> (or <code class="docutils literal notranslate"><span class="pre">continue</span></code>) to proceed with the installation.</p></li>
+<li><p>Then click Install.
+The default MATLAB Runtime installation directory is now in <code class="docutils literal notranslate"><span class="pre">/Applications/MATLAB/MATLAB_Compiler_Runtime/vXX</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Usage: Go where run_spm12.sh file can be found, then just type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">run_spm12</span><span class="o">.</span><span class="n">sh</span> <span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">MATLAB_Compiler_Runtime</span><span class="o">/</span><span class="n">vXX</span><span class="o">/</span>
+</pre></div>
+</div>
+</li>
+<li><p>If No Java runtime is already installed, a pop-up is opened with a <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">Java</span> <span class="pre">runtime</span> <span class="pre">present,</span> <span class="pre">requesting</span> <span class="pre">install</span></code> message.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Download Java for OS X 2017-001: <a class="reference external" href="https://support.apple.com/kb/DL1572?locale=en_US">https://support.apple.com/kb/DL1572?locale=en_US</a></p></li>
+<li><p>Download <a class="reference external" href="https://support.apple.com/kb/DL1572?locale=en_US">Java for OS X 2017-001</a>.</p></li>
+<li><p>Click on <code class="docutils literal notranslate"><span class="pre">Download</span></code> then Open with &gt; DiskImageMounter (default) &gt; Ok.</p></li>
+<li><p>Right click on the JavaForOSX.pkg then choose Open with Installer (default).</p></li>
+<li><p>The Java for OS X 2017-001 installer starts, it displays a dialog box. Answer the questions then install.</p></li>
 </ul>
-<p>Click on Download then Open with &gt; DiskImageMounter (default) &gt; Ok.
-Right click on the JavaForOSX.pkg then choose Open with Installer (default).
-The Java for OS X 2017-001installer starts, it displays a dialog box. Answer the questions  then install.</p>
 </div></blockquote>
 </li>
+<li><p>Tested on macOS 10.13.6:</p>
+<ul class="simple">
+<li><p>The spm12_r7771.zip <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/">file</a> and MCR v4.13 (MATLAB R2010a) MCRInstaller.dmg <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/MCR/maci64/">file</a> are not compatible with mia (while <cite>./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri</cite> works fine in a terminal). Using this version of spm standalone, the following message is observed in MIA: <cite>/Volumes/Users/econdami/Documents/spm/spm12Standalone/spm12Stndalone_r7771/run_spm12. sh: line 60: ./spm12.app/Contents/MacOS/spm12_maci64: No such file or directory</cite>.</p></li>
 </ul>
-<p>P.S. Tested on macOS 10.13.6. The spm12_r7771.zip <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/">file</a> and MCR v4.13 (MATLAB R2010a) MCRInstaller.dmg <a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/MCR/maci64/">file</a> are not compatible with mia (while <cite>./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri</cite> works fine in a terminal). Using this version of spm standalone results in an error with this message in MIA: <cite>/Volumes/Users/econdami/Documents/spm/spm12Standalone/spm12Stndalone_r7771/run_spm12. sh: line 60: ./spm12.app/Contents/MacOS/spm12_maci64: No such file or directory</cite>.</p>
+</li>
+</ul>
 </div></blockquote>
-</section>
-<section id="installation-of-others-software">
+</div>
+<div class="section" id="installation-of-others-software">
 <h2>Installation of others software<a class="headerlink" href="#installation-of-others-software" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Please follow the instruction in the documentation of each third-party software.</p>
 </div></blockquote>
-</section>
-</section>
-<section id="installation-on-windows">
+</div>
+</div>
+<div class="section" id="installation-on-windows">
 <h1>Installation on Windows<a class="headerlink" href="#installation-on-windows" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div><p>Please follow the instruction in the documentation of each third-party software.</p>
 </div></blockquote>
-</section>
+</div>
 
 
       </div>
@@ -240,7 +257,7 @@ The Java for OS X 2017-001installer starts, it displays a dialog box. Answer the
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>

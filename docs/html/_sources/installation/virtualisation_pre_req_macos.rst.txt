@@ -8,9 +8,9 @@
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
-Pre-requirements for virtualization using Brainvisa - MacOS 
+Pre-requirements for virtualization using Brainvisa - MacOS
 =============================================================
 In progress ...
 
 
-You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_. 
+You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_.
