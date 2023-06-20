@@ -56,10 +56,10 @@ if os.path.isdir(
     ):
         print(
             " - Adding {} to the sys.path ...".format(
-                os.path.abspath("../../../mia_processes/python")
+                os.path.abspath("../../../mia_processes")
             )
         )
-        sys.path.insert(1, os.path.abspath("../../../mia_processes/python"))
+        sys.path.insert(1, os.path.abspath("../../../mia_processes"))
 
     if os.path.isdir(
         os.path.join(
