@@ -79,7 +79,7 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 |
 
-* For some libraries a special version is required. In case of problems when launching populse_mia, please check that all versions of third party libraries are respected by consulting the REQUIRES object in the `populse_mia info.py <https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py>`_  and `mia_processes info.py <https://github.com/populse/mia_processes/blob/master/python/mia_processes/info.py>`_ module.
+* For some libraries a special version is required. In case of problems when launching populse_mia, please check that all versions of third party libraries are respected by consulting the REQUIRES object in the `populse_mia info.py <https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py>`_  and `mia_processes info.py <https://github.com/populse/mia_processes/blob/master/mia_processes/info.py>`_ module.
 
   * e.g. for traits ::
 
