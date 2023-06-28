@@ -24,12 +24,8 @@ if os.path.isdir(
     )
 ):
     print("\nGenerating sphinx documentation in developer mode ...")
-    print(
-        " - Adding {} to the sys.path ...".format(
-            os.path.abspath("../../python")
-        )
-    )
-    sys.path.insert(0, os.path.abspath("../../python"))
+    print(" - Adding {} to the sys.path ...".format(os.path.abspath("../..")))
+    sys.path.insert(0, os.path.abspath("../.."))
 
     if os.path.isdir(
         os.path.join(

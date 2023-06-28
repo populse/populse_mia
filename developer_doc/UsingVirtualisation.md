@@ -60,7 +60,7 @@ G - Install Populse-mia
 	5 - >>git clone https://github.com/populse/populse_mia.git
 	6 - >>git clone https://github.com/populse/mia_processes.git
 	7 - >>git clone https://github.com/populse/mri_conv
-	8 - >>python populse_mia/python/populse_mia/main.py
+	8 - >>python populse_mia/populse_mia/main.py
 
 Windows
 =======
@@ -257,7 +257,7 @@ git clone https://github.com/populse/mri_conv
 To launch mia using an alias, insert the  following commands in the bash of your container.
 
 # mia launch
-alias mia='pwd_orig=$PWD; cd /casa/home/DEV/populse_dev/populse_mia/python/populse_mia; python3 main.py; cd $pwd_orig'
+alias mia='pwd_orig=$PWD; cd /casa/home/DEV/populse_dev/populse_mia/populse_mia; python3 main.py; cd $pwd_orig'
 
 You can now lauch mia with the command:
 ```mia```

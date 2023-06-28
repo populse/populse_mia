@@ -1,5 +1,5 @@
 <p align="center" >
-	<img src="https://github.com/populse/populse_mia/blob/master/python/populse_mia/sources_images/Logo_populse_mia_HR.jpeg" alt="populse_mia logo" height="220" width="300">
+	<img src="https://github.com/populse/populse_mia/blob/master/populse_mia/sources_images/Logo_populse_mia_HR.jpeg" alt="populse_mia logo" height="220" width="300">
 </p>
 
 [//]: [![](https://travis-ci.com/populse/populse_mia.svg?branch=master)](https://app.travis-ci.com/github/populse/populse_mia)
@@ -33,7 +33,7 @@
 
   * After an [installation in developer mode](https://populse.github.io/populse_mia/html/installation/developer_installation.html), interprets the main.py file from the source code directory:
 
-        cd [populse_install_dir]/populse_mia/python/populse_mia
+        cd [populse_install_dir]/populse_mia/populse_mia
         python3 main.py
 
   * Depending on the operating system used, it was observed some compatibility issues with PyQt5/SIP. In this case, we recommend, as a first attempt, to do:
@@ -54,9 +54,9 @@ If you'd like to contribute to the project please read our [developer documentat
 * Code coverage calculated by the python module codecov
 * The module is ensured to work with Python >= 3.6
 * The module is ensured to work on the platforms Linux, OSX and Windows
-* The script of tests is python/populse_mia/test.py, so the following command launches the tests:
+* The script of tests is populse_mia/test.py, so the following command launches the tests:
 
-      python3 python/populse_mia/test.py (from populse_mia root folder, for example [populse_install_dir]/populse_mia)
+      python3 populse_mia/test.py (from populse_mia root folder, for example [populse_install_dir]/populse_mia)
 
 # Requirements
 

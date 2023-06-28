@@ -112,10 +112,10 @@ if (
     print('\n- Mia in "developer" mode\n')
 
     if os.path.isdir(os.path.join(root_dev_dir, "populse-mia")):
-        mia_dev_dir = os.path.join(root_dev_dir, "populse-mia", "python")
+        mia_dev_dir = os.path.join(root_dev_dir, "populse-mia")
 
     else:
-        mia_dev_dir = os.path.join(root_dev_dir, "populse_mia", "python")
+        mia_dev_dir = os.path.join(root_dev_dir, "populse_mia")
 
     sys.path.insert(0, mia_dev_dir)
     del mia_dev_dir
@@ -4571,11 +4571,11 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.data_browser.table_data.selectRow(0)
         # FIXME: following line raise exception, only on macos build:
         # Traceback (most recent call last):
-        # File "/Users/appveyor/projects/populse-mia/python/populse_mia/
+        # File "/Users/appveyor/projects/populse-mia/populse_mia/
         # test.py",
         # line 3797, in test_open_recent_project
         # self.main_window.data_browser.table_data.remove_scan()
-        # File "/Users/appveyor/projects/populse-mia/python/populse_mia/
+        # File "/Users/appveyor/projects/populse-mia/populse_mia/
         # user_interface/data_browser/data_browser.py", line 2055, in
         # remove_scan
         # scan_path)

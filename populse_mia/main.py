@@ -74,9 +74,7 @@ if (
 ):  # "developer" mode
     DEV_MODE = True
     root_dev_dir = os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        )
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     )
     branch = ""
     populse_bdir = ""
@@ -106,7 +104,7 @@ if (
     # Adding populse_mia
     print('\n- Mia in "developer" mode')
     mia_dev_dir = os.path.join(
-        root_dev_dir, populse_bdir, "populse_mia", branch, "python"
+        root_dev_dir, populse_bdir, "populse_mia", branch
     )
     print("  . Using populse_mia package from {} ...".format(mia_dev_dir))
     sys.path.insert(i, mia_dev_dir)
@@ -892,10 +890,10 @@ def main():
 
         if "path" in pc:
             matches = [
-                os.path.join("populse_mia", "python"),
                 "capsul",
-                os.path.join("populse_db", "python"),
                 "mia_processes",
+                "populse_mia",
+                os.path.join("populse_db", "python"),
                 os.path.join("soma-base", "python"),
                 os.path.join("soma-workflow", "python"),
                 os.path.join("populse_mia", "processes"),
