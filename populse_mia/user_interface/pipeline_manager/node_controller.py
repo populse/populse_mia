@@ -1268,6 +1268,9 @@ class NodeController(QWidget):
         self.v_box_outputs = QVBoxLayout()
         idx = 0
         for name, trait in process.traits(output=True).items():
+            if trait.userlevel is not None and trait.userlevel > 0:
+                continue
+
             label_output = QLabel()
             label_output.setText(str(name))
             self.labels_output.insert(idx, label_output)
