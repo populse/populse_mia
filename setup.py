@@ -7,7 +7,7 @@ import os
 from setuptools import find_packages, setup
 
 # Select modules to include in distribution
-modules = find_packages("python")
+modules = find_packages()
 print("\nmodules found: ", modules)
 
 # Additional script files to include in distribution
@@ -23,8 +23,8 @@ pkgdata = {
 
 # Read the info.py file in populse_mia module
 release_info = {}
-python_dir = os.path.join(os.path.dirname(__file__), "python")
-with open(os.path.join(python_dir, "populse_mia", "info.py")) as f:
+root_dir = os.path.join(os.path.dirname(__file__))
+with open(os.path.join(root_dir, "populse_mia", "info.py")) as f:
     code = f.read()
     exec(code, release_info)
 
@@ -39,7 +39,6 @@ setup(
     author_email=release_info["AUTHOR_EMAIL"],
     version=release_info["VERSION"],
     url=release_info["URL"],
-    package_dir={"": "python"},
     packages=modules,
     package_data=pkgdata,
     platforms=release_info["PLATFORMS"],
