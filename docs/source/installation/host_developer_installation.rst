@@ -66,7 +66,7 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 * To launch populse_mia: ::
 
-      python '[populse_install_dir]/populse_mia/python/populse_mia/main.py'
+      python '[populse_install_dir]/populse_mia/populse_mia/main.py'
 
 |
 
@@ -123,7 +123,7 @@ All the dependencies should be install with populse_mia project.
 
 * To launch populse_mia: ::
 
-      python '[populse_install_dir]/populse_mia/python/populse_mia/main.py'
+      python '[populse_install_dir]/populse_mia/populse_mia/main.py'
 
 |
 

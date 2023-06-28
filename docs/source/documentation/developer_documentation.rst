@@ -102,7 +102,7 @@ Pre-commit
       - hook id: black
       - files were modified by this hook
 
-      reformatted python/populse_mia/user_interface/data_viewer/data_viewer.py
+      reformatted /populse_mia/user_interface/data_viewer/data_viewer.py
 
       All done! ✨ 🍰 ✨
       1 file reformatted.

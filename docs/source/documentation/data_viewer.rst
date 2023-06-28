@@ -46,7 +46,7 @@ A drop-down menu is displayed next to the `use viewer:` label (top left) and con
 For now, Mia provides two viewers, anatomist and anatomist_2. Both viewers are based on tools provided by the API of Anatomist,
 available `here <https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1.html#introduction>`_.
 
-Users own viewers can be simply added to the `data_viewer folder <https://github.com/populse/populse_mia/tree/master/python/populse_mia/user_interface/data_viewer>`_. The viewer will then be automatically detected and added to the drop-down menu.
+Users own viewers can be simply added to the `data_viewer folder <https://github.com/populse/populse_mia/tree/master/populse_mia/user_interface/data_viewer>`_. The viewer will then be automatically detected and added to the drop-down menu.
 
 In the following section we will focuse on anatomist_2 viewer which is an improved version of anatomist simple viewer.
 
