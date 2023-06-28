@@ -1693,10 +1693,22 @@ class TableDataBrowser(QTableWidget):
                     self.old_database_values.append(database_value)
 
                     table_value = item.data(Qt.EditRole)
-                    table_value = ast.literal_eval(table_value)
+
+                    try:
+                        table_value = ast.literal_eval(table_value)
+
+                    except (ValueError, SyntaxError):
+                        table_value = None
+                        pass
+
                     self.old_table_values.append(table_value)
 
-                    size = len(database_value)
+                    try:
+                        size = len(database_value)
+
+                    except TypeError:
+                        size = None
+
                     if size not in self.lengths:
                         self.lengths.append(size)
 
@@ -1705,6 +1717,8 @@ class TableDataBrowser(QTableWidget):
                     return
 
             # Error if lists of different lengths
+            self.lengths = [x for x in self.lengths if x is not None]
+
             if len(self.lengths) > 1:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
