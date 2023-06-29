@@ -80,9 +80,7 @@ from traits.api import TraitListObject, Undefined
 
 uts_dir = os.path.isdir(
     os.path.join(
-        os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        ),
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
         "miautdata",
     )
 )
@@ -103,9 +101,7 @@ if (
 ):
     # "developer" mode
     root_dev_dir = os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        )
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     )
 
     # Adding populse_mia
