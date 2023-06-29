@@ -53,7 +53,9 @@ class ModifyTable(QDialog):
     content of the cell.
 
     .. Methods:
+        - add_item: add one more element to self.value
         - fill_table: fill the table
+        - rem_last_item: remove last element of self.value
         - update_table_values: update the table in the database
     """
 
@@ -68,7 +70,6 @@ class ModifyTable(QDialog):
         :param tags: Tags of the columns
         """
         super().__init__()
-
         self.setModal(True)
 
         # Variables init
@@ -91,17 +92,33 @@ class ModifyTable(QDialog):
         cancel_button = QPushButton("Cancel")
         cancel_button.clicked.connect(self.close)
 
+        # + button (add one more element to a list)
+        plus_button = QPushButton("+")
+        plus_button.clicked.connect(self.add_item)
+
+        # - button (remove last element from a list)
+        minus_button = QPushButton("-")
+        minus_button.clicked.connect(self.rem_last_item)
+
         # Layouts
         self.v_box_final = QVBoxLayout()
         self.h_box_final = QHBoxLayout()
 
         self.h_box_final.addWidget(ok_button)
         self.h_box_final.addWidget(cancel_button)
+        self.h_box_final.addWidget(plus_button)
+        self.h_box_final.addWidget(minus_button)
 
         self.v_box_final.addWidget(self.table)
         self.v_box_final.addLayout(self.h_box_final)
 
         self.setLayout(self.v_box_final)
+
+    def add_item(self):
+        """Add one more element to self.value"""
+        self.value.append(0)
+        # Filling the table
+        self.fill_table()
 
     def fill_table(self):
         """Fill the table."""
@@ -121,16 +138,32 @@ class ModifyTable(QDialog):
         total_width = 0
         total_height = 0
         i = 0
+
         while i < self.table.columnCount():
             total_width += self.table.columnWidth(i)
             total_height += self.table.rowHeight(i)
             i += 1
+
         if total_width + 20 < 900:
             self.table.setFixedWidth(total_width + 20)
             self.table.setFixedHeight(total_height + 25)
+
         else:
             self.table.setFixedWidth(900)
             self.table.setFixedHeight(total_height + 40)
+
+    def rem_last_item(self):
+        """Remove last element of self.value"""
+        if len(self.value) > 1:
+            self.value.pop()
+            # Filling the table
+            self.fill_table()
+
+        else:
+            print(
+                "\nThe list must contain at least one element. "
+                "Deletion of the last element is aborted!\n"
+            )
 
     def update_table_values(self, test=False):
         """Update the table in the database when the 'OK' button is clicked."""

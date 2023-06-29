@@ -1653,7 +1653,6 @@ class TableDataBrowser(QTableWidget):
         """Change values in DataBrowser"""
 
         self.setMouseTracking(False)
-
         self.coordinates = []  # Coordinates of selected cells stored
         self.old_database_values = []  # Old database values stored
         self.old_table_values = []  # Old table values stored
@@ -1699,7 +1698,6 @@ class TableDataBrowser(QTableWidget):
 
                     except (ValueError, SyntaxError):
                         table_value = None
-                        pass
 
                     self.old_table_values.append(table_value)
 
@@ -1719,6 +1717,9 @@ class TableDataBrowser(QTableWidget):
             # Error if lists of different lengths
             self.lengths = [x for x in self.lengths if x is not None]
 
+            if self.lengths == []:
+                self.lengths = [1]
+
             if len(self.lengths) > 1:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
@@ -1737,6 +1738,9 @@ class TableDataBrowser(QTableWidget):
                         value.append(0)
                 else:
                     value = self.old_table_values[0]
+
+                if value is None:
+                    value = [0]
 
                 # Window to change list values displayed
                 self.popup = ModifyTable(
@@ -1760,6 +1764,10 @@ class TableDataBrowser(QTableWidget):
                     new_cur_value = self.project.session.get_value(
                         COLLECTION_CURRENT, self.scans_list[i], self.tags[i]
                     )
+
+                    if new_cur_value is None:
+                        new_cur_value = "*Not Defined*"
+
                     modified_values.append(
                         [
                             self.scans_list[i],
