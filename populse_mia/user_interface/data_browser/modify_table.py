@@ -94,10 +94,12 @@ class ModifyTable(QDialog):
 
         # + button (add one more element to a list)
         plus_button = QPushButton("+")
+        plus_button.setToolTip("Add one more element to the list")
         plus_button.clicked.connect(self.add_item)
 
         # - button (remove last element from a list)
         minus_button = QPushButton("-")
+        minus_button.setToolTip("Remove the last element of the list")
         minus_button.clicked.connect(self.rem_last_item)
 
         # Layouts
