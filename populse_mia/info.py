@@ -22,7 +22,7 @@ import sys
 # Current version
 version_major = 2
 version_minor = 4
-version_micro = 0
+version_micro = 1
 version_extra = "dev"  # leave empty for release
 # version_extra = ""
 
@@ -140,7 +140,7 @@ REQUIRES = [
     "nibabel",
     "nipype",
     "pillow",
-    "populse-db >= 2.1.0",
+    "populse-db >= 2.2.0",
     "pre-commit",
     "pyqt5",
     "python-dateutil",
