@@ -51,7 +51,6 @@ def get_populse_mia_gitversion():
             os.path.join(
                 os.path.dirname(populse_mia.__file__),
                 os.path.pardir,
-                os.path.pardir,
             )
         )
 
