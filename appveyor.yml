@@ -3,7 +3,7 @@ environment:
   matrix:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      PYTHON: "C:\\Python37"
+      PYTHON: "C:\\Python37-x64"
 #      APPVEYOR_RDP_PASSWORD: 5fh'D*
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
@@ -53,6 +53,12 @@ install:
 
   - cmd: "pip install \"scipy<1.5\""
   - sh: pip3 install 'scipy<1.5'
+
+# A patch to install dipy (mia_processes requirement) in Windows builds:
+# see https://ci.appveyor.com/project/populse/populse-mia/builds/47455621/job/kugl7p8afeu1lh07#L351
+  - cmd: pip install h5py
+  - cmd: pip install tqdm
+  - cmd: pip install -i https://pypi.anaconda.org/scipy-wheels-nightly/simple dipy
 
   - cmd: "pip install \"scikit-image==0.19.3\""
   - sh: pip3 install 'scikit-image==0.19.3'
