@@ -40,15 +40,12 @@ The process library contains all the available pipeline processes.
 
 When Populse_MIA is launched for the first time, Nipype's interfaces are stored in the process library.
 
+If `Capsul <http://brainvisa.info/capsul/index.html>`_ and `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_  are used, 
+they are also stored in the process library.
+
 To use any of the available processes, drag it from the process library and drop it to the pipeline editor.
 
 When a pipeline is saved, it is stored in the process library under "User_processes" and can be used as a process.
-
-Here is an overview of the process library:
-
-.. image:: ../images/process_library.png
-   :align: center
-   :name: Process library
 
 
 .. _pipeline-editor-label:
@@ -60,6 +57,12 @@ The pipeline editor is a graphical tool to create pipelines. It is composed of s
 
 The menu on the top left of the Pipeline Manager tab contains several actions impacting the current editor:
 
+.. image:: ../images/pipeline_menu.png
+   :align: center
+   :name: Pipeline menu
+
+|
+
   * Load pipeline
       * Loads a saved pipeline in a new editor (or in the current editor if there is only one editor and it is empty)
   * Save pipeline
@@ -70,11 +73,18 @@ The menu on the top left of the Pipeline Manager tab contains several actions im
       * Loads a parameters set and apply them to the pipeline global inputs/outputs
   * Save pipeline parameters
       * Saves the pipeline global inputs/outputs to a json file
-  * Initialize pipeline
+  * Run pipeline
       * Creates the output file names for each process in the current pipeline and stores them to the database
       * For the processes that interact with the database, verifies that the fields are filled
-  * Run pipeline
       * Executes the current pipeline
+  * Stop pipeline 
+      * Stop the pipeline that is currently running
+  * Status
+      * Open the Execution status windows to check the status of the workflows run
+  * Cleanup
+      * If there is an issue during the run of the pipeline, this button can be used to cleanup the database (ie. remove of the database all non-existing files)
+
+Buttons for "Run pipeline", "Stop", "Status" and "Cleanup" are also displayed to the right of the menu.
 
 Shortcuts
 ^^^^^^^^^
@@ -87,9 +97,9 @@ Shortcuts
 How to use the pipeline editor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The pipeline edtior uses the PipelineDevelopperView tool from `Capsul <http://brainvisa.info/capsul/index.html>`_ to create pipelines in a graphical way. Here is a tutorial to help to create and save a simple pipeline (no initialization and no run):
+The pipeline edtior uses the PipelineDevelopperView tool from `Capsul <http://brainvisa.info/capsul/index.html>`_ to create pipelines in a graphical way. Here is a tutorial to help to create and save a simple pipeline (no run):
 
-- Add a SPM smooth process by dragging it from the process library and dropping it into the pipeline editor
+- Add a SPM smooth process (from Nipype library) by dragging it from the process library and dropping it into the pipeline editor
 
 .. image:: ../images/pipeline_tuto_1.png
    :align: center
@@ -217,18 +227,36 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
 
 |
 
-* The pipeline inputs are now correctly set and it can be initialized. Select "Initialize pipeline" in the Pipeline Manager's "Pipeline" menu.
-    * During the initialization step, the output files are created (but still empty) and stored in the database with information about their ancestors (their input files and parameters)
+* The pipeline inputs are now correctly set and it can be run. Select "Run pipeline" in the Pipeline menu (or click directly on the "Run pipeline" button of the Pipeline menu). 
 
-.. image:: ../images/node_controller_5.png
-   :align: center
-   :name: Node controller inputs/outputs 4
+* A connection dialog  is displayed. Select the resource you want to run the pipeline on and click "Ok". 
+  
+    .. image:: ../images/swf_connection.jpg
+      :align: center
+      :name: Soma workflow connection
 
-|
+    |
+  
+  During this step:
+    * The output files are created (but still empty) and stored in the database with information about their ancestors (their input files and parameters)
+    * The output file names are generated and updated in the node controller (in this example the file names begin with "ss" which means that they have been smoothed twice).
+    
+      .. image:: ../images/node_controller_5.png
+          :align: center
+          :name: Node controller inputs/outputs 4
 
-* The output file names are generated and updated in the node controller (in this example the file names begin with "ss" which means that they have been smoothed twice).
-* The pipeline can now be run by selecting "Run pipeline" in the Pipeline Manager's "Pipeline" menu.
-* At the end of the run, 'Pipeline "Double_smooth.py" been correctly run' should be run in the bottom left's status bar of the software.
+      |
+
+    * The pipeline is run.
+
+* During the run, the "Status" button near the Pipeline menu changes and a waiting bar appears at the top right corner. You can also used the "stop pipeline" button.
+  
+  .. image:: ../images/pipeline_menu_run.png
+      :align: center
+      :name: Pipeline menu during a run
+
+  |
+* At the end of the run, a windows with "Pipeline execution was ok' appears during 10 seconds and the waiting bar at the top right corner disappears. 
 
 
 .. _pipeline-iteration-label:
@@ -270,7 +298,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
     * Export the ``file1`` plug of the Files_To_List node (right click on the ``file1`` plug then select export plug), renamed as ``func_files`` (for clarity).
 
 
-* export all unconnected plugs of the Spatial_preprocessing_1 node (right click on the node then select "export all unconnected plugs")
+* Export all unconnected plugs of the Spatial_preprocessing_1 node (right click on the node then select "export all unconnected plugs")
 
   .. image:: ../images/pipeline_iter_1.jpg
     :align: center
@@ -278,7 +306,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 |
 
-* check on the **iterate pipeline** button.
+* Check on the **iterate pipeline** button.
 
 * A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if's OK, then just click "OK".
 
@@ -296,9 +324,9 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 |
 
-* select the ``inputs`` node
+* Select the ``inputs`` node
 
-* click the "Filter" button for the ``anat files`` parameter, and select the files (anatomical MRIs) we wish to extract the brain from.
+* Click the "Filter" button for the ``anat files`` parameter, and select the files (anatomical MRIs) we wish to extract the brain from.
 
   .. image:: ../images/pipeline_iter_4.jpg
     :align: center
@@ -306,15 +334,13 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 |
 
-* similarly, click on the "Filter" button for the ``func_files`` parameter and select the same number of functional files.
+* Similarly, click on the "Filter" button for the ``func_files`` parameter and select the same number of functional files.
 
 .. warning::
 
    In :ref:`regular iterative pipeline<viaRegularItPi>` iteration mode, check that anatomical and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
 
-* click on "Initialize pipeline". The Run button becomes enabled.
-
-* click on "Run pipeline".
+* Click on "Run pipeline".
 
 Via Input_Filter brick/process
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -336,7 +362,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 * Add the pipeline mia_processes > pipelines > preprocess > Spatial_preprocessing_1 to the pipeline editor.
 
-* check on the **iterate pipeline** button.
+* Check on the **iterate pipeline** button.
 
   A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for "database") on each input parameter. Click on the OK button.
 
@@ -352,7 +378,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 |
 
-* right-click on the ``anat_file_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select the wanted anatomical files.
+* Right-click on the ``anat_file_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select the wanted anatomical files.
 
   Here is an example where we select all the anatomical images excluding the patient "alej":
 
@@ -362,7 +388,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
 |
 
-* similarly, right-click on the ``func_files_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select the wanted functional files.
+* Similarly, right-click on the ``func_files_filter`` node, and select "Open filter".  In the filter pop-up, modify the filter to apply to select the wanted functional files.
 
   Here is an example where we select all the functional images excluding the patient "alej":
 
@@ -374,9 +400,7 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
   In :ref:`via Input_Filter  (without use of the iteration table)<viaInputFilBri>` iteration mode, check that anatomical and corresponding functional files are in the same order... The database filters do not ensure that and do not allow to specify any order...
 
-* click on "Initialize pipeline". The Run button becomes enabled.
-
-* click on "Run pipeline".
+* Click on "Run pipeline".
 
 .. _manually:
 
@@ -420,9 +444,7 @@ With use of the iteration table
 
 |
 
-* click on "Initialize pipeline". The Run button becomes enabled.
-
-* click on "Run pipeline".
+* Click on "Run pipeline".
 
 .. _iteration-table-label:
 
@@ -445,8 +467,6 @@ Assume that the current project contains several patients, so several "PatientNa
    :name: iter_allTagsUsed2
 
 |
-
-- Go to the Pipeline Manager and check the "Iterate pipeline" check box to activate the iteration table.
 
 - Select which tag to iterate the pipeline on by clicking on the "Select" push button and select the "PatientName" tag. The push button then takes the name of the chosen tag (here PatientName).
 
