@@ -145,7 +145,7 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
 	The default MATLAB Runtime installation directory is now in ``/Applications/MATLAB/MATLAB_Compiler_Runtime/vXX``.
 
   * Usage: Go where run_spm12.sh file can be found, then just type: ::
-      
+
         ./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/vXX/
 
   * If No Java runtime is already installed, a pop-up is opened with a ``No Java runtime present, requesting install`` message.
