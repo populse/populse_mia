@@ -1481,11 +1481,16 @@ class PipelineManagerTab(QWidget):
         missing_mandatory_param = []
 
         for node in self.node_list:
-            if node.context_name.split(".")[0] == "Pipeline":
-                node_name = ".".join(node.context_name.split(".")[1:])
+            if (
+                getattr(node, "context_name", node.name).split(".")[0]
+                == "Pipeline"
+            ):
+                node_name = ".".join(
+                    getattr(node, "context_name", node.name).split(".")[1:]
+                )
 
             else:
-                node_name = node.context_name
+                node_name = getattr(node, "context_name", node.name)
 
             job = None
 
@@ -1682,13 +1687,23 @@ class PipelineManagerTab(QWidget):
             # FIXME: Are these tests compatible with remote run?
             # FIXME: Make a requirement check for FreeSurfer:
             for req_node in requirements:
-                if req_node.context_name.split(".")[0] == "Pipeline":
+                getattr(req_node, "context_name", req_node.name)
+                if (
+                    getattr(req_node, "context_name", req_node.name).split(
+                        "."
+                    )[0]
+                    == "Pipeline"
+                ):
                     req_node_name = ".".join(
-                        req_node.context_name.split(".")[1:]
+                        getattr(req_node, "context_name", req_node.name).split(
+                            "."
+                        )[1:]
                     )
 
                 else:
-                    req_node_name = req_node.context_name
+                    req_node_name = getattr(
+                        req_node, "context_name", req_node.name
+                    )
 
                 # FreeSurfer
 
