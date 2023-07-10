@@ -516,7 +516,9 @@ class PipelineEditor(PipelineDeveloperView):
         )
 
         if node_name is None:
-            node_name = process.context_name.split(".")[-1]
+            node_name = getattr(process, "context_name", process.name).split(
+                "."
+            )[-1]
 
         if hasattr(process, "use_project") and process.use_project:
             process.project = self.project

@@ -346,13 +346,22 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         if not isinstance(in_process, ProcessMIA):
             if not isinstance(in_process, Pipeline):
-                if in_process.context_name.split(".")[0] == "Pipeline":
+                if (
+                    getattr(in_process, "context_name", in_process.name).split(
+                        "."
+                    )[0]
+                    == "Pipeline"
+                ):
                     node_name = ".".join(
-                        in_process.context_name.split(".")[1:]
+                        getattr(
+                            in_process, "context_name", in_process.name
+                        ).split(".")[1:]
                     )
 
                 else:
-                    node_name = in_process.context_name
+                    node_name = getattr(
+                        in_process, "context_name", in_process.name
+                    )
 
                 if isinstance(in_process, NipypeProcess):
                     # fmt: off
@@ -792,7 +801,7 @@ class ProcessMIA(Process):
             print(
                 "\nDuring the {0} process initialisation, some possible "
                 "problems were detected:".format(
-                    self.context_name.rsplit(".", 1)[-1]
+                    getattr(self, "context_name", self.name).rsplit(".", 1)[-1]
                 )
             )
 

@@ -427,6 +427,9 @@ class AttributesFilter(PlugFilter):
     The widget displays a browser with the selected files of the database,
     a rapid search and an advanced search to filter these files. Once the
     filtering is done, the result (as a list of files) is set to the plug.
+
+    .. Methods:
+        - ok_clicked: close the widget
     """
 
     attributes_selected = pyqtSignal(dict)
@@ -470,7 +473,19 @@ class AttributesFilter(PlugFilter):
 class CapsulNodeController(QWidget):
     """
     Implementation of NodeController using Capsul AttributedProcessWidget
-    widget
+    widget.
+
+    .. Methods:
+        - display_parameters: display the parameters of the selected node
+        - static_release: remove notification
+        - release_process: remove notification from process
+        - update_parameters: update the parameters values
+        - parameters_changed: emit the value_changed signal
+        - update_node_name: change the name of the selected node and updates
+        the pipeline
+        - rename_subprocesses: change the name of a node
+        - filter_attributes: display a filter widget
+        - update_attributes_from_filter: update attributes from filter widget
     """
 
     value_changed = pyqtSignal(list)
@@ -721,15 +736,31 @@ class CapsulNodeController(QWidget):
             )
 
     def rename_subprocesses(self, node, parent_node_name):
-        """blabla"""
+        """Change the name of a node."""
 
-        if node.process.context_name.split(".")[0] == "Pipeline":
-            if len(node.process.context_name.split(".")) >= 3:
+        if (
+            getattr(node.process, "context_name", node.process.name).split(
+                "."
+            )[0]
+            == "Pipeline"
+        ):
+            if (
+                len(
+                    getattr(
+                        node.process, "context_name", node.process.name
+                    ).split(".")
+                )
+                >= 3
+            ):
                 node.process.context_name = (
                     "Pipeline."
                     + parent_node_name
                     + "."
-                    + ".".join(node.process.context_name.split(".")[2:])
+                    + ".".join(
+                        getattr(
+                            node.process, "context_name", node.process.name
+                        ).split(".")[2:]
+                    )
                 )
             else:
                 node.process.context_name = "Pipeline." + parent_node_name
@@ -760,7 +791,7 @@ class CapsulNodeController(QWidget):
         )
 
     def update_attributes_from_filter(self, attributes):
-        """Update attributes from filter widger"""
+        """Update attributes from filter widget"""
         compl = self.process.completion_engine
         atts = compl.get_attribute_values()
         num_set = 0
@@ -798,8 +829,6 @@ class FilterWidget(QWidget):
         - ok_clicked: set the filter to the process and closes the widget
         - reset_search_bar: reset the search bar of the rapid search
         - search_str: update the files to display in the browser
-        - set_output_value: set the output of the filter to the output of the
-        node
         - update_tag_to_filter: update the tag to Filter
         - update_tags: update the list of visualized tags
     """
@@ -1075,11 +1104,14 @@ class NodeController(QWidget):
         - clearLayout: clear the layouts of the widget
         - display_filter: display a filter widget
         - display_parameters: display the parameters of the selected node
+        - get_index_from_plug_name: return the index of the plug label.
         - update_node_name: update the name of the selected node
+        - rename_subprocesses: change the name of a node
         - update_parameters: update the parameters values
         - update_plug_value: update the value of a node plug
         - update_plug_value_from_filter: update the plug value from a filter
            result
+        - release_process: remove notification from process (not implemented)
 
     """
 
@@ -1425,15 +1457,31 @@ class NodeController(QWidget):
             )
 
     def rename_subprocesses(self, node, parent_node_name):
-        """blabla"""
+        """Change the name of a node."""
 
-        if node.process.context_name.split(".")[0] == "Pipeline":
-            if len(node.process.context_name.split(".")) >= 3:
+        if (
+            getattr(node.process, "context_name", node.process.name).split(
+                "."
+            )[0]
+            == "Pipeline"
+        ):
+            if (
+                len(
+                    getattr(
+                        node.process, "context_name", node.process.name
+                    ).split(".")
+                )
+                >= 3
+            ):
                 node.process.context_name = (
                     "Pipeline."
                     + parent_node_name
                     + "."
-                    + ".".join(node.process.context_name.split(".")[2:])
+                    + ".".join(
+                        getattr(
+                            node.process, "context_name", node.process.name
+                        ).split(".")[2:]
+                    )
                 )
             else:
                 node.process.context_name = "Pipeline." + parent_node_name
