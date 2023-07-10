@@ -43,7 +43,6 @@ from nipype.interfaces.base import File, InputMultiObject, traits_extension
 # Soma-base import
 from soma.controller.trait_utils import relax_exists_constraint
 from soma.utils.weak_proxy import get_ref
-from traits.trait_base import Undefined
 
 # Populse_MIA imports
 from populse_mia.data_manager.project import COLLECTION_CURRENT
@@ -208,7 +207,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         return attributes
 
     @staticmethod
-    def complete_nipype_common(process):
+    def complete_nipype_common(process, output_dir=True):
         """
         Set Nipype parameters for SPM. This is used both on
         :class:`NipypeProcess` and :class:`ProcessMIA` instances which have the
@@ -217,6 +216,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         Parameters
         ----------
         process: a process
+        output_dir: a boolean. If False, the output_directory attribute value
+        is not initialised
 
         """
 
@@ -243,13 +244,20 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 process.project = project
 
             # set output_directory
-            if process.trait(
-                "output_directory"
-            ) and process.output_directory in (None, Undefined, ""):
+            out_dir = None
+            if process.trait("output_directory"):
                 out_dir = os.path.abspath(
                     os.path.join(project.folder, "data", "derived_data")
                 )
 
+            else:
+                print(
+                    "populse_mia.user_interface.pipeline_manager."
+                    "MiaProcessCompletionEngine.complete_nipype_common:"
+                    "\n - The output_directory trait does not exist!)"
+                )
+
+            if output_dir is True and out_dir is not None:
                 # ensure this output_directory exists since it is not
                 # actually an output but an input, and thus it is supposed
                 # to exist in Capsul.
@@ -511,7 +519,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     print("value:", repr(value))
                     traceback.print_exc()
 
-        MIAProcessCompletionEngine.complete_nipype_common(process)
+        MIAProcessCompletionEngine.complete_nipype_common(
+            process, output_dir=False
+        )
 
     def get_attribute_values(self):
         """Re-route to underlying fallback engine."""
