@@ -1082,12 +1082,23 @@ class PipelineManagerTab(QWidget):
                 # single node) to  make the workflow.
                 new_pipeline = Pipeline()
                 new_pipeline.set_study_config(pipeline.study_config)
-                if pipeline.context_name.split(".")[0] == "Pipeline":
+
+                if (
+                    getattr(pipeline, "context_name", pipeline.name).split(
+                        "."
+                    )[0]
+                    == "Pipeline"
+                ):
                     old_node_name = ".".join(
-                        pipeline.context_name.split(".")[1:]
+                        getattr(pipeline, "context_name", pipeline.name).split(
+                            "."
+                        )[1:]
                     )
                 else:
-                    old_node_name = pipeline.context_name
+                    old_node_name = getattr(
+                        pipeline, "context_name", pipeline.name
+                    )
+
                 new_pipeline.add_process(old_node_name, pipeline)
                 new_pipeline.autoexport_nodes_parameters(include_optional=True)
                 pipeline = new_pipeline
@@ -1960,13 +1971,22 @@ class PipelineManagerTab(QWidget):
                     ):
                         init_result = False
 
-                        if node.context_name.split(".")[0] == "Pipeline":
+                        if (
+                            getattr(node, "context_name", node.name).split(
+                                "."
+                            )[0]
+                            == "Pipeline"
+                        ):
                             node_name = ".".join(
-                                node.context_name.split(".")[1:]
+                                getattr(node, "context_name", node.name).split(
+                                    "."
+                                )[1:]
                             )
 
                         else:
-                            node_name = node.context_name
+                            node_name = getattr(
+                                node, "context_name", node.name
+                            )
 
                         missing_out_param.append(node_name)
 
@@ -2017,7 +2037,8 @@ class PipelineManagerTab(QWidget):
                     # trick to eliminate "ReduceJob" in jobs
                     # would it be better to test if process is a ReduceNode ?
                     if hasattr(process, "context_name"):
-                        node_name = getattr(process, "context_name", node.name)
+                        node_name = process.context_name
+
                         if node_name.split(".")[0] == "Pipeline":
                             node_name = ".".join(node_name.split(".")[1:])
 
@@ -3158,11 +3179,16 @@ class PipelineManagerTab(QWidget):
     def update_inheritance(self, job, node):
         """Update the inheritance dictionary"""
 
-        if node.context_name.split(".")[0] == "Pipeline":
-            node_name = ".".join(node.context_name.split(".")[1:])
+        if (
+            getattr(node, "context_name", node.name).split(".")[0]
+            == "Pipeline"
+        ):
+            node_name = ".".join(
+                getattr(node, "context_name", node.name).split(".")[1:]
+            )
 
         else:
-            node_name = node.context_name
+            node_name = getattr(node, "context_name", node.name)
 
         new_inheritance_dict = {}
 
