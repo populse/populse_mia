@@ -519,9 +519,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     print("value:", repr(value))
                     traceback.print_exc()
 
-        MIAProcessCompletionEngine.complete_nipype_common(
-            process, output_dir=False
-        )
+    #        MIAProcessCompletionEngine.complete_nipype_common(
+    #            process, output_dir=False
+    #        )
 
     def get_attribute_values(self):
         """Re-route to underlying fallback engine."""
