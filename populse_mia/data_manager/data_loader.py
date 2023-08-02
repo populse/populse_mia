@@ -279,9 +279,8 @@ class ImportWorker(QThread):
 
                         if tag_name != "Json_Version":
                             # Preparing value and type
-                            if (
-                                hasattr(value, "__len__")
-                                and type(value) != str
+                            if hasattr(value, "__len__") and not isinstance(
+                                value, str
                             ):
                                 if (
                                     len(value) == 1
