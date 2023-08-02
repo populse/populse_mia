@@ -7224,7 +7224,7 @@ class TestMIAOthers(TestMIACase):
         iter_table.push_buttons[2].setText("BandWidth")
         iter_table.fill_values(2)
         self.assertTrue(len(iter_table.values_list[-1]) == 3)
-        self.assertTrue(type(iter_table.values_list[-1][0]) == list)
+        self.assertTrue(isinstance(iter_table.values_list[-1][0], list))
         self.assertEqual(iter_table.values_list[-1][0], [50000.0])
 
         # Removes a tag and asserts that a tag button was removed
@@ -7247,7 +7247,7 @@ class TestMIAOthers(TestMIACase):
         # Filters the scans matching the selected  'iterated_tag'
         # Since the execution is mocked, 'tag_values_list' becomes empty
         iter_table.filter_values()
-        self.assertTrue(type(ppl_editor.tag_values_list) == list)
+        self.assertTrue(isinstance(ppl_editor.tag_values_list, list))
         self.assertTrue(len(ppl_editor.tag_values_list) == 0)
 
         # Updates the button with the selected tag
