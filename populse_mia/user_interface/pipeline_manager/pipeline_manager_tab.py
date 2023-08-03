@@ -637,18 +637,22 @@ class PipelineManagerTab(QWidget):
         auto_inheritance_dict = getattr(job, "auto_inheritance_dict", {})
         parent_files = inheritance_dict.get(old_value)
         own_tags = None
+        tags2del = None
         # the dicts may have several shapes. Keys are output filenames
         # Values may be
-        # - an input filenme: get the tags from it
+        # - an input filename: get the tags from it
         # - in inheritance_dict only: a dict
         #   {   'parent': input_filename,
-        #       'own_tags': dict of additional forceed tags}
+        #       'own_tags': dict of additional forced tags
+        #       'tags2del': list of tags where existing value will be deleted
+        #   }
         # - in auto_inheritance_dict only: a dict
         #   {   'param_name': input_filename, ... }
         #   when there are ambiguities
 
         if isinstance(parent_files, dict):
-            own_tags = parent_files["own_tags"]
+            own_tags = parent_files.get("own_tags")
+            tags2del = parent_files.get("tags2del")
             parent_files = {None: parent_files["parent"]}
 
         elif isinstance(parent_files, str):
@@ -861,6 +865,27 @@ class PipelineManagerTab(QWidget):
 
         self.project.session.set_values(COLLECTION_CURRENT, p_value, cvalues)
         self.project.session.set_values(COLLECTION_INITIAL, p_value, ivalues)
+
+        if tags2del:
+            for tag_to_del in tags2del:
+                try:
+                    self.project.session.remove_value(
+                        COLLECTION_CURRENT, p_value, tag_to_del
+                    )
+                except ValueError:
+                    # The collection does not exist
+                    # or the field does not exist
+                    # or the document does not exist
+                    pass
+                try:
+                    self.project.session.remove_value(
+                        COLLECTION_INITIAL, p_value, tag_to_del
+                    )
+                except ValueError:
+                    # The collection does not exist
+                    # or the field does not exist
+                    # or the document does not exist
+                    pass
 
     # def add_process_to_preview(self, class_process, node_name=None):
     #    """Add a process to the pipeline.
