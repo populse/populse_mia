@@ -694,6 +694,7 @@ class ProcessMIA(Process):
                          MIA's ProcessMIA.requirement attribute
          - run_process_mia: implements specific runs for ProcessMia
                             subclasses
+        - tags_inheritance: blabla
 
     """
 
@@ -876,3 +877,66 @@ class ProcessMIA(Process):
 
             if self.mfile:
                 self.process.mfile = self.mfile
+
+    def tags_inheritance(
+        self,
+        in_file,
+        out_file,
+        own_tags=None,
+        tags2del=None,
+        now=True,
+        end=True,
+    ):
+        """Create tags for data
+
+        :param in_file: a process input file name (the document_id for a
+                        database collection)
+        :param out_file: a process output file name (the document_id for a
+                         database collection)
+        :param own_tags: a list of dictionary. Each dictionary corresponds to
+                         a tag. Mandatory keys (and associated values):
+                         "name", "field_type", "description", "visibility",
+                         "origin", "unit","default_value"
+                         The "value" key is optional. If it does not exist, we
+                         try to find the value of the corresponding tag name
+                         for in_file in the database.
+        :param tags2del: a list of tags (str) to delete (value)
+        :param now: a boolean, only used if own_tags or tags2del are not None
+        :param end: a boolean, only used if own_tags or tags2del are not None
+        """
+        from mia_processes.utils import (  # del_dbFieldValue,
+            get_dbFieldValue,
+            set_dbFieldValue,
+        )
+
+        if own_tags is None and tags2del is None:
+            # case 1: We have several in_files for the process, we want
+            #         out_file to inherit all the tags from in_file,
+            #         only at the end of the initialisation step
+            self.inheritance_dict[out_file] = in_file
+
+        elif own_tags is not None:
+            # case 2: We want to add a tag or modify the value of a tag.
+            #         If now == True, then the modification is made immediately
+            #         (when the brick is initialised).
+            #         If end == True, then the modification is made at the end
+            #         of the workflow construction (at the end of the
+            #         initialisation of the entire pipeline).
+            for tag_to_add in own_tags:
+                if tag_to_add.get("value") is None:
+                    tag_to_add["value"] = get_dbFieldValue(
+                        self.project, in_file, tag_to_add["name"]
+                    )
+
+                if tag_to_add["value"] is not None and now is True:
+                    set_dbFieldValue(self.project, out_file, tag_to_add)
+
+                elif tag_to_add["value"] is None and now is True:
+                    print(
+                        "\nXXXCHANGE THIS NAME XXX:\nThe '{0}' tag could "
+                        "not be added to the database for the '{1}' "
+                        "parameter. This can lead to a subsequent issue "
+                        "during initialization!!\n".format(
+                            tag_to_add["name"], out_file
+                        )
+                    )

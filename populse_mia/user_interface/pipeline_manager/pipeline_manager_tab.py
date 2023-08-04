@@ -643,8 +643,8 @@ class PipelineManagerTab(QWidget):
         # - an input filename: get the tags from it
         # - in inheritance_dict only: a dict
         #   {   'parent': input_filename,
-        #       'own_tags': dict of additional forced tags
-        #       'tags2del': list of tags where existing value will be deleted
+        #       'own_tags': list of dict of additional forced tags
+        #       'tags2del': list of tags (str) whose value will be deleted
         #   }
         # - in auto_inheritance_dict only: a dict
         #   {   'param_name': input_filename, ... }
