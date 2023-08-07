@@ -893,50 +893,173 @@ class ProcessMIA(Process):
                         database collection)
         :param out_file: a process output file name (the document_id for a
                          database collection)
-        :param own_tags: a list of dictionary. Each dictionary corresponds to
-                         a tag. Mandatory keys (and associated values):
+        :param own_tags: a list of dictionaries. Each dictionary corresponds to
+                         a tag to be added or modified. Mandatory keys (and
+                         associated values):
                          "name", "field_type", "description", "visibility",
-                         "origin", "unit","default_value"
-                         The "value" key is optional. If it does not exist, we
-                         try to find the value of the corresponding tag name
-                         for in_file in the database.
+                         "origin", "unit","default_value", "value"
         :param tags2del: a list of tags (str) to delete (value)
         :param now: a boolean, only used if own_tags or tags2del are not None
         :param end: a boolean, only used if own_tags or tags2del are not None
         """
-        from mia_processes.utils import (  # del_dbFieldValue,
-            get_dbFieldValue,
-            set_dbFieldValue,
+        # from mia_processes.utils import (  # del_dbFieldValue,
+        #     get_dbFieldValue,
+        #     set_dbFieldValue,
+        # )
+
+        from populse_mia.data_manager.project import (
+            COLLECTION_CURRENT,
+            COLLECTION_INITIAL,
+            TAG_BRICKS,
+            TAG_CHECKSUM,
+            TAG_FILENAME,
+            TAG_HISTORY,
+            TAG_TYPE,
         )
 
-        if own_tags is None and tags2del is None:
-            # case 1: We have several in_files for the process, we want
-            #         out_file to inherit all the tags from in_file,
-            #         only at the end of the initialisation step
-            self.inheritance_dict[out_file] = in_file
+        # 1- We want out_file to inherit all the tags from in_file.
+        # FIXME: As in_file may not yet have inherited any tags (in the case
+        #        of a non-mia_processes brick, for example), inheritance takes
+        #        place now, but also at the end of the workflow generation
+        #        (inheritance must be possible in all cases after workflow
+        #        generation), see #290 and #310 and populse/mia_processes#39.
+        self.inheritance_dict[out_file] = in_file
+        db_dir = os.path.join(
+            os.path.abspath(os.path.normpath(self.project.folder)), ""
+        )
+        # fmt: off
+        rel_in_file = os.path.abspath(os.path.normpath(in_file))[len(db_dir):]
+        # fmt: on
+        cur_in_scan = self.project.session.get_document(
+            COLLECTION_CURRENT, rel_in_file
+        )
 
-        elif own_tags is not None:
-            # case 2: We want to add a tag or modify the value of a tag.
-            #         If now == True, then the modification is made immediately
-            #         (when the brick is initialised).
-            #         If end == True, then the modification is made at the end
-            #         of the workflow construction (at the end of the
-            #         initialisation of the entire pipeline).
+        if cur_in_scan is not None:
+            rel_out_file = out_file.replace(
+                os.path.abspath(self.project.folder), ""
+            )
+
+            if rel_out_file and rel_out_file[0] in ["\\", "/"]:
+                rel_out_file = rel_out_file[1:]
+
+            if rel_in_file == rel_out_file:
+                # output is one of the inputs: nothing to be done.
+                return
+
+            field_names = self.project.session.get_fields_names(
+                COLLECTION_CURRENT
+            )
+            banished_tags = set(
+                [
+                    TAG_TYPE,
+                    TAG_BRICKS,
+                    TAG_CHECKSUM,
+                    TAG_FILENAME,
+                    TAG_HISTORY,
+                ]
+            )
+            # tags in COLLECTION_CURRENT for in_file
+            cvalues = {
+                field: getattr(cur_in_scan, field)
+                for field in field_names
+                if field not in banished_tags
+            }
+
+            init_in_scan = self.project.session.get_document(
+                COLLECTION_INITIAL, rel_in_file
+            )
+            # tags in COLLECTION_CURRENT for in_file
+            ivalues = {
+                field: getattr(init_in_scan, field) for field in cvalues
+            }
+
+            if not self.project.session.get_document(
+                COLLECTION_CURRENT, rel_out_file
+            ):
+                self.project.session.add_document(
+                    COLLECTION_CURRENT, rel_out_file
+                )
+                self.project.session.add_document(
+                    COLLECTION_INITIAL, rel_out_file
+                )
+
+        else:
+            print(
+                "{0} brick initialization warning:\n"
+                "    {1} has no tags registered yet."
+                "    So, {2} cannot inherit its tags...".format(
+                    self.context_name, in_file, out_file
+                )
+            )
+
+        if own_tags is not None:
+            # We want to add a tag or modify the value of a tag.
+
             for tag_to_add in own_tags:
-                if tag_to_add.get("value") is None:
-                    tag_to_add["value"] = get_dbFieldValue(
-                        self.project, in_file, tag_to_add["name"]
+                if tag_to_add["name"] not in field_names:
+                    (self.project.session.add_field)(
+                        COLLECTION_CURRENT,
+                        tag_to_add["name"],
+                        tag_to_add["field_type"],
+                        tag_to_add["description"],
+                        tag_to_add["visibility"],
+                        tag_to_add["origin"],
+                        tag_to_add["unit"],
+                        tag_to_add["default_value"],
                     )
 
-                if tag_to_add["value"] is not None and now is True:
-                    set_dbFieldValue(self.project, out_file, tag_to_add)
-
-                elif tag_to_add["value"] is None and now is True:
-                    print(
-                        "\nXXXCHANGE THIS NAME XXX:\nThe '{0}' tag could "
-                        "not be added to the database for the '{1}' "
-                        "parameter. This can lead to a subsequent issue "
-                        "during initialization!!\n".format(
-                            tag_to_add["name"], out_file
-                        )
+                if tag_to_add["name"] not in (
+                    self.project.session.get_fields_names
+                )(COLLECTION_INITIAL):
+                    (self.project.session.add_field)(
+                        COLLECTION_INITIAL,
+                        tag_to_add["name"],
+                        tag_to_add["field_type"],
+                        tag_to_add["description"],
+                        tag_to_add["visibility"],
+                        tag_to_add["origin"],
+                        tag_to_add["unit"],
+                        tag_to_add["default_value"],
                     )
+
+                cvalues[tag_to_add["name"]] = tag_to_add["value"]
+                ivalues[tag_to_add["name"]] = tag_to_add["value"]
+
+        if tags2del is not None:
+            # We want to delete a tag value.
+
+            for tag_to_del in tags2del:
+                cvalues.pop(tag_to_del, None)
+                ivalues.pop(tag_to_del, None)
+
+        # if own_tags is None and tags2del is None:
+        #     # case 1: We have several in_files for the process, we want
+        #     #         out_file to inherit all the tags from in_file,
+        #     #         only at the end of the initialisation step
+        #     self.inheritance_dict[out_file] = in_file
+        #
+        # elif own_tags is not None:
+        #     # case 2: We want to add a tag or modify the value of a tag.
+        #     #         If now == True, then the modification is made
+        #               immediately (when the brick is initialised).
+        #     #         If end == True, then the modification is made at the
+        #               end of the workflow construction (at the end of the
+        #     #         initialisation of the entire pipeline).
+        #     for tag_to_add in own_tags:
+        #         if tag_to_add.get("value") is None:
+        #             tag_to_add["value"] = get_dbFieldValue(
+        #                 self.project, in_file, tag_to_add["name"]
+        #             )
+        #
+        #         if tag_to_add["value"] is not None and now is True:
+        #             set_dbFieldValue(self.project, out_file, tag_to_add)
+        #
+        #         elif tag_to_add["value"] is None and now is True:
+        #             print(
+        #                 "\nXXXCHANGE THIS NAME XXX:\nThe '{0}' tag could "
+        #                 "not be added to the database for the '{1}' "
+        #                 "parameter. This can lead to a subsequent issue "
+        #                 "during initialization!!\n".format(
+        #                     tag_to_add["name"], out_file
+        #                 )
+        #             )
