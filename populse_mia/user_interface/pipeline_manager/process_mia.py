@@ -884,28 +884,22 @@ class ProcessMIA(Process):
         out_file,
         own_tags=None,
         tags2del=None,
-        now=True,
-        end=True,
     ):
         """Create tags for data
 
-        :param in_file: a process input file name (the document_id for a
-                        database collection)
+        :param in_file: a process input file name (the document identifier for
+                        a database collection) from which the tags are
+                        inherited.
         :param out_file: a process output file name (the document_id for a
-                         database collection)
+                         database collection) which will inherit tags.
         :param own_tags: a list of dictionaries. Each dictionary corresponds to
                          a tag to be added or modified. Mandatory keys (and
                          associated values):
                          "name", "field_type", "description", "visibility",
-                         "origin", "unit","default_value", "value"
+                         "origin", "unit","default_value", "value".
         :param tags2del: a list of tags (str) to delete (value)
-        :param now: a boolean, only used if own_tags or tags2del are not None
-        :param end: a boolean, only used if own_tags or tags2del are not None
         """
-        # from mia_processes.utils import (  # del_dbFieldValue,
-        #     get_dbFieldValue,
-        #     set_dbFieldValue,
-        # )
+        from mia_processes.utils import del_dbFieldValue
 
         from populse_mia.data_manager.project import (
             COLLECTION_CURRENT,
@@ -918,37 +912,45 @@ class ProcessMIA(Process):
         )
 
         # 1- We want out_file to inherit all the tags from in_file.
-        # FIXME: As in_file may not yet have inherited any tags (in the case
-        #        of a non-mia_processes brick, for example), inheritance takes
-        #        place now, but also at the end of the workflow generation
-        #        (inheritance must be possible in all cases after workflow
-        #        generation), see #290 and #310 and populse/mia_processes#39.
-        self.inheritance_dict[out_file] = in_file
+        # FIXME: We're trying to do the inheritance now. However, as in_file
+        #        may not have inherited any tags yet (in the case of a
+        #        non-mia_processes brick, for example, etc.), the same
+        #        inheritance operation will also be performed at the end of
+        #        the workflow generation (inheritance must be possible in all
+        #        cases after workflow generation, see #290 and #310 and
+        #        populse/mia_processes#39). This is sub-optimal, but until the
+        #        #290 fix, it's the best solution we're using.
+        # For inheritance operation at the end of the workflow generation:
+        self.inheritance_dict[out_file] = dict()
+        self.inheritance_dict[out_file]["parent"] = in_file
+        self.inheritance_dict[out_file]["own_tags"] = own_tags
+        self.inheritance_dict[out_file]["tags2del"] = tags2del
+
+        # For inheritance now:
         db_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.project.folder)), ""
         )
         # fmt: off
         rel_in_file = os.path.abspath(os.path.normpath(in_file))[len(db_dir):]
         # fmt: on
+        rel_out_file = out_file.replace(
+            os.path.abspath(self.project.folder), ""
+        )
+
+        if rel_out_file and rel_out_file[0] in ["\\", "/"]:
+            rel_out_file = rel_out_file[1:]
+
+        field_names = self.project.session.get_fields_names(COLLECTION_CURRENT)
         cur_in_scan = self.project.session.get_document(
             COLLECTION_CURRENT, rel_in_file
         )
 
-        if cur_in_scan is not None:
-            rel_out_file = out_file.replace(
-                os.path.abspath(self.project.folder), ""
-            )
+        if rel_in_file == rel_out_file:
+            # output is one of the inputs: we just add or remove tags
+            cvalues = {}
+            ivalues = {}
 
-            if rel_out_file and rel_out_file[0] in ["\\", "/"]:
-                rel_out_file = rel_out_file[1:]
-
-            if rel_in_file == rel_out_file:
-                # output is one of the inputs: nothing to be done.
-                return
-
-            field_names = self.project.session.get_fields_names(
-                COLLECTION_CURRENT
-            )
+        elif cur_in_scan is not None:
             banished_tags = set(
                 [
                     TAG_TYPE,
@@ -973,24 +975,18 @@ class ProcessMIA(Process):
                 field: getattr(init_in_scan, field) for field in cvalues
             }
 
-            if not self.project.session.get_document(
-                COLLECTION_CURRENT, rel_out_file
-            ):
-                self.project.session.add_document(
-                    COLLECTION_CURRENT, rel_out_file
-                )
-                self.project.session.add_document(
-                    COLLECTION_INITIAL, rel_out_file
-                )
-
         else:
             print(
                 "{0} brick initialization warning:\n"
-                "    {1} has no tags registered yet."
-                "    So, {2} cannot inherit its tags...".format(
+                "    {1} has no tags registered yet.\n"
+                "    So, {2} cannot inherit its tags...\n"
+                "    This can lead to a subsequent issue during "
+                "initialization!!\n".format(
                     self.context_name, in_file, out_file
                 )
             )
+            cvalues = {}
+            ivalues = {}
 
         if own_tags is not None:
             # We want to add a tag or modify the value of a tag.
@@ -1032,34 +1028,29 @@ class ProcessMIA(Process):
                 cvalues.pop(tag_to_del, None)
                 ivalues.pop(tag_to_del, None)
 
-        # if own_tags is None and tags2del is None:
-        #     # case 1: We have several in_files for the process, we want
-        #     #         out_file to inherit all the tags from in_file,
-        #     #         only at the end of the initialisation step
-        #     self.inheritance_dict[out_file] = in_file
-        #
-        # elif own_tags is not None:
-        #     # case 2: We want to add a tag or modify the value of a tag.
-        #     #         If now == True, then the modification is made
-        #               immediately (when the brick is initialised).
-        #     #         If end == True, then the modification is made at the
-        #               end of the workflow construction (at the end of the
-        #     #         initialisation of the entire pipeline).
-        #     for tag_to_add in own_tags:
-        #         if tag_to_add.get("value") is None:
-        #             tag_to_add["value"] = get_dbFieldValue(
-        #                 self.project, in_file, tag_to_add["name"]
-        #             )
-        #
-        #         if tag_to_add["value"] is not None and now is True:
-        #             set_dbFieldValue(self.project, out_file, tag_to_add)
-        #
-        #         elif tag_to_add["value"] is None and now is True:
-        #             print(
-        #                 "\nXXXCHANGE THIS NAME XXX:\nThe '{0}' tag could "
-        #                 "not be added to the database for the '{1}' "
-        #                 "parameter. This can lead to a subsequent issue "
-        #                 "during initialization!!\n".format(
-        #                     tag_to_add["name"], out_file
-        #                 )
-        #             )
+            # If tag_to_del is only in out_file:
+            del_dbFieldValue(self.project, out_file, tags2del)
+
+        if cvalues:
+            if not self.project.session.get_document(
+                COLLECTION_CURRENT, rel_out_file
+            ):
+                self.project.session.add_document(
+                    COLLECTION_CURRENT, rel_out_file
+                )
+
+            self.project.session.set_values(
+                COLLECTION_CURRENT, rel_out_file, cvalues
+            )
+
+        if ivalues:
+            if not self.project.session.get_document(
+                COLLECTION_INITIAL, rel_out_file
+            ):
+                self.project.session.add_document(
+                    COLLECTION_INITIAL, rel_out_file
+                )
+
+            self.project.session.set_values(
+                COLLECTION_INITIAL, rel_out_file, ivalues
+            )
