@@ -25,6 +25,8 @@ import traceback
 import uuid
 
 import traits.api as traits
+
+# Capsul imports
 from capsul.api import Pipeline, Process, capsul_engine
 from capsul.attributes.completion_engine import (
     ProcessCompletionEngine,
@@ -37,6 +39,9 @@ from capsul.pipeline.pipeline_nodes import ProcessNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
 
+# Mia_processes imports
+from mia_processes.utils import del_dbFieldValue
+
 # nipype imports
 from nipype.interfaces.base import File, InputMultiObject, traits_extension
 
@@ -45,7 +50,15 @@ from soma.controller.trait_utils import relax_exists_constraint
 from soma.utils.weak_proxy import get_ref
 
 # Populse_MIA imports
-from populse_mia.data_manager.project import COLLECTION_CURRENT
+from populse_mia.data_manager.project import (
+    COLLECTION_CURRENT,
+    COLLECTION_INITIAL,
+    TAG_BRICKS,
+    TAG_CHECKSUM,
+    TAG_FILENAME,
+    TAG_HISTORY,
+    TAG_TYPE,
+)
 from populse_mia.software_properties import Config
 
 
@@ -694,7 +707,7 @@ class ProcessMIA(Process):
                          MIA's ProcessMIA.requirement attribute
          - run_process_mia: implements specific runs for ProcessMia
                             subclasses
-        - tags_inheritance: blabla
+        - tags_inheritance: create tags for data
 
     """
 
@@ -899,17 +912,6 @@ class ProcessMIA(Process):
                          "origin", "unit","default_value", "value".
         :param tags2del: a list of tags (str) to delete (value)
         """
-        from mia_processes.utils import del_dbFieldValue
-
-        from populse_mia.data_manager.project import (
-            COLLECTION_CURRENT,
-            COLLECTION_INITIAL,
-            TAG_BRICKS,
-            TAG_CHECKSUM,
-            TAG_FILENAME,
-            TAG_HISTORY,
-            TAG_TYPE,
-        )
 
         # 1- We want out_file to inherit all the tags from in_file.
         # FIXME: We're trying to do the inheritance now. However, as in_file
@@ -970,10 +972,18 @@ class ProcessMIA(Process):
             init_in_scan = self.project.session.get_document(
                 COLLECTION_INITIAL, rel_in_file
             )
-            # tags in COLLECTION_CURRENT for in_file
-            ivalues = {
-                field: getattr(init_in_scan, field) for field in cvalues
-            }
+
+            if init_in_scan is not None:
+                # tags in COLLECTION_CURRENT for in_file
+                ivalues = {
+                    field: getattr(init_in_scan, field) for field in cvalues
+                }
+            else:
+                ivalues = {}
+                # FIXME: In this case, do we want a message in stdout like the
+                #        one below (currently a message is only visible in
+                #        stdout if the document is not in the CURRENT
+                #        collection)?
 
         else:
             print(
