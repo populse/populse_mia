@@ -161,7 +161,7 @@ class Config:
               preferences
             - get_use_matlab_standalone: returns the value of "use matlab
               standalone" checkbox in the preferences
-            - get_use_mrtrix: retunrs the value of "use mrtrix" checkbox in the 
+            - get_use_mrtrix: retunrs the value of "use mrtrix" checkbox in the
               prefrence
             - get_user_level: get the user level in the Capsul config
             - get_user_mode: returns the value of "user mode" checkbox
@@ -479,9 +479,9 @@ class Config:
 
         # mrtrix
         if use_mrtrix:
-            m = eeconf.setdefault("capsul.engine.module.mrtrix", {}).setdefault(
-                "mrtrix", {}
-            )
+            m = eeconf.setdefault(
+                "capsul.engine.module.mrtrix", {}
+            ).setdefault("mrtrix", {})
             m["config_id"] = "mrtrix"
             m["config_environment"] = "global"
             m["directory"] = mrtrix_path
@@ -1249,7 +1249,9 @@ class Config:
                 use_mcr = True
 
         # mrtrix
-        mrtrix = engine_config.get("global", {}).get("capsul.engine.module.mrtrix")
+        mrtrix = engine_config.get("global", {}).get(
+            "capsul.engine.module.mrtrix"
+        )
 
         if mrtrix:
             mrtrix = next(iter(mrtrix.values()))

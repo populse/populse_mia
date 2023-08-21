@@ -3571,7 +3571,7 @@ class PopUpPreferences(QDialog):
 
             else:
                 config.set_use_fsl(False)
-            
+
             # mrtrix config test
             if self.use_mrtrix_checkbox.isChecked():
                 mrtrix_dir = self.mrtrix_choice.text()
@@ -4128,7 +4128,7 @@ class PopUpPreferences(QDialog):
 
                 except KeyError:
                     pass
-       
+
             # mrtrix CapsulConfig
             if not config.get_use_mrtrix():
                 # TODO: We only deal here with the global environment
@@ -4529,7 +4529,7 @@ class PopUpPreferences(QDialog):
             self.matlab_standalone_label.setDisabled(False)
             self.matlab_standalone_browse.setDisabled(False)
             self.use_matlab_checkbox.setChecked(False)
-    
+
     def use_mrtrix_changed(self):
         """Called when the use_mrtrix checkbox is changed."""
 

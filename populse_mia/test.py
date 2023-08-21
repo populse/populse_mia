@@ -5956,7 +5956,7 @@ class TestMIAMainWindow(TestMIACase):
             config = Config(config_path=self.config_path)
             config.set_use_fsl(False)
             config.set_fsl_config("")
-        
+
         def test_mrtrix_config():
             """Tests the mrtrix configuration."""
 
@@ -5995,7 +5995,6 @@ class TestMIAMainWindow(TestMIACase):
             config = Config(config_path=self.config_path)
             config.set_use_mrtrix(False)
             config.set_mrtrix_path("")
-
 
         def test_spm_matlab_config():
             """Tests the SPM and MATLAB (licence) configuration."""
@@ -6298,7 +6297,7 @@ class TestMIAMainWindow(TestMIACase):
 
         Config(config_path=self.config_path).set_projects_save_path(tmp_path)
 
-        # Test the configuration modules AFNI, ANTS, FSL, mrtrix, 
+        # Test the configuration modules AFNI, ANTS, FSL, mrtrix,
         # SPM and MATLAB
         test_afni_config()
         test_ants_config()
@@ -6311,7 +6310,7 @@ class TestMIAMainWindow(TestMIACase):
     def test_software_preferences_pop_up_validate(self):
         """Opens the preferences pop up, sets the configuration.
 
-        For modules AFNI, ANTS, FSL, SPM, mrtrix and MATLAB without pressing 
+        For modules AFNI, ANTS, FSL, SPM, mrtrix and MATLAB without pressing
         the OK button and switches the auto-save, controller version and
         radio view options.
 
