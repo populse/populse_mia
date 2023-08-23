@@ -40,7 +40,7 @@ The process library contains all the available pipeline processes.
 
 When Populse_MIA is launched for the first time, Nipype's interfaces are stored in the process library.
 
-If `Capsul <http://brainvisa.info/capsul/index.html>`_ and `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_  are used, 
+If `Capsul <http://brainvisa.info/capsul/index.html>`_ and `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_  are used,
 they are also stored in the process library.
 
 To use any of the available processes, drag it from the process library and drop it to the pipeline editor.
@@ -77,7 +77,7 @@ The menu on the top left of the Pipeline Manager tab contains several actions im
       * Creates the output file names for each process in the current pipeline and stores them to the database
       * For the processes that interact with the database, verifies that the fields are filled
       * Executes the current pipeline
-  * Stop pipeline 
+  * Stop pipeline
       * Stop the pipeline that is currently running
   * Status
       * Open the Execution status windows to check the status of the workflows run
@@ -227,20 +227,20 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
 
 |
 
-* The pipeline inputs are now correctly set and it can be run. Select "Run pipeline" in the Pipeline menu (or click directly on the "Run pipeline" button of the Pipeline menu). 
+* The pipeline inputs are now correctly set and it can be run. Select "Run pipeline" in the Pipeline menu (or click directly on the "Run pipeline" button of the Pipeline menu).
 
-* A connection dialog  is displayed. Select the resource you want to run the pipeline on and click "Ok". 
-  
+* A connection dialog  is displayed. Select the resource you want to run the pipeline on and click "Ok".
+
     .. image:: ../images/swf_connection.jpg
       :align: center
       :name: Soma workflow connection
 
     |
-  
+
   During this step:
     * The output files are created (but still empty) and stored in the database with information about their ancestors (their input files and parameters)
     * The output file names are generated and updated in the node controller (in this example the file names begin with "ss" which means that they have been smoothed twice).
-    
+
       .. image:: ../images/node_controller_5.png
           :align: center
           :name: Node controller inputs/outputs 4
@@ -250,13 +250,13 @@ This part is based on the Double_smooth.py file created in :ref:`pipeline-editor
     * The pipeline is run.
 
 * During the run, the "Status" button near the Pipeline menu changes and a waiting bar appears at the top right corner. You can also used the "stop pipeline" button.
-  
+
   .. image:: ../images/pipeline_menu_run.png
       :align: center
       :name: Pipeline menu during a run
 
   |
-* At the end of the run, a windows with "Pipeline execution was ok' appears during 10 seconds and the waiting bar at the top right corner disappears. 
+* At the end of the run, a windows with "Pipeline execution was ok' appears during 10 seconds and the waiting bar at the top right corner disappears.
 
 
 .. _pipeline-iteration-label:
