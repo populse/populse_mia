@@ -8,7 +8,7 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 Populse_mia's third-party softwares installations
-======================================
+=================================================
 
 To use bricks and pipelines from `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_ in populse_mia, it is necessary to install softwares as FSL, SPM, Freesurfer, ANTs...
 The softwares paths should be configure in Mia preferences.
@@ -16,7 +16,7 @@ The softwares paths should be configure in Mia preferences.
 
 
 Installation on Linux
-======================
+=====================
 
  * These installation notes are based on Ubuntu 22.04.02 which use Python3 as default (when you type ``python`` in a command line).
 
@@ -25,7 +25,7 @@ Installation on Linux
  * If you installed populse_mia in a container using `brainvisa Singulary image <./virtualisation_user_installation.html>`_, it is generally not necessary to be in the container to install third-party software (in fact, this will depend on the operating system in the container and the host).
 
 Installation of `FSL v6.0.6.4 <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
--------------------------------
+-------------------------------------------------------------------------
 
  * Download `fslinstaller.py <https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/>`_ then launch the installer: ::
 
@@ -49,7 +49,7 @@ Installation of `FSL v6.0.6.4 <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
      flirt -version
 
 Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ Standalone and Matlab Runtime
------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 
  * `Download <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/>`_ the desired version of standalone SPM 12.
 
@@ -99,14 +99,14 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
  * Check this `manual <https://en.wikibooks.org/wiki/SPM/Standalone>`_ if you have trouble during installation.
 
 Installation of `AFNI <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html>`_
---------------------
+-----------------------------------------------------------------------------------
 
   * Follow the `quick setup <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup>`_ of the AFNI's team.
 
   * It will download all AFNI in your home. If you want you can move AFNI folders (abin, AFNI_data5, AFNI_data6, AFNI_demos, afni_handouts, CD, std_leshes, suma_demo, .afni) in an other folder (for e.g ``/path/to/folder/afni``). In this case, change the afni paths set in your bashrc.
 
 Installation of `ANTs <http://stnava.github.io/ANTs/>`_
-----------------------
+-------------------------------------------------------
 
   You can install ANTs via pre-built releases :
 
@@ -115,7 +115,7 @@ Installation of `ANTs <http://stnava.github.io/ANTs/>`_
   * populse_mia do not need environment variables, however if you want to test ANTs outside populse_mia you need to add ANTs path in your .bashr.
 
 Installation of `freesurfer <https://surfer.nmr.mgh.harvard.edu/>`_
-----------------------------
+-------------------------------------------------------------------
 
   * Follow the installation instruction `here <https://surfer.nmr.mgh.harvard.edu/fswiki//FS7_linux>`_. For Ubuntu systeme it is easier to use the tar archive. For Fedora, centos8 tar archive works fine
 
@@ -129,7 +129,7 @@ Installation on Macos
 =====================
 
 Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ Standalone and Matlab Runtime
------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 
   * Download the spm12_r7532_BI_macOS_R2018b.zip `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/>`_. Unzip it. In the same directory where run_spm12.sh can be found unzip spm12_maci64.zip
 
@@ -160,13 +160,13 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
     * The spm12_r7771.zip `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/>`_ and MCR v4.13 (MATLAB R2010a) MCRInstaller.dmg `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/MCR/maci64/>`_ are not compatible with mia (while `./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri` works fine in a terminal). Using this version of spm standalone, the following message is observed in MIA: `/Volumes/Users/econdami/Documents/spm/spm12Standalone/spm12Stndalone_r7771/run_spm12. sh: line 60: ./spm12.app/Contents/MacOS/spm12_maci64: No such file or directory`.
 
 Installation of others software
---------------------------------
+-------------------------------
 
   Please follow the instruction in the documentation of each third-party software.
 
 
 
 Installation on Windows
-========================
+=======================
 
   Please follow the instruction in the documentation of each third-party software.
