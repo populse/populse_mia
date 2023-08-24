@@ -3049,7 +3049,7 @@ class PipelineManagerTab(QWidget):
 
                 {input_param: input_filename}
 
-        `auto_inheritance_dict` is built automatically, ans is used as a
+        `auto_inheritance_dict` is built automatically, and is used as a
         fallback to :class:`ProcessMIA` `inheritance_dict`, built "manually"
         (specialized for each process) in the :meth:`ProcessMIA.list_outputs`
         when the latter does not exist, or does not specify what an output
