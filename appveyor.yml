@@ -83,7 +83,8 @@ install:
   - cmd: "pip install \"PyQt5==5.9.2\""
   - sh: pip3 install 'PyQt5==5.9.2'
 
-  - pip uninstall -y populse_db soma-base soma-workflow capsul
+  # We want to use the last github version isnstead of the pypi version:
+  - pip uninstall -y populse_db soma-base soma-workflow capsul mia_processes
 
   - cmd: git clone --depth=50 --branch=master https://github.com/populse/populse_db.git C:\\projects\\populse_db
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/populse_db.git /home/appveyor/projects/populse_db; fi
@@ -107,6 +108,10 @@ install:
   - cmd: git clone --depth=50 --branch=master https://github.com/populse/capsul.git C:\\projects\\capsul
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/capsul.git /home/appveyor/projects/capsul; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=master https://github.com/populse/capsul.git /Users/appveyor/projects/capsul; fi
+
+  - cmd: git clone --depth=50 --branch=master https://github.com/populse/mia_processes.git C:\\projects\\mia_processes
+  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/mia_processes.git /home/appveyor/projects/mia_processes; fi
+  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=master https://github.com/populse/mia_processes.git /Users/appveyor/projects/mia_processes; fi
 
 # Download data for unit tests
   - cmd: git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata.git C:\\projects\\populse-mia\\miautdata

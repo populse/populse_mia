@@ -25,6 +25,8 @@ import traceback
 import uuid
 
 import traits.api as traits
+
+# Capsul imports
 from capsul.api import Pipeline, Process, capsul_engine
 from capsul.attributes.completion_engine import (
     ProcessCompletionEngine,
@@ -37,6 +39,9 @@ from capsul.pipeline.pipeline_nodes import ProcessNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
 
+# Mia_processes imports
+from mia_processes.utils import del_dbFieldValue
+
 # nipype imports
 from nipype.interfaces.base import File, InputMultiObject, traits_extension
 
@@ -45,7 +50,15 @@ from soma.controller.trait_utils import relax_exists_constraint
 from soma.utils.weak_proxy import get_ref
 
 # Populse_MIA imports
-from populse_mia.data_manager.project import COLLECTION_CURRENT
+from populse_mia.data_manager.project import (
+    COLLECTION_CURRENT,
+    COLLECTION_INITIAL,
+    TAG_BRICKS,
+    TAG_CHECKSUM,
+    TAG_FILENAME,
+    TAG_HISTORY,
+    TAG_TYPE,
+)
 from populse_mia.software_properties import Config
 
 
@@ -694,6 +707,7 @@ class ProcessMIA(Process):
                          MIA's ProcessMIA.requirement attribute
          - run_process_mia: implements specific runs for ProcessMia
                             subclasses
+        - tags_inheritance: create tags for data
 
     """
 
@@ -876,3 +890,177 @@ class ProcessMIA(Process):
 
             if self.mfile:
                 self.process.mfile = self.mfile
+
+    def tags_inheritance(
+        self,
+        in_file,
+        out_file,
+        own_tags=None,
+        tags2del=None,
+    ):
+        """Create tags for data
+
+        :param in_file: a process input file name (the document identifier for
+                        a database collection) from which the tags are
+                        inherited.
+        :param out_file: a process output file name (the document_id for a
+                         database collection) which will inherit tags.
+        :param own_tags: a list of dictionaries. Each dictionary corresponds to
+                         a tag to be added or modified. Mandatory keys (and
+                         associated values):
+                         "name", "field_type", "description", "visibility",
+                         "origin", "unit","default_value", "value".
+        :param tags2del: a list of tags (str) to delete (value)
+        """
+
+        # 1- We want out_file to inherit all the tags from in_file.
+        # FIXME: We're trying to do the inheritance now. However, as in_file
+        #        may not have inherited any tags yet (in the case of a
+        #        non-mia_processes brick, for example, etc.), the same
+        #        inheritance operation will also be performed at the end of
+        #        the workflow generation (inheritance must be possible in all
+        #        cases after workflow generation, see #290 and #310 and
+        #        populse/mia_processes#39). This is sub-optimal, but until the
+        #        #290 fix, it's the best solution we're using.
+        # For inheritance operation at the end of the workflow generation:
+        self.inheritance_dict[out_file] = dict()
+        self.inheritance_dict[out_file]["parent"] = in_file
+        self.inheritance_dict[out_file]["own_tags"] = own_tags
+        self.inheritance_dict[out_file]["tags2del"] = tags2del
+
+        # For inheritance now:
+        db_dir = os.path.join(
+            os.path.abspath(os.path.normpath(self.project.folder)), ""
+        )
+        # fmt: off
+        rel_in_file = os.path.abspath(os.path.normpath(in_file))[len(db_dir):]
+        # fmt: on
+        rel_out_file = out_file.replace(
+            os.path.abspath(self.project.folder), ""
+        )
+
+        if rel_out_file and rel_out_file[0] in ["\\", "/"]:
+            rel_out_file = rel_out_file[1:]
+
+        field_names = self.project.session.get_fields_names(COLLECTION_CURRENT)
+        cur_in_scan = self.project.session.get_document(
+            COLLECTION_CURRENT, rel_in_file
+        )
+
+        if rel_in_file == rel_out_file:
+            # output is one of the inputs: we just add or remove tags
+            cvalues = {}
+            ivalues = {}
+
+        elif cur_in_scan is not None:
+            banished_tags = set(
+                [
+                    TAG_TYPE,
+                    TAG_BRICKS,
+                    TAG_CHECKSUM,
+                    TAG_FILENAME,
+                    TAG_HISTORY,
+                ]
+            )
+            # tags in COLLECTION_CURRENT for in_file
+            cvalues = {
+                field: getattr(cur_in_scan, field)
+                for field in field_names
+                if field not in banished_tags
+            }
+
+            init_in_scan = self.project.session.get_document(
+                COLLECTION_INITIAL, rel_in_file
+            )
+
+            if init_in_scan is not None:
+                # tags in COLLECTION_CURRENT for in_file
+                ivalues = {
+                    field: getattr(init_in_scan, field) for field in cvalues
+                }
+            else:
+                ivalues = {}
+                # FIXME: In this case, do we want a message in stdout like the
+                #        one below (currently a message is only visible in
+                #        stdout if the document is not in the CURRENT
+                #        collection)?
+
+        else:
+            print(
+                "{0} brick initialization warning:\n"
+                "    {1} has no tags registered yet.\n"
+                "    So, {2} cannot inherit its tags...\n"
+                "    This can lead to a subsequent issue during "
+                "initialization!!\n".format(
+                    self.context_name, in_file, out_file
+                )
+            )
+            cvalues = {}
+            ivalues = {}
+
+        if own_tags is not None:
+            # We want to add a tag or modify the value of a tag.
+
+            for tag_to_add in own_tags:
+                if tag_to_add["name"] not in field_names:
+                    (self.project.session.add_field)(
+                        COLLECTION_CURRENT,
+                        tag_to_add["name"],
+                        tag_to_add["field_type"],
+                        tag_to_add["description"],
+                        tag_to_add["visibility"],
+                        tag_to_add["origin"],
+                        tag_to_add["unit"],
+                        tag_to_add["default_value"],
+                    )
+
+                if tag_to_add["name"] not in (
+                    self.project.session.get_fields_names
+                )(COLLECTION_INITIAL):
+                    (self.project.session.add_field)(
+                        COLLECTION_INITIAL,
+                        tag_to_add["name"],
+                        tag_to_add["field_type"],
+                        tag_to_add["description"],
+                        tag_to_add["visibility"],
+                        tag_to_add["origin"],
+                        tag_to_add["unit"],
+                        tag_to_add["default_value"],
+                    )
+
+                cvalues[tag_to_add["name"]] = tag_to_add["value"]
+                ivalues[tag_to_add["name"]] = tag_to_add["value"]
+
+        if tags2del is not None:
+            # We want to delete a tag value.
+
+            for tag_to_del in tags2del:
+                cvalues.pop(tag_to_del, None)
+                ivalues.pop(tag_to_del, None)
+
+            # If tag_to_del is only in out_file:
+            del_dbFieldValue(self.project, out_file, tags2del)
+
+        if cvalues:
+            if not self.project.session.get_document(
+                COLLECTION_CURRENT, rel_out_file
+            ):
+                self.project.session.add_document(
+                    COLLECTION_CURRENT, rel_out_file
+                )
+
+            self.project.session.set_values(
+                COLLECTION_CURRENT, rel_out_file, cvalues
+            )
+
+        if ivalues:
+            if not self.project.session.get_document(
+                COLLECTION_INITIAL, rel_out_file
+            ):
+                self.project.session.add_document(
+                    COLLECTION_INITIAL, rel_out_file
+                )
+
+            self.project.session.set_values(
+                COLLECTION_INITIAL, rel_out_file, ivalues
+            )

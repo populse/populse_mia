@@ -186,8 +186,8 @@ def get_data_history_processes(filename, project):
     the data history.
 
     The processes output by this functon may include extra processes that are
-    looked during history search, but finally not used. They are not filterd
-    out, but they are distingushed with their ``used`` attribute: those
+    looked during history search, but finally not used. They are not filtered
+    out, but they are distinguished with their ``used`` attribute: those
     actually used have it set to True.
 
     Processing bricks which are not used, probably part of earlier runs which
