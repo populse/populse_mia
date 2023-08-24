@@ -10106,21 +10106,21 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Note: only 'in_file' and '_out_file' are file trait types
         job.param_dict["_out_file"] = "_out_file_value"
 
-        ppl_manager.update_auto_inheritance(job, node)
+        ppl_manager.update_auto_inheritance(node, job)
 
         # 'job.param_dict' as list of objects
         job.param_dict["inlist"] = [DOCUMENT_1, DOCUMENT_2]
         process.get_outputs = Mock(return_value={"_out": ["_out_value"]})
         job.param_dict["_out"] = ["_out_value"]
-        ppl_manager.update_auto_inheritance(job, node)
+        ppl_manager.update_auto_inheritance(node, job)
 
         # 'node' does not have a 'project'
         del node.process.study_config.project
-        ppl_manager.update_auto_inheritance(job, node)
+        ppl_manager.update_auto_inheritance(node, job)
 
         # 'node' is not a 'Process'
         node = {}
-        ppl_manager.update_auto_inheritance(job, node)
+        ppl_manager.update_auto_inheritance(node, job)
 
     def test_update_inheritance(self):
         """Adds a process and updates the job's inheritance dict.

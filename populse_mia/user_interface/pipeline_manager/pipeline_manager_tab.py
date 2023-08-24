@@ -166,7 +166,7 @@ class PipelineManagerTab(QWidget):
         - show_status:
         - stop_execution:
         - undo: undo the last action made on the current pipeline editor
-        - update_auto_inheritance:
+        - update_auto_inheritance: get database tags for output parameters
         - update_node_list: update the list of nodes in workflow
         - updateProcessLibrary: update the library of processes when a
           pipeline is saved
@@ -2067,7 +2067,7 @@ class PipelineManagerTab(QWidget):
                         if node_name.split(".")[0] == "Pipeline":
                             node_name = ".".join(node_name.split(".")[1:])
 
-                        self.update_auto_inheritance(job, node)
+                        self.update_auto_inheritance(node, job)
                         self.update_inheritance(job, node)
 
                         # Adding the brick to the bricks history
@@ -3022,7 +3022,8 @@ class PipelineManagerTab(QWidget):
             c_e.scene.pipeline.update_nodes_and_plugs_activation()
             self.nodeController.update_parameters()
 
-    def update_auto_inheritance(self, job, node):
+    @staticmethod
+    def update_auto_inheritance(node, job=None):
         """
         Try (as best as possible) to assign output parameters to input ones,
         to get database tags for them.
@@ -3110,24 +3111,42 @@ class PipelineManagerTab(QWidget):
                 if not trait.output
             }
 
-        # Fill inputs and outputs values with job
-        for key in inputs.keys():
-            if key in job.param_dict:
-                value = job.param_dict[key]
-                if isinstance(value, list):
-                    for i in range(len(inputs[key])):
-                        inputs[key][i] = value[i]
-                else:
-                    inputs[key] = value
+        # Fill inputs and outputs values with job if job is mot None
+        keys = list(inputs.keys())
 
-        for key in outputs.keys():
-            if key in job.param_dict:
-                value = job.param_dict[key]
-                if isinstance(value, list):
-                    for i in range(len(outputs[key])):
-                        outputs[key][i] = value[i]
-                else:
-                    outputs[key] = value
+        for key in keys:
+            if job is not None:
+                if key in job.param_dict:
+                    value = job.param_dict[key]
+
+                    if isinstance(value, list):
+                        for i in range(len(inputs[key])):
+                            inputs[key][i] = value[i]
+
+                    else:
+                        inputs[key] = value
+
+            else:
+                if inputs[key] is Undefined:
+                    del inputs[key]
+
+        keys = list(outputs.keys())
+
+        for key in keys:
+            if job is not None:
+                if key in job.param_dict:
+                    value = job.param_dict[key]
+
+                    if isinstance(value, list):
+                        for i in range(len(outputs[key])):
+                            outputs[key][i] = value[i]
+
+                    else:
+                        outputs[key] = value
+
+            else:
+                if outputs[key] is Undefined:
+                    del outputs[key]
 
         # if the process has a single input with a value in the database,
         # then we can deduce its output database tags/attributes from it
@@ -3196,10 +3215,13 @@ class PipelineManagerTab(QWidget):
             for value in plug_values:
                 auto_inheritance_dict[value] = main_value
 
-        if auto_inheritance_dict:
+        if auto_inheritance_dict and job is not None:
             job.auto_inheritance_dict = auto_inheritance_dict
             # print('auto_inheritance_dict for',
             #       node.name, ':', auto_inheritance_dict)
+
+        else:
+            return auto_inheritance_dict
 
     def update_inheritance(self, job, node):
         """Update the inheritance dictionary"""

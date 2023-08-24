@@ -416,11 +416,29 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             self.fallback_engine.complete_parameters(
                 process_inputs, complete_iterations=complete_iterations
             )
+
             self.completion_progress = self.fallback_engine.completion_progress
             self.completion_progress_total = (
                 self.fallback_engine.completion_progress_total
             )
+            # isort: off
+            # fmt: off
+            from populse_mia.user_interface.pipeline_manager.\
+                pipeline_manager_tab import PipelineManagerTab
+            # isort: on
+            # fmt: on
+            auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
+                in_process
+            )
 
+            if auto_inheritance_dict is None:
+                # nothing to be done
+                pass
+
+            else:
+                for out in auto_inheritance_dict:
+                    print("inheritance out: ", out)
+                    print("inheritance parents: ", auto_inheritance_dict[out])
         else:
             # here the process is a ProcessMIA instance. Use the specific
             # method
