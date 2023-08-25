@@ -430,15 +430,41 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
                 in_process
             )
+            # auto_inheritance_dict object format:
+            # - if there is no ambiguity :
+            #    key: value of the output file (string)
+            #    value: value of the input file (string)
+            # - if ambiguous :
+            #    key: output plug value (string)
+            #    value: a dictionary: with key / value corresponding to each
+            #           possible input file
+            #           => key: name of the input plug
+            #              value: value of the input plug
 
             if auto_inheritance_dict is None:
                 # nothing to be done
                 pass
 
             else:
-                for out in auto_inheritance_dict:
-                    print("inheritance out: ", out)
-                    print("inheritance parents: ", auto_inheritance_dict[out])
+                in_process.inheritance_dict = {}
+
+                if not hasattr(in_process, "project"):
+                    if hasattr(in_process, "get_study_config"):
+                        study_config = in_process.get_study_config()
+                        project = getattr(study_config, "project", None)
+
+                        if project is not None:
+                            in_process.project = project
+
+                if hasattr(in_process, "project"):
+                    for out in auto_inheritance_dict:
+                        if isinstance(auto_inheritance_dict[out], str):
+                            ProcessMIA.tags_inheritance(
+                                in_process, auto_inheritance_dict[out], out
+                            )
+
+                        elif isinstance(auto_inheritance_dict[out], dict):
+                            print("TODO")
         else:
             # here the process is a ProcessMIA instance. Use the specific
             # method
