@@ -638,17 +638,24 @@ class PipelineManagerTab(QWidget):
         parent_files = inheritance_dict.get(old_value)
         own_tags = None
         tags2del = None
-        # the dicts may have several shapes. Keys are output filenames
-        # Values may be
-        # - an input filename: get the tags from it
-        # - in inheritance_dict only: a dict
+        # the dicts may have several shapes. Keys are output filenames (str).
+        # Values may be:
+        # - an input filename: get the tags from it (deprecated)
+        # - in inheritance_dict: a dict
         #   {   'parent': input_filename,
         #       'own_tags': list of dict of additional forced tags
         #       'tags2del': list of tags (str) whose value will be deleted
         #   }
-        # - in auto_inheritance_dict only: a dict
-        #   {   'param_name': input_filename, ... }
-        #   when there are ambiguities
+        # auto_inheritance_dict: a dict
+        # - if there is no ambiguity :
+        #    key: value of the output file (string)
+        #    value: value of the input file (string)
+        # - if ambiguous :
+        #    key: output plug value (string)
+        #    value: a dict: with key / value corresponding to each possible
+        #                   input file
+        #               => key: name of the input plug
+        #               => value: value of the input plug
 
         if isinstance(parent_files, dict):
             own_tags = parent_files.get("own_tags")
