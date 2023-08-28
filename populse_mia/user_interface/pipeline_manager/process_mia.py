@@ -60,6 +60,7 @@ from populse_mia.data_manager.project import (
     TAG_TYPE,
 )
 from populse_mia.software_properties import Config
+from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
 
 
 class MIAProcessCompletionEngine(ProcessCompletionEngine):
@@ -421,6 +422,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             self.completion_progress_total = (
                 self.fallback_engine.completion_progress_total
             )
+            # We're only importing PipelineManagerTab now, to avoid a
+            # circular import issue
             # isort: off
             # fmt: off
             from populse_mia.user_interface.pipeline_manager.\
@@ -430,10 +433,10 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
                 in_process
             )
-            # auto_inheritance_dict object format:
+            # auto_inheritance_dict (dict) object format:
             # - if there is no ambiguity :
-            #    key: value of the output file (string)
-            #    value: value of the input file (string)
+            #    key: value of the output file (str)
+            #    value: value of the input file (str)
             # - if ambiguous :
             #    key: output plug value (string)
             #    value: a dictionary: with key / value corresponding to each
@@ -446,8 +449,6 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 pass
 
             else:
-                in_process.inheritance_dict = {}
-
                 if not hasattr(in_process, "project"):
                     if hasattr(in_process, "get_study_config"):
                         study_config = in_process.get_study_config()
@@ -458,13 +459,13 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
                 if hasattr(in_process, "project"):
                     for out in auto_inheritance_dict:
-                        if isinstance(auto_inheritance_dict[out], str):
-                            ProcessMIA.tags_inheritance(
-                                in_process, auto_inheritance_dict[out], out
-                            )
+                        ProcessMIA.tags_inheritance(
+                            in_process,
+                            auto_inheritance_dict[out],
+                            out,
+                            node_name,
+                        )
 
-                        elif isinstance(auto_inheritance_dict[out], dict):
-                            print("TODO")
         else:
             # here the process is a ProcessMIA instance. Use the specific
             # method
@@ -939,6 +940,7 @@ class ProcessMIA(Process):
         self,
         in_file,
         out_file,
+        node_name=None,
         own_tags=None,
         tags2del=None,
     ):
@@ -949,6 +951,7 @@ class ProcessMIA(Process):
                         inherited.
         :param out_file: a process output file name (the document_id for a
                          database collection) which will inherit tags.
+        :param node_name: the name of the node.
         :param own_tags: a list of dictionaries. Each dictionary corresponds to
                          a tag to be added or modified. Mandatory keys (and
                          associated values):
@@ -966,19 +969,54 @@ class ProcessMIA(Process):
         #        cases after workflow generation, see #290 and #310 and
         #        populse/mia_processes#39). This is sub-optimal, but until the
         #        #290 fix, it's the best solution we're using.
-        # For inheritance operation at the end of the workflow generation:
+
+        if not hasattr(self, "ignore_node"):
+            self.ignore_node = False
+
+        if not hasattr(self, "ignore"):
+            self.ignore = {}
+
+        if not hasattr(self, "key"):
+            self.key = {}
+
+        if not hasattr(self, "inheritance_dict"):
+            self.inheritance_dict = {}
+
         self.inheritance_dict[out_file] = dict()
-        self.inheritance_dict[out_file]["parent"] = in_file
         self.inheritance_dict[out_file]["own_tags"] = own_tags
         self.inheritance_dict[out_file]["tags2del"] = tags2del
+
+        plug_name = None
+
+        for i in self.user_traits():
+            if getattr(self, i, None) == out_file:
+                plug_name = i
+
+        banished_tags = set(
+            [
+                TAG_TYPE,
+                TAG_BRICKS,
+                TAG_CHECKSUM,
+                TAG_FILENAME,
+                TAG_HISTORY,
+            ]
+        )
+
+        if isinstance(in_file, str):
+            in_files = {None: in_file}
+            # For inheritance operation at the end of the workflow generation:
+            self.inheritance_dict[out_file]["parent"] = in_file
+
+        elif isinstance(in_file, dict):
+            # self.inheritance_dict will be defined later, as there is
+            # currently some ambiguity.
+            in_files = in_file
 
         # For inheritance now:
         db_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.project.folder)), ""
         )
-        # fmt: off
-        rel_in_file = os.path.abspath(os.path.normpath(in_file))[len(db_dir):]
-        # fmt: on
+        field_names = self.project.session.get_fields_names(COLLECTION_CURRENT)
         rel_out_file = out_file.replace(
             os.path.abspath(self.project.folder), ""
         )
@@ -986,61 +1024,164 @@ class ProcessMIA(Process):
         if rel_out_file and rel_out_file[0] in ["\\", "/"]:
             rel_out_file = rel_out_file[1:]
 
-        field_names = self.project.session.get_fields_names(COLLECTION_CURRENT)
-        cur_in_scan = self.project.session.get_document(
-            COLLECTION_CURRENT, rel_in_file
-        )
+        all_cvalues = {}
+        all_ivalues = {}
 
-        if rel_in_file == rel_out_file:
-            # output is one of the inputs: we just add or remove tags
-            cvalues = {}
-            ivalues = {}
+        # get all tags values for inputs
+        for param, parent_file in in_files.items():
+            # fmt: off
+            rel_in_file = os.path.abspath(
+                os.path.normpath(parent_file))[len(db_dir):]
+            # fmt: on
 
-        elif cur_in_scan is not None:
-            banished_tags = set(
-                [
-                    TAG_TYPE,
-                    TAG_BRICKS,
-                    TAG_CHECKSUM,
-                    TAG_FILENAME,
-                    TAG_HISTORY,
-                ]
-            )
-            # tags in COLLECTION_CURRENT for in_file
-            cvalues = {
-                field: getattr(cur_in_scan, field)
-                for field in field_names
-                if field not in banished_tags
-            }
+            if rel_in_file == rel_out_file:
+                # output is one of the inputs: we just add or remove tags
+                all_cvalues = {}
+                all_ivalues = {}
+                break
 
-            init_in_scan = self.project.session.get_document(
-                COLLECTION_INITIAL, rel_in_file
+            cur_in_scan = self.project.session.get_document(
+                COLLECTION_CURRENT, rel_in_file
             )
 
-            if init_in_scan is not None:
+            if cur_in_scan is not None:
                 # tags in COLLECTION_CURRENT for in_file
-                ivalues = {
-                    field: getattr(init_in_scan, field) for field in cvalues
+                cvalues = {
+                    field: getattr(cur_in_scan, field)
+                    for field in field_names
+                    if field not in banished_tags
                 }
-            else:
-                ivalues = {}
-                # FIXME: In this case, do we want a message in stdout like the
-                #        one below (currently a message is only visible in
-                #        stdout if the document is not in the CURRENT
-                #        collection)?
 
-        else:
-            print(
-                "{0} brick initialization warning:\n"
-                "    {1} has no tags registered yet.\n"
-                "    So, {2} cannot inherit its tags...\n"
-                "    This can lead to a subsequent issue during "
-                "initialization!!\n".format(
-                    self.context_name, in_file, out_file
+                init_in_scan = self.project.session.get_document(
+                    COLLECTION_INITIAL, rel_in_file
                 )
-            )
-            cvalues = {}
-            ivalues = {}
+
+                if init_in_scan is not None:
+                    # tags in COLLECTION_CURRENT for in_file
+                    ivalues = {
+                        field: getattr(init_in_scan, field)
+                        for field in cvalues
+                    }
+                else:
+                    ivalues = {}
+                    # FIXME: In this case, do we want a message in stdout like
+                    #        the one below (currently a message is only visible
+                    #        in stdout if the document is not in the CURRENT
+                    #        collection)?
+
+                all_cvalues[param] = cvalues
+                all_ivalues[param] = ivalues
+
+            else:
+                print(
+                    "{0} brick initialization warning:\n"
+                    "    {1} has no tags registered yet.\n"
+                    "    So, {2} cannot inherit its tags...\n"
+                    "    This can lead to a subsequent issue during "
+                    "initialization!!\n".format(
+                        self.context_name, in_file, out_file
+                    )
+                )
+
+        # If there are several possible inputs: there is more work
+        if (
+            not self.ignore_node
+            and len(all_cvalues) >= 2
+            and (node_name not in self.ignore)
+            and (node_name + plug_name not in self.ignore)
+        ):
+            # if all inputs have the same tags set: then pick either of them,
+            # they are all the same, there is no ambiguity
+            eq = True
+            first = None
+            for param, cvalues in all_cvalues.items():
+                if first is None:
+                    first = cvalues
+                else:
+                    eq = cvalues == first
+                    if not eq:
+                        break
+            if eq:
+                first = None
+                for param, ivalues in all_ivalues.items():
+                    if first is None:
+                        first = ivalues
+                    else:
+                        eq = ivalues == first
+                        if not eq:
+                            break
+            if eq:
+                # all values equal, no ambiguity
+                k, v = next(iter(all_cvalues.items()))
+                all_cvalues = {k: v}
+                k, v = next(iter(all_ivalues.items()))
+                all_ivalues = {k: v}
+                self.inheritance_dict[out_file]["parent"] = in_files[k]
+
+            else:
+                # ambiguous inputs -> output
+                # ask the user, or use previously setup answers.
+
+                # FIXME: There is a GUI dialog here, involving user
+                #        interaction. This should probably be avoided here in
+                #        a processing loop. Some pipelines, especially with
+                #        iterations, may ask many many questions to users.
+                #        These should be worked on earlier.
+
+                if node_name in self.key:
+                    param = self.key[node_name]
+                    value = in_files[param]
+                    all_cvalues = {param: all_cvalues[param]}
+                    all_ivalues = {param: all_ivalues[param]}
+                    self.inheritance_dict[out_file]["parent"] = value
+
+                elif (plug_name is not None) and (
+                    node_name + plug_name in self.key
+                ):
+                    param = self.key[node_name + plug_name]
+                    value = in_files[param]
+                    all_cvalues = {param: all_cvalues[param]}
+                    all_ivalues = {param: all_ivalues[param]}
+                    self.inheritance_dict[out_file]["parent"] = value
+
+                else:
+                    print(
+                        "Ambiguity in tag inheritance for:",
+                        node_name,
+                        plug_name,
+                        out_file,
+                    )
+                    pop_up = PopUpInheritanceDict(
+                        in_files,
+                        node_name,
+                        plug_name,
+                        False,
+                    )
+                    pop_up.exec()
+                    self.ignore_node = pop_up.everything
+                    if pop_up.ignore:
+                        # self.inheritance_dict = None
+                        if pop_up.all is True:
+                            self.ignore[node_name] = True
+                        else:
+                            self.ignore[node_name + plug_name] = True
+                    else:
+                        value = pop_up.value
+                        if pop_up.all is True:
+                            self.key[node_name] = pop_up.key
+                        else:
+                            self.key[node_name + plug_name] = pop_up.key
+                        self.inheritance_dict[out_file] = value
+                        all_cvalues = {pop_up.key: all_cvalues[pop_up.key]}
+                        all_ivalues = {pop_up.key: all_ivalues[pop_up.key]}
+
+        # from here if we still have several tags sets, we do not assign them
+        # at all. Otherwise, set them.
+
+        # Adding inherited tags
+        if len(all_cvalues) == 1:
+            ivalues.update(next(iter(all_ivalues.values())))
+            cvalues.update(next(iter(all_cvalues.values())))
 
         if own_tags is not None:
             # We want to add a tag or modify the value of a tag.
