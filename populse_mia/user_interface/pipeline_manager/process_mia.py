@@ -60,7 +60,6 @@ from populse_mia.data_manager.project import (
     TAG_TYPE,
 )
 from populse_mia.software_properties import Config
-from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
 
 
 class MIAProcessCompletionEngine(ProcessCompletionEngine):
@@ -756,6 +755,11 @@ class ProcessMIA(Process):
 
     """
 
+    # Class attributes used for the inheritance dictionary
+    ignore_node = False
+    ignore = {}
+    key = {}
+
     def __init__(self, *args, **kwargs):
         super(ProcessMIA, self).__init__(*args, **kwargs)
         self.requirement = None
@@ -970,15 +974,6 @@ class ProcessMIA(Process):
         #        populse/mia_processes#39). This is sub-optimal, but until the
         #        #290 fix, it's the best solution we're using.
 
-        if not hasattr(self, "ignore_node"):
-            self.ignore_node = False
-
-        if not hasattr(self, "ignore"):
-            self.ignore = {}
-
-        if not hasattr(self, "key"):
-            self.key = {}
-
         if not hasattr(self, "inheritance_dict"):
             self.inheritance_dict = {}
 
@@ -1085,10 +1080,10 @@ class ProcessMIA(Process):
 
         # If there are several possible inputs: there is more work
         if (
-            not self.ignore_node
+            not ProcessMIA.ignore_node
             and len(all_cvalues) >= 2
-            and (node_name not in self.ignore)
-            and (node_name + plug_name not in self.ignore)
+            and (node_name not in ProcessMIA.ignore)
+            and (node_name + plug_name not in ProcessMIA.ignore)
         ):
             # if all inputs have the same tags set: then pick either of them,
             # they are all the same, there is no ambiguity
@@ -1128,17 +1123,17 @@ class ProcessMIA(Process):
                 #        iterations, may ask many many questions to users.
                 #        These should be worked on earlier.
 
-                if node_name in self.key:
-                    param = self.key[node_name]
+                if node_name in ProcessMIA.key:
+                    param = ProcessMIA.key[node_name]
                     value = in_files[param]
                     all_cvalues = {param: all_cvalues[param]}
                     all_ivalues = {param: all_ivalues[param]}
                     self.inheritance_dict[out_file]["parent"] = value
 
                 elif (plug_name is not None) and (
-                    node_name + plug_name in self.key
+                    node_name + plug_name in ProcessMIA.key
                 ):
-                    param = self.key[node_name + plug_name]
+                    param = ProcessMIA.key[node_name + plug_name]
                     value = in_files[param]
                     all_cvalues = {param: all_cvalues[param]}
                     all_ivalues = {param: all_ivalues[param]}
@@ -1146,11 +1141,19 @@ class ProcessMIA(Process):
 
                 else:
                     print(
-                        "Ambiguity in tag inheritance for:",
+                        "\nAmbiguity in tag inheritance for:",
                         node_name,
                         plug_name,
                         out_file,
                     )
+                    # We're only importing PopUpInheritanceDict now, to avoid a
+                    # circular import issue
+                    # isort: off
+                    # fmt: off
+                    from populse_mia.user_interface.pop_ups import \
+                        PopUpInheritanceDict
+                    # isort: on
+                    # fmt: on
                     pop_up = PopUpInheritanceDict(
                         in_files,
                         node_name,
@@ -1158,20 +1161,20 @@ class ProcessMIA(Process):
                         False,
                     )
                     pop_up.exec()
-                    self.ignore_node = pop_up.everything
+                    ProcessMIA.ignore_node = pop_up.everything
                     if pop_up.ignore:
                         # self.inheritance_dict = None
                         if pop_up.all is True:
-                            self.ignore[node_name] = True
+                            ProcessMIA.ignore[node_name] = True
                         else:
-                            self.ignore[node_name + plug_name] = True
+                            ProcessMIA.ignore[node_name + plug_name] = True
                     else:
                         value = pop_up.value
                         if pop_up.all is True:
-                            self.key[node_name] = pop_up.key
+                            ProcessMIA.key[node_name] = pop_up.key
                         else:
-                            self.key[node_name + plug_name] = pop_up.key
-                        self.inheritance_dict[out_file] = value
+                            ProcessMIA.key[node_name + plug_name] = pop_up.key
+                        self.inheritance_dict[out_file]["parent"] = value
                         all_cvalues = {pop_up.key: all_cvalues[pop_up.key]}
                         all_ivalues = {pop_up.key: all_ivalues[pop_up.key]}
 
