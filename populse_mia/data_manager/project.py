@@ -81,7 +81,7 @@ HISTORY_ID = "ID"
 HISTORY_PIPELINE = "Pipeline xml"
 HISTORY_BRICKS = "Bricks uuid"
 
-
+TYPE_BVEC_BVAL = "Bvec_Bval"
 TYPE_NII = "Scan"
 TYPE_MAT = "Matrix"
 TYPE_TXT = "Text"
