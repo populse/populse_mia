@@ -68,7 +68,8 @@ from populse_mia.data_manager.project import (
     TAG_CHECKSUM,
     TAG_FILENAME,
     TAG_TYPE,
-    TYPE_BVEC_BVAL,
+    TYPE_BVAL,
+    TYPE_BVEC,
     TYPE_NII,
 )
 
@@ -497,8 +498,8 @@ class ImportWorker(QThread):
                                 [
                                     bvec_database_path,
                                     TAG_TYPE,
-                                    TYPE_BVEC_BVAL,
-                                    TYPE_BVEC_BVAL,
+                                    TYPE_BVEC,
+                                    TYPE_BVEC,
                                 ]
                             )
 
@@ -515,9 +516,7 @@ class ImportWorker(QThread):
                         documents[bvec_database_path][
                             TAG_CHECKSUM
                         ] = original_md5_bvec
-                        documents[bvec_database_path][
-                            TAG_TYPE
-                        ] = TYPE_BVEC_BVAL
+                        documents[bvec_database_path][TAG_TYPE] = TYPE_BVEC
                         documents[bvec_database_path][tag_name] = str(
                             file_database_path
                         )
@@ -563,8 +562,8 @@ class ImportWorker(QThread):
                                 [
                                     bval_database_path,
                                     TAG_TYPE,
-                                    TYPE_BVEC_BVAL,
-                                    TYPE_BVEC_BVAL,
+                                    TYPE_BVAL,
+                                    TYPE_BVAL,
                                 ]
                             )
                             # Value added to history
@@ -580,9 +579,7 @@ class ImportWorker(QThread):
                         documents[bval_database_path][
                             TAG_CHECKSUM
                         ] = original_md5_bval
-                        documents[bval_database_path][
-                            TAG_TYPE
-                        ] = TYPE_BVEC_BVAL
+                        documents[bval_database_path][TAG_TYPE] = TYPE_BVAL
                         documents[bval_database_path][tag_name] = str(
                             file_database_path
                         )
