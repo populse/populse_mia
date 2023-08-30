@@ -114,6 +114,7 @@ class Config:
             - getChainCursors: returns if the "chain cursors" checkbox of the
               mini viewer is activated
             - get_config_path: returns the configuration file directory
+            - get_freesurfer_setup: get freesurfer path
             - get_fsl_config: returns the path of the FSL config file
             - get_mainwindow_maximized: get the maximized (full-screen) flag
             - get_mainwindow_size: get the main window size
@@ -127,6 +128,7 @@ class Config:
               browser bottom
             - get_mia_path: returns the software's install path
             - get_mri_conv_path: returns the MRIManager.jar path
+            - get_mrtrix_path: returns mrtrix path
             - getNbAllSlicesMax: returns the maximum number of slices to
               display in the mini viewer
             - get_opened_projects: returns the opened projects
@@ -151,12 +153,16 @@ class Config:
               preferences
             - get_use_clinical: returns the value of "clinical mode" checkbox
               in the preferences
+            - get_use_freesurfer: returns the value of "use freesurfer"
+              checkbox in the preferences
             - get_use_fsl: returns the value of "use fsl" checkbox in the
               preferences
             - get_use_matlab: returns the value of "use matlab" checkbox in the
               preferences
             - get_use_matlab_standalone: returns the value of "use matlab
               standalone" checkbox in the preferences
+            - get_use_mrtrix: retunrs the value of "use mrtrix" checkbox in the
+              prefrence
             - get_user_level: get the user level in the Capsul config
             - get_user_mode: returns the value of "user mode" checkbox
               in the preferences
@@ -178,6 +184,7 @@ class Config:
             - set_admin_hash: set the password hash
             - set_afni_path: set the path of the AFNI
             - set_ants_path: set the path of the ANTS
+            - set_mrtrix_path: set the path of mrtrix
             - setAutoSave: sets the auto-save mode
             - setBackgroundColor: sets the background color
             - set_capsul_config: set CAPSUL configuration dict into MIA config
@@ -186,6 +193,7 @@ class Config:
             - set_clinical_mode: set the value of "clinical mode" in
               the preferences
             - setControlV1: Set controller display mode (True if V1)
+            - set_freesurfer_setup: set freesurfer path
             - set_fsl_config: set the path of the FSL config file
             - set_mainwindow_maximized: set the maximized (fullscreen) flag
             - set_mainwindow_size: set main window size
@@ -218,12 +226,16 @@ class Config:
               preferences
             - set_use_ants: set the value of "use ants" checkbox in the
               preferences
+            - set_use_freesurfer: set the value of "use freesurfer" checkbox
+               in the preferences
             - set_use_fsl: set the value of "use fsl" checkbox in the
               preferences
             - set_use_matlab: set the value of "use matlab" checkbox in the
               preferences
             - set_use_matlab_standalone: set the value of "use matlab
               standalone" checkbox in the preferences
+            - set_use_mrtrix: set the value of "use mrtrix" checkbox in the
+              preferences
             - set_user_mode: set the value of "user mode" checkbox in
               the preferences
             - set_use_spm: set the value of "use spm" checkbox in the
@@ -324,6 +336,7 @@ class Config:
                 "python",
                 "afni",
                 "ants",
+                "mrtrix",
                 "somaworkflow",
             ],
         )
@@ -354,6 +367,9 @@ class Config:
 
         use_freesurfer = self.get_use_freesurfer()
         freesurfer_setup = self.get_freesurfer_setup()
+
+        use_mrtrix = self.get_use_mrtrix()
+        mrtrix_path = self.get_mrtrix_path()
 
         # Make synchronisation from Mia pref to Capsul config:
 
@@ -460,6 +476,15 @@ class Config:
             m["setup"] = freesurfer_setup
             # TODO: change fs subject dir
             m["subjects_dir"] = ""
+
+        # mrtrix
+        if use_mrtrix:
+            m = eeconf.setdefault(
+                "capsul.engine.module.mrtrix", {}
+            ).setdefault("mrtrix", {})
+            m["config_id"] = "mrtrix"
+            m["config_environment"] = "global"
+            m["directory"] = mrtrix_path
 
         # attributes completion
         m = eeconf.setdefault(
@@ -721,6 +746,14 @@ class Config:
 
         return self.config.get("mri_conv_path", "")
 
+    def get_mrtrix_path(self):
+        """Get the  mrtrix path
+
+        :returns: string of path to mrtrix
+        """
+
+        return self.config.get("mrtrix", "")
+
     def getNbAllSlicesMax(self):
         """Get number the maximum number of slices to display in the
         miniviewer.
@@ -908,6 +941,14 @@ class Config:
 
         return self.config.get("user_mode", True)
 
+    def get_use_mrtrix(self):
+        """Get the value of "use mrtrix" checkbox in the preferences.
+
+        :returns: boolean
+        """
+
+        return self.config.get("use_mrtrix", False)
+
     def get_use_spm(self):
         """Get the value of "use spm" checkbox in the preferences.
 
@@ -1041,6 +1082,16 @@ class Config:
         """
 
         self.config["ants"] = path
+        # Then save the modification
+        self.saveConfig()
+
+    def set_mrtrix_path(self, path):
+        """Set the mrtrix path
+
+        :param path: string of mrtrix path
+        """
+
+        self.config["mrtrix"] = path
         # Then save the modification
         self.saveConfig()
 
@@ -1196,6 +1247,21 @@ class Config:
 
             if bool(mcr_dir) and os.path.isdir(mcr_dir):
                 use_mcr = True
+
+        # mrtrix
+        mrtrix = engine_config.get("global", {}).get(
+            "capsul.engine.module.mrtrix"
+        )
+
+        if mrtrix:
+            mrtrix = next(iter(mrtrix.values()))
+            mrtrix_path = mrtrix.get("directory")
+            use_mrtrix = bool(mrtrix_path)
+
+            if mrtrix_path:
+                self.set_mrtrix_path(mrtrix_path)
+
+            self.set_use_mrtrix(use_mrtrix)
 
         # spm
         spm = engine_config.get("global", {}).get("capsul.engine.module.spm")
@@ -1589,6 +1655,16 @@ class Config:
         # Then save the modification
         self.saveConfig()
 
+    def set_use_mrtrix(self, use_mrtrix):
+        """Set the value of "use_mrtrix" checkbox in the preferences.
+
+        :param use_mrtrix: boolean
+        """
+
+        self.config["use_mrtrix"] = use_mrtrix
+        # Then save the modification
+        self.saveConfig()
+
     def set_user_mode(self, user_mode):
         """Enable of disable user mode.
 
@@ -1668,6 +1744,7 @@ class Config:
             "axon",
             "afni",
             "ants",
+            "mrtrix",
             "somaworkflow",
         ]:
             engine.load_module(module)

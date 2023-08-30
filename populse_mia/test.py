@@ -4187,9 +4187,9 @@ class TestMIAMainWindow(TestMIACase):
             - test_software_preferences_pop_up_config_file: opens the
               preferences pop up and changes parameters.
             - test_software_preferences_pop_up_modules_config: changes
-              the configuration of AFNI, ANTS, FSL, SPM and MATLAB.
+              the configuration of AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.
             - test_software_preferences_pop_up_validate: opens the
-              preferences pop up for AFNI, ANTS, FSL, SPM and MATLAB.
+              preferences pop up for AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.
             - test_switch_project: create project and switches to it.
             - test_tab_changed: switches between data browser, data
               viewer and pipeline manager.
@@ -5444,6 +5444,7 @@ class TestMIAMainWindow(TestMIACase):
         config.set_use_fsl(True)
         config.set_use_afni(True)
         config.set_use_ants(True)
+        config.set_use_mrtrix(True)
         config.set_mainwindow_size([100, 100, 100])
 
         # Open and close the software preferences window
@@ -5549,6 +5550,12 @@ class TestMIAMainWindow(TestMIACase):
         main_wnd.pop_up_preferences.browse_ants()
         self.assertEqual(
             main_wnd.pop_up_preferences.ants_choice.text(), mock_path
+        )
+
+        # Browses the mrtrix path
+        main_wnd.pop_up_preferences.browse_mrtrix()
+        self.assertEqual(
+            main_wnd.pop_up_preferences.mrtrix_choice.text(), mock_path
         )
 
         # Browses the MATLAB path
@@ -5755,7 +5762,7 @@ class TestMIAMainWindow(TestMIACase):
     def test_software_preferences_pop_up_modules_config(self):
         """Opens the preferences pop up and sets the configuration of modules.
 
-        For AFNI, ANTS, FSL, SPM and MATLAB.
+        For AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.
 
         -Tests: PopUpPreferences.validate_and_save
 
@@ -5783,7 +5790,7 @@ class TestMIAMainWindow(TestMIACase):
         if platform.system() == "Windows":
             return
 
-        # Mocks executables to be used as the afni, ants, fslm, matlab
+        # Mocks executables to be used as the afni, ants, mrtrix, fslm, matlab
         # and spm cmds
         def mock_executable(
             exc_dir,
@@ -5949,6 +5956,45 @@ class TestMIAMainWindow(TestMIACase):
             config = Config(config_path=self.config_path)
             config.set_use_fsl(False)
             config.set_fsl_config("")
+
+        def test_mrtrix_config():
+            """Tests the mrtrix configuration."""
+
+            main_wnd.software_preferences_pop_up()  # Reopens the window
+
+            # Enables mrtrix
+            main_wnd.pop_up_preferences.use_mrtrix_checkbox.setChecked(True)
+
+            # Sets a directory that does not exist
+            (
+                main_wnd.pop_up_preferences.mrtrix_choice.setText(
+                    os.path.join(tmp_path + "mock")
+                )
+            )
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
+
+            # Sets a directory that does not contain the mrtrix cmd
+            main_wnd.pop_up_preferences.mrtrix_choice.setText(tmp_path)
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
+
+            # Asserts that mrtrix is disabled in the 'config' object
+            config = Config(config_path=self.config_path)
+            self.assertFalse(config.get_use_mrtrix())
+
+            # Sets the path to the mrtrix to 'tmp_path'
+            main_wnd.pop_up_preferences.mrtrix_choice.setText(tmp_path)
+
+            mock_executable(tmp_path, "mrinfo", failing=True)
+            main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
+
+            mock_executable(tmp_path, "mrinfo")
+            # main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
+            main_wnd.pop_up_preferences.close()  # Closes the window
+
+            # Disables mrtrix
+            config = Config(config_path=self.config_path)
+            config.set_use_mrtrix(False)
+            config.set_mrtrix_path("")
 
         def test_spm_matlab_config():
             """Tests the SPM and MATLAB (licence) configuration."""
@@ -6251,9 +6297,11 @@ class TestMIAMainWindow(TestMIACase):
 
         Config(config_path=self.config_path).set_projects_save_path(tmp_path)
 
-        # Test the configuration modules AFNI, ANTS, FSL, SPM and MATLAB
+        # Test the configuration modules AFNI, ANTS, FSL, mrtrix,
+        # SPM and MATLAB
         test_afni_config()
         test_ants_config()
+        test_mrtrix_config()
         test_fsl_config()
         test_spm_matlab_config()
         test_matlab_config()
@@ -6262,9 +6310,9 @@ class TestMIAMainWindow(TestMIACase):
     def test_software_preferences_pop_up_validate(self):
         """Opens the preferences pop up, sets the configuration.
 
-        For modules AFNI, ANTS, FSL, SPM and MATLAB without pressing the OK
-        button and switches the auto-save, controller version and radio
-        view options.
+        For modules AFNI, ANTS, FSL, SPM, mrtrix and MATLAB without pressing
+        the OK button and switches the auto-save, controller version and
+        radio view options.
 
         - Tests: PopUpPreferences.validate_and_save
 
@@ -6298,7 +6346,7 @@ class TestMIAMainWindow(TestMIACase):
             self.assertTrue(getattr(config, "get_use_" + module)())
 
         # Selects non standalone modules
-        for module in ["afni", "ants", "fsl", "matlab", "spm"]:
+        for module in ["afni", "ants", "fsl", "matlab", "mrtrix", "spm"]:
             getattr(
                 main_wnd.pop_up_preferences, "use_" + module + "_checkbox"
             ).setChecked(True)
@@ -6307,7 +6355,7 @@ class TestMIAMainWindow(TestMIACase):
         main_wnd.pop_up_preferences.validate_and_save()
 
         config = Config(config_path=self.config_path)
-        for module in ["afni", "ants", "fsl", "matlab", "spm"]:
+        for module in ["afni", "ants", "fsl", "matlab", "mrtrix", "spm"]:
             self.assertTrue(getattr(config, "get_use_" + module)())
 
         # Validates the Pipeline tab by pressing the 'OK' button:
@@ -6325,7 +6373,7 @@ class TestMIAMainWindow(TestMIACase):
         QMessageBox.show = lambda x: None
 
         # Deselects non standalone modules
-        for module in ["afni", "ants", "fsl", "matlab", "spm"]:
+        for module in ["afni", "ants", "fsl", "matlab", "mrtrix", "spm"]:
             getattr(
                 main_wnd.pop_up_preferences, "use_" + module + "_checkbox"
             ).setChecked(False)
@@ -10287,7 +10335,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # )
         ppl_manager.check_requirements.assert_called_once()
         # Mocks external packages as requirements and initializes the pipeline
-        pkgs = ["fsl", "afni", "ants", "matlab", "spm"]
+        pkgs = ["fsl", "afni", "ants", "matlab", "mrtrix", "spm"]
         req = {"capsul_engine": {"uses": Mock()}}
 
         for pkg in pkgs:
