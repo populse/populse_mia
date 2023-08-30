@@ -1909,6 +1909,41 @@ class PipelineManagerTab(QWidget):
                             )
                         )
 
+                # mrtrix:
+                try:
+                    if (
+                        requirements[req_node]["capsul_engine"]["uses"].get(
+                            "capsul.engine.module.mrtrix"
+                        )
+                        is None
+                    ):
+                        raise KeyError
+
+                except KeyError:
+                    # The process don't need mrtrix
+                    pass
+
+                else:
+                    if "capsul.engine.module.mrtrix" in requirements[req_node]:
+                        if not requirements[req_node][
+                            "capsul.engine.module.mrtrix"
+                        ].get("directory", False):
+                            init_result = False
+                            req_messages.append(
+                                "The {} requires mrtrix "
+                                "but it seems mrtrix is not "
+                                "configured in mia "
+                                "preferences.".format(req_node_name)
+                            )
+
+                    else:
+                        init_result = False
+                        req_messages.append(
+                            "The {} requires mrtrix but it "
+                            "seems mrtrix is not configured in "
+                            "mia preferences.".format(req_node_name)
+                        )
+
                 # SPM
                 try:
                     if (
