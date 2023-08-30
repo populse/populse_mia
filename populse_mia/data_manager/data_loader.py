@@ -417,10 +417,7 @@ class ImportWorker(QThread):
                         COLLECTION_CURRENT, tag_name
                     )
 
-                    if (
-                        tag_row is None
-                        and tag_name not in tags_names_added
-                    ):
+                    if tag_row is None and tag_name not in tags_names_added:
                         # Adding the tag as it's not in the database yet
                         tags_added.append(
                             [
@@ -449,15 +446,18 @@ class ImportWorker(QThread):
                         tags_names_added.append(tag_name)
 
                     # Index BVEC in the database
-                    bvec_path = os.path.join(raw_data_folder,
-                                             file_name + ".bvec")
+                    bvec_path = os.path.join(
+                        raw_data_folder, file_name + ".bvec"
+                    )
 
                     with open(bvec_path, "rb") as bvec_file:
                         original_md5_bvec = hashlib.md5(
-                            bvec_file.read()).hexdigest()
+                            bvec_file.read()
+                        ).hexdigest()
 
-                    bvec_database_path = os.path.relpath(bvec_path,
-                                                         self.project.folder)
+                    bvec_database_path = os.path.relpath(
+                        bvec_path, self.project.folder
+                    )
 
                     document_not_existing = (
                         self.project.session.get_document(
@@ -492,7 +492,7 @@ class ImportWorker(QThread):
                                 bvec_database_path,
                                 TAG_TYPE,
                                 TYPE_BVEC_BVAL,
-                                TYPE_BVEC_BVAL
+                                TYPE_BVEC_BVAL,
                             ]
                         )
 
@@ -502,25 +502,29 @@ class ImportWorker(QThread):
                                 bvec_database_path,
                                 tag_name,
                                 file_database_path,
-                                file_database_path
+                                file_database_path,
                             ]
                         )
 
-                    documents[
-                        bvec_database_path
-                    ][TAG_CHECKSUM] = original_md5_bvec
+                    documents[bvec_database_path][
+                        TAG_CHECKSUM
+                    ] = original_md5_bvec
                     documents[bvec_database_path][TAG_TYPE] = TYPE_BVEC_BVAL
                     documents[bvec_database_path][tag_name] = str(
-                        file_database_path)
+                        file_database_path
+                    )
 
                     # Index BVAL in the database
-                    bval_path = os.path.join(raw_data_folder,
-                                             file_name + ".bval")
+                    bval_path = os.path.join(
+                        raw_data_folder, file_name + ".bval"
+                    )
                     with open(bval_path, "rb") as bval_file:
                         original_md5_bval = hashlib.md5(
-                            bval_file.read()).hexdigest()
-                    bval_database_path = os.path.relpath(bval_path,
-                                                         self.project.folder)
+                            bval_file.read()
+                        ).hexdigest()
+                    bval_database_path = os.path.relpath(
+                        bval_path, self.project.folder
+                    )
 
                     document_not_existing = (
                         self.project.session.get_document(
@@ -555,7 +559,8 @@ class ImportWorker(QThread):
                                 bval_database_path,
                                 TAG_TYPE,
                                 TYPE_BVEC_BVAL,
-                                TYPE_BVEC_BVAL]
+                                TYPE_BVEC_BVAL,
+                            ]
                         )
                         # Value added to history
                         values_added.append(
@@ -563,16 +568,17 @@ class ImportWorker(QThread):
                                 bval_database_path,
                                 tag_name,
                                 file_database_path,
-                                file_database_path
+                                file_database_path,
                             ]
                         )
 
-                    documents[
-                        bval_database_path
-                    ][TAG_CHECKSUM] = original_md5_bval
+                    documents[bval_database_path][
+                        TAG_CHECKSUM
+                    ] = original_md5_bval
                     documents[bval_database_path][TAG_TYPE] = TYPE_BVEC_BVAL
                     documents[bval_database_path][tag_name] = str(
-                        file_database_path)
+                        file_database_path
+                    )
 
         # Missing values added thanks to default values
         for tag in self.project.session.get_fields(COLLECTION_CURRENT):
