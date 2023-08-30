@@ -68,6 +68,7 @@ from populse_mia.data_manager.project import (
     TAG_CHECKSUM,
     TAG_FILENAME,
     TAG_TYPE,
+    TYPE_BVEC_BVAL,
     TYPE_NII,
 )
 
@@ -401,6 +402,177 @@ class ImportWorker(QThread):
                     )
                 documents[file_database_path][TAG_CHECKSUM] = original_md5
                 documents[file_database_path][TAG_TYPE] = TYPE_NII
+
+                # Index bvec/ bval in the database if they exist
+                if dict_log["Bvec_bval"] == "yes":
+                    file_name = dict_log["NameFile"]
+
+                    # Add a tag to link bvec/bval and the originla nifti file
+                    tag_name = "AssociatedNIfTIFile"
+                    tag_type = FIELD_TYPE_STRING
+                    description = "Associated NIfTI file"
+                    unit = None
+
+                    tag_row = self.project.session.get_field(
+                        COLLECTION_CURRENT, tag_name
+                    )
+
+                    if (
+                        tag_row is None
+                        and tag_name not in tags_names_added
+                    ):
+                        # Adding the tag as it's not in the database yet
+                        tags_added.append(
+                            [
+                                COLLECTION_CURRENT,
+                                tag_name,
+                                tag_type,
+                                description,
+                                False,
+                                TAG_ORIGIN_BUILTIN,
+                                unit,
+                                None,
+                            ]
+                        )
+                        tags_added.append(
+                            [
+                                COLLECTION_INITIAL,
+                                tag_name,
+                                tag_type,
+                                description,
+                                False,
+                                TAG_ORIGIN_BUILTIN,
+                                unit,
+                                None,
+                            ]
+                        )
+                        tags_names_added.append(tag_name)
+
+                    # Index BVEC in the database
+                    bvec_path = os.path.join(raw_data_folder,
+                                             file_name + ".bvec")
+
+                    with open(bvec_path, "rb") as bvec_file:
+                        original_md5_bvec = hashlib.md5(
+                            bvec_file.read()).hexdigest()
+
+                    bvec_database_path = os.path.relpath(bvec_path,
+                                                         self.project.folder)
+
+                    document_not_existing = (
+                        self.project.session.get_document(
+                            COLLECTION_CURRENT, bvec_database_path
+                        )
+                        is None
+                    )
+
+                    if document_not_existing:
+                        with self.lock:
+                            # Scan added to history
+                            self.scans_added.append(bvec_database_path)
+                    documents[bvec_database_path] = {}
+                    documents[bvec_database_path][
+                        TAG_FILENAME
+                    ] = bvec_database_path
+
+                    if document_not_existing:
+                        # Tags added manually
+                        # Value added to history
+                        values_added.append(
+                            [
+                                bvec_database_path,
+                                TAG_CHECKSUM,
+                                original_md5_bvec,
+                                original_md5_bvec,
+                            ]
+                        )
+                        # Value added to history
+                        values_added.append(
+                            [
+                                bvec_database_path,
+                                TAG_TYPE,
+                                TYPE_BVEC_BVAL,
+                                TYPE_BVEC_BVAL
+                            ]
+                        )
+
+                        # Value added to history
+                        values_added.append(
+                            [
+                                bvec_database_path,
+                                tag_name,
+                                file_database_path,
+                                file_database_path
+                            ]
+                        )
+
+                    documents[
+                        bvec_database_path
+                    ][TAG_CHECKSUM] = original_md5_bvec
+                    documents[bvec_database_path][TAG_TYPE] = TYPE_BVEC_BVAL
+                    documents[bvec_database_path][tag_name] = str(
+                        file_database_path)
+
+                    # Index BVAL in the database
+                    bval_path = os.path.join(raw_data_folder,
+                                             file_name + ".bval")
+                    with open(bval_path, "rb") as bval_file:
+                        original_md5_bval = hashlib.md5(
+                            bval_file.read()).hexdigest()
+                    bval_database_path = os.path.relpath(bval_path,
+                                                         self.project.folder)
+
+                    document_not_existing = (
+                        self.project.session.get_document(
+                            COLLECTION_CURRENT, bval_database_path
+                        )
+                        is None
+                    )
+
+                    if document_not_existing:
+                        with self.lock:
+                            # Scan added to history
+                            self.scans_added.append(bval_database_path)
+                    documents[bval_database_path] = {}
+                    documents[bval_database_path][
+                        TAG_FILENAME
+                    ] = bval_database_path
+
+                    if document_not_existing:
+                        # Tags added manually
+                        # Value added to history
+                        values_added.append(
+                            [
+                                bval_database_path,
+                                TAG_CHECKSUM,
+                                original_md5_bval,
+                                original_md5_bval,
+                            ]
+                        )
+                        # Value added to history
+                        values_added.append(
+                            [
+                                bval_database_path,
+                                TAG_TYPE,
+                                TYPE_BVEC_BVAL,
+                                TYPE_BVEC_BVAL]
+                        )
+                        # Value added to history
+                        values_added.append(
+                            [
+                                bval_database_path,
+                                tag_name,
+                                file_database_path,
+                                file_database_path
+                            ]
+                        )
+
+                    documents[
+                        bval_database_path
+                    ][TAG_CHECKSUM] = original_md5_bval
+                    documents[bval_database_path][TAG_TYPE] = TYPE_BVEC_BVAL
+                    documents[bval_database_path][tag_name] = str(
+                        file_database_path)
 
         # Missing values added thanks to default values
         for tag in self.project.session.get_fields(COLLECTION_CURRENT):
