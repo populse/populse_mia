@@ -1975,6 +1975,7 @@ class PopUpPreferences(QDialog):
         - browse_matlab_standalone: called when matlab browse button is clicked
         - browse_mri_conv_path: called when "MRIManager.jar" browse
           button is clicked
+        - browse_mrtrix: called when mrtrix browse button is clicked
         - browse_projects_save_path: called when "Projects folder" browse
           button is clicked
         - browse_resources_path: called when "resources" browse button is
@@ -1996,6 +1997,7 @@ class PopUpPreferences(QDialog):
         - use_matlab_changed: called when the use_matlab checkbox is changed
         - use_matlab_standalone_changed: called when the use_matlab_standalone
            checkbox is changed
+        - use_mrtrix_changed: called when the use_mrtrix checkbox is changed
         - use_spm_changed: called when the use_spm checkbox is changed
         - use_spm_standalone_changed: called when the use_spm_standalone
           checkbox is changed
@@ -2552,6 +2554,36 @@ class PopUpPreferences(QDialog):
 
         self.groupbox_freesurfer.setLayout(v_box_freesurfer)
 
+        # Groupbox "mrtrix"
+        self.groupbox_mrtrix = QtWidgets.QGroupBox("mrtrix")
+
+        self.use_mrtrix_label = QLabel("Use mrtrix")
+        self.use_mrtrix_checkbox = QCheckBox("", self)
+
+        self.mrtrix_label = QLabel("mrtrix path (e.g. mrtrix_dir/bin):")
+        self.mrtrix_choice = QLineEdit(config.get_mrtrix_path())
+        self.mrtrix_browse = QPushButton("Browse")
+        self.mrtrix_browse.clicked.connect(self.browse_mrtrix)
+
+        h_box_use_mrtrix = QtWidgets.QHBoxLayout()
+        h_box_use_mrtrix.addWidget(self.use_mrtrix_checkbox)
+        h_box_use_mrtrix.addWidget(self.use_mrtrix_label)
+        h_box_use_mrtrix.addStretch(1)
+
+        h_box_mrtrix_path = QtWidgets.QHBoxLayout()
+        h_box_mrtrix_path.addWidget(self.mrtrix_choice)
+        h_box_mrtrix_path.addWidget(self.mrtrix_browse)
+
+        v_box_mrtrix_path = QtWidgets.QVBoxLayout()
+        v_box_mrtrix_path.addWidget(self.mrtrix_label)
+        v_box_mrtrix_path.addLayout(h_box_mrtrix_path)
+
+        v_box_mrtrix = QtWidgets.QVBoxLayout()
+        v_box_mrtrix.addLayout(h_box_use_mrtrix)
+        v_box_mrtrix.addLayout(v_box_mrtrix_path)
+
+        self.groupbox_mrtrix.setLayout(v_box_mrtrix)
+
         # Groupbox "CAPSUL"
         groupbox_capsul = Qt.QGroupBox("CAPSUL")
         capsul_config_button = Qt.QPushButton(
@@ -2574,6 +2606,7 @@ class PopUpPreferences(QDialog):
         self.tab_pipeline_layout.addWidget(self.groupbox_afni)
         self.tab_pipeline_layout.addWidget(self.groupbox_ants)
         self.tab_pipeline_layout.addWidget(self.groupbox_freesurfer)
+        self.tab_pipeline_layout.addWidget(self.groupbox_mrtrix)
         self.tab_pipeline_layout.addWidget(groupbox_capsul)
 
         self.tab_pipeline_layout.addStretch(1)
@@ -2633,6 +2666,9 @@ class PopUpPreferences(QDialog):
 
         if config.get_use_freesurfer():
             self.use_freesurfer_checkbox.setChecked(True)
+
+        if config.get_use_mrtrix():
+            self.use_mrtrix_checkbox.setChecked(True)
 
         # The 'Appearance' tab
         self.tab_appearance = QtWidgets.QWidget()
@@ -2732,6 +2768,7 @@ class PopUpPreferences(QDialog):
         self.use_afni_changed()
         self.use_ants_changed()
         self.use_freesurfer_changed()
+        self.use_mrtrix_changed()
 
         # Signals
         self.use_matlab_checkbox.stateChanged.connect(self.use_matlab_changed)
@@ -2745,6 +2782,7 @@ class PopUpPreferences(QDialog):
         self.use_fsl_checkbox.stateChanged.connect(self.use_fsl_changed)
         self.use_afni_checkbox.stateChanged.connect(self.use_afni_changed)
         self.use_ants_checkbox.stateChanged.connect(self.use_ants_changed)
+        self.use_mrtrix_checkbox.stateChanged.connect(self.use_mrtrix_changed)
         self.use_freesurfer_checkbox.stateChanged.connect(
             self.use_freesurfer_changed
         )
@@ -2775,6 +2813,15 @@ class PopUpPreferences(QDialog):
         )
         if fname:
             self.ants_choice.setText(fname)
+
+    def browse_mrtrix(self):
+        """Called when mrtrix browse button is clicked."""
+
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose mrtrix directory", os.path.expanduser("~")
+        )
+        if fname:
+            self.mrtrix_choice.setText(fname)
 
     def browse_freesurfer(self):
         """Called when freesurfer browse button is clicked."""
@@ -3076,6 +3123,7 @@ class PopUpPreferences(QDialog):
             "nipype",
             "afni",
             "ants",
+            "mrtrix",
             "somaworkflow",
         ]:
             engine.load_module(module)
@@ -3165,6 +3213,15 @@ class PopUpPreferences(QDialog):
             self.matlab_standalone_choice.setText(
                 config.get_matlab_standalone_path()
             )
+
+            # mrtrix
+            use_mrtrix = config.get_use_mrtrix()
+
+            if use_mrtrix:
+                self.mrtrix_choice.setText(config.get_mrtrix_path())
+
+            use_mrtrix = Qt.Qt.Checked if use_mrtrix else Qt.Qt.Unchecked
+            self.use_mrtrix_checkbox.setCheckState(use_mrtrix)
 
             # spm
             use_spm = config.get_use_spm()
@@ -3256,6 +3313,16 @@ class PopUpPreferences(QDialog):
 
             else:
                 config.set_use_matlab_standalone(False)
+
+            # Use mrtrix
+            mrtrix_dir = self.mrtrix_choice.text()
+            config.set_mrtrix_path(mrtrix_dir)
+
+            if self.use_mrtrix_checkbox.isChecked():
+                config.set_use_mrtrix(True)
+
+            else:
+                config.set_use_mrtrix(False)
 
             # Use SPM
             spm_input = self.spm_choice.text()
@@ -3504,6 +3571,44 @@ class PopUpPreferences(QDialog):
 
             else:
                 config.set_use_fsl(False)
+
+            # mrtrix config test
+            if self.use_mrtrix_checkbox.isChecked():
+                mrtrix_dir = self.mrtrix_choice.text()
+                mrtrix_cmd = "mrinfo"
+
+                if os.path.isdir(mrtrix_dir):
+                    mrtrix_cmd = os.path.join(mrtrix_dir, mrtrix_cmd)
+
+                else:
+                    self.wrong_path(mrtrix_dir, "mrtrix")
+                    QApplication.restoreOverrideCursor()
+                    return False
+
+                try:
+                    p = subprocess.Popen(
+                        [mrtrix_cmd, "-version"],
+                        stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                    )
+                    output, err = p.communicate()
+
+                    if err == b"":
+                        config.set_mrtrix_path(mrtrix_dir)
+                        config.set_use_mrtrix(True)
+
+                    else:
+                        self.wrong_path(mrtrix_dir, "mrtrix")
+                        QApplication.restoreOverrideCursor()
+                        return False
+
+                except Exception:
+                    self.wrong_path(mrtrix_dir, "mrtrix")
+                    QApplication.restoreOverrideCursor()
+                    return False
+            else:
+                config.set_use_mrtrix(False)
 
             # SPM & Matlab (license) config test
             matlab_input = self.matlab_choice.text()
@@ -4024,6 +4129,28 @@ class PopUpPreferences(QDialog):
                 except KeyError:
                     pass
 
+            # mrtrix CapsulConfig
+            if not config.get_use_mrtrix():
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configants = settings.config("mrtrix", "global")
+
+                    if configants:
+                        settings.remove_config(
+                            "mrtrix", "global", getattr(configants, cif)
+                        )
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c["engine"]["global"]["capsul.engine.module.mrtrix"][
+                        "mrtrix"
+                    ]["directory"]
+
+                except KeyError:
+                    pass
+
             # SPM standalone CapsulConfig
             if not config.get_use_spm_standalone():
                 try:
@@ -4402,6 +4529,17 @@ class PopUpPreferences(QDialog):
             self.matlab_standalone_label.setDisabled(False)
             self.matlab_standalone_browse.setDisabled(False)
             self.use_matlab_checkbox.setChecked(False)
+
+    def use_mrtrix_changed(self):
+        """Called when the use_mrtrix checkbox is changed."""
+
+        if not self.use_mrtrix_checkbox.isChecked():
+            self.mrtrix_choice.setDisabled(True)
+            self.mrtrix_label.setDisabled(True)
+
+        else:
+            self.mrtrix_choice.setDisabled(False)
+            self.mrtrix_label.setDisabled(False)
 
     def use_spm_changed(self):
         """Called when the use_spm checkbox is changed."""
