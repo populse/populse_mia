@@ -253,8 +253,11 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         project = getattr(study_config, "project", None)
 
         if project:
-            if hasattr(process, "use_project") and process.use_project:
-                process.project = project
+            # I think we don't need to check if use_project attribute is True (
+            # we need to define process.project in all case)
+            # if hasattr(process, "use_project") and process.use_project:
+            #    process.project = project
+            process.project = project
 
             # set output_directory
             out_dir = None
@@ -490,6 +493,57 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
             self.complete_parameters_mia(process_inputs)
             self.completion_progress = self.completion_progress_total
+
+            if (
+                not hasattr(in_process, "inheritance_dict")
+                or in_process.inheritance_dict == {}
+            ):
+                # The tags_inheritance() function has not been implemented in
+                # the brick, so we are using auto-inheritance.
+
+                # We're only importing PipelineManagerTab now, to avoid a
+                # circular import issue
+                # isort: off
+                # fmt: off
+                from populse_mia.user_interface.pipeline_manager. \
+                    pipeline_manager_tab import PipelineManagerTab
+                # isort: on
+                # fmt: on
+                auto_inheritance_dict = (
+                    PipelineManagerTab.update_auto_inheritance(in_process)
+                )
+                # auto_inheritance_dict (dict) object format:
+                # - if there is no ambiguity :
+                #    key: value of the output file (str)
+                #    value: value of the input file (str)
+                # - if ambiguous :
+                #    key: output plug value (string)
+                #    value: a dictionary: with key / value corresponding to
+                #           each possible input file
+                #           => key: name of the input plug
+                #              value: value of the input plug
+
+                if auto_inheritance_dict is None:
+                    # nothing to be done
+                    pass
+
+                else:
+                    if not hasattr(in_process, "project"):
+                        if hasattr(in_process, "get_study_config"):
+                            study_config = in_process.get_study_config()
+                            project = getattr(study_config, "project", None)
+
+                            if project is not None:
+                                in_process.project = project
+
+                    if hasattr(in_process, "project"):
+                        for out in auto_inheritance_dict:
+                            ProcessMIA.tags_inheritance(
+                                in_process,
+                                auto_inheritance_dict[out],
+                                out,
+                                node_name,
+                            )
 
             # we must keep a copy of inheritance dict, since it changes
             # at each iteration and is not included in workflow
@@ -951,8 +1005,10 @@ class ProcessMIA(Process):
         """Create tags for data
 
         :param in_file: a process input file name (the document identifier for
-                        a database collection) from which the tags are
-                        inherited.
+                        a database collection, a str, unambiguous case) from
+                        which the tags are inherited or a dictionary whose
+                        keys are a plug name and whose value is the
+                        corresponding process input file name (ambiguous case).
         :param out_file: a process output file name (the document_id for a
                          database collection) which will inherit tags.
         :param node_name: the name of the node.
@@ -1154,6 +1210,12 @@ class ProcessMIA(Process):
                         PopUpInheritanceDict
                     # isort: on
                     # fmt: on
+                    # FIXME: As we don't have access here to the
+                    #        pipeline_manager_tab object we pass False for the
+                    #        iterate argument PopUpInheritanceDict below. In
+                    #        case of iteration the user will not be informed
+                    #        that their choice in the pop-up window will be
+                    #        valid for the entire iteration
                     pop_up = PopUpInheritanceDict(
                         in_files,
                         node_name,
@@ -1163,7 +1225,7 @@ class ProcessMIA(Process):
                     pop_up.exec()
                     ProcessMIA.ignore_node = pop_up.everything
                     if pop_up.ignore:
-                        # self.inheritance_dict = None
+                        self.inheritance_dict = {}
                         if pop_up.all is True:
                             ProcessMIA.ignore[node_name] = True
                         else:
