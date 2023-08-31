@@ -2205,7 +2205,7 @@ class PipelineManagerTab(QWidget):
             if not init_result:
                 if init_messages:
                     message = (
-                        "The pipeline could not be initialized " "properly:\n"
+                        "The pipeline could not be initialized properly:\n"
                     )
 
                     for mssg in init_messages:
