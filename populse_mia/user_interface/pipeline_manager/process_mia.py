@@ -1040,8 +1040,12 @@ class ProcessMIA(Process):
         plug_name = None
 
         for i in self.user_traits():
-            if getattr(self, i, None) == out_file:
-                plug_name = i
+            try:
+                if out_file in getattr(self, i, "___nothing___"):
+                    plug_name = i
+
+            except Exception:
+                pass
 
         banished_tags = set(
             [

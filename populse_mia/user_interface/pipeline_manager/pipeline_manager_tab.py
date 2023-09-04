@@ -3215,7 +3215,9 @@ class PipelineManagerTab(QWidget):
                         # is using full paths.
                         values[key] = path
                         break
-                        # TODO what if several path values are valid ?
+                        # TODO: What if several path values are valid ?
+                        #       Currently we keep only the first element of
+                        #       the plug parameters
 
         if len(values) == 0:
             # zero inputs are registered in the database: we cannot
