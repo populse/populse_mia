@@ -1157,6 +1157,7 @@ class TableDataBrowser(QTableWidget):
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
 
+        self.setVisible(False)
         idx = 0
         for scan in rows:
             # Scan added only if it's not already in the table
@@ -1251,6 +1252,7 @@ class TableDataBrowser(QTableWidget):
         self.itemChanged.connect(self.change_cell_color)
 
         self.progress.close()
+        self.setVisible(True)
 
     def change_cell_color(self, item_origin):
         """Change the background color and the value of cells when edited by
@@ -1869,6 +1871,7 @@ class TableDataBrowser(QTableWidget):
         }
         tag_types = [tag_types[tag] for tag in tags]
 
+        self.setVisible(False)
         for scan in scans:
             for column, current_tag in enumerate(tags):
                 idx += 1
@@ -1965,6 +1968,7 @@ class TableDataBrowser(QTableWidget):
         self.resizeColumnsToContents()
 
         self.progress.close()
+        self.setVisible(True)
 
     def fill_headers(self, take_tags_to_update=False):
         """Initialize and fill the headers of the table.
