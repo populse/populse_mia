@@ -1093,6 +1093,8 @@ class ProcessMIA(Process):
                 # output is one of the inputs: we just add or remove tags
                 all_cvalues = {}
                 all_ivalues = {}
+                ivalues = {}
+                cvalues = {}
                 break
 
             cur_in_scan = self.project.session.get_document(
