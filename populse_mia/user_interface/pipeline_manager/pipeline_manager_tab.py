@@ -2640,8 +2640,6 @@ class PipelineManagerTab(QWidget):
         # Initialize the pipeline
         self.initialize()
         if self.test_init:
-            self.run_pipeline_action.setDisabled(True)
-            self.garbage_collect_action.setDisabled(True)
             # End - added on January, 4th 2020
             name = os.path.basename(
                 self.pipelineEditorTabs.get_current_filename()
@@ -2771,6 +2769,9 @@ class PipelineManagerTab(QWidget):
             mmovie.stop()
             mmovie.frameChanged.connect(self._set_anim_frame)
             mmovie.start()
+
+            self.run_pipeline_action.setDisabled(True)
+            self.garbage_collect_action.setDisabled(True)
 
             self.progress.worker.finished.connect(self.finish_execution)
             self.progress.start()
