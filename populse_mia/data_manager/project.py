@@ -83,6 +83,7 @@ HISTORY_BRICKS = "Bricks uuid"
 
 TYPE_BVEC = "Bvec"
 TYPE_BVAL = "Bval"
+TYPE_BVEC_BVAL = "Bvec_bval_MRTRIX"
 TYPE_NII = "Scan"
 TYPE_MAT = "Matrix"
 TYPE_TXT = "Text"

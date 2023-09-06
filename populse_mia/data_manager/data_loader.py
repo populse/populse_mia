@@ -70,6 +70,7 @@ from populse_mia.data_manager.project import (
     TAG_TYPE,
     TYPE_BVAL,
     TYPE_BVEC,
+    TYPE_BVEC_BVAL,
     TYPE_NII,
 )
 
@@ -407,14 +408,21 @@ class ImportWorker(QThread):
                 # Index bvec/ bval in the database if they exist
                 if dict_log["Bvec_bval"] == "yes":
                     file_name = dict_log["NameFile"]
+                    # bvec /bval FSL format
                     bvec_path = os.path.join(
                         raw_data_folder, file_name + ".bvec"
                     )
                     bval_path = os.path.join(
                         raw_data_folder, file_name + ".bval"
                     )
+                    # bvec / bval mrtrix format
+                    bvec_bval_mrtrix_path = os.path.join(
+                        raw_data_folder, file_name + "-bvecs-bvals-MRtrix.txt"
+                    )
 
-                    if os.path.exists(bvec_path) and os.path.exists(bval_path):
+                    if (
+                        os.path.exists(bvec_path) and os.path.exists(bval_path)
+                    ) or os.path.exists(bvec_bval_mrtrix_path):
                         # Add a tag to link bvec/bval and the nifti file
                         tag_name = "AssociatedNIfTIFile"
                         tag_type = FIELD_TYPE_STRING
@@ -456,7 +464,8 @@ class ImportWorker(QThread):
                             )
                             tags_names_added.append(tag_name)
 
-                        # Index BVEC in the database
+                    if os.path.exists(bvec_path) and os.path.exists(bval_path):
+                        # Index BVEC FSL format in the database
                         with open(bvec_path, "rb") as bvec_file:
                             original_md5_bvec = hashlib.md5(
                                 bvec_file.read()
@@ -521,7 +530,7 @@ class ImportWorker(QThread):
                             file_database_path
                         )
 
-                        # Index BVAL in the database
+                        # Index BVAL FSL format in the database
                         with open(bval_path, "rb") as bval_file:
                             original_md5_bval = hashlib.md5(
                                 bval_file.read()
@@ -583,6 +592,78 @@ class ImportWorker(QThread):
                         documents[bval_database_path][tag_name] = str(
                             file_database_path
                         )
+                    if os.path.exists(bvec_bval_mrtrix_path):
+                        # Index BVEC/BVAL MRTRIX format in the database
+                        with open(
+                            bvec_bval_mrtrix_path, "rb"
+                        ) as bval_bvec_file:
+                            original_md5_bvec_bval = hashlib.md5(
+                                bval_bvec_file.read()
+                            ).hexdigest()
+
+                        bvec_bval_mrtrix_database_path = os.path.relpath(
+                            bvec_bval_mrtrix_path, self.project.folder
+                        )
+
+                        document_not_existing = (
+                            self.project.session.get_document(
+                                COLLECTION_CURRENT,
+                                bvec_bval_mrtrix_database_path,
+                            )
+                            is None
+                        )
+
+                        if document_not_existing:
+                            with self.lock:
+                                # Scan added to history
+                                self.scans_added.append(
+                                    bvec_bval_mrtrix_database_path
+                                )
+                        documents[bvec_bval_mrtrix_database_path] = {}
+                        documents[bvec_bval_mrtrix_database_path][
+                            TAG_FILENAME
+                        ] = bvec_bval_mrtrix_database_path
+
+                        if document_not_existing:
+                            # Tags added manually
+                            # Value added to history
+                            values_added.append(
+                                [
+                                    bvec_bval_mrtrix_database_path,
+                                    TAG_CHECKSUM,
+                                    original_md5_bvec_bval,
+                                    original_md5_bvec_bval,
+                                ]
+                            )
+                            # Value added to history
+                            values_added.append(
+                                [
+                                    bvec_bval_mrtrix_database_path,
+                                    TAG_TYPE,
+                                    TYPE_BVEC_BVAL,
+                                    TYPE_BVEC_BVAL,
+                                ]
+                            )
+
+                            # Value added to history
+                            values_added.append(
+                                [
+                                    bvec_bval_mrtrix_database_path,
+                                    tag_name,
+                                    file_database_path,
+                                    file_database_path,
+                                ]
+                            )
+
+                        documents[bvec_bval_mrtrix_database_path][
+                            TAG_CHECKSUM
+                        ] = original_md5_bvec_bval
+                        documents[bvec_bval_mrtrix_database_path][
+                            TAG_TYPE
+                        ] = TYPE_BVEC_BVAL
+                        documents[bvec_bval_mrtrix_database_path][
+                            tag_name
+                        ] = str(file_database_path)
 
         # Missing values added thanks to default values
         for tag in self.project.session.get_fields(COLLECTION_CURRENT):
