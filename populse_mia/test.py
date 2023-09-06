@@ -4439,7 +4439,11 @@ class TestMIAMainWindow(TestMIACase):
 
         # Creates the 'logExport*.json' file, in the raw data folder
         JSON_EXPORT_DUMP = [
-            {"StatusExport": "Export ok", "NameFile": DOCUMENT_1_NAME}
+            {
+                "StatusExport": "Export ok",
+                "NameFile": DOCUMENT_1_NAME,
+                "Bvec_bval": "no",
+            }
         ]
         JSON_EXPORT = os.path.join(
             test_proj_path, "data", "raw_data", "logExportMock.json"
