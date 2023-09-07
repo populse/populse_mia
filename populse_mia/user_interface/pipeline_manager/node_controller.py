@@ -1611,7 +1611,7 @@ class NodeController(QWidget):
                 }
             pipeline.nodes[node_name].set_plug_value(plug_name, new_value)
 
-        except TraitError as err:
+        except (TraitError, OSError) as err:
             msg = QMessageBox()
             msg.setText("{}".format(err))
             msg.setIcon(QMessageBox.Warning)
