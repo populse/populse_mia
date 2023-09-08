@@ -1,25 +1,21 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Populse_MIA’s pipeline processes &#8212; populse_mia 2.4.1-dev+28702685 documentation</title>
-    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
-    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
-    <script >mermaid.initialize({startOnLoad:true});</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Populse_MIA’s pipeline processes &#8212; populse_mia 2.4.1-dev+e9277d40 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=e491ac2d" />
+    <script src="../_static/documentation_options.js?v=4fd999eb"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.4.1-dev+28702685 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+e9277d40 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_MIA’s pipeline processes</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -33,12 +29,6 @@
         
         
   <table class="docutils align-default">
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 24%" />
-<col style="width: 31%" />
-<col style="width: 31%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
 <td><p><a class="reference external" href="./documentation.html">Documentation</a></p></td>
@@ -47,12 +37,12 @@
 </tr>
 </tbody>
 </table>
-<div class="section" id="populse-mia-s-pipeline-processes">
-<h1>Populse_MIA’s pipeline processes<a class="headerlink" href="#populse-mia-s-pipeline-processes" title="Permalink to this headline">¶</a></h1>
+<section id="populse-mia-s-pipeline-processes">
+<h1>Populse_MIA’s pipeline processes<a class="headerlink" href="#populse-mia-s-pipeline-processes" title="Link to this heading">¶</a></h1>
 <p>This page explains how to create a process that can be used in Populse_MIA’s Pipeline Manager and how to install it to Populse_MIA.</p>
 <p>Populse_MIA uses <a class="reference external" href="http://brainvisa.info/capsul/index.html">Capsul</a> to handle Pipeline processing. During Populse_MIA installation, Nipype’s interfaces are stored in the package library and are directly available in the Process Library. However, any user can import its own processes in Populse_MIA following these next steps:</p>
-<div class="section" id="creating-a-mia-process">
-<h2>Creating a MIA process<a class="headerlink" href="#creating-a-mia-process" title="Permalink to this headline">¶</a></h2>
+<section id="creating-a-mia-process">
+<h2>Creating a MIA process<a class="headerlink" href="#creating-a-mia-process" title="Link to this heading">¶</a></h2>
 <p>MIA processes are Capsul processes made specific for Populse_MIA. They need at least three methods to work properly: __init__, list_outputs and _run_process.</p>
 <blockquote>
 <div><ul class="simple">
@@ -192,19 +182,19 @@
             <span class="k">return</span> <span class="p">{}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="creating-a-python-package-containing-the-process">
-<h2>Creating a Python package containing the process<a class="headerlink" href="#creating-a-python-package-containing-the-process" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="creating-a-python-package-containing-the-process">
+<h2>Creating a Python package containing the process<a class="headerlink" href="#creating-a-python-package-containing-the-process" title="Link to this heading">¶</a></h2>
 <p>Make sure that the file containing the Smooth class is contained in a Python package and add this to the __init__.py file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.name_of_file</span> <span class="kn">import</span> <span class="n">SmoothSpmScipy</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="installing-the-package-in-populse-mia">
-<h2>Installing the package in Populse_MIA<a class="headerlink" href="#installing-the-package-in-populse-mia" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="installing-the-package-in-populse-mia">
+<h2>Installing the package in Populse_MIA<a class="headerlink" href="#installing-the-package-in-populse-mia" title="Link to this heading">¶</a></h2>
 <p>In the software menu bar, go to More &gt; Install processes &gt; From folder and browse to the package. Click on “Install package”. The package is now stored in the process library and the Smooth process can be used to create pipelines.</p>
-</div>
-</div>
+</section>
+</section>
 
 
       </div>
@@ -217,8 +207,8 @@
       </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     </div>
   </body>
 </html>
