@@ -494,6 +494,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             self.complete_parameters_mia(process_inputs)
             self.completion_progress = self.completion_progress_total
 
+            if getattr(in_process, "init_result", None) is False:
+                return
+
             if (
                 not hasattr(in_process, "inheritance_dict")
                 or in_process.inheritance_dict == {}
@@ -598,6 +601,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         else:
             is_plugged = None  # we cannot get this info
 
+        process.init_result = None
+
         try:
             # set inheritance dict to the node
             initResult_dict = process.list_outputs(is_plugged=is_plugged)
@@ -609,11 +614,13 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             initResult_dict = {}
 
         if not initResult_dict:
+            process.init_result = False
             return  # the process is not really configured
 
         outputs = initResult_dict.get("outputs", {})
 
         if not outputs:
+            process.init_result = False
             return  # the process is not really configured
 
         for parameter, value in outputs.items():
@@ -819,6 +826,7 @@ class ProcessMIA(Process):
         self.requirement = None
         self.outputs = {}
         self.inheritance_dict = {}
+        self.init_result = None
 
     def _after_run_process(self, run_process_result):
         """Try to recover the output values."""
