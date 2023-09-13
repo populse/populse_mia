@@ -2080,14 +2080,19 @@ class PipelineManagerTab(QWidget):
                         for (trait_name, trait) in six.iteritems(
                             node.traits(output=True)
                         )
-                        if trait_name != "spm_script_file"
+                        if trait_name
+                        not in ("spm_script_file", "_spm_script_file")
                     ]
 
-                    # If none of the outputs have a value, there is issue
+                    # If none of the outputs have a value, there is a problem.
+                    # Checked only for ProcessMIA bricks because it seems that
+                    # for some nipype processes the output parameters are only
+                    # generated at runtime (for example:
+                    # nipype.interfaces.utility.base.Rename).
                     if not any(
                         output_name in job.param_dict
                         for output_name in output_names
-                    ):
+                    ) and isinstance(node, ProcessMIA):
                         init_result = False
                         missing_all_out_param.append(node_name)
 
