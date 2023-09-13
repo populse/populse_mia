@@ -1690,6 +1690,37 @@ class PipelineManagerTab(QWidget):
 
             init_messages.append(mssg)
 
+        if getattr(self.workflow, "jobs", []) == []:
+            init_result = False
+            self.msg = QMessageBox()
+            self.msg.setWindowTitle("Pipeline initialization warning!")
+            self.msg.setText(
+                "No bricks were detected when the workflow was "
+                "generated!\nPlease check that the pipeline has "
+                "been correctly built and configured (have all "
+                "the necessary plugs been exported?, etc.)"
+            )
+            self.msg.setIcon(QMessageBox.Critical)
+            yes_button = self.msg.addButton(
+                "Open MIA preferences", QMessageBox.YesRole
+            )
+            self.msg.addButton(QMessageBox.Ok)
+            self.msg.exec()
+
+            if self.msg.clickedButton() == yes_button:
+                self.main_window.software_preferences_pop_up()
+                # fmt: off
+                (
+                    self.main_window.pop_up_preferences.
+                    tab_widget.setCurrentIndex
+                )(1)
+                # fmt: on
+
+            self.main_window.statusBar().showMessage(
+                'Pipeline "{0}" was not initialised successfully.'.format(name)
+            )
+            return init_result
+
         if self.workflow is not None:
             # retrieve node list
             self.update_node_list(brick=pipeline)
@@ -1704,8 +1735,8 @@ class PipelineManagerTab(QWidget):
 
         if len(missing_mandat_param) != 0:
             mssg = (
-                "Missing mandatory parameters in pipeline {0}:\n  "
-                "{1}\n".format(name, "\n  ".join(missing_mandat_param))
+                "Missing mandatory parameters in pipeline {0}:\n    - "
+                "{1}\n".format(name, "\n    - ".join(missing_mandat_param))
             )
             init_messages.append(mssg)
             init_result = False
@@ -1720,7 +1751,7 @@ class PipelineManagerTab(QWidget):
             print(study_config.engine.settings.export_config_dict("global"))
             init_result = False
             req_messages = [
-                "Please see the standard output for more " "information.\n"
+                "Please see the standard output for more information.\n"
             ]
 
         else:
@@ -2016,55 +2047,88 @@ class PipelineManagerTab(QWidget):
         if len(req_messages) != 0:
             mssg = (
                 "The pipeline requirements are not met for pipeline {0}:\n"
-                "  {1}\n".format(name, "\n  ".join(req_messages))
+                "    - {1}\n".format(name, "\n    - ".join(req_messages))
             )
             init_messages.append(mssg)
 
         # Check that completion for output parameters is fine (for each job)
+        missing_mandat_out_param = []
+        missing_all_out_param = []
+
         if self.workflow is not None:
-            missing_out_param = []
             for job in self.workflow.jobs:
                 if hasattr(job, "process"):
                     node = job.process()
-                    output_names = []
-                    for trait_name, trait in six.iteritems(
-                        node.traits(output=True, optional=False)
-                    ):
-                        output_names.append(trait_name)
 
+                    if (
+                        getattr(node, "context_name", node.name).split(".")[0]
+                        == "Pipeline"
+                    ):
+                        node_name = ".".join(
+                            getattr(node, "context_name", node.name).split(
+                                "."
+                            )[1:]
+                        )
+
+                    else:
+                        node_name = getattr(node, "context_name", node.name)
+
+                    # All output plugs (except spm_script_file),
+                    # optional or not:
+                    output_names = [
+                        trait_name
+                        for (trait_name, trait) in six.iteritems(
+                            node.traits(output=True)
+                        )
+                        if trait_name != "spm_script_file"
+                    ]
+
+                    # If none of the outputs have a value, there is issue
+                    if not any(
+                        output_name in job.param_dict
+                        for output_name in output_names
+                    ):
+                        init_result = False
+                        missing_all_out_param.append(node_name)
+
+                    # All output plugs (except spm_script_file), not optional
+                    output_names = [
+                        trait_name
+                        for trait_name in output_names
+                        if not node.trait(trait_name).optional
+                    ]
+
+                    # If a non-optional output has no value, there's issue
                     if not all(
                         output_name in job.param_dict
                         for output_name in output_names
                     ):
                         init_result = False
+                        missing_mandat_out_param.append(node_name)
 
-                        if (
-                            getattr(node, "context_name", node.name).split(
-                                "."
-                            )[0]
-                            == "Pipeline"
-                        ):
-                            node_name = ".".join(
-                                getattr(node, "context_name", node.name).split(
-                                    "."
-                                )[1:]
-                            )
+                    if getattr(node, "init_result", None) is False:
+                        init_result = False
+                        init_messages.append(
+                            "An issue has been detected when initializing the "
+                            "{0} brick in the {1} pipeline.\n"
+                            "  The pipeline cannot be launched under these "
+                            "conditions...\n".format(node_name, name)
+                        )
 
-                        else:
-                            node_name = getattr(
-                                node, "context_name", node.name
-                            )
-
-                        missing_out_param.append(node_name)
-
-        else:
-            missing_out_param = []
-
-        if len(missing_out_param) != 0:
+        if len(missing_mandat_out_param) != 0:
             mssg = (
                 "Missing mandatory output parameter(s) for the "
-                "following brick(s) in the {0} pipeline:\n  "
-                "{1}\n".format(name, "\n  ".join(missing_out_param))
+                "following brick(s) in the {0} pipeline:\n    - "
+                "{1}\n".format(name, "\n    - ".join(missing_mandat_out_param))
+            )
+            init_messages.append(mssg)
+
+        if len(missing_all_out_param) != 0:
+            mssg = (
+                "None of the output parameters have been completed for the "
+                "following brick(s) in the {0} pipeline. Please check the "
+                "configuration and input parameters for these bricks:\n    - "
+                "{1}\n".format(name, "\n    - ".join(missing_all_out_param))
             )
             init_messages.append(mssg)
 
