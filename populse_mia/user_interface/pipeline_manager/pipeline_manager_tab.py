@@ -1696,9 +1696,10 @@ class PipelineManagerTab(QWidget):
             self.msg.setWindowTitle("Pipeline initialization warning!")
             self.msg.setText(
                 "No bricks were detected when the workflow was "
-                "generated!\nPlease check that the pipeline has "
-                "been correctly built and configured (have all "
-                "the necessary plugs been exported?, etc.)"
+                "generated...!\nPlease check that the pipeline has "
+                "been correctly built and configured (have all the necessary "
+                "plugs been exported? have all the input parameters been "
+                "set?, etc.)"
             )
             self.msg.setIcon(QMessageBox.Critical)
             yes_button = self.msg.addButton(
