@@ -25,6 +25,7 @@ import datetime
 import functools
 import io
 import json
+import math
 import os
 import sys
 import threading
@@ -1636,7 +1637,8 @@ class PipelineManagerTab(QWidget):
         :param pipeline_name: name of the parent pipeline
         """
 
-        print("- Pipeline initialising ...\n")
+        print("\n- Pipeline initializing ...")
+        print("  *********************\n")
         t0 = time.time()
         QApplication.processEvents()
         # If the initialisation is launch for the main pipeline
@@ -1674,7 +1676,7 @@ class PipelineManagerTab(QWidget):
             self.workflow = workflow_from_pipeline(
                 pipeline, check_requirements=False, complete_parameters=True
             )
-            print("\nWorkflow done!\n")
+            print("\nWorkflow done!")
 
         except Exception as e:
             init_result = False
@@ -1692,6 +1694,18 @@ class PipelineManagerTab(QWidget):
 
         if getattr(self.workflow, "jobs", []) == []:
             init_result = False
+            print(
+                '\nPipeline "{0}" was not successfully initialised.'.format(
+                    name
+                )
+            )
+            deci, inte = math.modf(time.time() - t0)
+            print(
+                "Initialisation phase completed in {}s!".format(
+                    inte
+                    + round(deci, -int(math.floor(math.log10(abs(deci)))) + 1)
+                )
+            )
             self.msg = QMessageBox()
             self.msg.setWindowTitle("Pipeline initialization warning!")
             self.msg.setText(
@@ -2241,7 +2255,6 @@ class PipelineManagerTab(QWidget):
             )
 
         self.register_completion_attributes(pipeline)
-        print("init time:", time.time() - t0)
         self.project.saveModifications()
 
         # Updating the node controller
@@ -2273,6 +2286,8 @@ class PipelineManagerTab(QWidget):
             )
 
             if not init_result:
+                deci, inte = math.modf(time.time() - t0)
+
                 if init_messages:
                     message = (
                         "The pipeline could not be initialized properly:\n"
@@ -2333,6 +2348,10 @@ class PipelineManagerTab(QWidget):
                         name
                     )
                 )
+                print(
+                    '\nPipeline "{0}" was not successfully '
+                    "initialised.".format(name)
+                )
 
             else:
                 for i in range(0, len(self.pipelineEditorTabs) - 1):
@@ -2342,9 +2361,24 @@ class PipelineManagerTab(QWidget):
                 self.pipelineEditorTabs.get_current_editor().initialized = True
 
                 self.main_window.statusBar().showMessage(
-                    'Pipeline "{0}" has been initialised.'.format(name)
+                    'Pipeline "{0}" has been successfully initialised.'.format(
+                        name
+                    )
                 )
+                print(
+                    '\nPipeline "{0}" has been successfully '
+                    "initialised.".format(name)
+                )
+                deci, inte = math.modf(time.time() - t0)
 
+        # FIXME: I don't understand when main_pipeline can be False. If it is,
+        #        we'll get an exception because "inte" and "deci" won't be
+        #        defined (done in the "if not init_result:" above!).
+        print(
+            "Initialisation phase completed in {}s!".format(
+                inte + round(deci, -int(math.floor(math.log10(abs(deci)))) + 1)
+            )
+        )
         return init_result
 
     def layout_view(self):
@@ -3788,7 +3822,8 @@ class RunWorker(QThread):
                 print("*** INTERRUPT ***")
                 return
 
-        print("- Pipeline running ...\n")
+        print("\n- Pipeline running ...")
+        print("  ****************\n")
 
         workflow = self.pipeline_manager.workflow
         # if we are running with file transfers / translations, then we must
