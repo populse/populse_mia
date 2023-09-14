@@ -268,9 +268,10 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
             else:
                 print(
-                    "populse_mia.user_interface.pipeline_manager."
+                    "\npopulse_mia.user_interface.pipeline_manager."
                     "MiaProcessCompletionEngine.complete_nipype_common:"
-                    "\n - The output_directory trait does not exist!)"
+                    "\n - The output_directory trait does not exist for the "
+                    "{} process!)".format(process.context_name)
                 )
 
             if output_dir is True and out_dir is not None:
