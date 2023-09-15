@@ -101,9 +101,9 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
 Installation of `AFNI <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html>`_
 -----------------------------------------------------------------------------------
 
-  * Follow the `quick setup <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup>`_ of the AFNI's team.
+  * For Ubuntu, follow the `quick setup <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup>`_ of the AFNI's team. For Fedora 37, select the ``Linux, Fedora`` chapter in the table of contents on the left.
 
-  * It will download all AFNI in your home. If you want you can move AFNI folders (abin, AFNI_data5, AFNI_data6, AFNI_demos, afni_handouts, CD, std_leshes, suma_demo, .afni) in an other folder (for e.g ``/path/to/folder/afni``). In this case, change the afni paths set in your bashrc.
+  * By default, all data will be installed in $HOME. $HOME/abin can then be moved to a directory dedicated to AFNI (e.g. /data/softs/AFNI). The rest of the data installed in $HOME can be deleted if AFNI is to be used only in Mia.
 
 Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 -------------------------------------------------------

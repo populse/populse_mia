@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 2.4.1-dev+e9277d40 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 2.4.1-dev+0cb559c2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=e491ac2d" />
-    <script src="../../../../_static/documentation_options.js?v=4fd999eb"></script>
+    <script src="../../../../_static/documentation_options.js?v=9f8a27df"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.4.1-dev+e9277d40 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+0cb559c2 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -310,9 +310,10 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;populse_mia.user_interface.pipeline_manager.&quot;</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">populse_mia.user_interface.pipeline_manager.&quot;</span>
                     <span class="s2">&quot;MiaProcessCompletionEngine.complete_nipype_common:&quot;</span>
-                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> - The output_directory trait does not exist!)&quot;</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> - The output_directory trait does not exist for the &quot;</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> process!)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">context_name</span><span class="p">)</span>
                 <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -539,6 +540,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">complete_parameters_mia</span><span class="p">(</span><span class="n">process_inputs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span>
 
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="s2">&quot;init_result&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">return</span>
+
             <span class="k">if</span> <span class="p">(</span>
                 <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">in_process</span><span class="p">,</span> <span class="s2">&quot;inheritance_dict&quot;</span><span class="p">)</span>
                 <span class="ow">or</span> <span class="n">in_process</span><span class="o">.</span><span class="n">inheritance_dict</span> <span class="o">==</span> <span class="p">{}</span>
@@ -646,6 +650,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">is_plugged</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># we cannot get this info</span>
 
+        <span class="n">process</span><span class="o">.</span><span class="n">init_result</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># set inheritance dict to the node</span>
             <span class="n">initResult_dict</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">(</span><span class="n">is_plugged</span><span class="o">=</span><span class="n">is_plugged</span><span class="p">)</span>
@@ -657,11 +663,13 @@
             <span class="n">initResult_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">initResult_dict</span><span class="p">:</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">return</span>  <span class="c1"># the process is not really configured</span>
 
         <span class="n">outputs</span> <span class="o">=</span> <span class="n">initResult_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;outputs&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">outputs</span><span class="p">:</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">return</span>  <span class="c1"># the process is not really configured</span>
 
         <span class="k">for</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -893,7 +901,8 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">ProcessMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span> <span class="o">=</span> <span class="p">{}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_result</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
     <span class="k">def</span> <span class="nf">_after_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_process_result</span><span class="p">):</span>
