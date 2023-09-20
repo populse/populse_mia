@@ -108,11 +108,15 @@ Installation of `AFNI <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html
 Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 -------------------------------------------------------
 
-  You can install ANTs via pre-built releases :
+  * We strongly recommend installing ANTS via release binaries, available for macos and linux (ubuntu, centos - fedora) from ANTs 2.4.1, and Windows from 2.4.4. For this, `download pre-built releases <https://github.com/ANTsX/ANTs/releases>`_ (select the desired file in the ``Assets`` section, e.g. ants-2.4.1-centos7-X64-gcc.zip) then unzip it. `Some notes <https://github.com/ANTsX/ANTs/wiki/Installing-ANTs-release-binaries>`_ on this subject are available.
 
-  * Dowloand pre-built releases `here <https://github.com/ANTsX/ANTs/tags>`_ and unzip it. Please note that if you want to use mriqc pipeline on populse_mia you need to choose ``v2.3.4``.
+  * ANTs since 2.4.4 is also available `via Conda <https://anaconda.org/aramislab/ants>`_.
 
-  * populse_mia do not need environment variables, however if you want to test ANTs outside populse_mia you need to add ANTs path in your .bashr.
+  * The final solution for installing ANTs is to build it from source (e.g. for release < 2.4.1 `for linux and macos <https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS>`_ and release < 2.4.4 `for windows <https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Windows-10>`_).
+
+  * Please note that to use the mriqc pipeline on Mia, version ``v2.3.4`` is recommended.
+
+  * Mia doesn't need environment variables, but to test ANTs outside Mia, ANTs path have to be added to the ~/.bashrc file.
 
 Installation of `freesurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 -------------------------------------------------------------------
