@@ -1148,7 +1148,8 @@ class ProcessMIA(Process):
                         self.context_name, in_file, out_file
                     )
                 )
-
+                ivalues = {}
+                cvalues = {}
         # If there are several possible inputs: there is more work
         if (
             not ProcessMIA.ignore_node
