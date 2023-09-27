@@ -24,7 +24,7 @@ Installation on Linux
 
  * If populse_mia is installed in a container using `brainvisa Singulary image <./virtualisation_user_installation.html>`_, it is generally not necessary to be in the container to install third-party software (in fact, this will depend on the operating system in the container and the host).
 
-Installation of `FSL v6.0.6.4 <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
+Installation of `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
 -------------------------------------------------------------------------
 
  * Download `fslinstaller.py <https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/>`_ (with Fedora 37, choose Linux - Centos 8) then launch the installer: ::
@@ -119,7 +119,13 @@ Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 Installation of `freesurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 -------------------------------------------------------------------
 
-  * Follow the installation instruction `here <https://surfer.nmr.mgh.harvard.edu/fswiki//FS7_linux>`_. For Ubuntu systeme it is easier to use the tar archive. For Fedora, centos8 tar archive works fine
+  * Go to the `FreeSurfer Download and Install <https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_ page.
+
+  * Choose the version to install (we strongly recommend installing the latest version), for example at the time of writing, `version 7.x <https://surfer.nmr.mgh.harvard.edu/fswiki/rel7downloads>`_.
+
+  * Select the packages or tarballs you wish to download to proceed with the installation. `Some notes <https://surfer.nmr.mgh.harvard.edu/fswiki/FS7_linux>`_ on this subject are available.
+
+  * For Fedora 37, centos8 tar archive works fine.
 
   * Get the freesurfer License `here <https://surfer.nmr.mgh.harvard.edu/registration.html>`_. Copy the license received in the freesurfer folder.
 
