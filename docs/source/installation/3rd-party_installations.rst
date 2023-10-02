@@ -11,7 +11,7 @@ Populse_mia's third-party softwares installations
 =================================================
 
 To use bricks and pipelines from `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_ in populse_mia, it is necessary to install softwares as FSL, SPM, Freesurfer, ANTs...
-The softwares paths should be configure in Mia preferences.
+The softwares paths should be configure in `Mia preferences <../documentation/preferences.html>`_.
 
 
 
@@ -20,12 +20,43 @@ Installation on Linux
 
  * These installation notes are based on Ubuntu 22.04.02 (and Fedora 37) which use Python3 as default (when ``python`` is typed into a command line).
 
- * ``path/to/softs`` is the destination folder where the softwares will be installed, i.e.: ``/opt``, ``/home/APPS`` or other.
+ * ``/path/to/softs`` is the destination folder where the softwares will be installed, i.e.: ``/opt``, ``/home/APPS`` or other.
 
  * If populse_mia is installed in a container using `brainvisa Singulary image <./virtualisation_user_installation.html>`_, it is generally not necessary to be in the container to install third-party software (in fact, this will depend on the operating system in the container and the host).
 
+ * Populse_mia do not need environment variables, however to test installed third-party softwares outside populse_mia, the following lines must be included in the user's ``.bashrc`` file (we recommend not to use these environment variables when using populse_mia by commenting the corresponding lines in the ~\.bashrc file): ::
+
+    # FSL setup
+    # FSL configuration is done in /home/user/.bash_profile and /home/user/Documents/MATLAB/startup.m
+    export PATH="$PATH:/path/to/softs/fsl_you_have_installed/bin"
+    export FSLOUTPUTTYPE=NIFTI
+    export FSLDIR=/path/to/softs/fsl_you_have_installed
+
+    # AFNI setup
+    ## auto-inserted by @update.afni.binaries:
+    export PATH=$PATH:/path/to/softs/AFNI_you_have_installed/abin
+    ## auto-inserted by @update.afni.binaries :
+    ##    set up tab completion for AFNI programs
+    if [ -f $HOME/.afni/help/all_progs.COMP.bash ]
+    then
+       source $HOME/.afni/help/all_progs.COMP.bash
+    fi
+    export R_LIBS=/path/to/softs/AFNI_you_have_installed/R
+
+    # ANTS setup
+    export ANTSPATH=/path/to/softs/ANTS_you_have_installed
+    export PATH="$ANTSPATH:$PATH"
+    # The following three lines should not be commented on, in order to obtain perfectly reproducible results with ANTS (as with the MRIQC pipeline, for example).
+    export ANTS_RANDOM_SEED=1
+    export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+    export OMP_NUM_THREADS=1
+
+    # Freesurfer setup
+    export FREESURFER_HOME=/path/to/softs/FreeSurfer_you_have_installed
+    source $FREESURFER_HOME/SetUpFreeSurfer.csh>/dev/null
+
 Installation of `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
--------------------------------------------------------------------------
+----------------------------------------------------------------
 
  * Download `fslinstaller.py <https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/>`_ (with Fedora 37, choose Linux - Centos 8) then launch the installer: ::
 
@@ -35,18 +66,11 @@ Installation of `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
 
     FSL installation directory [/home/username/fsl]: /path/to/softs/fsl-6.0.6.4/
 
- * populse_mia do not need environment variables, however to test FSL outside populse_mia, the following lines must be included in the user's ``.bashrc`` file (it seems that some versions of the installer automatically add the FSL configuration to ~/.bash_profile): ::
-
-     FSLDIR=/pathto/softs/FSL/6.04
-     PATH=${FSLDIR}/bin:${PATH}
-     export FSLDIR PATH
-     . ${FSLDIR}/etc/fslconf/fsl.sh
-
-   ``fsl.sh`` defines other environment variables for FSL like ``FSLOUTPUTTYPE=NIFTI-GZ``
+ * It seems that some versions of the installer automatically add the FSL configuration to ~/.bash_profile). We recommend not to use these environment variables when using populse_mia (comment out the corresponding lines in the  ~/.bash_profile)
 
  * Test FSL on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
 
-     flirt -version
+     /path/to/softs/fsl-6.0.6.4/flirt -version
 
 Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ Standalone and Matlab Runtime
 -----------------------------------------------------------------------------------------------------------
@@ -94,7 +118,7 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
 
  * Check installation by exectuting SPM12, the second path being the path to the Matlab Runtime: ::
 
-         /path/to/spm_standalone/spm12/run_spm12.sh /path/to/MATLAB_Runtime/v97
+         /path/to/spm_standalone/spm12/run_spm12.sh /path/to/MATLAB_Runtime/v97 eval "ver"
 
  * Check this `manual <https://en.wikibooks.org/wiki/SPM/Standalone>`_ in case of problems during installation.
 
@@ -105,6 +129,10 @@ Installation of `AFNI <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html
 
   * By default, all data will be installed in $HOME. $HOME/abin can then be moved to a directory dedicated to AFNI (e.g. /data/softs/AFNI). The rest of the data installed in $HOME can be deleted if AFNI is to be used only in Mia.
 
+  * Test AFNI on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
+
+      /path/to/softs/AFNI_you_have_installed/abin/2dImReg -help
+
 Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 -------------------------------------------------------
 
@@ -114,9 +142,11 @@ Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 
   * The final solution for installing ANTs is to build it from source (e.g. for release < ``v2.4.1`` `for linux and macos <https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS>`_ and release < ``v2.4.4`` `for windows <https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Windows-10>`_).
 
-  * Mia doesn't need environment variables, but to test ANTs outside Mia, ANTs path have to be added to the ~/.bashrc file.
+  *  Test ANTs on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
 
-Installation of `freesurfer <https://surfer.nmr.mgh.harvard.edu/>`_
+        /path/to/softs/ANTs_you_have_installed/bin/antsRegistration --version
+
+Installation of `FreeSurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 -------------------------------------------------------------------
 
   * Go to the `FreeSurfer Download and Install <https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_ page.
@@ -129,7 +159,9 @@ Installation of `freesurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 
   * Get the freesurfer License `here <https://surfer.nmr.mgh.harvard.edu/registration.html>`_. Copy the license received in the freesurfer folder.
 
-  * populse_mia do not need environment variables, however if you want to testfFreesurfer outside populse_mia you need to add freesurfer path in your .bashr.
+  * Test FreeSurfer on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
+
+       /path/to/softs/FreeSurfer_you_have_installed/bin/mris_register --version
 
 
 
