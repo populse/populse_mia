@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Populse_mia’s third-party softwares installations &#8212; populse_mia 2.4.1-dev+fd7a1b9c documentation</title>
+    <title>Populse_mia’s third-party softwares installations &#8212; populse_mia 2.4.1-dev+209f4183 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=e491ac2d" />
-    <script src="../_static/documentation_options.js?v=45140603"></script>
+    <script src="../_static/documentation_options.js?v=7c319be0"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.4.1-dev+fd7a1b9c documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+209f4183 documentation</span></a></h1>
         <h2 class="heading"><span>Populse_mia’s third-party softwares installations</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -40,15 +40,47 @@
 <section id="populse-mia-s-third-party-softwares-installations">
 <h1>Populse_mia’s third-party softwares installations<a class="headerlink" href="#populse-mia-s-third-party-softwares-installations" title="Link to this heading">¶</a></h1>
 <p>To use bricks and pipelines from <a class="reference external" href="https://populse.github.io/mia_processes/html/index.html">mia_processes</a> in populse_mia, it is necessary to install softwares as FSL, SPM, Freesurfer, ANTs…
-The softwares paths should be configure in Mia preferences.</p>
+The softwares paths should be configure in <a class="reference external" href="../documentation/preferences.html">Mia preferences</a>.</p>
 </section>
 <section id="installation-on-linux">
 <h1>Installation on Linux<a class="headerlink" href="#installation-on-linux" title="Link to this heading">¶</a></h1>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p>These installation notes are based on Ubuntu 22.04.02 (and Fedora 37) which use Python3 as default (when <code class="docutils literal notranslate"><span class="pre">python</span></code> is typed into a command line).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">path/to/softs</span></code> is the destination folder where the softwares will be installed, i.e.: <code class="docutils literal notranslate"><span class="pre">/opt</span></code>, <code class="docutils literal notranslate"><span class="pre">/home/APPS</span></code> or other.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/path/to/softs</span></code> is the destination folder where the softwares will be installed, i.e.: <code class="docutils literal notranslate"><span class="pre">/opt</span></code>, <code class="docutils literal notranslate"><span class="pre">/home/APPS</span></code> or other.</p></li>
 <li><p>If populse_mia is installed in a container using <a class="reference external" href="./virtualisation_user_installation.html">brainvisa Singulary image</a>, it is generally not necessary to be in the container to install third-party software (in fact, this will depend on the operating system in the container and the host).</p></li>
+<li><p>Populse_mia do not need environment variables, however to test installed third-party softwares outside populse_mia, the following lines must be included in the user’s <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> file (we recommend not to use these environment variables when using populse_mia by commenting the corresponding lines in the ~.bashrc file):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># FSL setup
+# FSL configuration is done in /home/user/.bash_profile and /home/user/Documents/MATLAB/startup.m
+export PATH=&quot;$PATH:/path/to/softs/fsl_you_have_installed/bin&quot;
+export FSLOUTPUTTYPE=NIFTI
+export FSLDIR=/path/to/softs/fsl_you_have_installed
+
+# AFNI setup
+## auto-inserted by @update.afni.binaries:
+export PATH=$PATH:/path/to/softs/AFNI_you_have_installed/abin
+## auto-inserted by @update.afni.binaries :
+##    set up tab completion for AFNI programs
+if [ -f $HOME/.afni/help/all_progs.COMP.bash ]
+then
+   source $HOME/.afni/help/all_progs.COMP.bash
+fi
+export R_LIBS=/path/to/softs/AFNI_you_have_installed/R
+
+# ANTS setup
+export ANTSPATH=/path/to/softs/ANTS_you_have_installed
+export PATH=&quot;$ANTSPATH:$PATH&quot;
+# The following three lines should not be commented on, in order to obtain perfectly reproducible results with ANTS (as with the MRIQC pipeline, for example).
+export ANTS_RANDOM_SEED=1
+export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+export OMP_NUM_THREADS=1
+
+# Freesurfer setup
+export FREESURFER_HOME=/path/to/softs/FreeSurfer_you_have_installed
+source $FREESURFER_HOME/SetUpFreeSurfer.csh&gt;/dev/null
+</pre></div>
+</div>
+</li>
 </ul>
 </div></blockquote>
 <section id="installation-of-fsl">
@@ -65,17 +97,9 @@ The softwares paths should be configure in Mia preferences.</p>
 </pre></div>
 </div>
 </li>
-<li><p>populse_mia do not need environment variables, however to test FSL outside populse_mia, the following lines must be included in the user’s <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> file (it seems that some versions of the installer automatically add the FSL configuration to ~/.bash_profile):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>FSLDIR=/pathto/softs/FSL/6.04
-PATH=${FSLDIR}/bin:${PATH}
-export FSLDIR PATH
-. ${FSLDIR}/etc/fslconf/fsl.sh
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">fsl.sh</span></code> defines other environment variables for FSL like <code class="docutils literal notranslate"><span class="pre">FSLOUTPUTTYPE=NIFTI-GZ</span></code></p>
-</li>
+<li><p>It seems that some versions of the installer automatically add the FSL configuration to ~/.bash_profile). We recommend not to use these environment variables when using populse_mia (comment out the corresponding lines in the  ~/.bash_profile)</p></li>
 <li><p>Test FSL on a new terminal (it may be necessary to open a new shell or restart a session (logout / login):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flirt</span> <span class="o">-</span><span class="n">version</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">softs</span><span class="o">/</span><span class="n">fsl</span><span class="o">-</span><span class="mf">6.0.6.4</span><span class="o">/</span><span class="n">flirt</span> <span class="o">-</span><span class="n">version</span>
 </pre></div>
 </div>
 </li>
@@ -133,7 +157,7 @@ export FSLDIR PATH
 </ul>
 </li>
 <li><p>Check installation by exectuting SPM12, the second path being the path to the Matlab Runtime:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">spm_standalone</span><span class="o">/</span><span class="n">spm12</span><span class="o">/</span><span class="n">run_spm12</span><span class="o">.</span><span class="n">sh</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">spm_standalone</span><span class="o">/</span><span class="n">spm12</span><span class="o">/</span><span class="n">run_spm12</span><span class="o">.</span><span class="n">sh</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">MATLAB_Runtime</span><span class="o">/</span><span class="n">v97</span> <span class="nb">eval</span> <span class="s2">&quot;ver&quot;</span>
 </pre></div>
 </div>
 </li>
@@ -144,33 +168,46 @@ export FSLDIR PATH
 <section id="installation-of-afni">
 <h2>Installation of <a class="reference external" href="https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html">AFNI</a><a class="headerlink" href="#installation-of-afni" title="Link to this heading">¶</a></h2>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p>For Ubuntu, follow the <a class="reference external" href="https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu20.html#quick-setup">quick setup</a> of the AFNI’s team. For Fedora 37, select the <code class="docutils literal notranslate"><span class="pre">Linux,</span> <span class="pre">Fedora</span></code> chapter in the table of contents on the left.</p></li>
 <li><p>By default, all data will be installed in $HOME. $HOME/abin can then be moved to a directory dedicated to AFNI (e.g. /data/softs/AFNI). The rest of the data installed in $HOME can be deleted if AFNI is to be used only in Mia.</p></li>
+<li><p>Test AFNI on a new terminal (it may be necessary to open a new shell or restart a session (logout / login):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">softs</span><span class="o">/</span><span class="n">AFNI_you_have_installed</span><span class="o">/</span><span class="n">abin</span><span class="o">/</span><span class="mi">2</span><span class="n">dImReg</span> <span class="o">-</span><span class="n">help</span>
+</pre></div>
+</div>
+</li>
 </ul>
 </div></blockquote>
 </section>
 <section id="installation-of-ants">
 <h2>Installation of <a class="reference external" href="http://stnava.github.io/ANTs/">ANTs</a><a class="headerlink" href="#installation-of-ants" title="Link to this heading">¶</a></h2>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p>We strongly recommend installing ANTs via release binaries, available for macos and linux (ubuntu, centos - fedora) from ANTs <code class="docutils literal notranslate"><span class="pre">v2.4.1</span></code>, and Windows from <code class="docutils literal notranslate"><span class="pre">v2.4.4</span></code>. For this, <a class="reference external" href="https://github.com/ANTsX/ANTs/releases">download pre-built releases</a> (select the desired file in the <code class="docutils literal notranslate"><span class="pre">Assets</span></code> section, e.g. ants-2.4.1-centos7-X64-gcc.zip) then unzip it. <a class="reference external" href="https://github.com/ANTsX/ANTs/wiki/Installing-ANTs-release-binaries">Some notes</a> on this subject are available.</p></li>
 <li><p>ANTs since <code class="docutils literal notranslate"><span class="pre">v2.4.4</span></code> is also available <a class="reference external" href="https://anaconda.org/aramislab/ants">via Conda</a>.</p></li>
 <li><p>The final solution for installing ANTs is to build it from source (e.g. for release &lt; <code class="docutils literal notranslate"><span class="pre">v2.4.1</span></code> <a class="reference external" href="https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS">for linux and macos</a> and release &lt; <code class="docutils literal notranslate"><span class="pre">v2.4.4</span></code> <a class="reference external" href="https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Windows-10">for windows</a>).</p></li>
-<li><p>Mia doesn’t need environment variables, but to test ANTs outside Mia, ANTs path have to be added to the ~/.bashrc file.</p></li>
+<li><p>Test ANTs on a new terminal (it may be necessary to open a new shell or restart a session (logout / login):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">softs</span><span class="o">/</span><span class="n">ANTs_you_have_installed</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">antsRegistration</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+</li>
 </ul>
 </div></blockquote>
 </section>
 <section id="installation-of-freesurfer">
-<h2>Installation of <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/">freesurfer</a><a class="headerlink" href="#installation-of-freesurfer" title="Link to this heading">¶</a></h2>
+<h2>Installation of <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/">FreeSurfer</a><a class="headerlink" href="#installation-of-freesurfer" title="Link to this heading">¶</a></h2>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p>Go to the <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall">FreeSurfer Download and Install</a> page.</p></li>
 <li><p>Choose the version to install (we strongly recommend installing the latest version), for example at the time of writing, <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/rel7downloads">version 7.x</a>.</p></li>
 <li><p>Select the packages or tarballs you wish to download to proceed with the installation. <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/FS7_linux">Some notes</a> on this subject are available.</p></li>
 <li><p>For Fedora 37, centos8 tar archive works fine.</p></li>
 <li><p>Get the freesurfer License <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/registration.html">here</a>. Copy the license received in the freesurfer folder.</p></li>
-<li><p>populse_mia do not need environment variables, however if you want to testfFreesurfer outside populse_mia you need to add freesurfer path in your .bashr.</p></li>
+<li><p>Test FreeSurfer on a new terminal (it may be necessary to open a new shell or restart a session (logout / login):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">softs</span><span class="o">/</span><span class="n">FreeSurfer_you_have_installed</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">mris_register</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+</li>
 </ul>
 </div></blockquote>
 </section>
