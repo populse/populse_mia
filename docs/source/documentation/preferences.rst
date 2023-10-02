@@ -16,8 +16,8 @@ This page is a user guide for populse_mia's preferences.
 
 Access these preferences by going, when populse_mia is launched, to File > Mia preferences.
 
-Populse_mia’s presentation
---------------------------
+Populse_mia’s preferences presentation
+--------------------------------------
 
 Populse_mia's preferences are composed of three tabs:
 
