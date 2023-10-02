@@ -2523,13 +2523,13 @@ class PopUpPreferences(QDialog):
         self.groupbox_ants.setLayout(v_box_ants)
 
         # Groupbox "freesurfer"
-        self.groupbox_freesurfer = QtWidgets.QGroupBox("freesurfer")
+        self.groupbox_freesurfer = QtWidgets.QGroupBox("FreeSurfer")
 
-        self.use_freesurfer_label = QLabel("Use freesurfer")
+        self.use_freesurfer_label = QLabel("Use FreeSurfer")
         self.use_freesurfer_checkbox = QCheckBox("", self)
 
         self.freesurfer_label = QLabel(
-            "freesurfer path (e.g. freesurfer_dir/FreeSurferEnv.sh):"
+            "FreeSurfer path (e.g. FreeSurfer_dir/FreeSurferEnv.sh):"
         )
         self.freesurfer_choice = QLineEdit(config.get_freesurfer_setup())
         self.freesurfer_browse = QPushButton("Browse")
