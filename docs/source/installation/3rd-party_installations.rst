@@ -22,9 +22,9 @@ Installation on Linux
 
  * ``/path/to/softs`` is the destination folder where the softwares will be installed, i.e.: ``/opt``, ``/home/APPS`` or other.
 
- * If populse_mia is installed in a container using `brainvisa Singulary image <./virtualisation_user_installation.html>`_, it is generally not necessary to be in the container to install third-party software (in fact, this will depend on the operating system in the container and the host).
+ * If populse_mia is installed in a container using `brainvisa Singulary image <./virtualisation_user_installation.html>`_, it's generally not necessary to be inside the container to install third-party softwares (installation on the host may be enough, but this depends on the container's operating system and the host).
 
- * Populse_mia do not need environment variables, however to test installed third-party softwares outside populse_mia, the following lines must be included in the user's ``.bashrc`` file (we recommend not to use these environment variables when using populse_mia by commenting the corresponding lines in the ~\.bashrc file): ::
+ * Populse_mia do not need environment variables, however to test installed third-party softwares outside populse_mia, the following lines must be included in the user's ``.bashrc`` file (we recommend not to use these environment variables when using populse_mia by commenting the corresponding lines in the ~/.bashrc file). It may be necessary to open a new shell or restart a session (logout / login) or execute the contents of the .bashrc file (source ~/.bashrc) for the changes to take effect: ::
 
     # FSL setup
     # FSL configuration is done in /home/user/.bash_profile and /home/user/Documents/MATLAB/startup.m
@@ -55,22 +55,6 @@ Installation on Linux
     export FREESURFER_HOME=/path/to/softs/FreeSurfer_you_have_installed
     source $FREESURFER_HOME/SetUpFreeSurfer.csh>/dev/null
 
-Installation of `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
-----------------------------------------------------------------
-
- * Download `fslinstaller.py <https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/>`_ (with Fedora 37, choose Linux - Centos 8) then launch the installer: ::
-
-     python fslinstaller.py
-
- * The installer will ask where to install FSL. Keep the default location or specify a folder: ::
-
-    FSL installation directory [/home/username/fsl]: /path/to/softs/fsl-6.0.6.4/
-
- * It seems that some versions of the installer automatically add the FSL configuration to ~/.bash_profile). We recommend not to use these environment variables when using populse_mia (comment out the corresponding lines in the  ~/.bash_profile)
-
- * Test FSL on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
-
-     /path/to/softs/fsl-6.0.6.4/flirt -version
 
 Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ Standalone and Matlab Runtime
 -----------------------------------------------------------------------------------------------------------
@@ -116,11 +100,30 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
 
         sudo ldconfig
 
- * Check installation by exectuting SPM12, the second path being the path to the Matlab Runtime: ::
+   * Check this `manual <https://en.wikibooks.org/wiki/SPM/Standalone>`_ in case of problems during installation.
+
+   * Test SPM12 Standalone and MCR installation (the second path being the path to the Matlab Runtime): ::
 
          /path/to/spm_standalone/spm12/run_spm12.sh /path/to/MATLAB_Runtime/v97 eval "ver"
 
- * Check this `manual <https://en.wikibooks.org/wiki/SPM/Standalone>`_ in case of problems during installation.
+
+Installation of `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/>`_
+----------------------------------------------------------------
+
+ * Download `fslinstaller.py <https://fsl.fmrib.ox.ac.uk/fsldownloads_registration/>`_ (with Fedora 37, choose Linux - Centos 8) then launch the installer: ::
+
+     python fslinstaller.py
+
+ * The installer will ask where to install FSL. Keep the default location or specify a folder: ::
+
+    FSL installation directory [/home/username/fsl]: /path/to/softs/fsl-6.0.6.4/
+
+ * It seems that some versions of the installer automatically add the FSL configuration to ~/.bash_profile. We recommend not to use these environment variables when using populse_mia (comment out the corresponding lines in the  ~/.bash_profile).
+
+ * Test FSL installation on a new terminal: ::
+
+     /path/to/softs/fsl-6.0.6.4/bin/flirt -version
+
 
 Installation of `AFNI <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html>`_
 -----------------------------------------------------------------------------------
@@ -129,9 +132,10 @@ Installation of `AFNI <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html
 
   * By default, all data will be installed in $HOME. $HOME/abin can then be moved to a directory dedicated to AFNI (e.g. /data/softs/AFNI). The rest of the data installed in $HOME can be deleted if AFNI is to be used only in Mia.
 
-  * Test AFNI on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
+  * Test AFNI on a new terminal: ::
 
-      /path/to/softs/AFNI_you_have_installed/abin/2dImReg -help
+      /path/to/softs/AFNI_you_have_installed/abin/afni -ver
+
 
 Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 -------------------------------------------------------
@@ -142,9 +146,10 @@ Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 
   * The final solution for installing ANTs is to build it from source (e.g. for release < ``v2.4.1`` `for linux and macos <https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS>`_ and release < ``v2.4.4`` `for windows <https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Windows-10>`_).
 
-  *  Test ANTs on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
+  *  Test ANTs on a new terminal: ::
 
         /path/to/softs/ANTs_you_have_installed/bin/antsRegistration --version
+
 
 Installation of `FreeSurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 -------------------------------------------------------------------
@@ -159,10 +164,15 @@ Installation of `FreeSurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 
   * Get the freesurfer License `here <https://surfer.nmr.mgh.harvard.edu/registration.html>`_. Copy the license received in the freesurfer folder.
 
-  * Test FreeSurfer on a new terminal (it may be necessary to open a new shell or restart a session (logout / login): ::
+  * Test FreeSurfer on a new terminal: ::
 
        /path/to/softs/FreeSurfer_you_have_installed/bin/mris_register --version
 
+
+Installation of `MRtrix  <https://www.mrtrix.org/>`_
+----------------------------------------------------
+
+  * `WIP! <https://www.mrtrix.org/download/>`_
 
 
 Installation on Macos
