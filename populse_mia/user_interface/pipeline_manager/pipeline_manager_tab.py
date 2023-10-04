@@ -1709,13 +1709,23 @@ class PipelineManagerTab(QWidget):
                     name
                 )
             )
-            deci, inte = math.modf(time.time() - t0)
-            print(
-                "Initialisation phase completed in {}s!".format(
-                    inte
-                    + round(deci, -int(math.floor(math.log10(abs(deci)))) + 1)
+
+            try:
+                duration = round(
+                    time.time() - t0,
+                    -int(
+                        math.floor(
+                            math.log10(abs(math.modf(time.time() - t0)[0]))
+                        )
+                    )
+                    + 1,
                 )
-            )
+
+            except ValueError:
+                duration = time.time() - t0
+
+            print("Initialisation phase completed in {}s!".format(duration))
+
             self.msg = QMessageBox()
             self.msg.setWindowTitle("Pipeline initialization warning!")
             self.msg.setText(
@@ -2300,7 +2310,19 @@ class PipelineManagerTab(QWidget):
             )
 
             if not init_result:
-                deci, inte = math.modf(time.time() - t0)
+                try:
+                    duration = round(
+                        time.time() - t0,
+                        -int(
+                            math.floor(
+                                math.log10(abs(math.modf(time.time() - t0)[0]))
+                            )
+                        )
+                        + 1,
+                    )
+
+                except ValueError:
+                    duration = time.time() - t0
 
                 if init_messages:
                     message = (
@@ -2383,16 +2405,25 @@ class PipelineManagerTab(QWidget):
                     '\n"{0}" pipeline has been successfully '
                     "initialised.".format(name)
                 )
-                deci, inte = math.modf(time.time() - t0)
+
+                try:
+                    duration = round(
+                        time.time() - t0,
+                        -int(
+                            math.floor(
+                                math.log10(abs(math.modf(time.time() - t0)[0]))
+                            )
+                        )
+                        + 1,
+                    )
+
+                except ValueError:
+                    duration = time.time() - t0
 
         # FIXME: I don't understand when main_pipeline can be False. If it is,
-        #        we'll get an exception because "inte" and "deci" won't be
-        #        defined (done in the "if not init_result:" above!).
-        print(
-            "Initialisation phase completed in {}s!".format(
-                inte + round(deci, -int(math.floor(math.log10(abs(deci)))) + 1)
-            )
-        )
+        #        we'll get an exception because duration won't be
+        #        defined (done in the "if main_pipeline:"!).
+        print("Initialisation phase completed in {}s!".format(duration))
         return init_result
 
     def layout_view(self):
