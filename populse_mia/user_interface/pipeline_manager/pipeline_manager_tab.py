@@ -1639,25 +1639,35 @@ class PipelineManagerTab(QWidget):
 
         print("\n- Pipeline initializing ...")
         print("  *********************\n")
+        init_result = True
         t0 = time.time()
         QApplication.processEvents()
         # If the initialisation is launch for the main pipeline
         if not pipeline:
             pipeline = get_process_instance(self.get_pipeline_or_process())
             main_pipeline = True
+            name = None
+
+            if isinstance(pipeline, Process) and not isinstance(
+                pipeline, Pipeline
+            ):
+                name = pipeline.name.lower() + "_1"
+                init_result = False
 
         else:
             main_pipeline = False
+            name = None
 
-        name = pipeline.name
+        if name is None:
+            name = pipeline.name
+
         if name == "Pipeline" and len(pipeline.nodes) == 2:
             name = [k for k, v in pipeline.nodes.items() if k != ""][0]
         self.main_window.statusBar().showMessage(
-            'Pipeline "{0}" is getting initialized. '
-            "Please wait.".format(name)
+            '"{0}" pipeline is getting initialized. '
+            "Please wait...".format(name)
         )
         QApplication.processEvents()
-        init_result = True
 
         # complete config for completion
         study_config = pipeline.get_study_config()
@@ -1671,7 +1681,7 @@ class PipelineManagerTab(QWidget):
         try:
             print(
                 "Workflow generation / completion for the "
-                "{} pipeline...".format(name)
+                "'{}' pipeline...".format(name)
             )
             self.workflow = workflow_from_pipeline(
                 pipeline, check_requirements=False, complete_parameters=True
@@ -1681,7 +1691,7 @@ class PipelineManagerTab(QWidget):
         except Exception as e:
             init_result = False
             mssg = (
-                "Error when building the workflow for the {0} "
+                "Error when building the workflow for the '{0}' "
                 "pipeline:\n{1}  {2}: {3}\n".format(
                     name,
                     "".join(traceback.format_tb(e.__traceback__)),
@@ -1692,10 +1702,10 @@ class PipelineManagerTab(QWidget):
 
             init_messages.append(mssg)
 
-        if getattr(self.workflow, "jobs", []) == []:
+        if getattr(self.workflow, "jobs", []) == [] or init_result is False:
             init_result = False
             print(
-                '\nPipeline "{0}" was not successfully initialised.'.format(
+                '\n"{0}" pipeline was not successfully initialised...'.format(
                     name
                 )
             )
@@ -1732,7 +1742,9 @@ class PipelineManagerTab(QWidget):
                 # fmt: on
 
             self.main_window.statusBar().showMessage(
-                'Pipeline "{0}" was not initialised successfully.'.format(name)
+                '"{0}" pipeline was not initialised successfully...'.format(
+                    name
+                )
             )
             return init_result
 
@@ -1750,7 +1762,7 @@ class PipelineManagerTab(QWidget):
 
         if len(missing_mandat_param) != 0:
             mssg = (
-                "Missing mandatory parameters in pipeline {0}:\n    - "
+                "Missing mandatory parameters in '{0}' pipeline:\n    - "
                 "{1}\n".format(name, "\n    - ".join(missing_mandat_param))
             )
             init_messages.append(mssg)
@@ -2061,7 +2073,7 @@ class PipelineManagerTab(QWidget):
 
         if len(req_messages) != 0:
             mssg = (
-                "The pipeline requirements are not met for pipeline {0}:\n"
+                "The pipeline requirements are not met for '{0}' pipeline:\n"
                 "    - {1}\n".format(name, "\n    - ".join(req_messages))
             )
             init_messages.append(mssg)
@@ -2130,7 +2142,7 @@ class PipelineManagerTab(QWidget):
                         init_result = False
                         init_messages.append(
                             "An issue has been detected when initializing the "
-                            "{0} brick in the {1} pipeline.\n"
+                            "'{0}' brick in the '{1}' pipeline.\n"
                             "  The pipeline cannot be launched under these "
                             "conditions...\n".format(node_name, name)
                         )
@@ -2138,7 +2150,7 @@ class PipelineManagerTab(QWidget):
         if len(missing_mandat_out_param) != 0:
             mssg = (
                 "Missing mandatory output parameter(s) for the "
-                "following brick(s) in the {0} pipeline:\n    - "
+                "following brick(s) in the '{0}' pipeline:\n    - "
                 "{1}\n".format(name, "\n    - ".join(missing_mandat_out_param))
             )
             init_messages.append(mssg)
@@ -2146,9 +2158,11 @@ class PipelineManagerTab(QWidget):
         if len(missing_all_out_param) != 0:
             mssg = (
                 "None of the output parameters have been completed for the "
-                "following brick(s) in the {0} pipeline. Please check the "
-                "configuration and input parameters for these bricks:\n    - "
-                "{1}\n".format(name, "\n    - ".join(missing_all_out_param))
+                "following brick(s) in the '{0}' pipeline.\n    - "
+                "{1}\nPlease check the configuration and input parameters "
+                "for these bricks...".format(
+                    name, "\n    - ".join(missing_all_out_param)
+                )
             )
             init_messages.append(mssg)
 
@@ -2344,12 +2358,12 @@ class PipelineManagerTab(QWidget):
                     # fmt: on
 
                 self.main_window.statusBar().showMessage(
-                    'Pipeline "{0}" was not initialised successfully.'.format(
+                    '"{0}" pipeline was not initialised successfully.'.format(
                         name
                     )
                 )
                 print(
-                    '\nPipeline "{0}" was not successfully '
+                    '\n"{0}" pipeline was not successfully '
                     "initialised.".format(name)
                 )
 
@@ -2361,12 +2375,12 @@ class PipelineManagerTab(QWidget):
                 self.pipelineEditorTabs.get_current_editor().initialized = True
 
                 self.main_window.statusBar().showMessage(
-                    'Pipeline "{0}" has been successfully initialised.'.format(
+                    '"{0}" pipeline has been successfully initialised.'.format(
                         name
                     )
                 )
                 print(
-                    '\nPipeline "{0}" has been successfully '
+                    '\n"{0}" pipeline has been successfully '
                     "initialised.".format(name)
                 )
                 deci, inte = math.modf(time.time() - t0)
