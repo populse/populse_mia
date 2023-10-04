@@ -29,6 +29,7 @@ import inspect
 import os
 import pkgutil
 import sys
+import tempfile
 import traceback
 from functools import partial
 from pathlib import Path
@@ -622,7 +623,7 @@ def launch_mia():
     sys.excepthook = _my_excepthook
 
     # working from the scripts directory
-    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    # os.chdir(os.path.dirname(os.path.realpath(__file__)))
     lock_file = QLockFile(
         QDir.temp().absoluteFilePath("lock_file_populse_mia.lock")
     )
@@ -910,7 +911,12 @@ def main():
 
     verify_processes()
     check_python_version()
-    launch_mia()
+
+    cwd = os.getcwd()
+    with tempfile.TemporaryDirectory() as temp_work_dir:
+        os.chdir(temp_work_dir)
+        launch_mia()
+        os.chdir(cwd)
 
 
 def verify_processes():
