@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.4.1-dev+1a660874 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 2.4.1-dev+188c79b6 documentation</title>
     <link rel="stylesheet" href="../../../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -143,7 +143,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.4.1-dev+1a660874 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+188c79b6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -1798,25 +1798,35 @@
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">- Pipeline initializing ...&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  *********************</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">init_result</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
         <span class="c1"># If the initialisation is launch for the main pipeline</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="p">:</span>
             <span class="n">pipeline</span> <span class="o">=</span> <span class="n">get_process_instance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_pipeline_or_process</span><span class="p">())</span>
             <span class="n">main_pipeline</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">pipeline</span><span class="p">,</span> <span class="n">Pipeline</span>
+            <span class="p">):</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_1&quot;</span>
+                <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">main_pipeline</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">name</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">name</span>
+
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Pipeline&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-            <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; is getting initialized. &#39;</span>
-            <span class="s2">&quot;Please wait.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="s1">&#39;&quot;</span><span class="si">{0}</span><span class="s1">&quot; pipeline is getting initialized. &#39;</span>
+            <span class="s2">&quot;Please wait...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
-        <span class="n">init_result</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># complete config for completion</span>
         <span class="n">study_config</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get_study_config</span><span class="p">()</span>
@@ -1830,7 +1840,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="s2">&quot;Workflow generation / completion for the &quot;</span>
-                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> pipeline...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; pipeline...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">workflow</span> <span class="o">=</span> <span class="n">workflow_from_pipeline</span><span class="p">(</span>
                 <span class="n">pipeline</span><span class="p">,</span> <span class="n">check_requirements</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">complete_parameters</span><span class="o">=</span><span class="kc">True</span>
@@ -1840,7 +1850,7 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">mssg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;Error when building the workflow for the </span><span class="si">{0}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;Error when building the workflow for the &#39;</span><span class="si">{0}</span><span class="s2">&#39; &quot;</span>
                 <span class="s2">&quot;pipeline:</span><span class="se">\n</span><span class="si">{1}</span><span class="s2">  </span><span class="si">{2}</span><span class="s2">: </span><span class="si">{3}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">name</span><span class="p">,</span>
                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)),</span>
@@ -1851,20 +1861,30 @@
 
             <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mssg</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow</span><span class="p">,</span> <span class="s2">&quot;jobs&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow</span><span class="p">,</span> <span class="s2">&quot;jobs&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="o">==</span> <span class="p">[]</span> <span class="ow">or</span> <span class="n">init_result</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="nb">print</span><span class="p">(</span>
-                <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; was not successfully initialised.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&quot;</span><span class="si">{0}</span><span class="s1">&quot; pipeline was not successfully initialised...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">name</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">deci</span><span class="p">,</span> <span class="n">inte</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;Initialisation phase completed in </span><span class="si">{}</span><span class="s2">s!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">inte</span>
-                    <span class="o">+</span> <span class="nb">round</span><span class="p">(</span><span class="n">deci</span><span class="p">,</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">deci</span><span class="p">))))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
+                    <span class="o">-</span><span class="nb">int</span><span class="p">(</span>
+                        <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span>
+                            <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initialisation phase completed in </span><span class="si">{}</span><span class="s2">s!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duration</span><span class="p">))</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Pipeline initialization warning!&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
@@ -1891,7 +1911,9 @@
                 <span class="c1"># fmt: on</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-                <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; was not initialised successfully.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="s1">&#39;&quot;</span><span class="si">{0}</span><span class="s1">&quot; pipeline was not initialised successfully...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span>
+                <span class="p">)</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">init_result</span>
 
@@ -1909,7 +1931,7 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_mandat_param</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mssg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;Missing mandatory parameters in pipeline </span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">    - &quot;</span>
+                <span class="s2">&quot;Missing mandatory parameters in &#39;</span><span class="si">{0}</span><span class="s2">&#39; pipeline:</span><span class="se">\n</span><span class="s2">    - &quot;</span>
                 <span class="s2">&quot;</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_mandat_param</span><span class="p">))</span>
             <span class="p">)</span>
             <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mssg</span><span class="p">)</span>
@@ -2220,7 +2242,7 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">req_messages</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mssg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;The pipeline requirements are not met for pipeline </span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;The pipeline requirements are not met for &#39;</span><span class="si">{0}</span><span class="s2">&#39; pipeline:</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="s2">&quot;    - </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">req_messages</span><span class="p">))</span>
             <span class="p">)</span>
             <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mssg</span><span class="p">)</span>
@@ -2289,7 +2311,7 @@
                         <span class="n">init_result</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                             <span class="s2">&quot;An issue has been detected when initializing the &quot;</span>
-                            <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> brick in the </span><span class="si">{1}</span><span class="s2"> pipeline.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; brick in the &#39;</span><span class="si">{1}</span><span class="s2">&#39; pipeline.</span><span class="se">\n</span><span class="s2">&quot;</span>
                             <span class="s2">&quot;  The pipeline cannot be launched under these &quot;</span>
                             <span class="s2">&quot;conditions...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
                         <span class="p">)</span>
@@ -2297,7 +2319,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_mandat_out_param</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mssg</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="s2">&quot;Missing mandatory output parameter(s) for the &quot;</span>
-                <span class="s2">&quot;following brick(s) in the </span><span class="si">{0}</span><span class="s2"> pipeline:</span><span class="se">\n</span><span class="s2">    - &quot;</span>
+                <span class="s2">&quot;following brick(s) in the &#39;</span><span class="si">{0}</span><span class="s2">&#39; pipeline:</span><span class="se">\n</span><span class="s2">    - &quot;</span>
                 <span class="s2">&quot;</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_mandat_out_param</span><span class="p">))</span>
             <span class="p">)</span>
             <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mssg</span><span class="p">)</span>
@@ -2305,9 +2327,11 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_all_out_param</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mssg</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="s2">&quot;None of the output parameters have been completed for the &quot;</span>
-                <span class="s2">&quot;following brick(s) in the </span><span class="si">{0}</span><span class="s2"> pipeline. Please check the &quot;</span>
-                <span class="s2">&quot;configuration and input parameters for these bricks:</span><span class="se">\n</span><span class="s2">    - &quot;</span>
-                <span class="s2">&quot;</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_all_out_param</span><span class="p">))</span>
+                <span class="s2">&quot;following brick(s) in the &#39;</span><span class="si">{0}</span><span class="s2">&#39; pipeline.</span><span class="se">\n</span><span class="s2">    - &quot;</span>
+                <span class="s2">&quot;</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">Please check the configuration and input parameters &quot;</span>
+                <span class="s2">&quot;for these bricks...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_all_out_param</span><span class="p">)</span>
+                <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">init_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mssg</span><span class="p">)</span>
 
@@ -2445,7 +2469,19 @@
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">init_result</span><span class="p">:</span>
-                <span class="n">deci</span><span class="p">,</span> <span class="n">inte</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">duration</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
+                        <span class="o">-</span><span class="nb">int</span><span class="p">(</span>
+                            <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span>
+                                <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                        <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
 
                 <span class="k">if</span> <span class="n">init_messages</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
@@ -2503,12 +2539,12 @@
                     <span class="c1"># fmt: on</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-                    <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; was not initialised successfully.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s1">&#39;&quot;</span><span class="si">{0}</span><span class="s1">&quot; pipeline was not initialised successfully.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">name</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; was not successfully &#39;</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&quot;</span><span class="si">{0}</span><span class="s1">&quot; pipeline was not successfully &#39;</span>
                     <span class="s2">&quot;initialised.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -2520,24 +2556,33 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-                    <span class="s1">&#39;Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; has been successfully initialised.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s1">&#39;&quot;</span><span class="si">{0}</span><span class="s1">&quot; pipeline has been successfully initialised.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">name</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Pipeline &quot;</span><span class="si">{0}</span><span class="s1">&quot; has been successfully &#39;</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&quot;</span><span class="si">{0}</span><span class="s1">&quot; pipeline has been successfully &#39;</span>
                     <span class="s2">&quot;initialised.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="p">)</span>
-                <span class="n">deci</span><span class="p">,</span> <span class="n">inte</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">duration</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
+                        <span class="o">-</span><span class="nb">int</span><span class="p">(</span>
+                            <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span>
+                                <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                        <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
 
         <span class="c1"># FIXME: I don&#39;t understand when main_pipeline can be False. If it is,</span>
-        <span class="c1">#        we&#39;ll get an exception because &quot;inte&quot; and &quot;deci&quot; won&#39;t be</span>
-        <span class="c1">#        defined (done in the &quot;if not init_result:&quot; above!).</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;Initialisation phase completed in </span><span class="si">{}</span><span class="s2">s!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">inte</span> <span class="o">+</span> <span class="nb">round</span><span class="p">(</span><span class="n">deci</span><span class="p">,</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">deci</span><span class="p">))))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
+        <span class="c1">#        we&#39;ll get an exception because duration won&#39;t be</span>
+        <span class="c1">#        defined (done in the &quot;if main_pipeline:&quot;!).</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initialisation phase completed in </span><span class="si">{}</span><span class="s2">s!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duration</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">init_result</span></div>
 
 <div class="viewcode-block" id="PipelineManagerTab.layout_view"><a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.layout_view">[docs]</a>    <span class="k">def</span> <span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

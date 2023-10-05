@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.main &#8212; populse_mia 2.4.1-dev+1a660874 documentation</title>
+    <title>populse_mia.main &#8212; populse_mia 2.4.1-dev+188c79b6 documentation</title>
     <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -111,7 +111,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.4.1-dev+1a660874 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+188c79b6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -156,6 +156,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pkgutil</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -749,7 +750,7 @@
     <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">_my_excepthook</span>
 
     <span class="c1"># working from the scripts directory</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+    <span class="c1"># os.chdir(os.path.dirname(os.path.realpath(__file__)))</span>
     <span class="n">lock_file</span> <span class="o">=</span> <span class="n">QLockFile</span><span class="p">(</span>
         <span class="n">QDir</span><span class="o">.</span><span class="n">temp</span><span class="p">()</span><span class="o">.</span><span class="n">absoluteFilePath</span><span class="p">(</span><span class="s2">&quot;lock_file_populse_mia.lock&quot;</span><span class="p">)</span>
     <span class="p">)</span>
@@ -1037,7 +1038,12 @@
 
     <span class="n">verify_processes</span><span class="p">()</span>
     <span class="n">check_python_version</span><span class="p">()</span>
-    <span class="n">launch_mia</span><span class="p">()</span></div>
+
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_work_dir</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">temp_work_dir</span><span class="p">)</span>
+        <span class="n">launch_mia</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="verify_processes"><a class="viewcode-back" href="../../populse_mia.html#populse_mia.main.verify_processes">[docs]</a><span class="k">def</span> <span class="nf">verify_processes</span><span class="p">():</span>
