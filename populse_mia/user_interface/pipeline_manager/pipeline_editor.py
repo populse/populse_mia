@@ -523,6 +523,13 @@ class PipelineEditor(PipelineDeveloperView):
         if hasattr(process, "use_project") and process.use_project:
             process.project = self.project
 
+        if hasattr(process, "_spm_script_file"):
+            process.trait("_spm_script_file").userlevel = 1
+
+        if hasattr(process, "process") and hasattr(
+            process.process, "_spm_script_file"
+        ):
+            process.process.trait("_spm_script_file").userlevel = 1
         # If the process is added from a undo, all the links
         # that were connected to the corresponding node has to be reset
         for link in links:
