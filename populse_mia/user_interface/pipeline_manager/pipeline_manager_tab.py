@@ -470,7 +470,10 @@ class PipelineManagerTab(QWidget):
         notInDb = set(outputs.get("notInDb", []))
 
         for plug_name, plug_value in outputs.items():
-            if plug_name not in process.traits():
+            if (plug_name not in process.traits()) or (
+                process.trait(plug_name).userlevel is not None
+                and process.trait(plug_name).userlevel > 0
+            ):
                 continue
 
             if plug_value != "<undefined>":
@@ -3387,7 +3390,14 @@ class PipelineManagerTab(QWidget):
         auto_inheritance_dict = {}
 
         for plug_name, plug_value in outputs.items():
-            if plug_name in notInDb:
+            if (
+                (plug_name == "notInDb")
+                or (plug_name in notInDb)
+                or (
+                    process.trait(plug_name).userlevel is not None
+                    and process.trait(plug_name).userlevel > 0
+                )
+            ):
                 continue
 
             trait = process.trait(plug_name)
