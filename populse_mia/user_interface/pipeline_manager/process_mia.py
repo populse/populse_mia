@@ -295,9 +295,18 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 tmap = getattr(process, "_nipype_trait_mapping", {})
                 tname = tmap.get("_spm_script_file", "_spm_script_file")
 
-                if not process.trait(tname) and process.trait(
-                    "spm_script_file"
+                # FIXME: I don't understand why the _spm_script_file is in a
+                #       mia_processes process (normally it should be in
+                #       process.process!).
+                if process.trait(tname):
+                    process.trait(tname).userlevel = 1
+
+                if hasattr(process, "process") and process.process.trait(
+                    tname
                 ):
+                    process.process.trait(tname).userlevel = 1
+
+                if process.trait("spm_script_file"):
                     tname = "spm_script_file"
 
                 if tname:
@@ -628,7 +637,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             if parameter == "notInDb" or process.is_parameter_protected(
                 parameter
             ):
-                continue  # special non-param or set manually
+                # special non-param or set manually:
+                continue
             try:
                 setattr(process, parameter, value)
             except Exception as e:
