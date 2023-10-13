@@ -48,7 +48,11 @@ import yaml
 
 # Nipype import
 from nipype.interfaces import Rename, Select
-from nipype.interfaces.base.traits_extension import InputMultiObject
+from nipype.interfaces.base.traits_extension import (
+    File,
+    InputMultiObject,
+    OutputMultiPath,
+)
 from nipype.interfaces.spm import Smooth, Threshold
 from packaging import version
 
@@ -10163,6 +10167,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # 'job.param_dict' as list of objects
         job.param_dict["inlist"] = [DOCUMENT_1, DOCUMENT_2]
         process.get_outputs = Mock(return_value={"_out": ["_out_value"]})
+        process.add_trait(
+            "_out", OutputMultiPath(File(exists=True), desc="out files")
+        )
         job.param_dict["_out"] = ["_out_value"]
         ppl_manager.update_auto_inheritance(node, job)
 
