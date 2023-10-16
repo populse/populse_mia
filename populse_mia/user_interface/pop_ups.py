@@ -5696,8 +5696,13 @@ class PopUpShowHistory(QDialog):
         self.splitter = QSplitter(Qt.Qt.Vertical)
 
         self.table = QTableWidget()
-        self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-
+        # self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.table.setVerticalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel
+        )
+        self.table.setHorizontalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel
+        )
         history_uuid = self.project.session.get_value(
             COLLECTION_CURRENT, scan, TAG_HISTORY
         )
@@ -5789,7 +5794,6 @@ class PopUpShowHistory(QDialog):
         self.update_table(
             inputs, outputs, brick_name, init, init_time, exec, exec_time
         )
-
         self.splitter.addWidget(self.table)
 
         layout.addWidget(self.splitter)
@@ -5902,6 +5906,8 @@ class PopUpShowHistory(QDialog):
                 )
                 inputs = getattr(brick_row, BRICK_INPUTS)
                 outputs = getattr(brick_row, BRICK_OUTPUTS)
+                # We do not want notInDb in the outputs parameters display
+                outputs.pop("notInDb", None)
                 brick_name = getattr(brick_row, BRICK_NAME)
                 init = getattr(brick_row, BRICK_INIT)
                 init_time = getattr(brick_row, BRICK_INIT_TIME)
@@ -5952,7 +5958,8 @@ class PopUpShowHistory(QDialog):
                                         inputs_dict[plug_name] = plugs[
                                             inner_plug_name
                                         ]
-
+                # We do not want notInDb in the outputs parameters display
+                outputs_dict.pop("notInDb", None)
                 self.update_table(inputs_dict, outputs_dict, node_name)
 
             for name, gnode in self.pipeline_view.scene.gnodes.items():
@@ -5989,6 +5996,8 @@ class PopUpShowHistory(QDialog):
         item.setText(BRICK_NAME)
         self.table.setHorizontalHeaderItem(item_idx, item)
         item = QTableWidgetItem()
+        # item.setTextAlignment(QtCore.Qt.AlignTop)
+        item.setTextAlignment(QtCore.Qt.AlignCenter)
         item.setText(brick_name)
         item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
         self.table.setItem(0, item_idx, item)
@@ -6000,6 +6009,8 @@ class PopUpShowHistory(QDialog):
             item.setText(BRICK_INIT)
             self.table.setHorizontalHeaderItem(item_idx, item)
             item = QTableWidgetItem()
+            # item.setTextAlignment(QtCore.Qt.AlignTop)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setText(init)
             item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
             self.table.setItem(0, item_idx, item)
@@ -6010,6 +6021,8 @@ class PopUpShowHistory(QDialog):
             item.setText(BRICK_INIT_TIME)
             self.table.setHorizontalHeaderItem(item_idx, item)
             item = QTableWidgetItem()
+            # item.setTextAlignment(QtCore.Qt.AlignTop)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
             if init_time is not None:
                 item.setText(str(init_time))
@@ -6022,6 +6035,8 @@ class PopUpShowHistory(QDialog):
             item.setText(BRICK_EXEC)
             self.table.setHorizontalHeaderItem(item_idx, item)
             item = QTableWidgetItem()
+            # item.setTextAlignment(QtCore.Qt.AlignTop)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setText(exec)
             item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
             self.table.setItem(0, item_idx, item)
@@ -6032,6 +6047,8 @@ class PopUpShowHistory(QDialog):
             item.setText(BRICK_EXEC_TIME)
             self.table.setHorizontalHeaderItem(item_idx, item)
             item = QTableWidgetItem()
+            # item.setTextAlignment(QtCore.Qt.AlignTop)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
             if exec_time is not None:
                 item.setText(str(exec_time))
@@ -6054,13 +6071,16 @@ class PopUpShowHistory(QDialog):
                 button = QPushButton(value_scan)
                 button.clicked.connect(self.file_clicked)
                 output_layout.addWidget(button)
+                # output_layout.setAlignment(QtCore.Qt.AlignTop)
+                output_layout.setAlignment(QtCore.Qt.AlignCenter)
                 widget.setLayout(output_layout)
                 self.table.setCellWidget(0, item_idx, widget)
             else:
                 item = QTableWidgetItem()
+                # item.setTextAlignment(QtCore.Qt.AlignTop)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setText(str(value))
                 item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.table.setItem(0, item_idx, item)
             item_idx += 1
 
@@ -6082,6 +6102,8 @@ class PopUpShowHistory(QDialog):
                     else:
                         label = QLabel(str(sub_value))
                         sub_layout.addWidget(label)
+                # sub_layout.setAlignment(QtCore.Qt.AlignTop)
+                sub_layout.setAlignment(QtCore.Qt.AlignCenter)
                 sub_widget.setLayout(sub_layout)
                 self.table.setCellWidget(0, item_idx, sub_widget)
             else:
@@ -6092,10 +6114,14 @@ class PopUpShowHistory(QDialog):
                     button = QPushButton(value_scan)
                     button.clicked.connect(self.file_clicked)
                     output_layout.addWidget(button)
+                    # output_layout.setAlignment(QtCore.Qt.AlignTop)
+                    output_layout.setAlignment(QtCore.Qt.AlignCenter)
                     widget.setLayout(output_layout)
                     self.table.setCellWidget(0, item_idx, widget)
                 else:
                     item = QTableWidgetItem()
+                    # item.setTextAlignment(QtCore.Qt.AlignTop)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
                     item.setText(str(value))
                     item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
                     self.table.setItem(0, item_idx, item)
