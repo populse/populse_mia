@@ -1655,7 +1655,10 @@ class PipelineManagerTab(QWidget):
                 pipeline, Pipeline
             ):
                 name = pipeline.name.lower() + "_1"
-                init_result = False
+                # FIXME: We leave the possibility of launching a brick without
+                #        exporting all the plugs. I don't know if there could
+                #        be a side effect. To be seen...
+                # init_result = False
 
         else:
             main_pipeline = False
