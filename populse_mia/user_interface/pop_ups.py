@@ -5739,6 +5739,7 @@ class PopUpShowHistory(QDialog):
                         and pipeline.name != "CustomPipeline"
                     ) or (
                         len(full_brick_name) == 2
+                        # FIXME: We have "main" when ?
                         and full_brick_name[1] == "main"
                     ):
                         full_brick_name.pop(0)
@@ -5778,6 +5779,8 @@ class PopUpShowHistory(QDialog):
 
         inputs = getattr(brick_row, BRICK_INPUTS)
         outputs = getattr(brick_row, BRICK_OUTPUTS)
+        # We do not want notInDb in the outputs parameters display
+        outputs.pop("notInDb", None)
         brick_name = getattr(brick_row, BRICK_NAME)
         init = getattr(brick_row, BRICK_INIT)
         init_time = getattr(brick_row, BRICK_INIT_TIME)
