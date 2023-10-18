@@ -63,6 +63,9 @@ if "NO_ET" not in os.environ:
 if "NIPYPE_NO_ET" not in os.environ:
     os.environ["NIPYPE_NO_ET"] = "1"
 
+# Trying to fix High DPI Display issue
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+
 # General QApplication class instantiation
 QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
 app = QApplication(sys.argv)
