@@ -683,7 +683,7 @@ class PopUpAddTag(QDialog):
         # The 'Description value' text edit
         self.text_edit_description_value = QtWidgets.QLineEdit(self)
         self.text_edit_description_value.setObjectName(
-            "textEdit_" "description_value"
+            "textEdit_description_value"
         )
 
         # The 'Unit value' label
@@ -1601,7 +1601,7 @@ class PopUpInheritanceDict(QDialog):
         self.push_button_ok.setText("OK")
         self.push_button_ok.clicked.connect(self.ok_clicked)
         self.push_button_ok.setToolTip(
-            "<i>" + plug_name + "</i> will inherit " "tags from " + self.key
+            "<i>" + plug_name + "</i> will inherit tags from " + self.key
         )
         h_box_buttons.addWidget(self.push_button_ok)
 
@@ -1609,7 +1609,7 @@ class PopUpInheritanceDict(QDialog):
         self.push_button_ignore.setText("Ignore")
         self.push_button_ignore.clicked.connect(self.ignore_clicked)
         self.push_button_ignore.setToolTip(
-            "<i>" + plug_name + "</i> will " "not inherit any tags."
+            "<i>" + plug_name + "</i> will not inherit any tags."
         )
         h_box_buttons.addWidget(self.push_button_ignore)
 
@@ -1635,11 +1635,11 @@ class PopUpInheritanceDict(QDialog):
 
         self.push_button_ignore_node = QtWidgets.QPushButton(self)
         self.push_button_ignore_node.setText(
-            "Ignore for all nodes in the " "pipeline"
+            "Ignore for all nodes in the pipeline"
         )
         self.push_button_ignore_node.clicked.connect(self.ignore_node_clicked)
         self.push_button_ignore_node.setToolTip(
-            "No tags will be inherited " "for the whole pipeline."
+            "No tags will be inherited for the whole pipeline."
         )
         v_box_values.addLayout(h_box_buttons)
 
@@ -2123,7 +2123,7 @@ class PopUpPreferences(QDialog):
 
         # Max thumbnails number at the data browser bottom
         self.max_thumbnails_label = QLabel(
-            "Number of thumbnails " "in Data Browser:"
+            "Number of thumbnails in Data Browser:"
         )
         self.max_thumbnails_box = QtWidgets.QSpinBox()
         self.max_thumbnails_box.setMinimum(1)
@@ -2138,7 +2138,7 @@ class PopUpPreferences(QDialog):
         # Radiological vs neurological orientation in miniviewer data browser
         self.radioView_checkbox = QCheckBox("", self)
         self.radioView_label = QLabel(
-            "Radiological orientation in " "miniviewer (data browser)"
+            "Radiological orientation in miniviewer (data browser)"
         )
 
         if config.isRadioView() is True:
@@ -2316,7 +2316,7 @@ class PopUpPreferences(QDialog):
         self.use_matlab_checkbox = QCheckBox("", self)
 
         self.matlab_label = QLabel(
-            "Matlab path (e.g., matlab_dir/" "bin/matlab):"
+            "Matlab path (e.g., matlab_dir/bin/matlab):"
         )
         self.matlab_choice = QLineEdit(config.get_matlab_path())
         self.matlab_browse = QPushButton("Browse")
@@ -2325,7 +2325,7 @@ class PopUpPreferences(QDialog):
         self.use_matlab_standalone_label = QLabel("Use Matlab standalone")
         self.use_matlab_standalone_checkbox = QCheckBox("", self)
         self.matlab_standalone_label = QLabel(
-            "Matlab standalone path (e.g., " "MCR_dir/v95):"
+            "Matlab standalone path (e.g., MCR_dir/v95):"
         )
         self.matlab_standalone_choice = QLineEdit(
             config.get_matlab_standalone_path()
@@ -2437,7 +2437,7 @@ class PopUpPreferences(QDialog):
         self.use_fsl_checkbox = QCheckBox("", self)
 
         self.fsl_label = QLabel(
-            "FSL config file (e.g., " "fsl_dir/etc/fslconf/fsl.sh):"
+            "FSL config file (e.g., fsl_dir/etc/fslconf/fsl.sh):"
         )
         self.fsl_choice = QLineEdit(config.get_fsl_config())
         self.fsl_browse = QPushButton("Browse")
@@ -2855,7 +2855,7 @@ class PopUpPreferences(QDialog):
 
         fname = QFileDialog.getOpenFileName(
             self,
-            "Select the location of the " "MRIManager.jar file",
+            "Select the location of the MRIManager.jar file",
             os.path.expanduser("~"),
         )[0]
         if fname:
@@ -2866,7 +2866,7 @@ class PopUpPreferences(QDialog):
 
         fname = QFileDialog.getExistingDirectory(
             self,
-            "Select a folder where " "to save the projects",
+            "Select a folder where to save the projects",
             os.path.expanduser("~"),
         )
 
@@ -2881,7 +2881,7 @@ class PopUpPreferences(QDialog):
 
         fname = QFileDialog.getExistingDirectory(
             self,
-            "Select the location of the " "External resources folder",
+            "Select the location of the External resources folder",
             os.path.expanduser("~"),
         )
         if fname:
@@ -2900,7 +2900,7 @@ class PopUpPreferences(QDialog):
         """Called when spm standalone browse button is clicked."""
 
         fname = QFileDialog.getExistingDirectory(
-            self, "Choose SPM standalone " "directory", os.path.expanduser("~")
+            self, "Choose SPM standalone directory", os.path.expanduser("~")
         )
         if fname:
             self.spm_standalone_choice.setText(fname)
@@ -2957,7 +2957,7 @@ class PopUpPreferences(QDialog):
                 self.change_admin_psswd("The old password is incorrect.")
             elif len(change.new_psswd.text()) <= 6:
                 self.change_admin_psswd(
-                    "Your password must have more than 6 " "characters"
+                    "Your password must have more than 6 characters"
                 )
             elif change.new_psswd.text() != change.new_psswd_conf.text():
                 self.change_admin_psswd("The new passwords are not the same.")
@@ -3974,7 +3974,7 @@ class PopUpPreferences(QDialog):
                 self.msg.setIcon(QMessageBox.Warning)
                 self.msg.setText("Empty MRIFileManager.jar path")
                 self.msg.setInformativeText(
-                    "No path has been entered for " "MRIFileManager.jar."
+                    "No path has been entered for MRIFileManager.jar."
                 )
                 self.msg.setWindowTitle("Warning")
                 self.msg.setStandardButtons(QMessageBox.Ok)
@@ -4602,7 +4602,7 @@ class PopUpPreferences(QDialog):
                 if hash_psswd != config.get_admin_hash():
                     self.admin_mode_checkbox.setChecked(False)
                     self.status_label.setText(
-                        "<i style='color:red'>Wrong " "password.</i>"
+                        "<i style='color:red'>Wrong password.</i>"
                     )
 
                 else:
@@ -5677,6 +5677,9 @@ class PopUpShowHistory(QDialog):
 
         super().__init__()
 
+        # We do not want few parameters in the outputs parameters display
+        self.banished_param = ["notInDb", "dict4runtime"]
+
         self.setModal(False)
         self.setWindowFlags(
             self.windowFlags() & QtCore.Qt.WindowStaysOnBottomHint
@@ -5784,8 +5787,11 @@ class PopUpShowHistory(QDialog):
 
         inputs = getattr(brick_row, BRICK_INPUTS)
         outputs = getattr(brick_row, BRICK_OUTPUTS)
-        # We do not want notInDb in the outputs parameters display
-        outputs.pop("notInDb", None)
+
+        for k in self.banished_param:
+            outputs.pop(k, None)
+            inputs.pop(k, None)
+
         brick_name = getattr(brick_row, BRICK_NAME)
         init = getattr(brick_row, BRICK_INIT)
         init_time = getattr(brick_row, BRICK_INIT_TIME)
@@ -5906,8 +5912,11 @@ class PopUpShowHistory(QDialog):
                 )
                 inputs = getattr(brick_row, BRICK_INPUTS)
                 outputs = getattr(brick_row, BRICK_OUTPUTS)
-                # We do not want notInDb in the outputs parameters display
-                outputs.pop("notInDb", None)
+
+                for k in self.banished_param:
+                    outputs.pop(k, None)
+                    inputs.pop(k, None)
+
                 brick_name = getattr(brick_row, BRICK_NAME)
                 init = getattr(brick_row, BRICK_INIT)
                 init_time = getattr(brick_row, BRICK_INIT_TIME)
@@ -5958,8 +5967,11 @@ class PopUpShowHistory(QDialog):
                                         inputs_dict[plug_name] = plugs[
                                             inner_plug_name
                                         ]
-                # We do not want notInDb in the outputs parameters display
-                outputs_dict.pop("notInDb", None)
+
+                for k in self.banished_param:
+                    outputs_dict.pop(k, None)
+                    inputs_dict.pop(k, None)
+
                 self.update_table(inputs_dict, outputs_dict, node_name)
 
             for name, gnode in self.pipeline_view.scene.gnodes.items():

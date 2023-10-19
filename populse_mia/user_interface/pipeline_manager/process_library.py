@@ -510,13 +510,13 @@ class InstallProcesses(QDialog):
 
         try:
             self.main_window.statusBar().showMessage(
-                "Package installation, " "please wait ..."
+                "Package installation, please wait ..."
             )
             QApplication.processEvents()
 
         except AttributeError:
             self.main_window.status_label.setText(
-                "Package installation, " "please wait ..."
+                "Package installation, please wait ..."
             )
 
         self.result_add_package = True
@@ -1971,7 +1971,7 @@ class PackageLibraryDialog(QDialog):
             return deleted_packages
 
         if index == 1 and loop is False:
-            msgtext = "Do you really want to delete the " "package {}?".format(
+            msgtext = "Do you really want to delete the package {}?".format(
                 to_delete
             )
             msg = QMessageBox()

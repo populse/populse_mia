@@ -143,7 +143,7 @@ if (
     # Adding capsul:
     if os.path.isdir(os.path.join(root_dev_dir, "capsul")):
         capsul_dev_dir = os.path.join(root_dev_dir, "capsul")
-        print("- Using capsul package from {} " "...".format(capsul_dev_dir))
+        print("- Using capsul package from {} ...".format(capsul_dev_dir))
         sys.path.insert(1, capsul_dev_dir)
         del capsul_dev_dir
 
@@ -504,9 +504,9 @@ class TestMIACase(unittest.TestCase):
     ) -> QModelIndex:
         """Looks for a QModelIndex, in a QTreeView instance."""
 
-        assert isinstance(q_tree_view, QTreeView), (
-            "first argument is not a " "QTreeView instance!"
-        )
+        assert isinstance(
+            q_tree_view, QTreeView
+        ), "first argument is not a QTreeView instance!"
         q_tree_view.expandAll()
         index = q_tree_view.indexAt(QPoint(0, 0))
 
@@ -1862,7 +1862,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(self.main_window.project.getName(), "project_8")
         self.assertEqual(
             self.main_window.windowTitle(),
-            "MIA - Multiparametric Image Analysis" " (Admin mode) - project_8",
+            "MIA - Multiparametric Image Analysis (Admin mode) - project_8",
         )
 
         documents = self.main_window.project.session.get_documents_names(
@@ -5062,7 +5062,7 @@ class TestMIAMainWindow(TestMIACase):
                 file.write(filedata)
 
             init_file = open(os.path.join(mock_proc_fldr, "__init__.py"), "w")
-            init_file.write("from .unit_test_2 import " "Unit_test_2")
+            init_file.write("from .unit_test_2 import Unit_test_2")
             init_file.close()
 
         # Imports the UTs_processes processes folder as a package
