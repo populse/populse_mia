@@ -1141,7 +1141,7 @@ class TableDataBrowser(QTableWidget):
 
         cells_number = len(rows) * self.columnCount()
         self.progress = QProgressDialog(
-            "Please wait while the paths are " "being added...",
+            "Please wait while the paths are being added...",
             None,
             0,
             cells_number,

@@ -774,7 +774,7 @@ def main():
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
                 msg.setWindowTitle(
-                    "populse_mia - Error: " "mia path directory incorrect"
+                    "populse_mia - Error: mia path directory incorrect"
                 )
                 msg.setText(
                     "Error: Please select the MIA path (directory with"
@@ -1216,7 +1216,7 @@ def verify_processes():
                         scroll, 0, 0, 1, msg.layout().columnCount()
                     )
                     msg.setStyleSheet(
-                        "QScrollArea{min-width:550 px; " "min-height: 300px}"
+                        "QScrollArea{min-width:550 px; min-height: 300px}"
                     )
 
                 else:

@@ -352,7 +352,7 @@ class AdvancedSearch(QWidget):
         elif choice.currentText() == "IN":
             value.setDisabled(False)
             value.setPlaceholderText(
-                "Please separate each list item by a " "semicolon and a space"
+                "Please separate each list item by a semicolon and a space"
             )
         elif (
             choice.currentText() == "HAS VALUE"

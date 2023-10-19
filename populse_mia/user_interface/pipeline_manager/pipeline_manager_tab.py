@@ -2363,7 +2363,7 @@ class PipelineManagerTab(QWidget):
                         scroll, 0, 0, 1, self.msg.layout().columnCount()
                     )
                     self.msg.setStyleSheet(
-                        "QScrollArea{min-width:550 px; " "min-height: 300px}"
+                        "QScrollArea{min-width:550 px; min-height: 300px}"
                     )
 
                 else:

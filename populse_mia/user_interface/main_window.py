@@ -249,7 +249,7 @@ class MainWindow(QMainWindow):
         sources_images_dir = Config().getSourceImageDir()
         self.action_save_project = self.menu_file.addAction("Save project")
         self.action_save_project_as = self.menu_file.addAction(
-            "Save " "project as"
+            "Save project as"
         )
         self.action_delete_project = self.menu_file.addAction("Delete project")
         self.action_create = QAction("New project", self)
@@ -664,7 +664,7 @@ class MainWindow(QMainWindow):
         self.centralWindow.setLayout(vertical_layout)
 
     def credits(self):
-        """ "Open the credits in a web browser."""
+        """Open the credits in a web browser"""
         webbrowser.open(
             "https://github.com/populse/populse_mia/graphs/contributors"
         )
@@ -840,7 +840,7 @@ class MainWindow(QMainWindow):
 
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
-            msg.setWindowTitle("populse_mia - Warning: " "Data import issue!")
+            msg.setWindowTitle("populse_mia - Warning: Data import issue!")
             msg.setText(mssgText)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.buttonClicked.connect(msg.close)
@@ -1305,7 +1305,7 @@ class MainWindow(QMainWindow):
                 self.project = Project(as_folder_rel, False)
                 self.project.setName(os.path.basename(as_folder_rel))
                 self.project.setDate(
-                    datetime.now().strftime("%d/%m/%Y " "%H:%M:%S")
+                    datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 )
                 self.project.saveModifications()
 
@@ -1650,7 +1650,7 @@ class MainWindow(QMainWindow):
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
                     msg.setText(
-                        "The project selected isn't a " "valid MIA project"
+                        "The project selected isn't a valid MIA project"
                     )
                     msg.setInformativeText(
                         "The project selected " + name + " isn't a MIA project"

@@ -251,7 +251,7 @@ class PipelineEditor(PipelineDeveloperView):
                     elif reply == QMessageBox.No:
                         new_name, ok = QInputDialog.getText(
                             self,
-                            "Plug name Input " "Dialog",
+                            "Plug name Input Dialog",
                             "The plug {0} "
                             "already exists, "
                             "please choose a "
@@ -567,7 +567,7 @@ class PipelineEditor(PipelineDeveloperView):
         # End - commented on January, 4th 2020
 
         self.main_window.statusBar().showMessage(
-            "Node {0} has been " "added.".format(node_name)
+            "Node {0} has been added.".format(node_name)
         )
 
         self.main_window.pipeline_manager.update_user_buttons_states()
@@ -1000,9 +1000,7 @@ class PipelineEditor(PipelineDeveloperView):
             if os.path.basename(filename)[0].isdigit():
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle(
-                    "populse_mia - " "Save pipeline as Warning!"
-                )
+                msg.setWindowTitle("populse_mia - Save pipeline as Warning!")
                 msg.setText(
                     "Python does not allow to use a module name "
                     "starting with a number ...!"
@@ -1610,7 +1608,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             in self.get_current_pipeline().user_traits().keys()
         ):
             self.get_current_pipeline().add_link(
-                "database_scans->{0}" ".input".format(node_name)
+                "database_scans->{0}.input".format(node_name)
             )
         else:
             self.get_current_pipeline().export_parameter(
