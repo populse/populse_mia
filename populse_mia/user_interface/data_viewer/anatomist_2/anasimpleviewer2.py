@@ -177,9 +177,7 @@ class AnaSimpleViewer2(Qt.QObject):
         # ui file for dataviewer anasimpleviewer_2
         uifile = "mainwindow.ui"
         cwd = os.getcwd()
-        mainwindowdir = os.path.join(
-            cwd, "user_interface/data_viewer/anatomist_2"
-        )
+        mainwindowdir = os.path.dirname(__file__)
         os.chdir(mainwindowdir)
         awin = loadUi(os.path.join(mainwindowdir, uifile))
         os.chdir(cwd)
