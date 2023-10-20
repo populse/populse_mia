@@ -5995,24 +5995,26 @@ class PopUpShowHistory(QDialog):
         self.table.removeRow(0)
         self.table.setRowCount(1)
         nbColumn = 1
+
         if init != "":
             nbColumn += 2
+
         if exec != "":
             nbColumn += 2
 
         self.table.setColumnCount(nbColumn + len(inputs) + len(outputs))
-
         # Brick name
         item_idx = 0
         item = QTableWidgetItem()
         item.setText(BRICK_NAME)
         self.table.setHorizontalHeaderItem(item_idx, item)
-        item = QTableWidgetItem()
-        # item.setTextAlignment(QtCore.Qt.AlignTop)
-        item.setTextAlignment(QtCore.Qt.AlignCenter)
-        item.setText(brick_name)
-        item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-        self.table.setItem(0, item_idx, item)
+        widget = QWidget()
+        v_layout = QVBoxLayout()
+        v_layout.setAlignment(QtCore.Qt.AlignTop)
+        label = QLabel(brick_name)
+        v_layout.addWidget(label)
+        widget.setLayout(v_layout)
+        self.table.setCellWidget(0, item_idx, widget)
         item_idx += 1
 
         # Brick init
@@ -6020,128 +6022,165 @@ class PopUpShowHistory(QDialog):
             item = QTableWidgetItem()
             item.setText(BRICK_INIT)
             self.table.setHorizontalHeaderItem(item_idx, item)
-            item = QTableWidgetItem()
-            # item.setTextAlignment(QtCore.Qt.AlignTop)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            item.setText(init)
-            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-            self.table.setItem(0, item_idx, item)
+            widget = QWidget()
+            v_layout = QVBoxLayout()
+            v_layout.setAlignment(QtCore.Qt.AlignTop)
+            label = QLabel(init)
+            v_layout.addWidget(label)
+            widget.setLayout(v_layout)
+            self.table.setCellWidget(0, item_idx, widget)
             item_idx += 1
 
             # Brick init time
             item = QTableWidgetItem()
             item.setText(BRICK_INIT_TIME)
             self.table.setHorizontalHeaderItem(item_idx, item)
-            item = QTableWidgetItem()
-            # item.setTextAlignment(QtCore.Qt.AlignTop)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            widget = QWidget()
+            v_layout = QVBoxLayout()
+            v_layout.setAlignment(QtCore.Qt.AlignTop)
+
             if init_time is not None:
-                item.setText(str(init_time))
-            self.table.setItem(0, item_idx, item)
+                label = QLabel(str(init_time))
+
+            v_layout.addWidget(label)
+            widget.setLayout(v_layout)
+            self.table.setCellWidget(0, item_idx, widget)
             item_idx += 1
 
         # Brick execution
-        if init != "":
+        if exec != "":
             item = QTableWidgetItem()
             item.setText(BRICK_EXEC)
             self.table.setHorizontalHeaderItem(item_idx, item)
-            item = QTableWidgetItem()
-            # item.setTextAlignment(QtCore.Qt.AlignTop)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            item.setText(exec)
-            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-            self.table.setItem(0, item_idx, item)
+            widget = QWidget()
+            v_layout = QVBoxLayout()
+            v_layout.setAlignment(QtCore.Qt.AlignTop)
+            label = QLabel(exec)
+            v_layout.addWidget(label)
+            widget.setLayout(v_layout)
+            self.table.setCellWidget(0, item_idx, widget)
             item_idx += 1
 
             # Brick execution time
             item = QTableWidgetItem()
             item.setText(BRICK_EXEC_TIME)
             self.table.setHorizontalHeaderItem(item_idx, item)
-            item = QTableWidgetItem()
-            # item.setTextAlignment(QtCore.Qt.AlignTop)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+            widget = QWidget()
+            v_layout = QVBoxLayout()
+            v_layout.setAlignment(QtCore.Qt.AlignTop)
+
             if exec_time is not None:
-                item.setText(str(exec_time))
-            self.table.setItem(0, item_idx, item)
+                label = QLabel(str(exec_time))
+
+            v_layout.addWidget(label)
+            widget.setLayout(v_layout)
+            self.table.setCellWidget(0, item_idx, widget)
             item_idx += 1
 
-        # Inputs
-        for key, value in sorted(inputs.items()):
-            item = QTableWidgetItem()
-            item.setText(key)
-            self.table.setHorizontalHeaderItem(item_idx, item)
-            if isinstance(value, list):
-                # value = str(value).strip('[]')
-                value = str(value)
-
-            value_scan = self.io_value_is_scan(value)
-            if value_scan is not None:
-                widget = QWidget()
-                output_layout = QVBoxLayout()
-                button = QPushButton(value_scan)
-                button.clicked.connect(self.file_clicked)
-                output_layout.addWidget(button)
-                # output_layout.setAlignment(QtCore.Qt.AlignTop)
-                output_layout.setAlignment(QtCore.Qt.AlignCenter)
-                widget.setLayout(output_layout)
-                self.table.setCellWidget(0, item_idx, widget)
-            else:
-                item = QTableWidgetItem()
-                # item.setTextAlignment(QtCore.Qt.AlignTop)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                item.setText(str(value))
-                item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-                self.table.setItem(0, item_idx, item)
-            item_idx += 1
-
-        # Outputs
-        for key, value in sorted(outputs.items()):
-            item = QTableWidgetItem()
-            item.setText(key)
-            self.table.setHorizontalHeaderItem(item_idx, item)
-            value = outputs[key]
-            if isinstance(value, list):
-                sub_widget = QWidget()
-                sub_layout = QVBoxLayout()
-                for sub_value in value:
-                    value_scan = self.io_value_is_scan(sub_value)
-                    if value_scan is not None:
-                        button = QPushButton(value_scan)
-                        button.clicked.connect(self.file_clicked)
-                        sub_layout.addWidget(button)
-                    else:
-                        label = QLabel(str(sub_value))
-                        sub_layout.addWidget(label)
-                # sub_layout.setAlignment(QtCore.Qt.AlignTop)
-                sub_layout.setAlignment(QtCore.Qt.AlignCenter)
-                sub_widget.setLayout(sub_layout)
-                self.table.setCellWidget(0, item_idx, sub_widget)
-            else:
-                value_scan = self.io_value_is_scan(value)
-                if value_scan is not None:
-                    widget = QWidget()
-                    output_layout = QVBoxLayout()
-                    button = QPushButton(value_scan)
-                    button.clicked.connect(self.file_clicked)
-                    output_layout.addWidget(button)
-                    # output_layout.setAlignment(QtCore.Qt.AlignTop)
-                    output_layout.setAlignment(QtCore.Qt.AlignCenter)
-                    widget.setLayout(output_layout)
-                    self.table.setCellWidget(0, item_idx, widget)
-                else:
-                    item = QTableWidgetItem()
-                    # item.setTextAlignment(QtCore.Qt.AlignTop)
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    item.setText(str(value))
-                    item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-                    self.table.setItem(0, item_idx, item)
-            item_idx += 1
-
+        item_idx = self._update_table(inputs, item_idx)
+        _ = self._update_table(outputs, item_idx)
         self.table.verticalHeader().setMinimumSectionSize(30)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
+
+    def _update_table(self, io_dict, item_idx):
+        """Fill in the input and output sections of the table"""
+        for key, value in sorted(io_dict.items()):
+            item = QTableWidgetItem()
+            item.setText(key)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+
+            if isinstance(value, list):
+                widget = QWidget()
+                v_layout = QVBoxLayout()
+                v_layout.setAlignment(QtCore.Qt.AlignTop)
+                label = QLabel("[")
+                v_layout.addWidget(label)
+
+                for sub_value in value:
+                    if isinstance(sub_value, list):
+                        label = QLabel("[")
+                        v_layout.addWidget(label)
+
+                        for sub_sub_value in sub_value:
+                            sub_sub_value = str(sub_sub_value)
+                            value_scan = self.io_value_is_scan(sub_sub_value)
+
+                            if value_scan is None:
+                                h_layout = QHBoxLayout()
+                                h_layout.setAlignment(QtCore.Qt.AlignLeft)
+                                label = QLabel(sub_sub_value)
+                                h_layout.addWidget(label)
+                                label = QLabel(",")
+                                h_layout.addWidget(label)
+                                v_layout.addLayout(h_layout)
+
+                            else:
+                                h_layout = QHBoxLayout()
+                                h_layout.setAlignment(QtCore.Qt.AlignLeft)
+                                button = QPushButton(value_scan)
+                                button.clicked.connect(self.file_clicked)
+                                h_layout.addWidget(button)
+                                label = QLabel(",")
+                                h_layout.addWidget(label)
+                                v_layout.addLayout(h_layout)
+
+                        label = QLabel("],")
+                        v_layout.addWidget(label)
+
+                    else:
+                        sub_value = str(sub_value)
+                        value_scan = self.io_value_is_scan(sub_value)
+
+                        if value_scan is None:
+                            h_layout = QHBoxLayout()
+                            h_layout.setAlignment(QtCore.Qt.AlignLeft)
+                            label = QLabel(sub_value)
+                            h_layout.addWidget(label)
+                            label = QLabel(",")
+                            h_layout.addWidget(label)
+                            v_layout.addLayout(h_layout)
+
+                        else:
+                            h_layout = QHBoxLayout()
+                            button = QPushButton(value_scan)
+                            button.clicked.connect(self.file_clicked)
+                            h_layout.addWidget(button)
+                            label = QLabel(",")
+                            h_layout.addWidget(label)
+                            v_layout.addLayout(h_layout)
+
+                label = QLabel("]")
+                v_layout.addWidget(label)
+                widget.setLayout(v_layout)
+                self.table.setCellWidget(0, item_idx, widget)
+
+            else:
+                value_scan = self.io_value_is_scan(str(value))
+
+                if value_scan is not None:
+                    widget = QWidget()
+                    v_layout = QVBoxLayout()
+                    button = QPushButton(value_scan)
+                    button.clicked.connect(self.file_clicked)
+                    v_layout.addWidget(button)
+                    v_layout.setAlignment(QtCore.Qt.AlignTop)
+                    # v_layout.setAlignment(QtCore.Qt.AlignCenter)
+                    widget.setLayout(v_layout)
+                    self.table.setCellWidget(0, item_idx, widget)
+
+                else:
+                    widget = QWidget()
+                    v_layout = QVBoxLayout()
+                    v_layout.setAlignment(QtCore.Qt.AlignTop)
+                    label = QLabel(str(value))
+                    v_layout.addWidget(label)
+                    widget.setLayout(v_layout)
+                    self.table.setCellWidget(0, item_idx, widget)
+
+            item_idx += 1
+
+        return item_idx
 
 
 class PopUpVisualizedTags(QWidget):
