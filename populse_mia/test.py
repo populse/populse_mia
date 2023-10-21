@@ -1223,30 +1223,49 @@ class TestMIADataBrowser(TestMIACase):
             brick_table.horizontalHeaderItem(9).text(), "matlab_cmd"
         )
         self.assertEqual(brick_table.horizontalHeaderItem(10).text(), "mfile")
-        self.assertEqual(brick_table.item(0, 0).text(), "smooth_1")
-        self.assertEqual(brick_table.item(0, 1).text(), "Done")
+        # self.assertEqual(brick_table.item(0, 0).text(), "smooth_1")
         self.assertEqual(
-            brick_table.item(0, 2).text(), "2022-04-05 14:22:30.298043"
+            brick_table.cellWidget(0, 0).children()[1].text(), "smooth_1"
         )
-        self.assertEqual(brick_table.item(0, 3).text(), "Done")
+        # self.assertEqual(brick_table.item(0, 1).text(), "Done")
         self.assertEqual(
-            brick_table.item(0, 4).text(), "2022-04-05 14:22:30.298043"
+            brick_table.cellWidget(0, 1).children()[1].text(), "Done"
         )
-        self.assertEqual(brick_table.item(0, 5).text(), "0")
-        self.assertEqual(brick_table.item(0, 6).text(), "[6.0, 6.0, 6.0]")
-        self.assertEqual(brick_table.item(0, 7).text(), "False")
         self.assertEqual(
-            brick_table.cellWidget(0, 8).children()[1].text(),
+            brick_table.cellWidget(0, 2).children()[1].text(),
+            "2022-04-05 14:22:30.298043",
+        )
+        self.assertEqual(
+            brick_table.cellWidget(0, 3).children()[1].text(), "Done"
+        )
+        self.assertEqual(
+            brick_table.cellWidget(0, 4).children()[1].text(),
+            "2022-04-05 14:22:30.298043",
+        )
+        self.assertEqual(
+            brick_table.cellWidget(0, 5).children()[1].text(), "0"
+        )
+        self.assertEqual(
+            brick_table.cellWidget(0, 6).children()[1].text(),
+            "[6.0, 6.0, 6.0]",
+        )
+        self.assertEqual(
+            brick_table.cellWidget(0, 7).children()[1].text(), "False"
+        )
+        self.assertEqual(
+            brick_table.cellWidget(0, 8).children()[2].text(),
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
             "pvm-000220_000.nii",
         )
         self.assertEqual(
-            brick_table.item(0, 9).text(),
+            brick_table.cellWidget(0, 9).children()[1].text(),
             "/usr/local/SPM/spm12_standalone/run_spm12.sh "
             "/usr/local/MATLAB/MATLAB_Runtime/v95 script",
         )
-        self.assertEqual(brick_table.item(0, 10).text(), "True")
+        self.assertEqual(
+            brick_table.cellWidget(0, 10).children()[1].text(), "True"
+        )
 
     def test_clear_cell(self):
         """Tests the method clearing cells."""
@@ -3183,7 +3202,7 @@ class TestMIADataBrowser(TestMIACase):
         input_button = (
             data_browser.table_data.brick_history_popup.table.cellWidget(
                 0, 8
-            ).children()[-1]
+            ).children()[2]
         )
 
         input_button.clicked.emit()  # Clicks on the input button
