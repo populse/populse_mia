@@ -5659,9 +5659,13 @@ class PopUpShowHistory(QDialog):
     """Class to display the history of a document.
 
     .. Methods:
+        - file_clicked: close the history window and select the file in the
+          data browser
+        - find_associated_bricks:
+        - find_process_from_plug:
         - io_value_is_scan: checks if the I/O value is a scan
-        - file_clicked: called when a file is clicked
         - node_selected: called when a pipeline node is clicked
+        - _updateio_table: fill in the input and output sections of the table
         - update_table: update the brick row at the bottom
     """
 
@@ -5809,27 +5813,10 @@ class PopUpShowHistory(QDialog):
         width, height = screen_resolution.width(), screen_resolution.height()
         self.setGeometry(300, 200, round(0.6 * width), round(0.4 * height))
 
-    def io_value_is_scan(self, value):
-        """Checks if the I/O value is a scan.
-
-        :param value: I/O value
-        :return: The scan corresponding to the value if it exists,
-          None otherwise
-
-        """
-
-        value_scan = None
-
-        for scan in self.project.session.get_documents_names(
-            COLLECTION_CURRENT
-        ):
-            if scan in str(value):
-                value_scan = scan
-
-        return value_scan
-
     def file_clicked(self):
-        """Called when a file is clicked."""
+        """
+        Close the history window and select the file in the data browser.
+        """
 
         file = self.sender().text()
         self.databrowser.table_data.clearSelection()
@@ -5840,7 +5827,11 @@ class PopUpShowHistory(QDialog):
         self.close()
 
     def find_associated_bricks(self, node_name):
-        """Blabla"""
+        """Blabla
+
+        :param node_name: blabla
+        :return: blabla
+        """
 
         bricks = {}
         for uuid in self.brick_list:
@@ -5860,7 +5851,11 @@ class PopUpShowHistory(QDialog):
         return bricks
 
     def find_process_from_plug(self, plug):
-        """Blabla"""
+        """Blabla
+
+        :param plug: blabla
+        :return: blabla
+        """
 
         process_name = ""
         plug_name = ""
@@ -5891,6 +5886,25 @@ class PopUpShowHistory(QDialog):
                         ) = self.find_process_from_plug(link[2].plugs[link[1]])
                         process_name += sub_process_name
         return process_name, plug_name
+
+    def io_value_is_scan(self, value):
+        """Checks if the I/O value is a scan.
+
+        :param value: I/O value
+        :return: The scan corresponding to the value if it exists,
+        None otherwise
+
+        """
+
+        value_scan = None
+
+        for scan in self.project.session.get_documents_names(
+            COLLECTION_CURRENT
+        ):
+            if scan in str(value):
+                value_scan = scan
+
+        return value_scan
 
     def node_selected(self, node_name, process):
         """Emit a signal when a node is clicked.
@@ -5980,6 +5994,128 @@ class PopUpShowHistory(QDialog):
                 else:
                     gnode.fonced_viewer(True)
 
+    def _updateio_table(self, io_dict, item_idx):
+        """Fill in the input and output sections of the table.
+
+        :param io_dict: inputs / outputs dictionary
+        :param item_idx: current column element index
+        :return: new current column element index
+        """
+        for key, value in sorted(io_dict.items()):
+            item = QTableWidgetItem()
+            item.setText(key)
+            self.table.setHorizontalHeaderItem(item_idx, item)
+
+            if isinstance(value, list) and value:
+                widget = QWidget()
+                v_layout = QVBoxLayout()
+                v_layout.setAlignment(QtCore.Qt.AlignTop)
+                label = QLabel("[")
+                v_layout.addWidget(label)
+
+                for sub_value in value:
+                    if isinstance(sub_value, list) and sub_value:
+                        label = QLabel("[")
+                        v_layout.addWidget(label)
+
+                        for sub_sub_value in sub_value:
+                            sub_sub_value = str(sub_sub_value)
+                            value_scan = self.io_value_is_scan(sub_sub_value)
+
+                            if value_scan is None:
+                                del v_layout
+                                del label
+                                v_layout = QVBoxLayout()
+                                # v_layout.setAlignment(QtCore.Qt.AlignTop)
+                                v_layout.setAlignment(
+                                    QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
+                                )
+                                label = QLabel(str(value))
+                                v_layout.addWidget(label)
+                                break
+
+                            else:
+                                h_layout = QHBoxLayout()
+                                h_layout.setAlignment(QtCore.Qt.AlignLeft)
+                                button = QPushButton(value_scan)
+                                button.clicked.connect(self.file_clicked)
+                                h_layout.addWidget(button)
+                                label = QLabel(",")
+                                h_layout.addWidget(label)
+                                v_layout.addLayout(h_layout)
+
+                        else:
+                            label = QLabel("],")
+                            v_layout.addWidget(label)
+                            continue
+
+                        break
+
+                    else:
+                        sub_value = str(sub_value)
+                        value_scan = self.io_value_is_scan(sub_value)
+
+                        if value_scan is None:
+                            del v_layout
+                            del label
+                            v_layout = QVBoxLayout()
+                            # v_layout.setAlignment(QtCore.Qt.AlignTop)
+                            v_layout.setAlignment(
+                                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
+                            )
+                            label = QLabel(str(value))
+                            v_layout.addWidget(label)
+                            break
+
+                        else:
+                            h_layout = QHBoxLayout()
+                            button = QPushButton(value_scan)
+                            button.clicked.connect(self.file_clicked)
+                            h_layout.addWidget(button)
+                            label = QLabel(",")
+                            h_layout.addWidget(label)
+                            v_layout.addLayout(h_layout)
+
+                else:
+                    label = QLabel("]")
+                    v_layout.addWidget(label)
+
+                widget.setLayout(v_layout)
+                self.table.setCellWidget(0, item_idx, widget)
+
+            else:
+                value_scan = self.io_value_is_scan(str(value))
+
+                if value_scan is not None:
+                    widget = QWidget()
+                    v_layout = QVBoxLayout()
+                    button = QPushButton(value_scan)
+                    button.clicked.connect(self.file_clicked)
+                    v_layout.addWidget(button)
+                    # v_layout.setAlignment(QtCore.Qt.AlignTop)
+                    # v_layout.setAlignment(QtCore.Qt.AlignCenter)
+                    v_layout.setAlignment(
+                        QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
+                    )
+                    widget.setLayout(v_layout)
+                    self.table.setCellWidget(0, item_idx, widget)
+
+                else:
+                    widget = QWidget()
+                    v_layout = QVBoxLayout()
+                    # v_layout.setAlignment(QtCore.Qt.AlignTop)
+                    v_layout.setAlignment(
+                        QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
+                    )
+                    label = QLabel(str(value))
+                    v_layout.addWidget(label)
+                    widget.setLayout(v_layout)
+                    self.table.setCellWidget(0, item_idx, widget)
+
+            item_idx += 1
+
+        return item_idx
+
     def update_table(
         self,
         inputs,
@@ -5990,7 +6126,17 @@ class PopUpShowHistory(QDialog):
         exec="",
         exec_time=None,
     ):
-        """Filling the table."""
+        """Filling the table.
+
+        :param inputs: inputs dictionary
+        :param outputs: outputs dictionary
+        :param brick_name: name of the brick
+        :param init: initialisation status
+        :param init_time: init date / time
+        :param exec: execution status
+        :param exec_time: execution date / time
+
+        """
 
         self.table.removeRow(0)
         self.table.setRowCount(1)
@@ -6077,110 +6223,11 @@ class PopUpShowHistory(QDialog):
             self.table.setCellWidget(0, item_idx, widget)
             item_idx += 1
 
-        item_idx = self._update_table(inputs, item_idx)
-        _ = self._update_table(outputs, item_idx)
+        item_idx = self._updateio_table(inputs, item_idx)
+        _ = self._updateio_table(outputs, item_idx)
         self.table.verticalHeader().setMinimumSectionSize(30)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
-
-    def _update_table(self, io_dict, item_idx):
-        """Fill in the input and output sections of the table"""
-        for key, value in sorted(io_dict.items()):
-            item = QTableWidgetItem()
-            item.setText(key)
-            self.table.setHorizontalHeaderItem(item_idx, item)
-
-            if isinstance(value, list):
-                widget = QWidget()
-                v_layout = QVBoxLayout()
-                v_layout.setAlignment(QtCore.Qt.AlignTop)
-                label = QLabel("[")
-                v_layout.addWidget(label)
-
-                for sub_value in value:
-                    if isinstance(sub_value, list):
-                        label = QLabel("[")
-                        v_layout.addWidget(label)
-
-                        for sub_sub_value in sub_value:
-                            sub_sub_value = str(sub_sub_value)
-                            value_scan = self.io_value_is_scan(sub_sub_value)
-
-                            if value_scan is None:
-                                h_layout = QHBoxLayout()
-                                h_layout.setAlignment(QtCore.Qt.AlignLeft)
-                                label = QLabel(sub_sub_value)
-                                h_layout.addWidget(label)
-                                label = QLabel(",")
-                                h_layout.addWidget(label)
-                                v_layout.addLayout(h_layout)
-
-                            else:
-                                h_layout = QHBoxLayout()
-                                h_layout.setAlignment(QtCore.Qt.AlignLeft)
-                                button = QPushButton(value_scan)
-                                button.clicked.connect(self.file_clicked)
-                                h_layout.addWidget(button)
-                                label = QLabel(",")
-                                h_layout.addWidget(label)
-                                v_layout.addLayout(h_layout)
-
-                        label = QLabel("],")
-                        v_layout.addWidget(label)
-
-                    else:
-                        sub_value = str(sub_value)
-                        value_scan = self.io_value_is_scan(sub_value)
-
-                        if value_scan is None:
-                            h_layout = QHBoxLayout()
-                            h_layout.setAlignment(QtCore.Qt.AlignLeft)
-                            label = QLabel(sub_value)
-                            h_layout.addWidget(label)
-                            label = QLabel(",")
-                            h_layout.addWidget(label)
-                            v_layout.addLayout(h_layout)
-
-                        else:
-                            h_layout = QHBoxLayout()
-                            button = QPushButton(value_scan)
-                            button.clicked.connect(self.file_clicked)
-                            h_layout.addWidget(button)
-                            label = QLabel(",")
-                            h_layout.addWidget(label)
-                            v_layout.addLayout(h_layout)
-
-                label = QLabel("]")
-                v_layout.addWidget(label)
-                widget.setLayout(v_layout)
-                self.table.setCellWidget(0, item_idx, widget)
-
-            else:
-                value_scan = self.io_value_is_scan(str(value))
-
-                if value_scan is not None:
-                    widget = QWidget()
-                    v_layout = QVBoxLayout()
-                    button = QPushButton(value_scan)
-                    button.clicked.connect(self.file_clicked)
-                    v_layout.addWidget(button)
-                    v_layout.setAlignment(QtCore.Qt.AlignTop)
-                    # v_layout.setAlignment(QtCore.Qt.AlignCenter)
-                    widget.setLayout(v_layout)
-                    self.table.setCellWidget(0, item_idx, widget)
-
-                else:
-                    widget = QWidget()
-                    v_layout = QVBoxLayout()
-                    v_layout.setAlignment(QtCore.Qt.AlignTop)
-                    label = QLabel(str(value))
-                    v_layout.addWidget(label)
-                    widget.setLayout(v_layout)
-                    self.table.setCellWidget(0, item_idx, widget)
-
-            item_idx += 1
-
-        return item_idx
 
 
 class PopUpVisualizedTags(QWidget):
