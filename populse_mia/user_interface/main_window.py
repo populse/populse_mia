@@ -890,13 +890,13 @@ class MainWindow(QMainWindow):
 
             else:
                 if self.exPopup.exec():
-                    file_name = self.exPopup.selectedFiles()
-                    self.exPopup.get_filename(file_name)
-                    file_name = self.exPopup.relative_path
+                    project_name = self.exPopup.selectedFiles()
+                    self.exPopup.get_filename(project_name)
+                    project_name = self.exPopup.relative_path
                     self.data_browser.data_sent = False
 
                     # We switch the project
-                    self.switch_project(file_name, self.exPopup.name)
+                    self.switch_project(project_name, self.exPopup.name)
                     field_names = self.project.session.get_fields_names(
                         COLLECTION_CURRENT
                     )
@@ -909,13 +909,13 @@ class MainWindow(QMainWindow):
 
                     # Update the history and brick tables in the newly opened
                     # project, if it comes from outside.
-                    path_name = os.path.join(
-                        os.path.abspath(os.path.normpath(file_name)), ""
+                    path_name = os.path.dirname(
+                        os.path.abspath(os.path.normpath(project_name))
                     )
-                    projectsPath = os.path.join(
-                        os.path.abspath(self.config.getPathToProjectsFolder()),
-                        "",
+                    projectsPath = os.path.abspath(
+                        self.config.getPathToProjectsFolder()
                     )
+
                     if path_name != projectsPath:
                         self.project.update_db_for_paths(path_name)
 
@@ -937,10 +937,10 @@ class MainWindow(QMainWindow):
         if can_switch:
             action = self.sender()
             if action:
-                file_name = action.data()
-                entire_path = os.path.abspath(file_name)
+                project_name = action.data()
+                entire_path = os.path.abspath(project_name)
                 path, name = os.path.split(entire_path)
-                relative_path = os.path.relpath(file_name)
+                relative_path = os.path.relpath(project_name)
                 self.switch_project(relative_path, name)
                 # We switch the project
                 field_names = self.project.session.get_fields_names(
