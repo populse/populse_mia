@@ -24,16 +24,17 @@ from populse_mia.user_interface import data_browser
 
 
 class Filter:
-    """Class that represent a Filter, containing the results of both rapid and
-      advanced search.
+    """
+    Class that represent a Filter, containing the results of both rapid and
+    advanced search.
 
     .. Methods:
         - generate_filter: apply the filter to the given list of scans
         - json_format: returns the filter as a dictionary
 
     The advanced search creates a complex query to the database and is a
-    combination of several "query lines" which
-    are linked with AND or OR and all composed of:
+    combination of several "query lines" which are linked with AND or OR
+    and all composed of:
     - A negation or not
     - A tag name or all visible tags
     - A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN)
@@ -53,7 +54,8 @@ class Filter:
     def __init__(
         self, name, nots, values, fields, links, conditions, search_bar
     ):
-        """Initialization of the Filter class.
+        """
+        Initialization of the Filter class.
 
         :param name: filter's name
         :param nots: list of negations ("" or NOT)
@@ -61,7 +63,7 @@ class Filter:
         :param fields: list of list of fields
         :param links: list of links (AND/OR)
         :param conditions: list of conditions (==, !=, <, >, <=, >=, IN,
-        BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)
+         BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)
         :param search_bar: value in the rapid search bar
         """
         self.nots = nots

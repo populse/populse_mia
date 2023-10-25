@@ -8,21 +8,19 @@
 
 
 Mia's developer installation - Using virtualization
-==============================================
+===================================================
 
-The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements`).
-Then, the installation will be almost identical to the one done directly on the host (see :ref:`installation`).
+The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements_2`).
+Then, the installation will be almost identical to the one done directly on the host (see :ref:`installation_2`).
 
 You can perform the installation by following the detailed instruction provided by `BrainVisa team (Developer environment installation section) <https://brainvisa.info/web/download.html#developer-environment-installation>`_.
-In this case, skip the :ref:`prerequirements` below and proceed directly to the :ref:`installation`.
-Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation` section below.
+In this case, skip the :ref:`prerequirements_2` below and proceed directly to the :ref:`installation_2`.
+Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation_2` section below.
 For developer, it is recommended to use the Brainvisa developer image (casa_dev) in order to get the last version available of each project used in populse.
 
 You can also follow the full procedure below which uses Singularity virtualization technology.
 
-
-
-.. _prerequirements:
+.. _prerequirements_2:
 
 Pre-requirements
 ----------------
@@ -33,8 +31,7 @@ Pre-requirements
 
 * For Windows 10, please follow the detailed instruction provided by `BrainVisa team (Developer environment installation section) <https://brainvisa.info/web/download.html#developer-environment-installation>`_.
 
-
-.. _installation:
+.. _installation_2:
 
 Installation
 ------------

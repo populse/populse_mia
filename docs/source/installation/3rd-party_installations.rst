@@ -67,7 +67,7 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
 	unzip spm12_r7771_Linux_R2019b.zip -d /path/to/soft/spmStandalone
 
 
- * Download and install the corresponding R20xxa/b Matlab Runtime installation for linux `here <https://uk.mathworks.com/products/compiler/matlab-runtime.html>`_.
+ * Download and install the corresponding R20xxa/b Matlab Runtime installation for linux `here <https://uk.mathworks.com/products/compiler/matlab-runtime.html>`__.
 
    * Unzip it: ::
 
@@ -140,7 +140,7 @@ Installation of `AFNI <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/index.html
 Installation of `ANTs <http://stnava.github.io/ANTs/>`_
 -------------------------------------------------------
 
-  * We strongly recommend installing ANTs via release binaries, available for macos and linux (ubuntu, centos - fedora) from ANTs ``v2.4.1``, and Windows from ``v2.4.4``. For this, `download pre-built releases <https://github.com/ANTsX/ANTs/releases>`_ (select the desired file in the ``Assets`` section, e.g. ants-2.4.1-centos7-X64-gcc.zip) then unzip it. `Some notes <https://github.com/ANTsX/ANTs/wiki/Installing-ANTs-release-binaries>`_ on this subject are available.
+  * We strongly recommend installing ANTs via release binaries, available for macos and linux (ubuntu, centos - fedora) from ANTs ``v2.4.1``, and Windows from ``v2.4.4``. For this, `download pre-built releases <https://github.com/ANTsX/ANTs/releases>`_ (select the desired file in the ``Assets`` section, e.g. ants-2.4.1-centos7-X64-gcc.zip) then unzip it. `Some notes <https://github.com/ANTsX/ANTs/wiki/Installing-ANTs-release-binaries>`__ on this subject are available.
 
   * ANTs since ``v2.4.4`` is also available `via Conda <https://anaconda.org/aramislab/ants>`_.
 
@@ -158,11 +158,11 @@ Installation of `FreeSurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 
   * Choose the version to install (we strongly recommend installing the latest version), for example at the time of writing, `version 7.x <https://surfer.nmr.mgh.harvard.edu/fswiki/rel7downloads>`_.
 
-  * Select the packages or tarballs you wish to download to proceed with the installation. `Some notes <https://surfer.nmr.mgh.harvard.edu/fswiki/FS7_linux>`_ on this subject are available.
+  * Select the packages or tarballs you wish to download to proceed with the installation. `Some notes <https://surfer.nmr.mgh.harvard.edu/fswiki/FS7_linux>`__ on this subject are available.
 
   * For Fedora 37, centos8 tar archive works fine.
 
-  * Get the freesurfer License `here <https://surfer.nmr.mgh.harvard.edu/registration.html>`_. Copy the license received in the freesurfer folder.
+  * Get the freesurfer License `here <https://surfer.nmr.mgh.harvard.edu/registration.html>`__. Copy the license received in the freesurfer folder.
 
   * Test FreeSurfer on a new terminal: ::
 
@@ -181,9 +181,9 @@ Installation on Macos
 Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ Standalone and Matlab Runtime
 -----------------------------------------------------------------------------------------------------------
 
-  * Download the spm12_r7532_BI_macOS_R2018b.zip `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/>`_. Unzip it. In the same directory where run_spm12.sh can be found unzip spm12_maci64.zip
+  * Download the spm12_r7532_BI_macOS_R2018b.zip `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/>`__. Unzip it. In the same directory where run_spm12.sh can be found unzip spm12_maci64.zip.
 
-  * Download the corresponding MCR for MATLAB Compiler Runtime (MCR) MCR_R2018b_maci64_installer.dmg.zip `file <https://fr.mathworks.com/products/compiler/matlab-runtime.html>`_
+  * Download the corresponding MCR for MATLAB Compiler Runtime (MCR) MCR_R2018b_maci64_installer.dmg.zip `file <https://fr.mathworks.com/products/compiler/matlab-runtime.html>`__.
 
   * Start the MATLAB Runtime installer:
       * double click in MCRInstaller.dmg
@@ -207,7 +207,7 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
 
   * Tested on macOS 10.13.6:
 
-    * The spm12_r7771.zip `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/>`_ and MCR v4.13 (MATLAB R2010a) MCRInstaller.dmg `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/MCR/maci64/>`_ are not compatible with mia (while `./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri` works fine in a terminal). Using this version of spm standalone, the following message is observed in MIA: `/Volumes/Users/econdami/Documents/spm/spm12Standalone/spm12Stndalone_r7771/run_spm12. sh: line 60: ./spm12.app/Contents/MacOS/spm12_maci64: No such file or directory`.
+    * The spm12_r7771.zip `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/>`__ and MCR v4.13 (MATLAB R2010a) MCRInstaller.dmg `file <https://www.fil.ion.ucl.ac.uk/spm/download/restricted/utopia/MCR/maci64/>`__ are not compatible with mia (while `./run_spm12.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v713/ fmri` works fine in a terminal). Using this version of spm standalone, the following message is observed in MIA: `/Volumes/Users/econdami/Documents/spm/spm12Standalone/spm12Stndalone_r7771/run_spm12. sh: line 60: ./spm12.app/Contents/MacOS/spm12_maci64: No such file or directory`.
 
 Installation of others software
 -------------------------------

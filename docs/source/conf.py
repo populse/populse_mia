@@ -128,10 +128,11 @@ release = populse_mia.__version__
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.viewcode",
-    "sphinx.ext.autosectionlabel",
+    # "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
     "sphinxcontrib.mermaid",
+    "myst_parser",
 ]
 
 try:
