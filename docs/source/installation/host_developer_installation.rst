@@ -11,8 +11,6 @@
 Populse_mia's developer installation on host
 ============================================
 
-.. _pre-requirements:
-
 Pre-requirements
 ----------------
 
@@ -20,26 +18,21 @@ Pre-requirements
 
 * `For Windows 10 <./host_pre_req_windows10.html>`_
 
-
-.. _installation:
-
 Installation
 ------------
 
 **Installation by cloning the source codes**
 
-`populse_mia <https://github.com/populse/populse_mia>`_ sources can be found on gihub.
+`populse_mia <https://github.com/populse/populse_mia>`__ sources can be found on gihub.
 
 To use the whole populse project in developer mode on host (and have the latest versions available), it will be necessary to clone all this projects:
-    |   - `populse_mia <https://github.com/populse/populse_mia>`_
+    |   - `populse_mia <https://github.com/populse/populse_mia>`__
     |   - `capsul <https://github.com/populse/capsul>`_
-    |   - `mia_processes <https://github.com/populse/mia_processes>`_
+    |   - `mia_processes <https://github.com/populse/mia_processes>`__
     |   - `mri_conv <https://github.com/populse/mri_conv>`_
     |   - `populse_db <https://github.com/populse/populse_db>`_
     |   - `soma-workflow <https://github.com/populse//soma-workflow>`_
     |   - `soma-base <https://github.com/populse//soma-base>`_
-
-|
 
 * For each project:
 
@@ -70,7 +63,7 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 |
 
-* In development mode the libraries needed for populse_mia  and mia_processes are not installed as with pip. So depending on the libraries already installed on your station it may be necessary to complete this installation. Please refer to the Requirements chapter on the Github page for `populse_mia <https://github.com/populse/populse_mia#requirements>`_  and for `mia_processes <https://github.com/populse/mia_processes/blob/master/README.md#requirements>`_  to install the necessary third party libraries.
+* In development mode the libraries needed for populse_mia  and mia_processes are not installed as with pip. So depending on the libraries already installed on your station it may be necessary to complete this installation. Please refer to the Requirements chapter on the Github page for `populse_mia <https://github.com/populse/populse_mia#requirements>`_  and for `mia_processes <https://github.com/populse/mia_processes/blob/master/README.md#requirements>`__  to install the necessary third party libraries.
 
 
   * Third party librairies installation, e.g. for nibabel ::

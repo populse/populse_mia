@@ -30,10 +30,8 @@ from ..data_viewer import DataViewer
 
 class MiaViewer(Qt.QWidget, DataViewer):
     """
-    :class:`MIA data viewer
-           <populse_mia.user_interface.data_viewer.data_viewer.DataViewer>`
-    implementation based on `PyAnatomist
-    <http://brainvisa.info/pyanatomist/sphinx/index.html>`_
+    :class:`MIA data viewer <populse_mia.user_interface.data_viewer.data_viewer.DataViewer>` # noqa: E501
+    implementation based on `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_  # noqa: E501
     """
 
     def __init__(self, init_global_handlers=None):

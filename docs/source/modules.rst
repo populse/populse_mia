@@ -1,3 +1,7 @@
+.. :orphan: is used below to try to remove the following warning: checking consistency... /data/Git_Projects/populse_mia/docs/source/modules.rst: WARNING: document isn't included in any toctree
+
+:orphan:
+
 populse_mia
 ===========
 

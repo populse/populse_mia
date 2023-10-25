@@ -1558,7 +1558,7 @@ class PopUpInheritanceDict(QDialog):
         """Initialization
 
         :param values: A dictionary with input name as key and their paths
-        as values
+         as values
         :param node_name: name of the current node
         :param plug_name: name of the current output plug
         :param iterate: boolean, iteration or not
@@ -5674,7 +5674,7 @@ class PopUpShowHistory(QDialog):
 
         :param project: current project in the software
         :param scan: filename of the scan
-        :param databrowser; data browser instance of the software
+        :param databrowser: data browser instance of the software
         :param main_window: main window of the software
 
         """
@@ -5892,7 +5892,7 @@ class PopUpShowHistory(QDialog):
 
         :param value: I/O value
         :return: The scan corresponding to the value if it exists,
-        None otherwise
+         None otherwise
 
         """
 

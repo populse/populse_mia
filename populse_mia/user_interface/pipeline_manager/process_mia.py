@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Module used by MIA bricks to run processes.
+Module used by mia_processes bricks to run processes.
 
 :Contains:
     :Class:
@@ -94,19 +94,19 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         :Method:
             - __init__: constructor
             - complete_attributes_with_database:  augments the Capsul
-            completion system attributes associated with a process
+              completion system attributes associated with a process
             - complete_nipype_common: set Nipype parameters for SPM
             - complete_parameters: completes file parameters from
-            given inputs parameters
+              given inputs parameters
             - complete_parameters_mia: Completion for :class:`ProcessMIA`
-            instances
+              instances
             - get_attribute_values: re-route to underlying fallback engine
             - get_path_completion_engine: re-route to underlying fallback
-            engine
+              engine
             - get_project: get the project associated with the process
             - path_attributes: re-route to underlying fallback engine
             - remove_switch_observe: reimplemented since it is expectes
-            in switches completion engine
+              in switches completion engine
 
     """
 
@@ -741,8 +741,8 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
     :Contains:
         :Method:
             - get_completion_engine: get a ProcessCompletionEngine instance for
-             a given process/node
-            -
+              a given process/node
+
     """
 
     factory_id = "mia_completion"

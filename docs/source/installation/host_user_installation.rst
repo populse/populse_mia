@@ -21,8 +21,6 @@ Pre-requirements
 
 * `For Windows 10 <./host_pre_req_windows10.html>`_
 
-.. _installation:
-
 Installation
 ------------
 

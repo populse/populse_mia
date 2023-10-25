@@ -46,7 +46,7 @@ class PopulseFileControlWidget(FileControlWidget):
             - create_widget: method to create the file widget
             - filter_clicked: display a filter widget
             - update_plug_value_from_filter: update the plug value from
-            a filter result
+              a filter result
     """
 
     @staticmethod
@@ -236,7 +236,7 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
             - create_widget: method to create the file widget
             - filter_clicked: display a filter widget
             - update_plug_value_from_filter: update the plug value from
-            a filter result
+              a filter result
 
     """
 
@@ -327,7 +327,7 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
             - create_widget: method to create the list of files widget
             - filter_clicked: display a filter widget
             - update_plug_value_from_filter: update the plug value from
-            a filter result
+              a filter result
 
     """
 

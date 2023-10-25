@@ -1,4 +1,4 @@
-.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/user_installation.rst: WARNING: document isn't included in any toctree
+.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/virtualisation_pre_req_windows10.rst: WARNING: document isn't included in any toctree
 
 :orphan:
 
@@ -9,7 +9,7 @@
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
 Pre-requirements for virtualization using Brainvisa - Windows10
-================================================================
+===============================================================
 
 Pre-requirements of windows installations are the same for `windows host installation in user mode <https://populse.github.io/populse_mia/html/installation/host_pre_req_windows10.html>`_.
 But you can avoid numpy and PyQt5 install commands since they will be managed while installing the mia project under ubuntu.
@@ -18,22 +18,22 @@ Once pre-requirements are acquired, you will need to install Wsl2 to host a virt
 
 1- WSL2 (Windows Subsystem Linux) installation
 ----------------------------------------------
-|
 
 * In an administrator type Windows account:
 
    - Windows 10 must be up to date
    - You need to have enough free space on your system disk : around 20 Gb
-   - Open a **PowerShell as administrator** (right clic on powershell icon) and enter: ::
+   - Open a **PowerShell as administrator** (right clic on powershell icon) and enter:
 
-  wsl --install -d Ubuntu-20.04
+     ::
 
-|
+       wsl --install -d Ubuntu-20.04
 
+     |
 
-    .. image:: ../../../developer_doc/images/screenshots/Windows_10_PowerShell_WSL2.png
-       :align: center
-       :name: Windows_10_PowerShell_WSL2
+   .. image:: ../../../developer_doc/images/screenshots/Windows_10_PowerShell_WSL2.png
+      :align: center
+      :name: Windows_10_PowerShell_WSL2
 
 |
 
@@ -42,7 +42,6 @@ Once pre-requirements are acquired, you will need to install Wsl2 to host a virt
 * Normally a linux ubuntu window is already available, enter it:
 
 * Enter a user / password who will be administrator of this linux (asked by the system)
-
 
     .. image:: ../../../developer_doc/images/screenshots/Windows_10_Ubuntu.png
        :align: center
@@ -59,7 +58,6 @@ Once pre-requirements are acquired, you will need to install Wsl2 to host a virt
    sudo apt upgrade -y
 
    exit
-|
 
 * Close this window
 
@@ -81,7 +79,6 @@ To know more:
 
 2- X server installation in windows with VcXsrv
 -----------------------------------------------
-|
 
 We also need a X windows server to allow linux applications graphic user interface (GUI) works.
 
@@ -129,7 +126,6 @@ P.S: You have to make sure VcXsrv is running every time you to run a GUI via you
 
 3 - Dependencies Installation
 -----------------------------
-|
 
 Open an Ubuntu session in Windows by:
 
@@ -139,18 +135,14 @@ Open an Ubuntu session in Windows by:
 
 - open a normal Windows PowerShell,enter ``ubuntu.20.04.exe``
 
-
 In this Ubuntu window terminal, install the following dependencies: ::
 
    sudo apt install -y build-essential uuid-dev libgpgme-dev squashfs-tools libseccomp-dev wget pkg-config git git-lfs cryptsetup-bin python3-distutils python3-dev
    # Ubuntu 20.04
    sudo apt install python-is-python3
 
-|
-
 4 - BrainVisa Installation
 ----------------------------
-|
 
 To install properly BrainVisa you have to refer to `prerequisites guidelines <https://brainvisa.info/web/download.html#prerequisites>`_ for Singularity on linux.
 
@@ -161,7 +153,7 @@ Prerequisite are the software that need to be installed on your computer in orde
 ``mkdir -p $HOME/casa_distro/brainvisa-opensource-master`` (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations - but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
 
 - Download the "casa-dev" image found `here <https://brainvisa.info/download/>`_, preferably into the $HOME/casa_distro directory. Download the latest "casa-dev" image.
-It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvisa.info/download/casa-dev-5.3-8.sif``
+  It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvisa.info/download/casa-dev-5.3-8.sif``
 
 - Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: ``singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-8.sif branch=master distro=opensource``.
 
@@ -184,9 +176,7 @@ It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvi
    bv_maker
    # it takes time to compile
 
-
 Now you can test if the BrainVISA configuration GUI works well via the command: ``bv``.
-
 
 You have completely installed a virtual Ubuntu which is now able to host mia.
 You can now follow steps from **installation** via `populse mia installation in user mode <https://populse.github.io/populse_mia/html/installation/virtualisation_user_installation.html>`_.
