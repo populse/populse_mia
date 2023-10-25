@@ -1,4 +1,4 @@
-.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/user_installation.rst: WARNING: document isn't included in any toctree
+.. :orphan: is used below to try to remove the following warning: checking consistency... /home/econdami/Git_Projects/populse_mia/docs/source/installation/virtualisation_user_installation.rst: WARNING: document isn't included in any toctree
 
 :orphan:
 
@@ -12,17 +12,16 @@
 Mia's user installation - Using virtualization
 ==============================================
 
-The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements`).
-Then, the installation will be almost identical to the one done directly on the host (see :ref:`installation`).
+The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see :ref:`prerequirements_1`).
+Then, the installation will be almost identical to the one done directly on the host (see :ref:`installation_1`).
 
 You can perform the installation by `following the detailed instruction provided by BrainVisa team <https://brainvisa.info/web/download.html>`_.
-In this case, skip the :ref:`prerequirements` below and proceed directly to the :ref:`installation`.
-Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation` section below
+In this case, skip the :ref:`prerequirements_1` below and proceed directly to the :ref:`installation_1`.
+Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the :ref:`installation_1` section below
 
 You can also follow the full procedure below which uses Singularity virtualization technology.
 
-
-.. _prerequirements:
+.. _prerequirements_1:
 
 Pre-requirements
 ----------------
@@ -33,8 +32,7 @@ Pre-requirements
 
 * `For Windows 10 <./virtualisation_pre_req_windows10.html>`_
 
-
-.. _installation:
+.. _installation_1:
 
 Installation
 ------------

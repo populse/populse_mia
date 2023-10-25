@@ -21,15 +21,19 @@ In order to acess to the data viewer, it is possible to use virtualization by us
 
 - `Install a light version of Mia on the host <./host_user_installation.html>`_ (without data viewer)
 
-    `Pre-requirements <./host_user_installation.html#pre-requirements>`_
+    `Pre-requirements <./host_user_installation.html#pre-requirements>`__
+
         * `For linux - macOS <./host_pre_req_linux_macos.html>`_
-        * `For Windows 10 <./host_pre_req_windows10.html>`_
-    `Installation <./host_user_installation.html#isntallation>`_
+        * `For Windows 10 <./host_pre_req_windows10.html>`__
+
+    `Installation <./host_user_installation.html#installation>`__
 
 - `Use virtualisation to install Mia <./virtualisation_user_installation.html>`_ (with a data viewer access but with an additional cost for hard disk space)
 
-    `Pre-requirements <./virtualisation_user_installation.html#pre-requirements>`_
+    `Pre-requirements <./virtualisation_user_installation.html#pre-requirements>`__
+
         * `For linux <./virtualisation_pre_req_linux.html>`_
         * `For macos <./virtualisation_pre_req_macos.html>`_
-        * `For Windows 10 <./virtualisation_pre_req_windows10.html>`_
-    `Installation <./virtualisation_user_installation.html#isntallation>`_
+        * `For Windows 10 <./virtualisation_pre_req_windows10.html>`__
+
+    `Installation <./virtualisation_user_installation.html#installation>`__

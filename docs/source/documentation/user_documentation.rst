@@ -14,7 +14,7 @@ Populse_MIA's user documentation
 
 This page is a user guide for Populse_Mia.
 
-A minimal data set (~500 MB, zip file with Bruker, Philips and NIfTI data) can be downloaded `here <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers/-/archive/main/miadatausers-main.zip>`_ to allow users to quickly start using and testing Mia.
+A minimal data set (~500 MB, zip file with Bruker, Philips and NIfTI data) can be downloaded `here <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers/-/archive/main/miadatausers-main.zip>`__ to allow users to quickly start using and testing Mia.
 
 Software presentation
 ---------------------
@@ -25,7 +25,7 @@ Populse_MIA is composed of three main tabs:
   * The `Data Viewer <./data_viewer.html>`_ tab
       * An advanced viewer of up to 5-dimensional data, mostly but not exclusively MRI data, spectra,  plots linked to image and non-image data
   * The `Pipeline Manager <./pipeline_manager.html>`_ tab
-      * An advanced graphical tool for building process pipelines (`see a complete example here <./pipeline_example.html>`_)
+      * An advanced graphical tool for building process pipelines (`see a complete example here <./pipeline_example.html>`__)
 
 Populse_MIA uses a Populse third party software called `MRI File Manager <./mri_file_manager.html>`_) to import MRI data and convert them to Nifti/JSON format.
 
@@ -48,7 +48,7 @@ Menu bar actions
     * Saved projects
         * Lists all the recent projects
     * MIA preferences
-        * Opens the software preferences dialog (see preferences manual `here <./preferences.html>`_)
+        * Opens the software preferences dialog (see preferences manual `here <./preferences.html>`__)
     * Project properties
         * Opens the project properties dialog
     * Package library manager

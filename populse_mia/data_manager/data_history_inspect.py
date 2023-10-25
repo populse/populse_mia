@@ -539,13 +539,15 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
 
 def find_procs_with_output(procs, filename, project):
     """
-    Find in the given process list if the given filename is part of its outputs
+    Find in the given process list if the given filename is part of
+    its outputs.
 
     Parameters
     ----------
     procs: iterable
-        each process in the list is a :class:`ProtoProcess` instance
+        process in the list is a :class:`ProtoProcess` instance
     filename: str
+        a file name
     project: :class:`~populse_mia.data_manager.project.Project` instance
         used only to get the database folder (base directory for data)
 

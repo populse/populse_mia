@@ -4,7 +4,7 @@ Remote computing with Popluse-MIA
 
 Remote computing is performed using :somaworkflow:`Soma-Workflow <index.html>`.
 
-It needs several install steps before being able to process.
+It needs several install steps before being able to process:
 
 #. :ref:`Install Soma-Workflow on the computing server`
 #. :ref:`Configure Soma-Workflow on the computing resource`
@@ -12,7 +12,7 @@ It needs several install steps before being able to process.
 #. :ref:`Configure the computing resource in Populse-MIA / Capsul`
 #. :ref:`Run pipelines`
 
-:ref:`Limitations`
+Please note that there are few :ref:`Limitations`.
 
 
 In these steps, things will be a bit different if the server has to run jobs inside a container such as `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`_. Actually, the computing resource will then need to run the container in jobs, and often to pass it some additional information. The configuration will need to describe this indirection.
@@ -82,6 +82,7 @@ There are 3 components working together, all with 2 situations: "native" or "con
 
 The first point, client running natively or in a container, is normally not a problem and should make no difference. So the discussion will mainly focus on the two last points.
 
+.. _Install Soma-Workflow on the computing server:
 
 Install Soma-Workflow on the computing server
 ---------------------------------------------
@@ -116,6 +117,7 @@ Container installation
 
 The client just needs to know how to run it: the client config should specify the :somaworkflow:`PYTHON_COMMAND option <install_config.html#python-command-option>`. See the :ref:`client configuration <Configure Soma-Workflow on the client machine>` below.
 
+.. _Configure Soma-Workflow on the computing resource:
 
 Configure Soma-Workflow on the computing resource
 -------------------------------------------------
@@ -139,6 +141,7 @@ Ex - **On the remote computing login node**:
     scheduler_type    = pbspro
     # native_specification = -l walltime=96:00:00
 
+.. _Configure Soma-Workflow on the client machine:
 
 Configure Soma-Workflow on the client machine
 ---------------------------------------------
@@ -178,6 +181,7 @@ Ex - **On the client local machine, possibly in the container home directory**:
     login = dr144257
     allowed_python_versions = 3
 
+.. _Configure the computing resource in Populse-MIA / Capsul:
 
 Configure the computing resource in Populse-MIA / Capsul
 --------------------------------------------------------
@@ -211,6 +215,7 @@ Configure the computing resource in Populse-MIA / Capsul
 
             - validate the MIA preferences by pressing ``OK`` there too.
 
+.. _Run pipelines:
 
 Run pipelines
 -------------
@@ -226,23 +231,25 @@ You can monitor the execution through the ``Status`` button in the *Pipeline man
 
 - In the status window, check the ``Soma-Workflow monitoring`` option.
 
-.. image:: ../images/swf_monitor1.jpg
+.. image:: ../images/swf_monitor1.png
 
 - You see... *nothing !*... Yes it's normal: you see the *local machine* and the workflow has been sent to a *remote resource*: you need to connect the remote monitoring: click the ``Add`` button. The same connection dialog appears. Select the resource.
 
 - After connection, the resource is available. The running workflow should appear first in the list.
 
+.. _Limitations:
 
 Limitations
 -----------
 
-There are a few limitaions to the client / server processing
+There are a few limitations to the client / server processing
 
 #. :ref:`Disconnection is partly supported in MIA`
 #. :ref:`File transfers limitations`
 #. :somaworkflow:`Cluster admins may not like servers running on the login node <install_config.html#cluster-admins-may-not-like-servers-running-on-the-login-node>`
 #. :somaworkflow:`Why it's difficult and often impossible to run the Soma-Workflow server inside a container <install_config.html#why-it-s-difficult-and-often-impossible-to-run-the-soma-workflow-server-inside-a-container>`
 
+.. _Disconnection is partly supported in MIA:
 
 Disconnection is partly supported in MIA
 ++++++++++++++++++++++++++++++++++++++++
@@ -250,6 +257,7 @@ Disconnection is partly supported in MIA
 The pipeline execution engine in MIA is monitoring the execution directly, and when execution is finished, gaterhes the results to index them in the database. If the client is disconnected or shut down before processing has finished, the results indexing will not be done automatically.
 It will be done partly when clicking the "cleanup" button.
 
+.. _File transfers limitations:
 
 File transfers limitations
 ++++++++++++++++++++++++++
