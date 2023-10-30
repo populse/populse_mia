@@ -5918,6 +5918,9 @@ class PopUpShowHistory(QDialog):
 
         bricks = self.find_associated_bricks(node_name)
 
+        if hasattr(process, "full_name") and node_name in process.full_name:
+            full_node_name = process.full_name
+
         if bricks:
             if len(bricks) == 1:
                 brick_row = self.project.session.get_document(
@@ -5962,7 +5965,10 @@ class PopUpShowHistory(QDialog):
                                         COLLECTION_BRICK, uuid[0], BRICK_NAME
                                     )
                                 )
-                                if full_brick_name == node_name + process_name:
+                                if (
+                                    full_brick_name
+                                    == full_node_name + process_name
+                                ):
                                     if plug.output:
                                         plugs = self.project.session.get_value(
                                             COLLECTION_BRICK,
@@ -5986,7 +5992,7 @@ class PopUpShowHistory(QDialog):
                     outputs_dict.pop(k, None)
                     inputs_dict.pop(k, None)
 
-                self.update_table(inputs_dict, outputs_dict, node_name)
+                self.update_table(inputs_dict, outputs_dict, full_node_name)
 
             for name, gnode in self.pipeline_view.scene.gnodes.items():
                 if name == node_name:
