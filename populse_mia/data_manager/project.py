@@ -43,8 +43,8 @@ from populse_mia.data_manager.database_mia import (
 from populse_mia.data_manager.filter import Filter
 
 # Populse_MIA imports
-from populse_mia.software_properties import Config, verCmp
-from populse_mia.utils.utils import set_item_data
+from populse_mia.software_properties import Config
+from populse_mia.utils.utils import set_item_data, verCmp
 
 COLLECTION_CURRENT = "current"
 COLLECTION_INITIAL = "initial"
