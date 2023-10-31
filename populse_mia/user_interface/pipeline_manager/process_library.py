@@ -84,7 +84,8 @@ from soma.qt_gui.qt_backend.QtCore import (
 from soma.qt_gui.qt_backend.QtWidgets import QGroupBox, QListWidget, QMenu
 
 # Populse_MIA import
-from populse_mia.software_properties import Config, verCmp
+from populse_mia.software_properties import Config
+from populse_mia.utils.utils import verCmp
 
 
 class DictionaryTreeModel(QAbstractItemModel):
@@ -547,25 +548,27 @@ class InstallProcesses(QDialog):
         try:
             if (
                 os.path.abspath(
-                    os.path.join(config.get_mia_path(), "processes")
+                    os.path.join(config.get_properties_path(), "processes")
                 )
                 not in sys.path
             ):
                 sys.path.append(
                     os.path.abspath(
-                        os.path.join(config.get_mia_path(), "processes")
+                        os.path.join(config.get_properties_path(), "processes")
                     )
                 )
 
             # Process config update
             if not os.path.isfile(
                 os.path.join(
-                    config.get_mia_path(), "properties", "process_config.yml"
+                    config.get_properties_path(),
+                    "properties",
+                    "process_config.yml",
                 )
             ):
                 open(
                     os.path.join(
-                        config.get_mia_path(),
+                        config.get_properties_path(),
                         "properties",
                         "process_config.yml",
                     ),
@@ -574,7 +577,9 @@ class InstallProcesses(QDialog):
 
             with open(
                 os.path.join(
-                    config.get_mia_path(), "properties", "process_config.yml"
+                    config.get_properties_path(),
+                    "properties",
+                    "process_config.yml",
                 ),
                 "r",
             ) as stream:
@@ -616,10 +621,12 @@ class InstallProcesses(QDialog):
             packages_already = [
                 dire
                 for dire in os.listdir(
-                    os.path.join(config.get_mia_path(), "processes")
+                    os.path.join(config.get_properties_path(), "processes")
                 )
                 if not os.path.isfile(
-                    os.path.join(config.get_mia_path(), "processes", dire)
+                    os.path.join(
+                        config.get_properties_path(), "processes", dire
+                    )
                 )
             ]
 
@@ -652,7 +659,7 @@ class InstallProcesses(QDialog):
                         if (package_name == "mia_processes") and (
                             os.path.exists(
                                 os.path.join(
-                                    config.get_mia_path(),
+                                    config.get_properties_path(),
                                     "processes",
                                     "mia_processes",
                                 )
@@ -662,7 +669,7 @@ class InstallProcesses(QDialog):
                             tmp_folder4MIA = tempfile.mkdtemp()
                             shutil.copytree(
                                 os.path.join(
-                                    config.get_mia_path(),
+                                    config.get_properties_path(),
                                     "processes",
                                     "mia_processes",
                                 ),
@@ -678,7 +685,7 @@ class InstallProcesses(QDialog):
                             ]
                             zip_ref.extractall(
                                 os.path.join(
-                                    config.get_mia_path(), "processes"
+                                    config.get_properties_path(), "processes"
                                 ),
                                 members_to_extract,
                             )
@@ -686,13 +693,13 @@ class InstallProcesses(QDialog):
                     elif os.path.isdir(filename):
                         # distutils.dir_util.copy_tree(os.path.join(filename),
                         #                             os.path.join(
-                        #                                 config.get_mia_path(),
+                        #                                 config.get_properties_path(),
                         #                                 'processes',
                         #                                 package_name))
                         shutil.copytree(
                             os.path.join(filename),
                             os.path.join(
-                                config.get_mia_path(),
+                                config.get_properties_path(),
                                 "processes",
                                 package_name,
                             ),
@@ -713,7 +720,7 @@ class InstallProcesses(QDialog):
                             shutil.move(
                                 os.path.join(temp_dir, package_name),
                                 os.path.join(
-                                    config.get_mia_path(),
+                                    config.get_properties_path(),
                                     "processes",
                                     package_name + "_" + date,
                                 ),
@@ -723,7 +730,7 @@ class InstallProcesses(QDialog):
                         shutil.copytree(
                             os.path.join(filename),
                             os.path.join(
-                                config.get_mia_path(),
+                                config.get_properties_path(),
                                 "processes",
                                 package_name + "_" + date,
                             ),
@@ -737,7 +744,9 @@ class InstallProcesses(QDialog):
                     # with the date
                     _change_pattern_in_folder(
                         os.path.join(
-                            config.get_mia_path(), "processes", package_name
+                            config.get_properties_path(),
+                            "processes",
+                            package_name,
                         ),
                         original_package_name,
                         package_name,
@@ -749,13 +758,13 @@ class InstallProcesses(QDialog):
 
             if (
                 not os.path.abspath(
-                    os.path.join(config.get_mia_path(), "processes")
+                    os.path.join(config.get_properties_path(), "processes")
                 )
                 in paths
             ):
                 paths.append(
                     os.path.abspath(
-                        os.path.join(config.get_mia_path(), "processes")
+                        os.path.join(config.get_properties_path(), "processes")
                     )
                 )
 
@@ -766,7 +775,9 @@ class InstallProcesses(QDialog):
 
             with open(
                 os.path.join(
-                    config.get_mia_path(), "properties", "process_config.yml"
+                    config.get_properties_path(),
+                    "properties",
+                    "process_config.yml",
                 ),
                 "w",
                 encoding="utf8",
@@ -825,7 +836,9 @@ class InstallProcesses(QDialog):
 
             with open(
                 os.path.join(
-                    config.get_mia_path(), "properties", "process_config.yml"
+                    config.get_properties_path(),
+                    "properties",
+                    "process_config.yml",
                 ),
                 "w",
                 encoding="utf8",
@@ -844,12 +857,14 @@ class InstallProcesses(QDialog):
             for package_name in package_names:
                 if os.path.exists(
                     os.path.join(
-                        config.get_mia_path(), "processes", package_name
+                        config.get_properties_path(), "processes", package_name
                     )
                 ):
                     shutil.rmtree(
                         os.path.join(
-                            config.get_mia_path(), "processes", package_name
+                            config.get_properties_path(),
+                            "processes",
+                            package_name,
                         )
                     )
 
@@ -859,7 +874,9 @@ class InstallProcesses(QDialog):
                 distutils.dir_util.copy_tree(
                     os.path.join(tmp_folder4MIA, "mia_processes"),
                     os.path.join(
-                        config.get_mia_path(), "processes", "mia_processes"
+                        config.get_properties_path(),
+                        "processes",
+                        "mia_processes",
                     ),
                 )
 
@@ -1634,13 +1651,13 @@ class PackageLibraryDialog(QDialog):
         if module_name:
             if (
                 os.path.abspath(
-                    os.path.join(config.get_mia_path(), "processes")
+                    os.path.join(config.get_properties_path(), "processes")
                 )
                 not in sys.path
             ):
                 sys.path.append(
                     os.path.abspath(
-                        os.path.join(config.get_mia_path(), "processes")
+                        os.path.join(config.get_properties_path(), "processes")
                     )
                 )
 
@@ -1989,7 +2006,9 @@ class PackageLibraryDialog(QDialog):
             if index <= len(pkg_list):
                 path = os.path.abspath(
                     os.path.join(
-                        config.get_mia_path(), "processes", *pkg_list[0:index]
+                        config.get_properties_path(),
+                        "processes",
+                        *pkg_list[0:index]
                     )
                 )
                 sub_deleted_packages = self.delete_package(
@@ -2063,7 +2082,7 @@ class PackageLibraryDialog(QDialog):
                 else:
                     init = os.path.abspath(
                         os.path.join(
-                            config.get_mia_path(),
+                            config.get_properties_path(),
                             "processes",
                             *pkg_list[: index - 1],
                             "__init__.py"
@@ -2357,7 +2376,9 @@ class PackageLibraryDialog(QDialog):
 
         with open(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             ),
             "r",
         ) as stream:
@@ -2441,13 +2462,13 @@ class PackageLibraryDialog(QDialog):
         if package:
             if (
                 os.path.abspath(
-                    os.path.join(config.get_mia_path(), "processes")
+                    os.path.join(config.get_properties_path(), "processes")
                 )
                 not in sys.path
             ):
                 sys.path.append(
                     os.path.abspath(
-                        os.path.join(config.get_mia_path(), "processes")
+                        os.path.join(config.get_properties_path(), "processes")
                     )
                 )
 
@@ -2612,7 +2633,9 @@ class PackageLibraryDialog(QDialog):
 
         with open(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             ),
             "w",
             encoding="utf8",
@@ -2637,7 +2660,9 @@ class PackageLibraryDialog(QDialog):
 
         with open(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             ),
             "w",
             encoding="utf8",
@@ -2886,19 +2911,25 @@ class ProcessLibraryWidget(QWidget):
 
         if not os.path.exists(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             )
         ):
             open(
                 os.path.join(
-                    config.get_mia_path(), "properties", "process_config.yml"
+                    config.get_properties_path(),
+                    "properties",
+                    "process_config.yml",
                 ),
                 "a",
             ).close()
 
         with open(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             ),
             "r",
         ) as stream:
@@ -2949,7 +2980,9 @@ class ProcessLibraryWidget(QWidget):
 
         with open(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             ),
             "w",
             encoding="utf8",

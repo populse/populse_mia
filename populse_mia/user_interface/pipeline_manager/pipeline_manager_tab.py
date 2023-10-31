@@ -3535,13 +3535,18 @@ class PipelineManagerTab(QWidget):
         config = Config()
 
         if os.path.relpath(filename_folder) != os.path.relpath(
-            os.path.join(config.get_mia_path(), "processes", "User_processes")
+            os.path.join(
+                config.get_properties_path(), "processes", "User_processes"
+            )
         ):
             return
 
         # Updating __init__.py
         init_file = os.path.join(
-            config.get_mia_path(), "processes", "User_processes", "__init__.py"
+            config.get_properties_path(),
+            "processes",
+            "User_processes",
+            "__init__.py",
         )
 
         # Checking that import line is not already in the file

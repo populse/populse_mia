@@ -530,10 +530,10 @@ class TestMIACase(unittest.TestCase):
             shutil.rmtree(new_test_proj)
 
         config = Config(config_path=self.config_path)
-        mia_path = config.get_mia_path()
+        properties_path = config.get_properties_path()
 
         test_proj = os.path.join(
-            mia_path,
+            properties_path,
             "miautdata",
             "resources",
             "mia",
@@ -1545,10 +1545,10 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(config.get_max_projects(), 7)
         config.set_max_projects(5)
 
-        mia_path = os.path.join(
-            config.get_mia_path(), "properties", "config.yml"
+        properties_path = os.path.join(
+            config.get_properties_path(), "properties", "config.yml"
         )
-        self.assertEqual(os.path.exists(mia_path), True)
+        self.assertEqual(os.path.exists(properties_path), True)
 
         self.assertEqual(config.get_user_mode(), True)
         config.set_user_mode(False)
@@ -1818,7 +1818,7 @@ class TestMIADataBrowser(TestMIACase):
         config = Config(config_path=self.config_path)
         folder = os.path.abspath(
             os.path.join(
-                config.get_mia_path(),
+                config.get_properties_path(),
                 "miautdata",
                 "resources",
                 "mia",
@@ -4880,7 +4880,7 @@ class TestMIAMainWindow(TestMIACase):
         # User_processes
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "unit_test_pipeline.py",
@@ -5034,7 +5034,7 @@ class TestMIAMainWindow(TestMIACase):
         # User_processes
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "unit_test_pipeline.py",
@@ -5051,7 +5051,7 @@ class TestMIAMainWindow(TestMIACase):
 
         if os.path.exists(
             os.path.join(
-                config.get_mia_path(),
+                config.get_properties_path(),
                 "processes",
                 "User_processes",
                 "unit_test_pipeline.py",
@@ -5059,7 +5059,7 @@ class TestMIAMainWindow(TestMIACase):
         ):
             shutil.copy(
                 os.path.join(
-                    config.get_mia_path(),
+                    config.get_properties_path(),
                     "processes",
                     "User_processes",
                     "unit_test_pipeline.py",
@@ -7657,7 +7657,7 @@ class TestMIAPipelineEditor(TestMIACase):
         # Save the state of the current process library
         config = Config(config_path=self.config_path)
         usr_proc_folder = os.path.join(
-            config.get_mia_path(), "processes", "User_processes"
+            config.get_properties_path(), "processes", "User_processes"
         )
         shutil.copytree(
             usr_proc_folder,
@@ -7669,7 +7669,9 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         shutil.copy(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             ),
             os.path.join(self.config_path, "4UTs_TestMIAPipelineEditor"),
         )
@@ -7712,14 +7714,14 @@ class TestMIAPipelineEditor(TestMIACase):
         # Mocks the execution of a QFileDialog
         QFileDialog.getSaveFileName = lambda *args: [filename]
 
-        # Removes the config.get_mia_path()/processes/User_processes folder, to
-        # increase coverage
+        # Removes the config.get_properties_path()/processes/User_processes
+        # folder, to increase coverage
         shutil.rmtree(usr_proc_folder)
 
         # Tries to save the pipeline with a filename starting by a digit
         config = Config(config_path=self.config_path)
         usr_proc_folder = os.path.join(
-            config.get_mia_path(), "processes", "User_processes"
+            config.get_properties_path(), "processes", "User_processes"
         )
         filename = os.path.join(usr_proc_folder, "1_test_pipeline")
         res = ppl_edt_tabs.save_pipeline()
@@ -7863,7 +7865,7 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -7976,7 +7978,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -8023,7 +8025,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -8054,7 +8056,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -8117,7 +8119,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -8135,8 +8137,11 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         config = Config(config_path=self.config_path)
 
-        # Adding the "config.get_mia_path()/processes" path to the system path
-        sys.path.append(os.path.join(config.get_mia_path(), "processes"))
+        # Adding the "config.get_properties_path()/processes" path to the
+        # system path
+        sys.path.append(
+            os.path.join(config.get_properties_path(), "processes")
+        )
 
         # Importing the 'User_processes' package
         package_name = "User_processes"
@@ -8177,7 +8182,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         config = Config(config_path=self.config_path)
         filename = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -8232,12 +8237,14 @@ class TestMIAPipelineEditor(TestMIACase):
         # Restore the initial process library (before test_save_pipeline test)
         config = Config(config_path=self.config_path)
         usr_proc_folder = os.path.join(
-            config.get_mia_path(), "processes", "User_processes"
+            config.get_properties_path(), "processes", "User_processes"
         )
         shutil.rmtree(usr_proc_folder)
         os.remove(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             )
         )
         shutil.copytree(
@@ -8254,7 +8261,7 @@ class TestMIAPipelineEditor(TestMIACase):
                 "4UTs_TestMIAPipelineEditor",
                 "process_config.yml",
             ),
-            os.path.join(config.get_mia_path(), "properties"),
+            os.path.join(config.get_properties_path(), "properties"),
         )
 
 
@@ -9360,7 +9367,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         config = Config(config_path=self.config_path)
         folder = os.path.abspath(
             os.path.join(
-                config.get_mia_path(),
+                config.get_properties_path(),
                 "miautdata",
                 "resources",
                 "mia",
@@ -9451,7 +9458,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         config = Config(config_path=self.config_path)
         folder = os.path.abspath(
             os.path.join(
-                config.get_mia_path(),
+                config.get_properties_path(),
                 "miautdata",
                 "resources",
                 "mia",
@@ -9623,7 +9630,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         config = Config(config_path=self.config_path)
         folder = os.path.abspath(
             os.path.join(
-                config.get_mia_path(),
+                config.get_properties_path(),
                 "miautdata",
                 "resources",
                 "mia",
@@ -9702,7 +9709,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         config = Config(config_path=self.config_path)
         ppl_path = os.path.join(
-            config.get_mia_path(),
+            config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -10123,7 +10130,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         config = Config(config_path=self.config_path)
         folder = os.path.abspath(
             os.path.join(
-                config.get_mia_path(),
+                config.get_properties_path(),
                 "miautdata",
                 "resources",
                 "mia",
@@ -10171,7 +10178,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         node.auto_inheritance_dict = {}
         process = node.process
         process.study_config.project = Mock()
-        process.study_config.project.folder = config.get_mia_path()
+        process.study_config.project.folder = config.get_properties_path()
         process.outputs = []
         process.list_outputs = []
         process.auto_inheritance_dict = {}
@@ -10301,7 +10308,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         config = Config(config_path=self.config_path)
         folder = os.path.abspath(
             os.path.join(
-                config.get_mia_path(),
+                config.get_properties_path(),
                 "miautdata",
                 "resources",
                 "mia",

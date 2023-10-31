@@ -53,13 +53,14 @@ from PyQt5.QtWidgets import QInputDialog, QMessageBox
 from soma.utils.weak_proxy import weak_proxy
 from traits.api import TraitError
 
-from populse_mia.software_properties import Config, verCmp
+from populse_mia.software_properties import Config
 
-# Populse_MIA imports
+# Populse_mia imports
 from populse_mia.user_interface.pipeline_manager.node_controller import (
     FilterWidget,
 )
 from populse_mia.user_interface.pop_ups import PopUpClosePipeline
+from populse_mia.utils.utils import verCmp
 
 unicode = str
 
@@ -590,7 +591,7 @@ class PipelineEditor(PipelineDeveloperView):
                 # Reading the process configuration file
                 with open(
                     os.path.join(
-                        config.get_mia_path(),
+                        config.get_properties_path(),
                         "properties",
                         "process_config.yml",
                     ),
@@ -972,7 +973,7 @@ class PipelineEditor(PipelineDeveloperView):
             pipeline = self.scene.pipeline
             folder = os.path.abspath(
                 os.path.join(
-                    config.get_mia_path(), "processes", "User_processes"
+                    config.get_properties_path(), "processes", "User_processes"
                 )
             )
 
@@ -1924,7 +1925,9 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         with open(
             os.path.join(
-                config.get_mia_path(), "properties", "process_config.yml"
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
             ),
             "r",
         ) as stream:
