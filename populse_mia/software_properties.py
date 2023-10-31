@@ -8,9 +8,6 @@ pop-up in the config.yml file.
     :Class:
         - Config
 
-    :Function:
-        - verCmp
-
 """
 
 ##########################################################################
@@ -24,7 +21,6 @@ pop-up in the config.yml file.
 import glob
 import os
 import platform
-import re
 
 import yaml
 
@@ -32,70 +28,10 @@ import yaml
 from capsul.api import capsul_engine
 from cryptography.fernet import Fernet
 
+# populse_mia import
+from populse_mia.utils.utils import verCmp
+
 CONFIG = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
-
-
-def verCmp(first_ver, sec_ver, comp):
-    """Version comparator.
-
-    The verCmp() function returns a boolean value to indicate whether its
-    first argument (first_ver) is equal to, less or equal to, or greater or
-    equal to its second argument (sec_ver), as follows:
-
-      - if third argument (comp) is 'eq': when the first argument is equal to
-        the second argument, return True (False if not).
-      - if third argument (comp) is 'sup': when the first argument is greater
-        than the second argument, return True (False if not).
-      - if third argument (comp) is 'inf': when the first argument is less than
-        the second argument, return True (False if not).
-
-    :param first_ver: the version of a package (a string; ex. '0.13.0')
-    :param sec_ver: the version of a package (a string; ex. '0.13.0')
-    :param comp: comparator argument (accepted values: 'sup', 'inf' and 'eq' )
-
-    :return: False or True
-
-    :Contains:
-        :Private function:
-            - normalise: transform a version of a package to a corresponding
-              list of integer
-    """
-
-    def normalise(v):
-        """Transform a version of a package to a corresponding list of integer.
-
-        :param v: version of a package (ex. 5.4.1)
-
-        :return: a list of integer (ex. [0, 13, 0])
-        """
-
-        v = re.sub(r"[^0-9\.]", "", v)
-        return [int(x) for x in re.sub(r"(\.0+)*$", "", v).split(".")]
-
-    if comp == "eq":
-        if normalise(first_ver) == normalise(sec_ver):
-            return True
-
-        else:
-            return False
-
-    elif comp == "sup":
-        if (normalise(first_ver) > normalise(sec_ver)) or (
-            verCmp(first_ver, sec_ver, "eq")
-        ):
-            return True
-
-        else:
-            return False
-
-    elif comp == "inf":
-        if (normalise(first_ver) < normalise(sec_ver)) or (
-            verCmp(first_ver, sec_ver, "eq")
-        ):
-            return True
-
-        else:
-            return False
 
 
 class Config:
@@ -126,7 +62,7 @@ class Config:
               displayed in the "Saved projects" menu
             - get_max_thumbnails:  get max thumbnails number at the data
               browser bottom
-            - get_mia_path: returns the software's install path
+            - get_properties_path: returns the software's properties path
             - get_mri_conv_path: returns the MRIManager.jar path
             - get_mrtrix_path: returns mrtrix path
             - getNbAllSlicesMax: returns the maximum number of slices to
@@ -265,10 +201,17 @@ class Config:
         if config_path is not None:
             self.config_path = config_path
 
+        if os.environ.get("MIA_DEV_MODE", None) is not None:
+            self.dev_mode = bool(int(os.environ["MIA_DEV_MODE"]))
+
+        else:
+            # FIXME: What can we do if  "MIA_DEV_MODE" is not in os.environ?
+            print("MIA_DEV_MODE not found ...")
+
         self.config = self.loadConfig()
 
-        if "mia_user_path" not in self.config.keys():
-            self.config["mia_user_path"] = self.get_mia_path()
+        if "properties_user_path" not in self.config.keys():
+            self.config["properties_user_path"] = self.get_properties_path()
             self.saveConfig()
 
     def get_admin_hash(self):
@@ -540,7 +483,7 @@ class Config:
         return self.config.get("chain_cursors", False)
 
     def get_config_path(self):
-        """Get the MIA config path (including "properties" directory)
+        """Get the Mia config path (including "properties" directory)
 
         :returns: string of directory path to the config.yml file
         """
@@ -550,8 +493,8 @@ class Config:
         if config_path:
             return config_path
 
-        mia_path = self.get_mia_path()
-        return os.path.join(mia_path, "properties")
+        properties_path = self.get_properties_path()
+        return os.path.join(properties_path, "properties")
 
     def get_fsl_config(self):
         """Get the FSL config file  path
@@ -648,24 +591,25 @@ class Config:
         except KeyError:
             return 5
 
-    def get_mia_path(self):
+    def get_properties_path(self):
         """Get the path to the folder containing the processes and properties
-        folders of mia (mia_path).
+        folders of mia (properties_path).
 
-        During the mia installation, the mia_path is defined and stored in the
-        configuration.yml file, located in the .populse_mia folder (himself
-        located in the user's home). If mia is launched in admin mode,
-        mia path is the cloned git repository. If mia is launched in user
-        mode, mia path must compulsorily be returned from the mia_path
-        parameter of the configuration.yml
+        During the user mode mia installation, the properties_path is defined
+        and stored in the configuration.yml file, located in the .populse_mia
+        folder (located in the user's home). If mia is launched in user
+        mode, properties path must compulsorily be returned from the
+        "properties_user_path" parameter of the configuration.yml. If mia is
+        launched in developer mode, mia path must compulsorily be returned
+        from the "properties_dev_path" parameter of the configuration.yml.
 
-        :returns: string of path to mia folder
+        :returns: string of path to properties folder
         """
 
-        mia_path = getattr(self, "mia_path", None)
+        properties_path = getattr(self, "properties_path", None)
 
-        if mia_path:
-            return mia_path
+        if properties_path:
+            return properties_path
 
         dot_mia_config = os.path.join(
             os.path.expanduser("~"), ".populse_mia", "configuration.yml"
@@ -675,68 +619,69 @@ class Config:
             with open(dot_mia_config, "r") as stream:
                 try:
                     if verCmp(yaml.__version__, "5.1", "sup"):
-                        mia_home_config = yaml.load(
+                        mia_home_properties_path = yaml.load(
                             stream, Loader=yaml.FullLoader
                         )
+
                     else:
-                        mia_home_config = yaml.load(stream)
+                        mia_home_properties_path = yaml.load(stream)
 
-                    if (
-                        "user_mode" in mia_home_config.keys()
-                        and mia_home_config["user_mode"] is False
-                    ):
-                        # Only for admin mode
-                        config_path = os.path.dirname(
-                            os.path.realpath(__file__)
-                        )
+                except yaml.YAMLError:
+                    print(
+                        "\n ~/.populse_mia/configuration.yml cannot be read,"
+                        "the path to the properties has not been found..."
+                    )
+                    return None
 
-                        while "properties" not in os.listdir(config_path):
-                            config_path = os.path.dirname(config_path)
-
-                        self.mia_path = config_path
-                        return config_path
-
-                    # Only for user mode
-                    # mia_path is obsolete. Use mia_user_path instead
-                    if "mia_path" in mia_home_config:
-                        mia_home_config["mia_user_path"] = mia_home_config[
-                            "mia_path"
-                        ]
-                        del mia_home_config["mia_path"]
+                else:
+                    # Patch for obsolete "mia_path" parameter.
+                    if "mia_path" in mia_home_properties_path:
+                        mia_home_properties_path[
+                            "properties_user_path"
+                        ] = mia_home_properties_path["mia_path"]
 
                         with open(
                             dot_mia_config, "w", encoding="utf8"
                         ) as configfile:
                             yaml.dump(
-                                mia_home_config,
+                                mia_home_properties_path,
                                 configfile,
                                 default_flow_style=False,
                                 allow_unicode=True,
                             )
+                        del mia_home_properties_path["mia_path"]
 
-                    self.mia_path = mia_home_config["mia_user_path"]
-                    return self.mia_path
+                    if (
+                        self.dev_mode is True
+                        and "properties_dev_path" in mia_home_properties_path
+                    ):
+                        self.properties_path = mia_home_properties_path[
+                            "properties_dev_path"
+                        ]
+                        return self.properties_path
 
-                except (yaml.YAMLError, KeyError):
-                    print(
-                        "\nMia path (where is located the processes and "
-                        "the properties folders) has not "
-                        "been found ..."
-                    )
+                    elif (
+                        self.dev_mode is False
+                        and "properties_user_path" in mia_home_properties_path
+                    ):
+                        self.properties_path = mia_home_properties_path[
+                            "properties_user_path"
+                        ]
+                        return self.properties_path
 
-        else:  # Only for admin mode
-            try:
-                self.mia_path = self.config["mia_user_path"]
-                return self.mia_path
+                    else:
+                        print(
+                            "properties_dev_path or properties_user_path key"
+                            "not found in ~/.populse_mia/configuration.yml"
+                        )
+                        return None
 
-            except (KeyError, AttributeError):
-                config_path = os.path.dirname(os.path.realpath(__file__))
-
-                while "properties" not in os.listdir(config_path):
-                    config_path = os.path.dirname(config_path)
-
-                self.mia_path = config_path
-                return config_path
+        else:
+            print(
+                "\n ~/.populse_mia/configuration.yml cannot be found, the"
+                "path to the properties has not been found..."
+            )
+            return None
 
     def get_mri_conv_path(self):
         """Get the MRIManager.jar path.
@@ -790,10 +735,11 @@ class Config:
 
         except KeyError:
             # if not os.path.isdir(
-            #         os.path.join(self.get_mia_path(), 'projects')):
-            #     os.mkdir(os.path.join(self.get_mia_path(), 'projects'))
+            #         os.path.join(self.get_properties_path(), 'projects')):
+            #     os.mkdir(os.path.join(self.get_properties_path(),
+            #                           'projects'))
             #
-            # return os.path.join(self.get_mia_path(), 'projects')
+            # return os.path.join(self.get_properties_path(), 'projects')
             return ""
 
     def get_referential(self):

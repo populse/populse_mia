@@ -11,6 +11,7 @@ Module that contains multiple functions used across Mia.
         - set_item_data
         - set_projects_directory_as_default
         - table_to_database
+        - verCmp
 """
 
 ##########################################################################
@@ -23,6 +24,7 @@ Module that contains multiple functions used across Mia.
 
 import ast
 import os
+import re
 import sys
 from datetime import date, datetime, time
 
@@ -401,3 +403,66 @@ def table_to_database(value, value_type):
             )
 
         return list_to_return
+
+
+def verCmp(first_ver, sec_ver, comp):
+    """Version comparator.
+
+    The verCmp() function returns a boolean value to indicate whether its
+    first argument (first_ver) is equal to, less or equal to, or greater or
+    equal to its second argument (sec_ver), as follows:
+
+      - if third argument (comp) is 'eq': when the first argument is equal to
+        the second argument, return True (False if not).
+      - if third argument (comp) is 'sup': when the first argument is greater
+        than the second argument, return True (False if not).
+      - if third argument (comp) is 'inf': when the first argument is less than
+        the second argument, return True (False if not).
+
+    :param first_ver: the version of a package (a string; ex. '0.13.0')
+    :param sec_ver: the version of a package (a string; ex. '0.13.0')
+    :param comp: comparator argument (accepted values: 'sup', 'inf' and 'eq' )
+
+    :return: False or True
+
+    :Contains:
+        :Private function:
+            - normalise: transform a version of a package to a corresponding
+              list of integer
+    """
+
+    def normalise(v):
+        """Transform a version of a package to a corresponding list of integer.
+
+        :param v: version of a package (ex. 5.4.1)
+
+        :return: a list of integer (ex. [0, 13, 0])
+        """
+
+        v = re.sub(r"[^0-9\.]", "", v)
+        return [int(x) for x in re.sub(r"(\.0+)*$", "", v).split(".")]
+
+    if comp == "eq":
+        if normalise(first_ver) == normalise(sec_ver):
+            return True
+
+        else:
+            return False
+
+    elif comp == "sup":
+        if (normalise(first_ver) > normalise(sec_ver)) or (
+            verCmp(first_ver, sec_ver, "eq")
+        ):
+            return True
+
+        else:
+            return False
+
+    elif comp == "inf":
+        if (normalise(first_ver) < normalise(sec_ver)) or (
+            verCmp(first_ver, sec_ver, "eq")
+        ):
+            return True
+
+        else:
+            return False

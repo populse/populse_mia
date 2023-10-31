@@ -23,7 +23,6 @@ import numpy as np  # a N-dimensional array object
 import skimage as sk
 
 # Populse_MIA imports
-# from populse_mia.software_properties import verCmp
 from packaging import version
 from PyQt5 import QtCore
 

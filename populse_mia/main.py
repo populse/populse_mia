@@ -77,6 +77,7 @@ if (
     in sys.path
 ):  # "developer" mode
     DEV_MODE = True
+    os.environ["MIA_DEV_MODE"] = "1"
     root_dev_dir = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     )
@@ -280,9 +281,11 @@ if (
 elif "CASA_DISTRO" in os.environ:
     # If the casa distro development environment is detected, developer mode
     # is activated.
+    os.environ["MIA_DEV_MODE"] = "1"
     DEV_MODE = True
 
 else:  # "user" mode
+    os.environ["MIA_DEV_MODE"] = "0"
     DEV_MODE = False
     print('\n- Mia in "user" mode')
 
@@ -326,7 +329,7 @@ except (ImportError, AttributeError) as e:
     print("MIA warning {0}: {1}".format(e.__class__, e))
     print("*" * 37 + "\n")
 
-if len(pkg_error) > 0:
+if pkg_error:
     msg = QMessageBox()
     msg.setIcon(QMessageBox.Warning)
     msg.setWindowTitle("populse_mia -  warning: ImportError!")
@@ -379,7 +382,7 @@ from populse_mia.data_manager.project_properties import (  # noqa E402
 )
 from populse_mia.software_properties import Config  # noqa E402
 from populse_mia.user_interface.main_window import MainWindow  # noqa E402
-from populse_mia.utils.utils import check_python_version  # noqa E402
+from populse_mia.utils.utils import check_python_version, verCmp  # noqa E402
 
 main_window = None
 
@@ -653,41 +656,41 @@ def launch_mia():
 
 
 def main():
-    """Make basic configuration check then actual launch of mia.
+    """Make basic configuration check then actual launch of Mia.
 
     Checks if Mia is called from the site/dist packages (user mode) or from a
     cloned git repository (developer mode). Launches the verify_processes()
-    function, then the launch_mia() function (Mia's real launch !!). When
-    Mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the
-    dev_mode parameter to False.
+    function, then the launch_mia() function (Mia's real launch !!).
+    ~/.populse_mia/configuration.yml is mandatory, if it doesn't exist or is
+    corrupted, try to create one with a valid properties path.
 
     - If launched from a cloned git repository ('developer mode'):
-        - the mia_path is the cloned git repository.
+        - the properties_path is the properties_dev_path in
+          ~/.populse_mia/configuration.yml
     - If launched from the site/dist packages ('user mode'):
-        - if the file ~/.populse_mia/configuration.yml file is not found or
-          does not exist or if the returned mia_path parameter is incorrect,
-          a valid mia_path path is requested from the user, in order
-          to try to fix a corruption of this file.
+        - the properties_path is the properties_user_path in
+          ~/.populse_mia/configuration.yml
 
     :Contains:
         :Private function:
-            - _browse_mia_path: the user define the mia_path parameter
+            - _browse_properties_path: the user define the properties_path
+            parameter
             - _verify_miaConfig: check the config and try to fix if necessary
     """
 
-    def _browse_mia_path(dialog):
-        """The user define the mia_path parameter.
+    def _browse_properties_path(dialog):
+        """The user define the properties_path parameter.
 
         This method, used only if the mia configuration parameters are
         not accessible, goes with the _verify_miaConfig function,
-        which will use the value of the mia_path parameter,
+        which will use the value of the properties_path parameter,
         defined here.
 
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
 
         dname = QFileDialog.getExistingDirectory(
-            dialog, "Please select MIA path", os.path.expanduser("~")
+            dialog, "Please select properties path", os.path.expanduser("~")
         )
         dialog.file_line_edit.setText(dname)
 
@@ -696,28 +699,107 @@ def main():
 
         The purpose of this method is twofold. First, it allows to
         update the obsolete values for some parameters of the
-        mia_user_path/properties/config.yml file. Secondly, it allows
-        to correct the value of the mia_user_path parameter in the
-        ~/.populse_mia/configuration.yml file, (in the case of a user
-        mode launch, because the developer mode launch does not need
-        this parameter).
+        properties_path/properties/config.yml file. Secondly, it allows
+        to correct the value of the properties_user_path / properties_dev_path
+        parameter in the ~/.populse_mia/configuration.yml file.
 
         In the case of a launch in user mode, this method goes with the
-        _browse_mia_path() function, the latter having allowed the
-        definition of the mia_user_path parameter, the objective here
+        _browse_properties_path() function, the latter having allowed the
+        definition of the properties_user_path parameter, the objective here
         is to check if the value of this parameter is valid. The
-        mia_path parameters are saved in the
-        ~/.populse_mia/configuration.yml file (the mia_user_path
-        parameter is mandatory in the user mode). Then the data in the
-        mia_path/properties/config.yml file are checked. If an
+        properties_path parameters are saved in the
+        ~/.populse_mia/configuration.yml file (the properties_user_path
+        parameter is mandatory). Then the data in the
+        properties_path/properties/config.yml file are checked. If an
         exception is raised during the _verify_miaConfig function, the
-        "MIA path selection" window is not closed and the user is
-        prompted again to set the mia_user_path parameter.
+        "Properties path selection" window is not closed and the user is again
+        prompted to set the properties_user_path parameter.
 
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
 
         save_flag = False
+
+        if dialog is not None:
+            with open(dot_mia_config, "r") as stream:
+                try:
+                    if verCmp(yaml.__version__, "5.1", "sup"):
+                        mia_home_properties_path = yaml.load(
+                            stream, Loader=yaml.FullLoader
+                        )
+
+                    else:
+                        mia_home_properties_path = yaml.load(stream)
+
+                except yaml.YAMLError:
+                    print(
+                        "\n ~/.populse_mia/configuration.yml cannot be read,"
+                        "the path to the properties has not been found..."
+                    )
+                    mia_home_properties_path = dict()
+
+            mia_home_properties_path_new = dict()
+
+            if DEV_MODE:
+                mia_home_properties_path_new[
+                    "properties_dev_path"
+                ] = dialog.file_line_edit.text()
+
+            else:
+                mia_home_properties_path_new[
+                    "properties_user_path"
+                ] = dialog.file_line_edit.text()
+
+            print("\nNew values in ~/.populse_mia/configuration.yml: ")
+
+            for key, value in mia_home_properties_path_new.items():
+                print("- {0}: {1}".format(key, value))
+
+            print()
+
+            mia_home_properties_path = {
+                **mia_home_properties_path,
+                **mia_home_properties_path_new,
+            }
+
+            with open(dot_mia_config, "w", encoding="utf8") as configfile:
+                yaml.dump(
+                    mia_home_properties_path,
+                    configfile,
+                    default_flow_style=False,
+                    allow_unicode=True,
+                )
+
+            try:
+                config = Config()
+
+                if not config.get_admin_hash():
+                    config.set_admin_hash(
+                        "60cfd1916033576b0f2368603fe612fb"
+                        "78b8c20e4f5ad9cf39c9cf7e912dd282"
+                    )
+                dialog.close()
+
+            except Exception as e:
+                print(
+                    "\nCould not fetch the "
+                    "configuration file: {0} ...".format(
+                        e,
+                    )
+                )
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setWindowTitle(
+                    "populse_mia - Error: properties path directory incorrect"
+                )
+                msg.setText(
+                    "Error: Please select the properties path (directory with"
+                    "\nthe processes, properties & resources "
+                    "directories): "
+                )
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.buttonClicked.connect(msg.close)
+                msg.exec()
 
         if DEV_MODE:  # "developer" mode
             try:
@@ -739,7 +821,9 @@ def main():
 
         elif dialog is not None:  # "user" mode only if problem
             mia_home_config = dict()
-            mia_home_config["mia_user_path"] = dialog.file_line_edit.text()
+            mia_home_config[
+                "properties_user_path"
+            ] = dialog.file_line_edit.text()
             print("\nNew values in ~/.populse_mia/configuration.yml: ")
 
             for key, value in mia_home_config.items():
@@ -757,6 +841,7 @@ def main():
 
             try:
                 config = Config()
+
                 if not config.get_admin_hash():
                     config.set_admin_hash(
                         "60cfd1916033576b0f2368603fe612fb"
@@ -860,7 +945,7 @@ def main():
             msg.file_line_edit = QLineEdit()
             msg.file_line_edit.setFixedWidth(400)
             file_button = QPushButton("Browse")
-            file_button.clicked.connect(partial(_browse_mia_path, msg))
+            file_button.clicked.connect(partial(_browse_properties_path, msg))
             vbox_layout.addWidget(file_label)
             hbox_layout.addWidget(msg.file_line_edit)
             hbox_layout.addWidget(file_button)
@@ -941,7 +1026,7 @@ def verify_processes():
     mandatory to have nipype, capsul and mia_processes installed in the
     station.
     All this information, as well as the installed versions and package
-    paths are saved in the  mia_path/properties/process_config.yml file.
+    paths are saved in the  properties_path/properties/process_config.yml file.
     When an upgrade or downgrade is performed for a package, the last
     configuration used by the user is kept (if a pipeline was visible, it
     remains so and vice versa). However, if a new pipeline is available in
@@ -994,7 +1079,7 @@ def verify_processes():
 
     config = Config()
     proc_config = os.path.join(
-        config.get_mia_path(), "properties", "process_config.yml"
+        config.get_properties_path(), "properties", "process_config.yml"
     )
     print(
         "\nChecking the installed version for nipype, "
@@ -1028,21 +1113,27 @@ def verify_processes():
                 if (
                     not (
                         os.path.relpath(
-                            os.path.join(config.get_mia_path(), "processes")
+                            os.path.join(
+                                config.get_properties_path(), "processes"
+                            )
                         )
                         in sys.path
                     )
                 ) and (
                     not (
                         os.path.abspath(
-                            os.path.join(config.get_mia_path(), "processes")
+                            os.path.join(
+                                config.get_properties_path(), "processes"
+                            )
                         )
                         in sys.path
                     )
                 ):
                     sys.path.append(
                         os.path.abspath(
-                            os.path.join(config.get_mia_path(), "processes")
+                            os.path.join(
+                                config.get_properties_path(), "processes"
+                            )
                         )
                     )
 
@@ -1051,21 +1142,23 @@ def verify_processes():
 
                         # update the Paths parameter (processes/ directory
                         # currently used) saved later in the
-                        # mia_path/properties/process_config.yml file
+                        # properties_path/properties/process_config.yml file
                         if ("Paths" in proc_content) and (
                             isinstance(proc_content["Paths"], list)
                         ):
                             if (
                                 not os.path.relpath(
                                     os.path.join(
-                                        config.get_mia_path(), "processes"
+                                        config.get_properties_path(),
+                                        "processes",
                                     )
                                 )
                                 in proc_content["Paths"]
                             ) and (
                                 not os.path.abspath(
                                     os.path.join(
-                                        config.get_mia_path(), "processes"
+                                        config.get_properties_path(),
+                                        "processes",
                                     )
                                 )
                                 in proc_content["Paths"]
@@ -1073,7 +1166,8 @@ def verify_processes():
                                 proc_content["Paths"].append(
                                     os.path.abspath(
                                         os.path.join(
-                                            config.get_mia_path(), "processes"
+                                            config.get_properties_path(),
+                                            "processes",
                                         )
                                     )
                                 )
@@ -1082,7 +1176,8 @@ def verify_processes():
                             proc_content["Paths"] = [
                                 os.path.abspath(
                                     os.path.join(
-                                        config.get_mia_path(), "processes"
+                                        config.get_properties_path(),
+                                        "processes",
                                     )
                                 )
                             ]
@@ -1098,11 +1193,11 @@ def verify_processes():
                         # Finally, the processes' directory currently used is
                         # removed from the sys.path because this directory is
                         # now added to the Paths parameter in the
-                        # mia_path/properties/process_config.yml file
+                        # properties_path/properties/process_config.yml file
                         sys.path.remove(
                             os.path.abspath(
                                 os.path.join(
-                                    config.get_mia_path(), "processes"
+                                    config.get_properties_path(), "processes"
                                 )
                             )
                         )
@@ -1128,7 +1223,7 @@ def verify_processes():
                                 e.msg.split()[-1],
                                 os.path.abspath(
                                     os.path.join(
-                                        config.get_mia_path(),
+                                        config.get_properties_path(),
                                         "processes",
                                         pckg,
                                     )
@@ -1141,7 +1236,7 @@ def verify_processes():
                         sys.path.remove(
                             os.path.abspath(
                                 os.path.join(
-                                    config.get_mia_path(), "processes"
+                                    config.get_properties_path(), "processes"
                                 )
                             )
                         )
@@ -1166,7 +1261,7 @@ def verify_processes():
                             e.msg.split()[-1],
                             os.path.abspath(
                                 os.path.join(
-                                    config.get_mia_path(), "processes"
+                                    config.get_properties_path(), "processes"
                                 )
                             ),
                         )
