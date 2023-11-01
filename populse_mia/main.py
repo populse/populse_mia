@@ -689,9 +689,22 @@ def main():
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
 
-        dname = QFileDialog.getExistingDirectory(
-            dialog, "Please select properties path", os.path.expanduser("~")
-        )
+        if DEV_MODE:
+            dname = QFileDialog.getExistingDirectory(
+                dialog,
+                "Please select properties path, dev mode",
+                os.path.join(os.path.expanduser("~"), ".populse_mia", "dev"),
+                QFileDialog.ShowDirsOnly,
+            )
+
+        else:
+            dname = QFileDialog.getExistingDirectory(
+                dialog,
+                "Please select properties path, dev mode",
+                os.path.join(os.path.expanduser("~"), ".populse_mia", "usr"),
+                QFileDialog.ShowDirsOnly,
+            )
+
         dialog.file_line_edit.setText(dname)
 
     def _verify_miaConfig(dialog=None):
@@ -794,84 +807,16 @@ def main():
                 )
                 msg.setText(
                     "Error: Please select the properties path (directory with"
-                    "\nthe processes, properties & resources "
-                    "directories): "
+                    "\nthe usrORdev/processes, usrORdev/properties &"
+                    "usrORdev/resources directories): "
                 )
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.buttonClicked.connect(msg.close)
                 msg.exec()
 
-        if DEV_MODE:  # "developer" mode
-            try:
-                config = Config()
-
-                if not config.get_admin_hash():
-                    config.set_admin_hash(
-                        "60cfd1916033576b0f2368603fe612fb"
-                        "78b8c20e4f5ad9cf39c9cf7e912dd282"
-                    )
-
-            except Exception as e:
-                print(
-                    "\nMIA configuration settings could not be "
-                    "recovered: {0} ...".format(e)
-                )
-                print("\nMIA is exiting ...\n")
-                sys.exit(1)
-
-        elif dialog is not None:  # "user" mode only if problem
-            mia_home_config = dict()
-            mia_home_config[
-                "properties_user_path"
-            ] = dialog.file_line_edit.text()
-            print("\nNew values in ~/.populse_mia/configuration.yml: ")
-
-            for key, value in mia_home_config.items():
-                print("- {0}: {1}".format(key, value))
-
-            print()
-
-            with open(dot_mia_config, "w", encoding="utf8") as configfile:
-                yaml.dump(
-                    mia_home_config,
-                    configfile,
-                    default_flow_style=False,
-                    allow_unicode=True,
-                )
-
-            try:
-                config = Config()
-
-                if not config.get_admin_hash():
-                    config.set_admin_hash(
-                        "60cfd1916033576b0f2368603fe612fb"
-                        "78b8c20e4f5ad9cf39c9cf7e912dd282"
-                    )
-                dialog.close()
-
-            except Exception as e:
-                print(
-                    "\nCould not fetch the "
-                    "configuration file: {0} ...".format(
-                        e,
-                    )
-                )
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle(
-                    "populse_mia - Error: mia path directory incorrect"
-                )
-                msg.setText(
-                    "Error: Please select the MIA path (directory with"
-                    "\nthe processes, properties & resources "
-                    "directories): "
-                )
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
-
-        else:  # "user" mode (initial pass)
+        else:
             config = Config()
+
             if not config.get_admin_hash():
                 config.set_admin_hash(
                     "60cfd1916033576b0f2368603fe612fb"
@@ -880,6 +825,7 @@ def main():
 
         if "config" in locals():
             for key, value in config.config.items():
+                # Patch for obsolete values
                 if value == "no":
                     save_flag = True
                     config.config[key] = False
@@ -895,71 +841,72 @@ def main():
         os.path.expanduser("~"), ".populse_mia", "configuration.yml"
     )
 
-    if DEV_MODE:  # "developer" mode
+    # if DEV_MODE:  # "developer" mode
+    #     _verify_miaConfig()
+
+    try:
+        if not os.path.exists(os.path.dirname(dot_mia_config)):
+            os.mkdir(os.path.dirname(dot_mia_config))
+            print(
+                "\nThe {0} directory is created "
+                "...".format(os.path.dirname(dot_mia_config))
+            )
+
+        # Just to check if dot_mia_config file is well readable/writeable
+        with open(dot_mia_config, "r") as stream:
+            if version.parse(yaml.__version__) > version.parse("5.1"):
+                mia_home_properties_path = yaml.load(
+                    stream, Loader=yaml.FullLoader
+                )
+
+            else:
+                mia_home_properties_path = yaml.load(stream)
+
+        with open(dot_mia_config, "w", encoding="utf8") as configfile:
+            yaml.dump(
+                mia_home_properties_path,
+                configfile,
+                default_flow_style=False,
+                allow_unicode=True,
+            )
+
         _verify_miaConfig()
 
-    else:  # "user" mode
-        try:
-            if not os.path.exists(os.path.dirname(dot_mia_config)):
-                os.mkdir(os.path.dirname(dot_mia_config))
-                print(
-                    "\nThe {0} directory is created "
-                    "...".format(os.path.dirname(dot_mia_config))
-                )
+    except Exception as e:
+        # the configuration.yml file does not exist or has not been
+        # correctly read ...
+        print(
+            "\nA problem has been detected when opening"
+            " the ~/.populse_mia/configuration.yml file"
+            " or with the parameters returned from this file: ",
+            e,
+        )
 
-            # Just to check if dot_mia_config file is well readable/writeable
-            with open(dot_mia_config, "r") as stream:
-                if version.parse(yaml.__version__) > version.parse("5.1"):
-                    mia_home_config = yaml.load(stream, Loader=yaml.FullLoader)
-                else:
-                    mia_home_config = yaml.load(stream)
-
-            with open(dot_mia_config, "w", encoding="utf8") as configfile:
-                yaml.dump(
-                    mia_home_config,
-                    configfile,
-                    default_flow_style=False,
-                    allow_unicode=True,
-                )
-
-        except Exception as e:
-            # the configuration.yml file does not exist or has not been
-            # correctly read ...
-            print(
-                "\nA problem has been detected when opening"
-                " the ~/.populse_mia/configuration.yml file"
-                " or with the parameters returned from this file: ",
-                e,
-            )
-
-            # open popup, user choose the path to .populse_mia/populse_mia dir
-            msg = QDialog()
-            msg.setWindowTitle("populse_mia - mia path selection")
-            vbox_layout = QVBoxLayout()
-            hbox_layout = QHBoxLayout()
-            file_label = QLabel(
-                "Please select the MIA path (directory with\n "
-                "the processes, properties & resources "
-                "directories): "
-            )
-            msg.file_line_edit = QLineEdit()
-            msg.file_line_edit.setFixedWidth(400)
-            file_button = QPushButton("Browse")
-            file_button.clicked.connect(partial(_browse_properties_path, msg))
-            vbox_layout.addWidget(file_label)
-            hbox_layout.addWidget(msg.file_line_edit)
-            hbox_layout.addWidget(file_button)
-            vbox_layout.addLayout(hbox_layout)
-            hbox_layout = QHBoxLayout()
-            msg.ok_button = QPushButton("Ok")
-            msg.ok_button.clicked.connect(partial(_verify_miaConfig, msg))
-            hbox_layout.addWidget(msg.ok_button)
-            vbox_layout.addLayout(hbox_layout)
-            msg.setLayout(vbox_layout)
-            msg.exec()
-
-        else:
-            _verify_miaConfig()
+        # open popup, we choose the properties path dir
+        msg = QDialog()
+        msg.setWindowTitle("populse_mia - properties path selection")
+        vbox_layout = QVBoxLayout()
+        hbox_layout = QHBoxLayout()
+        file_label = QLabel(
+            "Please select the properties path (directory with\n "
+            "the usrORdev/processes, userORdev/properties"
+            "& usrORdev/resources directories): "
+        )
+        msg.file_line_edit = QLineEdit()
+        msg.file_line_edit.setFixedWidth(400)
+        file_button = QPushButton("Browse")
+        file_button.clicked.connect(partial(_browse_properties_path, msg))
+        vbox_layout.addWidget(file_label)
+        hbox_layout.addWidget(msg.file_line_edit)
+        hbox_layout.addWidget(file_button)
+        vbox_layout.addLayout(hbox_layout)
+        hbox_layout = QHBoxLayout()
+        msg.ok_button = QPushButton("Ok")
+        msg.ok_button.clicked.connect(partial(_verify_miaConfig, msg))
+        hbox_layout.addWidget(msg.ok_button)
+        vbox_layout.addLayout(hbox_layout)
+        msg.setLayout(vbox_layout)
+        msg.exec()
 
     global pypath
 
