@@ -52,9 +52,6 @@ from populse_db.database import (
 from PyQt5.QtCore import QDate, QDateTime, Qt, QTime, QVariant
 from PyQt5.QtWidgets import QMessageBox
 
-# Populse_mia imports
-from populse_mia.software_properties import Config
-
 
 def check_python_version():
     """Check Python version used.
@@ -328,6 +325,8 @@ def set_projects_directory_as_default(dialog):
 
     :param dialog: current file dialog
     """
+    # import Config only here to prevent circular import issue
+    from populse_mia.software_properties import Config
 
     config = Config()
     projects_directory = config.get_projects_save_path()

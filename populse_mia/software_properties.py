@@ -483,7 +483,7 @@ class Config:
         return self.config.get("chain_cursors", False)
 
     def get_config_path(self):
-        """Get the Mia config path (including "properties" directory)
+        """Get the config.yml folder path.
 
         :returns: string of directory path to the config.yml file
         """
@@ -494,6 +494,7 @@ class Config:
             return config_path
 
         properties_path = self.get_properties_path()
+
         return os.path.join(properties_path, "properties")
 
     def get_fsl_config(self):
@@ -615,7 +616,9 @@ class Config:
             os.path.expanduser("~"), ".populse_mia", "configuration.yml"
         )
 
-        if os.path.isfile(dot_mia_config):
+        # if os.path.isfile(dot_mia_config):
+
+        try:
             with open(dot_mia_config, "r") as stream:
                 try:
                     if verCmp(yaml.__version__, "5.1", "sup"):
@@ -626,19 +629,23 @@ class Config:
                     else:
                         mia_home_properties_path = yaml.load(stream)
 
-                except yaml.YAMLError:
+                except yaml.YAMLError as e:
                     print(
-                        "\n ~/.populse_mia/configuration.yml cannot be read,"
-                        "the path to the properties has not been found..."
+                        "\n ",
+                        e,
+                        "\n ~/.populse_mia/configuration.yml cannot "
+                        "be read, the path to the properties folder has not "
+                        "been found...",
                     )
-                    return None
+                    raise
 
                 else:
-                    # Patch for obsolete "mia_path" parameter.
+                    # Patch for obsolete parameters.
                     if "mia_path" in mia_home_properties_path:
                         mia_home_properties_path[
                             "properties_user_path"
                         ] = mia_home_properties_path["mia_path"]
+                        del mia_home_properties_path["mia_path"]
 
                         with open(
                             dot_mia_config, "w", encoding="utf8"
@@ -649,39 +656,52 @@ class Config:
                                 default_flow_style=False,
                                 allow_unicode=True,
                             )
-                        del mia_home_properties_path["mia_path"]
 
-                    if (
-                        self.dev_mode is True
-                        and "properties_dev_path" in mia_home_properties_path
-                    ):
-                        self.properties_path = mia_home_properties_path[
-                            "properties_dev_path"
-                        ]
-                        return self.properties_path
-
-                    elif (
-                        self.dev_mode is False
-                        and "properties_user_path" in mia_home_properties_path
-                    ):
-                        self.properties_path = mia_home_properties_path[
+                    if "mia_user_path" in mia_home_properties_path:
+                        mia_home_properties_path[
                             "properties_user_path"
-                        ]
-                        return self.properties_path
+                        ] = mia_home_properties_path["mia_user_path"]
+                        del mia_home_properties_path["mia_user_path"]
 
-                    else:
+                        with open(
+                            dot_mia_config, "w", encoding="utf8"
+                        ) as configfile:
+                            yaml.dump(
+                                mia_home_properties_path,
+                                configfile,
+                                default_flow_style=False,
+                                allow_unicode=True,
+                            )
+
+                    try:
+                        if self.dev_mode is True:
+                            self.properties_path = mia_home_properties_path[
+                                "properties_dev_path"
+                            ]
+                            return self.properties_path
+
+                        elif self.dev_mode is False:
+                            self.properties_path = mia_home_properties_path[
+                                "properties_user_path"
+                            ]
+                            return self.properties_path
+
+                    except KeyError as e:
                         print(
-                            "properties_dev_path or properties_user_path key"
-                            "not found in ~/.populse_mia/configuration.yml"
+                            "\nproperties_dev_path or properties_user_path key"
+                            " not found in ~/.populse_mia/configuration.yml:"
+                            "\n",
+                            e,
                         )
-                        return None
+                        raise
 
-        else:
+        except Exception as e:
             print(
-                "\n ~/.populse_mia/configuration.yml cannot be found, the"
-                "path to the properties has not been found..."
+                "\n ~/.populse_mia/configuration.yml cannot be found, the "
+                "path to the properties has not been found...:\n",
+                e,
             )
-            return None
+            raise
 
     def get_mri_conv_path(self):
         """Get the MRIManager.jar path.
