@@ -35,6 +35,7 @@ from functools import partial
 from pathlib import Path
 
 import yaml
+from cryptography.fernet import Fernet
 from packaging import version
 
 # PyQt5 imports
@@ -55,6 +56,7 @@ from PyQt5.QtWidgets import (
 )
 
 pypath = []
+CONFIG = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
 
 # Disables any etelemetry check.
 if "NO_ET" not in os.environ:
@@ -693,19 +695,91 @@ def main():
             dname = QFileDialog.getExistingDirectory(
                 dialog,
                 "Please select properties path, dev mode",
-                os.path.join(os.path.expanduser("~"), ".populse_mia", "dev"),
-                QFileDialog.ShowDirsOnly,
+                os.path.join(os.path.expanduser("~"), ".populse_mia"),
+                QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
             )
 
         else:
             dname = QFileDialog.getExistingDirectory(
                 dialog,
-                "Please select properties path, dev mode",
-                os.path.join(os.path.expanduser("~"), ".populse_mia", "usr"),
-                QFileDialog.ShowDirsOnly,
+                "Please select properties path, user mode",
+                os.path.join(os.path.expanduser("~"), ".populse_mia"),
+                QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
             )
 
         dialog.file_line_edit.setText(dname)
+
+    def _cancel_clicked(dialog):
+        """Cancel the config check."""
+        dialog.close()
+        print(
+            "\nNo configuration has been detected. "
+            "Mia is shutting down...\n"
+        )
+        sys.exit(0)
+
+    def _make_default_config(dialog):
+        """Make default configuration."""
+        if DEV_MODE is True:
+            properties_path = os.path.join(dialog.file_line_edit.text(), "dev")
+
+        else:
+            properties_path = os.path.join(dialog.file_line_edit.text(), "usr")
+
+        if not os.path.exists(properties_path):
+            os.makedirs(properties_path, exist_ok=True)
+            print("\nThe {0} directory is created...".format(properties_path))
+
+        # processes folder initialisation:
+        os.makedirs(
+            os.path.join(properties_path, "processes", "User_processes")
+        )
+        Path(
+            os.path.join(
+                properties_path, "processes", "User_processes", "__init__.py"
+            )
+        ).touch()
+        # properties folder initialisation:
+        os.makedirs(os.path.join(properties_path, "properties"))
+        saved_projects = {"paths": []}
+        _save_default_config(
+            saved_projects,
+            os.path.join(properties_path, "properties", "saved_projects.yml"),
+            fernet=False,
+        )
+        _save_default_config(
+            "gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq"
+            "ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0"
+            "VuT1ZdlmTYv4wwRjhlyPiir7afubLrLK4Jfk84OoOeVtR0a5"
+            "a0k0WqPlZl-y8_Wu4osHeQCfeWFKW5EWYF776rWgJZsjn3fx"
+            "Z-V2g5aHo-Q5aqYi2V1Kc-kQ9ZwjFBFbXNa1g9nHKZeyd3ve"
+            "6p3RUSELfUmEhS0eOWn8i-7GW1UGa4zEKCsoY6T19vrimiuR"
+            "Vy-DTmmgzbbjGkgmNxB5MvEzs0BF2bAcina_lKR-yeICuIqp"
+            "TSOBfgkTDcB0LVPBoQmogUVVTeCrjYH9_llFTJQ3ZtKZLdeS"
+            "tFR5Y2I2ZkQETi6m-0wmUDKf-KRzmk6sLRK_oz6GmuTAN8A5"
+            "1au2v1M=",
+            os.path.join(properties_path, "properties", "config.yml"),
+            fernet=False,
+        )
+        print("\nDefault configuration done.\n")
+
+    def _save_default_config(config_dic, config_file, fernet=False):
+        """Save default configuration."""
+        if fernet is True:
+            f = Fernet(CONFIG)
+            with open(config_file, "wb") as configfile:
+                stream = yaml.dump(
+                    config_dic, default_flow_style=False, allow_unicode=True
+                )
+                configfile.write(f.encrypt(stream.encode()))
+        else:
+            with open(config_file, "w", encoding="utf8") as configfile:
+                yaml.dump(
+                    config_dic,
+                    configfile,
+                    default_flow_style=False,
+                    allow_unicode=True,
+                )
 
     def _verify_miaConfig(dialog=None):
         """Check the config is not corrupted and try to fix if necessary.
@@ -732,6 +806,7 @@ def main():
         """
 
         save_flag = False
+        config = None
 
         if dialog is not None:
             with open(dot_mia_config, "r") as stream:
@@ -823,7 +898,7 @@ def main():
                     "78b8c20e4f5ad9cf39c9cf7e912dd282"
                 )
 
-        if "config" in locals():
+        if config is not None:
             for key, value in config.config.items():
                 # Patch for obsolete values
                 if value == "no":
@@ -840,9 +915,6 @@ def main():
     dot_mia_config = os.path.join(
         os.path.expanduser("~"), ".populse_mia", "configuration.yml"
     )
-
-    # if DEV_MODE:  # "developer" mode
-    #     _verify_miaConfig()
 
     try:
         if not os.path.exists(os.path.dirname(dot_mia_config)):
@@ -877,9 +949,8 @@ def main():
         # correctly read ...
         print(
             "\nA problem has been detected when opening"
-            " the ~/.populse_mia/configuration.yml file"
-            " or with the parameters returned from this file: ",
-            e,
+            " the {0} file or with the parameters returned "
+            "from this file:\n{1}".format(dot_mia_config, e)
         )
 
         # open popup, we choose the properties path dir
@@ -888,21 +959,28 @@ def main():
         vbox_layout = QVBoxLayout()
         hbox_layout = QHBoxLayout()
         file_label = QLabel(
-            "Please select the properties path (directory with\n "
+            "Please select the properties path (directory with "
             "the usrORdev/processes, userORdev/properties"
             "& usrORdev/resources directories): "
         )
         msg.file_line_edit = QLineEdit()
+        msg.file_line_edit.setText(os.path.dirname(dot_mia_config))
         msg.file_line_edit.setFixedWidth(400)
         file_button = QPushButton("Browse")
         file_button.clicked.connect(partial(_browse_properties_path, msg))
+        default_button = QPushButton("Make default config")
+        default_button.clicked.connect(partial(_make_default_config, msg))
         vbox_layout.addWidget(file_label)
         hbox_layout.addWidget(msg.file_line_edit)
         hbox_layout.addWidget(file_button)
+        hbox_layout.addWidget(default_button)
         vbox_layout.addLayout(hbox_layout)
         hbox_layout = QHBoxLayout()
         msg.ok_button = QPushButton("Ok")
         msg.ok_button.clicked.connect(partial(_verify_miaConfig, msg))
+        msg.cancel_button = QPushButton("Cancel")
+        msg.cancel_button.clicked.connect(partial(_cancel_clicked, msg))
+        hbox_layout.addWidget(msg.cancel_button)
         hbox_layout.addWidget(msg.ok_button)
         vbox_layout.addLayout(hbox_layout)
         msg.setLayout(vbox_layout)

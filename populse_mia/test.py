@@ -104,6 +104,7 @@ if (
     in sys.path
 ):
     # "developer" mode
+    os.environ["MIA_DEV_MODE"] = "1"
     root_dev_dir = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     )
@@ -168,6 +169,9 @@ if (
         )
         sys.path.insert(1, soma_workflow_dev_dir)
         del soma_workflow_dev_dir
+
+else:
+    os.environ["MIA_DEV_MODE"] = "0"
 
 # Imports after defining the location of populse packages in the case of a
 # developer configuration:
