@@ -819,6 +819,28 @@ def main():
                     else:
                         mia_home_properties_path = yaml.load(stream)
 
+                    if mia_home_properties_path is None or not isinstance(
+                        mia_home_properties_path, dict
+                    ):
+                        raise yaml.YAMLError(
+                            "\nThe '{}' file seems to be "
+                            "corrupted...\n".format(dot_mia_config)
+                        )
+
+                # if (DEV_MODE and "properties_dev_path"
+                #                  not in mia_home_properties_path):
+                #     raise yaml.YAMLError(
+                #         "\nNo properties path found in {}..."
+                #         "\n".format(dot_mia_config)
+                #     )
+                #
+                # elif (not DEV_MODE and "properties_user_path"
+                #                 not in mia_home_properties_path):
+                #     raise yaml.YAMLError(
+                #         "\nNo properties path found in {}..."
+                #         "\n".format(dot_mia_config)
+                #    )
+
                 except yaml.YAMLError:
                     print(
                         "\n ~/.populse_mia/configuration.yml cannot be read,"
@@ -849,6 +871,12 @@ def main():
                 **mia_home_properties_path,
                 **mia_home_properties_path_new,
             }
+
+            key_to_keep = ("properties_dev_path", "properties_user_path")
+
+            for k in mia_home_properties_path:
+                if k not in key_to_keep:
+                    del mia_home_properties_path[k]
 
             with open(dot_mia_config, "w", encoding="utf8") as configfile:
                 yaml.dump(
@@ -916,14 +944,18 @@ def main():
         os.path.expanduser("~"), ".populse_mia", "configuration.yml"
     )
 
-    try:
-        if not os.path.exists(os.path.dirname(dot_mia_config)):
-            os.mkdir(os.path.dirname(dot_mia_config))
-            print(
-                "\nThe {0} directory is created "
-                "...".format(os.path.dirname(dot_mia_config))
-            )
+    if not os.path.exists(os.path.dirname(dot_mia_config)):
+        os.mkdir(os.path.dirname(dot_mia_config))
+        print(
+            "\nThe {0} directory is created "
+            "...".format(os.path.dirname(dot_mia_config))
+        )
+        Path(os.path.join(dot_mia_config)).touch()
 
+    if not os.path.exists(dot_mia_config):
+        Path(os.path.join(dot_mia_config)).touch()
+
+    try:
         # Just to check if dot_mia_config file is well readable/writeable
         with open(dot_mia_config, "r") as stream:
             if version.parse(yaml.__version__) > version.parse("5.1"):
@@ -933,6 +965,25 @@ def main():
 
             else:
                 mia_home_properties_path = yaml.load(stream)
+
+        if mia_home_properties_path is None:
+            raise yaml.YAMLError(
+                "\nThe '{}' file seems to be "
+                "corrupted...\n".format(dot_mia_config)
+            )
+
+        if DEV_MODE and "properties_dev_path" not in mia_home_properties_path:
+            raise yaml.YAMLError(
+                "\nNo properties path found in {}...\n".format(dot_mia_config)
+            )
+
+        elif (
+            not DEV_MODE
+            and "properties_user_path" not in mia_home_properties_path
+        ):
+            raise yaml.YAMLError(
+                "\nNo properties path found in {}...\n".format(dot_mia_config)
+            )
 
         with open(dot_mia_config, "w", encoding="utf8") as configfile:
             yaml.dump(
