@@ -661,22 +661,28 @@ def main():
     """Make basic configuration check then actual launch of Mia.
 
     Checks if Mia is called from the site/dist packages (user mode) or from a
-    cloned git repository (developer mode). Launches the verify_processes()
-    function, then the launch_mia() function (Mia's real launch !!).
-    ~/.populse_mia/configuration.yml is mandatory, if it doesn't exist or is
-    corrupted, try to create one with a valid properties path.
+    cloned git repository (developer mode).
+
+    Launches the verify_processes() function, then the launch_mia() function
+    (Mia's real launch !!).
+
+    ~/.populse_mia/configuration_path.yml is mandatory, if it doesn't exist
+    or is corrupted, try to create one with a valid properties path.
 
     - If launched from a cloned git repository ('developer mode'):
-        - the properties_path is the properties_dev_path in
-          ~/.populse_mia/configuration.yml
+        - the properties_path is the "properties_dev_path" parameter in
+          ~/.populse_mia/configuration_path.yml
     - If launched from the site/dist packages ('user mode'):
-        - the properties_path is the properties_user_path in
-          ~/.populse_mia/configuration.yml
+        - the properties_path is the "properties_user_path" parameter in
+          ~/.populse_mia/configuration_path.yml
 
     :Contains:
         :Private function:
             - _browse_properties_path: the user define the properties_path
             parameter
+            - _cancel_clicked: exit form Mia
+            - _make_default_config: make default configuration
+            - _save_default_config: save default configuration
             - _verify_miaConfig: check the config and try to fix if necessary
     """
 
@@ -694,7 +700,7 @@ def main():
         if DEV_MODE:
             dname = QFileDialog.getExistingDirectory(
                 dialog,
-                "Please select properties path, dev mode",
+                "Please select a root directory for configuration, dev mode",
                 os.path.join(os.path.expanduser("~"), ".populse_mia"),
                 QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
             )
@@ -702,7 +708,7 @@ def main():
         else:
             dname = QFileDialog.getExistingDirectory(
                 dialog,
-                "Please select properties path, user mode",
+                "Please select a root directory for configuration, user mode",
                 os.path.join(os.path.expanduser("~"), ".populse_mia"),
                 QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
             )
@@ -720,48 +726,91 @@ def main():
 
     def _make_default_config(dialog):
         """Make default configuration."""
+
+        properties_path = dialog.file_line_edit.text()
+        erase_flag = False
+
+        if properties_path.endswith(os.sep):
+            properties_path = properties_path[:-1]
+            dialog.file_line_edit.setText(properties_path)
+
         if DEV_MODE is True:
-            properties_path = os.path.join(dialog.file_line_edit.text(), "dev")
+            if not os.path.split(properties_path)[-1] == "dev":
+                properties_path = os.path.join(properties_path, "dev")
+
+            else:
+                dialog.file_line_edit.setText(properties_path[0])
 
         else:
-            properties_path = os.path.join(dialog.file_line_edit.text(), "usr")
+            if not os.path.split(properties_path)[-1] == "usr":
+                properties_path = os.path.join(properties_path, "usr")
 
-        if not os.path.exists(properties_path):
+            else:
+                dialog.file_line_edit.setText(properties_path[0])
+
+        if os.path.exists(properties_path):
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Warning)
+            msgBox.setText(
+                "{} directory already exists. By clicking on Ok, "
+                "the directory will be overwritten with the new "
+                "parameters...".format(properties_path)
+            )
+            msgBox.setWindowTitle("Configuration warning")
+            msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            returnValue = msgBox.exec()
+
+            if returnValue == QMessageBox.Ok:
+                erase_flag = True
+
+        if not os.path.exists(properties_path) or erase_flag is True:
             os.makedirs(properties_path, exist_ok=True)
             print("\nThe {0} directory is created...".format(properties_path))
 
-        # processes folder initialisation:
-        os.makedirs(
-            os.path.join(properties_path, "processes", "User_processes")
-        )
-        Path(
-            os.path.join(
-                properties_path, "processes", "User_processes", "__init__.py"
+            # processes folder initialisation:
+            os.makedirs(
+                os.path.join(
+                    properties_path,
+                    "processes",
+                    "User_processes",
+                ),
+                exist_ok=True,
             )
-        ).touch()
-        # properties folder initialisation:
-        os.makedirs(os.path.join(properties_path, "properties"))
-        saved_projects = {"paths": []}
-        _save_default_config(
-            saved_projects,
-            os.path.join(properties_path, "properties", "saved_projects.yml"),
-            fernet=False,
-        )
-        _save_default_config(
-            "gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq"
-            "ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0"
-            "VuT1ZdlmTYv4wwRjhlyPiir7afubLrLK4Jfk84OoOeVtR0a5"
-            "a0k0WqPlZl-y8_Wu4osHeQCfeWFKW5EWYF776rWgJZsjn3fx"
-            "Z-V2g5aHo-Q5aqYi2V1Kc-kQ9ZwjFBFbXNa1g9nHKZeyd3ve"
-            "6p3RUSELfUmEhS0eOWn8i-7GW1UGa4zEKCsoY6T19vrimiuR"
-            "Vy-DTmmgzbbjGkgmNxB5MvEzs0BF2bAcina_lKR-yeICuIqp"
-            "TSOBfgkTDcB0LVPBoQmogUVVTeCrjYH9_llFTJQ3ZtKZLdeS"
-            "tFR5Y2I2ZkQETi6m-0wmUDKf-KRzmk6sLRK_oz6GmuTAN8A5"
-            "1au2v1M=",
-            os.path.join(properties_path, "properties", "config.yml"),
-            fernet=False,
-        )
-        print("\nDefault configuration done.\n")
+            Path(
+                os.path.join(
+                    properties_path,
+                    "processes",
+                    "User_processes",
+                    "__init__.py",
+                )
+            ).touch()
+            # properties folder initialisation:
+            os.makedirs(
+                os.path.join(properties_path, "properties"), exist_ok=True
+            )
+            saved_projects = {"paths": []}
+            _save_default_config(
+                saved_projects,
+                os.path.join(
+                    properties_path, "properties", "saved_projects.yml"
+                ),
+                fernet=False,
+            )
+            _save_default_config(
+                "gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq"
+                "ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0"
+                "VuT1ZdlmTYv4wwRjhlyPiir7afubLrLK4Jfk84OoOeVtR0a5"
+                "a0k0WqPlZl-y8_Wu4osHeQCfeWFKW5EWYF776rWgJZsjn3fx"
+                "Z-V2g5aHo-Q5aqYi2V1Kc-kQ9ZwjFBFbXNa1g9nHKZeyd3ve"
+                "6p3RUSELfUmEhS0eOWn8i-7GW1UGa4zEKCsoY6T19vrimiuR"
+                "Vy-DTmmgzbbjGkgmNxB5MvEzs0BF2bAcina_lKR-yeICuIqp"
+                "TSOBfgkTDcB0LVPBoQmogUVVTeCrjYH9_llFTJQ3ZtKZLdeS"
+                "tFR5Y2I2ZkQETi6m-0wmUDKf-KRzmk6sLRK_oz6GmuTAN8A5"
+                "1au2v1M=",
+                os.path.join(properties_path, "properties", "config.yml"),
+                fernet=False,
+            )
+            print("\nDefault configuration done.\n")
 
     def _save_default_config(config_dic, config_file, fernet=False):
         """Save default configuration."""
@@ -788,19 +837,18 @@ def main():
         update the obsolete values for some parameters of the
         properties_path/properties/config.yml file. Secondly, it allows
         to correct the value of the properties_user_path / properties_dev_path
-        parameter in the ~/.populse_mia/configuration.yml file.
+        parameter in the ~/.populse_mia/configuration_path.yml file.
 
-        In the case of a launch in user mode, this method goes with the
-        _browse_properties_path() function, the latter having allowed the
-        definition of the properties_user_path parameter, the objective here
-        is to check if the value of this parameter is valid. The
-        properties_path parameters are saved in the
-        ~/.populse_mia/configuration.yml file (the properties_user_path
-        parameter is mandatory). Then the data in the
-        properties_path/properties/config.yml file are checked. If an
+        This method goes with the _browse_properties_path() function, the
+        latter having allowed the definition of the properties_path parameter,
+        the objective here is to check if the value of this parameter is valid.
+        The properties_path parameters are saved in the
+        ~/.populse_mia/configuration_path.yml file (the properties_user_path
+        or the properties_dev_path parameter is mandatory).
+        Then the data in the properties/config.yml file are checked. If an
         exception is raised during the _verify_miaConfig function, the
         "Properties path selection" window is not closed and the user is again
-        prompted to set the properties_user_path parameter.
+        prompted to set the properties_path parameter.
 
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
@@ -827,28 +875,15 @@ def main():
                             "corrupted...\n".format(dot_mia_config)
                         )
 
-                # if (DEV_MODE and "properties_dev_path"
-                #                  not in mia_home_properties_path):
-                #     raise yaml.YAMLError(
-                #         "\nNo properties path found in {}..."
-                #         "\n".format(dot_mia_config)
-                #     )
-                #
-                # elif (not DEV_MODE and "properties_user_path"
-                #                 not in mia_home_properties_path):
-                #     raise yaml.YAMLError(
-                #         "\nNo properties path found in {}..."
-                #         "\n".format(dot_mia_config)
-                #    )
-
                 except yaml.YAMLError:
                     print(
-                        "\n ~/.populse_mia/configuration.yml cannot be read,"
-                        "the path to the properties has not been found..."
+                        "\n {} cannot be read, the path to the properties has "
+                        "not been found...".format(dot_mia_config)
                     )
                     mia_home_properties_path = dict()
 
             mia_home_properties_path_new = dict()
+            _make_default_config(dialog)
 
             if DEV_MODE:
                 mia_home_properties_path_new[
@@ -860,23 +895,25 @@ def main():
                     "properties_user_path"
                 ] = dialog.file_line_edit.text()
 
-            print("\nNew values in ~/.populse_mia/configuration.yml: ")
+            mia_home_properties_path = {
+                **mia_home_properties_path,
+                **mia_home_properties_path_new,
+            }
+            key_to_del = [
+                k
+                for k, v in mia_home_properties_path.items()
+                if k not in ("properties_dev_path", "properties_user_path")
+            ]
+
+            for k in key_to_del:
+                del mia_home_properties_path[k]
+
+            print("\nNew values in ~/.populse_mia/configuration_path.yml: ")
 
             for key, value in mia_home_properties_path_new.items():
                 print("- {0}: {1}".format(key, value))
 
             print()
-
-            mia_home_properties_path = {
-                **mia_home_properties_path,
-                **mia_home_properties_path_new,
-            }
-
-            key_to_keep = ("properties_dev_path", "properties_user_path")
-
-            for k in mia_home_properties_path:
-                if k not in key_to_keep:
-                    del mia_home_properties_path[k]
 
             with open(dot_mia_config, "w", encoding="utf8") as configfile:
                 yaml.dump(
@@ -899,26 +936,22 @@ def main():
             except Exception as e:
                 print(
                     "\nCould not fetch the "
-                    "configuration file: {0} ...".format(
+                    "properties/config.yml file: {0} ...".format(
                         e,
                     )
                 )
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle(
-                    "populse_mia - Error: properties path directory incorrect"
-                )
-                msg.setText(
-                    "Error: Please select the properties path (directory with"
-                    "\nthe usrORdev/processes, usrORdev/properties &"
-                    "usrORdev/resources directories): "
-                )
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
+                raise
 
         else:
             config = Config()
+
+            # Check properties/config.yml by checking if
+            # key == 'name' / value == 'MIA':
+            if config.config["name"] != "MIA":
+                raise yaml.YAMLError(
+                    "\nThe '{}' file seems to be "
+                    "corrupted...\n".format(dot_mia_config)
+                )
 
             if not config.get_admin_hash():
                 config.set_admin_hash(
@@ -941,9 +974,10 @@ def main():
                     config.saveConfig()
 
     dot_mia_config = os.path.join(
-        os.path.expanduser("~"), ".populse_mia", "configuration.yml"
+        os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
     )
 
+    # ~/.populse_mia/configuration_path.yml management/initialisation
     if not os.path.exists(os.path.dirname(dot_mia_config)):
         os.mkdir(os.path.dirname(dot_mia_config))
         print(
@@ -996,12 +1030,15 @@ def main():
         _verify_miaConfig()
 
     except Exception as e:
-        # the configuration.yml file does not exist or has not been
-        # correctly read ...
+        # the ~/.populse_mia/configuration_path.yml or the
+        # properties/config.yml file does not exist or has not been
+        # correctly read...
+
+        # FIXME: We may be need a more precise Exception class to catch ?
         print(
-            "\nA problem has been detected when opening"
+            "\nAn issue has been detected when opening"
             " the {0} file or with the parameters returned "
-            "from this file:\n{1}".format(dot_mia_config, e)
+            "from this file:{1}\n".format(dot_mia_config, e)
         )
 
         # open popup, we choose the properties path dir
@@ -1010,9 +1047,8 @@ def main():
         vbox_layout = QVBoxLayout()
         hbox_layout = QHBoxLayout()
         file_label = QLabel(
-            "Please select the properties path (directory with "
-            "the usrORdev/processes, userORdev/properties"
-            "& usrORdev/resources directories): "
+            "No configuration parameters found. Please select a root directory"
+            " for configuration."
         )
         msg.file_line_edit = QLineEdit()
         msg.file_line_edit.setText(os.path.dirname(dot_mia_config))

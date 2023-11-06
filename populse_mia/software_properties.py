@@ -211,10 +211,6 @@ class Config:
         self.properties_path = None
         self.config = self.loadConfig()
 
-        if "properties_user_path" not in self.config.keys():
-            self.config["properties_user_path"] = self.get_properties_path()
-            self.saveConfig()
-
     def get_admin_hash(self):
         """Get the value of the hash of the admin password.
 
@@ -494,9 +490,7 @@ class Config:
         if config_path:
             return config_path
 
-        properties_path = self.get_properties_path()
-
-        return os.path.join(properties_path, "properties")
+        return os.path.join(self.get_properties_path(), "properties")
 
     def get_fsl_config(self):
         """Get the FSL config file  path
@@ -597,13 +591,16 @@ class Config:
         """Get the path to the folder containing the processes and properties
         folders of mia (properties_path).
 
-        During the user mode mia installation, the properties_path is defined
-        and stored in the configuration.yml file, located in the .populse_mia
-        folder (located in the user's home). If mia is launched in user
-        mode, properties path must compulsorily be returned from the
-        "properties_user_path" parameter of the configuration.yml. If mia is
-        launched in developer mode, mia path must compulsorily be returned
-        from the "properties_dev_path" parameter of the configuration.yml.
+        The properties_path is defined and stored in the
+        configuration_path.yml file, located in the ~/.populse_mia folder.
+
+        If Mia is launched in user mode, properties path must compulsorily be
+        returned from the "properties_user_path" parameter of the
+        configuration_path.yml file.
+
+        If mia is launched in developer mode, mia path must compulsorily be
+        returned from the "properties_dev_path" parameter of the
+        configuration_path.yml file.
 
         :returns: string of path to properties folder
         """
@@ -612,7 +609,7 @@ class Config:
             return self.properties_path
 
         dot_mia_config = os.path.join(
-            os.path.expanduser("~"), ".populse_mia", "configuration.yml"
+            os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
         )
 
         try:
@@ -629,9 +626,8 @@ class Config:
             print(
                 "\n ",
                 e,
-                "\n ~/.populse_mia/configuration.yml cannot "
-                "be read, the path to the properties folder has not "
-                "been found...",
+                "\n ~/.populse_mia/configuration_path.yml cannot be read, the "
+                "path to the properties folder has not been found...",
             )
             raise
 
@@ -667,21 +663,21 @@ class Config:
 
             try:
                 if self.dev_mode is True:
-                    self.properties_path = mia_home_properties_path[
-                        "properties_dev_path"
-                    ]
-                    return self.properties_path
+                    self.properties_path = os.path.join(
+                        mia_home_properties_path["properties_dev_path"], "dev"
+                    )
 
                 elif self.dev_mode is False:
-                    self.properties_path = mia_home_properties_path[
-                        "properties_user_path"
-                    ]
-                    return self.properties_path
+                    self.properties_path = os.path.join(
+                        mia_home_properties_path["properties_user_path"], "usr"
+                    )
+
+                return self.properties_path
 
             except KeyError as e:
                 print(
                     "\n{} key not found in ~/.populse_mia/"
-                    "configuration.yml!\n".format(e)
+                    "configuration_path.yml!\n".format(e)
                 )
                 raise
 
