@@ -698,12 +698,27 @@ def main():
         """
 
         if DEV_MODE:
-            dname = QFileDialog.getExistingDirectory(
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            options |= QFileDialog.ShowDirsOnly
+            existDir = QFileDialog(
                 dialog,
                 "Please select a root directory for configuration, dev mode",
-                os.path.join(os.path.expanduser("~"), ".populse_mia"),
-                QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
             )
+            existDir.setFileMode(QFileDialog.Directory)
+            existDir.setFilter(
+                existDir.filter()
+                | QDir.AllEntries
+                | QDir.Hidden
+                | QDir.NoDotAndDotDot
+            )
+            existDir.setOptions(options)
+            existDir.setDirectory(
+                os.path.join(os.path.expanduser("~"), ".populse_mia")
+            )
+
+            if existDir.exec():
+                dname = existDir.selectedFiles()[0]
 
         else:
             dname = QFileDialog.getExistingDirectory(
@@ -1055,12 +1070,12 @@ def main():
         msg.file_line_edit.setFixedWidth(400)
         file_button = QPushButton("Browse")
         file_button.clicked.connect(partial(_browse_properties_path, msg))
-        default_button = QPushButton("Make default config")
-        default_button.clicked.connect(partial(_make_default_config, msg))
+        # default_button = QPushButton("Make default config")
+        # default_button.clicked.connect(partial(_make_default_config, msg))
         vbox_layout.addWidget(file_label)
         hbox_layout.addWidget(msg.file_line_edit)
         hbox_layout.addWidget(file_button)
-        hbox_layout.addWidget(default_button)
+        # hbox_layout.addWidget(default_button)
         vbox_layout.addLayout(hbox_layout)
         hbox_layout = QHBoxLayout()
         msg.ok_button = QPushButton("Ok")
