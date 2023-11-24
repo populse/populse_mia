@@ -861,6 +861,12 @@ def main():
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
 
+        if not dialog.file_line_edit.text():
+            # FIXME: Shouldn't we carry out a more thorough invalidity check
+            #        (we're only checking the empty string here)?
+            print("Warning: configuration root directory is invalid...")
+            return
+
         save_flag = False
         config = None
 
