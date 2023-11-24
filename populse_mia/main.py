@@ -697,36 +697,29 @@ def main():
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
 
-        if DEV_MODE:
-            options = QFileDialog.Options()
-            options |= QFileDialog.DontUseNativeDialog
-            options |= QFileDialog.ShowDirsOnly
-            existDir = QFileDialog(
-                dialog,
-                "Please select a root directory for configuration, dev mode",
-            )
-            existDir.setFileMode(QFileDialog.Directory)
-            existDir.setFilter(
-                existDir.filter()
-                | QDir.AllEntries
-                | QDir.Hidden
-                | QDir.NoDotAndDotDot
-            )
-            existDir.setOptions(options)
-            existDir.setDirectory(
-                os.path.join(os.path.expanduser("~"), ".populse_mia")
-            )
+        dname = None
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        options |= QFileDialog.ShowDirsOnly
+        options |= QFileDialog.ReadOnly
+        caption = (
+            "Please select a root directory for configuration, {} mode."
+        ).format("dev" if DEV_MODE is True else "user")
+        existDir = QFileDialog(dialog, caption)
+        existDir.setFileMode(QFileDialog.DirectoryOnly)
+        existDir.setFilter(
+            existDir.filter()
+            | QDir.AllEntries
+            | QDir.Hidden
+            | QDir.NoDotAndDotDot
+        )
+        existDir.setOptions(options)
+        existDir.setDirectory(
+            os.path.join(os.path.expanduser("~"), ".populse_mia")
+        )
 
-            if existDir.exec():
-                dname = existDir.selectedFiles()[0]
-
-        else:
-            dname = QFileDialog.getExistingDirectory(
-                dialog,
-                "Please select a root directory for configuration, user mode",
-                os.path.join(os.path.expanduser("~"), ".populse_mia"),
-                QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
-            )
+        if existDir.exec():
+            dname = existDir.selectedFiles()[0]
 
         dialog.file_line_edit.setText(dname)
 
