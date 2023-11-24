@@ -35,7 +35,6 @@ from functools import partial
 from pathlib import Path
 
 import yaml
-from cryptography.fernet import Fernet
 from packaging import version
 
 # PyQt5 imports
@@ -56,7 +55,6 @@ from PyQt5.QtWidgets import (
 )
 
 pypath = []
-CONFIG = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
 
 # Disables any etelemetry check.
 if "NO_ET" not in os.environ:
@@ -724,7 +722,10 @@ def main():
         dialog.file_line_edit.setText(dname)
 
     def _cancel_clicked(dialog):
-        """Cancel the config check."""
+        """Cancel the config check.
+
+        :param dialog: QtWidgets.QDialog object ('msg' in the main function)
+        """
         dialog.close()
         print(
             "\nNo configuration has been detected. "
@@ -733,10 +734,15 @@ def main():
         sys.exit(0)
 
     def _make_default_config(dialog):
-        """Make default configuration."""
+        """Make default configuration.
+
+        Default directories and configuration files are created only if they
+        do not exist (they are not overwritten if they already exist).
+
+        :param dialog: QtWidgets.QDialog object ('msg' in the main function)
+        """
 
         properties_path = dialog.file_line_edit.text()
-        erase_flag = False
 
         if properties_path.endswith(os.sep):
             properties_path = properties_path[:-1]
@@ -747,63 +753,36 @@ def main():
                 properties_path = os.path.join(properties_path, "dev")
 
             else:
-                dialog.file_line_edit.setText(properties_path[0])
+                dialog.file_line_edit.setText(os.path.dirname(properties_path))
 
         else:
             if not os.path.split(properties_path)[-1] == "usr":
                 properties_path = os.path.join(properties_path, "usr")
 
             else:
-                dialog.file_line_edit.setText(properties_path[0])
+                dialog.file_line_edit.setText(os.path.dirname(properties_path))
 
-        if os.path.exists(properties_path):
-            msgBox = QMessageBox()
-            msgBox.setIcon(QMessageBox.Warning)
-            msgBox.setText(
-                "{} directory already exists. By clicking on Ok, "
-                "the directory will be overwritten with the new "
-                "parameters...".format(properties_path)
-            )
-            msgBox.setWindowTitle("Configuration warning")
-            msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-            returnValue = msgBox.exec()
+        # properties folder management / initialisation:
+        properties_dir = os.path.join(properties_path, "properties")
 
-            if returnValue == QMessageBox.Ok:
-                erase_flag = True
+        if not os.path.exists(properties_dir):
+            os.makedirs(properties_dir, exist_ok=True)
+            print("\nThe {0} directory is created...".format(properties_dir))
 
-        if not os.path.exists(properties_path) or erase_flag is True:
-            os.makedirs(properties_path, exist_ok=True)
-            print("\nThe {0} directory is created...".format(properties_path))
-
-            # processes folder initialisation:
-            os.makedirs(
-                os.path.join(
-                    properties_path,
-                    "processes",
-                    "User_processes",
-                ),
-                exist_ok=True,
-            )
-            Path(
-                os.path.join(
-                    properties_path,
-                    "processes",
-                    "User_processes",
-                    "__init__.py",
-                )
-            ).touch()
-            # properties folder initialisation:
-            os.makedirs(
-                os.path.join(properties_path, "properties"), exist_ok=True
-            )
-            saved_projects = {"paths": []}
+        if not os.path.exists(
+            os.path.join(properties_dir, "saved_projects.yml")
+        ):
             _save_default_config(
-                saved_projects,
-                os.path.join(
-                    properties_path, "properties", "saved_projects.yml"
-                ),
-                fernet=False,
+                {"paths": []},
+                os.path.join(properties_dir, "saved_projects.yml"),
             )
+            print(
+                "\nThe {0} file is created...".format(
+                    os.path.join(properties_dir, "saved_projects.yml")
+                )
+            )
+
+        if not os.path.exists(os.path.join(properties_dir, "config.yml")):
             _save_default_config(
                 "gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq"
                 "ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0"
@@ -815,28 +794,58 @@ def main():
                 "TSOBfgkTDcB0LVPBoQmogUVVTeCrjYH9_llFTJQ3ZtKZLdeS"
                 "tFR5Y2I2ZkQETi6m-0wmUDKf-KRzmk6sLRK_oz6GmuTAN8A5"
                 "1au2v1M=",
-                os.path.join(properties_path, "properties", "config.yml"),
-                fernet=False,
+                os.path.join(properties_dir, "config.yml"),
             )
-            print("\nDefault configuration done.\n")
+            print(
+                "\nThe {0} file is created...".format(
+                    os.path.join(properties_dir, "config.yml")
+                )
+            )
 
-    def _save_default_config(config_dic, config_file, fernet=False):
-        """Save default configuration."""
-        if fernet is True:
-            f = Fernet(CONFIG)
-            with open(config_file, "wb") as configfile:
-                stream = yaml.dump(
-                    config_dic, default_flow_style=False, allow_unicode=True
+            # processes/User_processes folder management / initialisation:
+            user_processes_dir = os.path.join(
+                properties_path, "processes", "User_processes"
+            )
+
+            if not os.path.exists(user_processes_dir):
+                os.makedirs(user_processes_dir, exist_ok=True)
+                print(
+                    "\nThe {0} directory is created...".format(
+                        user_processes_dir
+                    )
                 )
-                configfile.write(f.encrypt(stream.encode()))
-        else:
-            with open(config_file, "w", encoding="utf8") as configfile:
-                yaml.dump(
-                    config_dic,
-                    configfile,
-                    default_flow_style=False,
-                    allow_unicode=True,
+
+            if not os.path.exists(
+                os.path.join(user_processes_dir, "__init__.py")
+            ):
+                Path(
+                    os.path.join(
+                        user_processes_dir,
+                        "__init__.py",
+                    )
+                ).touch()
+                print(
+                    "\nThe {0} file is created...".format(
+                        os.path.join(properties_dir, "config.yml")
+                    )
                 )
+
+            print("\nDefault configuration checked.\n")
+
+    def _save_default_config(a_dic, a_file):
+        """Save data in a YAML file.
+
+        :param a_dic: a dictionary
+        :param a_file: a .yml file path
+        """
+
+        with open(a_file, "w", encoding="utf8") as configfile:
+            yaml.dump(
+                a_dic,
+                configfile,
+                default_flow_style=False,
+                allow_unicode=True,
+            )
 
     def _verify_miaConfig(dialog=None):
         """Check the config is not corrupted and try to fix if necessary.
@@ -861,7 +870,7 @@ def main():
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
 
-        if not dialog.file_line_edit.text():
+        if dialog is not None and not dialog.file_line_edit.text():
             # FIXME: Shouldn't we carry out a more thorough invalidity check
             #        (we're only checking the empty string here)?
             print("Warning: configuration root directory is invalid...")
@@ -928,14 +937,7 @@ def main():
                 print("- {0}: {1}".format(key, value))
 
             print()
-
-            with open(dot_mia_config, "w", encoding="utf8") as configfile:
-                yaml.dump(
-                    mia_home_properties_path,
-                    configfile,
-                    default_flow_style=False,
-                    allow_unicode=True,
-                )
+            _save_default_config(mia_home_properties_path, dot_mia_config)
 
             try:
                 config = Config()
@@ -1033,14 +1035,7 @@ def main():
                 "\nNo properties path found in {}...\n".format(dot_mia_config)
             )
 
-        with open(dot_mia_config, "w", encoding="utf8") as configfile:
-            yaml.dump(
-                mia_home_properties_path,
-                configfile,
-                default_flow_style=False,
-                allow_unicode=True,
-            )
-
+        _save_default_config(mia_home_properties_path, dot_mia_config)
         _verify_miaConfig()
 
     except Exception as e:
@@ -1069,12 +1064,9 @@ def main():
         msg.file_line_edit.setFixedWidth(400)
         file_button = QPushButton("Browse")
         file_button.clicked.connect(partial(_browse_properties_path, msg))
-        # default_button = QPushButton("Make default config")
-        # default_button.clicked.connect(partial(_make_default_config, msg))
         vbox_layout.addWidget(file_label)
         hbox_layout.addWidget(msg.file_line_edit)
         hbox_layout.addWidget(file_button)
-        # hbox_layout.addWidget(default_button)
         vbox_layout.addLayout(hbox_layout)
         hbox_layout = QHBoxLayout()
         msg.ok_button = QPushButton("Ok")
