@@ -206,7 +206,7 @@ class Config:
 
         else:
             # FIXME: What can we do if "MIA_DEV_MODE" is not in os.environ?
-            print("\nMIA_DEV_MODE not found ...\n")
+            print("\nMIA_DEV_MODE not found...\n")
 
         self.properties_path = None
         self.config = self.loadConfig()
@@ -487,7 +487,7 @@ class Config:
 
         config_path = getattr(self, "config_path", None)
 
-        if config_path:
+        if config_path is not None:
             return config_path
 
         return os.path.join(self.get_properties_path(), "properties")
