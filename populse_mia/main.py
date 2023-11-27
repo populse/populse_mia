@@ -242,40 +242,6 @@ if (
             del mia_processes_dir
             del mia_processes
 
-    # Adding personal libraries (User_processes: by default in Mia, but others
-    # can be added by developers):
-    # TODO: The same fix type will certainly have to be made in user more
-    #        (for ~/.populse_mia/process' ).
-    mia_proc = os.path.join(
-        root_dev_dir, populse_bdir, "populse_mia", "processes"
-    )
-
-    if os.path.isdir(mia_proc):
-        mia_proc_dir = os.listdir(mia_proc)
-
-        if mia_proc_dir:
-            i += 1
-            sys.path.insert(i, mia_proc)
-            pypath.append(mia_proc)
-
-            for elt in mia_proc_dir:
-                print(
-                    "  . Using {0} package from {1}...".format(elt, mia_proc)
-                )
-
-        del mia_proc_dir
-
-        try:
-            del elt
-
-        except NameError:
-            # there is nothing in the "processes" directory!
-            os.mkdir(os.path.join(mia_proc, "User_processes"))
-            Path(
-                os.path.join(mia_proc, "User_processes", "__init__.py")
-            ).touch()
-
-    del mia_proc
     del root_dev_dir
 
 elif "CASA_DISTRO" in os.environ:
@@ -680,7 +646,7 @@ def main():
             parameter
             - _cancel_clicked: exit form Mia
             - _make_default_config: make default configuration
-            - _save_default_config: save default configuration
+            - _save_yml_file: save data in a YAML file
             - _verify_miaConfig: check the config and try to fix if necessary
     """
 
@@ -736,8 +702,13 @@ def main():
     def _make_default_config(dialog):
         """Make default configuration.
 
-        Default directories and configuration files are created only if they
-        do not exist (they are not overwritten if they already exist).
+        Default directories (properties_path/properties,
+        properties_path/processes/User_processes), configuration files
+        (properties_path/properties/saved_projects.yml,
+        properties_path/properties/config.yml) and
+        properties_path/processes/User_processes__init__.py are created
+        only if they do not exist (they are not overwritten if they already
+        exist).
 
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
@@ -772,7 +743,7 @@ def main():
         if not os.path.exists(
             os.path.join(properties_dir, "saved_projects.yml")
         ):
-            _save_default_config(
+            _save_yml_file(
                 {"paths": []},
                 os.path.join(properties_dir, "saved_projects.yml"),
             )
@@ -783,7 +754,7 @@ def main():
             )
 
         if not os.path.exists(os.path.join(properties_dir, "config.yml")):
-            _save_default_config(
+            _save_yml_file(
                 "gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq"
                 "ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0"
                 "VuT1ZdlmTYv4wwRjhlyPiir7afubLrLK4Jfk84OoOeVtR0a5"
@@ -832,7 +803,7 @@ def main():
 
             print("\nDefault configuration checked.\n")
 
-    def _save_default_config(a_dic, a_file):
+    def _save_yml_file(a_dic, a_file):
         """Save data in a YAML file.
 
         :param a_dic: a dictionary
@@ -870,16 +841,22 @@ def main():
         :param dialog: QtWidgets.QDialog object ('msg' in the main function)
         """
 
-        if dialog is not None and not dialog.file_line_edit.text():
-            # FIXME: Shouldn't we carry out a more thorough invalidity check
-            #        (we're only checking the empty string here)?
-            print("Warning: configuration root directory is invalid...")
-            return
-
         save_flag = False
         config = None
 
         if dialog is not None:
+            if not dialog.file_line_edit.text():
+                # FIXME: Shouldn't we carry out a more thorough invalidity
+                #        check (we're only checking the empty
+                #        string here)?
+                print("Warning: configuration root directory is invalid...")
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setWindowTitle("Mia configuration Error")
+                msg.setText("No configuration path found...")
+                msg.exec()
+                return
+
             with open(dot_mia_config, "r") as stream:
                 try:
                     if verCmp(yaml.__version__, "5.1", "sup"):
@@ -906,7 +883,22 @@ def main():
                     mia_home_properties_path = dict()
 
             mia_home_properties_path_new = dict()
-            _make_default_config(dialog)
+
+            try:
+                _make_default_config(dialog)
+
+            except Exception as e:
+                print(
+                    "\nAutomatic configuration fails: {0} ...".format(
+                        e,
+                    )
+                )
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setWindowTitle("Mia configuration Error")
+                msg.setText("Automatic configuration fails...")
+                msg.exec()
+                return
 
             if DEV_MODE:
                 mia_home_properties_path_new[
@@ -937,17 +929,24 @@ def main():
                 print("- {0}: {1}".format(key, value))
 
             print()
-            _save_default_config(mia_home_properties_path, dot_mia_config)
+            _save_yml_file(mia_home_properties_path, dot_mia_config)
 
             try:
                 config = Config()
+
+                # Check properties/config.yml by checking if
+                # key == 'name' / value == 'MIA':
+                if config.config["name"] != "MIA":
+                    raise yaml.YAMLError(
+                        "\nThe '{}' file seems to be "
+                        "corrupted...\n".format(dot_mia_config)
+                    )
 
                 if not config.get_admin_hash():
                     config.set_admin_hash(
                         "60cfd1916033576b0f2368603fe612fb"
                         "78b8c20e4f5ad9cf39c9cf7e912dd282"
                     )
-                dialog.close()
 
             except Exception as e:
                 print(
@@ -956,7 +955,15 @@ def main():
                         e,
                     )
                 )
-                raise
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setWindowTitle("Mia configuration Error")
+                msg.setText("No configuration path found...")
+                msg.exec()
+                return
+
+            else:
+                dialog.close()
 
         else:
             config = Config()
@@ -989,6 +996,8 @@ def main():
                 if save_flag is True:
                     config.saveConfig()
 
+    # The directory in which the configuration is located must be
+    # declared in ~/.populse_mia/configuration_path.yml
     dot_mia_config = os.path.join(
         os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
     )
@@ -1019,7 +1028,8 @@ def main():
         if mia_home_properties_path is None:
             raise yaml.YAMLError(
                 "\nThe '{}' file seems to be "
-                "corrupted...\n".format(dot_mia_config)
+                "corrupted or the configuration has never "
+                "been initialized...\n".format(dot_mia_config)
             )
 
         if DEV_MODE and "properties_dev_path" not in mia_home_properties_path:
@@ -1035,7 +1045,7 @@ def main():
                 "\nNo properties path found in {}...\n".format(dot_mia_config)
             )
 
-        _save_default_config(mia_home_properties_path, dot_mia_config)
+        _save_yml_file(mia_home_properties_path, dot_mia_config)
         _verify_miaConfig()
 
     except Exception as e:
@@ -1079,10 +1089,40 @@ def main():
         msg.setLayout(vbox_layout)
         msg.exec()
 
-    global pypath
+    # Adding personal libraries User_processes (and others if any) to sys.path
+    # and to pypath.
+    config = Config()
+    properties_path = config.get_properties_path()
+    user_proc = os.path.join(properties_path, "processes")
 
-    if DEV_MODE and pypath:
-        config = Config()
+    if os.path.isdir(user_proc):
+        user_proc_dir = os.listdir(user_proc)
+
+        if user_proc_dir:
+            sys.path.append(user_proc)
+            pypath.append(user_proc)
+
+            for elt in user_proc_dir:
+                print(
+                    "  . Using {0} package from {1}...".format(elt, user_proc)
+                )
+
+        del user_proc_dir
+
+        try:
+            del elt
+
+        except NameError:
+            # There's nothing in the "processes" directory! Let's try to fix
+            #  it and put at least one valid directory User_processes
+            os.mkdir(os.path.join(user_proc, "User_processes"))
+            Path(
+                os.path.join(user_proc, "User_processes", "__init__.py")
+            ).touch()
+
+    # global pypath
+
+    if pypath:
         config.get_capsul_engine()
         c = config.get_capsul_config()
         pc = (
