@@ -1268,31 +1268,12 @@ def verify_processes():
             except ImportError as e:
                 # Try to update the sys.path for the processes/ directory
                 # currently used
-                if (
-                    not (
-                        os.path.relpath(
-                            os.path.join(
-                                config.get_properties_path(), "processes"
-                            )
-                        )
-                        in sys.path
-                    )
-                ) and (
-                    not (
-                        os.path.abspath(
-                            os.path.join(
-                                config.get_properties_path(), "processes"
-                            )
-                        )
-                        in sys.path
-                    )
+                if not (
+                    os.path.join(config.get_properties_path(), "processes")
+                    in sys.path
                 ):
                     sys.path.append(
-                        os.path.abspath(
-                            os.path.join(
-                                config.get_properties_path(), "processes"
-                            )
-                        )
+                        os.path.join(config.get_properties_path(), "processes")
                     )
 
                     try:
@@ -1305,38 +1286,22 @@ def verify_processes():
                             isinstance(proc_content["Paths"], list)
                         ):
                             if (
-                                not os.path.relpath(
-                                    os.path.join(
-                                        config.get_properties_path(),
-                                        "processes",
-                                    )
-                                )
-                                in proc_content["Paths"]
-                            ) and (
-                                not os.path.abspath(
-                                    os.path.join(
-                                        config.get_properties_path(),
-                                        "processes",
-                                    )
+                                not os.path.join(
+                                    config.get_properties_path(), "processes"
                                 )
                                 in proc_content["Paths"]
                             ):
                                 proc_content["Paths"].append(
-                                    os.path.abspath(
-                                        os.path.join(
-                                            config.get_properties_path(),
-                                            "processes",
-                                        )
+                                    os.path.join(
+                                        config.get_properties_path(),
+                                        "processes",
                                     )
                                 )
 
                         else:
                             proc_content["Paths"] = [
-                                os.path.abspath(
-                                    os.path.join(
-                                        config.get_properties_path(),
-                                        "processes",
-                                    )
+                                os.path.join(
+                                    config.get_properties_path(), "processes"
                                 )
                             ]
 
@@ -1353,10 +1318,8 @@ def verify_processes():
                         # now added to the Paths parameter in the
                         # properties_path/properties/process_config.yml file
                         sys.path.remove(
-                            os.path.abspath(
-                                os.path.join(
-                                    config.get_properties_path(), "processes"
-                                )
+                            os.path.join(
+                                config.get_properties_path(), "processes"
                             )
                         )
 
@@ -1379,12 +1342,10 @@ def verify_processes():
                                 "process library."
                             ).format(
                                 e.msg.split()[-1],
-                                os.path.abspath(
-                                    os.path.join(
-                                        config.get_properties_path(),
-                                        "processes",
-                                        pckg,
-                                    )
+                                os.path.join(
+                                    config.get_properties_path(),
+                                    "processes",
+                                    pckg,
                                 ),
                             )
                         )
@@ -1392,10 +1353,8 @@ def verify_processes():
                         msg.buttonClicked.connect(msg.close)
                         msg.exec()
                         sys.path.remove(
-                            os.path.abspath(
-                                os.path.join(
-                                    config.get_properties_path(), "processes"
-                                )
+                            os.path.join(
+                                config.get_properties_path(), "processes"
                             )
                         )
 
@@ -1417,10 +1376,8 @@ def verify_processes():
                             "process library."
                         ).format(
                             e.msg.split()[-1],
-                            os.path.abspath(
-                                os.path.join(
-                                    config.get_properties_path(), "processes"
-                                )
+                            os.path.join(
+                                config.get_properties_path(), "processes"
                             ),
                         )
                     )
