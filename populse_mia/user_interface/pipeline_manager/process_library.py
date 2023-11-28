@@ -547,15 +547,11 @@ class InstallProcesses(QDialog):
 
         try:
             if (
-                os.path.abspath(
-                    os.path.join(config.get_properties_path(), "processes")
-                )
+                os.path.join(config.get_properties_path(), "processes")
                 not in sys.path
             ):
                 sys.path.append(
-                    os.path.abspath(
-                        os.path.join(config.get_properties_path(), "processes")
-                    )
+                    os.path.join(config.get_properties_path(), "processes")
                 )
 
             # Process config update
@@ -757,15 +753,11 @@ class InstallProcesses(QDialog):
                 final_package_dic = _add_package(packages, package_name)
 
             if (
-                not os.path.abspath(
-                    os.path.join(config.get_properties_path(), "processes")
-                )
+                not os.path.join(config.get_properties_path(), "processes")
                 in paths
             ):
                 paths.append(
-                    os.path.abspath(
-                        os.path.join(config.get_properties_path(), "processes")
-                    )
+                    os.path.join(config.get_properties_path(), "processes")
                 )
 
             process_dic["Packages"] = final_package_dic
@@ -1650,15 +1642,11 @@ class PackageLibraryDialog(QDialog):
 
         if module_name:
             if (
-                os.path.abspath(
-                    os.path.join(config.get_properties_path(), "processes")
-                )
+                os.path.join(config.get_properties_path(), "processes")
                 not in sys.path
             ):
                 sys.path.append(
-                    os.path.abspath(
-                        os.path.join(config.get_properties_path(), "processes")
-                    )
+                    os.path.join(config.get_properties_path(), "processes")
                 )
 
             # Reloading the package
@@ -1891,26 +1879,26 @@ class PackageLibraryDialog(QDialog):
                 msg.setIcon(QMessageBox.Warning)
                 msg.exec_()
 
-    def browse_package(self):
-        """Open a browser to select a package."""
-
-        file_dialog = QFileDialog()
-        file_dialog.setOption(QFileDialog.DontUseNativeDialog, True)
-
-        # To select files or directories, we should use a proxy model
-        # but mine is not working yet...
-
-        # file_dialog.setProxyModel(FileFilterProxyModel())
-        file_dialog.setFileMode(QFileDialog.Directory)
-        # file_dialog.setFileMode(QFileDialog.Directory |
-        # QFileDialog.ExistingFile)
-        # file_dialog.setFilter("Processes (*.py *.xml)")
-
-        if file_dialog.exec_():
-            file_name = file_dialog.selectedFiles()[0]
-            file_name = os.path.abspath(file_name)
-            self.is_path = True
-            self.line_edit.setText(file_name)
+    # def browse_package(self):
+    #     """Open a browser to select a package."""
+    #
+    #     file_dialog = QFileDialog()
+    #     file_dialog.setOption(QFileDialog.DontUseNativeDialog, True)
+    #
+    #     # To select files or directories, we should use a proxy model
+    #     # but mine is not working yet...
+    #
+    #     # file_dialog.setProxyModel(FileFilterProxyModel())
+    #     file_dialog.setFileMode(QFileDialog.Directory)
+    #     # file_dialog.setFileMode(QFileDialog.Directory |
+    #     # QFileDialog.ExistingFile)
+    #     # file_dialog.setFilter("Processes (*.py *.xml)")
+    #
+    #     if file_dialog.exec_():
+    #         file_name = file_dialog.selectedFiles()[0]
+    #         file_name = os.path.abspath(file_name)
+    #         self.is_path = True
+    #         self.line_edit.setText(file_name)
 
     def delete_package(
         self,
@@ -2004,12 +1992,10 @@ class PackageLibraryDialog(QDialog):
             pkg_list = to_delete.split(".")
 
             if index <= len(pkg_list):
-                path = os.path.abspath(
-                    os.path.join(
-                        config.get_properties_path(),
-                        "processes",
-                        *pkg_list[0:index]
-                    )
+                path = os.path.join(
+                    config.get_properties_path(),
+                    "processes",
+                    *pkg_list[0:index]
                 )
                 sub_deleted_packages = self.delete_package(
                     index + 1,
@@ -2080,13 +2066,11 @@ class PackageLibraryDialog(QDialog):
                             )
 
                 else:
-                    init = os.path.abspath(
-                        os.path.join(
-                            config.get_properties_path(),
-                            "processes",
-                            *pkg_list[: index - 1],
-                            "__init__.py"
-                        )
+                    init = os.path.join(
+                        config.get_properties_path(),
+                        "processes",
+                        *pkg_list[: index - 1],
+                        "__init__.py"
                     )
 
                     if os.path.isfile(init):
@@ -2461,15 +2445,11 @@ class PackageLibraryDialog(QDialog):
 
         if package:
             if (
-                os.path.abspath(
-                    os.path.join(config.get_properties_path(), "processes")
-                )
+                os.path.join(config.get_properties_path(), "processes")
                 not in sys.path
             ):
                 sys.path.append(
-                    os.path.abspath(
-                        os.path.join(config.get_properties_path(), "processes")
-                    )
+                    os.path.join(config.get_properties_path(), "processes")
                 )
 
             path_list = package.split(".")
@@ -2962,8 +2942,8 @@ class ProcessLibraryWidget(QWidget):
         for path in self.paths:
             # Adding the module path to the system path
             # sys.path.insert(0, os.path.abspath(path))
-            if os.path.abspath(path) not in sys.path:
-                sys.path.append(os.path.abspath(path))
+            if path not in sys.path:
+                sys.path.append(path)
 
     def open_pkg_lib(self):
         """Open the package library."""

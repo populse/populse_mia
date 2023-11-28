@@ -3562,7 +3562,7 @@ class PipelineManagerTab(QWidget):
                 )
 
         package = "User_processes"
-        path = os.path.relpath(os.path.join(filename_folder, ".."))
+        path = os.path.dirname(filename_folder)
 
         # If the pipeline has already been saved
         if "User_processes." + module_name in sys.modules.keys():
@@ -3579,8 +3579,8 @@ class PipelineManagerTab(QWidget):
             package, class_name, init_package_tree=True
         )
 
-        if os.path.relpath(path) not in self.processLibrary.pkg_library.paths:
-            self.processLibrary.pkg_library.paths.append(os.path.relpath(path))
+        if path not in self.processLibrary.pkg_library.paths:
+            self.processLibrary.pkg_library.paths.append(path)
 
         self.processLibrary.pkg_library.save()
 
