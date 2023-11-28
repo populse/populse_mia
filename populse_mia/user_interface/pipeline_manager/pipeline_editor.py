@@ -971,21 +971,15 @@ class PipelineEditor(PipelineDeveloperView):
             or os.path.join("mia_processes", "mia_processes") in filename
         ):
             pipeline = self.scene.pipeline
-            folder = os.path.abspath(
-                os.path.join(
-                    config.get_properties_path(), "processes", "User_processes"
-                )
+            folder = os.path.join(
+                config.get_properties_path(), "processes", "User_processes"
             )
 
             if not os.path.isdir(folder):
                 os.mkdir(folder)
 
-            if not os.path.isfile(
-                os.path.abspath(os.path.join(folder, "__init__.py"))
-            ):
-                with open(
-                    os.path.abspath(os.path.join(folder, "__init__.py")), "w"
-                ):
+            if not os.path.isfile(os.path.join(folder, "__init__.py")):
+                with open(os.path.join(folder, "__init__.py"), "w"):
                     pass
 
             filename = QtWidgets.QFileDialog.getSaveFileName(
