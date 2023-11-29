@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.utils.utils &#8212; populse_mia 2.4.1-dev+b35c71e5 documentation</title>
+    <title>populse_mia.utils.utils &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=e491ac2d" />
-    <script src="../../../_static/documentation_options.js?v=ca8cbbaa"></script>
+    <script src="../../../_static/documentation_options.js?v=2d69834f"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.4.1-dev+b35c71e5 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -43,6 +43,7 @@
 <span class="sd">        - set_item_data</span>
 <span class="sd">        - set_projects_directory_as_default</span>
 <span class="sd">        - table_to_database</span>
+<span class="sd">        - verCmp</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">##########################################################################</span>
@@ -55,6 +56,7 @@
 
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">time</span>
 
@@ -81,9 +83,6 @@
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QDate</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QTime</span><span class="p">,</span> <span class="n">QVariant</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QMessageBox</span>
-
-<span class="c1"># Populse_mia imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 
 
 <div class="viewcode-block" id="check_python_version">
@@ -375,6 +374,8 @@
 
 <span class="sd">    :param dialog: current file dialog</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># import Config only here to prevent circular import issue</span>
+    <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
     <span class="n">projects_directory</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_projects_save_path</span><span class="p">()</span>
@@ -454,6 +455,72 @@
 
         <span class="k">return</span> <span class="n">list_to_return</span></div>
 
+
+
+<div class="viewcode-block" id="verCmp">
+<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.verCmp">[docs]</a>
+<span class="k">def</span> <span class="nf">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Version comparator.</span>
+
+<span class="sd">    The verCmp() function returns a boolean value to indicate whether its</span>
+<span class="sd">    first argument (first_ver) is equal to, less or equal to, or greater or</span>
+<span class="sd">    equal to its second argument (sec_ver), as follows:</span>
+
+<span class="sd">      - if third argument (comp) is &#39;eq&#39;: when the first argument is equal to</span>
+<span class="sd">        the second argument, return True (False if not).</span>
+<span class="sd">      - if third argument (comp) is &#39;sup&#39;: when the first argument is greater</span>
+<span class="sd">        than the second argument, return True (False if not).</span>
+<span class="sd">      - if third argument (comp) is &#39;inf&#39;: when the first argument is less than</span>
+<span class="sd">        the second argument, return True (False if not).</span>
+
+<span class="sd">    :param first_ver: the version of a package (a string; ex. &#39;0.13.0&#39;)</span>
+<span class="sd">    :param sec_ver: the version of a package (a string; ex. &#39;0.13.0&#39;)</span>
+<span class="sd">    :param comp: comparator argument (accepted values: &#39;sup&#39;, &#39;inf&#39; and &#39;eq&#39; )</span>
+
+<span class="sd">    :return: False or True</span>
+
+<span class="sd">    :Contains:</span>
+<span class="sd">        :Private function:</span>
+<span class="sd">            - normalise: transform a version of a package to a corresponding</span>
+<span class="sd">              list of integer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform a version of a package to a corresponding list of integer.</span>
+
+<span class="sd">        :param v: version of a package (ex. 5.4.1)</span>
+
+<span class="sd">        :return: a list of integer (ex. [0, 13, 0])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^0-9\.]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\.0+)*$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">comp</span> <span class="o">==</span> <span class="s2">&quot;eq&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">normalise</span><span class="p">(</span><span class="n">first_ver</span><span class="p">)</span> <span class="o">==</span> <span class="n">normalise</span><span class="p">(</span><span class="n">sec_ver</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s2">&quot;sup&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">normalise</span><span class="p">(</span><span class="n">first_ver</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">normalise</span><span class="p">(</span><span class="n">sec_ver</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="s2">&quot;eq&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">normalise</span><span class="p">(</span><span class="n">first_ver</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">normalise</span><span class="p">(</span><span class="n">sec_ver</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="s2">&quot;eq&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
 </pre></div>
 
       </div>
@@ -467,7 +534,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     </div>
   </body>
 </html>

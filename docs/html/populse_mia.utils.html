@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.utils package &#8212; populse_mia 2.4.1-dev+b35c71e5 documentation</title>
+    <title>populse_mia.utils package &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=e491ac2d" />
-    <script src="_static/documentation_options.js?v=ca8cbbaa"></script>
+    <script src="_static/documentation_options.js?v=2d69834f"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.4.1-dev+b35c71e5 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -58,6 +58,7 @@
 <li><p>set_item_data</p></li>
 <li><p>set_projects_directory_as_default</p></li>
 <li><p>table_to_database</p></li>
+<li><p>verCmp</p></li>
 </ul>
 </dd>
 </dl>
@@ -149,6 +150,47 @@ one, False otherwise</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.verCmp">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">verCmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_ver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sec_ver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#verCmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.verCmp" title="Link to this definition">¶</a></dt>
+<dd><p>Version comparator.</p>
+<p>The verCmp() function returns a boolean value to indicate whether its
+first argument (first_ver) is equal to, less or equal to, or greater or
+equal to its second argument (sec_ver), as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>if third argument (comp) is ‘eq’: when the first argument is equal to
+the second argument, return True (False if not).</p></li>
+<li><p>if third argument (comp) is ‘sup’: when the first argument is greater
+than the second argument, return True (False if not).</p></li>
+<li><p>if third argument (comp) is ‘inf’: when the first argument is less than
+the second argument, return True (False if not).</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>first_ver</strong> – the version of a package (a string; ex. ‘0.13.0’)</p></li>
+<li><p><strong>sec_ver</strong> – the version of a package (a string; ex. ‘0.13.0’)</p></li>
+<li><p><strong>comp</strong> – comparator argument (accepted values: ‘sup’, ‘inf’ and ‘eq’ )</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>False or True</p>
+</dd>
+<dt class="field-odd">Contains<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="field-list simple">
+<dt class="field-odd">Private function<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>normalise: transform a version of a package to a corresponding
+list of integer</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -164,7 +206,7 @@ one, False otherwise</p>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     </div>
   </body>
 </html>

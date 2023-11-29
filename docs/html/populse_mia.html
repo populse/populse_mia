@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia package &#8212; populse_mia 2.4.1-dev+b35c71e5 documentation</title>
+    <title>populse_mia package &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=e491ac2d" />
-    <script src="_static/documentation_options.js?v=ca8cbbaa"></script>
+    <script src="_static/documentation_options.js?v=2d69834f"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.4.1-dev+b35c71e5 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -535,6 +535,7 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.set_item_data"><code class="docutils literal notranslate"><span class="pre">set_item_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.set_projects_directory_as_default"><code class="docutils literal notranslate"><span class="pre">set_projects_directory_as_default()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.table_to_database"><code class="docutils literal notranslate"><span class="pre">table_to_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.verCmp"><code class="docutils literal notranslate"><span class="pre">verCmp()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -598,7 +599,7 @@ mia’s GUI.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.main.PackagesInstall">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">PackagesInstall</span></span><a class="reference internal" href="_modules/populse_mia/main.html#PackagesInstall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.PackagesInstall" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.11/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Help to make available a pipeline package in the Mia pipeline library,
 in a recursive way.</p>
 <dl class="field-list simple">
@@ -670,39 +671,43 @@ mode</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.main.main">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.main" title="Link to this definition">¶</a></dt>
-<dd><p>Make basic configuration check then actual launch of mia.</p>
+<dd><p>Make basic configuration check then actual launch of Mia.</p>
 <p>Checks if Mia is called from the site/dist packages (user mode) or from a
-cloned git repository (developer mode). Launches the verify_processes()
-function, then the launch_mia() function (Mia’s real launch !!). When
-Mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the
-dev_mode parameter to False.</p>
+cloned git repository (developer mode).</p>
+<p>Launches the verify_processes() function, then the launch_mia() function
+(Mia’s real launch !!).</p>
+<p>~/.populse_mia/configuration_path.yml is mandatory, if it doesn’t exist
+or is corrupted, try to create one with a valid properties path.</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>If launched from a cloned git repository (‘developer mode’):</dt><dd><ul>
-<li><p>the mia_path is the cloned git repository.</p></li>
+<li><p>the properties_path is the “properties_dev_path” parameter in
+~/.populse_mia/configuration_path.yml</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt>If launched from the site/dist packages (‘user mode’):</dt><dd><ul>
-<li><p>if the file ~/.populse_mia/configuration.yml file is not found or
-does not exist or if the returned mia_path parameter is incorrect,
-a valid mia_path path is requested from the user, in order
-to try to fix a corruption of this file.</p></li>
+<li><p>the properties_path is the “properties_user_path” parameter in
+~/.populse_mia/configuration_path.yml</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
+<dd class="field-odd"><dl class="field-list">
 <dt class="field-odd">Private function<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>_browse_mia_path: the user define the mia_path parameter</p></li>
-<li><p>_verify_miaConfig: check the config and try to fix if necessary</p></li>
+<li><p>_browse_properties_path: the user define the properties_path</p></li>
 </ul>
+<p>parameter
+- _cancel_clicked: exit form Mia
+- _make_default_config: make default configuration
+- _save_yml_file: save data in a YAML file
+- _verify_miaConfig: check the config and try to fix if necessary</p>
 </dd>
 </dl>
 </dd>
@@ -729,7 +734,7 @@ mia_processes libraries in the pipeline library. Currently, it is
 mandatory to have nipype, capsul and mia_processes installed in the
 station.
 All this information, as well as the installed versions and package
-paths are saved in the  mia_path/properties/process_config.yml file.
+paths are saved in the  properties_path/properties/process_config.yml file.
 When an upgrade or downgrade is performed for a package, the last
 configuration used by the user is kept (if a pipeline was visible, it
 remains so and vice versa). However, if a new pipeline is available in
@@ -762,18 +767,13 @@ pop-up in the config.yml file.</p>
 <li><p>Config</p></li>
 </ul>
 </dd>
-<dt class="field-even">Function<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p>verCmp</p></li>
-</ul>
-</dd>
 </dl>
 </dd>
 </dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.software_properties.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.11/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Object that handles the configuration of the software</p>
 <dl class="field-list simple">
 <dt class="field-odd">Contains<span class="colon">:</span></dt>
@@ -802,7 +802,7 @@ Runtime</p></li>
 displayed in the “Saved projects” menu</p></li>
 <li><p>get_max_thumbnails:  get max thumbnails number at the data
 browser bottom</p></li>
-<li><p>get_mia_path: returns the software’s install path</p></li>
+<li><p>get_properties_path: returns the software’s properties path</p></li>
 <li><p>get_mri_conv_path: returns the MRIManager.jar path</p></li>
 <li><p>get_mrtrix_path: returns mrtrix path</p></li>
 <li><p>getNbAllSlicesMax: returns the maximum number of slices to
@@ -1134,7 +1134,7 @@ application. The engine is created once when needed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_config_path">
 <span class="sig-name descname"><span class="pre">get_config_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_config_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_config_path" title="Link to this definition">¶</a></dt>
-<dd><p>Get the MIA config path (including “properties” directory)</p>
+<dd><p>Get the config.yml folder path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string of directory path to the config.yml file</p>
@@ -1244,24 +1244,6 @@ projects” menu.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_mia_path">
-<span class="sig-name descname"><span class="pre">get_mia_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mia_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mia_path" title="Link to this definition">¶</a></dt>
-<dd><p>Get the path to the folder containing the processes and properties
-folders of mia (mia_path).</p>
-<p>During the mia installation, the mia_path is defined and stored in the
-configuration.yml file, located in the .populse_mia folder (himself
-located in the user’s home). If mia is launched in admin mode,
-mia path is the cloned git repository. If mia is launched in user
-mode, mia path must compulsorily be returned from the mia_path
-parameter of the configuration.yml</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path to mia folder</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_mri_conv_path">
 <span class="sig-name descname"><span class="pre">get_mri_conv_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mri_conv_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mri_conv_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the MRIManager.jar path.</p>
@@ -1301,6 +1283,26 @@ parameter of the configuration.yml</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string of path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_properties_path">
+<span class="sig-name descname"><span class="pre">get_properties_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_properties_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_properties_path" title="Link to this definition">¶</a></dt>
+<dd><p>Get the path to the folder containing the processes and properties
+folders of mia (properties_path).</p>
+<p>The properties_path is defined and stored in the
+configuration_path.yml file, located in the ~/.populse_mia folder.</p>
+<p>If Mia is launched in user mode, properties path must compulsorily be
+returned from the “properties_user_path” parameter of the
+configuration_path.yml file.</p>
+<p>If mia is launched in developer mode, mia path must compulsorily be
+returned from the “properties_dev_path” parameter of the
+configuration_path.yml file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string of path to properties folder</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2041,47 +2043,6 @@ each time the config is saved.</p>
 
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="populse_mia.software_properties.verCmp">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.software_properties.</span></span><span class="sig-name descname"><span class="pre">verCmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_ver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sec_ver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#verCmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.verCmp" title="Link to this definition">¶</a></dt>
-<dd><p>Version comparator.</p>
-<p>The verCmp() function returns a boolean value to indicate whether its
-first argument (first_ver) is equal to, less or equal to, or greater or
-equal to its second argument (sec_ver), as follows:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>if third argument (comp) is ‘eq’: when the first argument is equal to
-the second argument, return True (False if not).</p></li>
-<li><p>if third argument (comp) is ‘sup’: when the first argument is greater
-than the second argument, return True (False if not).</p></li>
-<li><p>if third argument (comp) is ‘inf’: when the first argument is less than
-the second argument, return True (False if not).</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>first_ver</strong> – the version of a package (a string; ex. ‘0.13.0’)</p></li>
-<li><p><strong>sec_ver</strong> – the version of a package (a string; ex. ‘0.13.0’)</p></li>
-<li><p><strong>comp</strong> – comparator argument (accepted values: ‘sup’, ‘inf’ and ‘eq’ )</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>False or True</p>
-</dd>
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Private function<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>normalise: transform a version of a package to a corresponding
-list of integer</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="populse-mia-test-module">
 <h2>populse_mia.test module<a class="headerlink" href="#populse-mia-test-module" title="Link to this heading">¶</a></h2>
@@ -2100,7 +2061,7 @@ list of integer</p></li>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     </div>
   </body>
 </html>

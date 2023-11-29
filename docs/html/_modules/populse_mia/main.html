@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.main &#8212; populse_mia 2.4.1-dev+b35c71e5 documentation</title>
+    <title>populse_mia.main &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=e491ac2d" />
-    <script src="../../_static/documentation_options.js?v=ca8cbbaa"></script>
+    <script src="../../_static/documentation_options.js?v=2d69834f"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.4.1-dev+b35c71e5 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -109,6 +109,7 @@
     <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span>
 <span class="p">):</span>  <span class="c1"># &quot;developer&quot; mode</span>
     <span class="n">DEV_MODE</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MIA_DEV_MODE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
     <span class="n">root_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
     <span class="p">)</span>
@@ -273,48 +274,16 @@
             <span class="k">del</span> <span class="n">mia_processes_dir</span>
             <span class="k">del</span> <span class="n">mia_processes</span>
 
-    <span class="c1"># Adding personal libraries (User_processes: by default in Mia, but others</span>
-    <span class="c1"># can be added by developers):</span>
-    <span class="c1"># TODO: The same fix type will certainly have to be made in user more</span>
-    <span class="c1">#        (for ~/.populse_mia/process&#39; ).</span>
-    <span class="n">mia_proc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">populse_bdir</span><span class="p">,</span> <span class="s2">&quot;populse_mia&quot;</span><span class="p">,</span> <span class="s2">&quot;processes&quot;</span>
-    <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">mia_proc</span><span class="p">):</span>
-        <span class="n">mia_proc_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">mia_proc</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">mia_proc_dir</span><span class="p">:</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">mia_proc</span><span class="p">)</span>
-            <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mia_proc</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">mia_proc_dir</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;  . Using </span><span class="si">{0}</span><span class="s2"> package from </span><span class="si">{1}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">mia_proc</span><span class="p">)</span>
-                <span class="p">)</span>
-
-        <span class="k">del</span> <span class="n">mia_proc_dir</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">elt</span>
-
-        <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-            <span class="c1"># there is nothing in the &quot;processes&quot; directory!</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_proc</span><span class="p">,</span> <span class="s2">&quot;User_processes&quot;</span><span class="p">))</span>
-            <span class="n">Path</span><span class="p">(</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mia_proc</span><span class="p">,</span> <span class="s2">&quot;User_processes&quot;</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
-
-    <span class="k">del</span> <span class="n">mia_proc</span>
     <span class="k">del</span> <span class="n">root_dev_dir</span>
 
 <span class="k">elif</span> <span class="s2">&quot;CASA_DISTRO&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
     <span class="c1"># If the casa distro development environment is detected, developer mode</span>
     <span class="c1"># is activated.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MIA_DEV_MODE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
     <span class="n">DEV_MODE</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="k">else</span><span class="p">:</span>  <span class="c1"># &quot;user&quot; mode</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MIA_DEV_MODE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
     <span class="n">DEV_MODE</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">- Mia in &quot;user&quot; mode&#39;</span><span class="p">)</span>
 
@@ -358,7 +327,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MIA warning </span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">37</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pkg_error</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">pkg_error</span><span class="p">:</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
     <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
     <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia -  warning: ImportError!&quot;</span><span class="p">)</span>
@@ -411,7 +380,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>  <span class="c1"># noqa E402</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.main_window</span> <span class="kn">import</span> <span class="n">MainWindow</span>  <span class="c1"># noqa E402</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="n">check_python_version</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="n">check_python_version</span><span class="p">,</span> <span class="n">verCmp</span>  <span class="c1"># noqa E402</span>
 
 <span class="n">main_window</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -699,148 +668,369 @@
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../populse_mia.html#populse_mia.main.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make basic configuration check then actual launch of mia.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make basic configuration check then actual launch of Mia.</span>
 
 <span class="sd">    Checks if Mia is called from the site/dist packages (user mode) or from a</span>
-<span class="sd">    cloned git repository (developer mode). Launches the verify_processes()</span>
-<span class="sd">    function, then the launch_mia() function (Mia&#39;s real launch !!). When</span>
-<span class="sd">    Mia is exited, if the ~/.populse_mia/configuration.yml exists, sets the</span>
-<span class="sd">    dev_mode parameter to False.</span>
+<span class="sd">    cloned git repository (developer mode).</span>
+
+<span class="sd">    Launches the verify_processes() function, then the launch_mia() function</span>
+<span class="sd">    (Mia&#39;s real launch !!).</span>
+
+<span class="sd">    ~/.populse_mia/configuration_path.yml is mandatory, if it doesn&#39;t exist</span>
+<span class="sd">    or is corrupted, try to create one with a valid properties path.</span>
 
 <span class="sd">    - If launched from a cloned git repository (&#39;developer mode&#39;):</span>
-<span class="sd">        - the mia_path is the cloned git repository.</span>
+<span class="sd">        - the properties_path is the &quot;properties_dev_path&quot; parameter in</span>
+<span class="sd">          ~/.populse_mia/configuration_path.yml</span>
 <span class="sd">    - If launched from the site/dist packages (&#39;user mode&#39;):</span>
-<span class="sd">        - if the file ~/.populse_mia/configuration.yml file is not found or</span>
-<span class="sd">          does not exist or if the returned mia_path parameter is incorrect,</span>
-<span class="sd">          a valid mia_path path is requested from the user, in order</span>
-<span class="sd">          to try to fix a corruption of this file.</span>
+<span class="sd">        - the properties_path is the &quot;properties_user_path&quot; parameter in</span>
+<span class="sd">          ~/.populse_mia/configuration_path.yml</span>
 
 <span class="sd">    :Contains:</span>
 <span class="sd">        :Private function:</span>
-<span class="sd">            - _browse_mia_path: the user define the mia_path parameter</span>
+<span class="sd">            - _browse_properties_path: the user define the properties_path</span>
+<span class="sd">            parameter</span>
+<span class="sd">            - _cancel_clicked: exit form Mia</span>
+<span class="sd">            - _make_default_config: make default configuration</span>
+<span class="sd">            - _save_yml_file: save data in a YAML file</span>
 <span class="sd">            - _verify_miaConfig: check the config and try to fix if necessary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_browse_mia_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The user define the mia_path parameter.</span>
+    <span class="k">def</span> <span class="nf">_browse_properties_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The user define the properties_path parameter.</span>
 
 <span class="sd">        This method, used only if the mia configuration parameters are</span>
 <span class="sd">        not accessible, goes with the _verify_miaConfig function,</span>
-<span class="sd">        which will use the value of the mia_path parameter,</span>
+<span class="sd">        which will use the value of the properties_path parameter,</span>
 <span class="sd">        defined here.</span>
 
 <span class="sd">        :param dialog: QtWidgets.QDialog object (&#39;msg&#39; in the main function)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">dname</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span><span class="p">(</span>
-            <span class="n">dialog</span><span class="p">,</span> <span class="s2">&quot;Please select MIA path&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+        <span class="n">dname</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">Options</span><span class="p">()</span>
+        <span class="n">options</span> <span class="o">|=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">DontUseNativeDialog</span>
+        <span class="n">options</span> <span class="o">|=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">ShowDirsOnly</span>
+        <span class="n">options</span> <span class="o">|=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">ReadOnly</span>
+        <span class="n">caption</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Please select a root directory for configuration, </span><span class="si">{}</span><span class="s2"> mode.&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;dev&quot;</span> <span class="k">if</span> <span class="n">DEV_MODE</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="s2">&quot;user&quot;</span><span class="p">)</span>
+        <span class="n">existDir</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">caption</span><span class="p">)</span>
+        <span class="n">existDir</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">DirectoryOnly</span><span class="p">)</span>
+        <span class="n">existDir</span><span class="o">.</span><span class="n">setFilter</span><span class="p">(</span>
+            <span class="n">existDir</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span>
+            <span class="o">|</span> <span class="n">QDir</span><span class="o">.</span><span class="n">AllEntries</span>
+            <span class="o">|</span> <span class="n">QDir</span><span class="o">.</span><span class="n">Hidden</span>
+            <span class="o">|</span> <span class="n">QDir</span><span class="o">.</span><span class="n">NoDotAndDotDot</span>
         <span class="p">)</span>
+        <span class="n">existDir</span><span class="o">.</span><span class="n">setOptions</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">existDir</span><span class="o">.</span><span class="n">setDirectory</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">existDir</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+            <span class="n">dname</span> <span class="o">=</span> <span class="n">existDir</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
         <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">dname</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cancel_clicked</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cancel the config check.</span>
+
+<span class="sd">        :param dialog: QtWidgets.QDialog object (&#39;msg&#39; in the main function)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">No configuration has been detected. &quot;</span>
+            <span class="s2">&quot;Mia is shutting down...</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_default_config</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make default configuration.</span>
+
+<span class="sd">        Default directories (properties_path/properties,</span>
+<span class="sd">        properties_path/processes/User_processes), configuration files</span>
+<span class="sd">        (properties_path/properties/saved_projects.yml,</span>
+<span class="sd">        properties_path/properties/config.yml) and</span>
+<span class="sd">        properties_path/processes/User_processes__init__.py are created</span>
+<span class="sd">        only if they do not exist (they are not overwritten if they already</span>
+<span class="sd">        exist).</span>
+
+<span class="sd">        :param dialog: QtWidgets.QDialog object (&#39;msg&#39; in the main function)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">properties_path</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">properties_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
+            <span class="n">properties_path</span> <span class="o">=</span> <span class="n">properties_path</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">properties_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">DEV_MODE</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">properties_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dev&quot;</span><span class="p">:</span>
+                <span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">properties_path</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">properties_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;usr&quot;</span><span class="p">:</span>
+                <span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;usr&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">properties_path</span><span class="p">))</span>
+
+        <span class="c1"># properties folder management / initialisation:</span>
+        <span class="n">properties_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{0}</span><span class="s2"> directory is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;saved_projects.yml&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">_save_yml_file</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;paths&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;saved_projects.yml&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{0}</span><span class="s2"> file is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;saved_projects.yml&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)):</span>
+            <span class="n">_save_yml_file</span><span class="p">(</span>
+                <span class="s2">&quot;gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq&quot;</span>
+                <span class="s2">&quot;ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0&quot;</span>
+                <span class="s2">&quot;VuT1ZdlmTYv4wwRjhlyPiir7afubLrLK4Jfk84OoOeVtR0a5&quot;</span>
+                <span class="s2">&quot;a0k0WqPlZl-y8_Wu4osHeQCfeWFKW5EWYF776rWgJZsjn3fx&quot;</span>
+                <span class="s2">&quot;Z-V2g5aHo-Q5aqYi2V1Kc-kQ9ZwjFBFbXNa1g9nHKZeyd3ve&quot;</span>
+                <span class="s2">&quot;6p3RUSELfUmEhS0eOWn8i-7GW1UGa4zEKCsoY6T19vrimiuR&quot;</span>
+                <span class="s2">&quot;Vy-DTmmgzbbjGkgmNxB5MvEzs0BF2bAcina_lKR-yeICuIqp&quot;</span>
+                <span class="s2">&quot;TSOBfgkTDcB0LVPBoQmogUVVTeCrjYH9_llFTJQ3ZtKZLdeS&quot;</span>
+                <span class="s2">&quot;tFR5Y2I2ZkQETi6m-0wmUDKf-KRzmk6sLRK_oz6GmuTAN8A5&quot;</span>
+                <span class="s2">&quot;1au2v1M=&quot;</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{0}</span><span class="s2"> file is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># processes/User_processes folder management / initialisation:</span>
+            <span class="n">user_processes_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;processes&quot;</span><span class="p">,</span> <span class="s2">&quot;User_processes&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{0}</span><span class="s2"> directory is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">user_processes_dir</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="n">Path</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">user_processes_dir</span><span class="p">,</span>
+                        <span class="s2">&quot;__init__.py&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{0}</span><span class="s2"> file is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Default configuration checked.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_save_yml_file</span><span class="p">(</span><span class="n">a_dic</span><span class="p">,</span> <span class="n">a_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save data in a YAML file.</span>
+
+<span class="sd">        :param a_dic: a dictionary</span>
+<span class="sd">        :param a_file: a .yml file path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">a_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                <span class="n">a_dic</span><span class="p">,</span>
+                <span class="n">configfile</span><span class="p">,</span>
+                <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_verify_miaConfig</span><span class="p">(</span><span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the config is not corrupted and try to fix if necessary.</span>
 
 <span class="sd">        The purpose of this method is twofold. First, it allows to</span>
 <span class="sd">        update the obsolete values for some parameters of the</span>
-<span class="sd">        mia_user_path/properties/config.yml file. Secondly, it allows</span>
-<span class="sd">        to correct the value of the mia_user_path parameter in the</span>
-<span class="sd">        ~/.populse_mia/configuration.yml file, (in the case of a user</span>
-<span class="sd">        mode launch, because the developer mode launch does not need</span>
-<span class="sd">        this parameter).</span>
+<span class="sd">        properties_path/properties/config.yml file. Secondly, it allows</span>
+<span class="sd">        to correct the value of the properties_user_path / properties_dev_path</span>
+<span class="sd">        parameter in the ~/.populse_mia/configuration_path.yml file.</span>
 
-<span class="sd">        In the case of a launch in user mode, this method goes with the</span>
-<span class="sd">        _browse_mia_path() function, the latter having allowed the</span>
-<span class="sd">        definition of the mia_user_path parameter, the objective here</span>
-<span class="sd">        is to check if the value of this parameter is valid. The</span>
-<span class="sd">        mia_path parameters are saved in the</span>
-<span class="sd">        ~/.populse_mia/configuration.yml file (the mia_user_path</span>
-<span class="sd">        parameter is mandatory in the user mode). Then the data in the</span>
-<span class="sd">        mia_path/properties/config.yml file are checked. If an</span>
+<span class="sd">        This method goes with the _browse_properties_path() function, the</span>
+<span class="sd">        latter having allowed the definition of the properties_path parameter,</span>
+<span class="sd">        the objective here is to check if the value of this parameter is valid.</span>
+<span class="sd">        The properties_path parameters are saved in the</span>
+<span class="sd">        ~/.populse_mia/configuration_path.yml file (the properties_user_path</span>
+<span class="sd">        or the properties_dev_path parameter is mandatory).</span>
+<span class="sd">        Then the data in the properties/config.yml file are checked. If an</span>
 <span class="sd">        exception is raised during the _verify_miaConfig function, the</span>
-<span class="sd">        &quot;MIA path selection&quot; window is not closed and the user is</span>
-<span class="sd">        prompted again to set the mia_user_path parameter.</span>
+<span class="sd">        &quot;Properties path selection&quot; window is not closed and the user is again</span>
+<span class="sd">        prompted to set the properties_path parameter.</span>
 
 <span class="sd">        :param dialog: QtWidgets.QDialog object (&#39;msg&#39; in the main function)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">save_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">DEV_MODE</span><span class="p">:</span>  <span class="c1"># &quot;developer&quot; mode</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dialog</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">():</span>
+                <span class="c1"># FIXME: Shouldn&#39;t we carry out a more thorough invalidity</span>
+                <span class="c1">#        check (we&#39;re only checking the empty</span>
+                <span class="c1">#        string here)?</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: configuration root directory is invalid...&quot;</span><span class="p">)</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Mia configuration Error&quot;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No configuration path found...&quot;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="k">return</span>
 
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span>
-                        <span class="s2">&quot;60cfd1916033576b0f2368603fe612fb&quot;</span>
-                        <span class="s2">&quot;78b8c20e4f5ad9cf39c9cf7e912dd282&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">verCmp</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;5.1&quot;</span><span class="p">,</span> <span class="s2">&quot;sup&quot;</span><span class="p">):</span>
+                        <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                            <span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span>
+                        <span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">mia_home_properties_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                        <span class="n">mia_home_properties_path</span><span class="p">,</span> <span class="nb">dict</span>
+                    <span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">(</span>
+                            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The &#39;</span><span class="si">{}</span><span class="s2">&#39; file seems to be &quot;</span>
+                            <span class="s2">&quot;corrupted...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span>
+                        <span class="p">)</span>
+
+                <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> cannot be read, the path to the properties has &quot;</span>
+                        <span class="s2">&quot;not been found...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span>
                     <span class="p">)</span>
+                    <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+            <span class="n">mia_home_properties_path_new</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_make_default_config</span><span class="p">(</span><span class="n">dialog</span><span class="p">)</span>
 
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIA configuration settings could not be &quot;</span>
-                    <span class="s2">&quot;recovered: </span><span class="si">{0}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                <span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIA is exiting ...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">dialog</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># &quot;user&quot; mode only if problem</span>
-            <span class="n">mia_home_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-            <span class="n">mia_home_config</span><span class="p">[</span><span class="s2">&quot;mia_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">New values in ~/.populse_mia/configuration.yml: &quot;</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mia_home_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;- </span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-
-            <span class="nb">print</span><span class="p">()</span>
-
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
-                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                    <span class="n">mia_home_config</span><span class="p">,</span>
-                    <span class="n">configfile</span><span class="p">,</span>
-                    <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                    <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="p">)</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span>
-                        <span class="s2">&quot;60cfd1916033576b0f2368603fe612fb&quot;</span>
-                        <span class="s2">&quot;78b8c20e4f5ad9cf39c9cf7e912dd282&quot;</span>
-                    <span class="p">)</span>
-                <span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Could not fetch the &quot;</span>
-                    <span class="s2">&quot;configuration file: </span><span class="si">{0}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Automatic configuration fails: </span><span class="si">{0}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">e</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span>
-                    <span class="s2">&quot;populse_mia - Error: mia path directory incorrect&quot;</span>
-                <span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
-                    <span class="s2">&quot;Error: Please select the MIA path (directory with&quot;</span>
-                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">the processes, properties &amp; resources &quot;</span>
-                    <span class="s2">&quot;directories): &quot;</span>
-                <span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Mia configuration Error&quot;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Automatic configuration fails...&quot;</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="k">return</span>
 
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># &quot;user&quot; mode (initial pass)</span>
+            <span class="k">if</span> <span class="n">DEV_MODE</span><span class="p">:</span>
+                <span class="n">mia_home_properties_path_new</span><span class="p">[</span>
+                    <span class="s2">&quot;properties_dev_path&quot;</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mia_home_properties_path_new</span><span class="p">[</span>
+                    <span class="s2">&quot;properties_user_path&quot;</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+            <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="o">**</span><span class="n">mia_home_properties_path</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">mia_home_properties_path_new</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">key_to_del</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">k</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mia_home_properties_path</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;properties_dev_path&quot;</span><span class="p">,</span> <span class="s2">&quot;properties_user_path&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key_to_del</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">mia_home_properties_path</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">New values in ~/.populse_mia/configuration_path.yml: &quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mia_home_properties_path_new</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;- </span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="n">_save_yml_file</span><span class="p">(</span><span class="n">mia_home_properties_path</span><span class="p">,</span> <span class="n">dot_mia_config</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+
+                <span class="c1"># Check properties/config.yml by checking if</span>
+                <span class="c1"># key == &#39;name&#39; / value == &#39;MIA&#39;:</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;MIA&quot;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The &#39;</span><span class="si">{}</span><span class="s2">&#39; file seems to be &quot;</span>
+                        <span class="s2">&quot;corrupted...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span>
+                        <span class="s2">&quot;60cfd1916033576b0f2368603fe612fb&quot;</span>
+                        <span class="s2">&quot;78b8c20e4f5ad9cf39c9cf7e912dd282&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Could not fetch the &quot;</span>
+                    <span class="s2">&quot;properties/config.yml file: </span><span class="si">{0}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">e</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Mia configuration Error&quot;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No configuration path found...&quot;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="k">return</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+
+            <span class="c1"># Check properties/config.yml by checking if</span>
+            <span class="c1"># key == &#39;name&#39; / value == &#39;MIA&#39;:</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;MIA&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The &#39;</span><span class="si">{}</span><span class="s2">&#39; file seems to be &quot;</span>
+                    <span class="s2">&quot;corrupted...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span>
+                <span class="p">)</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span>
                     <span class="s2">&quot;60cfd1916033576b0f2368603fe612fb&quot;</span>
                     <span class="s2">&quot;78b8c20e4f5ad9cf39c9cf7e912dd282&quot;</span>
                 <span class="p">)</span>
 
-        <span class="k">if</span> <span class="s2">&quot;config&quot;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># Patch for obsolete values</span>
                 <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
                     <span class="n">save_flag</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
@@ -852,80 +1042,133 @@
                 <span class="k">if</span> <span class="n">save_flag</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
 
+    <span class="c1"># The directory in which the configuration is located must be</span>
+    <span class="c1"># declared in ~/.populse_mia/configuration_path.yml</span>
     <span class="n">dot_mia_config</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">,</span> <span class="s2">&quot;configuration.yml&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">,</span> <span class="s2">&quot;configuration_path.yml&quot;</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">DEV_MODE</span><span class="p">:</span>  <span class="c1"># &quot;developer&quot; mode</span>
+    <span class="c1"># ~/.populse_mia/configuration_path.yml management/initialisation</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{0}</span><span class="s2"> directory is created &quot;</span>
+            <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">):</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Just to check if dot_mia_config file is well readable/writeable</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;5.1&quot;</span><span class="p">):</span>
+                <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                    <span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span>
+                <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mia_home_properties_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The &#39;</span><span class="si">{}</span><span class="s2">&#39; file seems to be &quot;</span>
+                <span class="s2">&quot;corrupted or the configuration has never &quot;</span>
+                <span class="s2">&quot;been initialized...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">DEV_MODE</span> <span class="ow">and</span> <span class="s2">&quot;properties_dev_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mia_home_properties_path</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">No properties path found in </span><span class="si">{}</span><span class="s2">...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">DEV_MODE</span>
+            <span class="ow">and</span> <span class="s2">&quot;properties_user_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mia_home_properties_path</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">No properties path found in </span><span class="si">{}</span><span class="s2">...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">_save_yml_file</span><span class="p">(</span><span class="n">mia_home_properties_path</span><span class="p">,</span> <span class="n">dot_mia_config</span><span class="p">)</span>
         <span class="n">_verify_miaConfig</span><span class="p">()</span>
 
-    <span class="k">else</span><span class="p">:</span>  <span class="c1"># &quot;user&quot; mode</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)):</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># the ~/.populse_mia/configuration_path.yml or the</span>
+        <span class="c1"># properties/config.yml file does not exist or has not been</span>
+        <span class="c1"># correctly read...</span>
+
+        <span class="c1"># FIXME: We may be need a more precise Exception class to catch ?</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">An issue has been detected when opening&quot;</span>
+            <span class="s2">&quot; the </span><span class="si">{0}</span><span class="s2"> file or with the parameters returned &quot;</span>
+            <span class="s2">&quot;from this file:</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># open popup, we choose the properties path dir</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">QDialog</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia - properties path selection&quot;</span><span class="p">)</span>
+        <span class="n">vbox_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">hbox_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">file_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span>
+            <span class="s2">&quot;No configuration parameters found. Please select a root directory&quot;</span>
+            <span class="s2">&quot; for configuration.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+        <span class="n">file_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
+        <span class="n">file_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_browse_properties_path</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
+        <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">file_label</span><span class="p">)</span>
+        <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span><span class="p">)</span>
+        <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">file_button</span><span class="p">)</span>
+        <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_layout</span><span class="p">)</span>
+        <span class="n">hbox_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Ok&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_verify_miaConfig</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">cancel_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">cancel_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_cancel_clicked</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
+        <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">cancel_button</span><span class="p">)</span>
+        <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span><span class="p">)</span>
+        <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_layout</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_layout</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+    <span class="c1"># Adding personal libraries User_processes (and others if any) to sys.path</span>
+    <span class="c1"># and to pypath.</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="n">properties_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">()</span>
+    <span class="n">user_proc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">user_proc</span><span class="p">):</span>
+        <span class="n">user_proc_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">user_proc</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">user_proc_dir</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user_proc</span><span class="p">)</span>
+            <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user_proc</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">user_proc_dir</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{0}</span><span class="s2"> directory is created &quot;</span>
-                    <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
+                    <span class="s2">&quot;  . Using </span><span class="si">{0}</span><span class="s2"> package from </span><span class="si">{1}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">user_proc</span><span class="p">)</span>
                 <span class="p">)</span>
 
-            <span class="c1"># Just to check if dot_mia_config file is well readable/writeable</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;5.1&quot;</span><span class="p">):</span>
-                    <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">mia_home_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">user_proc_dir</span>
 
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
-                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                    <span class="n">mia_home_config</span><span class="p">,</span>
-                    <span class="n">configfile</span><span class="p">,</span>
-                    <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                    <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">elt</span>
 
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="c1"># the configuration.yml file does not exist or has not been</span>
-            <span class="c1"># correctly read ...</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">A problem has been detected when opening&quot;</span>
-                <span class="s2">&quot; the ~/.populse_mia/configuration.yml file&quot;</span>
-                <span class="s2">&quot; or with the parameters returned from this file: &quot;</span><span class="p">,</span>
-                <span class="n">e</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+            <span class="c1"># There&#39;s nothing in the &quot;processes&quot; directory! Let&#39;s try to fix</span>
+            <span class="c1">#  it and put at least one valid directory User_processes</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_proc</span><span class="p">,</span> <span class="s2">&quot;User_processes&quot;</span><span class="p">))</span>
+            <span class="n">Path</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_proc</span><span class="p">,</span> <span class="s2">&quot;User_processes&quot;</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
 
-            <span class="c1"># open popup, user choose the path to .populse_mia/populse_mia dir</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">QDialog</span><span class="p">()</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia - mia path selection&quot;</span><span class="p">)</span>
-            <span class="n">vbox_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
-            <span class="n">hbox_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
-            <span class="n">file_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span>
-                <span class="s2">&quot;Please select the MIA path (directory with</span><span class="se">\n</span><span class="s2"> &quot;</span>
-                <span class="s2">&quot;the processes, properties &amp; resources &quot;</span>
-                <span class="s2">&quot;directories): &quot;</span>
-            <span class="p">)</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
-            <span class="n">file_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
-            <span class="n">file_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_browse_mia_path</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
-            <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">file_label</span><span class="p">)</span>
-            <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span><span class="p">)</span>
-            <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">file_button</span><span class="p">)</span>
-            <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_layout</span><span class="p">)</span>
-            <span class="n">hbox_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Ok&quot;</span><span class="p">)</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_verify_miaConfig</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
-            <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span><span class="p">)</span>
-            <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_layout</span><span class="p">)</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">vbox_layout</span><span class="p">)</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+    <span class="c1"># global pypath</span>
 
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">_verify_miaConfig</span><span class="p">()</span>
-
-    <span class="k">global</span> <span class="n">pypath</span>
-
-    <span class="k">if</span> <span class="n">DEV_MODE</span> <span class="ow">and</span> <span class="n">pypath</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">pypath</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_capsul_config</span><span class="p">()</span>
         <span class="n">pc</span> <span class="o">=</span> <span class="p">(</span>
@@ -990,7 +1233,7 @@
 <span class="sd">    mandatory to have nipype, capsul and mia_processes installed in the</span>
 <span class="sd">    station.</span>
 <span class="sd">    All this information, as well as the installed versions and package</span>
-<span class="sd">    paths are saved in the  mia_path/properties/process_config.yml file.</span>
+<span class="sd">    paths are saved in the  properties_path/properties/process_config.yml file.</span>
 <span class="sd">    When an upgrade or downgrade is performed for a package, the last</span>
 <span class="sd">    configuration used by the user is kept (if a pipeline was visible, it</span>
 <span class="sd">    remains so and vice versa). However, if a new pipeline is available in</span>
@@ -1043,7 +1286,7 @@
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
     <span class="n">proc_config</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="s2">&quot;process_config.yml&quot;</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="s2">&quot;process_config.yml&quot;</span>
     <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Checking the installed version for nipype, &quot;</span>
@@ -1074,25 +1317,12 @@
             <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># Try to update the sys.path for the processes/ directory</span>
                 <span class="c1"># currently used</span>
-                <span class="k">if</span> <span class="p">(</span>
-                    <span class="ow">not</span> <span class="p">(</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
-                        <span class="p">)</span>
-                        <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span>
-                    <span class="p">)</span>
-                <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
-                    <span class="ow">not</span> <span class="p">(</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
-                        <span class="p">)</span>
-                        <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span>
-                    <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
+                    <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span>
                 <span class="p">):</span>
                     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
-                        <span class="p">)</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span><span class="p">)</span>
                     <span class="p">)</span>
 
                     <span class="k">try</span><span class="p">:</span>
@@ -1100,39 +1330,27 @@
 
                         <span class="c1"># update the Paths parameter (processes/ directory</span>
                         <span class="c1"># currently used) saved later in the</span>
-                        <span class="c1"># mia_path/properties/process_config.yml file</span>
+                        <span class="c1"># properties_path/properties/process_config.yml file</span>
                         <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;Paths&quot;</span> <span class="ow">in</span> <span class="n">proc_content</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
                             <span class="nb">isinstance</span><span class="p">(</span><span class="n">proc_content</span><span class="p">[</span><span class="s2">&quot;Paths&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
                         <span class="p">):</span>
                             <span class="k">if</span> <span class="p">(</span>
-                                <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span>
-                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                        <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
-                                    <span class="p">)</span>
-                                <span class="p">)</span>
-                                <span class="ow">in</span> <span class="n">proc_content</span><span class="p">[</span><span class="s2">&quot;Paths&quot;</span><span class="p">]</span>
-                            <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
-                                <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                        <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
-                                    <span class="p">)</span>
+                                <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                    <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
                                 <span class="p">)</span>
                                 <span class="ow">in</span> <span class="n">proc_content</span><span class="p">[</span><span class="s2">&quot;Paths&quot;</span><span class="p">]</span>
                             <span class="p">):</span>
                                 <span class="n">proc_content</span><span class="p">[</span><span class="s2">&quot;Paths&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                            <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
-                                        <span class="p">)</span>
+                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                        <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span>
+                                        <span class="s2">&quot;processes&quot;</span><span class="p">,</span>
                                     <span class="p">)</span>
                                 <span class="p">)</span>
 
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">proc_content</span><span class="p">[</span><span class="s2">&quot;Paths&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                        <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
-                                    <span class="p">)</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                    <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
                                 <span class="p">)</span>
                             <span class="p">]</span>
 
@@ -1147,12 +1365,10 @@
                         <span class="c1"># Finally, the processes&#39; directory currently used is</span>
                         <span class="c1"># removed from the sys.path because this directory is</span>
                         <span class="c1"># now added to the Paths parameter in the</span>
-                        <span class="c1"># mia_path/properties/process_config.yml file</span>
+                        <span class="c1"># properties_path/properties/process_config.yml file</span>
                         <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                    <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
-                                <span class="p">)</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
                             <span class="p">)</span>
                         <span class="p">)</span>
 
@@ -1175,12 +1391,10 @@
                                 <span class="s2">&quot;process library.&quot;</span>
                             <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                 <span class="n">e</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                        <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span>
-                                        <span class="s2">&quot;processes&quot;</span><span class="p">,</span>
-                                        <span class="n">pckg</span><span class="p">,</span>
-                                    <span class="p">)</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                    <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span>
+                                    <span class="s2">&quot;processes&quot;</span><span class="p">,</span>
+                                    <span class="n">pckg</span><span class="p">,</span>
                                 <span class="p">),</span>
                             <span class="p">)</span>
                         <span class="p">)</span>
@@ -1188,10 +1402,8 @@
                         <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
                         <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
                         <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                    <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
-                                <span class="p">)</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
                             <span class="p">)</span>
                         <span class="p">)</span>
 
@@ -1213,10 +1425,8 @@
                             <span class="s2">&quot;process library.&quot;</span>
                         <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                             <span class="n">e</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                    <span class="n">config</span><span class="o">.</span><span class="n">get_mia_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
-                                <span class="p">)</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
                             <span class="p">),</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
@@ -1662,7 +1872,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     </div>
   </body>
 </html>

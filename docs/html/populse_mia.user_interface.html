@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface package &#8212; populse_mia 2.4.1-dev+b35c71e5 documentation</title>
+    <title>populse_mia.user_interface package &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=e491ac2d" />
-    <script src="_static/documentation_options.js?v=ca8cbbaa"></script>
+    <script src="_static/documentation_options.js?v=2d69834f"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.4.1-dev+b35c71e5 documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -544,7 +544,6 @@ definition, as well as pop ups.</p>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.__init__"><code class="docutils literal notranslate"><span class="pre">PackageLibraryDialog.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.add_package"><code class="docutils literal notranslate"><span class="pre">PackageLibraryDialog.add_package()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.add_package_with_text"><code class="docutils literal notranslate"><span class="pre">PackageLibraryDialog.add_package_with_text()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.browse_package"><code class="docutils literal notranslate"><span class="pre">PackageLibraryDialog.browse_package()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.del_list"><code class="docutils literal notranslate"><span class="pre">PackageLibraryDialog.del_list</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.delete_package"><code class="docutils literal notranslate"><span class="pre">PackageLibraryDialog.delete_package()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.delete_package_with_text"><code class="docutils literal notranslate"><span class="pre">PackageLibraryDialog.delete_package_with_text()</span></code></a></li>
@@ -1055,7 +1054,17 @@ projects menus.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.ClickableLabel.clicked">
 <span class="sig-name descname"><span class="pre">clicked</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.ClickableLabel.clicked" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id1"><span class="problematic" id="id2">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.ClickableLabel.mousePressEvent">
@@ -1228,7 +1237,17 @@ to the data browser.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpAddTag.signal_add_tag">
 <span class="sig-name descname"><span class="pre">signal_add_tag</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpAddTag.signal_add_tag" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id3"><span class="problematic" id="id4">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1282,7 +1301,17 @@ to the data browser.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpCloneTag.signal_clone_tag">
 <span class="sig-name descname"><span class="pre">signal_clone_tag</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpCloneTag.signal_clone_tag" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id5"><span class="problematic" id="id6">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1334,7 +1363,17 @@ another name</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpClosePipeline.cancel_signal">
 <span class="sig-name descname"><span class="pre">cancel_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpClosePipeline.cancel_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id7"><span class="problematic" id="id8">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpClosePipeline.do_not_save_clicked">
@@ -1345,7 +1384,17 @@ another name</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpClosePipeline.do_not_save_signal">
 <span class="sig-name descname"><span class="pre">do_not_save_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpClosePipeline.do_not_save_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id9"><span class="problematic" id="id10">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpClosePipeline.save_as_clicked">
@@ -1356,7 +1405,17 @@ another name</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpClosePipeline.save_as_signal">
 <span class="sig-name descname"><span class="pre">save_as_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpClosePipeline.save_as_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id11"><span class="problematic" id="id12">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1493,7 +1552,17 @@ information.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpInformation.signal_preferences_change">
 <span class="sig-name descname"><span class="pre">signal_preferences_change</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpInformation.signal_preferences_change" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id13"><span class="problematic" id="id14">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1666,7 +1735,17 @@ values.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpNewProject.signal_create_project">
 <span class="sig-name descname"><span class="pre">signal_create_project</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpNewProject.signal_create_project" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id15"><span class="problematic" id="id16">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1694,7 +1773,17 @@ values.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpOpenProject.signal_create_project">
 <span class="sig-name descname"><span class="pre">signal_create_project</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpOpenProject.signal_create_project" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id17"><span class="problematic" id="id18">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1838,7 +1927,17 @@ when editing configuration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences.not_use_clinical_mode_signal">
 <span class="sig-name descname"><span class="pre">not_use_clinical_mode_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.not_use_clinical_mode_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id19"><span class="problematic" id="id20">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences.ok_clicked">
@@ -1849,7 +1948,17 @@ when editing configuration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences.signal_preferences_change">
 <span class="sig-name descname"><span class="pre">signal_preferences_change</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.signal_preferences_change" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id21"><span class="problematic" id="id22">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences.use_afni_changed">
@@ -1866,7 +1975,17 @@ when editing configuration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences.use_clinical_mode_signal">
 <span class="sig-name descname"><span class="pre">use_clinical_mode_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.use_clinical_mode_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id23"><span class="problematic" id="id24">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences.use_current_mainwindow_size">
@@ -1974,7 +2093,17 @@ parameters are saved and tested.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpProperties.signal_settings_change">
 <span class="sig-name descname"><span class="pre">signal_settings_change</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpProperties.signal_settings_change" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id25"><span class="problematic" id="id26">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2017,7 +2146,17 @@ parameters are saved and tested.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpQuit.cancel_signal">
 <span class="sig-name descname"><span class="pre">cancel_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpQuit.cancel_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id27"><span class="problematic" id="id28">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpQuit.do_not_save_clicked">
@@ -2028,7 +2167,17 @@ parameters are saved and tested.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpQuit.do_not_save_signal">
 <span class="sig-name descname"><span class="pre">do_not_save_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpQuit.do_not_save_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id29"><span class="problematic" id="id30">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpQuit.save_as_clicked">
@@ -2039,7 +2188,17 @@ parameters are saved and tested.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpQuit.save_as_signal">
 <span class="sig-name descname"><span class="pre">save_as_signal</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpQuit.save_as_signal" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id31"><span class="problematic" id="id32">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2134,7 +2293,17 @@ browser.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpRemoveTag.signal_remove_tag">
 <span class="sig-name descname"><span class="pre">signal_remove_tag</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpRemoveTag.signal_remove_tag" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id33"><span class="problematic" id="id34">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2168,7 +2337,17 @@ browser.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.signal_saved_project">
 <span class="sig-name descname"><span class="pre">signal_saved_project</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.signal_saved_project" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id35"><span class="problematic" id="id36">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2549,7 +2728,17 @@ this widget</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpVisualizedTags.signal_preferences_change">
 <span class="sig-name descname"><span class="pre">signal_preferences_change</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpVisualizedTags.signal_preferences_change" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id37"><span class="problematic" id="id38">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2566,7 +2755,17 @@ this widget</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.QLabel_clickable.clicked">
 <span class="sig-name descname"><span class="pre">clicked</span></span><a class="headerlink" href="#populse_mia.user_interface.pop_ups.QLabel_clickable.clicked" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pyqtSignal(<a href="#id39"><span class="problematic" id="id40">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.QLabel_clickable.mousePressEvent">
@@ -2591,7 +2790,7 @@ this widget</p></li>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     </div>
   </body>
 </html>
