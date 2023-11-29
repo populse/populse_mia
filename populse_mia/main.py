@@ -643,7 +643,7 @@ def main():
     :Contains:
         :Private function:
             - _browse_properties_path: the user define the properties_path
-            parameter
+              parameter
             - _cancel_clicked: exit form Mia
             - _make_default_config: make default configuration
             - _save_yml_file: save data in a YAML file
