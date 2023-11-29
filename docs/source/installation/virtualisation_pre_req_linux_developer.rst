@@ -67,12 +67,16 @@ And continue with the `Installation part <./virtualisation_developer_installatio
 **Create a container within a writable directory**
 
 Only if you need to add librairies with apt in your container.
-  - sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)
-  - sudo singularity run --writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image
-  - "It is now possible to modify the image. For example let's update all packages and install emacs:"
+  - sudo singularity build \--sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)
+  - sudo singularity run \--writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image
+
+It is now possible to modify the image. For example let's update all packages and install GUI emacs:
   - Singularity> apt update  # Singularity> is the prompt
-  - Singularity> apt-get install -y software-properties-common
+  - Singularity> apt upgrade
+  - Singularity> apt remove --autoremove emacs emacs-common # remove the old emacs package, if any, to avoid conflicts with the new package
+  - Singularity> apt-get install -y software-properties-common # provide some useful scripts for adding and removing PPAs
   - Singularity> add-apt-repository ppa:kelleyk/emacs
-  - Singularity> apt install emacs26
+  - Singularity> apt update
+  - Singularity> apt install emacs28
   - "Edit the $HOME/casa_distro/brainvisa-opensource-master/conf/casa_distro.json file and change the value of the `image` key (ex. "image": "/home/econdami/casa_distro/casa-dev-5.3-6_wr" in place of "image": "/home/econdami/casa_distro/casa-dev-5.3-6.sif")"
   - "Then using `bv` or `bv bash` will use the casa-dev-5.3-6_wr image"
