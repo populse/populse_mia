@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Pre-requirements for virtualization developer- Linux &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
+    <title>Pre-requirements for virtualization developer- Linux &#8212; populse_mia 2.4.1-dev+60ba0205 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=e491ac2d" />
-    <script src="../_static/documentation_options.js?v=2d69834f"></script>
+    <script src="../_static/documentation_options.js?v=26bed19d"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
+          <span>populse_mia 2.4.1-dev+60ba0205 documentation</span></a></h1>
         <h2 class="heading"><span>Pre-requirements for virtualization developer- Linux</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -78,13 +78,18 @@
 <p><strong>Create a container within a writable directory</strong></p>
 <dl class="simple">
 <dt>Only if you need to add librairies with apt in your container.</dt><dd><ul class="simple">
-<li><p>sudo singularity build –sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)</p></li>
-<li><p>sudo singularity run –writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image</p></li>
-<li><p>“It is now possible to modify the image. For example let’s update all packages and install emacs:”</p></li>
+<li><p>sudo singularity build --sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)</p></li>
+<li><p>sudo singularity run --writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image</p></li>
+</ul>
+</dd>
+<dt>It is now possible to modify the image. For example let’s update all packages and install GUI emacs:</dt><dd><ul class="simple">
 <li><p>Singularity&gt; apt update  # Singularity&gt; is the prompt</p></li>
-<li><p>Singularity&gt; apt-get install -y software-properties-common</p></li>
+<li><p>Singularity&gt; apt upgrade</p></li>
+<li><p>Singularity&gt; apt remove –autoremove emacs emacs-common # remove the old emacs package, if any, to avoid conflicts with the new package</p></li>
+<li><p>Singularity&gt; apt-get install -y software-properties-common # provide some useful scripts for adding and removing PPAs</p></li>
 <li><p>Singularity&gt; add-apt-repository ppa:kelleyk/emacs</p></li>
-<li><p>Singularity&gt; apt install emacs26</p></li>
+<li><p>Singularity&gt; apt update</p></li>
+<li><p>Singularity&gt; apt install emacs28</p></li>
 <li><p>“Edit the $HOME/casa_distro/brainvisa-opensource-master/conf/casa_distro.json file and change the value of the <cite>image</cite> key (ex. “image”: “/home/econdami/casa_distro/casa-dev-5.3-6_wr” in place of “image”: “/home/econdami/casa_distro/casa-dev-5.3-6.sif”)”</p></li>
 <li><p>“Then using <cite>bv</cite> or <cite>bv bash</cite> will use the casa-dev-5.3-6_wr image”</p></li>
 </ul>
