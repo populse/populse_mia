@@ -34,7 +34,7 @@ Open a shell, then:
 
    mkdir -p $HOME/casa_distro/brainvisa-opensource-master # create an installation directory
 
-`Download the latest BrainVISA developer image (casa-dev) <https://brainvisa.info/download/>`_ found in brainvisa site into this new directory (ex. casa-dev-5.4.4.sif).
+`Download the latest BrainVISA developer image (casa-dev) <https://brainvisa.info/download/>`_ found in brainvisa site into $HOME/casa_distro (ex. $HOME/casa_distro/casa-dev-5.4.4.sif).
 
 In the opened shell, execute the container image:
 
