@@ -943,8 +943,9 @@ class Config:
         """
 
         f = Fernet(CONFIG)
-        config_file = os.path.join(self.get_properties_path(), "properties",
-                                   "config.yml")
+        config_file = os.path.join(
+            self.get_properties_path(), "properties", "config.yml"
+        )
 
         if not os.path.exists(config_file):
             raise yaml.YAMLError(
@@ -974,8 +975,9 @@ class Config:
         """Save the current parameters in the config.yml file."""
 
         f = Fernet(CONFIG)
-        config_file = os.path.join(self.get_properties_path(), "properties",
-                                   "config.yml")
+        config_file = os.path.join(
+            self.get_properties_path(), "properties", "config.yml"
+        )
 
         if not os.path.exists(os.path.dirname(config_file)):
             os.makedirs(os.path.dirname(config_file))
