@@ -85,7 +85,6 @@ from soma.qt_gui.qt_backend.QtWidgets import QGroupBox, QListWidget, QMenu
 
 # Populse_MIA import
 from populse_mia.software_properties import Config
-from populse_mia.utils.utils import verCmp
 
 
 class DictionaryTreeModel(QAbstractItemModel):
@@ -390,6 +389,8 @@ class InstallProcesses(QDialog):
               'new_pattern' in the 'path' folder
 
         """
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
         def _add_package(proc_dic, module_name):
             """Add a package and its modules to the package tree.
@@ -2355,6 +2356,8 @@ class PackageLibraryDialog(QDialog):
         :return: the config as a dictionary
 
         """
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
         config = Config()
 
@@ -2886,6 +2889,8 @@ class ProcessLibraryWidget(QWidget):
         :return: the config as a dictionary
 
         """
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
         config = Config()
 

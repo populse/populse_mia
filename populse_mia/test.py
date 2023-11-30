@@ -277,10 +277,7 @@ from populse_mia.user_interface.pop_ups import (  # noqa: E402
     PopUpSelectTag,
     PopUpSelectTagCountTable,
 )
-from populse_mia.utils.utils import (  # noqa: E402
-    check_value_type,
-    table_to_database,
-)
+from populse_mia.utils import check_value_type, table_to_database  # noqa: E402
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))

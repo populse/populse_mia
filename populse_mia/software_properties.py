@@ -28,9 +28,6 @@ import yaml
 from capsul.api import capsul_engine
 from cryptography.fernet import Fernet
 
-# populse_mia import
-from populse_mia.utils.utils import verCmp
-
 CONFIG = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
 
 
@@ -588,6 +585,8 @@ class Config:
 
         :returns: string of path to properties folder
         """
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
         if self.properties_path is not None:
             return self.properties_path
@@ -941,6 +940,9 @@ class Config:
 
         :returns: Returns a dictionary of the contents of config.yml
         """
+
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
         f = Fernet(CONFIG)
         config_file = os.path.join(
