@@ -147,8 +147,6 @@ from populse_mia.data_manager.project import (
 )
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser import data_browser
-from populse_mia.utils import utils
-from populse_mia.utils.utils import check_value_type, verCmp
 
 
 class ClickableLabel(QLabel):
@@ -782,6 +780,8 @@ class PopUpAddTag(QDialog):
         to the data browser.
 
         """
+        # import check_value_type only here to prevent circular import issue
+        from populse_mia.utils import check_value_type
 
         name_already_exists = False
 
@@ -1887,12 +1887,16 @@ class PopUpNewProject(QFileDialog):
     def __init__(self):
         """Initialization."""
 
+        # import set_projects_directory_as_default only here to prevent
+        # circular import issue
+        from populse_mia.utils import set_projects_directory_as_default
+
         super().__init__()
         self.setLabelText(QFileDialog.Accept, "Create")
         self.setAcceptMode(QFileDialog.AcceptSave)
 
         # Setting the projects directory as default
-        utils.set_projects_directory_as_default(self)
+        set_projects_directory_as_default(self)
 
     def get_filename(self, file_name_tuple):
         """Sets the widget's attributes depending on the selected file name.
@@ -1901,6 +1905,9 @@ class PopUpNewProject(QFileDialog):
         :return: real file name
 
         """
+        # import message_already_exists only here to prevent
+        # circular import issue
+        from populse_mia.utils import message_already_exists
 
         file_name = file_name_tuple[0]
         if file_name:
@@ -1914,7 +1921,7 @@ class PopUpNewProject(QFileDialog):
                 # A signal is emitted to tell that the project has been created
                 self.signal_create_project.emit()
             else:
-                utils.message_already_exists()
+                message_already_exists()
 
         return file_name
 
@@ -1933,13 +1940,17 @@ class PopUpOpenProject(QFileDialog):
     signal_create_project = pyqtSignal()
 
     def __init__(self):
+        # import set_projects_directory_as_default only here to prevent
+        # circular import issue
+        from populse_mia.utils import set_projects_directory_as_default
+
         super().__init__()
 
         self.setOption(QFileDialog.DontUseNativeDialog, True)
         self.setFileMode(QFileDialog.Directory)
 
         # Setting the projects directory as default
-        utils.set_projects_directory_as_default(self)
+        set_projects_directory_as_default(self)
 
     def get_filename(self, file_name_tuple):
         """Sets the widget's attributes depending on the selected file name.
@@ -1947,6 +1958,9 @@ class PopUpOpenProject(QFileDialog):
         :param file_name_tuple: tuple obtained with the selectedFiles method
 
         """
+        # import message_already_exists only here to prevent
+        # circular import issue
+        from populse_mia.utils import message_already_exists
 
         file_name = file_name_tuple[0]
 
@@ -1961,7 +1975,7 @@ class PopUpOpenProject(QFileDialog):
                 # A signal is emitted to tell that the project has been created
                 self.signal_create_project.emit()
             else:
-                utils.message_already_exists()
+                message_already_exists()
 
 
 class PopUpPreferences(QDialog):
@@ -3007,6 +3021,10 @@ class PopUpPreferences(QDialog):
 
     def edit_config_file(self):
         """Create a window to view, edit the mia configuration file."""
+
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
+
         config = Config()
 
         self.editConf = QDialog()
@@ -5125,6 +5143,10 @@ class PopUpSaveProjectAs(QDialog):
         :return: new project's file name
 
         """
+        # import message_already_exists only here to prevent circular
+        # import issue
+        from populse_mia.utils import message_already_exists
+
         file_name_tuple = self.new_project.text()
 
         if len(file_name_tuple) > 0:
@@ -5150,7 +5172,7 @@ class PopUpSaveProjectAs(QDialog):
                     return
                 else:
                     if self.config.get_user_mode():
-                        utils.message_already_exists()
+                        message_already_exists()
                         return
                     else:
                         msgtext = (

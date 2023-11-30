@@ -110,11 +110,13 @@ from populse_mia.user_interface.pop_ups import (
     PopUpSelectFilter,
     PopUpShowHistory,
 )
-from populse_mia.utils.utils import (
-    check_value_type,
-    set_item_data,
-    table_to_database,
-)
+
+# from populse_mia.utils.utils import (
+#     check_value_type,
+#     set_item_data,
+#     table_to_database,
+# )
+
 
 # Variable shown everywhere when no value for the tag
 not_defined_value = "*Not Defined*"
@@ -227,6 +229,8 @@ class DataBrowser(QWidget):
         :param new_tag_description: New tag description
         :param new_tag_unit: New tag unit
         """
+        # import table_to_database only here to prevent circular import issue
+        from populse_mia.utils import table_to_database
 
         values = []
 
@@ -946,6 +950,8 @@ class TableDataBrowser(QTableWidget):
         :param column: index of the column to add
         :param tag: tag name to add
         """
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
 
         self.itemChanged.disconnect()
 
@@ -1007,6 +1013,9 @@ class TableDataBrowser(QTableWidget):
 
     def add_columns(self):
         """Add columns."""
+
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
 
         self.itemChanged.disconnect()
 
@@ -1133,10 +1142,11 @@ class TableDataBrowser(QTableWidget):
         :param rows: list of all scans
         """
 
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
+
         self.setSortingEnabled(False)
-
         self.itemSelectionChanged.disconnect()
-
         self.itemChanged.disconnect()
 
         cells_number = len(rows) * self.columnCount()
@@ -1261,6 +1271,13 @@ class TableDataBrowser(QTableWidget):
 
         :param item_origin: item from where the call comes from
         """
+        # import check_value_type and table_to_database only here to prevent
+        # circular import issue
+        from populse_mia.utils import (
+            check_value_type,
+            set_item_data,
+            table_to_database,
+        )
 
         self.itemChanged.disconnect()
         new_value = item_origin.data(Qt.EditRole)
@@ -1424,6 +1441,8 @@ class TableDataBrowser(QTableWidget):
 
     def clear_cell(self):
         """Clear the selected cells."""
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
 
         # For history
         history_maker = []
@@ -1654,6 +1673,9 @@ class TableDataBrowser(QTableWidget):
     def edit_table_data_values(self):
         """Change values in DataBrowser"""
 
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
+
         self.setMouseTracking(False)
         self.coordinates = []  # Coordinates of selected cells stored
         self.old_database_values = []  # Old database values stored
@@ -1810,6 +1832,9 @@ class TableDataBrowser(QTableWidget):
 
     def fill_cells_update_table(self):
         """Initialize and fill the cells of the table."""
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
+
         cells_number = len(self.scans_to_visualize) * len(
             self.horizontalHeader()
         )
@@ -2117,6 +2142,8 @@ class TableDataBrowser(QTableWidget):
         :param list_tags: list of the tags on which to sort the documents
         :param order: "Ascending" or "Descending"
         """
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
 
         self.itemChanged.disconnect()
         list_tags_name = list_tags
@@ -2392,6 +2419,8 @@ class TableDataBrowser(QTableWidget):
 
     def reset_cell(self):
         """Reset the selected cells to their original values."""
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
 
         # For history
         history_maker = []
@@ -2451,6 +2480,9 @@ class TableDataBrowser(QTableWidget):
     def reset_column(self):
         """Reset the selected columns to their original values."""
 
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
+
         # For history
         history_maker = list()
         history_maker.append("modified_values")
@@ -2508,6 +2540,8 @@ class TableDataBrowser(QTableWidget):
 
     def reset_row(self):
         """Reset the selected rows to their original values."""
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
 
         # For history
         history_maker = []
