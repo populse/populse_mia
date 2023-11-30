@@ -691,8 +691,6 @@ class TestMIACase(unittest.TestCase):
         # instances are created out of our control in the code
         Config.properties_path = cls.properties_path
 
-
-
     def tearDown(self):
         """Called after each test"""
 
@@ -2061,8 +2059,13 @@ class TestMIADataBrowser(TestMIACase):
         config = Config(config_path=self.config_path)
         project_8_path = self.get_new_test_project()
 
-        os.remove(os.path.join(config.get_properties_path(), "properties",
-                               "saved_projects.yml"))
+        os.remove(
+            os.path.join(
+                config.get_properties_path(),
+                "properties",
+                "saved_projects.yml",
+            )
+        )
 
         saved_projects = SavedProjects()
         self.assertEqual(saved_projects.pathsList, [])
