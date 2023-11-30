@@ -42,7 +42,6 @@ from populse_mia.user_interface.pop_ups import (
     ClickableLabel,
     PopUpSelectTagCountTable,
 )
-from populse_mia.utils.utils import set_item_data, table_to_database
 
 
 class CountTable(QDialog):
@@ -256,6 +255,8 @@ class CountTable(QDialog):
         """Fills the cells of the table corresponding to the (n-1)
         first selected tags
         """
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
 
         cell_text = []
         for col in range(len(self.values_list) - 1):
@@ -344,6 +345,9 @@ class CountTable(QDialog):
         Fills the headers of the table depending on the selected tags
         """
 
+        # import set_item_data only here to prevent circular import issue
+        from populse_mia.utils import set_item_data
+
         idx_end = 0
         # Headers
         for idx in range(len(self.values_list) - 1):
@@ -378,6 +382,8 @@ class CountTable(QDialog):
         """
         Fills the cells corresponding to the last selected tag
         """
+        # import table_to_database only here to prevent circular import issue
+        from populse_mia.utils import table_to_database
 
         # Cells of the last tag
         for col in range(self.idx_last_tag + 1, self.nb_col):

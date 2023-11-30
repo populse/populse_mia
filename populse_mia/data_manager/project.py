@@ -44,7 +44,6 @@ from populse_mia.data_manager.filter import Filter
 
 # Populse_MIA imports
 from populse_mia.software_properties import Config
-from populse_mia.utils.utils import set_item_data, verCmp
 
 COLLECTION_CURRENT = "current"
 COLLECTION_INITIAL = "initial"
@@ -1122,6 +1121,10 @@ class Project:
 
     def loadProperties(self):
         """Load the properties file."""
+
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
+
         with open(
             os.path.join(self.folder, "properties", "properties.yml"), "r"
         ) as stream:
@@ -1150,6 +1153,7 @@ class Project:
         from populse_mia.user_interface.data_browser.data_browser import (
             not_defined_value,
         )
+        from populse_mia.utils import set_item_data
 
         # We can redo if we have an action to make again
         if len(self.redos) > 0:
@@ -1499,6 +1503,7 @@ class Project:
         from populse_mia.user_interface.data_browser.data_browser import (
             not_defined_value,
         )
+        from populse_mia.utils import set_item_data
 
         # We can undo if we have an action to revert
         if len(self.undos) > 0:

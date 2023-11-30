@@ -60,7 +60,6 @@ from populse_mia.user_interface.pipeline_manager.node_controller import (
     FilterWidget,
 )
 from populse_mia.user_interface.pop_ups import PopUpClosePipeline
-from populse_mia.utils.utils import verCmp
 
 unicode = str
 
@@ -575,6 +574,8 @@ class PipelineEditor(PipelineDeveloperView):
 
     def check_modifications(self):
         """Check if the nodes of the pipeline have been modified."""
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
         pipeline = self.scene.pipeline
         config = Config()
@@ -1913,6 +1914,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param sub_pipeline: the pipeline to open
         """
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
         # Reading the process configuration file
         config = Config()

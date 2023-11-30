@@ -39,10 +39,8 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 
-from populse_mia.data_manager.project import COLLECTION_CURRENT
-
 # Populse_MIA imports
-from populse_mia.utils.utils import check_value_type
+from populse_mia.data_manager.project import COLLECTION_CURRENT
 
 
 class ModifyTable(QDialog):
@@ -169,6 +167,9 @@ class ModifyTable(QDialog):
 
     def update_table_values(self, test=False):
         """Update the table in the database when the 'OK' button is clicked."""
+
+        # import check_value_type only here to prevent circular import issue
+        from populse_mia.utils import check_value_type
 
         valid = True
 
