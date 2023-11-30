@@ -672,7 +672,7 @@ class TestMIACase(unittest.TestCase):
         """Called before each test"""
 
         # All the tests are run in admin mode
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_user_mode(False)
         self.app = QApplication.instance()
 
@@ -686,10 +686,12 @@ class TestMIACase(unittest.TestCase):
     def setUpClass(cls):
         """Called once at the beginning of the class"""
 
-        cls.config_path = tempfile.mkdtemp(prefix="mia_tests")
+        cls.properties_path = tempfile.mkdtemp(prefix="mia_tests")
         # hack the Config class to get config_path, because some Config
         # instances are created out of our control in the code
-        Config.config_path = cls.config_path
+        Config.properties_path = cls.properties_path
+
+
 
     def tearDown(self):
         """Called after each test"""
@@ -2059,7 +2061,8 @@ class TestMIADataBrowser(TestMIACase):
         config = Config(config_path=self.config_path)
         project_8_path = self.get_new_test_project()
 
-        os.remove(os.path.join(config.get_config_path(), "saved_projects.yml"))
+        os.remove(os.path.join(config.get_properties_path(), "properties",
+                               "saved_projects.yml"))
 
         saved_projects = SavedProjects()
         self.assertEqual(saved_projects.pathsList, [])
