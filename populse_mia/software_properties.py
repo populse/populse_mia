@@ -49,7 +49,6 @@ class Config:
               operations in MIA application
             - getChainCursors: returns if the "chain cursors" checkbox of the
               mini viewer is activated
-            - get_config_path: returns the configuration file directory
             - get_freesurfer_setup: get freesurfer path
             - get_fsl_config: returns the path of the FSL config file
             - get_mainwindow_maximized: get the maximized (full-screen) flag
@@ -187,7 +186,7 @@ class Config:
 
     capsul_engine = None
 
-    def __init__(self, config_path=None):
+    def __init__(self, properties_path=None):
         """Initialization of the Config class
 
         :Parameters:
@@ -198,8 +197,7 @@ class Config:
                tests for instance).
         """
 
-        if config_path is not None:
-            self.config_path = config_path
+        self.properties_path = properties_path
 
         if os.environ.get("MIA_DEV_MODE", None) is not None:
             self.dev_mode = bool(int(os.environ["MIA_DEV_MODE"]))
@@ -208,7 +206,6 @@ class Config:
             # FIXME: What can we do if "MIA_DEV_MODE" is not in os.environ?
             print("\nMIA_DEV_MODE not found...\n")
 
-        self.properties_path = None
         self.config = self.loadConfig()
 
     def get_admin_hash(self):
@@ -478,19 +475,6 @@ class Config:
         """
 
         return self.config.get("chain_cursors", False)
-
-    def get_config_path(self):
-        """Get the config.yml folder path.
-
-        :returns: string of directory path to the config.yml file
-        """
-
-        config_path = getattr(self, "config_path", None)
-
-        if config_path is not None:
-            return config_path
-
-        return os.path.join(self.get_properties_path(), "properties")
 
     def get_fsl_config(self):
         """Get the FSL config file  path
@@ -959,7 +943,8 @@ class Config:
         """
 
         f = Fernet(CONFIG)
-        config_file = os.path.join(self.get_config_path(), "config.yml")
+        config_file = os.path.join(self.get_properties_path(), "properties",
+                                   "config.yml")
 
         if not os.path.exists(config_file):
             raise yaml.YAMLError(
@@ -989,7 +974,8 @@ class Config:
         """Save the current parameters in the config.yml file."""
 
         f = Fernet(CONFIG)
-        config_file = os.path.join(self.get_config_path(), "config.yml")
+        config_file = os.path.join(self.get_properties_path(), "properties",
+                                   "config.yml")
 
         if not os.path.exists(os.path.dirname(config_file)):
             os.makedirs(os.path.dirname(config_file))

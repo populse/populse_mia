@@ -3011,7 +3011,8 @@ class PopUpPreferences(QDialog):
 
         self.editConf = QDialog()
         self.editConf.setWindowTitle(
-            os.path.join(config.get_config_path(), "config.yml")
+            os.path.join(config.get_properties_path(), "properties",
+                         "config.yml")
         )
         self.editConf.txt = QPlainTextEdit()
         stream = yaml.dump(
