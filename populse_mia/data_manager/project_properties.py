@@ -101,8 +101,11 @@ class SavedProjects:
 
         try:
             with open(
-                os.path.join(config.get_properties_path(), "properties",
-                             "saved_projects.yml"),
+                os.path.join(
+                    config.get_properties_path(),
+                    "properties",
+                    "saved_projects.yml",
+                ),
                 "r",
             ) as stream:
                 try:
@@ -116,8 +119,11 @@ class SavedProjects:
 
         except FileNotFoundError:
             with open(
-                os.path.join(config.get_properties_path(), "properties",
-                             "saved_projects.yml"),
+                os.path.join(
+                    config.get_properties_path(),
+                    "properties",
+                    "saved_projects.yml",
+                ),
                 "w",
             ) as stream:
                 yaml.dump({"paths": []}, stream, default_flow_style=False)
@@ -142,8 +148,11 @@ class SavedProjects:
         config = Config()
 
         with open(
-            os.path.join(config.get_properties_path(), "properties",
-                         "saved_projects.yml"),
+            os.path.join(
+                config.get_properties_path(),
+                "properties",
+                "saved_projects.yml",
+            ),
             "w",
             encoding="utf8",
         ) as configfile:
