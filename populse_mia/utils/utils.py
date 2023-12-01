@@ -1600,7 +1600,7 @@ def verify_setup(dev_mode, pypath=[]):
     def _save_yml_file(a_dic, a_file):
         """Save data in a YAML file.
 
-        :param a_dic: a dictionary
+        :param a_dic: a python object
         :param a_file: a .yml file path
         """
 
