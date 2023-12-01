@@ -110,7 +110,7 @@ if (
     )
 
     # Adding populse_mia
-    print('\n- Mia in "developer" mode\n')
+    print('\n- Unit testing in "developer" mode\n')
 
     if os.path.isdir(os.path.join(root_dev_dir, "populse-mia")):
         mia_dev_dir = os.path.join(root_dev_dir, "populse-mia")
@@ -118,6 +118,7 @@ if (
     else:
         mia_dev_dir = os.path.join(root_dev_dir, "populse_mia")
 
+    print("- Using populse_mia package from {} " "...".format(mia_dev_dir))
     sys.path.insert(0, mia_dev_dir)
     del mia_dev_dir
 
@@ -525,12 +526,12 @@ class TestMIACase(unittest.TestCase):
         :param light: True to copy a project with few documents (bool)
         """
 
-        new_test_proj = os.path.join(self.config_path, name)
+        new_test_proj = os.path.join(self.properties_path, name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         properties_path = config.get_properties_path()
 
         test_proj = os.path.join(
@@ -648,14 +649,14 @@ class TestMIACase(unittest.TestCase):
         self.main_window.close()
 
         # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_opened_projects([])
         config.saveConfig()
         QApplication.processEvents()
         self.app.exit()
         del self.app
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_user_mode(False)
         self.app = QApplication.instance()
 
@@ -683,17 +684,80 @@ class TestMIACase(unittest.TestCase):
     def setUpClass(cls):
         """Called once at the beginning of the class"""
 
-        cls.properties_path = tempfile.mkdtemp(prefix="mia_tests")
-        # hack the Config class to get config_path, because some Config
+        cls.properties_path = os.path.join(
+            tempfile.mkdtemp(prefix="mia_tests"), "dev"
+        )
+        # hack the Config class to get properties path, because some Config
         # instances are created out of our control in the code
         Config.properties_path = cls.properties_path
+
+        # properties folder management / initialisation:
+        properties_dir = os.path.join(cls.properties_path, "properties")
+
+        if not os.path.exists(properties_dir):
+            os.makedirs(properties_dir, exist_ok=True)
+
+        if not os.path.exists(
+            os.path.join(properties_dir, "saved_projects.yml")
+        ):
+            with open(
+                os.path.join(properties_dir, "saved_projects.yml"),
+                "w",
+                encoding="utf8",
+            ) as configfile:
+                yaml.dump(
+                    {"paths": []},
+                    configfile,
+                    default_flow_style=False,
+                    allow_unicode=True,
+                )
+
+        if not os.path.exists(os.path.join(properties_dir, "config.yml")):
+            with open(
+                os.path.join(properties_dir, "config.yml"),
+                "w",
+                encoding="utf8",
+            ) as configfile:
+                yaml.dump(
+                    "gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq"
+                    "ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0"
+                    "VuT1ZdlmTYv4wwRjhlyPiir7afubLrLK4Jfk84OoOeVtR0a5"
+                    "a0k0WqPlZl-y8_Wu4osHeQCfeWFKW5EWYF776rWgJZsjn3fx"
+                    "Z-V2g5aHo-Q5aqYi2V1Kc-kQ9ZwjFBFbXNa1g9nHKZeyd3ve"
+                    "6p3RUSELfUmEhS0eOWn8i-7GW1UGa4zEKCsoY6T19vrimiuR"
+                    "Vy-DTmmgzbbjGkgmNxB5MvEzs0BF2bAcina_lKR-yeICuIqp"
+                    "TSOBfgkTDcB0LVPBoQmogUVVTeCrjYH9_llFTJQ3ZtKZLdeS"
+                    "tFR5Y2I2ZkQETi6m-0wmUDKf-KRzmk6sLRK_oz6GmuTAN8A5"
+                    "1au2v1M=",
+                    configfile,
+                    default_flow_style=False,
+                    allow_unicode=True,
+                )
+
+            # processes/User_processes folder management / initialisation:
+            user_processes_dir = os.path.join(
+                cls.properties_path, "processes", "User_processes"
+            )
+
+            if not os.path.exists(user_processes_dir):
+                os.makedirs(user_processes_dir, exist_ok=True)
+
+            if not os.path.exists(
+                os.path.join(user_processes_dir, "__init__.py")
+            ):
+                Path(
+                    os.path.join(
+                        user_processes_dir,
+                        "__init__.py",
+                    )
+                ).touch()
 
     def tearDown(self):
         """Called after each test"""
 
         self.main_window.close()
         # Removing the opened projects (in CI, the tests are run twice)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_opened_projects([])
         config.saveConfig()
         QApplication.processEvents()
@@ -704,8 +768,8 @@ class TestMIACase(unittest.TestCase):
     def tearDownClass(cls):
         """Called once at the end of the class"""
 
-        if os.path.exists(cls.config_path):
-            shutil.rmtree(cls.config_path)
+        if os.path.exists(cls.properties_path):
+            shutil.rmtree(cls.properties_path)
 
 
 class TestMIADataBrowser(TestMIACase):
@@ -1494,7 +1558,7 @@ class TestMIADataBrowser(TestMIACase):
     def test_mia_preferences(self):
         """Tests the MIA preferences popup."""
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         old_auto_save = config.isAutoSave()
         self.assertEqual(old_auto_save, False)
 
@@ -1510,7 +1574,7 @@ class TestMIADataBrowser(TestMIACase):
         QTest.qWait(500)
         self.execute_QMessageBox_clickOk()
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         new_auto_save = config.isAutoSave()
         self.assertEqual(new_auto_save, True)
 
@@ -1522,7 +1586,7 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(properties.push_button_ok, Qt.LeftButton)
         QTest.qWait(500)
         self.execute_QMessageBox_clickOk()
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         reput_auto_save = config.isAutoSave()
         self.assertEqual(reput_auto_save, False)
 
@@ -1534,7 +1598,7 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(properties.push_button_cancel, Qt.LeftButton)
         QTest.qWait(500)
         self.execute_QMessageBox_clickOk()
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         # clear config -> user_mode become True !
         config.config = {}
         auto_save = config.isAutoSave()
@@ -1816,7 +1880,7 @@ class TestMIADataBrowser(TestMIACase):
         viewer = data_browser.viewer
 
         # Gets a document filepath
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         folder = os.path.abspath(
             os.path.join(
                 config.get_properties_path(),
@@ -2053,7 +2117,7 @@ class TestMIADataBrowser(TestMIACase):
         saved_projects = self.main_window.saved_projects
         self.assertEqual(saved_projects.pathsList, [])
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         project_8_path = self.get_new_test_project()
 
         os.remove(
@@ -2089,7 +2153,7 @@ class TestMIADataBrowser(TestMIACase):
         projects.
         """
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         projects = config.get_opened_projects()
         self.assertEqual(len(projects), 1)
         self.assertTrue(self.main_window.project.folder in projects)
@@ -2866,7 +2930,7 @@ class TestMIADataBrowser(TestMIACase):
     def test_save_project(self):
         """Test opening & saving of a project."""
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         projects_dir = os.path.realpath(
             tempfile.mkdtemp(prefix="projects_tests")
         )
@@ -4342,7 +4406,7 @@ class TestMIAMainWindow(TestMIACase):
         QMessageBox.exec = lambda self_, *args: self_.show()
 
         # Resets the projects folder
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_projects_save_path(None)
 
         # Tries to create a new project without setting the projects folder
@@ -4353,7 +4417,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Sets the projects folder path
         proj_folder = os.path.split(new_proj_path)[0]
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_projects_save_path(proj_folder)
 
         # Mocks the execution of 'PopUpNewProject
@@ -4536,7 +4600,7 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.msg.accept()
 
         # Sets the projects save dir
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_projects_save_path(os.path.split(test_proj_path)[0])
 
         PopUpOpenProject.exec = lambda self_, *arg: self_.show()
@@ -4575,7 +4639,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Switches to the first one
         self.main_window.switch_project(proj_test_1_path, "test_project_1")
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_projects_save_path(os.path.split(proj_test_1_path)[0])
         self.main_window.saved_projects_list.append(proj_test_1_path)
 
@@ -4592,7 +4656,7 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.saved_projects_actions[0].triggered.emit()
 
         # Asserts that it is now the current project
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         self.assertEqual(
             os.path.abspath(config.get_opened_projects()[0]), proj_test_1_path
         )
@@ -4885,7 +4949,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Saves the pipeline as the package 'Unit_test_pipeline' in
         # User_processes
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -5039,7 +5103,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Saves the pipeline as the package 'Unit_test_pipeline' in
         # User_processes
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -5291,8 +5355,8 @@ class TestMIAMainWindow(TestMIACase):
 
         # Sets a projects save directory
         # config = Config()
-        config = Config(config_path=self.config_path)
-        projects_save_path = os.path.join(self.config_path, "projects")
+        config = Config(properties_path=self.properties_path)
+        projects_save_path = os.path.join(self.properties_path, "projects")
         config.set_projects_save_path(projects_save_path)
 
         # Mocks a project filepath that does not exist in the filesystem
@@ -5347,14 +5411,14 @@ class TestMIAMainWindow(TestMIACase):
         QMessageBox.exec = lambda self_: self_.show()
 
         # Resets the projects folder
-        Config(config_path=self.config_path).set_projects_save_path("")
+        Config(properties_path=self.properties_path).set_projects_save_path("")
 
         # Tries to delete a project without setting the projects folder
         self.main_window.delete_project()
         self.main_window.msg.accept()
 
         # Sets a projects save directory
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         proj_save_path = os.path.split(test_proj_path)[0]
         config.set_projects_save_path(proj_save_path)
 
@@ -5402,8 +5466,8 @@ class TestMIAMainWindow(TestMIACase):
         project_9_path = self.get_new_test_project(name="project_9")
 
         # Sets the projects save path
-        config = Config(config_path=self.config_path)
-        config.set_projects_save_path(self.config_path)
+        config = Config(properties_path=self.properties_path)
+        config.set_projects_save_path(self.properties_path)
 
         # Adds the projects to the 'pathsList'
         main_wnd.saved_projects.pathsList.append(project_8_path)
@@ -5426,7 +5490,7 @@ class TestMIAMainWindow(TestMIACase):
         )
 
         # Asserts that project 8 is not opened:
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         self.assertNotEqual(
             os.path.abspath(config.get_opened_projects()[0]), project_8_path
         )
@@ -5441,7 +5505,7 @@ class TestMIAMainWindow(TestMIACase):
         main_wnd.exPopup.open_project()
 
         # Asserts that project 8 is now opened
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         self.assertEqual(
             os.path.abspath(config.get_opened_projects()[0]), project_8_path
         )
@@ -5471,7 +5535,7 @@ class TestMIAMainWindow(TestMIACase):
         ppl_manager.project.folder = project_8_path
 
         # Modification of some configuration parameters
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.setControlV1(True)
         config.setAutoSave(True)
         config.set_clinical_mode(True)
@@ -5760,7 +5824,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Asserts that the 'Config' object was updated
         main_wnd.pop_up_preferences.edit_config_file()
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         self.assertTrue(config.get_user_mode())
 
         # Tries to find an empty string of characters in the config file
@@ -5818,7 +5882,7 @@ class TestMIAMainWindow(TestMIACase):
         # Mocks 'QMessageBox.show'
         QMessageBox.show = lambda x: None
 
-        tmp_path = self.config_path
+        tmp_path = self.properties_path
 
         # Temporary solution that allows test only on Linux and MacOS
         if platform.system() == "Windows":
@@ -5887,7 +5951,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that AFNI is disabled in the 'config' object
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertFalse(config.get_use_afni())
 
             # Sets the path to the AFNI to 'tmp_path'
@@ -5901,7 +5965,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.close()  # Closes the window
 
             # Disables AFNI
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_use_afni(False)
             config.set_afni_path("")
 
@@ -5926,7 +5990,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that ANTS is disabled in the 'config' object
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertFalse(config.get_use_ants())
 
             # Sets the path to the AFNI to 'tmp_path'
@@ -5940,7 +6004,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.close()  # Closes the window
 
             # Disables ANTS
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_use_ants(False)
             config.set_ants_path("")
 
@@ -5971,7 +6035,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that FSL is disabled in the 'config' object
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertFalse(config.get_use_fsl())
 
             # Sets the path to the FSL to 'tmp_path'
@@ -5987,7 +6051,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.close()  # Closes the window
 
             # Disables FSL
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_use_fsl(False)
             config.set_fsl_config("")
 
@@ -6012,7 +6076,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that mrtrix is disabled in the 'config' object
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertFalse(config.get_use_mrtrix())
 
             # Sets the path to the mrtrix to 'tmp_path'
@@ -6026,7 +6090,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.close()  # Closes the window
 
             # Disables mrtrix
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_use_mrtrix(False)
             config.set_mrtrix_path("")
 
@@ -6049,18 +6113,18 @@ class TestMIAMainWindow(TestMIACase):
 
             # Sets the same MATLAB directory in the preferences window and
             # in the config object
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_matlab_path(os.path.join(tmp_path, "matlab"))
             # main_wnd.pop_up_preferences.ok_clicked() # Opens error dialog
 
             # Also sets the same SPM directory in the preferences window and
             # in the config object, and a 'tmp_path' as the MATLAB directory
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_spm_path(tmp_path)
             main_wnd.pop_up_preferences.spm_choice.setText(tmp_path)
             main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertTrue(config.get_use_spm())
             self.assertTrue(config.get_use_matlab())
             self.assertFalse(config.get_use_matlab_standalone())
@@ -6069,7 +6133,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Resets the MATLAB executable path
-            Config(config_path=self.config_path).set_matlab_path("")
+            Config(properties_path=self.properties_path).set_matlab_path("")
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Creates a working MATLAB executable
@@ -6084,7 +6148,7 @@ class TestMIAMainWindow(TestMIACase):
 
             # Resets the MATLAB executable path (which was set by the last
             # call on 'ok_clicked')
-            Config(config_path=self.config_path).set_matlab_path("")
+            Config(properties_path=self.properties_path).set_matlab_path("")
 
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
@@ -6098,7 +6162,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.close()  # Closes the window
 
             # Disables MATLAB and SPM
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_use_matlab(False)
             config.set_use_spm(False)
             config.set_spm_path("")
@@ -6124,13 +6188,15 @@ class TestMIAMainWindow(TestMIACase):
             # Sets the same MATLAB directory on both the preferences
             # window and 'config' object
             main_wnd.pop_up_preferences.matlab_choice.setText(tmp_path)
-            Config(config_path=self.config_path).set_matlab_path(tmp_path)
+            Config(properties_path=self.properties_path).set_matlab_path(
+                tmp_path
+            )
 
             main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
             # Asserts that MATLAB was enabled and MATLAB standalone
             # remains disabled
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertTrue(config.get_use_matlab())
             self.assertFalse(config.get_use_matlab_standalone())
 
@@ -6160,7 +6226,7 @@ class TestMIAMainWindow(TestMIACase):
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
             # Asserts that MATLAB was still not enabled
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertFalse(config.get_use_matlab())
 
             # Creates a working MATLAB executable
@@ -6170,12 +6236,12 @@ class TestMIAMainWindow(TestMIACase):
 
             # Asserts that MATLAB was enabled and MATLAB standalone
             # remains disabled
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertTrue(config.get_use_matlab())
             self.assertFalse(config.get_use_matlab_standalone())
 
             # Disables MATLAB and SPM
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             config.set_use_matlab(False)
             config.set_matlab_path("")
 
@@ -6259,7 +6325,7 @@ class TestMIAMainWindow(TestMIACase):
             )
             main_wnd.pop_up_preferences.ok_clicked()  # Opens error dialog
 
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             self.assertFalse(config.get_use_spm_standalone())
             self.assertFalse(config.get_use_matlab_standalone())
 
@@ -6276,7 +6342,7 @@ class TestMIAMainWindow(TestMIACase):
 
             main_wnd.pop_up_preferences.ok_clicked()  # Closes window
 
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             # FIXME: the following lines makes, only with macos build:
             #        'AssertionError: False is not true'. Commented.
             # self.assertTrue(config.get_use_spm_standalone())
@@ -6300,7 +6366,7 @@ class TestMIAMainWindow(TestMIACase):
 
             main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             # FIXME: the following lines makes, only with macos build:
             #        'AssertionError: False is not true'. Commented.
             # self.assertTrue(config.get_use_spm_standalone())
@@ -6323,13 +6389,15 @@ class TestMIAMainWindow(TestMIACase):
             # standalone
             main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
-            config = Config(config_path=self.config_path)
+            config = Config(properties_path=self.properties_path)
             # FIXME: the following lines makes, only with macos build:
             #        'AssertionError: False is not true'. Commented.
             # self.assertTrue(config.get_use_spm_standalone())
             # self.assertTrue(config.get_use_matlab_standalone())
 
-        Config(config_path=self.config_path).set_projects_save_path(tmp_path)
+        Config(properties_path=self.properties_path).set_projects_save_path(
+            tmp_path
+        )
 
         # Test the configuration modules AFNI, ANTS, FSL, mrtrix,
         # SPM and MATLAB
@@ -6363,7 +6431,7 @@ class TestMIAMainWindow(TestMIACase):
         # Mocks the execution of 'PopUpPreferences' to speed up the test
         # PopUpPreferences.show = lambda x: None
 
-        tmp_path = self.config_path
+        tmp_path = self.properties_path
         main_wnd.software_preferences_pop_up()
 
         # Selects standalone modules
@@ -6375,7 +6443,7 @@ class TestMIAMainWindow(TestMIACase):
         # Validates the Pipeline tab without pressing the 'OK' button
         main_wnd.pop_up_preferences.validate_and_save()
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         for module in ["matlab_standalone", "spm_standalone"]:
             self.assertTrue(getattr(config, "get_use_" + module)())
 
@@ -6388,7 +6456,7 @@ class TestMIAMainWindow(TestMIACase):
         # Validates the Pipeline tab without pressing the 'OK' button
         main_wnd.pop_up_preferences.validate_and_save()
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         for module in ["afni", "ants", "fsl", "matlab", "mrtrix", "spm"]:
             self.assertTrue(getattr(config, "get_use_" + module)())
 
@@ -6422,12 +6490,14 @@ class TestMIAMainWindow(TestMIACase):
         # The options autoSave, radioView and controlV1 are not selected
 
         # Sets the projects save path
-        Config(config_path=self.config_path).set_projects_save_path(tmp_path)
+        Config(properties_path=self.properties_path).set_projects_save_path(
+            tmp_path
+        )
 
         # Validates the all tab after pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         for opt in [
             "isAutoSave",
@@ -6441,7 +6511,7 @@ class TestMIAMainWindow(TestMIACase):
         self.assertEqual(config.get_projects_save_path(), tmp_path)
 
         # Deselects MATLAB and SPM modules from the config file
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         for module in ["matlab", "spm"]:
             getattr(config, "set_use_" + module)(False)
@@ -6462,7 +6532,7 @@ class TestMIAMainWindow(TestMIACase):
         main_wnd.pop_up_preferences.fullscreen_cbox.setChecked(True)
 
         # Sets a non-existent projects save path
-        Config(config_path=self.config_path).set_projects_save_path(
+        Config(properties_path=self.properties_path).set_projects_save_path(
             os.path.join(tmp_path, "non_existent")
         )
 
@@ -6471,7 +6541,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Asserts that the 'config' objects was not updated with the
         # non-existent projects folder
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         self.assertEqual(config.get_projects_save_path(), tmp_path)
 
     def test_switch_project(self):
@@ -6509,7 +6579,7 @@ class TestMIAMainWindow(TestMIACase):
         self.assertEqual(self.main_window.project.folder, "")
 
         # Resets the opened projects list
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         config.set_opened_projects([])
 
         # Deletes the 'COLLECTION_CURRENT' equivalent in 'mia.db'
@@ -6726,7 +6796,7 @@ class TestMIANodeController(TestMIACase):
     def test_display_filter(self):
         """Displays parameters of a node and displays a plug filter."""
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
@@ -6780,7 +6850,7 @@ class TestMIANodeController(TestMIACase):
 
         # Switches back to node controller V2, if necessary (return to initial
         # state)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         if not controlV1_ver:
             config.setControlV1(False)
@@ -6795,7 +6865,7 @@ class TestMIANodeController(TestMIACase):
         Controller version (V1 or V2) and can be used in both of them.
         """
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
@@ -6907,7 +6977,7 @@ class TestMIANodeController(TestMIACase):
 
         # Switches back to node controller V2, if necessary (return to initial
         # state)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         if not controlV1_ver:
             config.setControlV1(False)
@@ -6919,7 +6989,7 @@ class TestMIANodeController(TestMIACase):
         Tests the class NodeController().
         """
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
@@ -7020,7 +7090,7 @@ class TestMIANodeController(TestMIACase):
 
         # Switches back to node controller V2, if necessary (return to initial
         # state)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         if not controlV1_ver:
             config.setControlV1(False)
@@ -7033,7 +7103,7 @@ class TestMIANodeController(TestMIACase):
         (class NodeController()).
         """
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
@@ -7162,7 +7232,7 @@ class TestMIANodeController(TestMIACase):
 
         # Switches back to node controller V2, if necessary (return to initial
         # state)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         if not controlV1_ver:
             config.setControlV1(False)
@@ -7662,14 +7732,14 @@ class TestMIAPipelineEditor(TestMIACase):
         """
 
         # Save the state of the current process library
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         usr_proc_folder = os.path.join(
             config.get_properties_path(), "processes", "User_processes"
         )
         shutil.copytree(
             usr_proc_folder,
             os.path.join(
-                self.config_path,
+                self.properties_path,
                 "4UTs_TestMIAPipelineEditor",
                 "User_processes",
             ),
@@ -7680,7 +7750,7 @@ class TestMIAPipelineEditor(TestMIACase):
                 "properties",
                 "process_config.yml",
             ),
-            os.path.join(self.config_path, "4UTs_TestMIAPipelineEditor"),
+            os.path.join(self.properties_path, "4UTs_TestMIAPipelineEditor"),
         )
 
         # Sets often used shortcuts
@@ -7726,7 +7796,7 @@ class TestMIAPipelineEditor(TestMIACase):
         shutil.rmtree(usr_proc_folder)
 
         # Tries to save the pipeline with a filename starting by a digit
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         usr_proc_folder = os.path.join(
             config.get_properties_path(), "processes", "User_processes"
         )
@@ -7749,7 +7819,7 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertTrue(res)  # The resulting filename is not empty
 
         # Sets user mode to true
-        Config(config_path=self.config_path).set_user_mode(True)
+        Config(properties_path=self.properties_path).set_user_mode(True)
 
         # Tries to overwrite the previously saved pipeline without
         # permissions
@@ -7757,7 +7827,7 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertIsNone(res)
 
         # Sets user mode back to false
-        Config(config_path=self.config_path).set_user_mode(True)
+        Config(properties_path=self.properties_path).set_user_mode(True)
 
         # Saves a pipeline by specifying a filename
         filename = os.path.join(usr_proc_folder, "test_pipeline_3.py")
@@ -7767,7 +7837,7 @@ class TestMIAPipelineEditor(TestMIACase):
     def test_update_plug_value(self):
         """Displays parameters of a node and updates a plug value."""
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
@@ -7854,7 +7924,7 @@ class TestMIAPipelineEditor(TestMIACase):
 
         # Switches back to node controller V2, if necessary (return to initial
         # state)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         if not controlV1_ver:
             config.setControlV1(False)
@@ -7870,7 +7940,7 @@ class TestMIAPipelineEditor(TestMIACase):
 
         # Adding a process from a .py file, creates a node called "smooth_1"
         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -7983,7 +8053,7 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -8030,7 +8100,7 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -8061,7 +8131,7 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -8124,7 +8194,7 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -8142,7 +8212,7 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         # Adding the "config.get_properties_path()/processes" path to the
         # system path
@@ -8187,7 +8257,7 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -8242,7 +8312,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
 
         # Restore the initial process library (before test_save_pipeline test)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         usr_proc_folder = os.path.join(
             config.get_properties_path(), "processes", "User_processes"
         )
@@ -8256,7 +8326,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         shutil.copytree(
             os.path.join(
-                self.config_path,
+                self.properties_path,
                 "4UTs_TestMIAPipelineEditor",
                 "User_processes",
             ),
@@ -8264,7 +8334,7 @@ class TestMIAPipelineEditor(TestMIACase):
         )
         shutil.copy(
             os.path.join(
-                self.config_path,
+                self.properties_path,
                 "4UTs_TestMIAPipelineEditor",
                 "process_config.yml",
             ),
@@ -9371,7 +9441,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         """
 
         # Gets the paths of 2 documents
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         folder = os.path.abspath(
             os.path.join(
                 config.get_properties_path(),
@@ -9462,7 +9532,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl = ppl_edt_tabs.get_current_pipeline()
 
         # Gets the path of one document
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         folder = os.path.abspath(
             os.path.join(
                 config.get_properties_path(),
@@ -9634,7 +9704,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         folder = os.path.abspath(
             os.path.join(
                 config.get_properties_path(),
@@ -9714,7 +9784,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         ppl_path = os.path.join(
             config.get_properties_path(),
             "processes",
@@ -9837,7 +9907,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
     def test_undo_redo(self):
         """Tests the undo/redo action."""
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
@@ -10123,7 +10193,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Switches back to node controller V2, if necessary (return to initial
         # state)
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
 
         if not controlV1_ver:
             config.setControlV1(False)
@@ -10134,7 +10204,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         - Tests: PipelineManagerTab.update_auto_inheritance
         """
 
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         folder = os.path.abspath(
             os.path.join(
                 config.get_properties_path(),
@@ -10312,7 +10382,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl = ppl_edt_tabs.get_current_pipeline()
 
         # Gets the path of one document
-        config = Config(config_path=self.config_path)
+        config = Config(properties_path=self.properties_path)
         folder = os.path.abspath(
             os.path.join(
                 config.get_properties_path(),

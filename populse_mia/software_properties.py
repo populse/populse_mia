@@ -194,7 +194,8 @@ class Config:
                tests for instance).
         """
 
-        self.properties_path = properties_path
+        if properties_path is not None:
+            self.properties_path = properties_path
 
         if os.environ.get("MIA_DEV_MODE", None) is not None:
             self.dev_mode = bool(int(os.environ["MIA_DEV_MODE"]))
@@ -588,7 +589,7 @@ class Config:
         # import verCmp only here to prevent circular import issue
         from populse_mia.utils import verCmp
 
-        if self.properties_path is not None:
+        if getattr(self, "properties_path", None) is not None:
             return self.properties_path
 
         dot_mia_config = os.path.join(
