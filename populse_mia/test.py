@@ -531,17 +531,13 @@ class TestMIACase(unittest.TestCase):
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
 
-        config = Config(properties_path=self.properties_path)
-        properties_path = config.get_properties_path()
-
         test_proj = os.path.join(
-            properties_path,
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
             "miautdata",
             "resources",
             "mia",
             "light_test_project" if light else "project_8",
         )
-
         shutil.copytree(test_proj, new_test_proj)
         return new_test_proj
 
@@ -1873,6 +1869,7 @@ class TestMIADataBrowser(TestMIACase):
 
         - Tests MiniViewer.openTagsPopUp.
         - Indirectly tests PopUpSelectTag.
+        - Mocks: PopUpSelectTag.exec_
         """
 
         # Sets shortcuts for objects that are often used
@@ -1880,18 +1877,16 @@ class TestMIADataBrowser(TestMIACase):
         viewer = data_browser.viewer
 
         # Gets a document filepath
-        config = Config(properties_path=self.properties_path)
-        folder = os.path.abspath(
-            os.path.join(
-                config.get_properties_path(),
-                "miautdata",
-                "resources",
-                "mia",
-                "project_8",
-                "data",
-                "raw_data",
-            )
+        folder = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            "miautdata",
+            "resources",
+            "mia",
+            "project_8",
+            "data",
+            "raw_data",
         )
+
         NII_FILE_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
@@ -4748,7 +4743,6 @@ class TestMIAMainWindow(TestMIACase):
         - Mocks:
             - QMessageBox.exec
             - QMessageBox.exec_
-            - QFileDialog.exec_
         """
 
         PKG = "nipype.interfaces.DataGrabber"
@@ -4776,16 +4770,21 @@ class TestMIAMainWindow(TestMIACase):
         ).widget().clicked.emit()
 
         # Open a browser to select a package
-        QFileDialog.exec_ = lambda x: True
-        proc_lib_view.pkg_library.browse_package()
+        # QFileDialog.exec_ = lambda x: True
+        # proc_lib_view.pkg_library.browse_package()
 
         # Fill in the line edit to "PKG" then click on the add package button
         pkg_lib_window.line_edit.setText(PKG)
         proc_lib_view.pkg_library.is_path = False
+        os.environ["FSLOUTPUTTYPE"] = "NIFTI"
+        stdout_fileno = sys.stdout
+        f = open(os.devnull, "w")
+        sys.stdout = f
         pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
             0
         ).widget().clicked.emit()
-
+        f.close()
+        sys.stdout = stdout_fileno
         # Resets the previous action
         pkg_lib_window.add_list.selectAll()
         pkg_lib_window.layout().children()[0].layout().itemAt(
@@ -4974,7 +4973,6 @@ class TestMIAMainWindow(TestMIACase):
             - QMessageBox.exec
             - QMessageBox.question
         """
-
         PKG = "nipype.interfaces.DataGrabber"
 
         # Creates a new project folder and switches to it
@@ -5001,9 +4999,15 @@ class TestMIAMainWindow(TestMIACase):
                 ppl_manager.processLibrary.process_library.pkg_library.is_path
             ) = False
             # Clicks on add package
+            os.environ["FSLOUTPUTTYPE"] = "NIFTI"
+            stdout_fileno = sys.stdout
+            f = open(os.devnull, "w")
+            sys.stdout = f
             pkg_lib_window.layout().children()[0].layout().children()[
                 3
             ].itemAt(0).widget().clicked.emit()
+            f.close()
+            sys.stdout = stdout_fileno
             pkg_lib_window.ok_clicked()
 
         # Opens the package library pop-up
@@ -5018,6 +5022,9 @@ class TestMIAMainWindow(TestMIACase):
 
         # Resets the previous action
         pkg_lib_window.del_list.selectAll()
+        stdout_fileno = sys.stdout
+        f = open(os.devnull, "w")
+        sys.stdout = f
         (
             pkg_lib_window.layout()
             .children()[0]
@@ -5029,6 +5036,8 @@ class TestMIAMainWindow(TestMIACase):
             .widget()
             .clicked.emit()
         )  # clicks on Reset
+        f.close()
+        sys.stdout = stdout_fileno
 
         # Tries to delete again PKG
         pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
@@ -5037,7 +5046,12 @@ class TestMIAMainWindow(TestMIACase):
 
         # Close the package library pop-up
         QMessageBox.question = Mock(return_value=QMessageBox.No)
+        stdout_fileno = sys.stdout
+        f = open(os.devnull, "w")
+        sys.stdout = f
         pkg_lib_window.ok_clicked()  # Do not apply the modification
+        f.close()
+        sys.stdout = stdout_fileno
 
         # Opens again the package library pop-up
         self.main_window.package_library_pop_up()
@@ -5059,9 +5073,14 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
         pkg_lib_window.line_edit.setText(PKG)
+        stdout_fileno = sys.stdout
+        f = open(os.devnull, "w")
+        sys.stdout = f
         pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
             0
         ).widget().clicked.emit()  # Clicks on add package
+        f.close()
+        sys.stdout = stdout_fileno
         pkg_lib_window.ok_clicked()
 
         # Switches to the pipeline manager tab
@@ -5316,10 +5335,6 @@ class TestMIAMainWindow(TestMIACase):
         File > Package library manager is clicked.
 
         - Tests: PackageLibraryDialog
-
-        - Mocks:
-            - QMessageBox.exec
-            - QMessageBox.exec_
         """
 
         # Creates a new project folder and switches to it
@@ -9441,17 +9456,14 @@ class TestMIAPipelineManagerTab(TestMIACase):
         """
 
         # Gets the paths of 2 documents
-        config = Config(properties_path=self.properties_path)
-        folder = os.path.abspath(
-            os.path.join(
-                config.get_properties_path(),
-                "miautdata",
-                "resources",
-                "mia",
-                "project_8",
-                "data",
-                "raw_data",
-            )
+        folder = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            "miautdata",
+            "resources",
+            "mia",
+            "project_8",
+            "data",
+            "raw_data",
         )
 
         NII_FILE_1 = (
@@ -9532,18 +9544,16 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl = ppl_edt_tabs.get_current_pipeline()
 
         # Gets the path of one document
-        config = Config(properties_path=self.properties_path)
-        folder = os.path.abspath(
-            os.path.join(
-                config.get_properties_path(),
-                "miautdata",
-                "resources",
-                "mia",
-                "project_8",
-                "data",
-                "raw_data",
-            )
+        folder = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            "miautdata",
+            "resources",
+            "mia",
+            "project_8",
+            "data",
+            "raw_data",
         )
+
         NII_FILE_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
             "Guerbet_Anat-RAREpvm-000220_000.nii"
@@ -9704,19 +9714,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
 
-        config = Config(properties_path=self.properties_path)
-        folder = os.path.abspath(
-            os.path.join(
-                config.get_properties_path(),
-                "miautdata",
-                "resources",
-                "mia",
-                "project_8",
-                "data",
-                "raw_data",
-            )
+        folder = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            "miautdata",
+            "resources",
+            "mia",
+            "project_8",
+            "data",
+            "raw_data",
         )
-
         NII_FILE_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
             "Guerbet_Anat-RAREpvm-000220_000.nii"
@@ -10204,17 +10210,11 @@ class TestMIAPipelineManagerTab(TestMIACase):
         - Tests: PipelineManagerTab.update_auto_inheritance
         """
 
-        config = Config(properties_path=self.properties_path)
-        folder = os.path.abspath(
-            os.path.join(
-                config.get_properties_path(),
-                "miautdata",
-                "resources",
-                "mia",
-                "project_8",
-                "data",
-                "raw_data",
-            )
+        project_8_path = self.get_new_test_project()
+        folder = os.path.join(
+            project_8_path,
+            "data",
+            "raw_data",
         )
 
         NII_FILE_1 = (
@@ -10226,8 +10226,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
         )
 
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
+        DOCUMENT_1 = os.path.realpath(os.path.join(folder, NII_FILE_1))
+        DOCUMENT_2 = os.path.realpath(os.path.join(folder, NII_FILE_2))
 
         # Set shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
@@ -10255,7 +10255,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         node.auto_inheritance_dict = {}
         process = node.process
         process.study_config.project = Mock()
-        process.study_config.project.folder = config.get_properties_path()
+        process.study_config.project.folder = os.path.dirname(project_8_path)
         process.outputs = []
         process.list_outputs = []
         process.auto_inheritance_dict = {}
@@ -10382,17 +10382,14 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl = ppl_edt_tabs.get_current_pipeline()
 
         # Gets the path of one document
-        config = Config(properties_path=self.properties_path)
-        folder = os.path.abspath(
-            os.path.join(
-                config.get_properties_path(),
-                "miautdata",
-                "resources",
-                "mia",
-                "project_8",
-                "data",
-                "raw_data",
-            )
+        folder = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            "miautdata",
+            "resources",
+            "mia",
+            "project_8",
+            "data",
+            "raw_data",
         )
 
         NII_FILE_1 = (

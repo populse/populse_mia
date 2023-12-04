@@ -31,23 +31,23 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 
 
 def main():
-    """Make basic configuration check then actual launch of Mia.
+    """Make basic configuration check, then actual launch of Mia.
 
-    Checks if Mia is called from the site/dist packages (user mode) or from a
-    cloned git repository (developer mode).
+    Checks if Mia is called from the site/dist packages (`user mode`) or from a
+    cloned git repository (`developer mode`).
 
     ~/.populse_mia/configuration_path.yml is mandatory, if it doesn't exist
     or is corrupted, try to create one with a valid properties path.
 
-    - If launched from a cloned git repository ('developer mode'):
+    - If launched from a cloned git repository (`developer mode`):
         - the properties_path is the "properties_dev_path" parameter in
           ~/.populse_mia/configuration_path.yml
-    - If launched from the site/dist packages ('user mode'):
+    - If launched from the site/dist packages (`user mode`):
         - the properties_path is the "properties_user_path" parameter in
           ~/.populse_mia/configuration_path.yml
 
     Launches the verify_processes() function, then the launch_mia() function
-    (Mia's real launch !!).
+    (Mia's real launch).
     """
 
     pypath = []
@@ -345,11 +345,6 @@ def main():
 
     # Now that populse projects paths have been set in sys.path, if necessary,
     # we can import from these projects:
-
-    # capsul imports
-    import capsul.api as capsul_api  # noqa E402
-    from capsul.api import get_process_instance  # noqa E402
-
     # Populse_mia imports
     from populse_mia.utils import (  # noqa E402
         check_python_version,

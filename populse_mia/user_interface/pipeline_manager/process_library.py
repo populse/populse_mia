@@ -1423,7 +1423,7 @@ class PackageLibraryDialog(QDialog):
         - remove_package: remove a package from the package tree
         - remove_package_with_text: remove the package in the line edit from
           the package tree
-        - reset_action: called to reset a prevous add or remove package action.
+        - reset_action: called to reset a previous add or remove package action
         - save: save the tree to the process_config.yml file
         - save_config: save the current config to process_config.yml
         - update_config: update the process_config and package_library
@@ -2708,6 +2708,7 @@ class ProcessLibrary(QTreeView):
         """Initialization of the ProcessLibrary class.
 
         :param d: dictionary: dictionary corresponding to the tree
+        :param pkg_lib: an instance of the PackageLibraryDialog class
 
         """
 
