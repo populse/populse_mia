@@ -58,8 +58,7 @@ from functools import partial
 import yaml
 
 # Capsul imports
-from capsul.api import capsul_engine
-from capsul.pipeline.pipeline_nodes import PipelineNode
+from capsul.api import capsul_engine, Pipeline
 from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
@@ -5761,9 +5760,7 @@ class PopUpShowHistory(QDialog):
                     if len(pipeline.nodes) == 2:
                         for key in pipeline.nodes.keys():
                             if key != "":
-                                if isinstance(
-                                    pipeline.nodes[key], PipelineNode
-                                ):
+                                if isinstance(pipeline.nodes[key], Pipeline):
                                     pipeline = pipeline.nodes[key].process
                                     full_brick_name.pop(0)
                                     self.unitary_pipeline = True
@@ -5890,7 +5887,7 @@ class PopUpShowHistory(QDialog):
                     link_done = True
                     process_name += "." + link[2].name
                     plug_name = link[1]
-                    if isinstance(link[2], PipelineNode):
+                    if isinstance(link[2], Pipeline):
                         (
                             sub_process_name,
                             plug_name,
@@ -5903,7 +5900,7 @@ class PopUpShowHistory(QDialog):
                     link_done = True
                     process_name += "." + link[2].name
                     plug_name = link[1]
-                    if isinstance(link[2], PipelineNode):
+                    if isinstance(link[2], Pipeline):
                         (
                             sub_process_name,
                             plug_name,
@@ -5976,7 +5973,7 @@ class PopUpShowHistory(QDialog):
                 # subpipeline case
                 inputs_dict = {}
                 outputs_dict = {}
-                if isinstance(process, PipelineNode):
+                if isinstance(process, Pipeline):
                     for plug_name, plug in process.plugs.items():
                         if plug.activated:
                             (

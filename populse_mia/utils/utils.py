@@ -106,8 +106,6 @@ class PackagesInstall:
         "capsul.process.process.Process",
         "capsul.process.process.NipypeProcess",
         "capsul.process.process.FileCopyProcess",
-        "capsul.pipeline.pipeline_nodes.ProcessNode",
-        "capsul.pipeline.pipeline_nodes.PipelineNode",
         "capsul.pipeline.pipeline_nodes.Node",
     }
 

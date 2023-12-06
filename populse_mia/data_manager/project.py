@@ -24,7 +24,6 @@ from datetime import datetime
 import yaml
 from capsul.api import Pipeline
 from capsul.pipeline import pipeline_tools
-from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
 
 # Populse_db imports
 from populse_db.database import (
@@ -798,7 +797,7 @@ class Project:
             if hasattr(node, "process"):
                 process = node.process
 
-                if isinstance(node, PipelineNode):
+                if isinstance(node, Pipeline):
                     new_nodes = [
                         n
                         for n in process.nodes.items()
@@ -811,7 +810,7 @@ class Project:
         procs = {}
 
         for node_name, node in all_nodes:
-            if isinstance(node, ProcessNode):
+            if not isinstance(node, Pipeline):
                 process = node.process
                 brid = getattr(process, "uuid", None)
                 if brid is not None:

@@ -27,13 +27,12 @@ import io
 import json
 import math
 import os
+import six
 import sys
 import threading
 import time
 import traceback
 import uuid
-
-import six
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -43,9 +42,7 @@ import traits.api as traits
 from capsul.api import (
     NipypeProcess,
     Pipeline,
-    PipelineNode,
     Process,
-    ProcessNode,
     get_process_instance,
 )
 from capsul.attributes.completion_engine import ProcessCompletionEngine
@@ -390,12 +387,12 @@ class PipelineManagerTab(QWidget):
 
             raise TypeError
 
-        if isinstance(node, (PipelineNode, Pipeline)):
+        if isinstance(node, Pipeline):
             # only leaf processes produce output data
             return
 
         process = node
-        if isinstance(node, ProcessNode):
+        if not isinstance(node, Pipeline):
             process = node.process
         if isinstance(process, Process):
             inputs = process.get_inputs()
@@ -1517,7 +1514,7 @@ class PipelineManagerTab(QWidget):
             for name, node in pipeline.nodes.items():
                 if name == "":
                     continue
-                if isinstance(node, ProcessNode):
+                if not isinstance(node, Pipeline):
                     return node.process
         return pipeline
 
@@ -2213,7 +2210,7 @@ class PipelineManagerTab(QWidget):
                 if hasattr(job, "process"):
                     node = job.process()
                     process = node
-                    if isinstance(node, ProcessNode):
+                    if not isinstance(node, Pipeline):
                         process = node.process
                     # trick to eliminate "ReduceJob" in jobs
                     # would it be better to test if process is a ReduceNode ?
@@ -2227,7 +2224,7 @@ class PipelineManagerTab(QWidget):
                         self.update_inheritance(job, node)
 
                         # Adding the brick to the bricks history
-                        if not isinstance(node, (PipelineNode, Pipeline)):
+                        if not isinstance(node, Pipeline):
                             # check if brick_id has already been assigned
                             brick_id = getattr(job, "uuid", None)
 
@@ -3262,7 +3259,7 @@ class PipelineManagerTab(QWidget):
         # print('update_auto_inheritance:', node.name)
 
         process = node
-        if isinstance(process, ProcessNode):
+        if not isinstance(process, Pipeline):
             process = process.process
 
         if not isinstance(process, Process) or isinstance(process, Pipeline):
@@ -3464,7 +3461,7 @@ class PipelineManagerTab(QWidget):
         if not new_inheritance_dict:
             process = node
 
-            if isinstance(process, ProcessNode):
+            if not isinstance(process, Pipeline):
                 process = process.process
             job.inheritance_dict = getattr(process, "inheritance_dict", {})
 

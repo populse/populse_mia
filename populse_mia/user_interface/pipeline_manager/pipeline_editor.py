@@ -25,19 +25,17 @@ Contains:
 
 import os
 import sys
-
 import six
 import yaml
 
 # Capsul imports
 from capsul.api import (
     Node,
-    PipelineNode,
+    Pipeline,
     Process,
     Switch,
     get_process_instance,
 )
-from capsul.pipeline.pipeline_nodes import ProcessNode
 from capsul.pipeline.python_export import save_py_pipeline
 from capsul.pipeline.xml import save_xml_pipeline
 from capsul.qt_gui.widgets.pipeline_developer_view import (
@@ -586,7 +584,7 @@ class PipelineEditor(PipelineDeveloperView):
         for node_name, node in pipeline.nodes.items():
             # Only if the node is a pipeline node ?
 
-            if node_name and isinstance(node, PipelineNode):
+            if node_name and isinstance(node, Pipeline):
                 sub_pipeline_process = node.process
 
                 # Reading the process configuration file
@@ -842,7 +840,7 @@ class PipelineEditor(PipelineDeveloperView):
         # For history
         process = node
 
-        if isinstance(process, ProcessNode):
+        if not isinstance(process, Pipeline):
             process = node.process
 
         history_maker = ["delete_process", node_name, process, links]
@@ -863,7 +861,7 @@ class PipelineEditor(PipelineDeveloperView):
         for node_name, node in pipeline.nodes.items():
             process = node
 
-            if isinstance(process, ProcessNode):
+            if not isinstance(process, Pipeline):
                 process = node.process
 
             if node_name != "":
