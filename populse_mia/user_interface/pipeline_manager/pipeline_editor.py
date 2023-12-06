@@ -25,17 +25,12 @@ Contains:
 
 import os
 import sys
+
 import six
 import yaml
 
 # Capsul imports
-from capsul.api import (
-    Node,
-    Pipeline,
-    Process,
-    Switch,
-    get_process_instance,
-)
+from capsul.api import Node, Pipeline, Process, Switch, get_process_instance
 from capsul.pipeline.python_export import save_py_pipeline
 from capsul.pipeline.xml import save_xml_pipeline
 from capsul.qt_gui.widgets.pipeline_developer_view import (
