@@ -2,16 +2,16 @@ environment:
 
   matrix:
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      PYTHON: "C:\\Python37-x64"
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      PYTHON: "C:\\Python39-x64"
 #      APPVEYOR_RDP_PASSWORD: 5fh'D*
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
-      PYTHON: "$HOME/venv3.7"
-#      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBPta1n4K1qUHAEoGUpBbH9cAppZggBnWA9TnK/UpKCUWZ433VYC2KX8Ji0IoUMTDsAhYR36/hdQYN9gjLiuR65uLb2r8ZacIriTPiW+Ba/y9pUBuc/SlBj15eRtpmL0DMqLlqTJ+D6B1ZTB4e8tXPYLMxHosEtAJclxZXWWTOByxVeXkdMX4fP7dtnCQUcusVqaO1s9yvWdnfLonuQbcY+x5N9X0gsrCgCyDmKtXaeY/8B5rOwmaD9HAeh6GSM+2sA3/cVIyGBAdIfeM1qaZsKjhAr6bbWpxfm+g0letRI2w7C0f4nW+ZNuPUeD3ZUgatTp8UPrhOyXmY3duyJfvptSgekacYqck3YDd8opNndkIoW2jz+rvIwkSzepWu+4O4V09KRvfhuxYi8lO5jSKfaGofm9ZKw+AUyB4Ma1Q1SsHWmVrH+CIdqup3XLG1Rp+edbL7aWkhfcn2zFHRbOdH4ibzmpTKApBzkzfAPAjERwbfVPpqJXMTHOu203hzswM= econdami@irmage-pteric
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
+      PYTHON: "$HOME/venv3.9"
+#      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCinsCtblP8Dlo0IyeE3chxy7Opt1nrrhLWQCUFJBtWr1EjtvZSme00z56yV2c0WWlhKyVUbz56w893WHTjvqgeZuezzGM1vdeD+fQDPBn3WhhOQHNmL2VxDo+f1CFE7ybT6epYPrvdz4B7MqORX8lIOIVVL82GclpDxnJkM7LzMWbOvJ7Gjf12Ob45Nx2ESZxHVv5Z9GeAmMyX2gHu3dlhJQoq6YQ0U/aqkFzfYLbEI5/H78Xmd2YzlxDnzNPB9xbjNqub1KTS+p3JhhSXJgWHeRn/kqwwkOdTnjG1yZoCWgSzCHsQx9oacYciY49Lo5falgIIw3ORJWgk/vjedxDFjBLgYj5NPzGcaxgzsFmMDWyynTSZyysb3HKbydODXV9i40dEnC9gfBQER0m9/cXPcxBK7oVZdZwrxXm0Ke3QGYtRLmh9N2lTUm51/IPBRaDH6/L1se4NgVuT2uytHEYN2t30r14CJhzJ2QGCoas8sxFS9Pt0BWzC4C1WQyZlDN0= econdami@irmage-pteric
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: macos
-      PYTHON: "~/venv3.7"
+    - APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+      PYTHON: "~/venv39"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdDYk1yZyk/W/2UtL1oBEDzX9Mk6YUXJKS3gTrZaK+ScAzPUkm7UlXwwpzSYZjKIkYzpi3WKSRKuDc7VRVk43hIhmwaIzcmpHAXtbgxAGRYembgz+kLDGtkhlP4i8n5GfNWvkkfbS0pu2w2dZQB7EGFFtopfvzBokKltjAYOnP89GCAo4MTfx6kmv1tpm1SDbCAGHJPuN+81B47+v0uGw3KG+AX+1ezPv1MCBQl5V2J4MI6vomyaHz6/UNBZ6rpsrZBYRljwWbyH5E5fqLdep/kO9sEuiXxTrCTLnUPSrR0+h0f8HlgWCaqxO+OUyDoQMI3xsUn4sMpoASi8jkDgd51vGbzkQHyjy2hYzjs47GAvLLtGfTJYQBVcfXEoZaKQUJhqjR7TUdY4bSBOxIPR9qlA9fLFwlQsC3++0m4roM/0SyoDVTz0I6lp1TsYRMKxEJSM90ewCAK8UnN6gEqmOz5ezOFpVsnpz4bZ7vCGaJa/6ODfOhEvl5bFUK40+GxSk= otavio@otavio-UX430UAR
 
 build: off
@@ -25,12 +25,12 @@ install:
 #  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
   - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  - sh: export PATH=~/venv3.7/bin:~/venv3.7/lib:$PATH
+  - sh: export PATH=~/venv3.9/bin:~/venv3.9/lib:$PATH
 
   - python --version
   - python -m pip install pip --upgrade
   - pip -V
-  - pip install setuptools --upgrade
+  - pip install --upgrade setuptools wheel
   - pip install cython --upgrade
   - pip install numpy
   - pip install freetype-py
@@ -40,38 +40,57 @@ install:
   - pip install qtconsole
   - pip install jupyter_core
 
-  - cmd: "pip install \"nibabel==4.0.2\""
-  - sh: pip3 install 'nibabel==4.0.2'
+#  - cmd: "pip install \"nibabel==4.0.2\""
+#  - sh: pip3 install 'nibabel==4.0.2'
+  - pip install nibabel
 
-  - cmd: "pip install \"traits==6.3.2\""
-  - sh: pip3 install 'traits==6.3.2'
+# - cmd: "pip install \"traits==6.3.2\""
+#  - sh: pip3 install 'traits==6.3.2'
+  - pip install traits
 
   - cmd: pip install pypiwin32
 
-  - cmd: "pip install \"matplotlib<3.6\""
-  - sh: pip3 install 'matplotlib<3.6'
+#  - cmd: "pip install \"matplotlib<3.6\""
+#  - sh: pip3 install 'matplotlib<3.6'
+  - pip install matplotlib
 
-  - cmd: "pip install \"scipy<1.5\""
-  - sh: pip3 install 'scipy<1.5'
+#  - cmd: "pip install \"scipy<1.5\""
+#  - sh: pip3 install 'scipy<1.5'
+  - pip install scipy
 
 # A patch to install dipy (mia_processes requirement) in Windows builds:
 # see https://ci.appveyor.com/project/populse/populse-mia/builds/47455621/job/kugl7p8afeu1lh07#L351
-  - cmd: pip install h5py
-  - cmd: pip install tqdm
-  - cmd: pip install -i https://pypi.anaconda.org/scipy-wheels-nightly/simple dipy
+#  - cmd: pip install h5py
+#  - cmd: pip install tqdm
+#  - cmd: pip install -i https://pypi.anaconda.org/scipy-wheels-nightly/simple dipy
+  - pip install dipy
 
-  - cmd: "pip install \"scikit-image==0.19.3\""
-  - sh: pip3 install 'scikit-image==0.19.3'
+# install nipy from source, seems to not work from pip install nipy
+#  - cmd: git clone --depth=50 --branch=main https://github.com/nipy/nipy.git C:\\projects\\nipy
+#  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=main https://github.com/nipy/nipy.git /home/appveyor/projects/nipy; fi
+#  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=main https://github.com/nipy/nipy.git /Users/appveyor/projects/nipy; fi
+#  - cd ../nipy
+#  - pip install .
+#  - cd ../populse-mia
+  - pip install nipy
+
+#  - cmd: "pip install \"scikit-image==0.19.3\""
+#  - sh: pip3 install 'scikit-image==0.19.3'
+  - pip install scikit-image
 
 # On April 12, 2023, Codecov removed the codecov package from PyPI
 #  - pip install codecov
 #  - pip install coverage
-  - pip install --upgrade --force-reinstall pyparsing==2.4.7
+
+#  - pip install --upgrade --force-reinstall pyparsing==2.4.7
+  - pip install pyparsing --upgrade
+
 # This is a patch to avoid the "AttributeError: 'PathMetadata' object has no attribute 'isdir'" observed since pip-22.0.2 (see for example UT for commit 50187200b6):
   - pip install capsul soma-workflow
 #  This is a patch to avoid the error: importlib-metadata 6.1.0 is installed but importlib-metadata<5.0.0,>=4.0.0 is required by {'rdflib'}
-  - cmd: "pip install \"importlib-metadata==4.13.0\""
-  - sh: pip3 install 'importlib-metadata==4.13.0'
+#  - cmd: "pip install \"importlib-metadata==4.13.0\""
+#  - sh: pip3 install 'importlib-metadata==4.13.0'
+
 # The execution of setup.py gives unpredictable results and since April 2023 leads to issues in requirements management
 #  - python setup.py install
   - pip install .
@@ -80,8 +99,9 @@ install:
   - echo y | pip uninstall PyQt5
   - echo y | pip uninstall PyQt5-sip
 
-  - cmd: "pip install \"PyQt5==5.9.2\""
-  - sh: pip3 install 'PyQt5==5.9.2'
+#  - cmd: "pip install \"PyQt5==5.9.2\""
+#  - sh: pip3 install 'PyQt5==5.9.2'
+  - pip install PyQt5
 
   # We want to use the last github version instead of the pypi version:
   - pip uninstall -y populse_db soma-base soma-workflow capsul mia_processes
