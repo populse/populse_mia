@@ -26,8 +26,8 @@ from functools import partial
 import sip
 
 # capsul imports
+from capsul.api import Pipeline
 from capsul.attributes.completion_engine import ProcessCompletionEngine
-from capsul.pipeline.pipeline_nodes import PipelineNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.qt_gui.widgets.attributed_process_widget import (
     AttributedProcessWidget,
@@ -767,7 +767,7 @@ class CapsulNodeController(QWidget):
         else:
             node.process.context_name = parent_node_name
 
-        if isinstance(node, PipelineNode):
+        if isinstance(node, Pipeline):
             for name, subnode in node.process.nodes.items():
                 if name == "":
                     continue
@@ -1492,7 +1492,7 @@ class NodeController(QWidget):
         else:
             node.process.context_name = parent_node_name
 
-        if isinstance(node, PipelineNode):
+        if isinstance(node, Pipeline):
             for name, subnode in node.process.nodes.items():
                 if name == "":
                     continue

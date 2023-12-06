@@ -35,7 +35,6 @@ from capsul.attributes.completion_engine import (
 from capsul.attributes.completion_engine_factory import (
     BuiltinProcessCompletionEngineFactory,
 )
-from capsul.pipeline.pipeline_nodes import ProcessNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
 
@@ -143,7 +142,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         # re-route to underlying fallback engine
         attributes = self.fallback_engine.get_attribute_values()
         process = self.process
-        if isinstance(process, ProcessNode):
+        if not isinstance(process, Pipeline):
             process = process.process
         if not isinstance(process, Process):
             return attributes
@@ -371,7 +370,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         self.complete_attributes_with_database(process_inputs)
         in_process = get_ref(self.process)
 
-        if isinstance(in_process, ProcessNode):
+        if not isinstance(in_process, Pipeline):
             in_process = in_process.process
 
         # nipype special case -- output_directory is set from MIA project
@@ -601,7 +600,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         node = get_ref(self.process)
         process = node
 
-        if isinstance(node, ProcessNode):
+        if not isinstance(node, Pipeline):
             process = node.process
 
             is_plugged = {
@@ -678,7 +677,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         project = None
 
-        if isinstance(process, ProcessNode):
+        if not isinstance(process, Pipeline):
             process = process.process
 
         if hasattr(process, "get_study_config"):
@@ -787,7 +786,7 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
         # iteration
         in_process = process
 
-        if isinstance(process, ProcessNode):
+        if not isinstance(process, Pipeline):
             in_process = process.process
 
         if isinstance(in_process, ProcessIteration):
