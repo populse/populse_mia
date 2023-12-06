@@ -19,10 +19,10 @@ populse_db and some of its methods
 ##########################################################################
 
 # Populse_db imports
+from populse_db import Database
 from populse_db.database import (
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_STRING,
-    Database,
     DatabaseSession,
 )
 
