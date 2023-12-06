@@ -2722,7 +2722,7 @@ class ProcessLibrary(QTreeView):
 
         if event.key() == QtCore.Qt.Key_Delete and not config.get_user_mode():
             for idx in self.selectedIndexes():
-                if idx.isValid:
+                if idx.isValid():
                     idx = idx.sibling(idx.row(), 0)
                     node = idx.internalPointer()
 
