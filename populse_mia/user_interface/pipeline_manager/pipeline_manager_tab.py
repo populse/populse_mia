@@ -27,24 +27,20 @@ import io
 import json
 import math
 import os
-import six
 import sys
 import threading
 import time
 import traceback
 import uuid
 
+import six
+
 # Soma_workflow import
 import soma_workflow.constants as swconstants
 import traits.api as traits
 
 # Capsul imports
-from capsul.api import (
-    NipypeProcess,
-    Pipeline,
-    Process,
-    get_process_instance,
-)
+from capsul.api import NipypeProcess, Pipeline, Process, get_process_instance
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.engine import WorkflowExecutionError
 from capsul.pipeline import pipeline_tools

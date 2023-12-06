@@ -58,7 +58,7 @@ from functools import partial
 import yaml
 
 # Capsul imports
-from capsul.api import capsul_engine, Pipeline
+from capsul.api import Pipeline, capsul_engine
 from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
