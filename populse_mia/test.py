@@ -7459,6 +7459,12 @@ class TestMIAOthers(TestMIACase):
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
+        ppl_manager.processLibrary.process_config = {}
+        ppl_manager.processLibrary.packages = {
+            "User_processes": {"Tests": "process_enabled"}
+        }
+        ppl_manager.processLibrary.paths = []
+        ppl_manager.processLibrary.save_config()
         proc_lib = ppl_manager.processLibrary.process_library
 
         # Switches to pipeline manager
