@@ -156,7 +156,7 @@ test_script:
   - sh: if [[ $(uname -s) == Linux ]]; then if [ -z $XDG_RUNTIME_DIR ]; then export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"; if [ ! -d "/tmp/runtime-$(id -un)" ]; then mkdir "/tmp/runtime-$(id -un)"; chmod 0700 "/tmp/runtime-$(id -un)"; fi; fi; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python3 ./populse_mia/test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./populse_mia/test.py -v; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then coverage xml; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then coverage xml -i; fi
 
 
 after_test:
