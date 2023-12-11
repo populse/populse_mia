@@ -29,6 +29,13 @@ omit = [
     "processes/*"
 ]
 
+[tool.coverage.xml]
+omit = [
+    "populse_mia/user_interface/data_viewer/anatomist_2/*",
+    "populse_mia/user_interface/data_viewer/anatomist/*",
+    "processes/*",
+    "/tmp/*"
+]
 [tool.interrogate]
 ignore-init-method = true
 ignore-init-module = false

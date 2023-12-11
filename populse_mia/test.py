@@ -446,39 +446,39 @@ class TestMIACase(unittest.TestCase):
             item.setText(value)
             w.update_table_values(True)
 
-    def execute_QDialogAccept(self):
-        """Accept (close) a QDialog window.
+    # def execute_QDialogAccept(self):
+    #     """Accept (close) a QDialog window.
+    #
+    #     Currently, this method is not used.
+    #     """
+    #
+    #     w = QApplication.activeWindow()
+    #
+    #     if isinstance(w, QDialog):
+    #         w.accept()
 
-        Currently, this method is not used.
-        """
+    # def execute_QDialogClose(self):
+    #     """Close a QDialog window.
+    #
+    #     Currently, this method is not used.
+    #     """
+    #
+    #     w = QApplication.activeWindow()
+    #
+    #     if isinstance(w, QDialog):
+    #         w.close()
 
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.accept()
-
-    def execute_QDialogClose(self):
-        """Close a QDialog window.
-
-        Currently, this method is not used.
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QDialog):
-            w.close()
-
-    def execute_QMessageBox_clickClose(self):
-        """Press the Close button of a QMessageBox instance.
-
-        Currently, this method is not used.
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Close)
-            QTest.mouseClick(close_button, Qt.LeftButton)
+    # def execute_QMessageBox_clickClose(self):
+    #     """Press the Close button of a QMessageBox instance.
+    #
+    #     Currently, this method is not used.
+    #     """
+    #
+    #     w = QApplication.activeWindow()
+    #
+    #     if isinstance(w, QMessageBox):
+    #         close_button = w.button(QMessageBox.Close)
+    #         QTest.mouseClick(close_button, Qt.LeftButton)
 
     def execute_QMessageBox_clickOk(self):
         """Press the Ok button of a QMessageBox instance."""
@@ -489,17 +489,17 @@ class TestMIACase(unittest.TestCase):
             close_button = w.button(QMessageBox.Ok)
             QTest.mouseClick(close_button, Qt.LeftButton)
 
-    def execute_QMessageBox_clickYes(self):
-        """Press the Yes button of a QMessageBox instance.
-
-        Currently, this method is not used.
-        """
-
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Yes)
-            QTest.mouseClick(close_button, Qt.LeftButton)
+    # def execute_QMessageBox_clickYes(self):
+    #     """Press the Yes button of a QMessageBox instance.
+    #
+    #     Currently, this method is not used.
+    #     """
+    #
+    #     w = QApplication.activeWindow()
+    #
+    #     if isinstance(w, QMessageBox):
+    #         close_button = w.button(QMessageBox.Yes)
+    #         QTest.mouseClick(close_button, Qt.LeftButton)
 
     def find_item_by_data(
         self, q_tree_view: QTreeView, data: str
@@ -526,7 +526,7 @@ class TestMIACase(unittest.TestCase):
         :param light: True to copy a project with few documents (bool)
         """
 
-        new_test_proj = os.path.join(self.properties_path, name)
+        new_test_proj = os.path.join(self.project_path, name)
 
         if os.path.exists(new_test_proj):
             shutil.rmtree(new_test_proj)
@@ -683,6 +683,9 @@ class TestMIACase(unittest.TestCase):
         cls.properties_path = os.path.join(
             tempfile.mkdtemp(prefix="mia_tests"), "dev"
         )
+        cls.project_path = os.path.join(
+            tempfile.mkdtemp(prefix="mia_project"), "project"
+        )
         # hack the Config class to get properties path, because some Config
         # instances are created out of our control in the code
         Config.properties_path = cls.properties_path
@@ -766,6 +769,9 @@ class TestMIACase(unittest.TestCase):
 
         if os.path.exists(cls.properties_path):
             shutil.rmtree(cls.properties_path)
+
+        if os.path.exists(cls.project_path):
+            shutil.rmtree(cls.project_path)
 
 
 class TestMIADataBrowser(TestMIACase):
@@ -1606,10 +1612,10 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(config.get_max_projects(), 7)
         config.set_max_projects(5)
 
-        properties_path = os.path.join(
+        config_path = os.path.join(
             config.get_properties_path(), "properties", "config.yml"
         )
-        self.assertEqual(os.path.exists(properties_path), True)
+        self.assertEqual(os.path.exists(config_path), True)
 
         self.assertEqual(config.get_user_mode(), True)
         config.set_user_mode(False)
@@ -4693,9 +4699,10 @@ class TestMIAMainWindow(TestMIACase):
 
         print()
 
-    @unittest.skipUnless(sys.platform.startswith("linux"), "requires linux")
+    @unittest.skip("Not currently available on all the platforms")
+    # @unittest.skipUnless(sys.platform.startswith("linux"), "requires linux")
     def test_open_shell(self):
-        """Opens a Qt console and kill it afterwards.
+        """Opens a Qt console and kill it afterward.
 
         -Tests: MainWindow.open_shell
 
@@ -4743,6 +4750,7 @@ class TestMIAMainWindow(TestMIACase):
         - Mocks:
             - QMessageBox.exec
             - QMessageBox.exec_
+            - QFileDialog.exec_
         """
 
         PKG = "nipype.interfaces.DataGrabber"
@@ -4770,7 +4778,7 @@ class TestMIAMainWindow(TestMIACase):
         ).widget().clicked.emit()
 
         # Open a browser to select a package
-        # QFileDialog.exec_ = lambda x: True
+        QFileDialog.exec_ = lambda x: True
         # proc_lib_view.pkg_library.browse_package()
 
         # Fill in the line edit to "PKG" then click on the add package button
