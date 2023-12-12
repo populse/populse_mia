@@ -33,7 +33,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
-import threading
+
+# import threading
 import unittest
 import uuid
 from datetime import datetime
@@ -66,6 +67,7 @@ from PyQt5.QtCore import (
     QPoint,
     Qt,
     QThread,
+    QTimer,
 )
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (
@@ -1726,6 +1728,8 @@ class TestMIADataBrowser(TestMIACase):
             tag_name,
         )
         mod.update_table_values(True)
+        mod.deleteLater()
+        del mod
         new_value = self.main_window.project.session.get_value(
             COLLECTION_CURRENT, scans_displayed[0], "FOV"
         )
@@ -1747,6 +1751,8 @@ class TestMIADataBrowser(TestMIACase):
             COLLECTION_CURRENT, scans_displayed[0], "FOV"
         )
         self.assertEqual(mod.table.columnCount(), 2)
+        mod.deleteLater()
+        del mod
         self.assertEqual(value, new_value)
 
     def test_multiple_sort(self):
@@ -2598,9 +2604,10 @@ class TestMIADataBrowser(TestMIACase):
 
         # Change the value
         item.setSelected(True)
-        threading.Timer(
-            2, partial(self.edit_databrowser_list, "25000")
-        ).start()
+        # threading.Timer(
+        #     2, partial(self.edit_databrowser_list, "25000")
+        # ).start()
+        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "25000"))
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # Check again the equality between DataBrowser and db
@@ -2783,9 +2790,10 @@ class TestMIADataBrowser(TestMIACase):
         item3.setSelected(True)
 
         # Change the value to [70000] for the third and second documents
-        threading.Timer(
-            2, partial(self.edit_databrowser_list, "70000")
-        ).start()
+        # threading.Timer(
+        #     2, partial(self.edit_databrowser_list, "70000")
+        # ).start()
+        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "70000"))
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # Second document; values in the db
@@ -3173,9 +3181,10 @@ class TestMIADataBrowser(TestMIACase):
 
         # Change the value
         item.setSelected(True)
-        threading.Timer(
-            2, partial(self.edit_databrowser_list, "25000")
-        ).start()
+        # threading.Timer(
+        #     2, partial(self.edit_databrowser_list, "25000")
+        # ).start()
+        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "25000"))
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # Check if value was changed in db and DataBrowser
@@ -3559,7 +3568,9 @@ class TestMIADataBrowser(TestMIACase):
 
         # Change the value
         bw_item.setSelected(True)
-        threading.Timer(2, partial(self.edit_databrowser_list, "0.0")).start()
+        # threading.Timer(2,
+        #                 partial(self.edit_databrowser_list, "0.0")).start()
+        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "0.0"))
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # Check undos and redos have the right values.
