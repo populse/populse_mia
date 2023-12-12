@@ -163,7 +163,7 @@ after_test:
 #  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then curl -Os https://uploader.codecov.io/latest/linux/codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then chmod +x codecov; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -t ${CODECOV_TOKEN}; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "da09d9b5-de99-476e-a0ba-81c772e65afb"; fi
 
 notifications:
   - provider: Email
