@@ -1770,9 +1770,11 @@ class TableDataBrowser(QTableWidget):
                 self.popup = ModifyTable(
                     self.project, value, self.types, self.scans_list, self.tags
                 )
-                self.popup.show()
+                # self.popup.show()
+
                 if self.popup.exec_():
-                    pass
+                    self.popup.deleteLater()
+                    del self.popup
 
                 # For history
                 history_maker = []
