@@ -40,23 +40,12 @@ install:
   - pip install psutil
   - pip install qtconsole
   - pip install jupyter_core
-
-#  - cmd: "pip install \"nibabel==4.0.2\""
-#  - sh: pip3 install 'nibabel==4.0.2'
   - pip install nibabel
-
-# - cmd: "pip install \"traits==6.3.2\""
-#  - sh: pip3 install 'traits==6.3.2'
   - pip install traits
 
   - cmd: pip install pypiwin32
 
-#  - cmd: "pip install \"matplotlib<3.6\""
-#  - sh: pip3 install 'matplotlib<3.6'
   - pip install matplotlib
-
-#  - cmd: "pip install \"scipy<1.5\""
-#  - sh: pip3 install 'scipy<1.5'
   - pip install scipy
 
 # A patch to install dipy (mia_processes requirement) in Windows builds:
@@ -74,34 +63,17 @@ install:
 #  - pip install .
 #  - cd ../populse-mia
   - pip install nipy
-
-#  - cmd: "pip install \"scikit-image==0.19.3\""
-#  - sh: pip3 install 'scikit-image==0.19.3'
   - pip install scikit-image
-
-# On April 12, 2023, Codecov removed the codecov package from PyPI
-#  - pip install codecov
-#  - pip install coverage
-
-#  - pip install --upgrade --force-reinstall pyparsing==2.4.7
   - pip install pyparsing --upgrade
 
 # This is a patch to avoid the "AttributeError: 'PathMetadata' object has no attribute 'isdir'" observed since pip-22.0.2 (see for example UT for commit 50187200b6):
   - pip install capsul soma-workflow
-#  This is a patch to avoid the error: importlib-metadata 6.1.0 is installed but importlib-metadata<5.0.0,>=4.0.0 is required by {'rdflib'}
-#  - cmd: "pip install \"importlib-metadata==4.13.0\""
-#  - sh: pip3 install 'importlib-metadata==4.13.0'
 
-# The execution of setup.py gives unpredictable results and since April 2023 leads to issues in requirements management
-#  - python setup.py install
   - pip install .
   - git lfs install
   - git lfs pull
   - echo y | pip uninstall PyQt5
   - echo y | pip uninstall PyQt5-sip
-
-#  - cmd: "pip install \"PyQt5==5.9.2\""
-#  - sh: pip3 install 'PyQt5==5.9.2'
   - pip install PyQt5
 
   # We want to use the last github versions instead of the pypi version:
