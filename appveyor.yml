@@ -26,6 +26,7 @@ install:
 
   - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - sh: export PATH=~/venv3.9/bin:~/venv3.9/lib:$PATH
+  - sh: if [[ $(uname -s) == Linux ]]; then export QT_LOGGING_RULES='*.debug=false;qt.qpa.*=false'; fi
 
   - python --version
   - python -m pip install pip --upgrade
