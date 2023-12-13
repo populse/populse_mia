@@ -45,4 +45,13 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 # for details.
 ###############################################################################
 
-from .info import __version__  # noqa: F401
+# from .info import __version__  # noqa: F401
+import importlib.metadata
+
+try:
+    __version__ = importlib.metadata.__version__ = importlib.metadata.version(
+        "populse_mia"
+    )
+
+except importlib.metadata.PackageNotFoundError:
+    __version__ = None
