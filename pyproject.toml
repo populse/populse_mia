@@ -1,3 +1,58 @@
+[project]
+name = "populse_mia"
+version = "2.4.1"
+authors = [
+    {name = "Populse team", email = "populse-support@univ-grenoble-alpes.fr"},
+]
+description = "populse_mia"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "CeCILL-B"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "capsul",
+    "cryptography",
+    "jinja2 == 2.8.1",
+    "lark-parser >= 0.7.0",
+    "matplotlib",
+    "mia-processes >= 2.3.0",
+    "nibabel",
+    "nipype",
+    "pillow",
+    "populse-db >= 2.2.0",
+    "pre-commit",
+    "pyqt5",
+    "python-dateutil",
+    "pyyaml",
+    "scikit-image",
+    "scipy",
+    "snakeviz",
+    "soma_workflow",
+    "six >= 1.13",
+    "traits",
+]
+
+[project.optional-dependencies]
+doc = [
+    "sphinx >=1.0",
+]
+
+[project.urls]
+homepage = "http://populse.github.io/populse_mia/"
+repository = "https://github.com/populse/populse_mia"
+
 [tool.black]
 line-length = 79
 include = '\.pyi?$'
