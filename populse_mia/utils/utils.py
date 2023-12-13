@@ -1420,13 +1420,20 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
         )
 
 
-def verify_setup(dev_mode, pypath=[]):
+def verify_setup(
+    dev_mode,
+    pypath=[],
+    dot_mia_config=os.path.join(
+        os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
+    ),
+):
     """check whether the configuration is valid and try to correct it
     if it is not.
 
     :param dev_mode: the current developer mode (bool).
                      (if True: dev, if False: user)
     :param pypath: a list of path for the capsul config (list)
+    :dot_mia_config: the path to the configuration_path.yml file
 
     :Contains:
     :Private function:
@@ -1718,7 +1725,7 @@ def verify_setup(dev_mode, pypath=[]):
             for k in key_to_del:
                 del mia_home_properties_path[k]
 
-            print("\nNew values in ~/.populse_mia/configuration_path.yml: ")
+            print("\nNew values in {}: ".format(dot_mia_config))
 
             for key, value in mia_home_properties_path_new.items():
                 print("- {0}: {1}".format(key, value))
@@ -1793,9 +1800,9 @@ def verify_setup(dev_mode, pypath=[]):
 
     # The directory in which the configuration is located must be
     # declared in ~/.populse_mia/configuration_path.yml
-    dot_mia_config = os.path.join(
-        os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
-    )
+    # dot_mia_config = os.path.join(
+    #     os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
+    # )
 
     # ~/.populse_mia/configuration_path.yml management/initialisation
     if not os.path.exists(os.path.dirname(dot_mia_config)):
