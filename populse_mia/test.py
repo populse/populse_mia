@@ -280,7 +280,11 @@ from populse_mia.user_interface.pop_ups import (  # noqa: E402
     PopUpSelectTag,
     PopUpSelectTagCountTable,
 )
-from populse_mia.utils import check_value_type, table_to_database  # noqa: E402
+from populse_mia.utils import (  # noqa: E402
+    check_value_type,
+    table_to_database,
+    verify_setup,
+)
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -448,16 +452,13 @@ class TestMIACase(unittest.TestCase):
             item.setText(value)
             w.update_table_values(True)
 
-    # def execute_QDialogAccept(self):
-    #     """Accept (close) a QDialog window.
-    #
-    #     Currently, this method is not used.
-    #     """
-    #
-    #     w = QApplication.activeWindow()
-    #
-    #     if isinstance(w, QDialog):
-    #         w.accept()
+    def execute_QDialogAccept(self):
+        """Accept (close) a QDialog window."""
+
+        w = QApplication.activeWindow()
+
+        if isinstance(w, QDialog):
+            w.accept()
 
     # def execute_QDialogClose(self):
     #     """Close a QDialog window.
@@ -7547,6 +7548,18 @@ class TestMIAOthers(TestMIACase):
         QMenu.exec_ = lambda *args: proc_lib.action_delete
 
         proc_lib.mousePressEvent(mouse_event)
+
+    def test_verify_setup(self):
+        """check that Mia's configuration control is working correctly.
+
+        - Tests: utils.verify_setup()
+        """
+        dot_mia_config = os.path.join(
+            os.path.dirname(self.properties_path), "configuration_path.yml"
+        )
+
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
 
 
 class TestMIAPipelineEditor(TestMIACase):
