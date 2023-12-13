@@ -579,7 +579,7 @@ class PopulseUndefinedControlWidget(object):
         control_instance,
         reset_invalid_value,
         *args,
-        **kwargs
+        **kwargs,
     ):
         """Update one element of the controller.
 

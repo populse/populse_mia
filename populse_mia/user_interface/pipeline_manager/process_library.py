@@ -1996,7 +1996,7 @@ class PackageLibraryDialog(QDialog):
                 path = os.path.join(
                     config.get_properties_path(),
                     "processes",
-                    *pkg_list[0:index]
+                    *pkg_list[0:index],
                 )
                 sub_deleted_packages = self.delete_package(
                     index + 1,
@@ -2071,7 +2071,7 @@ class PackageLibraryDialog(QDialog):
                         config.get_properties_path(),
                         "processes",
                         *pkg_list[: index - 1],
-                        "__init__.py"
+                        "__init__.py",
                     )
 
                     if os.path.isfile(init):
