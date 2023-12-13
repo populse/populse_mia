@@ -240,10 +240,10 @@ def check_python_version():
     Returns an AssertionError exception if the version is lower than 3.5.
     """
 
-    if sys.version_info[:2] < (3, 5):
+    if sys.version_info[:2] < (3, 9):
         raise AssertionError(
             "Mia is ensured to work only with Python "
-            ">= 3.5 (the version of Python used is "
+            ">= 3.9 (the version of Python used is "
             "{}).".format(".".join((str(x) for x in sys.version_info[:2])))
         )
 
