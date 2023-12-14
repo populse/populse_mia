@@ -24,7 +24,7 @@ classifiers = [
 dependencies = [
     "capsul",
     "cryptography",
-    "jinja2 == 2.8.1",
+    "jinja2 == 2.11.3",
     "lark-parser >= 0.7.0",
     "matplotlib",
     "mia-processes >= 2.3.0",
