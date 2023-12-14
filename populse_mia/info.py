@@ -132,8 +132,6 @@ PLATFORMS = "OS Independent"
 REQUIRES = [
     "capsul",
     "cryptography",
-    "jinja2 == 2.8.1",
-    "lark-parser >= 0.7.0, < 1.0.0",
     "matplotlib",
     "mia-processes >= 2.3.0",
     "nibabel",
@@ -149,8 +147,7 @@ REQUIRES = [
     "snakeviz",
     "soma_workflow",
     "six >= 1.13",
-    "traits",  # Remove '==5.2.0' when capsul get a new release
-    # (> 2.2.1)
+    "traits",
 ]
 
 EXTRA_REQUIRES = {
