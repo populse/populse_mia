@@ -22,8 +22,8 @@ import sys
 # Current version
 version_major = 2
 version_minor = 5
-version_micro = 0
-version_extra = ""  # leave empty for release
+version_micro = 1
+version_extra = "dev"  # leave empty for release
 # version_extra = ""
 
 # Expected by setup.py: string of form "X.Y.Z"
