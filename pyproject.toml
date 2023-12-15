@@ -1,6 +1,6 @@
 [project]
 name = "populse_mia"
-version = "2.4.1"
+version = "2.5.0"
 authors = [
     {name = "Populse team", email = "populse-support@univ-grenoble-alpes.fr"},
 ]
@@ -22,16 +22,14 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "capsul",
+    "capsul >= 2.5.0, < 3.0.0",
     "cryptography",
-    "jinja2 == 2.8.1",
-    "lark-parser >= 0.7.0",
     "matplotlib",
-    "mia-processes >= 2.3.0",
+    "mia-processes >= 2.5.0, < 3.0.0",
     "nibabel",
     "nipype",
     "pillow",
-    "populse-db >= 2.2.0",
+    "populse-db >= 2.5.0, < 3.0.0",
     "pre-commit",
     "pyqt5",
     "python-dateutil",
@@ -39,7 +37,8 @@ dependencies = [
     "scikit-image",
     "scipy",
     "snakeviz",
-    "soma_workflow",
+    "soma-base >= 5.2.0, < 6.0.0",
+    "soma-workflow >= 3.3.0",
     "six >= 1.13",
     "traits",
 ]
