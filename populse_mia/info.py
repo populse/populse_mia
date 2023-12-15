@@ -21,9 +21,9 @@ import sys
 
 # Current version
 version_major = 2
-version_minor = 4
-version_micro = 1
-version_extra = "dev"  # leave empty for release
+version_minor = 5
+version_micro = 0
+version_extra = ""  # leave empty for release
 # version_extra = ""
 
 # Expected by setup.py: string of form "X.Y.Z"
@@ -95,10 +95,9 @@ CLASSIFIERS = [
     "Logiciel Libre License, version 2.1 (CeCILL-2.1)",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.5",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Scientific/Engineering",
     "Topic :: Utilities",
@@ -130,14 +129,14 @@ CLASSIFIERS = CLASSIFIERS
 PLATFORMS = "OS Independent"
 
 REQUIRES = [
-    "capsul",
+    "capsul >= 2.5.0, < 3.0.0",
     "cryptography",
     "matplotlib",
-    "mia-processes >= 2.3.0",
+    "mia-processes >= 2.5.0, < 3.0.0",
     "nibabel",
     "nipype",
     "pillow",
-    "populse-db >= 2.2.0",
+    "populse-db >= 2.5.0, < 3.0.0",
     "pre-commit",
     "pyqt5",
     "python-dateutil",
@@ -145,7 +144,8 @@ REQUIRES = [
     "scikit-image",
     "scipy",
     "snakeviz",
-    "soma_workflow",
+    "soma-base >= 5.2.0, < 6.0.0",
+    "soma-workflow >= 3.3.0",
     "six >= 1.13",
     "traits",
 ]
