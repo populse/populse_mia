@@ -60,30 +60,29 @@ If you'd like to contribute to the project please read our [developer documentat
 
 # Requirements
 
-* capsul
-* lark-parser
+* capsul >= 2.5.0, < 3.0.0
+* cryptography
 * matplotlib
-* mia-processes
+* mia-processes >= 2.5.0, < 3.0.0
 * nibabel
 * nipype
 * pillow
-* populse-db
+* populse-db >= 2.5.0, < 3.0.0
+* pre-commit
 * pyqt5
 * python-dateutil
 * pyyaml
 * scikit-image
 * scipy
-* SIP
 * snakeviz
-* soma_workflow
+* soma-base >= 5.2.0, < 6.0.0
+* soma-workflow >= 3.3.0
+* six >= 1.13
 * traits
 
 # Other packages used
 
-* copy
-* os
-* six
-* tempfile
+* sphinx
 * unittest
 
 # License
