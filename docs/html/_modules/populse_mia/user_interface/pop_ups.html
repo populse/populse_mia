@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 2.5.1-dev+53a60969 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=e491ac2d" />
-    <script src="../../../_static/documentation_options.js?v=2d69834f"></script>
+    <script src="../../../_static/documentation_options.js?v=8f6e2028"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
+          <span>populse_mia 2.5.1-dev+53a60969 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -179,8 +179,6 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser</span> <span class="kn">import</span> <span class="n">data_browser</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="n">check_value_type</span><span class="p">,</span> <span class="n">verCmp</span>
 
 
 <div class="viewcode-block" id="ClickableLabel">
@@ -875,6 +873,8 @@
 <span class="sd">        to the data browser.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import check_value_type only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">check_value_type</span>
 
         <span class="n">name_already_exists</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -2112,12 +2112,16 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.&quot;&quot;&quot;</span>
 
+        <span class="c1"># import set_projects_directory_as_default only here to prevent</span>
+        <span class="c1"># circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_projects_directory_as_default</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setLabelText</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">Accept</span><span class="p">,</span> <span class="s2">&quot;Create&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setAcceptMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">AcceptSave</span><span class="p">)</span>
 
         <span class="c1"># Setting the projects directory as default</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PopUpNewProject.get_filename">
@@ -2129,6 +2133,9 @@
 <span class="sd">        :return: real file name</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import message_already_exists only here to prevent</span>
+        <span class="c1"># circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">message_already_exists</span>
 
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">file_name</span><span class="p">:</span>
@@ -2142,7 +2149,7 @@
                 <span class="c1"># A signal is emitted to tell that the project has been created</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">signal_create_project</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">utils</span><span class="o">.</span><span class="n">message_already_exists</span><span class="p">()</span>
+                <span class="n">message_already_exists</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">file_name</span></div>
 </div>
@@ -2167,13 +2174,17 @@
 <div class="viewcode-block" id="PopUpOpenProject.__init__">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpOpenProject.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># import set_projects_directory_as_default only here to prevent</span>
+        <span class="c1"># circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_projects_directory_as_default</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">DontUseNativeDialog</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">Directory</span><span class="p">)</span>
 
         <span class="c1"># Setting the projects directory as default</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="n">set_projects_directory_as_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PopUpOpenProject.get_filename">
@@ -2184,6 +2195,9 @@
 <span class="sd">        :param file_name_tuple: tuple obtained with the selectedFiles method</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import message_already_exists only here to prevent</span>
+        <span class="c1"># circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">message_already_exists</span>
 
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -2198,7 +2212,7 @@
                 <span class="c1"># A signal is emitted to tell that the project has been created</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">signal_create_project</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">utils</span><span class="o">.</span><span class="n">message_already_exists</span><span class="p">()</span></div>
+                <span class="n">message_already_exists</span><span class="p">()</span></div>
 </div>
 
 
@@ -3295,11 +3309,17 @@
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_config_file">[docs]</a>
     <span class="k">def</span> <span class="nf">edit_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a window to view, edit the mia configuration file.&quot;&quot;&quot;</span>
+
+        <span class="c1"># import verCmp only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">verCmp</span>
+
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span> <span class="o">=</span> <span class="n">QDialog</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_config_path</span><span class="p">(),</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span>
+            <span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">editConf</span><span class="o">.</span><span class="n">txt</span> <span class="o">=</span> <span class="n">QPlainTextEdit</span><span class="p">()</span>
         <span class="n">stream</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
@@ -5528,6 +5548,10 @@
 <span class="sd">        :return: new project&#39;s file name</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import message_already_exists only here to prevent circular</span>
+        <span class="c1"># import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">message_already_exists</span>
+
         <span class="n">file_name_tuple</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_name_tuple</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -5553,7 +5577,7 @@
                     <span class="k">return</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_user_mode</span><span class="p">():</span>
-                        <span class="n">utils</span><span class="o">.</span><span class="n">message_already_exists</span><span class="p">()</span>
+                        <span class="n">message_already_exists</span><span class="p">()</span>
                         <span class="k">return</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">msgtext</span> <span class="o">=</span> <span class="p">(</span>
@@ -6980,7 +7004,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

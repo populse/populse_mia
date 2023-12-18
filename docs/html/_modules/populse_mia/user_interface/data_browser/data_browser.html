@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.4.1-dev+34aa5fbd documentation</title>
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 2.5.1-dev+53a60969 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=e491ac2d" />
-    <script src="../../../../_static/documentation_options.js?v=2d69834f"></script>
+    <script src="../../../../_static/documentation_options.js?v=8f6e2028"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.4.1-dev+34aa5fbd documentation</span></a></h1>
+          <span>populse_mia 2.5.1-dev+53a60969 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -142,11 +142,13 @@
     <span class="n">PopUpSelectFilter</span><span class="p">,</span>
     <span class="n">PopUpShowHistory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils.utils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">check_value_type</span><span class="p">,</span>
-    <span class="n">set_item_data</span><span class="p">,</span>
-    <span class="n">table_to_database</span><span class="p">,</span>
-<span class="p">)</span>
+
+<span class="c1"># from populse_mia.utils.utils import (</span>
+<span class="c1">#     check_value_type,</span>
+<span class="c1">#     set_item_data,</span>
+<span class="c1">#     table_to_database,</span>
+<span class="c1"># )</span>
+
 
 <span class="c1"># Variable shown everywhere when no value for the tag</span>
 <span class="n">not_defined_value</span> <span class="o">=</span> <span class="s2">&quot;*Not Defined*&quot;</span>
@@ -266,6 +268,8 @@
 <span class="sd">        :param new_tag_description: New tag description</span>
 <span class="sd">        :param new_tag_unit: New tag unit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import table_to_database only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">table_to_database</span>
 
         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1078,6 +1082,8 @@
 <span class="sd">        :param column: index of the column to add</span>
 <span class="sd">        :param tag: tag name to add</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
@@ -1142,6 +1148,9 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_columns">[docs]</a>
     <span class="k">def</span> <span class="nf">add_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add columns.&quot;&quot;&quot;</span>
+
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
@@ -1274,10 +1283,11 @@
 <span class="sd">        :param rows: list of all scans</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">setSortingEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">itemSelectionChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
         <span class="n">cells_number</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()</span>
@@ -1405,6 +1415,13 @@
 
 <span class="sd">        :param item_origin: item from where the call comes from</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import check_value_type and table_to_database only here to prevent</span>
+        <span class="c1"># circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="p">(</span>
+            <span class="n">check_value_type</span><span class="p">,</span>
+            <span class="n">set_item_data</span><span class="p">,</span>
+            <span class="n">table_to_database</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
         <span class="n">new_value</span> <span class="o">=</span> <span class="n">item_origin</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">)</span>
@@ -1571,6 +1588,8 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.clear_cell">[docs]</a>
     <span class="k">def</span> <span class="nf">clear_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the selected cells.&quot;&quot;&quot;</span>
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1816,6 +1835,9 @@
     <span class="k">def</span> <span class="nf">edit_table_data_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Change values in DataBrowser&quot;&quot;&quot;</span>
 
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">setMouseTracking</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Coordinates of selected cells stored</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_database_values</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Old database values stored</span>
@@ -1910,9 +1932,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">popup</span> <span class="o">=</span> <span class="n">ModifyTable</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span>
                 <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">popup</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+                <span class="c1"># self.popup.show()</span>
+
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">popup</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
-                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">popup</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">popup</span>
 
                 <span class="c1"># For history</span>
                 <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1975,6 +1999,9 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.fill_cells_update_table">[docs]</a>
     <span class="k">def</span> <span class="nf">fill_cells_update_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize and fill the cells of the table.&quot;&quot;&quot;</span>
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
+
         <span class="n">cells_number</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
         <span class="p">)</span>
@@ -2303,6 +2330,8 @@
 <span class="sd">        :param list_tags: list of the tags on which to sort the documents</span>
 <span class="sd">        :param order: &quot;Ascending&quot; or &quot;Descending&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
         <span class="n">list_tags_name</span> <span class="o">=</span> <span class="n">list_tags</span>
@@ -2587,6 +2616,8 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_cell">[docs]</a>
     <span class="k">def</span> <span class="nf">reset_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the selected cells to their original values.&quot;&quot;&quot;</span>
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2649,6 +2680,9 @@
     <span class="k">def</span> <span class="nf">reset_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the selected columns to their original values.&quot;&quot;&quot;</span>
 
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
+
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">history_maker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;modified_values&quot;</span><span class="p">)</span>
@@ -2709,6 +2743,8 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_row">[docs]</a>
     <span class="k">def</span> <span class="nf">reset_row</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the selected rows to their original values.&quot;&quot;&quot;</span>
+        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="c1"># For history</span>
         <span class="n">history_maker</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3260,7 +3296,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
