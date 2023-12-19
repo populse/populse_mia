@@ -76,7 +76,7 @@ If you'd like to contribute to the project please read our [developer documentat
 * scipy
 * snakeviz
 * soma-base >= 5.2.0, < 6.0.0
-* soma-workflow >= 3.3.0
+* soma-workflow >= 3.2.2
 * six >= 1.13
 * traits
 
