@@ -226,8 +226,9 @@ class PackagesInstall:
 
             except Exception as e:
                 print(
-                    "\nWhen attempting to add a package and its modules to "
-                    "the package tree, the following exception was caught:"
+                    "\nWhen attempting to add a package ({}) or its"
+                    "modules to the package tree, the following exception"
+                    "was caught:".format(module_name)
                 )
                 print("{0}".format(e))
 
