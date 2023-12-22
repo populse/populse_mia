@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager package &#8212; populse_mia 2.5.1-dev+53a60969 documentation</title>
+    <title>populse_mia.data_manager package &#8212; populse_mia 2.5.2-dev+5f005d4e documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=e491ac2d" />
-    <script src="_static/documentation_options.js?v=8f6e2028"></script>
+    <script src="_static/documentation_options.js?v=52014ebe"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.5.1-dev+53a60969 documentation</span></a></h1>
+          <span>populse_mia 2.5.2-dev+5f005d4e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -53,7 +53,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_history_inspect.ProtoProcess">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.data_history_inspect.</span></span><span class="sig-name descname"><span class="pre">ProtoProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brick</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/data_history_inspect.html#ProtoProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.11/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Lightweight convenience class, stores a brick database entry, plus
 additional info (used)</p>
 <dl class="py method">
@@ -358,17 +358,7 @@ file</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_loader.ImportWorker.notifyProgress">
 <span class="sig-name descname"><span class="pre">notifyProgress</span></span><a class="headerlink" href="#populse_mia.data_manager.data_loader.ImportWorker.notifyProgress" title="Link to this definition">¶</a></dt>
-<dd><p>pyqtSignal(<a href="#id6"><span class="problematic" id="id7">*</span></a>types, name: str = …, revision: int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
-<p>types is normally a sequence of individual types.  Each type is either a
-type object or a string that is the name of a C++ type.  Alternatively
-each type could itself be a sequence of types each describing a different
-overloaded signal.
-name is the optional C++ name of the signal.  If it is not specified then
-the name of the class attribute that is bound to the signal is used.
-revision is the optional revision of the signal that is exported to QML.
-If it is not specified then 0 is used.
-arguments is the optional sequence of the names of the signal’s arguments.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_loader.ImportWorker.run">
@@ -562,7 +552,7 @@ visibility, origin, unit, default_value)</p>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.11/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If the collection does not exist</p></li>
 <li><p>If the field does not exist</p></li>
 </ul>
@@ -603,7 +593,7 @@ rapid and advanced search</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.data_manager.filter.Filter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.filter.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">links</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_bar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/filter.html#Filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.filter.Filter" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.11/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class that represent a Filter, containing the results of both rapid and
 advanced search.</p>
 <p>The advanced search creates a complex query to the database and is a
@@ -696,7 +686,7 @@ BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.data_manager.project.Project">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.project.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_root_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/data_manager/project.html#Project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.11/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class that handles projects and their associated database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1074,8 +1064,8 @@ otherwise does nothing.</p>
 list those which correspond to obsolete runs (data has been re-written
 by more recent runs). This function only updates data status (bricks
 list), it does not remove obsolete bricks from the database.</p>
-<section id="id8">
-<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <p>a set of obsolete bricks that might become orphan: they are not used
 any longer in input data history, and were in the previous ones. But
 they still can be used in other data.</p>
@@ -1104,7 +1094,7 @@ from outside.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.data_manager.project_properties.SavedProjects">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.project_properties.</span></span><span class="sig-name descname"><span class="pre">SavedProjects</span></span><a class="reference internal" href="_modules/populse_mia/data_manager/project_properties.html#SavedProjects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.project_properties.SavedProjects" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.11/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class that handles all the projects that have been saved in the
 software.</p>
 <dl class="py method">
