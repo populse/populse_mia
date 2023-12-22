@@ -17,7 +17,7 @@ Populse_MIA can be installed either directly on host or using virtualisation (co
 The `data viewer <../documentation/data_viewer.html>`_ currently available by default in Mia is based on `Anatomist <https://brainvisa.info/web/anatomist.html>`_, which should be compiled.
 Therefore, on the host, the user will not have access to the data viewer.
 
-In order to acess to the data viewer, it is possible to use virtualization by using `BrainVISA <https://brainvisa.info/web/>`_ images which are available for two free and open source virtualisation technologies: `Singularity <https://en.wikipedia.org/wiki/Singularity_(software)>`_ and `VirtualBox <https://en.wikipedia.org/wiki/VirtualBox>`_.
+In order to access to the data viewer, it is possible to use virtualization by using `BrainVISA <https://brainvisa.info/web/>`_ images which are available for two free and open source virtualisation technologies: `Singularity <https://en.wikipedia.org/wiki/Singularity_(software)>`_ and `VirtualBox <https://en.wikipedia.org/wiki/VirtualBox>`_.
 
 - `Install a light version of Mia on the host <./host_user_installation.html>`_ (without data viewer)
 
