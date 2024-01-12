@@ -23,8 +23,8 @@ import sys
 version_major = 2
 version_minor = 5
 version_micro = 2
-version_extra = "dev"  # leave empty for release
-# version_extra = ""
+# version_extra = "dev"  # leave empty for release
+version_extra = ""
 
 # Expected by setup.py: string of form "X.Y.Z"
 if version_extra:
