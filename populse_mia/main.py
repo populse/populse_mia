@@ -267,11 +267,16 @@ def main():
         DEV_MODE = False
         print('\n- Mia in "user" mode')
         # Where do we import the modules from?
-        modules = ('populse_mia', 'capsul', 'soma', 'soma_workflow',
-                   'populse_db', 'mia_processes')
+        modules = (
+            "populse_mia",
+            "capsul",
+            "soma",
+            "soma_workflow",
+            "populse_db",
+            "mia_processes",
+        )
 
         for i in modules:
-
             if i in sys.modules:
                 mod = sys.modules[i]
 
@@ -279,10 +284,11 @@ def main():
                 mod = __import__(i)
                 del sys.modules[i]
 
-            print("  . Using {0} package from {1} ...".format(
-                mod.__name__,
-                mod.__path__[0]))
-
+            print(
+                "  . Using {0} package from {1} ...".format(
+                    mod.__name__, mod.__path__[0]
+                )
+            )
 
     # Check if nipype, mia_processes and capsul are available on the station.
     # If not available ask the user to install them
