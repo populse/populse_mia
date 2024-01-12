@@ -1,6 +1,6 @@
 [project]
 name = "populse_mia"
-version = "2.5.2"
+version = "2.5.3_dev"
 authors = [
     {name = "Populse team", email = "populse-support@univ-grenoble-alpes.fr"},
 ]
