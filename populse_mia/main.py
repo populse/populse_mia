@@ -256,16 +256,33 @@ def main():
 
         del root_dev_dir
 
-    elif "CASA_DISTRO" in os.environ:
-        # If the casa distro development environment is detected,
-        # developer mode is activated.
-        os.environ["MIA_DEV_MODE"] = "1"
-        DEV_MODE = True
+    # elif "CASA_DISTRO" in os.environ:
+    #     # If the casa distro development environment is detected,
+    #     # developer mode is activated.
+    #     os.environ["MIA_DEV_MODE"] = "1"
+    #     DEV_MODE = True
 
     else:  # "user" mode
         os.environ["MIA_DEV_MODE"] = "0"
         DEV_MODE = False
         print('\n- Mia in "user" mode')
+        # Where do we import the modules from?
+        modules = ('populse_mia', 'capsul', 'soma', 'soma_workflow',
+                   'populse_db', 'mia_processes')
+
+        for i in modules:
+
+            if i in sys.modules:
+                mod = sys.modules[i]
+
+            else:
+                mod = __import__(i)
+                del sys.modules[i]
+
+            print("  . Using {0} package from {1} ...".format(
+                mod.__name__,
+                mod.__path__[0]))
+
 
     # Check if nipype, mia_processes and capsul are available on the station.
     # If not available ask the user to install them
