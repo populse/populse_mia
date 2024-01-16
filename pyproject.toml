@@ -1,6 +1,12 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "populse_mia"
-version = "2.5.3_dev"
+#version = "2.5.3_dev"
+dynamic = ["version"]
 authors = [
     {name = "Populse team", email = "populse-support@univ-grenoble-alpes.fr"},
 ]
