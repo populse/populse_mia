@@ -1842,7 +1842,12 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                 if filename:
                     self.setTabText(working_index, os.path.basename(filename))
                     self.update_scans_list()
-
+                    # fmt: off
+                    (
+                        self.main_window.pipeline_manager
+                        .run_pipeline_action.setDisabled(False)
+                    )
+                    # fmt: on
                     return  # success
 
         # if we're still here, something went wrong. clean up.
