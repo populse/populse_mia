@@ -1718,9 +1718,9 @@ class PackageLibraryDialog(QDialog):
                                                 "\nAdding %s.%s ..."
                                                 % (module_name, v.__name__)
                                             )
-                                            pkg_iter[
-                                                element
-                                            ] = "process_enabled"
+                                            pkg_iter[element] = (
+                                                "process_enabled"
+                                            )
 
                                         elif element in pkg_iter.keys():
                                             pkg_iter = pkg_iter[element]
@@ -2783,16 +2783,16 @@ class ProcessLibrary(QTreeView):
                     action = self.menu.exec_(self.mapToGlobal(event.pos()))
 
                     if action == self.remove:
-                        (
-                            self.pkg_library.package_library.package_tree
-                        ) = self.pkg_library.load_config()["Packages"]
+                        (self.pkg_library.package_library.package_tree) = (
+                            self.pkg_library.load_config()["Packages"]
+                        )
                         self.pkg_library.remove_package(txt)
                         self.pkg_library.save()
 
                     if action == self.action_delete:
-                        (
-                            self.pkg_library.package_library.package_tree
-                        ) = self.pkg_library.load_config()["Packages"]
+                        (self.pkg_library.package_library.package_tree) = (
+                            self.pkg_library.load_config()["Packages"]
+                        )
                         self.pkg_library.delete_package(
                             to_delete=txt, from_pipeline_manager=True
                         )
