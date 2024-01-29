@@ -588,16 +588,16 @@ class PopUpAddPath(QDialog):
 
                 # Databrowser updated
 
-                (
-                    self.databrowser.table_data.scans_to_visualize
-                ) = self.project.session.get_documents_names(
-                    COLLECTION_CURRENT
+                (self.databrowser.table_data.scans_to_visualize) = (
+                    self.project.session.get_documents_names(
+                        COLLECTION_CURRENT
+                    )
                 )
 
-                (
-                    self.databrowser.table_data.scans_to_search
-                ) = self.project.session.get_documents_names(
-                    COLLECTION_CURRENT
+                (self.databrowser.table_data.scans_to_search) = (
+                    self.project.session.get_documents_names(
+                        COLLECTION_CURRENT
+                    )
                 )
                 self.databrowser.table_data.add_columns()
                 self.databrowser.table_data.fill_headers()

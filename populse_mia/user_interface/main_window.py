@@ -131,7 +131,6 @@ class _ProcDeleter(threading.Thread):
 
 
 class MainWindow(QMainWindow):
-
     """Initialize software appearance and define interactions with the user.
 
     .. Methods:

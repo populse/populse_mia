@@ -26,7 +26,6 @@ class named ``MiaViewer`` which:
 
 
 class DataViewer(object):
-
     """
     Populse-MIA data viewers abstract base class: it just gives an API to be
     overloaded by subclasses.
