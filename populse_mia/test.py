@@ -6855,9 +6855,9 @@ class TestMIANodeController(TestMIACase):
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
         # Exporting the input plugs and modifying the "synchronize" input plug
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().current_node_name = "threshold_1"
+        (pipeline_editor_tabs.get_current_editor)().current_node_name = (
+            "threshold_1"
+        )
         (
             pipeline_editor_tabs.get_current_editor
         )().export_node_all_unconnected_inputs()
@@ -7755,9 +7755,9 @@ class TestMIAPipelineEditor(TestMIACase):
             )
 
         # Exporting the input plugs and modifying the "synchronize" input plug
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().current_node_name = "threshold_1"
+        (pipeline_editor_tabs.get_current_editor)().current_node_name = (
+            "threshold_1"
+        )
         (
             pipeline_editor_tabs.get_current_editor
         )().export_node_all_unconnected_inputs()
@@ -8933,9 +8933,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager.brick_list.append(brick_id)
 
         # Mocks methods used in the test
-        (
-            ppl_manager.main_window.data_browser.table_data.delete_from_brick
-        ) = MagicMock()
+        (ppl_manager.main_window.data_browser.table_data.delete_from_brick) = (
+            MagicMock()
+        )
         ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
 
         # Cleans up older init
@@ -9156,9 +9156,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager.postprocess_pipeline_execution = MagicMock()
         ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
         ppl_manager.project.cleanup_orphan_history = MagicMock()
-        (
-            ppl_manager.main_window.data_browser.table_data.update_table
-        ) = MagicMock()
+        (ppl_manager.main_window.data_browser.table_data.update_table) = (
+            MagicMock()
+        )
         ppl_manager.update_user_buttons_states = MagicMock()
 
         # Collects the garbage

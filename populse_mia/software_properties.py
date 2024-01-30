@@ -618,9 +618,9 @@ class Config:
         else:
             # Patch for obsolete parameters.
             if "mia_path" in mia_home_properties_path:
-                mia_home_properties_path[
-                    "properties_user_path"
-                ] = mia_home_properties_path["mia_path"]
+                mia_home_properties_path["properties_user_path"] = (
+                    mia_home_properties_path["mia_path"]
+                )
                 del mia_home_properties_path["mia_path"]
 
                 with open(dot_mia_config, "w", encoding="utf8") as configfile:
@@ -632,9 +632,9 @@ class Config:
                     )
 
             if "mia_user_path" in mia_home_properties_path:
-                mia_home_properties_path[
-                    "properties_user_path"
-                ] = mia_home_properties_path["mia_user_path"]
+                mia_home_properties_path["properties_user_path"] = (
+                    mia_home_properties_path["mia_user_path"]
+                )
                 del mia_home_properties_path["mia_user_path"]
 
                 with open(dot_mia_config, "w", encoding="utf8") as configfile:
