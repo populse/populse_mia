@@ -1622,10 +1622,12 @@ class PipelineManagerTab(QWidget):
         self.pipelineEditorTabs.update_current_node(
             self.pipelineEditorTabs.currentIndex()
         )
-        (
-            self.pipelineEditorTabs.get_current_editor()
-        ).node_parameters = copy.deepcopy(
-            (self.pipelineEditorTabs.get_current_editor()).node_parameters_tmp
+        (self.pipelineEditorTabs.get_current_editor()).node_parameters = (
+            copy.deepcopy(
+                (
+                    self.pipelineEditorTabs.get_current_editor()
+                ).node_parameters_tmp
+            )
         )
         self.pipelineEditorTabs.update_current_node(
             self.pipelineEditorTabs.currentIndex()

@@ -661,9 +661,9 @@ class ImportWorker(QThread):
                         documents[bvec_bval_mrtrix_database_path][
                             TAG_TYPE
                         ] = TYPE_BVEC_BVAL
-                        documents[bvec_bval_mrtrix_database_path][
-                            tag_name
-                        ] = str(file_database_path)
+                        documents[bvec_bval_mrtrix_database_path][tag_name] = (
+                            str(file_database_path)
+                        )
 
         # Missing values added thanks to default values
         for tag in self.project.session.get_fields(COLLECTION_CURRENT):

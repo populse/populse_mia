@@ -2234,9 +2234,9 @@ class TableDataBrowser(QTableWidget):
                                         )[0]
                                     ):
                                         del self.bricks[key]
-                                        self.bricks[
-                                            brick_name_button
-                                        ] = brick_uuid
+                                        self.bricks[brick_name_button] = (
+                                            brick_uuid
+                                        )
 
                                 del bricks_copy
 
@@ -2289,9 +2289,9 @@ class TableDataBrowser(QTableWidget):
                                         )[0]
                                     ):
                                         del self.bricks[key]
-                                        self.bricks[
-                                            brick_name_button
-                                        ] = brick_uuid
+                                        self.bricks[brick_name_button] = (
+                                            brick_uuid
+                                        )
 
                                 del bricks_copy
 

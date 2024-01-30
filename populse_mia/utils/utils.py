@@ -1704,14 +1704,14 @@ def verify_setup(
                 return
 
             if dev_mode:
-                mia_home_properties_path_new[
-                    "properties_dev_path"
-                ] = dialog.file_line_edit.text()
+                mia_home_properties_path_new["properties_dev_path"] = (
+                    dialog.file_line_edit.text()
+                )
 
             else:
-                mia_home_properties_path_new[
-                    "properties_user_path"
-                ] = dialog.file_line_edit.text()
+                mia_home_properties_path_new["properties_user_path"] = (
+                    dialog.file_line_edit.text()
+                )
 
             mia_home_properties_path = {
                 **mia_home_properties_path,
