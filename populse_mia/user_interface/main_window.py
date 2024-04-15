@@ -750,6 +750,9 @@ class MainWindow(QMainWindow):
         print("\nmri_conv opening ...\n")
 
         try:
+            # Xmxsize: Specifies the maximum size (in bytes) of the memory
+            #          allocation pool in bytes
+            # Start with 4096M
             code_exit = subprocess.call(
                 [
                     "java",
@@ -771,7 +774,10 @@ class MainWindow(QMainWindow):
                 raise ValueError("mri_conv did not run properly!")
 
         except ValueError:
-            print("\nTrial with a lower maximum heap size ...\n")
+            print(
+                "\nMri_conv: Test with lower maximum heap "
+                "size (4096M -> 1024M)...\n"
+            )
             code_exit = subprocess.call(
                 [
                     "java",
@@ -789,7 +795,7 @@ class MainWindow(QMainWindow):
                 ]
             )
 
-        # 'NoLogExport'if we don't want log export
+        # 'NoLogExport' if we don't want log export
 
         if code_exit == 0:
             # Database filled
