@@ -50,6 +50,7 @@ import glob
 import hashlib
 import os
 import platform
+import re
 import shutil
 import subprocess
 from datetime import datetime
@@ -3531,8 +3532,15 @@ class PopUpPreferences(QDialog):
                         stderr=subprocess.PIPE,
                     )
                     output, err = p.communicate()
+                    warning_pattern = re.compile(r"warning", re.IGNORECASE)
+                    errors = []
 
-                    if err == b"":
+                    for line in err.decode().split("\n"):
+
+                        if not re.search(warning_pattern, line):
+                            errors.append(line)
+
+                    if errors in [[], [""]]:
                         config.set_freesurfer_setup(freesurfer_setup)
                         config.set_use_freesurfer(True)
 
