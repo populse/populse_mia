@@ -47,11 +47,6 @@ install:
   - echo y | pip uninstall PyQt5-sip
   - pip install PyQt5
 
-  # Try to fix the importError: cannot import name 'get_cmap' from 'matplotlib.cm (see: https://ci.appveyor.com/project/populse/populse-mia/builds/49913015/job/3aadmx3jtvqb1hak)
-  - pip show matplotlib
-  - pip install --force-reinstall "matplotlib==3.8.3"
-  - pip show matplotlib
-
   # We want to use the last github versions instead of the pypi version:
   - pip uninstall -y populse_db soma-base soma-workflow capsul mia_processes
 
