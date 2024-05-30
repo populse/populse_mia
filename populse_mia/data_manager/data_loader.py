@@ -778,7 +778,7 @@ def tags_from_file(file_path, path):
             # We don't want spaces in PatientName (used by Mia to define
             # subfolders when writing calculation results)
             if name == "PatientName":
-                value["value"] = value["value"][0].replace(" ", "")
+                value["value"] = [value["value"][0].replace(" ", "")]
 
             json_tags.append([name, value])
 
