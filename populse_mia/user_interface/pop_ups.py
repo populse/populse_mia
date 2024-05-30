@@ -815,6 +815,27 @@ class PopUpAddTag(QDialog):
             self.msg.exec()
             return
 
+        # If the tag name is PatientName, the default value cannot contain
+        # spaces and the type must be string
+        if self.text_edit_tag_name.text() == "PatientName":
+
+            if self.type != "string":
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Critical)
+                self.msg.setText(
+                    "PatientName is a special tag that must be "
+                    "a character string containing no spaces!"
+                )
+                self.msg.setInformativeText("Please select string type.")
+                self.msg.setWindowTitle("Error")
+                self.msg.setStandardButtons(QMessageBox.Close)
+                self.msg.exec()
+                return
+
+            self.text_edit_default_value.setText(
+                self.text_edit_default_value.text().replace(" ", "")
+            )
+
         # Default value checked
         wrong_default_value_type = not check_value_type(
             self.text_edit_default_value.text(), self.type, False
