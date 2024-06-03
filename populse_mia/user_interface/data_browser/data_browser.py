@@ -1292,6 +1292,12 @@ class TableDataBrowser(QTableWidget):
             row = item.row()
             col = item.column()
             tag_name = self.horizontalHeaderItem(col).text()
+
+            #  We don't want spaces in PatientName (used by Mia to define
+            #  subfolders when writing calculation results)
+            if tag_name == "PatientName":
+                new_value = new_value.replace(" ", "")
+
             tag_object = self.project.session.get_field(
                 COLLECTION_CURRENT, tag_name
             )
