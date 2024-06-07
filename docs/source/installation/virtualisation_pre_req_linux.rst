@@ -56,7 +56,7 @@ If Singularity is not already installed:
 
 .. code-block:: bash
 
-   % sudo dnf install singularity
+   % sudo dnf install singularity  # sudo dnf install singularity-ce, for recent versions of singularity
 
 
 **Ubuntu**
@@ -105,6 +105,12 @@ Optionally, you can launch the graphical configuration interface, e.g. to define
 .. code-block:: bash
 
    bv
+
+Build from the container terminal (after `bv bash`) or outside the container:
+
+.. code-block:: bash
+
+   bv_maker
 
 Then open an interactive shell in the container:
 
