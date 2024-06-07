@@ -11,8 +11,8 @@ Populse_mia's third-party softwares installations
 =================================================
 
 To use bricks and pipelines from `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_ in populse_mia, it is necessary to install softwares as FSL, SPM, Freesurfer, ANTs...
-The softwares paths should be configure in `Mia preferences <../documentation/preferences.html>`_.
 
+The software access paths must be configured in `Mia preferences <../documentation/preferences.html>`_.
 
 
 Installation on Linux
