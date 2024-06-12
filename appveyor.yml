@@ -1,5 +1,7 @@
 environment:
 
+  GIT_CLONE_PROTECTION_ACTIVE: false
+
   matrix:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
