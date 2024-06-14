@@ -57,7 +57,7 @@ from matplotlib.backends.qt_compat import QtWidgets
 
 # PyQt5 imports
 from PyQt5 import Qt, QtCore
-from PyQt5.QtCore import QThread, QTimer, Signal
+from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import QCursor, QIcon, QMovie
 from PyQt5.QtWidgets import (
     QAction,
@@ -180,7 +180,7 @@ class PipelineManagerTab(QWidget):
 
     """
 
-    item_library_clicked = Signal(str)
+    item_library_clicked = pyqtSignal(str)
 
     def __init__(self, project, scan_list, main_window):
         """
