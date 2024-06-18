@@ -2702,7 +2702,7 @@ class ProcessLibrary(QTreeView):
 
     """
 
-    item_library_clicked = QtCore.Signal(str)
+    item_library_clicked = QtCore.pyqtSignal(str)
 
     def __init__(self, d, pkg_lib):
         """Initialization of the ProcessLibrary class.
