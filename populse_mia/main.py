@@ -51,6 +51,7 @@ def main():
     """
 
     pypath = []
+    package_not_found = []
 
     # Disables any etelemetry check.
     if "NO_ET" not in os.environ:
@@ -129,11 +130,13 @@ def main():
             del capsul_dev_dir
 
         else:
+
             try:
                 import capsul
 
             except Exception:
-                pass
+                print("  . capsul package was not found!...")
+                package_not_found.append("capsul")
 
             else:
                 capsul_dir = os.path.dirname(os.path.dirname(capsul.__file__))
@@ -155,12 +158,19 @@ def main():
             del soma_b_dev_dir
 
         else:
-            import soma
 
-            soma_b_dir = os.path.dirname(os.path.dirname(soma.__file__))
-            print("  . Using soma package from {} ...".format(soma_b_dir))
-            del soma_b_dir
-            del soma
+            try:
+                import soma
+
+            except Exception:
+                print("  . soma package was not found!...")
+                package_not_found.append("soma")
+
+            else:
+                soma_b_dir = os.path.dirname(os.path.dirname(soma.__file__))
+                print("  . Using soma package from {} ...".format(soma_b_dir))
+                del soma_b_dir
+                del soma
 
         # Adding soma_workflow:
         if os.path.isdir(
@@ -179,16 +189,25 @@ def main():
             del soma_w_dev_dir
 
         else:
-            import soma_workflow
 
-            soma_w_dir = os.path.dirname(
-                os.path.dirname(soma_workflow.__file__)
-            )
-            print(
-                "  . Using soma_worflow package from {} ...".format(soma_w_dir)
-            )
-            del soma_w_dir
-            del soma_workflow
+            try:
+                import soma_workflow
+
+            except Exception:
+                print("  . soma_workflow package was not found!...")
+                package_not_found.append("soma_workflow")
+
+            else:
+                soma_w_dir = os.path.dirname(
+                    os.path.dirname(soma_workflow.__file__)
+                )
+                print(
+                    "  . Using soma_worflow package from {} ...".format(
+                        soma_w_dir
+                    )
+                )
+                del soma_w_dir
+                del soma_workflow
 
         # Adding populse_db:
         if os.path.isdir(
@@ -207,18 +226,25 @@ def main():
             del populse_db_dev_dir
 
         else:
-            import populse_db
 
-            populse_db_dir = os.path.dirname(
-                os.path.dirname(populse_db.__file__)
-            )
-            print(
-                "  . Using populse_db package from {} ...".format(
-                    populse_db_dir
+            try:
+                import populse_db
+
+            except Exception:
+                print("  . populse_db package was not found!...")
+                package_not_found.append("populse_db")
+
+            else:
+                populse_db_dir = os.path.dirname(
+                    os.path.dirname(populse_db.__file__)
                 )
-            )
-            del populse_db_dir
-            del populse_db
+                print(
+                    "  . Using populse_db package from {} ...".format(
+                        populse_db_dir
+                    )
+                )
+                del populse_db_dir
+                del populse_db
 
         # Adding mia_processes:
         if os.path.isdir(
@@ -237,11 +263,13 @@ def main():
             del mia_processes_dev_dir
 
         else:
+
             try:
                 import mia_processes
 
             except Exception:
-                pass
+                print("  . mia_processes package was not found!...")
+                package_not_found.append("mia_processes")
 
             else:
                 mia_processes_dir = os.path.dirname(
@@ -255,6 +283,14 @@ def main():
                 del mia_processes
 
         del root_dev_dir
+
+        if package_not_found:
+            print(
+                "\nMia cannot be started because the following packages "
+                "were not found:\n"
+                + "\n".join(f"- {package}" for package in package_not_found)
+            )
+            sys.exit(1)
 
     # elif "CASA_DISTRO" in os.environ:
     #     # If the casa distro development environment is detected,
