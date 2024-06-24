@@ -172,7 +172,27 @@ Installation of `FreeSurfer <https://surfer.nmr.mgh.harvard.edu/>`_
 Installation of `MRtrix  <https://www.mrtrix.org/>`_
 ----------------------------------------------------
 
-  * `WIP! <https://www.mrtrix.org/download/>`_
+The following instruction resume how to build MRTrix3 from source on Linux. 
+Further details are available on the `MRtrix's documentation <https://mrtrix.readthedocs.io/en/latest/installation/build_from_source.html>`_
+
+  * python and python-is-python3 should be installed
+  
+  * Install others dependencies: ::
+
+        sudo apt-get install git g++ libeigen3-dev zlib1g-dev libqt5opengl5-dev libqt5svg5-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev libpng-dev
+
+  * Clone the MRTrix3 repository: ::
+
+        git clone https://github.com/MRtrix3/mrtrix3.git
+  
+  * Configure the MRtrix3 install (in the new mrtrix3 directory): ::
+
+        cd mrtrix3
+        ./configure
+
+  * Build MRtrix3: ::
+
+        ./build
 
 
 Installation on Macos
