@@ -261,6 +261,9 @@ def main():
             sys.path.insert(i, mia_processes_dev_dir)
             pypath.append(mia_processes_dev_dir)
             del mia_processes_dev_dir
+            from mia_processes import info
+
+            print(f"    mia_processes version: {info.__version__}")
 
         else:
 
