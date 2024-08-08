@@ -24,6 +24,8 @@ import os
 import traceback
 import uuid
 
+import nibabel as nib
+import numpy as np
 import traits.api as traits
 
 # Capsul imports
@@ -814,6 +816,7 @@ class ProcessMIA(Process):
          - init_process: instantiation of the process attribute given a
            process identifier
          - list_outputs: override the outputs of the process
+         - load_nii: return the header and the data of a nibabel image object
          - make_initResult: make the final dictionary for outputs,
                             inheritance and requirement from the
                             initialisation of a brick
@@ -936,6 +939,57 @@ class ProcessMIA(Process):
 
         if self.inheritance_dict:
             self.inheritance_dict = {}
+
+    def load_nii(self, file_path, scaled=True, matlab_like=False):
+        """Return the header and the data of a nibabel image object
+
+        MATLAB and Python (in particular NumPy) treat the order of dimensions
+        and the origin of the coordinate system differently. MATLAB uses main
+        column order (also known as Fortran order). NumPy (and Python in
+        general) uses the order of the main rows (C order). For a 3D array
+        data(x, y, z) in MATLAB, the equivalent in NumPy is data[y, x, z].
+        MATLAB and NumPy also handle the origin of the coordinate system
+        differently:
+        MATLAB's coordinate system starts with the origin in the lower
+        left-hand corner (as in traditional matrix mathematics).
+        NumPy's coordinate system starts with the origin in the top left-hand
+        corner.
+        When taking matlab_like=True as argument, the numpy matrix is
+        rearranged to follow MATLAB conventions.
+        Using scaled=False generates a raw unscaled data matrix (as in MATLAB
+        with `header = loadnifti(fnii)` and `header.reco.data`).
+
+        :param file_path: the path to a NIfTI file
+        :param scaled: A boolean, if True the data is scaled
+        :param matlab_like: A Boolean, if True the data is rearranged to match
+                            the order of the dimensions and the origin of the
+                            coordinate system in Matlab
+        """
+        img = nib.load(file_path)
+        header = img.header
+
+        if scaled is True:
+            data = img.get_fdata()
+
+        elif scaled is False:
+            data = img.dataobj.get_unscaled()
+
+        else:
+            print("Make_AIF brick: scaled argument must be True or False")
+
+        if matlab_like is True:
+
+            if data.ndim == 3:
+                data = np.transpose(data, (1, 0, 2))
+
+            if data.ndim == 4:
+                data = np.transpose(data, (1, 0, 2, 3))
+
+            # TODO: Should transpose for ndim>4 cases be implemented?
+
+            data = np.flip(data, axis=0)
+
+        return header, data
 
     def make_initResult(self):
         """Make the initResult_dict from initialisation."""
