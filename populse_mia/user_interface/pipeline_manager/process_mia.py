@@ -503,7 +503,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 )
             )
 
-            self.complete_parameters_mia(process_inputs)
+            self.complete_parameters_mia(
+                process_inputs, iteration=complete_iterations
+            )
             self.completion_progress = self.completion_progress_total
 
             if getattr(in_process, "init_result", None) is False:
@@ -585,7 +587,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                         node.inheritance_dict
                     )
 
-    def complete_parameters_mia(self, process_inputs={}):
+    def complete_parameters_mia(self, process_inputs={}, iteration=False):
         """
         Completion for :class:`ProcessMIA` instances. This is done using their
         :meth: `ProcessMIA.list_outputs` method, which fills in output
@@ -617,7 +619,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         try:
             # set inheritance dict to the node
-            initResult_dict = process.list_outputs(is_plugged=is_plugged)
+            initResult_dict = process.list_outputs(
+                is_plugged=is_plugged, iteration=iteration
+            )
 
         except Exception as e:
             print("\nError during initialisation ...!\nTraceback:")
