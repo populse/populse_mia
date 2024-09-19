@@ -1764,6 +1764,10 @@ class PipelineManagerTab(QWidget):
                     name
                 )
             )
+
+            for err_mess in init_messages:
+                print("\n" + err_mess)
+
             return init_result
 
         if self.workflow is not None:
