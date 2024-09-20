@@ -1188,6 +1188,7 @@ class PipelineManagerTab(QWidget):
                 in_filter = engine.get_process_instance(
                     "mia_processes.bricks.tools.Input_Filter"
                 )
+                in_filter.pipmantab = self
 
             except ValueError:
                 in_filter_not_found = True
