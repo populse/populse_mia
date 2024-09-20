@@ -53,6 +53,7 @@ class IterationTable(QWidget):
         - emit_iteration_table_updated: emits a signal when the iteration
                                         scans have been updated
         - fill_values: fill values_list depending on the visualized tags
+        - filter_values: select the tag values used for the iteration
         - refresh_layout: updates the layout of the widget
         - remove_tag: removes a tag to visualize in the iteration table
         - select_iterated_tag: opens a pop-up to let the user select on which
@@ -229,6 +230,37 @@ class IterationTable(QWidget):
             if value not in self.values_list[idx]:
                 self.values_list[idx].append(value)
 
+    def filter_values(self):
+        """Select the tag values used for the iteration"""
+
+        # fmt: off
+        iterated_tag = (
+            self.main_window.pipeline_manager.pipelineEditorTabs.
+            get_current_editor().iterated_tag
+        )
+        tag_values = (
+            self.main_window.pipeline_manager.pipelineEditorTabs.
+            get_current_editor().all_tag_values_list
+        )
+        # fmt: on
+
+        ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
+
+        if ui_iteration.exec_():
+            tag_values_list = [
+                t.replace("&", "") for t in ui_iteration.final_values
+            ]
+            # fmt: off
+            (
+                self.main_window.pipeline_manager.pipelineEditorTabs.
+                get_current_editor
+            )().tag_values_list = tag_values_list
+            # fmt: on
+
+            self.combo_box.clear()
+            self.combo_box.addItems(tag_values_list)
+            self.update_table()
+
     def refresh_layout(self):
         """Update the layout of the widget.
 
@@ -310,37 +342,6 @@ class IterationTable(QWidget):
 
                 # Retrieve tag values
                 self.update_selected_tag(ui_select.selected_tag)
-
-    def filter_values(self):
-        """blabla"""
-
-        # fmt: off
-        iterated_tag = (
-            self.main_window.pipeline_manager.pipelineEditorTabs.
-            get_current_editor().iterated_tag
-        )
-        tag_values = (
-            self.main_window.pipeline_manager.pipelineEditorTabs.
-            get_current_editor().all_tag_values_list
-        )
-        # fmt: on
-
-        ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
-
-        if ui_iteration.exec_():
-            tag_values_list = [
-                t.replace("&", "") for t in ui_iteration.final_values
-            ]
-            # fmt: off
-            (
-                self.main_window.pipeline_manager.pipelineEditorTabs.
-                get_current_editor
-            )().tag_values_list = tag_values_list
-            # fmt: on
-
-            self.combo_box.clear()
-            self.combo_box.addItems(tag_values_list)
-            self.update_table()
 
     def select_visualized_tag(self, idx):
         """Open a pop-up to let the user select which tag to visualize in the
@@ -523,7 +524,10 @@ class IterationTable(QWidget):
             )
 
     def update_selected_tag(self, selected_tag):
-        """blabla"""
+        """Update the list of values corresponding to the selected tag
+
+        :param selected_tag: the selected tag
+        """
 
         tag_values_list = []
         scans_names = self.project.session.get_documents_names(
