@@ -4109,12 +4109,12 @@ class TestMIADataBrowser(TestMIACase):
         """Tests the popup modifying the visualized tags."""
 
         # Testing default tags visibility
-        visibles = self.main_window.project.session.get_shown_tags()
-        self.assertEqual(len(visibles), 4)
-        self.assertTrue(TAG_FILENAME in visibles)
-        self.assertTrue(TAG_BRICKS in visibles)
-        self.assertTrue(TAG_TYPE in visibles)
-        self.assertTrue(TAG_EXP_TYPE in visibles)
+        visible = self.main_window.project.session.get_shown_tags()
+        self.assertEqual(len(visible), 4)
+        self.assertTrue(TAG_FILENAME in visible)
+        self.assertTrue(TAG_BRICKS in visible)
+        self.assertTrue(TAG_TYPE in visible)
+        self.assertTrue(TAG_EXP_TYPE in visible)
 
         # Testing columns displayed in the DataBrowser
         self.assertEqual(
@@ -4134,7 +4134,7 @@ class TestMIADataBrowser(TestMIACase):
             ):
                 columns_displayed.append(tag_displayed)
 
-        self.assertEqual(sorted(visibles), sorted(columns_displayed))
+        self.assertEqual(sorted(visible), sorted(columns_displayed))
 
         # Testing that FileName tag is the first column
         self.assertEqual(
@@ -4144,7 +4144,7 @@ class TestMIADataBrowser(TestMIACase):
             ).text(),
         )
 
-        # Trying to set the visibles tags
+        # Trying to set the visible tags
         QTest.mouseClick(
             self.main_window.data_browser.visualized_tags_button, Qt.LeftButton
         )

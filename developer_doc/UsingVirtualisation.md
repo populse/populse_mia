@@ -69,7 +69,7 @@ We use virtualization with Singularity.
 
 Before everything, we need to have WSL (Windows Subsystem Linux). With this we can install a linux Ubuntu 22.04, 20.04 or 18.04.
 To install linux Ubuntu 22.04 you can either make an upgrade of the linux Ubuntu 20.04.
-We recommand an update of  linux Ubuntu 20.04 once it's installed.
+We recommend an update of  linux Ubuntu 20.04 once it's installed.
 
 
 ### 1 - WSL2 (Windows Subsystem Linux) installation
@@ -82,7 +82,7 @@ We recommand an update of  linux Ubuntu 20.04 once it's installed.
       - <img src="images/screenshots/Windows 10 - PowerShell - WSL2.png" width=80%>
 
    - Reboot the computer
-   - Normaly a linux ubuntu window is already available, enter it:
+   - Normally a linux ubuntu window is already available, enter it:
       - enter a user / password who will be administrator of this linux (asked by the system)
       - <img src="images/screenshots/Windows 10 - Ubuntu.png" width=80%>
       - then you can write your first commands to make ubuntu up to date:
@@ -98,7 +98,7 @@ Now you have WSL2 and an Ubuntu 20.04 linux.
 Before you install a new distribution using `wsl --install -d distribution`, make sure that WSL is in 2 mode with:
    `wsl --set-default-version 2`
 The distribution is only available for the current Windows user.
-Usefull : in the Ubuntu WSL Windows terminal, we can access Windows files via `/mnt/c/`
+Useful : in the Ubuntu WSL Windows terminal, we can access Windows files via `/mnt/c/`
 
 To know more:
    - [Manual installation steps for older versions of WSL](https://docs.microsoft.com/en-us/windows/wsl/install-manual)
@@ -108,7 +108,7 @@ To know more:
 
 ### 2- Upgrade Ubuntu 20.04 to 22.04 (Only for devellopers )
 
-If you are a developper, you will need Ubuntu 22.04 to work on the whole project populse.
+If you are a developer, you will need Ubuntu 22.04 to work on the whole project populse.
 If not , you can ignore this part 2.
 You have precedently update the linux system. You can directly upgrade your linux Ubuntu distriution to 22.04 with the following commands:
 
@@ -142,7 +142,7 @@ Once the installation of the new Jammy Jelly Fish is completed, remove the obsol
 
 The WSL Ubuntu App will ask you to restart the system. However, it has not been started as an init system, so that will not be possible. Therefore, simply close the WSL app window and open it again.
 
-* You can chechk the Ubuntu version installed via the command:
+* You can check the Ubuntu version installed via the command:
 
 `cat /otc/os-release`
 
@@ -167,7 +167,7 @@ We also need a X windows server to allow linux applications graphic user interfa
 
 - Allow access asked by Windows firewall
 
- P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux ditribution.
+ P.S: You have to make sure VcXsrv is running every time you to run a GUI via your Ubuntu linux distribution.
 
 ### 4 - Dependencies Installation
 
@@ -195,15 +195,15 @@ In the aim to install Populse_MIA with anatomist viewer, we need the Brainvisa d
 - #### 5 - 1 - Brainvisa Installation
 
 
-To install properly BrainVisa you have to refer to [prerequesites guidelines](https://brainvisa.info/web/download.html#prerequisites) for Singularity on linux.
+To install properly BrainVisa you have to refer to [prerequisites guidelines](https://brainvisa.info/web/download.html#prerequisites) for Singularity on linux.
 
-Prerequisite are the software that need to be installed on your computer in order to be able to install and use BrainVISA. As we use her Ubuntu, we recommand to install Singularity. To do it so follow the steps below.
+Prerequisite are the software that need to be installed on your computer in order to be able to install and use BrainVISA. As we use her Ubuntu, we recommend to install Singularity. To do it so follow the steps below.
 
 -Create an installation directory:
 
-``mkdir -p $HOME/casa_distro/brainvisa-opensource-master`` (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations  but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
+``mkdir -p $HOME/casa_distro/brainvisa-opensource-master`` (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared between several development configurations  but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
 
- -Download the "casa-dev" image found [here](https://brainvisa.info/download/), preferably into the $HOME/casa_distro directory. Download the lates "casa-dev" image.
+ -Download the "casa-dev" image found [here](https://brainvisa.info/download/), preferably into the $HOME/casa_distro directory. Download the latest "casa-dev" image.
 It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvisa.info/download/casa-dev-5.3-8.sif``
 
  -Execute the container image using Singularity, with an option to tell it to run its setup procedure. The installation directory should be passed, and it will require additional parameters to specify the development environment characteristics. Namely a distro argument will tell which projects set the build will be based on (valid values are opensource, brainvisa, cea etc.), a branch argument will be master, latest_release etc., and other arguments are optional: ``singularity run -B $HOME/casa_distro/brainvisa-opensource-master:/casa/setup $HOME/casa_distro/casa-dev-5.3-8.sif branch=master distro=opensource``.
@@ -234,7 +234,7 @@ Now you can test if the brainvisa configuration GUI works well via the command: 
 
 - #### 5 - 2 - Populse_MIA Installation
 
-For the purpose of the container is to make profit of its ressources,
+For the purpose of the container is to make profit of its resources,
 you will install populse_mia, mri_conv and mia_processes in the container repertory.
 
 
@@ -249,7 +249,7 @@ sudo apt install -y openjdk-17-jre-headless
 mkdir ~/DEV &&\
 mkdir ~/DEV/populse_dev &&\
 cd ~/DEV/populse_dev
-git clone https://github.com/populse/populse_mia.git #git allow icons and other ressources to be download
+git clone https://github.com/populse/populse_mia.git #git allow icons and other resources to be download
 git clone https://github.com/populse/mia_processes
 git clone https://github.com/populse/mri_conv
 ```
@@ -259,5 +259,5 @@ To launch mia using an alias, insert the  following commands in the bash of your
 # mia launch
 alias mia='pwd_orig=$PWD; cd /casa/home/DEV/populse_dev/populse_mia/populse_mia; python3 main.py; cd $pwd_orig'
 
-You can now lauch mia with the command:
+You can now launch mia with the command:
 ```mia```

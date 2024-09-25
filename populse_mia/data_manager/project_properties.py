@@ -92,7 +92,7 @@ class SavedProjects:
         """Load the savedProjects dictionary from the saved_projects.yml file.
 
         If the saved_projects.yml file is not existing, it is created with the
-        "{paths: []}" value and the returned dictionnary is {paths: []}.
+        "{paths: []}" value and the returned dictionary is {paths: []}.
 
         :returns: the dictionary
 

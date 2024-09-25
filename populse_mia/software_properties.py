@@ -93,7 +93,7 @@ class Config:
               preferences
             - get_use_matlab_standalone: returns the value of "use matlab
               standalone" checkbox in the preferences
-            - get_use_mrtrix: retunrs the value of "use mrtrix" checkbox in the
+            - get_use_mrtrix: returns the value of "use mrtrix" checkbox in the
               prefrence
             - get_user_level: get the user level in the Capsul config
             - get_user_mode: returns the value of "user mode" checkbox

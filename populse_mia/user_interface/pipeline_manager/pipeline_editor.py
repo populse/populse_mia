@@ -2214,7 +2214,7 @@ def find_filename(paths_list, packages_list, file_name):
             for package in packages_list:
                 new_path = os.path.join(new_path, package)
 
-            # Making sure that the filename is found (has somme issues
+            # Making sure that the filename is found (has some issues
             # with case sensitivity)
             if os.path.isdir(new_path):
                 for f in os.listdir(new_path):
