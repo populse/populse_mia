@@ -1668,7 +1668,7 @@ class PopUpInheritanceDict(QDialog):
         v_box_values.addWidget(self.push_button_ignore_node)
 
         if iterate:
-            label = "<i>Theses choices will be valid for each iteration.</i>"
+            label = "<i>These choices will be valid for each iteration.</i>"
             v_box_values.addWidget(QLabel(label))
 
         self.setLayout(v_box_values)
@@ -4740,7 +4740,7 @@ class PopUpProperties(QDialog):
         self.tab_infos = PopUpInformation(self.project)
         self.tab_infos.setObjectName("tab_infos")
         self.tab_widget.addTab(
-            self.tab_infos, _translate("Dialog", "Informations")
+            self.tab_infos, _translate("Dialog", "Information")
         )
 
         # The 'OK' push button

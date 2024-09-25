@@ -453,7 +453,7 @@ class InstallProcesses(QDialog):
                             get_process_instance(
                                 "%s.%s" % (module_name, v.__name__)
                             )
-                            # Updating the tree's dictionnary
+                            # Updating the tree's dictionary
                             path_list = module_name.split(".")
                             path_list.append(k)
                             pkg_iter = proc_dic
@@ -2567,7 +2567,7 @@ class PackageLibraryDialog(QDialog):
             self.status_label.setText(old_status)
 
     def reset_action(self, itemlist, add):
-        """Called to reset a prevous add or remove package action.
+        """Called to reset a previous add or remove package action.
 
         :param itemlist: the QListWidget from add or remove package
         :param add: boolean to know which list to update
@@ -3015,7 +3015,7 @@ def import_file(full_name, path):
 
 
 def node_structure_from_dict(datadict, parent=None, root_node=None):
-    """Return a hierarchical node stucture required by the TreeModel.
+    """Return a hierarchical node structure required by the TreeModel.
 
     :param datadict: dictionary
     :param parent: Parent of the node

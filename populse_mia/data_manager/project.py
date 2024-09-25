@@ -753,7 +753,7 @@ class Project:
 
         The history dict contains several elements:
 
-        - `parent_files`: set of other data used (directy or indirectly) to
+        - `parent_files`: set of other data used (directly or indirectly) to
           produce the data.
         - `processes`: processing bricks set from each ancestor data which
           lead to the given one. Elements are process (brick) UUIDs.
@@ -1664,10 +1664,10 @@ class Project:
                 # To revert the modifications of the visualized tags
                 # Old list of columns
                 old_tags = self.session.get_shown_tags()
-                # List of the tags visibles before the modification
+                # List of the tags visible before the modification
                 # (Tag objects)
-                visibles = to_undo[1]
-                self.session.set_shown_tags(visibles)
+                visible = to_undo[1]
+                self.session.set_shown_tags(visible)
                 # Columns updated
                 table.update_visualized_columns(
                     old_tags, self.session.get_shown_tags()

@@ -709,7 +709,7 @@ class MiniViewer(QWidget):
 
             # If we are in the "cursors" display mode
             if self.check_box_slices.checkState() == Qt.Unchecked:
-                # Layout to aligne each thumbnail (image + cursors)
+                # Layout to align each thumbnail (image + cursors)
                 self.h_box_thumb = QHBoxLayout()
 
                 # idx represents the index of the selected image

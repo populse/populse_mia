@@ -1245,7 +1245,7 @@ class MainWindow(QMainWindow):
                     ):
                         shutil.copy(filename, os.path.join(filters_path))
 
-                # First we register the Database before commiting the last
+                # First we register the Database before committing the last
                 # pending modifications
                 shutil.copy(
                     os.path.join(old_folder, "database", "mia.db"),
@@ -1263,7 +1263,7 @@ class MainWindow(QMainWindow):
                     properties_path,
                 )
 
-                # We copy the Database with all the modifications commited in
+                # We copy the Database with all the modifications committed in
                 # the new project
                 os.mkdir(database_path)
                 shutil.copy(
@@ -1467,7 +1467,7 @@ class MainWindow(QMainWindow):
         app = IPKernelApp.instance()
 
         if not app.initialized() or not app.kernel:
-            print("runing IP console kernel")
+            print("running IP console kernel")
             app.hb_port = 50042  # don't know why this is not set automatically
             app.initialize(
                 [
