@@ -297,10 +297,10 @@ class PipelineManagerTab(QWidget):
         )
 
         sources_images_dir = config.getSourceImageDir()
-        # commented on January, 4th 2020
-        # initialization button was deleted to avoid issues of indexation
-        # into the database.
-        # initialization is now performed just before run in run_pipeline_action
+        # Commented on January, 4th 2020
+        # Initialization button was deleted to avoid issues of indexation
+        # into the database. Initialization is now performed just before
+        # run in run_pipeline_action.
         # self.init_pipeline_action = QAction(
         #     QIcon(os.path.join(sources_images_dir, 'init32.png')),
         #     "Initialize pipeline", self)
