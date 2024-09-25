@@ -300,7 +300,7 @@ class PipelineManagerTab(QWidget):
         # commented on January, 4th 2020
         # initialization button was deleted to avoid issues of indexation
         # into the database.
-        # initialization is now performed just befor run in run_pipeline_action
+        # initialization is now performed just before run in run_pipeline_action
         # self.init_pipeline_action = QAction(
         #     QIcon(os.path.join(sources_images_dir, 'init32.png')),
         #     "Initialize pipeline", self)
@@ -1251,7 +1251,7 @@ class PipelineManagerTab(QWidget):
         """
         Complete pipeline parameters using Capsul's completion engine
         mechanism.
-        This engine works using a set of attributes which can be retreived from
+        This engine works using a set of attributes which can be retrieved from
         the database.
         """
 
@@ -2544,10 +2544,10 @@ class PipelineManagerTab(QWidget):
         distributed/remote execution activated, then closes the client MIA.
         Processing takes place (possibly remotely) within a soma-workflow
         server. Then the user runs MIA again, and we have to collect the
-        outputs of runs which happenned (finished) while we were disconnected.
+        outputs of runs which happened (finished) while we were disconnected.
 
         Such post-processing includes database indexing of output data, and
-        should take into account not only the current pipeline, bu all past
+        should take into account not only the current pipeline, but all past
         runs which have not been postprocessed yet.
 
         When called with a pipeline argument, it only deals with this one.
@@ -3316,7 +3316,7 @@ class PipelineManagerTab(QWidget):
                 if not trait.output
             }
 
-        # Fill inputs and outputs values with job if job is mot None
+        # Fill inputs and outputs values with job if job is not None
         keys = list(inputs.keys())
 
         for key in keys:

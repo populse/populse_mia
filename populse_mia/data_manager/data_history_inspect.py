@@ -146,7 +146,7 @@ def get_data_history(filename, project):
 
     The history dict contains several elements:
 
-    - `parent_files`: set of other data used (directy or indirectly) to
+    - `parent_files`: set of other data used (directly or indirectly) to
       produce the data.
     - `processes`: processing bricks set from each ancestor data which
       lead to the given one. Elements are process (brick) UUIDs.
@@ -185,7 +185,7 @@ def get_data_history_processes(filename, project):
     into a :class:`~capsul.pipeline.pipeline.Pipeline` instance to represent
     the data history.
 
-    The processes output by this functon may include extra processes that are
+    The processes output by this function may include extra processes that are
     looked during history search, but finally not used. They are not filtered
     out, but they are distinguished with their ``used`` attribute: those
     actually used have it set to True.

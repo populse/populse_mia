@@ -107,7 +107,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
               engine
             - get_project: get the project associated with the process
             - path_attributes: re-route to underlying fallback engine
-            - remove_switch_observe: reimplemented since it is expectes
+            - remove_switch_observe: reimplemented since it is expects
               in switches completion engine
 
     """
@@ -710,7 +710,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         return self.fallback_engine.path_attributes(filename, parameter)
 
     def remove_switch_observer(self, observer=None):
-        """Reimplemented since it is expectes in switches completion engine.
+        """Reimplemented since it is expects in switches completion engine.
 
         Parameters
         ----------

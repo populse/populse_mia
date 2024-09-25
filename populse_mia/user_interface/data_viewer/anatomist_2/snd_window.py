@@ -190,7 +190,7 @@ class NewWindowViewer(QtGui.QMainWindow):
         """
         Defines the dimensions of the popup which is a QWidget
         QWidget is added to self.popups in order to keep the widget
-        but beeing able to replace the object inside
+        but being able to replace the object inside
 
         """
         a = ana.Anatomist("-b")
