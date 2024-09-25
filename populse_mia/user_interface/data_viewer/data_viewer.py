@@ -32,7 +32,7 @@ class DataViewer(object):
 
     The API is made willingly very simple and limited. Viewers implementations
     are free to use Populse database features to implement fancy views. The
-    base functions are to regiter a project and documents list, display or
+    base functions are to register a project and documents list, display or
     remove given files.
     """
 
@@ -72,7 +72,7 @@ class DataViewer(object):
             "viewer implementations"
         )
 
-    def set_documents(self, projet, documents):
+    def set_documents(self, project, documents):
         """
         Sets the project and list of possible documents
         """

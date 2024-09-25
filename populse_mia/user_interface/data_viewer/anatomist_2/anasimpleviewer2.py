@@ -521,7 +521,7 @@ class AnaSimpleViewer2(Qt.QObject):
             valbox.setVerticalHeaderLabels([""] * (len(self.fusion2d) - 1))
         i = 0
         for obj in self.fusion2d[1:]:
-            # retreive volume val'radio'ue in its own coords system
+            # retrieve volume val'radio'ue in its own coords system
             aimsv = ana.cpp.AObjectConverter.aims(obj)
             oref = obj.getReferential()
             tr = a.getTransformation(wref, oref)
@@ -566,7 +566,7 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def automaticRunning(self):
         """
-        Enable automatic running of functionnal images
+        Enable automatic running of functional images
         frame rate can be changed in preferences by the user
         """
 
@@ -954,7 +954,7 @@ class AnaSimpleViewer2(Qt.QObject):
 
         # view obj in these views
         self.addObject(obj)
-        # set the cursot at the center of the object (actually, overcome a bug
+        # set the cursor at the center of the object (actually, overcome a bug
         # in anatomist...)
         self.viewReferential(obj)
 

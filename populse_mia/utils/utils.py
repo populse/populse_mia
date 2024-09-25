@@ -1099,7 +1099,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             and ("Versions" not in proc_content)
         )
     ):
-        # The process_config.yml fle is corrupted or no pipeline/process
+        # The process_config.yml file is corrupted or no pipeline/process
         # was available during the previous use of mia or their versions
         # are not known
         pack2install = [
