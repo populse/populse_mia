@@ -24,7 +24,7 @@ Install singularity `as for user installation <./virtualisation_pre_req_linux.ht
 After installing singularity in your station
 ----------------------------------------------
 
-`Reminder: Two softwares must be installed: Python (version >= 3.7) and Singularity (version > 3.6).`
+`Reminder: Two software must be installed: Python (version >= 3.7) and Singularity (version > 3.6).`
 
 **Install Read only_container**
 
@@ -66,7 +66,7 @@ And continue with the `Installation part <./virtualisation_developer_installatio
 
 **Create a container within a writable directory**
 
-Only if you need to add librairies with apt in your container.
+Only if you need to add libraries with apt in your container.
   - sudo singularity build \--sandbox $HOME/casa_distro/casa-dev-5.3-6_wr $HOME/casa_distro/casa-dev-5.3-6.sif # to make an editable image (casa-dev-5.3-6_wr)
   - sudo singularity run \--writable $HOME/casa_distro/casa-dev-5.3-6_wr bash # to modify the image
 

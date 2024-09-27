@@ -58,7 +58,7 @@ Pre-commit
 
 * Description
 
-  The populse_mia software calls a set of `git hooks <https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks#_git_hooks>`_ before each piece of code is commited. This feature is accomplished with the `pre-commit <https://pre-commit.com/>`_ package and helps to better format the code, include documentation and much more.
+  The populse_mia software calls a set of `git hooks <https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks#_git_hooks>`_ before each piece of code is committed. This feature is accomplished with the `pre-commit <https://pre-commit.com/>`_ package and helps to better format the code, include documentation and much more.
 
 * Installation
 
@@ -66,7 +66,7 @@ Pre-commit
 
     pip3 install pre-commit
 
-  Before commiting for the first time and after every change in the .pre-commit-config.yaml file, launch: ::
+  Before committing for the first time and after every change in the .pre-commit-config.yaml file, launch: ::
 
     pre-commit install
 
@@ -87,7 +87,7 @@ Pre-commit
       [pre_commit c10882d05] Add features to data_viewer.
         1 file changed, 29 insertions(+), 24 deletions(-)
 
-  * On the other hand, if a commit fails the pre-commit (eg. for containing a file not formatted according to `PEP8 <https://peps.python.org/pep-0008/>`_), failing file will be fixed and recreated as an unstaged file. Those files should be then added and commited again. In the case where the pre-commit feature cannot fix the error by itself, the developer should modify the accordingly and recommit the changes.
+  * On the other hand, if a commit fails the pre-commit (eg. for containing a file not formatted according to `PEP8 <https://peps.python.org/pep-0008/>`_), failing file will be fixed and recreated as an unstaged file. Those files should be then added and committed again. In the case where the pre-commit feature cannot fix the error by itself, the developer should modify the accordingly and recommit the changes.
 
   * An example of a failing commit: ::
 

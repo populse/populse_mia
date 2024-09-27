@@ -7,10 +7,10 @@
 |`Home <../index.html>`_|`Documentation <../documentation/documentation.html>`_|`Installation <./installation.html>`_|`GitHub <https://github.com/populse/populse_mia>`_|
 +-----------------------+------------------------------------------------------+-------------------------------------+--------------------------------------------------+
 
-Populse_mia's third-party softwares installations
+Populse_mia's third-party software installations
 =================================================
 
-To use bricks and pipelines from `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_ in populse_mia, it is necessary to install softwares as FSL, SPM, Freesurfer, ANTs...
+To use bricks and pipelines from `mia_processes <https://populse.github.io/mia_processes/html/index.html>`_ in populse_mia, it is necessary to install software as FSL, SPM, Freesurfer, ANTs...
 
 The software access paths must be configured in `Mia preferences <../documentation/preferences.html>`_.
 
@@ -20,11 +20,11 @@ Installation on Linux
 
  * These installation notes are based on Ubuntu 22.04.02 (and Fedora 37) which use Python3 as default (when ``python`` is typed into a command line).
 
- * ``/path/to/softs`` is the destination folder where the softwares will be installed, i.e.: ``/opt``, ``/home/APPS`` or other.
+ * ``/path/to/softs`` is the destination folder where the software will be installed, i.e.: ``/opt``, ``/home/APPS`` or other.
 
- * If populse_mia is installed in a container using `brainvisa Singulary image <./virtualisation_user_installation.html>`_, it's generally not necessary to be inside the container to install third-party softwares (installation on the host may be enough, but this depends on the container's operating system and the host).
+ * If populse_mia is installed in a container using `brainvisa Singulary image <./virtualisation_user_installation.html>`_, it's generally not necessary to be inside the container to install third-party software (installation on the host may be enough, but this depends on the container's operating system and the host).
 
- * Populse_mia needs no environment variables, however to test installed third-party softwares outside populse_mia, the following lines must be included in the user's ``.bashrc`` file, or, depending on the operating system, any other script file executed when a user logs on (we recommend not to use these environment variables when using populse_mia by commenting the corresponding lines in the ~/.bashrc file). It may be necessary to open a new shell or restart a session (logout / login) or execute the contents of the .bashrc file (source ~/.bashrc) for the changes to take effect: ::
+ * Populse_mia needs no environment variables, however to test installed third-party software outside populse_mia, the following lines must be included in the user's ``.bashrc`` file, or, depending on the operating system, any other script file executed when a user logs on (we recommend not to use these environment variables when using populse_mia by commenting the corresponding lines in the ~/.bashrc file). It may be necessary to open a new shell or restart a session (logout / login) or execute the contents of the .bashrc file (source ~/.bashrc) for the changes to take effect: ::
 
     # FSL setup
     # FSL configuration is done in /home/user/.bash_profile and /home/user/Documents/MATLAB/startup.m
@@ -90,7 +90,7 @@ Installation of `SPM 12 <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>`_ St
    * Then if necessary (optional), create a .conf file in the /etc/ld.so.conf.d/ folder and add those previous paths in the file: ::
 
         sudo nano /etc/ld.so.conf.d/your_lib.conf
-	# Matlab 2019b Runtine Library
+	# Matlab 2019b Runtime Library
 	/usr/local/MATLAB/MATLAB_Runtime/v97/runtime/glnxa64
 	/usr/local/MATLAB/MATLAB_Runtime/v97/bin/glnxa64
 	/usr/local/MATLAB/MATLAB_Runtime/v97/sys/os/glnxa64

@@ -1028,7 +1028,7 @@ class TableDataBrowser(QTableWidget):
         tags = sorted(tags)
         tags.insert(0, TAG_FILENAME)
 
-        visibles = self.project.session.get_shown_tags()
+        visible = self.project.session.get_shown_tags()
 
         # Adding missing columns
 
@@ -1077,7 +1077,7 @@ class TableDataBrowser(QTableWidget):
 
                 # Hide the column if not visible
 
-                if tag in visibles:
+                if tag in visible:
                     self.setColumnHidden(column_index, True)
 
                 # Rows filled for the column being added

@@ -224,7 +224,7 @@ When Soma-Workflow is enabled, when clicking the ``Run`` button in the *Pipeline
 
 .. image:: ../images/swf_connection.jpg
 
-Select the configured resource you want to run the pipeline on, and click ``OK``. The resource will be connected, and the workflow will be sent there. If directories have been declared as *transfers*, then the input files from these directories will be automatically sent to the remote computing resource (through a secure ssh connection), and results in these directories will be transfered back to the client machine after execution.
+Select the configured resource you want to run the pipeline on, and click ``OK``. The resource will be connected, and the workflow will be sent there. If directories have been declared as *transfers*, then the input files from these directories will be automatically sent to the remote computing resource (through a secure ssh connection), and results in these directories will be transferred back to the client machine after execution.
 
 You can monitor the execution through the ``Status`` button in the *Pipeline manager tab* - or directly through the ``soma_workflow_gui`` monitor program.
 

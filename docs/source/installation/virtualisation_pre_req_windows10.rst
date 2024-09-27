@@ -150,7 +150,7 @@ Prerequisite are the software that need to be installed on your computer in orde
 
 - Create an installation directory:
 
-``mkdir -p $HOME/casa_distro/brainvisa-opensource-master`` (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared betwen several development configurations - but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
+``mkdir -p $HOME/casa_distro/brainvisa-opensource-master`` (note that we are using a slightly different directories organization from the user case, because the images here can be reused and shared between several development configurations - but this organization is not mandatory, it will just make things simpler for the management tool casa_distro if it is used later)
 
 - Download the "casa-dev" image found `here <https://brainvisa.info/download/>`_, preferably into the $HOME/casa_distro directory. Download the latest "casa-dev" image.
   It’s a .sif file, for instance casa-dev-5.3-8.sif. Type ``wget https://brainvisa.info/download/casa-dev-5.3-8.sif``

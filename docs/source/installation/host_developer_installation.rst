@@ -49,7 +49,7 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 * You can also download the following folders:
 
-      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains usefull resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
+      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
 
       * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
 
@@ -66,7 +66,7 @@ To use the whole populse project in developer mode on host (and have the latest 
 * In development mode the libraries needed for populse_mia  and mia_processes are not installed as with pip. So depending on the libraries already installed on your station it may be necessary to complete this installation. Please refer to the Requirements chapter on the Github page for `populse_mia <https://github.com/populse/populse_mia#requirements>`_  and for `mia_processes <https://github.com/populse/mia_processes/blob/master/README.md#requirements>`__  to install the necessary third party libraries.
 
 
-  * Third party librairies installation, e.g. for nibabel ::
+  * Third party libraries installation, e.g. for nibabel ::
 
       pip3 install nibabel --user
 
@@ -76,8 +76,8 @@ To use the whole populse project in developer mode on host (and have the latest 
 
   * e.g. for traits ::
 
-      pip3 install traits==5.2.0 --user # The traits librairy is not yet installed
-      Pip3 install --force-reinstall traits==5.2.0 --user  # The traits librairy is already installed
+      pip3 install traits==5.2.0 --user # The traits library is not yet installed
+      Pip3 install --force-reinstall traits==5.2.0 --user  # The traits library is already installed
 
 |
 
@@ -126,7 +126,7 @@ All the dependencies should be install with populse_mia project.
 
 * You can also download the following folders:
 
-      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains usefull resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
+      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
 
       * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
 

@@ -1101,7 +1101,7 @@ class Node(object):
             return self._name
 
         def fset(self, value):
-            """Set tye name of the object."""
+            """Set the name of the object."""
 
             self._name = value
 
@@ -1184,7 +1184,7 @@ class Node(object):
             return self._value
 
         def fset(self, value):
-            """Set tye value of the object."""
+            """Set the value of the object."""
 
             self._value = value
 

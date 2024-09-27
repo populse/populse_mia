@@ -48,7 +48,7 @@ available `here <https://brainvisa.info/anatomist-5.0/user_doc/anatomist_manual1
 
 Users own viewers can be simply added to the `data_viewer folder <https://github.com/populse/populse_mia/tree/master/populse_mia/user_interface/data_viewer>`_. The viewer will then be automatically detected and added to the drop-down menu.
 
-In the following section we will focuse on anatomist_2 viewer which is an improved version of anatomist simple viewer.
+In the following section we will focus on anatomist_2 viewer which is an improved version of anatomist simple viewer.
 
 **The toolbar**
 ---------------

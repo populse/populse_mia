@@ -52,7 +52,7 @@ Installation
 
     * MRIFileManager: containing the file converter used in Mia.
 
-    * MiaResources (external resources): containing resources needed to use populse_mia and mia_processes in some cases (references data as ROI, templates, ect...)
+    * MiaResources (external resources): containing resources needed to use populse_mia and mia_processes in some cases (references data as ROI, templates, etc...)
 
   * Mia projects path: the folder containing the analysis projects saved in Mia. A "projects" folder will be created in the selected folder.
 
@@ -74,7 +74,7 @@ Installation
 
   * Matlab standalone path:
 
-    * Path of the folder containing Matlab Compiler Runtine.
+    * Path of the folder containing Matlab Compiler Runtime.
 
       * e.g. for linux - macOS: /usr/local/MATLAB/MATLAB_Runtime/v93/
 
