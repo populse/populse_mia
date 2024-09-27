@@ -83,7 +83,7 @@ Then, check that Singularity is well installed on your station:
 After installing singularity in your station
 ----------------------------------------------
 
-`Reminder: Two softwares must be installed: Python (version >= 3.7) and Singularity (version > 3.6).`
+`Reminder: Two software must be installed: Python (version >= 3.7) and Singularity (version > 3.6).`
 
 Open a shell, then:
 

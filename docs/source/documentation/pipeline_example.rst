@@ -61,7 +61,7 @@ Pipeline creation
 
 |
 
-* Save the pipeline in the proposed folder (User_processes) by clicking on "Save pipeine" or "Save pipeline as" in the "Pipeline" menu:
+* Save the pipeline in the proposed folder (User_processes) by clicking on "Save pipeline" or "Save pipeline as" in the "Pipeline" menu:
 
   .. image:: ../images/save_pipeline.png
    :align: center

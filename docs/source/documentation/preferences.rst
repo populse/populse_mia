@@ -77,8 +77,8 @@ POPULSE third party preferences
         * Sets the path to the executable file of MRI File Manager (usually stored in the "MRIFileManager" folder next to ``populse_mia`` install path, `if populse_mia was installed in user mode <../installation/user_installation.html>`_).
 	   * e.g.  /home/user/.populse_mia/MRIFileManager/MRIManager.jar
 
-External ressources preferences
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+External resources preferences
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     * Some processes may require external data to function correctly (such as ROIs, templates, etc.). The folder containing this resource data can be defined here. The `following data <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ can be used by default.
 
