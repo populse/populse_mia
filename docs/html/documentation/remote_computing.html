@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Remote computing with Popluse-MIA &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
+    <script src="../_static/documentation_options.js?v=bd736f96"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+        <h2 class="heading"><span>Remote computing with Popluse-MIA</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="remote-computing-with-popluse-mia">
+<h1>Remote computing with Popluse-MIA<a class="headerlink" href="#remote-computing-with-popluse-mia" title="Link to this heading">¶</a></h1>
+<p>Remote computing is performed using <a class="reference external" href="https://populse.github.io/soma-workflow/index.html">Soma-Workflow</a>.</p>
+<p>It needs several install steps before being able to process:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#install-soma-workflow-on-the-computing-server"><span class="std std-ref">Install Soma-Workflow on the computing server</span></a></p></li>
+<li><p><a class="reference internal" href="#configure-soma-workflow-on-the-computing-resource"><span class="std std-ref">Configure Soma-Workflow on the computing resource</span></a></p></li>
+<li><p><a class="reference internal" href="#configure-soma-workflow-on-the-client-machine"><span class="std std-ref">Configure Soma-Workflow on the client machine</span></a></p></li>
+<li><p><a class="reference internal" href="#configure-the-computing-resource-in-populse-mia-capsul"><span class="std std-ref">Configure the computing resource in Populse-MIA / Capsul</span></a></p></li>
+<li><p><a class="reference internal" href="#run-pipelines"><span class="std std-ref">Run pipelines</span></a></p></li>
+</ol>
+<p>Please note that there are few <a class="reference internal" href="#limitations"><span class="std std-ref">Limitations</span></a>.</p>
+<p>In these steps, things will be a bit different if the server has to run jobs inside a container such as <a class="reference external" href="https://docs.sylabs.io/guides/latest/user-guide/">Singularity</a>. Actually, the computing resource will then need to run the container in jobs, and often to pass it some additional information. The configuration will need to describe this indirection.</p>
+<p>There are 3 components working together, all with 2 situations: “native” or “containerized”:</p>
+<div class="mermaid">
+            flowchart LR
+    Client(Client)&lt;--&gt;SWF(Soma-Workflow server)
+    subgraph client [local client]
+        Client
+    end
+    subgraph server [remote computing resource]
+        SWF--&gt;Jobs
+    end
+        </div><ul class="simple">
+<li><p>the client (Populse-MIA, Capsul, Axon, or Soma-Workflow GUI) may run natively on the client system, or inside a container.</p></li>
+</ul>
+<div class="mermaid">
+            flowchart LR
+    Client(Client)&lt;--&gt;SWF(Soma-Workflow server)
+    subgraph client [local client]
+      subgraph container
+          Client
+      end
+    end
+    subgraph server [remote computing resource]
+        SWF--&gt;Jobs
+    end
+        </div><ul class="simple">
+<li><p>the computing resource should be running Soma-Workflow, either natively, or inside a container - and this is not always possible.</p></li>
+</ul>
+<div class="mermaid">
+            flowchart LR
+    Client(Client)&lt;--&gt;SWF(Soma-Workflow server)
+    subgraph client [local client]
+        Client
+    end
+    subgraph server [remote computing resource]
+        subgraph container
+            SWF
+        end
+        SWF--&gt;Jobs
+    end
+        </div><ul class="simple">
+<li><p>processing jobs may run natively on the computing resource nodes, or inside a container.</p></li>
+</ul>
+<div class="mermaid">
+            flowchart LR
+    Client(Client)&lt;--&gt;SWF(Soma-Workflow server)
+    subgraph client [local client]
+        Client
+    end
+    subgraph server [remote computing resource]
+        SWF--&gt;Jobs
+        subgraph container
+            Jobs
+        end
+    end
+        </div><p>The first point, client running natively or in a container, is normally not a problem and should make no difference. So the discussion will mainly focus on the two last points.</p>
+<section id="install-soma-workflow-on-the-computing-server">
+<span id="id1"></span><h2>Install Soma-Workflow on the computing server<a class="headerlink" href="#install-soma-workflow-on-the-computing-server" title="Link to this heading">¶</a></h2>
+<p>read <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#remote-execution">Soma-Workflow remote execution</a></p>
+<section id="native-installation">
+<h3>Native installation<a class="headerlink" href="#native-installation" title="Link to this heading">¶</a></h3>
+<p>If the computing resource is a cluster with a jobs resource manager (DRMS) like PBS, Grid Engine, Slurm or another one, then this manager needs to be operated by Soma-Workflow, and thus cannot run inside a container: in this situation, Soma-Workflow should be installed natively on the cluster front-end machine.</p>
+<ul class="simple">
+<li><p>Python (python3) should be installed and in the PATH of the system</p></li>
+<li><p>Soma-Workflow can be installed as sources just by cloning the github repository</p></li>
+</ul>
+<p>Ex - <strong>On the remote computing login node</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/populse/soma-workflow.git
+<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/soma-workflow/python:</span><span class="nv">$PYTHONPATH</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>then add in your <code class="docutils literal notranslate"><span class="pre">$HOME/.bashrc</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/soma-workflow/python:</span><span class="nv">$PYTHONPATH</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="container-installation">
+<h3>Container installation<a class="headerlink" href="#container-installation" title="Link to this heading">¶</a></h3>
+<p>The client just needs to know how to run it: the client config should specify the <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#python-command-option">PYTHON_COMMAND option</a>. See the <a class="reference internal" href="#configure-soma-workflow-on-the-client-machine"><span class="std std-ref">client configuration</span></a> below.</p>
+</section>
+</section>
+<section id="configure-soma-workflow-on-the-computing-resource">
+<span id="id2"></span><h2>Configure Soma-Workflow on the computing resource<a class="headerlink" href="#configure-soma-workflow-on-the-computing-resource" title="Link to this heading">¶</a></h2>
+<p>See <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#client-server-application-server">Soma-Workflow documentation</a>.</p>
+<p>The configuration file <code class="docutils literal notranslate"><span class="pre">$HOME/.soma-workflow.cfg</span></code> has to be created or edited on the computing resource side, on the user account. It needs to declare the computing resource, with an identifier.</p>
+<p>If the computing server will run jobs inside a container, then each command has to be prefixed with the container run command, such as <code class="docutils literal notranslate"><span class="pre">singularity</span> <span class="pre">run</span> <span class="pre">/home/myself/container.sif</span></code>, or <code class="docutils literal notranslate"><span class="pre">/home/myself/brainvisa/bin/bv</span></code> for a <a class="reference external" href="https://brainvisa.github.io/casa-distro/index.html">Casa-Distro container</a> like a <a class="reference external" href="https://brainvisa.info">BrainVisa distribution</a>. This is done using the <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#container-command">CONTAINER_COMMAND option</a>, as explained <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#running-servers-and-jobs-in-a-container">in this documentation</a>.</p>
+<p>Ex - <strong>On the remote computing login node</strong>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[dr144257@alambic-py3]</span>
+<span class="na">SERVER_NAME</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s">dr144257@alambic-py3</span>
+<span class="c1"># optional limitation of the jobs in various queues</span>
+<span class="na">MAX_JOB_IN_QUEUE</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">{15} test{50} Nspin_long{15}</span>
+<span class="na">MAX_JOB_RUNNING</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">{100} test{500} Nspin_long{50}</span>
+<span class="na">container_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;/home/dr144257/brainvisa-cea-master/bin/bv&#39;]</span>
+<span class="na">scheduler_type</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">pbspro</span>
+<span class="c1"># native_specification = -l walltime=96:00:00</span>
+</pre></div>
+</div>
+</section>
+<section id="configure-soma-workflow-on-the-client-machine">
+<span id="id3"></span><h2>Configure Soma-Workflow on the client machine<a class="headerlink" href="#configure-soma-workflow-on-the-client-machine" title="Link to this heading">¶</a></h2>
+<p>See <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#client-server-application-client">Soma-Workflow documentation</a>.</p>
+<p>The configuration file <code class="docutils literal notranslate"><span class="pre">$HOME/.soma-workflow.cfg</span></code> has to be created or edited on the client system machine side, on the user account. It needs to declare the remote computing resource, with the same identifier it has been declared on the server side.</p>
+<p>If the client runs inside a container (such as a <a class="reference external" href="https://brainvisa.github.io/casa-distro/index.html">Casa-Distro container</a>) using a separate user home directory, then the config file must be located (or symlinked, or mounted) in the container home directory.</p>
+<p>If the Soma-Workflow server on the remote computing side should run inside a container, then the client needs to know how to run the container. This is done by specifying the <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#python-command-option">PYTHON_COMMAND option</a> as explained in <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#running-servers-and-jobs-in-a-container">the remote execution doc</a>. Typically we will use something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHON_COMMAND</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>bv<span class="w"> </span>python
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHON_COMMAND</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/home/myself/brainvisa/bin/bv<span class="w"> </span>python
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHON_COMMAND</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>/home/myself/container.sif<span class="w"> </span>python
+</pre></div>
+</div>
+<p>Ex - <strong>On the client local machine, possibly in the container home directory</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>dr144257@alambic-py3<span class="o">]</span>
+<span class="nv">cluster_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>alambic.intra.cea.fr
+<span class="nv">submitting_machines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>alambic.intra.cea.fr
+<span class="nv">queues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Default<span class="w"> </span>Nspin_run32<span class="w"> </span>Nspin_run16<span class="w"> </span>Nspin_run8<span class="w"> </span>Nspin_run4<span class="w"> </span>Nspin_bigM<span class="w">  </span>Nspin_short<span class="w"> </span>Nspin_long<span class="w"> </span>Cati_run32<span class="w"> </span>Cati_run16<span class="w"> </span>Cati_run8<span class="w"> </span>Cati_run4<span class="w"> </span>Cati_short<span class="w"> </span>Cati_long<span class="w"> </span>Global_short<span class="w"> </span>Global_long<span class="w"> </span>run2<span class="w"> </span>run4<span class="w"> </span>run8<span class="w"> </span>run16<span class="w"> </span>run32<span class="w"> </span>lowprio
+<span class="nv">login</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>dr144257
+<span class="nv">allowed_python_versions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+</pre></div>
+</div>
+</section>
+<section id="configure-the-computing-resource-in-populse-mia-capsul">
+<span id="id4"></span><h2>Configure the computing resource in Populse-MIA / Capsul<a class="headerlink" href="#configure-the-computing-resource-in-populse-mia-capsul" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Run Populse-MIA:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>populse_mia
+</pre></div>
+</div>
+<ul>
+<li><dl>
+<dt>Go to the menu <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">/</span> <span class="pre">MIA</span> <span class="pre">preferences</span></code></dt><dd><ul>
+<li><dl>
+<dt>In the preferences, open the <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> tab</dt><dd><ul>
+<li><dl>
+<dt>in the Pipeline tab, click <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">CAPSUL</span> <span class="pre">config</span></code></dt><dd><ul>
+<li><dl>
+<dt>in the Capsul config, go to the <code class="docutils literal notranslate"><span class="pre">somaworkflow</span></code> tab</dt><dd><ul>
+<li><p>type the computing resource name in the <code class="docutils literal notranslate"><span class="pre">computing_resource</span></code> parameter. In our example, type: <code class="docutils literal notranslate"><span class="pre">dr144257&#64;alambic-py3</span></code>. Well, this is just to set it as the default resource, it’s not mandatory</p>
+<blockquote>
+<div><img alt="../_images/swf_capsul_config1.jpg" src="../_images/swf_capsul_config1.jpg" />
+</div></blockquote>
+</li>
+<li><p>edit the <code class="docutils literal notranslate"><span class="pre">Environment</span></code> parameter at the top of the Capsul config dialog, and enter the computig resource name: <code class="docutils literal notranslate"><span class="pre">dr144257&#64;alambic-py3</span></code> for us here. Validate by pressing <em>Return</em>: this will create a config entry for this resource.</p></li>
+<li><p>You can enter different config values for this computing resource from the default, “<em>global</em>” one. Especially the <code class="docutils literal notranslate"><span class="pre">somaworkflow</span></code> module config can be edited to use some data file transfers: some directories can be declared in <code class="docutils literal notranslate"><span class="pre">transfer_paths</span></code></p>
+<blockquote>
+<div><img alt="../_images/swf_capsul_config2.jpg" src="../_images/swf_capsul_config2.jpg" />
+</div></blockquote>
+</li>
+<li><p>still in the <code class="docutils literal notranslate"><span class="pre">dr144257&#64;alambic-py3</span></code> environment (or your computing resource) config, you can set other tabs config, like <code class="docutils literal notranslate"><span class="pre">matlab</span></code> or <code class="docutils literal notranslate"><span class="pre">spm</span></code> paths:</p>
+<blockquote>
+<div><img alt="../_images/swf_capsul_config3.jpg" src="../_images/swf_capsul_config3.jpg" />
+<img alt="../_images/swf_capsul_config4.jpg" src="../_images/swf_capsul_config4.jpg" />
+</div></blockquote>
+</li>
+<li><p>validate by pressing <code class="docutils literal notranslate"><span class="pre">OK</span></code> in the Capsul config dialog</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>validate the MIA preferences by pressing <code class="docutils literal notranslate"><span class="pre">OK</span></code> there too.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="run-pipelines">
+<span id="id5"></span><h2>Run pipelines<a class="headerlink" href="#run-pipelines" title="Link to this heading">¶</a></h2>
+<p>When Soma-Workflow is enabled, when clicking the <code class="docutils literal notranslate"><span class="pre">Run</span></code> button in the <em>Pipeline Manager tab</em> of Populse-MIA, then a connection dialog is displayed: it is the classical Soma-Workflow connection dialog:</p>
+<img alt="../_images/swf_connection.jpg" src="../_images/swf_connection.jpg" />
+<p>Select the configured resource you want to run the pipeline on, and click <code class="docutils literal notranslate"><span class="pre">OK</span></code>. The resource will be connected, and the workflow will be sent there. If directories have been declared as <em>transfers</em>, then the input files from these directories will be automatically sent to the remote computing resource (through a secure ssh connection), and results in these directories will be transferred back to the client machine after execution.</p>
+<p>You can monitor the execution through the <code class="docutils literal notranslate"><span class="pre">Status</span></code> button in the <em>Pipeline manager tab</em> - or directly through the <code class="docutils literal notranslate"><span class="pre">soma_workflow_gui</span></code> monitor program.</p>
+<ul class="simple">
+<li><p>In the status window, check the <code class="docutils literal notranslate"><span class="pre">Soma-Workflow</span> <span class="pre">monitoring</span></code> option.</p></li>
+</ul>
+<img alt="../_images/swf_monitor1.png" src="../_images/swf_monitor1.png" />
+<ul class="simple">
+<li><p>You see… <em>nothing !</em>… Yes it’s normal: you see the <em>local machine</em> and the workflow has been sent to a <em>remote resource</em>: you need to connect the remote monitoring: click the <code class="docutils literal notranslate"><span class="pre">Add</span></code> button. The same connection dialog appears. Select the resource.</p></li>
+<li><p>After connection, the resource is available. The running workflow should appear first in the list.</p></li>
+</ul>
+</section>
+<section id="limitations">
+<span id="id6"></span><h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">¶</a></h2>
+<p>There are a few limitations to the client / server processing</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#disconnection-is-partly-supported-in-mia"><span class="std std-ref">Disconnection is partly supported in MIA</span></a></p></li>
+<li><p><a class="reference internal" href="#file-transfers-limitations"><span class="std std-ref">File transfers limitations</span></a></p></li>
+<li><p><a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#cluster-admins-may-not-like-servers-running-on-the-login-node">Cluster admins may not like servers running on the login node</a></p></li>
+<li><p><a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#why-it-s-difficult-and-often-impossible-to-run-the-soma-workflow-server-inside-a-container">Why it’s difficult and often impossible to run the Soma-Workflow server inside a container</a></p></li>
+</ol>
+<section id="disconnection-is-partly-supported-in-mia">
+<span id="id7"></span><h3>Disconnection is partly supported in MIA<a class="headerlink" href="#disconnection-is-partly-supported-in-mia" title="Link to this heading">¶</a></h3>
+<p>The pipeline execution engine in MIA is monitoring the execution directly, and when execution is finished, gaterhes the results to index them in the database. If the client is disconnected or shut down before processing has finished, the results indexing will not be done automatically.
+It will be done partly when clicking the “cleanup” button.</p>
+</section>
+<section id="file-transfers-limitations">
+<span id="id8"></span><h3>File transfers limitations<a class="headerlink" href="#file-transfers-limitations" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>File transfers are using network bandwidth. For large data, it can be slow enough to forbid any execution.</p></li>
+<li><p>Transfers are working well as long as they are correctly and fully described in processes input and output parameters. If a process takes a directory as input, <strong>the full contents of that directory will be sent to the server</strong>. So if the directory contains more than the needed data, it will involve unnecessary, and possibly huge data transfers. In some cases it will simply be impossible to use. An interesting example is SPM / nipype processes which take the output directory as an input parameter: it will likely trigger the transfer of the <strong>full database</strong>, which is certainly not good.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

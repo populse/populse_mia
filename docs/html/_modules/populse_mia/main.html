@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>populse_mia.main &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=dfa0e015" />
+    <script src="../../_static/documentation_options.js?v=bd736f96"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
+          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.main</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for populse_mia.main</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;The first module used at the mia runtime.</span>
+
+<span class="sd">Basically, this module is dedicated to the initialisation of the basic</span>
+<span class="sd">parameters and the various checks necessary for a successful launch of the</span>
+<span class="sd">mia&#39;s GUI.</span>
+
+<span class="sd">:Contains:</span>
+<span class="sd">    :Function:</span>
+<span class="sd">        - main</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># Populse_mia - Copyright (C) IRMaGe/CEA, 2018</span>
+<span class="c1"># Distributed under the terms of the CeCILL license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="c1"># PyQt5 imports</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
+
+<span class="c1"># main_window = None</span>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../populse_mia.html#populse_mia.main.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make basic configuration check, then actual launch of Mia.</span>
+
+<span class="sd">    Checks if Mia is called from the site/dist packages (`user mode`) or from a</span>
+<span class="sd">    cloned git repository (`developer mode`).</span>
+
+<span class="sd">    ~/.populse_mia/configuration_path.yml is mandatory, if it doesn&#39;t exist</span>
+<span class="sd">    or is corrupted, try to create one with a valid properties path.</span>
+
+<span class="sd">    - If launched from a cloned git repository (`developer mode`):</span>
+<span class="sd">        - the properties_path is the &quot;properties_dev_path&quot; parameter in</span>
+<span class="sd">          ~/.populse_mia/configuration_path.yml</span>
+<span class="sd">    - If launched from the site/dist packages (`user mode`):</span>
+<span class="sd">        - the properties_path is the &quot;properties_user_path&quot; parameter in</span>
+<span class="sd">          ~/.populse_mia/configuration_path.yml</span>
+
+<span class="sd">    Launches the verify_processes() function, then the launch_mia() function</span>
+<span class="sd">    (Mia&#39;s real launch).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pypath</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">package_not_found</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Disables any etelemetry check.</span>
+    <span class="k">if</span> <span class="s2">&quot;NO_ET&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;NO_ET&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;NIPYPE_NO_ET&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;NIPYPE_NO_ET&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+
+    <span class="c1"># Trying to fix High DPI Display issue</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;QT_AUTO_SCREEN_SCALE_FACTOR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+
+    <span class="c1"># General QApplication class instantiation</span>
+    <span class="n">QCoreApplication</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AA_ShareOpenGLContexts</span><span class="p">)</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">QApplication</span><span class="o">.</span><span class="n">setOverrideCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WaitCursor</span><span class="p">)</span>
+
+    <span class="c1"># Adding the populse projects path to sys.path, if in developer mode</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+        <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span>
+    <span class="p">):</span>  <span class="c1"># &quot;developer&quot; mode</span>
+        <span class="n">DEV_MODE</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MIA_DEV_MODE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+        <span class="n">root_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+        <span class="p">)</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">populse_bdir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">capsul_bdir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">soma_bdir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">,</span> <span class="s2">&quot;populse_mia&quot;</span><span class="p">)):</span>
+            <span class="c1"># Different sources layout - try casa_distro mode</span>
+            <span class="n">root_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;populse&quot;</span><span class="p">:</span>
+                <span class="n">root_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">)</span>
+                <span class="n">populse_bdir</span> <span class="o">=</span> <span class="s2">&quot;populse&quot;</span>
+                <span class="n">soma_bdir</span> <span class="o">=</span> <span class="s2">&quot;soma&quot;</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;root_dev_dir:&quot;</span><span class="p">,</span> <span class="n">root_dev_dir</span><span class="p">)</span>
+            <span class="n">branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;branch:&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Adding populse_mia</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">- Mia in &quot;developer&quot; mode&#39;</span><span class="p">)</span>
+        <span class="n">mia_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">populse_bdir</span><span class="p">,</span> <span class="s2">&quot;populse_mia&quot;</span><span class="p">,</span> <span class="n">branch</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . Using populse_mia package from </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mia_dev_dir</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">mia_dev_dir</span><span class="p">)</span>
+        <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mia_dev_dir</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">mia_dev_dir</span>
+        <span class="kn">from</span> <span class="nn">populse_mia</span> <span class="kn">import</span> <span class="n">info</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    populse_mia version: </span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Adding capsul</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">capsul_bdir</span><span class="p">,</span> <span class="s2">&quot;capsul&quot;</span><span class="p">)):</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">capsul_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">capsul_bdir</span><span class="p">,</span> <span class="s2">&quot;capsul&quot;</span><span class="p">,</span> <span class="n">branch</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;  . Using capsul package from </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">capsul_dev_dir</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">capsul_dev_dir</span><span class="p">)</span>
+            <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">capsul_dev_dir</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">capsul_dev_dir</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">capsul</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . capsul package was not found!...&quot;</span><span class="p">)</span>
+                <span class="n">package_not_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;capsul&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">capsul_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">capsul</span><span class="o">.</span><span class="vm">__file__</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;  . Using capsul package from </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">capsul_dir</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">del</span> <span class="n">capsul_dir</span>
+                <span class="k">del</span> <span class="n">capsul</span>
+
+        <span class="c1"># Adding soma_base:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">soma_bdir</span><span class="p">,</span> <span class="s2">&quot;soma-base&quot;</span><span class="p">)):</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">soma_b_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">soma_bdir</span><span class="p">,</span> <span class="s2">&quot;soma-base&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . Using soma package from </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">soma_b_dev_dir</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">soma_b_dev_dir</span><span class="p">)</span>
+            <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">soma_b_dev_dir</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">soma_b_dev_dir</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">soma</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . soma package was not found!...&quot;</span><span class="p">)</span>
+                <span class="n">package_not_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;soma&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">soma_b_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">soma</span><span class="o">.</span><span class="vm">__file__</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . Using soma package from </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">soma_b_dir</span><span class="p">))</span>
+                <span class="k">del</span> <span class="n">soma_b_dir</span>
+                <span class="k">del</span> <span class="n">soma</span>
+
+        <span class="c1"># Adding soma_workflow:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">soma_bdir</span><span class="p">,</span> <span class="s2">&quot;soma-workflow&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">soma_w_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">soma_bdir</span><span class="p">,</span> <span class="s2">&quot;soma-workflow&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;  . Using soma_workflow package from </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">soma_w_dev_dir</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">soma_w_dev_dir</span><span class="p">)</span>
+            <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">soma_w_dev_dir</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">soma_w_dev_dir</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">soma_workflow</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . soma_workflow package was not found!...&quot;</span><span class="p">)</span>
+                <span class="n">package_not_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;soma_workflow&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">soma_w_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">soma_workflow</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;  . Using soma_worflow package from </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">soma_w_dir</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">del</span> <span class="n">soma_w_dir</span>
+                <span class="k">del</span> <span class="n">soma_workflow</span>
+
+        <span class="c1"># Adding populse_db:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">populse_bdir</span><span class="p">,</span> <span class="s2">&quot;populse_db&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">populse_db_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">populse_bdir</span><span class="p">,</span> <span class="s2">&quot;populse_db&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;  . Using populse_db package from </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">populse_db_dev_dir</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">populse_db_dev_dir</span><span class="p">)</span>
+            <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">populse_db_dev_dir</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">populse_db_dev_dir</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">populse_db</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . populse_db package was not found!...&quot;</span><span class="p">)</span>
+                <span class="n">package_not_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;populse_db&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">populse_db_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">populse_db</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;  . Using populse_db package from </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">populse_db_dir</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">del</span> <span class="n">populse_db_dir</span>
+                <span class="k">del</span> <span class="n">populse_db</span>
+
+        <span class="c1"># Adding mia_processes:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">populse_bdir</span><span class="p">,</span> <span class="s2">&quot;mia_processes&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">mia_processes_dev_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">root_dev_dir</span><span class="p">,</span> <span class="n">populse_bdir</span><span class="p">,</span> <span class="s2">&quot;mia_processes&quot;</span><span class="p">,</span> <span class="n">branch</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;  . Using mia_processes package from </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mia_processes_dev_dir</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">mia_processes_dev_dir</span><span class="p">)</span>
+            <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mia_processes_dev_dir</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">mia_processes_dev_dir</span>
+            <span class="kn">from</span> <span class="nn">mia_processes</span> <span class="kn">import</span> <span class="n">info</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    mia_processes version: </span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">mia_processes</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  . mia_processes package was not found!...&quot;</span><span class="p">)</span>
+                <span class="n">package_not_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mia_processes_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">mia_processes</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;  . Using mia_processes package from </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                    <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mia_processes_dir</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">del</span> <span class="n">mia_processes_dir</span>
+                <span class="k">del</span> <span class="n">mia_processes</span>
+
+        <span class="k">del</span> <span class="n">root_dev_dir</span>
+
+        <span class="k">if</span> <span class="n">package_not_found</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Mia cannot be started because the following packages &quot;</span>
+                <span class="s2">&quot;were not found:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">package_not_found</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># elif &quot;CASA_DISTRO&quot; in os.environ:</span>
+    <span class="c1">#     # If the casa distro development environment is detected,</span>
+    <span class="c1">#     # developer mode is activated.</span>
+    <span class="c1">#     os.environ[&quot;MIA_DEV_MODE&quot;] = &quot;1&quot;</span>
+    <span class="c1">#     DEV_MODE = True</span>
+
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># &quot;user&quot; mode</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MIA_DEV_MODE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+        <span class="n">DEV_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">- Mia in &quot;user&quot; mode&#39;</span><span class="p">)</span>
+        <span class="c1"># Where do we import the modules from?</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;populse_mia&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;capsul&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;soma&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;soma_workflow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;populse_db&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mia_processes&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+                <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mod</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">del</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;  . Using </span><span class="si">{0}</span><span class="s2"> package from </span><span class="si">{1}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">mod</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Check if nipype, mia_processes and capsul are available on the station.</span>
+    <span class="c1"># If not available ask the user to install them</span>
+    <span class="n">pkg_error</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># pkg_error: a list containing nipype and/or mia_processes and/or capsul,</span>
+    <span class="c1">#            if not currently installed</span>
+    <span class="n">capsulVer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># capsul version currently installed</span>
+    <span class="n">miaProcVer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># mia_processes version currently installed</span>
+    <span class="n">nipypeVer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># nipype version currently installed</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">capsul</span> <span class="kn">import</span> <span class="n">info</span> <span class="k">as</span> <span class="n">capsul_info</span>
+
+        <span class="n">capsulVer</span> <span class="o">=</span> <span class="n">capsul_info</span><span class="o">.</span><span class="n">__version__</span>
+
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">pkg_error</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;capsul&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">37</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MIA warning </span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">37</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;nipype&quot;</span><span class="p">)</span>
+        <span class="n">nipypeVer</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;nipype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">__version__</span>
+
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">pkg_error</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;nipype&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">37</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MIA warning </span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">37</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">)</span>
+        <span class="n">miaProcVer</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">__version__</span>
+
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">pkg_error</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">37</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MIA warning </span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">37</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pkg_error</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia -  warning: ImportError!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pkg_error</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+                <span class="s2">&quot;An issue has been detected with the </span><span class="si">{0}</span><span class="s2"> package. &quot;</span>
+                <span class="s2">&quot;Please (re)install this package and/or fix the &quot;</span>
+                <span class="s2">&quot;problems displayed in the standard output. &quot;</span>
+                <span class="s2">&quot;Then, start again Mia ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pkg_error</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">pkg_error</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+                <span class="s2">&quot;An issue has been detected with the </span><span class="si">{0}</span><span class="s2"> and </span><span class="si">{1}</span><span class="s2"> packages. &quot;</span>
+                <span class="s2">&quot;Please (re)install these package and/or fix the &quot;</span>
+                <span class="s2">&quot;problems displayed in the standard output. &quot;</span>
+                <span class="s2">&quot;Then, start again Mia ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pkg_error</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pkg_error</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+                <span class="s2">&quot;An issue has been detected with the </span><span class="si">{0}</span><span class="s2">, </span><span class="si">{1}</span><span class="s2"> and </span><span class="si">{2}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;packages. Please (re)install these package and/or fix the &quot;</span>
+                <span class="s2">&quot;problems displayed in the standard output. &quot;</span>
+                <span class="s2">&quot;Then, start again Mia ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">pkg_error</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pkg_error</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pkg_error</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Now that populse projects paths have been set in sys.path, if necessary,</span>
+    <span class="c1"># we can import from these projects:</span>
+    <span class="c1"># Populse_mia imports</span>
+    <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
+        <span class="n">check_python_version</span><span class="p">,</span>
+        <span class="n">launch_mia</span><span class="p">,</span>
+        <span class="n">verify_processes</span><span class="p">,</span>
+        <span class="n">verify_setup</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">verify_setup</span><span class="p">(</span><span class="n">dev_mode</span><span class="o">=</span><span class="n">DEV_MODE</span><span class="p">,</span> <span class="n">pypath</span><span class="o">=</span><span class="n">pypath</span><span class="p">)</span>
+    <span class="n">verify_processes</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">,</span> <span class="n">capsulVer</span><span class="p">)</span>
+    <span class="n">check_python_version</span><span class="p">()</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_work_dir</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">temp_work_dir</span><span class="p">)</span>
+        <span class="n">launch_mia</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># this will only be executed when this module is run directly</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

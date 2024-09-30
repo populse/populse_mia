@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Populse_MIA’s Pipeline Manager &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
+    <script src="../_static/documentation_options.js?v=bd736f96"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+        <h2 class="heading"><span>Populse_MIA’s Pipeline Manager</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <div class="toctree-wrapper compound">
+</div>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
+<td><p><a class="reference external" href="./documentation.html">Documentation</a></p></td>
+<td><p><a class="reference external" href="../installation/installation.html">Installation</a></p></td>
+<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+</tr>
+</tbody>
+</table>
+<section id="populse-mia-s-pipeline-manager">
+<h1>Populse_MIA’s Pipeline Manager<a class="headerlink" href="#populse-mia-s-pipeline-manager" title="Link to this heading">¶</a></h1>
+<p>This page is a user guide for Populse_mia’s Pipeline Manager, a tool to build and run processing pipelines in a graphical way.</p>
+<section id="tab-presentation">
+<h2>Tab presentation<a class="headerlink" href="#tab-presentation" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>The Pipeline Manager tab is composed of four main elements:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#process-library-label"><span class="std std-ref">The process library</span></a></p></li>
+<li><p><a class="reference internal" href="#pipeline-editor-label"><span class="std std-ref">The pipeline editor</span></a></p></li>
+<li><p><a class="reference internal" href="#node-controller-label"><span class="std std-ref">The node controller</span></a></p></li>
+<li><p><a class="reference internal" href="#pipeline-iteration-label"><span class="std std-ref">Pipeline iteration</span></a></p></li>
+<li><p><a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a></p></li>
+</ul>
+</dd>
+</dl>
+<p>Here is an overview of the Pipeline Manager tab:</p>
+<img alt="../_images/pipeline_manager.png" class="align-center" id="pipeline-manager-tab" src="../_images/pipeline_manager.png" />
+</section>
+<section id="the-process-library">
+<span id="process-library-label"></span><h2>The process library<a class="headerlink" href="#the-process-library" title="Link to this heading">¶</a></h2>
+<p>The process library contains all the available pipeline processes.</p>
+<p>When Populse_MIA is launched for the first time, Nipype’s interfaces are stored in the process library.</p>
+<p>If <a class="reference external" href="http://brainvisa.info/capsul/index.html">Capsul</a> and <a class="reference external" href="https://populse.github.io/mia_processes/html/index.html">mia_processes</a>  are used,
+they are also stored in the process library.</p>
+<p>To use any of the available processes, drag it from the process library and drop it to the pipeline editor.</p>
+<p>When a pipeline is saved, it is stored in the process library under “User_processes” and can be used as a process.</p>
+</section>
+<section id="the-pipeline-editor">
+<span id="pipeline-editor-label"></span><h2>The pipeline editor<a class="headerlink" href="#the-pipeline-editor" title="Link to this heading">¶</a></h2>
+<p>The pipeline editor is a graphical tool to create pipelines. It is composed of several tabs to work on several pipelines at the same time. In the following, the current tab will be called “current editor”.</p>
+<p>The menu on the top left of the Pipeline Manager tab contains several actions impacting the current editor:</p>
+<img alt="../_images/pipeline_menu.png" class="align-center" id="pipeline-menu" src="../_images/pipeline_menu.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Load pipeline</dt><dd><ul>
+<li><p>Loads a saved pipeline in a new editor (or in the current editor if there is only one editor and it is empty)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Save pipeline</dt><dd><ul>
+<li><p>Saves the pipeline of the current editor (shortcut: Ctrl+S)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Save pipeline as</dt><dd><ul>
+<li><p>Saves the pipeline of the current editor under another name (shortcut: Ctrl+Shift+S)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Load pipeline parameters</dt><dd><ul>
+<li><p>Loads a parameters set and apply them to the pipeline global inputs/outputs</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Save pipeline parameters</dt><dd><ul>
+<li><p>Saves the pipeline global inputs/outputs to a json file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Run pipeline</dt><dd><ul>
+<li><p>Creates the output file names for each process in the current pipeline and stores them to the database</p></li>
+<li><p>For the processes that interact with the database, verifies that the fields are filled</p></li>
+<li><p>Executes the current pipeline</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Stop pipeline</dt><dd><ul>
+<li><p>Stop the pipeline that is currently running</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Status</dt><dd><ul>
+<li><p>Open the Execution status windows to check the status of the workflows run</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Cleanup</dt><dd><ul>
+<li><p>If there is an issue during the run of the pipeline, this button can be used to cleanup the database (ie. remove of the database all non-existing files)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>Buttons for “Run pipeline”, “Stop”, “Status” and “Cleanup” are also displayed to the right of the menu.</p>
+<section id="shortcuts">
+<h3>Shortcuts<a class="headerlink" href="#shortcuts" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Hold Ctrl while using the mouse trackwheel to zoom/zoom out.</p></li>
+<li><p>Click on a node to display its parameters in the node controller.</p></li>
+<li><p>Hold Ctrl while clicking on a node to display it and its link in the foreground.</p></li>
+<li><p>To add a link between two nodes, drag from an output plug to an input plug.</p></li>
+</ul>
+</section>
+<section id="how-to-use-the-pipeline-editor">
+<h3>How to use the pipeline editor<a class="headerlink" href="#how-to-use-the-pipeline-editor" title="Link to this heading">¶</a></h3>
+<p>The pipeline edtior uses the PipelineDevelopperView tool from <a class="reference external" href="http://brainvisa.info/capsul/index.html">Capsul</a> to create pipelines in a graphical way. Here is a tutorial to help to create and save a simple pipeline (no run):</p>
+<ul class="simple">
+<li><p>Add a SPM smooth process (from Nipype library) by dragging it from the process library and dropping it into the pipeline editor</p></li>
+</ul>
+<img alt="../_images/pipeline_tuto_1.png" class="align-center" id="pipeline-tutorial-1" src="../_images/pipeline_tuto_1.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Export the input and output plug(s) we want to be able to modify by right-clicking on them and click on “export plug”, rename it if we want and click on “OK”.</p></li>
+</ul>
+<p>Note 1: a plug is either mandatory or optional. When it is mandatory, it is represented as a triangle and has to be exported or connected to another plug to run the pipeline. When it is optional, it is represented as a rectangle and can be exported or connected or not. Usually optional plugs have default values, e.g. “fwhm” plug from SPM’s smooth is [6, 6, 6], so do not need to be exported and/or modified. It all depends if we want to have access to this plug when the pipeline will be used as a process.</p>
+<p>Note 2: to make a pipeline valid, we have to export plugs that are the pipeline global input/outputs. In this example, the “in_files” plug needs to be exported because it is mandatory. The only output plug has to be also exported. The node will then be activated and its color become lighter. It is also possible to export optional plug such as “fwhm” and “output_directory” even if they already have default value.</p>
+<p>Note 3: Nipype’s processes needs values for “output_directory”, “use_mcr”, “paths”, “matlab_cmd” and “mfile” plugs. These are updated from Populse_MIA’s during pipeline initialization.</p>
+<p>Note 4: if we right-click on a node or on the pipeline editor background, we can also export plugs (mandatory or not, input, output or both). This method is usually faster to export plugs.</p>
+<img alt="../_images/pipeline_tuto_2.png" class="align-center" id="pipeline-tutorial-2" src="../_images/pipeline_tuto_2.png" />
+<p>Now the pipeline is only composed of one process with exported inputs/output. It is still possible to add another process to modify it.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Add another SPM smooth process and make it follow the first one.</dt><dd><ul>
+<li><p>Right-click on the link between the output of the “smooth1” node and the pipeline output and select “remove link”. The pipeline is disabled.</p></li>
+<li><p>Connect the “_smoothed_files” plug of the “smooth1” node to the “in_files” plug of the “smooth2” node by dragging from “_smoothed_files” and dropping to “in_files”.</p></li>
+<li><p>Connect the “_smoothed_files” plug of the “smooth2” node to the “_smoothed_files” global output by dragging from “_smoothed_files” and dropping to “in_files”. The pipeline in enabled.</p></li>
+<li><p>Connect the “output_directory” global input to the “output_directory” plug of the “smooth2” node by dragging from “output_directory” and dropping to “output_directory”.</p></li>
+<li><p>Connect the “fwhm” global input to the “fwhm” plug of the “smooth2” node by dragging from “fwhm” and dropping to “fwhm”.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<img alt="../_images/pipeline_tuto_3.png" class="align-center" id="pipeline-tutorial-3" src="../_images/pipeline_tuto_3.png" />
+<p>We now have a pipeline that can smooth an image twice with the same fwhm parameter.</p>
+<ul class="simple">
+<li><p>Save the pipeline in the proposed folder by clicking on the bottom left “Pipeline” menu</p></li>
+</ul>
+<img alt="../_images/pipeline_tuto_4.png" class="align-center" id="pipeline-tutorial-4" src="../_images/pipeline_tuto_4.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt>The pipeline is now stored in the process library under “User_processes”. We can use it as a process and add it to a new pipeline editor.</dt><dd><ul>
+<li><p>We can visualize the pipeline by double-clicking on the nodee</p></li>
+<li><p>We can edit the pipeline by right-clicking on the node and selecting “Open sub-pipeline”. It will open “double_smooth.py” in a new editor tab.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<img alt="../_images/pipeline_tuto_5.png" class="align-center" id="pipeline-tutorial-5" src="../_images/pipeline_tuto_5.png" />
+<p>If we want to change one parameter of the pipeline, it is still possible to make a change following these steps:</p>
+<ul class="simple">
+<li><p>For instance, if we want to change the prefix of the file name generated in the second process, go back to the “double_smooth.py” pipeline, export the “out_prefix” plug and save the pipeline.</p></li>
+</ul>
+<img alt="../_images/pipeline_tuto_6.png" class="align-center" id="pipeline-tutorial-6" src="../_images/pipeline_tuto_6.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>When we go back to the “New pipeline 1” pipeline, we can see that the “out_prefix” plug has been automatically added and we can now control its value.</p></li>
+</ul>
+<img alt="../_images/pipeline_tuto_7.png" class="align-center" id="pipeline-tutorial-7" src="../_images/pipeline_tuto_7.png" />
+<p>To set input values and to run the pipeline, follow the steps of <a class="reference internal" href="#node-controller-label"><span class="std std-ref">The node controller</span></a>.</p>
+</section>
+</section>
+<section id="the-node-controller">
+<span id="node-controller-label"></span><h2>The node controller<a class="headerlink" href="#the-node-controller" title="Link to this heading">¶</a></h2>
+<p>The node controller is a controller that updates pipeline nodes and is located on the bottom right of the Pipeline Manager tab. It can change their inputs/outputs values and their name.</p>
+<ul>
+<li><p>Note: to enable the node controller, click on a node. It will display its parameters.</p></li>
+<li><p>Note: when changing a value in the node controller, be sure to press Enter to validate the change.</p>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="../_images/node_controllerV1V2_1.png"><img alt="../_images/node_controllerV1V2_1.png" src="../_images/node_controllerV1V2_1.png" style="width: 800.0px; height: 491.0px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">The controller in V1 (left) and V2 (right) mode</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</li>
+</ul>
+<section id="how-to-use-the-node-controller">
+<h3>How to use the node controller<a class="headerlink" href="#how-to-use-the-node-controller" title="Link to this heading">¶</a></h3>
+<p>This part is based on the Double_smooth.py file created in <a class="reference internal" href="#pipeline-editor-label"><span class="std std-ref">The pipeline editor</span></a>.</p>
+<ul class="simple">
+<li><p>When we have clicked on a pipeline global inputs/outputs node (blue node) it is possible to filter each input plug to set documents directly from the database. For that, click on the “Filter” push button.</p></li>
+</ul>
+<img alt="../_images/node_controller_2.png" class="align-center" id="node-controller-inputs-outputs" src="../_images/node_controller_2.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>A pop-up similar to the Data Browser will be displayed and we will be able to choose which documents of the database to set on the plug by using Rapid or Advanced Search.</p></li>
+<li><p>We can either filter the database (by setting the filter parameters and clicking on “Search”) or click on the selected documents.</p></li>
+<li><p>The second push button at the bottom left of the window specifies which tag values to set on the selected plug.</p></li>
+</ul>
+<img alt="../_images/plug_filter.png" class="align-center" id="plug-filter" src="../_images/plug_filter.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Press “OK” to set the selected documents to the plug value. The plug value has been updated in the node controller</p></li>
+</ul>
+<img alt="../_images/node_controller_3.png" class="align-center" id="node-controller-inputs-outputs-2" src="../_images/node_controller_3.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt>We can also modify the plug values by hand</dt><dd><ul>
+<li><p>Note: the “output_directory” of a Nipype process corresponds to the folder where Nipype writes the Matlab scripts during execution and has to be set.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<img alt="../_images/node_controller_4.png" class="align-center" id="node-controller-inputs-outputs-3" src="../_images/node_controller_4.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>The pipeline inputs are now correctly set and it can be run. Select “Run pipeline” in the Pipeline menu (or click directly on the “Run pipeline” button of the Pipeline menu).</p></li>
+<li><p>A connection dialog  is displayed. Select the resource you want to run the pipeline on and click “Ok”.</p>
+<blockquote>
+<div><img alt="../_images/swf_connection.jpg" class="align-center" id="soma-workflow-connection" src="../_images/swf_connection.jpg" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+<dl>
+<dt>During this step:</dt><dd><ul>
+<li><p>The output files are created (but still empty) and stored in the database with information about their ancestors (their input files and parameters)</p></li>
+<li><p>The output file names are generated and updated in the node controller (in this example the file names begin with “ss” which means that they have been smoothed twice).</p>
+<img alt="../_images/node_controller_5.png" class="align-center" id="node-controller-inputs-outputs-4" src="../_images/node_controller_5.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</li>
+<li><p>The pipeline is run.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>During the run, the “Status” button near the Pipeline menu changes and a waiting bar appears at the top right corner. You can also used the “stop pipeline” button.</p>
+<img alt="../_images/pipeline_menu_run.png" class="align-center" id="pipeline-menu-during-a-run" src="../_images/pipeline_menu_run.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</li>
+<li><p>At the end of the run, a windows with “Pipeline execution was ok’ appears during 10 seconds and the waiting bar at the top right corner disappears.</p></li>
+</ul>
+</section>
+</section>
+<section id="pipeline-iteration">
+<span id="pipeline-iteration-label"></span><h2>Pipeline iteration<a class="headerlink" href="#pipeline-iteration" title="Link to this heading">¶</a></h2>
+<p>A pipeline is generally designed to perform a series of tasks on a single data, or on a set of data going together (an anatomical MRI image and a series of fMRI data for instance). To process databases we need to iterate pipelines on many input data. For this we use <em>iterations</em> which virtually duplicate the given pipeline as many times as there are data to process. Populse is able to process such iterations in parallel as long as they are independent. This is done by transforming a pipeline (or a process) into an iterative pipeline, using an iteration node.</p>
+<p>The Pipeline Manager simplifies this operation using the <strong>Iterate pipeline</strong> button and <a class="reference internal" href="#iteration-table-label"><span class="std std-ref">The iteration table</span></a>.</p>
+<p>There are two ways to iterate a pipeline (or a brick/process): one is by creating a regular iterative pipeline (with “direct” inputs and without use of the iteration table), the other is using Input_Filter linked to the database.</p>
+<section id="via-a-regular-iterative-pipeline-without-use-of-the-iteration-table">
+<span id="viaregularitpi"></span><h3>Via a regular iterative pipeline (without use of the iteration table)<a class="headerlink" href="#via-a-regular-iterative-pipeline-without-use-of-the-iteration-table" title="Link to this heading">¶</a></h3>
+<p>Starting with a new, empty pipeline tab in the Pipeline Manager:</p>
+<ul>
+<li><p>Add the pipeline mia_processes &gt; pipelines &gt; preprocess &gt; Spatial_preprocessing_1 to the pipeline editor</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">func_files</span></code> parameter is a list. We will use only one item per iteration. In order to disambiguate the “list of list” situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.</p></li>
+<li><p>Use the “capsul &gt; pipeline &gt; custom_nodes &gt; reduce_node &gt; ReduceNode” or the “mia_processes &gt; bricks &gt; tools &gt; Files_To_List” brick.</p>
+<ul class="simple">
+<li><p>In case of the ReduceNode brick:</p>
+<ul>
+<li><p>Validate the default node parameters (just click on OK button). The ReduceNode appears in the pipeline editor.</p></li>
+<li><p>Connect the <code class="docutils literal notranslate"><span class="pre">outputs</span></code> plug of the ReduceNode to the <code class="docutils literal notranslate"><span class="pre">func_files</span></code> plug of the Spatial_preprocessing_1 node.</p></li>
+<li><p>Export the <code class="docutils literal notranslate"><span class="pre">input_0</span></code> plug of the ReduceNode (right click on the <code class="docutils literal notranslate"><span class="pre">input_0</span></code> plug then select export plug), renamed as <code class="docutils literal notranslate"><span class="pre">func_files</span></code> (for clarity).</p></li>
+</ul>
+</li>
+<li><p>In case of the Files_To_List brick:</p>
+<ul>
+<li><p>Connect the <code class="docutils literal notranslate"><span class="pre">file_list</span></code> plug of the Files_To_List node to the <code class="docutils literal notranslate"><span class="pre">func_files</span></code> plug of the Spatial_preprocessing_1 node.</p></li>
+<li><p>Export the <code class="docutils literal notranslate"><span class="pre">file1</span></code> plug of the Files_To_List node (right click on the <code class="docutils literal notranslate"><span class="pre">file1</span></code> plug then select export plug), renamed as <code class="docutils literal notranslate"><span class="pre">func_files</span></code> (for clarity).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Export all unconnected plugs of the Spatial_preprocessing_1 node (right click on the node then select “export all unconnected plugs”)</p>
+<img alt="../_images/pipeline_iter_1.jpg" class="align-center" id="pipeline-iteration-1" src="../_images/pipeline_iter_1.jpg" />
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Check on the <strong>iterate pipeline</strong> button.</p></li>
+<li><p>A dialog pops up and displays all the pipeline parameters. The user can choose which ones will be iterated (by default, all). It if’s OK, then just click “OK”.</p>
+<img alt="../_images/pipeline_iter_2.jpg" class="align-center" id="pipeline-iteration-2" src="../_images/pipeline_iter_2.jpg" />
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node. The former pipeline is now inside the iterative node.</p>
+<img alt="../_images/pipeline_iter_3.jpg" class="align-center" id="pipeline-iteration-3" src="../_images/pipeline_iter_3.jpg" />
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Select the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> node</p></li>
+<li><p>Click the “Filter” button for the <code class="docutils literal notranslate"><span class="pre">anat</span> <span class="pre">files</span></code> parameter, and select the files (anatomical MRIs) we wish to extract the brain from.</p>
+<img alt="../_images/pipeline_iter_4.jpg" class="align-center" id="pipeline-iteration-4" src="../_images/pipeline_iter_4.jpg" />
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Similarly, click on the “Filter” button for the <code class="docutils literal notranslate"><span class="pre">func_files</span></code> parameter and select the same number of functional files.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In <a class="reference internal" href="#viaregularitpi"><span class="std std-ref">regular iterative pipeline</span></a> iteration mode, check that anatomical and corresponding functional files are in the same order… The database filters do not ensure that and do not allow to specify any order…</p>
+</div>
+<ul class="simple">
+<li><p>Click on “Run pipeline”.</p></li>
+</ul>
+</section>
+<section id="via-input-filter-brick-process">
+<h3>Via Input_Filter brick/process<a class="headerlink" href="#via-input-filter-brick-process" title="Link to this heading">¶</a></h3>
+<p>Input_Filters are filters applied between the database and the input of a pipeline (or a brick/process). The Input_Filter brick/process is provided in the mia_processes package, since version 1.1.1. The mia_processes package is available from the <a class="reference external" href="https://pypi.org/search/?q=mia_processes">Cheese Shop</a>.</p>
+<p>In the following, we will use a database with the Exp Type and PatientName tags correctly filled in, for example:</p>
+<blockquote>
+<div><img alt="../_images/iter_allTagsUsed.png" class="align-center" id="iter-alltagsused" src="../_images/iter_allTagsUsed.png" />
+</div></blockquote>
+<section id="without-use-of-the-iteration-table">
+<span id="viainputfilbri"></span><h4>Without use of the iteration table<a class="headerlink" href="#without-use-of-the-iteration-table" title="Link to this heading">¶</a></h4>
+<p>Starting with a new, empty pipeline tab in the Pipeline Manager:</p>
+<ul>
+<li><p>Add the pipeline mia_processes &gt; pipelines &gt; preprocess &gt; Spatial_preprocessing_1 to the pipeline editor.</p></li>
+<li><p>Check on the <strong>iterate pipeline</strong> button.</p>
+<p>A dialog pops up and displays all the pipeline parameters. In addition to the previous example, also check the second button (for “database”) on each input parameter. Click on the OK button.</p>
+<img alt="../_images/pipeline_iter_5.jpg" class="align-center" id="pipeline-iteration-5" src="../_images/pipeline_iter_5.jpg" />
+<p>The pipeline (or process) will now be changed into an iterative pipeline, with an iterative node, and two Input_Filters nodes (anat_file_filter and func_files_filter). The former pipeline is now inside the iterative node.</p>
+<img alt="../_images/pipeline_iter_6.jpg" class="align-center" id="pipeline-iteration-6" src="../_images/pipeline_iter_6.jpg" />
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Right-click on the <code class="docutils literal notranslate"><span class="pre">anat_file_filter</span></code> node, and select “Open filter”.  In the filter pop-up, modify the filter to apply to select the wanted anatomical files.</p>
+<p>Here is an example where we select all the anatomical images excluding the patient “alej”:</p>
+<img alt="../_images/Input_Filter_anat.png" class="align-center" id="input-filter-anat" src="../_images/Input_Filter_anat.png" />
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Similarly, right-click on the <code class="docutils literal notranslate"><span class="pre">func_files_filter</span></code> node, and select “Open filter”.  In the filter pop-up, modify the filter to apply to select the wanted functional files.</p>
+<p>Here is an example where we select all the functional images excluding the patient “alej”:</p>
+<img alt="../_images/Input_Filter_func.png" class="align-center" id="input-filter-func" src="../_images/Input_Filter_func.png" />
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In <a class="reference internal" href="#viainputfilbri"><span class="std std-ref">via Input_Filter  (without use of the iteration table)</span></a> iteration mode, check that anatomical and corresponding functional files are in the same order… The database filters do not ensure that and do not allow to specify any order…</p>
+</div>
+<ul class="simple">
+<li><p>Click on “Run pipeline”.</p></li>
+</ul>
+</section>
+<section id="with-use-of-the-iteration-table">
+<span id="manually"></span><h4>With use of the iteration table<a class="headerlink" href="#with-use-of-the-iteration-table" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>Follow the same procedure as for the first two points of the <a class="reference internal" href="#viainputfilbri"><span class="std std-ref">via Input_Filter (without use of the iteration table)</span></a> iteration mode.</p></li>
+<li><p>Right-click on each Input_filter process and select “Open Filter”. In the filter pop-up window, change the filter to be applied to select all anatomical images for the <cite>anat_file</cite> input and all functional images for the func_files input.</p>
+<ul>
+<li><p>For example, for the anat_file_filter node, set “Exp Type == anat” (or “Exp Type CONTAINS anat”) in the advanced search field and for the func_files_filter node, set “Exp Type == “func” (or “Exp Type CONTAINS func”) in the advanced search field.</p>
+<a class="reference internal image-reference" href="../_images/Input_Filter_anat2.png"><img alt="../_images/Input_Filter_anat2.png" src="../_images/Input_Filter_anat2.png" style="width: 47.3%;" />
+</a>
+<a class="reference internal image-reference" href="../_images/Input_Filter_func2.png"><img alt="../_images/Input_Filter_func2.png" src="../_images/Input_Filter_func2.png" style="width: 50%;" />
+</a>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Set up the iteration table:</p>
+<ul>
+<li><p>In the iteration section (top right of the pipeline manager tab), click on the “iterate over” feature (“Select” button).
+A dialog pops up and displays all the tags in the current project. Check the tag on which the pipeline will be iterated, a good choice could be here the “PatientName” tag.</p></li>
+<li><p>So below the “iterate over” part there is now a “PatientName” part (in place of “select a tag”, before).</p>
+<ul class="simple">
+<li><p>The first button on this “PatientName” part is a Combobox where it is possible to see all the values of the selected tags used to iterate.</p></li>
+</ul>
+<img alt="../_images/PatientName_Combobox.png" class="align-center" id="iteration-patientname-combobox" src="../_images/PatientName_Combobox.png" />
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><p>It is possible to change the values used for the iteration by clicking on the next “Filter” button.
+In the example below we only want to iterate on the “alej” and “rocmi” patients.</p></li>
+</ul>
+<img alt="../_images/PatientName_Filter.png" class="align-center" id="iteration-filter" src="../_images/PatientName_Filter.png" />
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Click on “Run pipeline”.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="the-iteration-table">
+<span id="iteration-table-label"></span><h2>The iteration table<a class="headerlink" href="#the-iteration-table" title="Link to this heading">¶</a></h2>
+<p>The iteration table is a tool used to handle pipeline iteration and is located on the top right of the Pipeline Manager tab. An iteration can only be made over one tag (e.g. a pipeline in run for each “Patient” value in the database).</p>
+<p>The iteration table is composed of several components that are described below in this tutorial.</p>
+<p>Please, read the <a class="reference external" href="./pipeline_example.html#pipeline-iteration">“Pipeline iteration” chapter of the “A pipeline example with Populse_MIA’s” page</a>, in order to have a complete vision of how to use iteration.</p>
+<section id="how-to-use-the-iteration-table">
+<h3>How to use the iteration table<a class="headerlink" href="#how-to-use-the-iteration-table" title="Link to this heading">¶</a></h3>
+<p>Assume that the current project contains several patients, so several “PatientName” tag values (the values for the PatientName” tag can be changed manually):</p>
+<img alt="../_images/iter_allTagsUsed.png" class="align-center" id="iter-alltagsused2" src="../_images/iter_allTagsUsed.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Select which tag to iterate the pipeline on by clicking on the “Select” push button and select the “PatientName” tag. The push button then takes the name of the chosen tag (here PatientName).</p></li>
+<li><dl class="simple">
+<dt>We can visualise for each “PatientName” value which documents are associated thanks to the combo box beside the “Filter” button.</dt><dd><ul>
+<li><p>The displayed tags are by default “SequenceName” and “AcquisitionDate” but can be changed at the bottom of the window by clicking on the push buttons, next to “Tags to visualize:”.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<img alt="../_images/iteration_table.png" class="align-center" id="iteration-table" src="../_images/iteration_table.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>It is possible to choose on which values of the chosen tag we want to iterate the pipeline by clicking on the “Filter” button. Indeed, when the “Filter” button is clicked, a pop-up is displayed to allow us to choose on which values to iterate the pipeline. In the following example we will iterate only on the “coug” and “rocmi” values:</p></li>
+</ul>
+<img alt="../_images/iterate_pipeline.png" class="align-center" id="iterate-pipeline" src="../_images/iterate_pipeline.png" />
+</section>
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

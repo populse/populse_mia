@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Populse_mia’s developer installation on host &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
+    <script src="../_static/documentation_options.js?v=bd736f96"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+        <h2 class="heading"><span>Populse_mia’s developer installation on host</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
+<td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
+<td><p><a class="reference external" href="./installation.html">Installation</a></p></td>
+<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+</tr>
+</tbody>
+</table>
+<section id="populse-mia-s-developer-installation-on-host">
+<h1>Populse_mia’s developer installation on host<a class="headerlink" href="#populse-mia-s-developer-installation-on-host" title="Link to this heading">¶</a></h1>
+<section id="pre-requirements">
+<h2>Pre-requirements<a class="headerlink" href="#pre-requirements" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="./host_pre_req_linux_macos.html">For linux - macOS</a></p></li>
+<li><p><a class="reference external" href="./host_pre_req_windows10.html">For Windows 10</a></p></li>
+</ul>
+</section>
+<section id="id1">
+<h2>Installation<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p><strong>Installation by cloning the source codes</strong></p>
+<p><a class="reference external" href="https://github.com/populse/populse_mia">populse_mia</a> sources can be found on gihub.</p>
+<dl>
+<dt>To use the whole populse project in developer mode on host (and have the latest versions available), it will be necessary to clone all this projects:</dt><dd><div class="line-block">
+<div class="line">- <a class="reference external" href="https://github.com/populse/populse_mia">populse_mia</a></div>
+<div class="line">- <a class="reference external" href="https://github.com/populse/capsul">capsul</a></div>
+<div class="line">- <a class="reference external" href="https://github.com/populse/mia_processes">mia_processes</a></div>
+<div class="line">- <a class="reference external" href="https://github.com/populse/mri_conv">mri_conv</a></div>
+<div class="line">- <a class="reference external" href="https://github.com/populse/populse_db">populse_db</a></div>
+<div class="line">- <a class="reference external" href="https://github.com/populse//soma-workflow">soma-workflow</a></div>
+<div class="line">- <a class="reference external" href="https://github.com/populse//soma-base">soma-base</a></div>
+</div>
+</dd>
+</dl>
+<ul>
+<li><p>For each project:</p>
+<ul>
+<li><p>Get source codes from Github. Replace [populse_install_dir] with a directory of your choice. For example for populse_mia:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">populse</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">.</span><span class="n">git</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">populse_mia</span>
+</pre></div>
+</div>
+</li>
+<li><p>Or download the zip file (for example populse_mia-master.zip) of the project (green button “Code”, Download ZIP in Github), then extract the data in the directory of your choice [populse_install_dir]:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unzip</span> <span class="n">populse_mia</span><span class="o">-</span><span class="n">master</span><span class="o">.</span><span class="n">zip</span> <span class="o">-</span><span class="n">d</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span>
+<span class="n">mv</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">populse_mia</span><span class="o">-</span><span class="n">master</span> <span class="p">[</span><span class="n">populse_install_dir</span><span class="p">]</span><span class="o">/</span><span class="n">populse_mia</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>You can also download the following folders:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources">miaresources</a> : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).</p></li>
+<li><p><a class="reference external" href="https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata">miautdata</a> : it contains data for unit tests in populse_mia</p></li>
+<li><p><a class="reference external" href="https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers">miadatausers</a> : it contains initial user data for using / testing Mia</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>To launch populse_mia:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="s1">&#39;[populse_install_dir]/populse_mia/populse_mia/main.py&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>In development mode the libraries needed for populse_mia  and mia_processes are not installed as with pip. So depending on the libraries already installed on your station it may be necessary to complete this installation. Please refer to the Requirements chapter on the Github page for <a class="reference external" href="https://github.com/populse/populse_mia#requirements">populse_mia</a>  and for <a class="reference external" href="https://github.com/populse/mia_processes/blob/master/README.md#requirements">mia_processes</a>  to install the necessary third party libraries.</p>
+<ul>
+<li><p>Third party libraries installation, e.g. for nibabel</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">nibabel</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>For some libraries a special version is required. In case of problems when launching populse_mia, please check that all versions of third party libraries are respected by consulting the REQUIRES object in the <a class="reference external" href="https://github.com/populse/populse_mia/blob/master/python/populse_mia/info.py">populse_mia info.py</a>  and <a class="reference external" href="https://github.com/populse/mia_processes/blob/master/mia_processes/info.py">mia_processes info.py</a> module.</p>
+<ul>
+<li><p>e.g. for traits</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">traits</span><span class="o">==</span><span class="mf">5.2.0</span> <span class="o">--</span><span class="n">user</span> <span class="c1"># The traits library is not yet installed</span>
+<span class="n">Pip3</span> <span class="n">install</span> <span class="o">--</span><span class="n">force</span><span class="o">-</span><span class="n">reinstall</span> <span class="n">traits</span><span class="o">==</span><span class="mf">5.2.0</span> <span class="o">--</span><span class="n">user</span>  <span class="c1"># The traits library is already installed</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>If, in spite of that, you observe an ImportError exception at launch … Well … you will have to install the involved library (see the two steps above). In this case, please send us a message (<a class="reference external" href="mailto:populse-support&#37;&#52;&#48;univ-grenoble-alpes&#46;fr">populse-support<span>&#64;</span>univ-grenoble-alpes<span>&#46;</span>fr</a>) so that we can update the list of third party libraries needed to run populse_mia properly.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>On first launch after a developer installation, please <a class="reference external" href="../documentation/preferences.html">refer to the preferences page</a> to configure populse_mia.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>Installation by using mia_install project</strong></p>
+<p>In order to avoid dependencies issues, it is possible to first install populse_mia as an user by using <a class="reference external" href="https://github.com/populse/mia_install">mia_install project</a>, then remove all the populse_mia projects and finally clone the sources to have the latest version available.
+All the dependencies should be install with populse_mia project.</p>
+<ul class="simple">
+<li><p>Install populse_mia with mia_install project following <a class="reference external" href="./host_user_installation.html">user installation</a>. This step will allow the installation of all the dependencies needed.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Uninstall the libraries from populse project (capsul, mia_processes, populse_db, populse_mia, soma-base, soma-workflow):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">populse_mia</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>Remove the ./populse_mia folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="o">-</span><span class="n">Rf</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">username</span><span class="o">/.</span><span class="n">populse_mia</span><span class="o">/</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Clone sources as described in the “Installation by cloning the source codes” part above.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>To launch populse_mia:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="s1">&#39;[populse_install_dir]/populse_mia/populse_mia/main.py&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>On first launch after a developer installation, please <a class="reference external" href="../documentation/preferences.html">refer to the preferences page</a> to configure populse_mia.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>You can also download the following folders:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources">miaresources</a> : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).</p></li>
+<li><p><a class="reference external" href="https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata">miautdata</a> : it contains data for unit tests in populse_mia</p></li>
+<li><p><a class="reference external" href="https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers">miadatausers</a> : it contains initial user data for using / testing Mia</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

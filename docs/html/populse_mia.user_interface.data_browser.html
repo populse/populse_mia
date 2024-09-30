@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>populse_mia.user_interface.data_browser package &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=dfa0e015" />
+    <script src="_static/documentation_options.js?v=bd736f96"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.user_interface.data_browser package</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="module-populse_mia.user_interface.data_browser">
+<span id="populse-mia-user-interface-data-browser-package"></span><h1>populse_mia.user_interface.data_browser package<a class="headerlink" href="#module-populse_mia.user_interface.data_browser" title="Link to this heading">¶</a></h1>
+<p>Handle the data browser tab. Visualize, modify and search data.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Module:</dt><dd><ul class="simple">
+<li><p>advanced_search</p></li>
+<li><p>count_table</p></li>
+<li><p>data_browser</p></li>
+<li><p>mini_viewer</p></li>
+<li><p>modify_table</p></li>
+<li><p>rapid_search</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-populse_mia.user_interface.data_browser.advanced_search">
+<span id="populse-mia-user-interface-data-browser-advanced-search-module"></span><h2>populse_mia.user_interface.data_browser.advanced_search module<a class="headerlink" href="#module-populse_mia.user_interface.data_browser.advanced_search" title="Link to this heading">¶</a></h2>
+<p>Module to define the advanced search.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>AdvancedSearch</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.advanced_search.</span></span><span class="sig-name descname"><span class="pre">AdvancedSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_pipeline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Class that manages the widget of the advanced search</p>
+<p>The advanced search creates a complex query to the database and is a
+combination of several “query lines” which are linked with AND or OR and
+all composed of:
+- A negation or not
+- A tag name or all visible tags
+- A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN)
+- A value</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_pipeline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialization of the AdvancedSearch class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – current project in the software</p></li>
+<li><p><strong>data_browser</strong> – parent data browser widget</p></li>
+<li><p><strong>scans_list</strong> – current list of the documents</p></li>
+<li><p><strong>tags_list</strong> – list of the visualized tags</p></li>
+<li><p><strong>from_pipeline</strong> – True if the widget is called from the pipeline
+manager</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.add_search_bar">
+<span class="sig-name descname"><span class="pre">add_search_bar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.add_search_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.add_search_bar" title="Link to this definition">¶</a></dt>
+<dd><p>Create and define the advanced research bar.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.apply_filter">
+<span class="sig-name descname"><span class="pre">apply_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.apply_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.apply_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Apply an opened filter to update the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filter</strong> – Filter object opened to apply</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayConditionRules">
+<span class="sig-name descname"><span class="pre">displayConditionRules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.displayConditionRules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayConditionRules" title="Link to this definition">¶</a></dt>
+<dd><p>Set the list of condition choices, depending on the tag type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field</strong> – field</p></li>
+<li><p><strong>condition</strong> – condition</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayValueRules">
+<span class="sig-name descname"><span class="pre">displayValueRules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.displayValueRules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayValueRules" title="Link to this definition">¶</a></dt>
+<dd><p>Update the placeholder text. when the condition choice is
+changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>choice</strong> – choice</p></li>
+<li><p><strong>value</strong> – value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.get_filters">
+<span class="sig-name descname"><span class="pre">get_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">replace_all_by_fields</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.get_filters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.get_filters" title="Link to this definition">¶</a></dt>
+<dd><p>Get the filters in a list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>replace_all_by_fields</strong> – to replace All visualized tags by the
+list of visible fields</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lists of filters (fields, conditions, values, links, nots)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.launch_search">
+<span class="sig-name descname"><span class="pre">launch_search</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.launch_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.launch_search" title="Link to this definition">¶</a></dt>
+<dd><p>Start the search and update the table</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.prepare_filters">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">links</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.prepare_filters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.prepare_filters" title="Link to this definition">¶</a></dt>
+<dd><p>Prepare the str representation of the filter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>links</strong> – list of links (AND/OR)</p></li>
+<li><p><strong>fields</strong> – list of fields</p></li>
+<li><p><strong>conditions</strong> – list of conditions (==, !=, &lt;, &gt;, &lt;=, &gt;=, IN,
+BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
+<li><p><strong>values</strong> – list of values</p></li>
+<li><p><strong>nots</strong> – list of negations (”” or NOT)</p></li>
+<li><p><strong>scans</strong> – list of scans to search in</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>str representation of the filter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.refresh_search">
+<span class="sig-name descname"><span class="pre">refresh_search</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.refresh_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.refresh_search" title="Link to this definition">¶</a></dt>
+<dd><p>Refresh the widget</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.remove_row">
+<span class="sig-name descname"><span class="pre">remove_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row_layout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.remove_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.remove_row" title="Link to this definition">¶</a></dt>
+<dd><p>Remove a row</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row_layout</strong> – Row to remove</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_added">
+<span class="sig-name descname"><span class="pre">rows_borders_added</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">links</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.rows_borders_added"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_added" title="Link to this definition">¶</a></dt>
+<dd><p>Add the links and the added row to the good rows</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>links</strong> – Old links to reput</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_removed">
+<span class="sig-name descname"><span class="pre">rows_borders_removed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.rows_borders_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_removed" title="Link to this definition">¶</a></dt>
+<dd><p>Link and add row removed from every row</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.show_search">
+<span class="sig-name descname"><span class="pre">show_search</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.show_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.show_search" title="Link to this definition">¶</a></dt>
+<dd><p>Reset the rows when the Advanced Search button is clicked</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_browser.count_table">
+<span id="populse-mia-user-interface-data-browser-count-table-module"></span><h2>populse_mia.user_interface.data_browser.count_table module<a class="headerlink" href="#module-populse_mia.user_interface.data_browser.count_table" title="Link to this heading">¶</a></h2>
+<p>Module to define CountTable popup.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>CountTable</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.count_table.</span></span><span class="sig-name descname"><span class="pre">CountTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Tool to precisely verify the scans of the project.</p>
+<p>It is composed of push buttons on its top, each one corresponding to a tag
+selected by the user.
+When, the “Count scans” button is clicked, a table is created with all the
+combinations possible for the values of the first n-1 tags. Then,
+the m values that can take the  last tag are displayed in the header of
+the m last columns of the table. The cells are then filled with a green
+plus or a red cross depending on if there is at least a scan that has
+all the tags values or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>Assume that the current project has scans for two patients (P1 and P2)
+and three time points (T1, T2 and T3). For each (patient, time point),
+several sequences have been made (two RARE, one MDEFT and one FLASH).
+Selecting [PatientName, TimePoint, SequenceName] as tags, the table will
+be:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>PatientName</p></th>
+<th class="head"><p>TimePoint</p></th>
+<th class="head"><p>RARE</p></th>
+<th class="head"><p>MDEFT</p></th>
+<th class="head"><p>FLASH</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>P1</p></td>
+<td><p>T1</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>P1</p></td>
+<td><p>T2</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>P1</p></td>
+<td><p>T3</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2</p></td>
+<td><p>T1</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>P2</p></td>
+<td><p>T2</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2</p></td>
+<td><p>T3</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+</tbody>
+</table>
+<p>with v(n) meaning that n scans corresponds of the selected values for
+(PatientName, TimePoint,SequenceName).</p>
+<p>If no scans corresponds for a triplet value, a red cross will be
+displayed. For example, if the user forgets to import one RARE for P1 at
+T2 and one FLASH for P2 at T3. The table will be:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>PatientName</p></th>
+<th class="head"><p>TimePoint</p></th>
+<th class="head"><p>RARE</p></th>
+<th class="head"><p>MDEFT</p></th>
+<th class="head"><p>FLASH</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>P1</p></td>
+<td><p>T1</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>P1</p></td>
+<td><p>T2</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>P1</p></td>
+<td><p>T3</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2</p></td>
+<td><p>T1</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>P2</p></td>
+<td><p>T2</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>v(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2</p></td>
+<td><p>T3</p></td>
+<td><p>v(2)</p></td>
+<td><p>v(1)</p></td>
+<td><p>x</p></td>
+</tr>
+</tbody>
+</table>
+<p>Thus, thanks to the CountTable tool, he or she directly knows if some
+scans are missing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialization of the Count Table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>project</strong> – current project in the software</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.add_tag">
+<span class="sig-name descname"><span class="pre">add_tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.add_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.add_tag" title="Link to this definition">¶</a></dt>
+<dd><p>Adds a tag to visualize in the count table</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.count_scans">
+<span class="sig-name descname"><span class="pre">count_scans</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.count_scans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.count_scans" title="Link to this definition">¶</a></dt>
+<dd><p>Counts the number of scans depending on the selected tags and
+displays the result in the table</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.fill_first_tags">
+<span class="sig-name descname"><span class="pre">fill_first_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.fill_first_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.fill_first_tags" title="Link to this definition">¶</a></dt>
+<dd><p>Fills the cells of the table corresponding to the (n-1)
+first selected tags</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.fill_headers">
+<span class="sig-name descname"><span class="pre">fill_headers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.fill_headers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.fill_headers" title="Link to this definition">¶</a></dt>
+<dd><p>Fills the headers of the table depending on the selected tags</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.fill_last_tag">
+<span class="sig-name descname"><span class="pre">fill_last_tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.fill_last_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.fill_last_tag" title="Link to this definition">¶</a></dt>
+<dd><p>Fills the cells corresponding to the last selected tag</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.fill_values">
+<span class="sig-name descname"><span class="pre">fill_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.fill_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.fill_values" title="Link to this definition">¶</a></dt>
+<dd><p>Fill values_list depending on the visualized tags</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – index of the select tag</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">couples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.prepare_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Prepares the filter in order to fill the count table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>couples</strong> – (tag, value) couples</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Str query of the corresponding filter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.refresh_layout">
+<span class="sig-name descname"><span class="pre">refresh_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.refresh_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.refresh_layout" title="Link to this definition">¶</a></dt>
+<dd><p>Updates the layout of the widget</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.remove_tag">
+<span class="sig-name descname"><span class="pre">remove_tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.remove_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.remove_tag" title="Link to this definition">¶</a></dt>
+<dd><p>Removes a tag to visualize in the count table</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.select_tag">
+<span class="sig-name descname"><span class="pre">select_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.select_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.select_tag" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a pop-up to select which tag to visualize in the count table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – the index of the selected push button</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_browser.data_browser">
+<span id="populse-mia-user-interface-data-browser-data-browser-module"></span><h2>populse_mia.user_interface.data_browser.data_browser module<a class="headerlink" href="#module-populse_mia.user_interface.data_browser.data_browser" title="Link to this heading">¶</a></h2>
+<p>Module to define data browser tab appearance, settings and methods.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>DataBrowser</p></li>
+<li><p>DateFormatDelegate</p></li>
+<li><p>DateTimeFormatDelegate</p></li>
+<li><p>NumberFormatDelegate</p></li>
+<li><p>TableDataBrowser</p></li>
+<li><p>TimeFormatDelegate</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.data_browser.</span></span><span class="sig-name descname"><span class="pre">DataBrowser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Widget that contains everything in the Data Browser tab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – current project in the software</p></li>
+<li><p><strong>main_window</strong> – main window of the software</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialization of the data_browser class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – current project in the software</p></li>
+<li><p><strong>main_window</strong> – main window of the software</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.add_tag_infos">
+<span class="sig-name descname"><span class="pre">add_tag_infos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_tag_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_default_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_tag_description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_tag_unit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.add_tag_infos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.add_tag_infos" title="Link to this definition">¶</a></dt>
+<dd><p>Add the tag after add tag pop-up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_tag_name</strong> – New tag name</p></li>
+<li><p><strong>new_default_value</strong> – New default value</p></li>
+<li><p><strong>tag_type</strong> – New tag type</p></li>
+<li><p><strong>new_tag_description</strong> – New tag description</p></li>
+<li><p><strong>new_tag_unit</strong> – New tag unit</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.add_tag_pop_up">
+<span class="sig-name descname"><span class="pre">add_tag_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.add_tag_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.add_tag_pop_up" title="Link to this definition">¶</a></dt>
+<dd><p>Display the add tag pop-up.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.clone_tag_infos">
+<span class="sig-name descname"><span class="pre">clone_tag_infos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_to_clone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_tag_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.clone_tag_infos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.clone_tag_infos" title="Link to this definition">¶</a></dt>
+<dd><p>Clone the tag after the clone tag pop-up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_to_clone</strong> – Tag to clone</p></li>
+<li><p><strong>new_tag_name</strong> – New tag name</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.clone_tag_pop_up">
+<span class="sig-name descname"><span class="pre">clone_tag_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.clone_tag_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.clone_tag_pop_up" title="Link to this definition">¶</a></dt>
+<dd><p>Display the clone tag pop-up.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_actions">
+<span class="sig-name descname"><span class="pre">connect_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.connect_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_actions" title="Link to this definition">¶</a></dt>
+<dd><p>Connect methods to actions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_mini_viewer">
+<span class="sig-name descname"><span class="pre">connect_mini_viewer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.connect_mini_viewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_mini_viewer" title="Link to this definition">¶</a></dt>
+<dd><p>Display the selected documents in the viewer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_toolbar">
+<span class="sig-name descname"><span class="pre">connect_toolbar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.connect_toolbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_toolbar" title="Link to this definition">¶</a></dt>
+<dd><p>Connect methods to toolbar.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.count_table_pop_up">
+<span class="sig-name descname"><span class="pre">count_table_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.count_table_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.count_table_pop_up" title="Link to this definition">¶</a></dt>
+<dd><p>Open the count table pop-up.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.create_layout">
+<span class="sig-name descname"><span class="pre">create_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.create_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.create_layout" title="Link to this definition">¶</a></dt>
+<dd><p>Create the layouts of the tab.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.create_toolbar_view">
+<span class="sig-name descname"><span class="pre">create_toolbar_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.create_toolbar_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.create_toolbar_view" title="Link to this definition">¶</a></dt>
+<dd><p>Create the toolbar menu at the top of the tab</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.move_splitter">
+<span class="sig-name descname"><span class="pre">move_splitter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.move_splitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.move_splitter" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the viewer’s splitter is at its lowest position.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.open_filter">
+<span class="sig-name descname"><span class="pre">open_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.open_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.open_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Open a project filter that has already been saved.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.open_filter_infos">
+<span class="sig-name descname"><span class="pre">open_filter_infos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.open_filter_infos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.open_filter_infos" title="Link to this definition">¶</a></dt>
+<dd><p>Apply the current filter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.remove_tag_infos">
+<span class="sig-name descname"><span class="pre">remove_tag_infos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_names_to_remove</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.remove_tag_infos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.remove_tag_infos" title="Link to this definition">¶</a></dt>
+<dd><p>Remove user tags after the pop-up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tag_names_to_remove</strong> – list of tags to remove</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.remove_tag_pop_up">
+<span class="sig-name descname"><span class="pre">remove_tag_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.remove_tag_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.remove_tag_pop_up" title="Link to this definition">¶</a></dt>
+<dd><p>Display the pop-up to remove user tags.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.reset_search_bar">
+<span class="sig-name descname"><span class="pre">reset_search_bar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.reset_search_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.reset_search_bar" title="Link to this definition">¶</a></dt>
+<dd><p>Reset the rapid search bar.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.run_advanced_search">
+<span class="sig-name descname"><span class="pre">run_advanced_search</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.run_advanced_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.run_advanced_search" title="Link to this definition">¶</a></dt>
+<dd><p>Launch the advanced search.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.search_str">
+<span class="sig-name descname"><span class="pre">search_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_search</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.search_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.search_str" title="Link to this definition">¶</a></dt>
+<dd><p>Search a string in the table and updates the visualized documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>str_search</strong> – string to search</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.send_documents_to_pipeline">
+<span class="sig-name descname"><span class="pre">send_documents_to_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.send_documents_to_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.send_documents_to_pipeline" title="Link to this definition">¶</a></dt>
+<dd><p>Send the current list of scans to the Pipeline Manager.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.update_database">
+<span class="sig-name descname"><span class="pre">update_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.update_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.update_database" title="Link to this definition">¶</a></dt>
+<dd><p>Update the database in the software. Called when switching project
+(new, open, and save as).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>database</strong> – New instance of Database</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.data_browser.</span></span><span class="sig-name descname"><span class="pre">DateFormatDelegate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DateFormatDelegate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QItemDelegate</span></code></p>
+<p>Delegate that is used to handle dates in the TableDataBrowser.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DateFormatDelegate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.createEditor">
+<span class="sig-name descname"><span class="pre">createEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DateFormatDelegate.createEditor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.createEditor" title="Link to this definition">¶</a></dt>
+<dd><p>Override of the createEditor method, called to generate the widget.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.data_browser.</span></span><span class="sig-name descname"><span class="pre">DateTimeFormatDelegate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DateTimeFormatDelegate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QItemDelegate</span></code></p>
+<p>Delegate that is used to handle date &amp; time in the TableDataBrowser.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DateTimeFormatDelegate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.__init__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.createEditor">
+<span class="sig-name descname"><span class="pre">createEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#DateTimeFormatDelegate.createEditor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.createEditor" title="Link to this definition">¶</a></dt>
+<dd><p>Override of the createEditor method, called to generate the widget.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.data_browser.</span></span><span class="sig-name descname"><span class="pre">NumberFormatDelegate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#NumberFormatDelegate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QItemDelegate</span></code></p>
+<p>Delegate that is used to handle numbers in the TableDataBrowser.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#NumberFormatDelegate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.createEditor">
+<span class="sig-name descname"><span class="pre">createEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#NumberFormatDelegate.createEditor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.createEditor" title="Link to this definition">¶</a></dt>
+<dd><p>Override of the createEditor method, called to generate the widget.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.data_browser.</span></span><span class="sig-name descname"><span class="pre">TableDataBrowser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_to_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QTableWidget</span></code></p>
+<p>Table widget that displays the documents contained in the database and
+their associated tags.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_to_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialization of the class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – current project in the software</p></li>
+<li><p><strong>data_browser</strong> – parent data browser widget</p></li>
+<li><p><strong>tags_to_display</strong> – list of tags to display</p></li>
+<li><p><strong>update_values</strong> – boolean to specify if edition is enabled</p></li>
+<li><p><strong>activate_selection</strong> – dictionary containing information about
+the processes that has been run to generate documents</p></li>
+<li><p><strong>link_viewer</strong> – boolean to specify if the table is linked to a
+viewer</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_column">
+<span class="sig-name descname"><span class="pre">add_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_column" title="Link to this definition">¶</a></dt>
+<dd><p>Add a column to the table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> – index of the column to add</p></li>
+<li><p><strong>tag</strong> – tag name to add</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_columns">
+<span class="sig-name descname"><span class="pre">add_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_columns" title="Link to this definition">¶</a></dt>
+<dd><p>Add columns.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_path">
+<span class="sig-name descname"><span class="pre">add_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_path" title="Link to this definition">¶</a></dt>
+<dd><p>Call a pop-up to add any document to the project.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_rows">
+<span class="sig-name descname"><span class="pre">add_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_rows" title="Link to this definition">¶</a></dt>
+<dd><p>Insert rows if they are not already in the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rows</strong> – list of all scans</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.change_cell_color">
+<span class="sig-name descname"><span class="pre">change_cell_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_origin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.change_cell_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.change_cell_color" title="Link to this definition">¶</a></dt>
+<dd><p>Change the background color and the value of cells when edited by
+the user.
+Handle the multi-selection case.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item_origin</strong> – item from where the call comes from</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.clear_cell">
+<span class="sig-name descname"><span class="pre">clear_cell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.clear_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.clear_cell" title="Link to this definition">¶</a></dt>
+<dd><p>Clear the selected cells.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.context_menu_table">
+<span class="sig-name descname"><span class="pre">context_menu_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.context_menu_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.context_menu_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the context menu of the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>position</strong> – position of the mouse cursor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.delete_from_brick">
+<span class="sig-name descname"><span class="pre">delete_from_brick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.delete_from_brick"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.delete_from_brick" title="Link to this definition">¶</a></dt>
+<dd><p>Delete a document from its brick id.</p>
+<p>This method is used to clean the database when the user initializes
+a pipeline (multiple bricks) but doesn’t run it before initializing
+another one or closing the software.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – string of the brick id</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.display_file">
+<span class="sig-name descname"><span class="pre">display_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.display_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.display_file" title="Link to this definition">¶</a></dt>
+<dd><p>Tries to display a file in the user’s preferred application.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.display_unreset_values">
+<span class="sig-name descname"><span class="pre">display_unreset_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.display_unreset_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.display_unreset_values" title="Link to this definition">¶</a></dt>
+<dd><p>Display an error message when trying to reset user tags.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.edit_table_data_values">
+<span class="sig-name descname"><span class="pre">edit_table_data_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.edit_table_data_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.edit_table_data_values" title="Link to this definition">¶</a></dt>
+<dd><p>Change values in DataBrowser</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.fill_cells_update_table">
+<span class="sig-name descname"><span class="pre">fill_cells_update_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.fill_cells_update_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.fill_cells_update_table" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize and fill the cells of the table.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.fill_headers">
+<span class="sig-name descname"><span class="pre">fill_headers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">take_tags_to_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.fill_headers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.fill_headers" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize and fill the headers of the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>take_tags_to_update</strong> – boolean to hide or show tags</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_current_filter">
+<span class="sig-name descname"><span class="pre">get_current_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_current_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_current_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Get the current data browser selection (list of paths).</p>
+<p>If there is a current selection, the list of selected scans is returned
+otherwise the list of the visible paths in the data browser is
+returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the list of scans corresponding to the current selection in
+the data browser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_index_insertion">
+<span class="sig-name descname"><span class="pre">get_index_insertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_insert</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_index_insertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_index_insertion" title="Link to this definition">¶</a></dt>
+<dd><p>Get index insertion of a new column, since it’s already sorted in
+alphabetical order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>to_insert</strong> – tag to insert</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_scan_row">
+<span class="sig-name descname"><span class="pre">get_scan_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_scan_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_scan_row" title="Link to this definition">¶</a></dt>
+<dd><p>Return the row index of the scan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scan</strong> – scan filename</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>index of the row of the scan</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_tag_column">
+<span class="sig-name descname"><span class="pre">get_tag_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_tag_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_tag_column" title="Link to this definition">¶</a></dt>
+<dd><p>Return the column index of the tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tag</strong> – tag name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>index of the column of the tag</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.mouseReleaseEvent">
+<span class="sig-name descname"><span class="pre">mouseReleaseEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.mouseReleaseEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.mouseReleaseEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Update table after mouse release.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> – event</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.multiple_sort_infos">
+<span class="sig-name descname"><span class="pre">multiple_sort_infos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_tags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.multiple_sort_infos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.multiple_sort_infos" title="Link to this definition">¶</a></dt>
+<dd><p>Sort the table according to the tags specify in list_tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_tags</strong> – list of the tags on which to sort the documents</p></li>
+<li><p><strong>order</strong> – “Ascending” or “Descending”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.multiple_sort_pop_up">
+<span class="sig-name descname"><span class="pre">multiple_sort_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.multiple_sort_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.multiple_sort_pop_up" title="Link to this definition">¶</a></dt>
+<dd><p>Display the multiple sort pop-up.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.remove_scan">
+<span class="sig-name descname"><span class="pre">remove_scan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.remove_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.remove_scan" title="Link to this definition">¶</a></dt>
+<dd><p>Remove documents from table and project.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_cell">
+<span class="sig-name descname"><span class="pre">reset_cell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.reset_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_cell" title="Link to this definition">¶</a></dt>
+<dd><p>Reset the selected cells to their original values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_column">
+<span class="sig-name descname"><span class="pre">reset_column</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.reset_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_column" title="Link to this definition">¶</a></dt>
+<dd><p>Reset the selected columns to their original values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_row">
+<span class="sig-name descname"><span class="pre">reset_row</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.reset_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_row" title="Link to this definition">¶</a></dt>
+<dd><p>Reset the selected rows to their original values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.section_moved">
+<span class="sig-name descname"><span class="pre">section_moved</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logical_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.section_moved"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.section_moved" title="Link to this definition">¶</a></dt>
+<dd><p>Update the visual index and forbid to move the first column when
+the user try to move columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logical_index</strong> – int of the column logical index</p></li>
+<li><p><strong>old_index</strong> – int of the column old visual index</p></li>
+<li><p><strong>new_index</strong> – int of the column new visual index</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.select_all_column">
+<span class="sig-name descname"><span class="pre">select_all_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.select_all_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.select_all_column" title="Link to this definition">¶</a></dt>
+<dd><p>Select all column when the header is double clicked</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>col</strong> – column to select</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.select_all_columns">
+<span class="sig-name descname"><span class="pre">select_all_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.select_all_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.select_all_columns" title="Link to this definition">¶</a></dt>
+<dd><p>Select one or several column(s). Called from the context menu.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.selection_changed">
+<span class="sig-name descname"><span class="pre">selection_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.selection_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.selection_changed" title="Link to this definition">¶</a></dt>
+<dd><p>Update the tab view when the selection changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.show_brick_history">
+<span class="sig-name descname"><span class="pre">show_brick_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.show_brick_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.show_brick_history" title="Link to this definition">¶</a></dt>
+<dd><p>Show brick history pop-up.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.sort_column">
+<span class="sig-name descname"><span class="pre">sort_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.sort_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.sort_column" title="Link to this definition">¶</a></dt>
+<dd><p>Sort the current column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>order</strong> – order of sort (0 for ascending, 1 for descending)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.sort_updated">
+<span class="sig-name descname"><span class="pre">sort_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.sort_updated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.sort_updated" title="Link to this definition">¶</a></dt>
+<dd><p>Update project and tab parameters after a sort.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> – index of that was sorted</p></li>
+<li><p><strong>order</strong> – boolean of the new order</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_colors">
+<span class="sig-name descname"><span class="pre">update_colors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_colors" title="Link to this definition">¶</a></dt>
+<dd><p>Update the background of all the cells.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_selection">
+<span class="sig-name descname"><span class="pre">update_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_selection" title="Link to this definition">¶</a></dt>
+<dd><p>Update the selection after a search.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_table">
+<span class="sig-name descname"><span class="pre">update_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">take_tags_to_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_table" title="Link to this definition">¶</a></dt>
+<dd><p>Fill the table with the project’s data.</p>
+<p>Only called when switching project to completely reset the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>take_tags_to_update</strong> – boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_visualized_columns">
+<span class="sig-name descname"><span class="pre">update_visualized_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_tags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_visualized_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_visualized_columns" title="Link to this definition">¶</a></dt>
+<dd><p>Update the tags shown in the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_tags</strong> – old list of visualized tags</p></li>
+<li><p><strong>showed</strong> – list of tags to display</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_visualized_rows">
+<span class="sig-name descname"><span class="pre">update_visualized_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_scans</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_visualized_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_visualized_rows" title="Link to this definition">¶</a></dt>
+<dd><p>Update the list of documents (scans) in the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>old_scans</strong> – old list of scans</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.visualized_tags_pop_up">
+<span class="sig-name descname"><span class="pre">visualized_tags_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.visualized_tags_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.visualized_tags_pop_up" title="Link to this definition">¶</a></dt>
+<dd><p>Display the visualized tags pop-up.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.data_browser.</span></span><span class="sig-name descname"><span class="pre">TimeFormatDelegate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TimeFormatDelegate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QItemDelegate</span></code></p>
+<p>Delegate that is used to handle times in the TableDataBrowser.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TimeFormatDelegate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialization of the class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> – QWidget parent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.createEditor">
+<span class="sig-name descname"><span class="pre">createEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/data_browser.html#TimeFormatDelegate.createEditor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.createEditor" title="Link to this definition">¶</a></dt>
+<dd><p>Override of the createEditor method, called to generate the widget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> – QWidget parent</p></li>
+<li><p><strong>option</strong> – Only used to overload the QItemDelegate class</p></li>
+<li><p><strong>index</strong> – Only used to overload the QItemDelegate class</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The QWidget with a specified format</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_browser.mini_viewer">
+<span id="populse-mia-user-interface-data-browser-mini-viewer-module"></span><h2>populse_mia.user_interface.data_browser.mini_viewer module<a class="headerlink" href="#module-populse_mia.user_interface.data_browser.mini_viewer" title="Link to this heading">¶</a></h2>
+<p>Module to define the mini viewer.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>MiniViewer</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.mini_viewer.</span></span><span class="sig-name descname"><span class="pre">MiniViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>MiniViewer that allows to rapidly visualize scans either with a single
+image per scan with cursors to move in five dimensions or with all images
+of the greater dimension of the scan.</p>
+<p>When the latter is selected, the displayed images depends on their
+dimension:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>3D: display all the slices.</p></li>
+<li><dl class="simple">
+<dt>4D: display the middle slice of the third dimension for each time</dt><dd><p>of the fourth dimension.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>5D: display the middle slice of the third dimension for the first</dt><dd><p>time of the fourth dimension for each time of the fifth dimension.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>Note:</dt><dd><ul class="simple">
+<li><p>idx corresponds to the index of the displayed image</p></li>
+<li><p>idx in [0, self.max_scans]</p></li>
+<li><dl class="simple">
+<dt>most of the class’s attributes are lists of 0 to self.max_scans</dt><dd><p>elements</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialise the MiniViewer object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>project</strong> – current project in the software</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.boxSlider">
+<span class="sig-name descname"><span class="pre">boxSlider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.boxSlider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.boxSlider" title="Link to this definition">¶</a></dt>
+<dd><p>Define horizontal sliders connections and thumbnail labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – the selected index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.changePosValue">
+<span class="sig-name descname"><span class="pre">changePosValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor_to_change</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.changePosValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.changePosValue" title="Link to this definition">¶</a></dt>
+<dd><p>Change the value of a cursor for the selected index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx</strong> – the selected index</p></li>
+<li><p><strong>cursor_to_change</strong> – the cursor to change (1, 2 or 3)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.check_box_cursors_state_changed">
+<span class="sig-name descname"><span class="pre">check_box_cursors_state_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.check_box_cursors_state_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.check_box_cursors_state_changed" title="Link to this definition">¶</a></dt>
+<dd><p>Update the config file.</p>
+<p>Called when the state of the checkbox to chain the cursors changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.clear" title="Link to this definition">¶</a></dt>
+<dd><p>Remove the Nibabel images to be able to remove it in the unit tests</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.clearLayouts">
+<span class="sig-name descname"><span class="pre">clearLayouts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.clearLayouts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.clearLayouts" title="Link to this definition">¶</a></dt>
+<dd><p>Clear the final layout</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createDimensionLabels">
+<span class="sig-name descname"><span class="pre">createDimensionLabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.createDimensionLabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createDimensionLabels" title="Link to this definition">¶</a></dt>
+<dd><p>Create the dimension labels for the selected index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – the selected index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createFieldValue">
+<span class="sig-name descname"><span class="pre">createFieldValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.createFieldValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createFieldValue" title="Link to this definition">¶</a></dt>
+<dd><p>Create a field where will be displayed the position of a cursor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the corresponding field</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createLayouts">
+<span class="sig-name descname"><span class="pre">createLayouts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.createLayouts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createLayouts" title="Link to this definition">¶</a></dt>
+<dd><p>Create the layouts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.create_slider">
+<span class="sig-name descname"><span class="pre">create_slider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.create_slider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.create_slider" title="Link to this definition">¶</a></dt>
+<dd><p>Generate an horizontal slider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maxm</strong> – slider’s maximum</p></li>
+<li><p><strong>minm</strong> – slider’s minimum</p></li>
+<li><p><strong>pos</strong> – slider’s initial value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the slider object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.displayPosValue">
+<span class="sig-name descname"><span class="pre">displayPosValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.displayPosValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.displayPosValue" title="Link to this definition">¶</a></dt>
+<dd><p>Display the position of each cursor for the selected index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – the selected index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.enableSliders">
+<span class="sig-name descname"><span class="pre">enableSliders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.enableSliders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.enableSliders" title="Link to this definition">¶</a></dt>
+<dd><p>Enable all the horizontal slider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – the slider’s index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.image2DModifications">
+<span class="sig-name descname"><span class="pre">image2DModifications</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">im2D</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.image2DModifications"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.image2DModifications" title="Link to this definition">¶</a></dt>
+<dd><p>Apply modifications to display the image correctly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx</strong> – the selected index</p></li>
+<li><p><strong>im2D</strong> – image to modify</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.image_to_pixmap">
+<span class="sig-name descname"><span class="pre">image_to_pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">im</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.image_to_pixmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.image_to_pixmap" title="Link to this definition">¶</a></dt>
+<dd><p>Create a 2D pixmap from a N-D Nifti image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>im</strong> – Nifti image</p></li>
+<li><p><strong>i</strong> – index of the slide</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the corresponding pixmap</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.indexImage">
+<span class="sig-name descname"><span class="pre">indexImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.indexImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.indexImage" title="Link to this definition">¶</a></dt>
+<dd><p>Update all slider values according to the size of the current image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – the selected index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.mem_release">
+<span class="sig-name descname"><span class="pre">mem_release</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.mem_release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.mem_release" title="Link to this definition">¶</a></dt>
+<dd><p>Reset all object lists to zero in order to preserve memory</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.navigImage">
+<span class="sig-name descname"><span class="pre">navigImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.navigImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.navigImage" title="Link to this definition">¶</a></dt>
+<dd><p>Display the 2D image for the selected index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – the selected index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.openTagsPopUp">
+<span class="sig-name descname"><span class="pre">openTagsPopUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.openTagsPopUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.openTagsPopUp" title="Link to this definition">¶</a></dt>
+<dd><p>Open a pop-up to select the legend of the thumbnails.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.setThumbnail">
+<span class="sig-name descname"><span class="pre">setThumbnail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path_base_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.setThumbnail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.setThumbnail" title="Link to this definition">¶</a></dt>
+<dd><p>Set the thumbnail tag value under the image frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path_base_name</strong> – basename of the selected path</p></li>
+<li><p><strong>idx</strong> – index of the image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.show_slices">
+<span class="sig-name descname"><span class="pre">show_slices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.show_slices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.show_slices" title="Link to this definition">¶</a></dt>
+<dd><p>Creates the thumbnails from the selected file paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_paths</strong> – the selected file paths</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.update_nb_slices">
+<span class="sig-name descname"><span class="pre">update_nb_slices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.update_nb_slices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.update_nb_slices" title="Link to this definition">¶</a></dt>
+<dd><p>Update the config file and the thumbnails.</p>
+<p>Called when the number of slices to visualize changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.update_visualization_method">
+<span class="sig-name descname"><span class="pre">update_visualization_method</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.update_visualization_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.update_visualization_method" title="Link to this definition">¶</a></dt>
+<dd><p>Update the config file and the thumbnails.</p>
+<p>Called when the state of the checkbox to show all slices changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.verify_slices">
+<span class="sig-name descname"><span class="pre">verify_slices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.verify_slices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.verify_slices" title="Link to this definition">¶</a></dt>
+<dd><p>Make ‘Show all slices’ checkbox unclickable if len(file_paths) &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_paths</strong> – the selected documents</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_browser.modify_table">
+<span id="populse-mia-user-interface-data-browser-modify-table-module"></span><h2>populse_mia.user_interface.data_browser.modify_table module<a class="headerlink" href="#module-populse_mia.user_interface.data_browser.modify_table" title="Link to this heading">¶</a></h2>
+<p>Module to handle updates of the databrowser table after modifications.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>ModifyTable</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.modify_table.ModifyTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.modify_table.</span></span><span class="sig-name descname"><span class="pre">ModifyTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/modify_table.html#ModifyTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.modify_table.ModifyTable" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Used to modify the contents of cells which contains lists.</p>
+<p>When the user wishes to modify a cell which contains a list in the
+databrowser tab, a popup will appear to help the user to change the
+content of the cell.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.modify_table.ModifyTable.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/modify_table.html#ModifyTable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.modify_table.ModifyTable.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialization of the ModifyTable class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – Instance of project</p></li>
+<li><p><strong>value</strong> – List of values of the cell</p></li>
+<li><p><strong>types</strong> – Value types</p></li>
+<li><p><strong>scans</strong> – Scans of the rows</p></li>
+<li><p><strong>tags</strong> – Tags of the columns</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.modify_table.ModifyTable.add_item">
+<span class="sig-name descname"><span class="pre">add_item</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/modify_table.html#ModifyTable.add_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.modify_table.ModifyTable.add_item" title="Link to this definition">¶</a></dt>
+<dd><p>Add one more element to self.value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.modify_table.ModifyTable.fill_table">
+<span class="sig-name descname"><span class="pre">fill_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/modify_table.html#ModifyTable.fill_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.modify_table.ModifyTable.fill_table" title="Link to this definition">¶</a></dt>
+<dd><p>Fill the table.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.modify_table.ModifyTable.rem_last_item">
+<span class="sig-name descname"><span class="pre">rem_last_item</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/modify_table.html#ModifyTable.rem_last_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.modify_table.ModifyTable.rem_last_item" title="Link to this definition">¶</a></dt>
+<dd><p>Remove last element of self.value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.modify_table.ModifyTable.update_table_values">
+<span class="sig-name descname"><span class="pre">update_table_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/modify_table.html#ModifyTable.update_table_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.modify_table.ModifyTable.update_table_values" title="Link to this definition">¶</a></dt>
+<dd><p>Update the table in the database when the ‘OK’ button is clicked.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-populse_mia.user_interface.data_browser.rapid_search">
+<span id="populse-mia-user-interface-data-browser-rapid-search-module"></span><h2>populse_mia.user_interface.data_browser.rapid_search module<a class="headerlink" href="#module-populse_mia.user_interface.data_browser.rapid_search" title="Link to this heading">¶</a></h2>
+<p>Module to define the rapid search.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>RapidSearch</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.rapid_search.RapidSearch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_browser.rapid_search.</span></span><span class="sig-name descname"><span class="pre">RapidSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/rapid_search.html#RapidSearch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.rapid_search.RapidSearch" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QLineEdit</span></code></p>
+<dl class="simple">
+<dt>Widget used to search for a pattern in the table (for all the visualized</dt><dd><p>tags).</p>
+</dd>
+</dl>
+<p>Enter % to replace any string, _ to replace any character , <em>Not Defined</em>
+for the scans with missing value(s).
+Dates are in the following format: yyyy-mm-dd hh:mm:ss.fff”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>databrowser</strong> – parent data browser widget</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.rapid_search.RapidSearch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/rapid_search.html#RapidSearch.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.rapid_search.RapidSearch.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialization of RapidSearch class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>databrowser</strong> – parent data browser widget</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.rapid_search.RapidSearch.prepare_filter">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/rapid_search.html#RapidSearch.prepare_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.rapid_search.RapidSearch.prepare_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Prepare the rapid search filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>search</strong> – Search (str)</p></li>
+<li><p><strong>tags</strong> – List of tags to take into account</p></li>
+<li><p><strong>scans</strong> – List of scans to search into</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>str filter corresponding to the rapid search</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.rapid_search.RapidSearch.prepare_not_defined_filter">
+<span class="sig-name descname"><span class="pre">prepare_not_defined_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_browser/rapid_search.html#RapidSearch.prepare_not_defined_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.rapid_search.RapidSearch.prepare_not_defined_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Prepare the rapid search filter for not defined values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tags</strong> – list of tags to take into account</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>str filter corresponding to the rapid search for not defined
+values</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>
