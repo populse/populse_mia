@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# PyCharm:
+.idea
+.idea/**
+
 # Distribution / packaging
 .Python
 env/
@@ -107,10 +111,10 @@ ENV/
 # processes directory
 processes/*
 
-#python/populse_mia/src/modules/PipelineManager/Processes/MIA_processes/*
+#populse_mia/src/modules/PipelineManager/Processes/MIA_processes/*
 #src/modules/NodeEditor/Processes/processes.py
 #src/modules/PipelineManager/Processes/processes.py
-#python/populse_mia/src/modules/PipelineManager/Processes/*
+#populse_mia/src/modules/PipelineManager/Processes/*
 #src/modules/PipelineManager/Processes/*
 
 # config files

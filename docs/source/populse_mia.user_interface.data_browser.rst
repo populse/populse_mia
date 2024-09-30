@@ -56,4 +56,3 @@ populse\_mia.user\_interface.data\_browser.rapid\_search module
    :members:
    :undoc-members:
    :show-inheritance:
-

@@ -10,6 +10,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    populse_mia.data_manager
    populse_mia.user_interface
@@ -49,4 +50,3 @@ populse\_mia.test module
    :members:
    :undoc-members:
    :show-inheritance:
-

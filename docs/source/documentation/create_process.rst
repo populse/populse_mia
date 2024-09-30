@@ -14,7 +14,7 @@ This page explains how to create a process that can be used in Populse_MIA's Pip
 Populse_MIA uses `Capsul <http://brainvisa.info/capsul/index.html>`_ to handle Pipeline processing. During Populse_MIA installation, Nipype’s interfaces are stored in the package library and are directly available in the Process Library. However, any user can import its own processes in Populse_MIA following these next steps:
 
 
-Creating a MIA process 
+Creating a MIA process
 ----------------------
 
 MIA processes are Capsul processes made specific for Populse_MIA. They need at least three methods to work properly: __init__, list_outputs and _run_process.
@@ -52,30 +52,30 @@ MIA processes are Capsul processes made specific for Populse_MIA. They need at l
     from nipype.interfaces import spm  # used to use SPM's Smooth
     from scipy.ndimage.filters import gaussian_filter  # used to apply the smoothing on an array
     from populse_mia.user_interface.pipeline_manager.process_mia import ProcessMIA  # base class that the created process has to inherit from
-    
-    
+
+
     class SmoothSpmScipy(ProcessMIA):
-    
+
         def __init__(self):
             super(SmoothSpmScipy, self).__init__()
-    
+
             # Inputs
             self.add_trait("in_file", traits.File(output=False, desc='3D input file'))  # Mandatory plug
-    
+
             # For inputs/outputs that are lists, it is possible to specify which the type of the list element (here
             # traits.Float(). The second value ([1.0, 1.0, 1.0]) corresponds to the default value
             self.add_trait("fwhm", traits.List(traits.Float(), [1.0, 1.0, 1.0], output=False, optional=True,
                                                desc='List of fwhm for each dimension (in mm)'))
-    
+
             self.add_trait("out_prefix", traits.String('s', output=False, optional=True, desc='Output file prefix'))
             self.add_trait("method", traits.Enum('SPM', 'Scipy', output=False, optional=True,
                                                  desc='Method used (either "SPM" or "Scipy")'))
-    
+
             # Output
             self.add_trait("smoothed_file", traits.File(output=True, desc='Output file'))  # Mandatory plug
 
             self.process = spm.Smooth()
-    
+
         def list_outputs(self):
             # Depending on the chosen method, the output dictionary will be generated differently
             if self.method in ['SPM', 'Scipy']:
@@ -98,16 +98,16 @@ MIA processes are Capsul processes made specific for Populse_MIA. They need at l
                         path, filename = os.path.split(self.in_file)
                         out_filename = self.out_prefix + filename
                         output_dict = {'smoothed_file': os.path.join(path, out_filename)}
-    
+
                 # Generating the inheritance dictionary
                 inheritance_dict = {output_dict['smoothed_file']: self.in_file}
-    
+
                 return output_dict, inheritance_dict
-    
+
             else:
                 print('"method" input has to be "SPM" or "Scipy" for a Smooth process')
                 return {}
-    
+
         def _run_process(self):
             # Depending on the chosen method, the output file will be generated differently
             if self.method in ['SPM', 'Scipy']:
@@ -121,9 +121,9 @@ MIA processes are Capsul processes made specific for Populse_MIA. They need at l
                         self.process.inputs.in_files = self.in_file  # The input for a SPM Smooth is "in_files"
                     self.process.inputs.fwhm = self.fwhm
                     self.process.inputs.out_prefix = self.out_prefix
-    
+
                     self.process.run()  # Running the interface
-    
+
                 else:
                     if not self.in_file:
                         print('"in_file" plug is mandatory for a Smooth process')
@@ -132,29 +132,29 @@ MIA processes are Capsul processes made specific for Populse_MIA. They need at l
                         input_image = nib.load(self.in_file)  # Loading the nibabel image
                         input_image_header = input_image.header
                         input_array = input_image.get_fdata()  # Getting the 3D volume as a numpy array
-    
+
                         # Getting the image resolution in x, y and z
                         x_resolution = abs(input_image_header['pixdim'][1])
                         y_resolution = abs(input_image_header['pixdim'][2])
                         z_resolution = abs(input_image_header['pixdim'][3])
-    
+
                         # Convert the fwhm for each dimension from mm to pixel
                         x_fwhm = self.fwhm[0] / x_resolution
                         y_fwhm = self.fwhm[1] / y_resolution
                         z_fwhm = self.fwhm[2] / z_resolution
                         pixel_fwhm = [x_fwhm, y_fwhm, z_fwhm]
-    
+
                         sigma = [pixel_fwhm_dim / 2.355 for pixel_fwhm_dim in pixel_fwhm]  # Converting fwmh to sigma
                         output_array = gaussian_filter(input_array, sigma)  # Filtering the array
-    
+
                         # Creating a new Nifti image with the affine/header of the input_image
                         output_image = nib.Nifti1Image(output_array, input_image.affine, input_image.header)
-    
+
                         # Saving the image
                         path, filename = os.path.split(self.in_file)
                         out_filename = self.out_prefix + filename
                         nib.save(output_image, os.path.join(path, out_filename))
-    
+
             else:
                 print('"method" input has to be "SPM" or "Scipy" for a Smooth process')
                 return {}
@@ -172,4 +172,3 @@ Installing the package in Populse_MIA
 -------------------------------------
 
 In the software menu bar, go to More > Install processes > From folder and browse to the package. Click on “Install package”. The package is now stored in the process library and the Smooth process can be used to create pipelines.
-

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-#
-# Configuration file for the Sphinx documentation builder.
-#
+
+""" Configuration file for the Sphinx documentation builder."""
+
 # This file does only contain a selection of the most common options. For a
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
@@ -15,33 +15,103 @@
 import os
 import sys
 
-if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'populse_mia')):
-    print('\nGenerating sphinx documentation in developer mode ...')
-    print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../python')))
-    sys.path.insert(0, os.path.abspath('../../python'))
+if os.path.isdir(
+    os.path.join(
+        os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        ),
+        "populse_mia",
+    )
+):
+    print("\nGenerating sphinx documentation in developer mode ...")
+    print(" - Adding {} to the sys.path ...".format(os.path.abspath("../..")))
+    sys.path.insert(0, os.path.abspath("../.."))
 
-    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'capsul')):
-        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../capsul')))
-        sys.path.insert(1, os.path.abspath('../../../capsul'))
+    if os.path.isdir(
+        os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "populse_db",
+        )
+    ):
+        print(
+            " - Adding {} to the sys.path ...".format(
+                os.path.abspath("../../../populse_db/python")
+            )
+        )
+        sys.path.insert(1, os.path.abspath("../../../populse_db/python"))
 
-    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'soma-base')):
-        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../soma-base/python')))
-        sys.path.insert(1, os.path.abspath('../../../soma-base/python'))
+    if os.path.isdir(
+        os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "mia_processes",
+        )
+    ):
+        print(
+            " - Adding {} to the sys.path ...".format(
+                os.path.abspath("../../../mia_processes")
+            )
+        )
+        sys.path.insert(1, os.path.abspath("../../../mia_processes"))
 
-    if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'populse_db')):
-        print(' - Adding {} to the sys.path ...'.format(os.path.abspath('../../../populse_db/python')))
-        sys.path.insert(1, os.path.abspath('../../../populse_db/python'))
+    if os.path.isdir(
+        os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "capsul",
+        )
+    ):
+        print(
+            " - Adding {} to the sys.path ...".format(
+                os.path.abspath("../../../capsul")
+            )
+        )
+        sys.path.insert(1, os.path.abspath("../../../capsul"))
+
+    if os.path.isdir(
+        os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "soma-base",
+        )
+    ):
+        print(
+            " - Adding {} to the sys.path ...".format(
+                os.path.abspath("../../../soma-base/python")
+            )
+        )
+        sys.path.insert(1, os.path.abspath("../../../soma-base/python"))
+
+    if os.path.isdir(
+        os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "soma-workflow",
+        )
+    ):
+        print(
+            " - Adding {} to the sys.path ...".format(
+                os.path.abspath("../../../soma-workflow/python")
+            )
+        )
+        sys.path.insert(1, os.path.abspath("../../../soma-workflow/python"))
 
 import populse_mia
 
 # -- project information -----------------------------------------------------
 
-project = 'populse_mia'
-copyright = '2021, populse'
-author = 'populse'
+project = "populse_mia"
+copyright = "2022, populse"
+author = "populse"
 
 # The short X.Y version
-version = ''
+version = ""
 # The full version, including alpha/beta/rc tags
 release = populse_mia.__version__
 
@@ -56,32 +126,59 @@ release = populse_mia.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc', 'sphinx.ext.viewcode',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
+    # "sphinx.ext.autosectionlabel",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.extlinks",
+    "sphinxcontrib.mermaid",
+    "myst_parser",
 ]
 
+try:
+    import sphinxcontrib.mermaid
+
+    # flake8 ignore F401
+    extensions.append("sphinxcontrib.mermaid")
+
+except ImportError:
+    # oh well... no schemas then.
+    print(
+        "sphinxcontrib.mermaid is not present on your system. Schemas will "
+        "not be rendered in docs. You probably should consider installing "
+        "it using:\n\n"
+        "pip install sphinxcontrib.mermaid\n",
+        file=sys.stderr,
+    )
+    pass
+
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # The language for content autogenerated by Sphinx. Refer to documentation
 # for a list of supported languages.
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+# language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['populse_mia.#image_viewer.rst','populse_mia.sources_images.rst']
+exclude_patterns = [
+    "populse_mia.#image_viewer.rst",
+    "populse_mia.sources_images.rst",
+]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -92,18 +189,21 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'haiku'
+html_theme = "haiku"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+# html_theme_options = {}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-#html_static_path = ['_static'] ## Commented to fix the warning: "copying static files... WARNING: html_static_path entry '/home/econdami/Git_Projects/populse_mia/docs/source/_static' does not exist
+# The following html_static_path = is commented to fix the warning:
+# copying static files... WARNING: html_static_path entry '/home/econdami/
+# Git_Projects/populse_mia/docs/source/_static' does not exist
+# html_static_path = ['_static']
 
 
 # Custom sidebar templates, must be a dictionary that maps document names
@@ -120,7 +220,7 @@ html_theme = 'haiku'
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'populse_miadoc'
+htmlhelp_basename = "populse_miadoc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -129,15 +229,12 @@ latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     #
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     #
     # 'preamble': '',
-
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
@@ -147,8 +244,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'populse_mia.tex', 'populse\\_mia Documentation',
-     'populse', 'manual'),
+    (
+        master_doc,
+        "populse_mia.tex",
+        "populse\\_mia Documentation",
+        "populse",
+        "manual",
+    ),
 ]
 
 
@@ -157,8 +259,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'populse_mia', 'populse_mia Documentation',
-     [author], 1)
+    (master_doc, "populse_mia", "populse_mia Documentation", [author], 1)
 ]
 
 
@@ -168,9 +269,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'populse_mia', 'populse_mia Documentation',
-     author, 'populse_mia', 'One line description of project.',
-     'Miscellaneous'),
+    (
+        master_doc,
+        "populse_mia",
+        "populse_mia Documentation",
+        author,
+        "populse_mia",
+        "One line description of project.",
+        "Miscellaneous",
+    ),
 ]
 
 
@@ -189,13 +296,42 @@ epub_title = project
 # epub_uid = ''
 
 # A list of files that should not be packed into the epub file.
-epub_exclude_files = ['search.html']
+epub_exclude_files = ["search.html"]
 
 
 # -- Extension configuration -------------------------------------------------
 
 
 autodoc_default_options = {
-    'special-members': '__init__',
+    "special-members": "__init__",
 }
 
+
+# -- Intersphinx configuration -----------------------------------------------
+
+extlinks = {
+    "somabase": ("https://populse.github.io/soma-base/%s", "somabase "),
+    "somaworkflow": (
+        "https://populse.github.io/soma-workflow/%s",
+        "somaworkflow ",
+    ),
+    "casadistro": (
+        "https://brainvisa.github.io/casa-distro/%s",
+        "casadistro ",
+    ),
+}
+
+
+pyversion = "%d.%d" % sys.version_info[:2]
+
+intersphinx_mapping = {
+    "somabase": ("https://populse.github.io/soma-base", None),
+    "somaworkflow": ("https://populse.github.io/soma-workflow", None),
+    "python": ("https://docs.python.org/%s" % pyversion, None),
+    "traits": ("https://docs.enthought.com/traits", None),
+}
+
+
+# -- mermaid configuration ---------------------------------------------------
+
+mermaid_output_format = "raw"
