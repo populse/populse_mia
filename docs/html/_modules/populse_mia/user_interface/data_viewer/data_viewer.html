@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>populse_mia.user_interface.data_viewer.data_viewer &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
+    <script src="../../../../_static/documentation_options.js?v=bd736f96"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
+          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../../../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for populse_mia.user_interface.data_viewer.data_viewer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides an abstract base class for data viewer implemenataions in</span>
+<span class="sd">populse-mia.</span>
+
+<span class="sd">Data viewers are supposed to inherit :class:`DataViewer` and implement (at</span>
+<span class="sd">least) its methods. A data viewer is given a project and documents list, and is</span>
+<span class="sd">thus allowed to access databasing features and documents attributes.</span>
+
+<span class="sd">Coding a data viewer</span>
+<span class="sd">--------------------</span>
+
+<span class="sd">A data viewer is identified after its module name, and is currently searched</span>
+<span class="sd">for as a submodule of :mod:`populse_mia.user_interface.data_viewer`. The</span>
+<span class="sd">data viewer module may be implemented as a &quot;regular&quot; module (.py file) or a</span>
+<span class="sd">package (directory) and should contain at least a</span>
+<span class="sd">class named ``MiaViewer`` which:</span>
+
+<span class="sd">  - is a Qt ``QWidget`` (inherits ``QWidget`` as 1st inheritance as is required</span>
+<span class="sd">    by Qt)</span>
+<span class="sd">  - implements the :class:`DataViewer` API (normally by inheriting it as second</span>
+<span class="sd">    inheritance after ``QWidget`` but this is not technically required if the</span>
+<span class="sd">    API is implemented)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="DataViewer">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer">[docs]</a>
+<span class="k">class</span> <span class="nc">DataViewer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Populse-MIA data viewers abstract base class: it just gives an API to be</span>
+<span class="sd">    overloaded by subclasses.</span>
+
+<span class="sd">    The API is made willingly very simple and limited. Viewers implementations</span>
+<span class="sd">    are free to use Populse database features to implement fancy views. The</span>
+<span class="sd">    base functions are to register a project and documents list, display or</span>
+<span class="sd">    remove given files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataViewer.display_files">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.display_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display the selected document files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;display_files is abstract and should be overloaded in data &quot;</span>
+            <span class="s2">&quot;viewer implementations&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DataViewer.clear">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.clear">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hide / unload all displayed documents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">displayed_files</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="DataViewer.displayed_files">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.displayed_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayed_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the list of displayed files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;displayed_files is abstract and should be overloaded in data &quot;</span>
+            <span class="s2">&quot;viewer implementations&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DataViewer.remove_files">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.remove_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove documents from the displayed ones (hide, unload...)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;remove_files is abstract and should be overloaded in data &quot;</span>
+            <span class="s2">&quot;viewer implementations&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DataViewer.set_documents">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.set_documents">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the project and list of possible documents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;set_documents is abstract and should be overloaded in data &quot;</span>
+            <span class="s2">&quot;viewer implementations&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DataViewer.close">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer.close">[docs]</a>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Blabla&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../../../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

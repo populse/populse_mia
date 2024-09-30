@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mia’s user installation - Using virtualization &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
+    <script src="../_static/documentation_options.js?v=bd736f96"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+        <h2 class="heading"><span>Mia’s user installation - Using virtualization</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <div class="toctree-wrapper compound">
+</div>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../index.html">Home</a></p></td>
+<td><p><a class="reference external" href="../documentation/documentation.html">Documentation</a></p></td>
+<td><p><a class="reference external" href="./installation.html">Installation</a></p></td>
+<td><p><a class="reference external" href="https://github.com/populse/populse_mia">GitHub</a></p></td>
+</tr>
+</tbody>
+</table>
+<section id="mia-s-user-installation-using-virtualization">
+<h1>Mia’s user installation - Using virtualization<a class="headerlink" href="#mia-s-user-installation-using-virtualization" title="Link to this heading">¶</a></h1>
+<p>The general installation process is to first, thanks to virtualization, make running BrainVisa on your system (see <a class="reference internal" href="#prerequirements-1"><span class="std std-ref">Pre-requirements</span></a>).
+Then, the installation will be almost identical to the one done directly on the host (see <a class="reference internal" href="#installation-1"><span class="std std-ref">Installation</span></a>).</p>
+<p>You can perform the installation by <a class="reference external" href="https://brainvisa.info/web/download.html">following the detailed instruction provided by BrainVisa team</a>.
+In this case, skip the <a class="reference internal" href="#prerequirements-1"><span class="std std-ref">Pre-requirements</span></a> below and proceed directly to the <a class="reference internal" href="#installation-1"><span class="std std-ref">Installation</span></a>.
+Depending on the solution you have chosen, go to the Singularity container or the VirtualBox virtual machine and then follow the <a class="reference internal" href="#installation-1"><span class="std std-ref">Installation</span></a> section below</p>
+<p>You can also follow the full procedure below which uses Singularity virtualization technology.</p>
+<section id="pre-requirements">
+<span id="prerequirements-1"></span><h2>Pre-requirements<a class="headerlink" href="#pre-requirements" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="./virtualisation_pre_req_linux.html">For linux</a></p></li>
+<li><p><a class="reference external" href="./virtualisation_pre_req_macos.html">For macos</a></p></li>
+<li><p><a class="reference external" href="./virtualisation_pre_req_windows10.html">For Windows 10</a></p></li>
+</ul>
+</section>
+<section id="installation-1">
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation-1" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>If you followed <a class="reference external" href="https://brainvisa.info/web/download.html">BrainVisa installation</a> you should be in the container. Make sure to type the command <code class="docutils literal notranslate"><span class="pre">bv</span> <span class="pre">bash</span></code> if not.</p></li>
+<li><p>Then download the archive <a class="reference external" href="https://github.com/populse/mia_install/archive/master.zip">here</a>.</p></li>
+<li><p>Unzip it and launch the following command in the extracted folder (“mia_install-main”):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#update pip before installing mia</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+<span class="n">python3</span> <span class="n">install_mia</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+<li><p>If PyQt5 and pyyaml are not installed in your Python environment they will be first installed before launching the populse_mia’s installation.</p></li>
+</ul>
+<img alt="../_images/mia_install_1.png" class="align-center" id="pyqt5-and-pyyaml" src="../_images/mia_install_1.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>An error can sometimes occur, depending on your OS, after the installation of both packages, the Python environment not being correctly updated. If this error occurs launch the same command again to install populse_mia:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">install_mia</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>The Mia installation is now launched and you have to select four mandatory parameters:</p>
+<ul>
+<li><p>Mia installation path: the folder where to install few directories and files necessary for the operation of populse_mia, set by default to “.populse_mia” in the current user’s directory. Two folders will be created in the selected folder</p>
+<ul>
+<li><p>populse_mia: containing Mia’s configuration and resources files.</p></li>
+<li><p>MRIFileManager: containing the file converter used in Mia.</p></li>
+<li><p>MiaResources (external resources): containing resources needed to use populse_mia and mia_processes in some cases (references data as ROI, templates, etc…)</p></li>
+</ul>
+</li>
+<li><p>Mia projects path: the folder containing the analysis projects saved in Mia. A “projects” folder will be created in the selected folder.</p></li>
+<li><p>Installation target: Check <strong>Casa_distro</strong> for installation on virtualized BrainVisa.</p></li>
+<li><p>Operating mode: Choose between clinical and research mode (more information about <a class="reference external" href="../documentation/documentation.html#operating-mode">operating mode</a>).</p></li>
+</ul>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>If you already want to configure the use of Matlab and SPM (in license or standalone mode), you can also specify these several paths:</p>
+<ul>
+<li><p>Matlab path:</p>
+<ul>
+<li><p>Path of the Matlab executable file (is detected automatically).</p>
+<ul>
+<li><p>e.g. for linux - macOS: /usr/local/MATLAB/R2018a/bin/matlab</p></li>
+<li><p>e.g. for Windows 10: C:/Program Files/Matlab/R2019a/bin/matlab.exe</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Matlab standalone path:</p>
+<ul>
+<li><p>Path of the folder containing Matlab Compiler Runtime.</p>
+<ul>
+<li><p>e.g. for linux - macOS: /usr/local/MATLAB/MATLAB_Runtime/v93/</p></li>
+<li><p>e.g. for Windows 10: Nothing to declare here if you use spm standalone!</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>SPM path:</p>
+<ul>
+<li><p>Path of the folder containing SPM12 code.</p>
+<ul>
+<li><p>e.g. for linux - macOS: /usr/local/SPM/spm12</p></li>
+<li><p>e.g. for Windows 10: C:/Program Files/Matlab/spm12</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>SPM standalone path:</p>
+<ul>
+<li><p>Path to SPM12 standalone folder.</p>
+<ul>
+<li><p>e.g. for linux - macOS: /usr/local/SPM/spm12_standalone (folder containing run_spm12.sh)</p></li>
+<li><p>e.g. for Windows 10: C:/Program Files/Matlab/spm12_r7771/spm12 (with Windows 10, it is not necessary to declare the above Matlab standalone path in this case!)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img alt="../_images/mia_install_2.png" class="align-center" id="populse-mia-install-widge" src="../_images/mia_install_2.png" />
+<div class="line-block">
+<div class="line">You can install SPM and Matlab via <a class="reference external" href="./3rd-party_installations.html">Third party software installations</a> if those are not installed yet.</div>
+</div>
+<ul class="simple">
+<li><p>Click on “Install” to install populse_mia with the selected parameters.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>The installation status is displayed. The last step (Python packages installation) may take a few minutes.</p></li>
+</ul>
+<img alt="../_images/mia_install_3.png" class="align-center" id="populse-mia-install-widget-status" src="../_images/mia_install_3.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>When the packages have been installed, a summary of the installation is displayed.</p></li>
+</ul>
+<img alt="../_images/mia_install_4.png" class="align-center" id="populse-mia-install-widget-summary" src="../_images/mia_install_4.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>To launch populse_mia:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">populse_mia</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><p>Set <a class="reference external" href="../documentation/preferences.html">populse_mia preferences</a></p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p>You can also download the following folders:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers">miadatausers</a> : it contains initial user data for using / testing Mia</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>
