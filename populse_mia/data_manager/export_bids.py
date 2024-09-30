@@ -1,29 +1,56 @@
-from bids import BIDSLayout
-import os
-import yaml
-import json
-import gzip
-import shutil
+# -*- coding: utf-8 -*-
+"""
+Blabla
+"""
+
+###############################################################################
+# Populse_mia - Copyright (C) IRMaGe/CEA, 2018
+# Distributed under the terms of the CeCILL license, as published by
+# the CEA-CNRS-INRIA. Refer to the LICENSE file or to
+# http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
+# for details.
+###############################################################################
+
 import datetime
-import sys
+import gzip
+import json
+import os
+import shutil
+
+import yaml
+from bids import BIDSLayout
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (
+    QApplication,
+    QDialog,
+    QFileDialog,
+    QHBoxLayout,
+    QMainWindow,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QStyledItemDelegate,
+    QTableWidget,
+    QTableWidgetItem,
+    QVBoxLayout,
+)
+
+from populse_mia.data_manager.project import COLLECTION_CURRENT
+
 # import threading
 # from multiprocessing import Queue, Process
 # import time
 
-from PyQt5.QtWidgets import QMainWindow, QProgressBar, QApplication, QFileDialog,\
-    QMessageBox, QWidget, QTableWidget, QTableWidgetItem, QHeaderView,\
-    QVBoxLayout, QDialog, QPushButton, QHBoxLayout, QStyledItemDelegate
-from PyQt5.QtCore import Qt
-
-from populse_mia.data_manager.project import COLLECTION_CURRENT
-from PyQt5 import QtWidgets
 
 # data_path =  '..../data/raw_data'
 # data_export = '.../Bids_export'
 
+
 class ProgressBar(QMainWindow):
+    """Blabla"""
 
     def __init__(self):
+        """Blabla"""
         super().__init__()
 
         self.pbar = QProgressBar(self)
@@ -31,25 +58,27 @@ class ProgressBar(QMainWindow):
         self.pbar.setValue(0)
 
         self.setWindowTitle("Export progress ... ")
-        self.setGeometry(300,350,300,100)
+        self.setGeometry(300, 350, 300, 100)
 
 
 class TableBids(QDialog):
-    
+    """Blabla"""
+
     def __init__(self, parent=None):
+        """Blabla"""
         QDialog.__init__(self, None)
 
-#         print('dataList :', dataList)
+        #         print('dataList :', dataList)
 
         self.dataList = []
 
         current_path = os.path.dirname(os.path.realpath(__file__))
-        self.desc_Bids = os.path.join(current_path,'Modalities_BIDS.yml')
-        with open(self.desc_Bids, 'r') as stream:
+        self.desc_Bids = os.path.join(current_path, "Modalities_BIDS.yml")
+        with open(self.desc_Bids, "r") as stream:
             self.desc_bids = yaml.load(stream, yaml.FullLoader)
 
         self.setWindowModality(Qt.ApplicationModal)
-        self.title = 'BIDS - manager (in development)'
+        self.title = "BIDS - manager (in development)"
         self.left = 0
         self.top = 0
         self.width = 1000
@@ -60,9 +89,9 @@ class TableBids(QDialog):
 
         self.createTable()
 
-        buttonOk = QPushButton('Ok', self)
-        buttonReset = QPushButton('Reset to initial values', self)
-        buttonCancel = QPushButton('Cancel', self)
+        buttonOk = QPushButton("Ok", self)
+        buttonReset = QPushButton("Reset to initial values", self)
+        buttonCancel = QPushButton("Cancel", self)
 
         layoutH = QHBoxLayout()
         layoutH.addWidget(buttonOk)
@@ -78,15 +107,24 @@ class TableBids(QDialog):
         buttonReset.clicked.connect(self.reset)
         buttonCancel.clicked.connect(self.cancel)
 
-        self.answer = 'cancel'
+        self.answer = "cancel"
 
-    #Create table
+    # Create table
     def createTable(self):
+        """Blabla"""
         self.tableWidget = QTableWidget(0, 8)
-#         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
-        self.tableWidget.setHorizontalHeaderLabels(("data", "DataType", "sub", "ses", "acq", "task", "run", "suffix"))
-        self.tableWidget.horizontalHeaderItem(4).setToolTip(self.desc_bids['description']['acq'])
-        self.tableWidget.horizontalHeaderItem(5).setToolTip(self.desc_bids['description']['task'])
+        # self.tableWidget.setEditTriggers(
+        #     QtWidgets.QTableWidget.NoEditTriggers
+        # )
+        self.tableWidget.setHorizontalHeaderLabels(
+            ("data", "DataType", "sub", "ses", "acq", "task", "run", "suffix")
+        )
+        self.tableWidget.horizontalHeaderItem(4).setToolTip(
+            self.desc_bids["description"]["acq"]
+        )
+        self.tableWidget.horizontalHeaderItem(5).setToolTip(
+            self.desc_bids["description"]["task"]
+        )
 
         self.tableWidget.setColumnWidth(0, 500)
 
@@ -102,6 +140,7 @@ class TableBids(QDialog):
         self.tableWidget.setItemDelegateForColumn(7, delegate3)
 
     def addRow(self, list_data):
+        """Blabla"""
         self.dataList.append(list_data)
         row = self.tableWidget.rowCount()
         self.tableWidget.insertRow(row)
@@ -109,62 +148,86 @@ class TableBids(QDialog):
             self.tableWidget.setItem(row, i, QTableWidgetItem(col))
 
     def getRow(self, idx):
+        """Blabla"""
         list_fields = []
         for column in range(self.tableWidget.columnCount()):
             list_fields.append(self.tableWidget.item(idx, column).text())
         return list_fields
 
     def ok(self):
-        self.answer = 'ok'
+        """Blabla"""
+        self.answer = "ok"
         self.close()
 
     def reset(self):
+        """Blabla"""
         for row, rawdata in enumerate(self.dataList):
             for i, col in enumerate(rawdata):
                 self.tableWidget.setItem(row, i, QTableWidgetItem(col))
 
     def cancel(self):
+        """Blabla"""
         self.close()
 
     def getAnswer(self):
+        """Blabla"""
         return self.answer
 
 
 class ReadOnlyAlignDelegate(QStyledItemDelegate):
+    """Blabla"""
+
     def createEditor(self, parent, option, index):
+        """Blabla"""
         return
-    
+
     def initStyleOption(self, option, index):
+        """Blabla"""
         super(ReadOnlyAlignDelegate, self).initStyleOption(option, index)
         option.displayAlignment = Qt.AlignCenter
 
 
 class ReadOnlyDelegate(QStyledItemDelegate):
+    """Blabla"""
+
     def createEditor(self, parent, option, index):
+        """Blabla"""
         return
 
+
 class AlignDelegate(QStyledItemDelegate):
+    """Blabla"""
+
     def initStyleOption(self, option, index):
+        """Blabla"""
         super(AlignDelegate, self).initStyleOption(option, index)
         option.displayAlignment = Qt.AlignCenter
 
 
-class ExportToBIDS():
+class ExportToBIDS:
+    """Blabla"""
 
     def __init__(self, project):
+        """Blabla"""
 
         current_path = os.path.dirname(os.path.realpath(__file__))
-        self.mod_Bids = os.path.join(current_path,'Modalities_BIDS.yml')
+        self.mod_Bids = os.path.join(current_path, "Modalities_BIDS.yml")
         self.project = project
         self.documents = project.session.get_documents_names(
-                                            COLLECTION_CURRENT)
-#         for doc in self.documents:
-#             tags_dict = self.project.session.get_document(COLLECTION_CURRENT, doc, fields=None, as_list=False)
-#             tags_dict = self.strip_dict(dict(tags_dict._items()))
+            COLLECTION_CURRENT
+        )
+        # for doc in self.documents:
+        #     tags_dict = self.project.session.get_document(
+        #                     COLLECTION_CURRENT,
+        #                     doc,
+        #                     fields=None,
+        #                     as_list=False
+        #     )
+        #     tags_dict = self.strip_dict(dict(tags_dict._items()))
         # tags = project.session.get_fields_names(
         #                                 COLLECTION_CURRENT)
-#             print('doc :', doc)
-#             print('tags :', tags_dict)
+        #             print('doc :', doc)
+        #             print('tags :', tags_dict)
         if self.documents:
             self.data_export = self.dialogbox_dir()
             if self.data_export:
@@ -173,10 +236,11 @@ class ExportToBIDS():
                 new_tags["BIDSVersion"] = "1.6.0"
                 new_tags["pyBIDSVersion"] = ""
 
-                data_descript = os.path.join(self.data_export, 
-                                             "dataset_description.json")
+                data_descript = os.path.join(
+                    self.data_export, "dataset_description.json"
+                )
 
-                with open(data_descript, 'w+') as f:
+                with open(data_descript, "w+") as f:
                     json.dump(new_tags, f)
 
                 self.layout = BIDSLayout(self.data_export)
@@ -186,12 +250,16 @@ class ExportToBIDS():
                 self.startExport()
 
     def dialogbox_dir(self):
-        rep = str(QFileDialog.getExistingDirectory(
-                                    None, 
-                                    "Export to BIDS: Select Directory"))
+        """Blabla"""
+        rep = str(
+            QFileDialog.getExistingDirectory(
+                None, "Export to BIDS: Select Directory"
+            )
+        )
         return rep
 
     def find(self, d, tag):
+        """Blabla"""
         for ka, va in d.items():
             for kb, vb in va.items():
                 t = list(vb.values())
@@ -202,44 +270,54 @@ class ExportToBIDS():
                     yield ka, kb, vb
 
     def save_nii_gz(self, file_nii, dest_file):
-        with open(file_nii, 'rb') as f_in:
-            with gzip.open(dest_file, 'wb') as f_out:
+        """Blabla"""
+        with open(file_nii, "rb") as f_in:
+            with gzip.open(dest_file, "wb") as f_out:
                 shutil.copyfileobj(f_in, f_out)
 
     def save_json(self, new_tags, dest_file):
-        with open(dest_file, 'w') as f:
+        """Blabla"""
+        with open(dest_file, "w") as f:
             json.dump(new_tags, f, default=self.outputJSON)
-            
+
     def outputJSON(self, obj):
         """Default JSON serializer."""
         if isinstance(obj, datetime.datetime):
             if obj.utcoffset() is not None:
                 obj = obj - obj.utcoffset()
-            return obj.strftime('%Y-%m-%d %H:%M:%S.%f')
+            return obj.strftime("%Y-%m-%d %H:%M:%S.%f")
         return str(obj)
 
     def save_bvec_bval(self, bvec_bval, dest, ext):
+        """Blabla"""
         dir_name = os.path.dirname(dest)
         base_name = os.path.basename(dest)
         base_name = os.path.splitext(base_name)[0]
         base_name = os.path.splitext(base_name)[0]
         new_bvec_bval = os.path.join(dir_name, base_name + ext)
         shutil.copy(bvec_bval, new_bvec_bval)
-        
+
     def strip_dict(self, dc):
-        return {key.replace(' ', ''): value for key, value in dc.items()}
+        """Blabla"""
+        return {key.replace(" ", ""): value for key, value in dc.items()}
 
     def startExport(self):
+        """Blabla"""
 
-#         print('export to BIDS (' + str(len(self.documents)) + ' files)')
-#         list_tag = ['StudyName', 'ProtocolName', 'SequenceName']
-#         for doc in self.documents:
-#             print('\n' + doc)
-#             for lst in list_tag:
-#                 print("{0} = {1} ; ".format(lst,self.project.session.get_value(
-#                                             COLLECTION_CURRENT,
-#                                             doc,
-#                                             lst)))
+        # print('export to BIDS (' + str(len(self.documents)) + ' files)')
+        # list_tag = ['StudyName', 'ProtocolName', 'SequenceName']
+        # for doc in self.documents:
+        #     print('\n' + doc)
+        #     for lst in list_tag:
+        #         print("{0} = {1} ; ".format(
+        #             lst,
+        #             self.project.session.get_value(
+        #                 COLLECTION_CURRENT,
+        #                 doc,
+        #                 lst
+        #             )
+        #           )
+        #         )
 
         error = False
         list_nii = []
@@ -250,18 +328,16 @@ class ExportToBIDS():
         c = TableBids()
 
         for doc in self.documents:
-            if doc.endswith('.nii') and 'raw_data' in doc:
+            if doc.endswith(".nii") and "raw_data" in doc:
                 list_nii.append(doc)
                 sub_current = self.project.session.get_value(
-                                            COLLECTION_CURRENT,
-                                            doc,
-                                            'StudyName')
+                    COLLECTION_CURRENT, doc, "StudyName"
+                )
                 ses_current = self.project.session.get_value(
-                                            COLLECTION_CURRENT,
-                                            doc,
-                                            'CreationDate')
+                    COLLECTION_CURRENT, doc, "CreationDate"
+                )
                 if sub_current not in sub:
-                    sub[sub_current] = ('0' + str(len(sub) + 1), [ses_current])
+                    sub[sub_current] = ("0" + str(len(sub) + 1), [ses_current])
                 else:
                     sub_tmp = sub[sub_current]
                     tmp = sub_tmp[1]
@@ -270,83 +346,94 @@ class ExportToBIDS():
                         tmp = [ses_current]
                     else:
                         tmp.append(ses_current)
-                    sub[sub_current] = (sub_tmp[0], sorted(list(dict.fromkeys(tmp))))
-#                 print("sub : ", sub)
+                    sub[sub_current] = (
+                        sub_tmp[0],
+                        sorted(list(dict.fromkeys(tmp))),
+                    )
+            #                 print("sub : ", sub)
             BIDSdata.append([doc, sub[sub_current][0]])
 
         # c = TableBids()
         # c.exec_()
         # if c.getAnswer() == 'cancel': return
 
-        with open(self.mod_Bids, 'r') as stream:
+        with open(self.mod_Bids, "r") as stream:
             modal_bids = yaml.load(stream, yaml.FullLoader)
 
         n = len(list_nii)
         i = 0
-        no_acq = 1
 
         for doc in list_nii:
             # QApplication.processEvents()
             # self.p.pbar.setValue(i)
             list_data = []
             list_data.append(doc)
-            tmp = sub[self.project.session.get_value(
-                                            COLLECTION_CURRENT,
-                                            doc,
-                                            'StudyName')]
+            tmp = sub[
+                self.project.session.get_value(
+                    COLLECTION_CURRENT, doc, "StudyName"
+                )
+            ]
             seq_name = self.project.session.get_value(
-                                            COLLECTION_CURRENT,
-                                            doc,
-                                            'SequenceName')
+                COLLECTION_CURRENT, doc, "SequenceName"
+            )
             if not seq_name:
                 seq_name = self.project.session.get_value(
-                                            COLLECTION_CURRENT,
-                                            doc,
-                                            'ProtocolName')
+                    COLLECTION_CURRENT, doc, "ProtocolName"
+                )
             list_fields = {}
-            for val in self.find(modal_bids['listProtocols'], seq_name):
-                list_fields['datatype'] = val[0]
-                list_fields['suffix'] = val[1]
+            for val in self.find(modal_bids["listProtocols"], seq_name):
+                list_fields["datatype"] = val[0]
+                list_fields["suffix"] = val[1]
             if not list_fields:
                 seq_name = self.project.session.get_value(
-                                            COLLECTION_CURRENT,
-                                            doc,
-                                            'ProtocolName')
-                for val in self.find(modal_bids['listProtocols'], seq_name):
-                    list_fields['datatype'] = val[0]
-                    list_fields['suffix'] = val[1]
+                    COLLECTION_CURRENT, doc, "ProtocolName"
+                )
+                for val in self.find(modal_bids["listProtocols"], seq_name):
+                    list_fields["datatype"] = val[0]
+                    list_fields["suffix"] = val[1]
 
             # pattern = "sub-{subject}[_
-                         # ses-{session}]_
-                         # task-{task}[_
-                         # acq-{acquisition}][_
-                         # rec-{reconstruction}][_
-                         # run-{run}][_echo-{echo}]_{suffix}.nii.gz"
+            # ses-{session}]_
+            # task-{task}[_
+            # acq-{acquisition}][_
+            # rec-{reconstruction}][_
+            # run-{run}][_echo-{echo}]_{suffix}.nii.gz"
 
             if not list_fields:
-                list_fields['datatype'] = ''
-                list_fields['suffix'] = ''
-                
-            list_data.append(list_fields['datatype'])
+                list_fields["datatype"] = ""
+                list_fields["suffix"] = ""
+
+            list_data.append(list_fields["datatype"])
             list_data.append(tmp[0])
-            list_data.append('0' + str(tmp[1].index(self.project.session.get_value(
-                                                COLLECTION_CURRENT,
-                                                doc,
-                                                'CreationDate')) + 1))
-            list_data.extend(["", "", "", list_fields['suffix']])
+            list_data.append(
+                "0"
+                + str(
+                    tmp[1].index(
+                        self.project.session.get_value(
+                            COLLECTION_CURRENT, doc, "CreationDate"
+                        )
+                    )
+                    + 1
+                )
+            )
+            list_data.extend(["", "", "", list_fields["suffix"]])
 
             c.addRow(list_data)
-                 
+
             # if list_fields['suffix'] == 'fieldmap':
             #     list_fields['suffix'] = 'magnitude1'
             #
             # if list_fields['suffix'] in ['magnitude1', 'bold']:
             #     entities = {
             #         'subject': tmp[0],
-            #         'session': '0' + str(tmp[1].index(self.project.session.get_value(
+            #         'session': '0' + str(
+            #             tmp[1].index(self.project.session.get_value(
             #                                     COLLECTION_CURRENT,
             #                                     doc,
-            #                                     'CreationDate')) + 1),
+            #                                     'CreationDate'
+            #                                     )
+            #                          ) + 1
+            #         ),
             #         # 'run': "1",
             #         'task': '01',
             #         'datatype': list_fields['datatype'],
@@ -355,10 +442,14 @@ class ExportToBIDS():
             # else:
             #     entities = {
             #         'subject': tmp[0],
-            #         'session': '0' + str(tmp[1].index(self.project.session.get_value(
+            #         'session': '0' + str(
+            #             tmp[1].index(self.project.session.get_value(
             #                                     COLLECTION_CURRENT,
             #                                     doc,
-            #                                     'CreationDate')) + 1),
+            #                                     'CreationDate'
+            #                                     )
+            #                          ) + 1
+            #         ),
             #         # 'run': 2,
             #         # 'task': 'nback',
             #         'acq': 'lowres',
@@ -367,7 +458,9 @@ class ExportToBIDS():
             #     }
             # path_nii = os.path.join(data_path, doc)
             # path_nii_without_ext = os.path.splitext(path_nii)[0]
-            # tags_dict = self.project.session.get_document(COLLECTION_CURRENT, doc, fields=None, as_list=False)
+            # tags_dict = self.project.session.get_document(
+            #    COLLECTION_CURRENT, doc, fields=None, as_list=False
+            # )
             # tags_dict = self.strip_dict(dict(tags_dict._items()))
             #
             # try:
@@ -396,17 +489,26 @@ class ExportToBIDS():
             #     print("can't build this data : ", e)
 
             i += round(100 / n)
-            
-        c.exec_()
-        if c.getAnswer() == 'cancel': return
 
-        list_entities = ["dataType", "subject", "session", "acquisition", "task", "run", "suffix"] 
-        
+        c.exec_()
+        if c.getAnswer() == "cancel":
+            return
+
+        list_entities = [
+            "dataType",
+            "subject",
+            "session",
+            "acquisition",
+            "task",
+            "run",
+            "suffix",
+        ]
+
         self.p.show()
         for i in range(c.tableWidget.rowCount()):
             QApplication.processEvents()
             self.p.pbar.setValue(i)
-            data_p= c.getRow(i)[0]
+            data_p = c.getRow(i)[0]
             entities = {}
             for j in range(0, len(list_entities)):
                 current_field = c.getRow(i)[j + 1]
@@ -414,7 +516,9 @@ class ExportToBIDS():
                     entities[list_entities[j]] = current_field
             path_nii = os.path.join(data_path, data_p)
             path_nii_without_ext = os.path.splitext(path_nii)[0]
-            tags_dict = self.project.session.get_document(COLLECTION_CURRENT, data_p, fields=None, as_list=False)
+            tags_dict = self.project.session.get_document(
+                COLLECTION_CURRENT, data_p, fields=None, as_list=False
+            )
             tags_dict = self.strip_dict(dict(tags_dict._items()))
             try:
                 path_const = self.layout.build_path(entities, validate=True)
@@ -424,30 +528,30 @@ class ExportToBIDS():
                 base_path = os.path.basename(path_const)
                 file_json = os.path.splitext(base_path)[0]
                 file_json = os.path.splitext(file_json)[0]
-                path_json = os.path.join(dir_path, file_json + '.json')
-            
+                path_json = os.path.join(dir_path, file_json + ".json")
+
                 self.save_nii_gz(path_nii, path_const)
                 self.save_json(tags_dict, path_json)
-                bval_path = path_nii_without_ext + '-bvals-MRtrix.txt'
-                bvec_path = path_nii_without_ext + '-bvecs-MRtrix.txt'
+                bval_path = path_nii_without_ext + "-bvals-MRtrix.txt"
+                bvec_path = path_nii_without_ext + "-bvecs-MRtrix.txt"
                 if os.path.exists(bval_path):
-                    self.save_bvec_bval(bval_path, path_const, '.bval')
+                    self.save_bvec_bval(bval_path, path_const, ".bval")
                 if os.path.exists(bvec_path):
-                    self.save_bvec_bval(bvec_path, path_const, '.bvec')
-            
+                    self.save_bvec_bval(bvec_path, path_const, ".bvec")
+
                 # print(' ' * 10, 'exported to ', path_const)
             except Exception as e:
                 error = True
                 print(path_nii)
-                print("can't build this data : ", e)            
+                print("can't build this data : ", e)
 
         self.p.close()
-        
+
         if error:
-            message = 'There were errors during the export, see terminal'
+            message = "There were errors during the export, see terminal"
         else:
-            message = 'Export successfully completed'
-            
+            message = "Export successfully completed"
+
         dlg = QMessageBox()
         dlg.setWindowTitle("Dialog")
         dlg.setText(message)

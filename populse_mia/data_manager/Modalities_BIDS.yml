@@ -1,5 +1,5 @@
 # BIDS v 1.2.1
-# ProtocolName or SequenceName: 
+# ProtocolName or SequenceName:
 #   Bruker : PV5, PV6
 #   Philips : PAR/REC v4.2, xml/REC
 #   DICOM : Philips, Siemens, GE
@@ -53,7 +53,7 @@ listProtocols:
          Bruker : []
          Philips : []
          Dicom : []
-         Nifti : []               
+         Nifti : []
       PDmap:
          Bruker : []
          Philips : []
@@ -78,7 +78,7 @@ listProtocols:
          Bruker : []
          Philips : []
          Dicom : []
-         Nifti : []      
+         Nifti : []
 
    dwi:
       dwi:
@@ -118,9 +118,9 @@ description:
          Required for functional imaging (with 'func' entity)\n\n
          Definition: Each task has a unique label that MUST only\n
          consist of letters and/or numbers (other characters,\n
-         including spaces and underscores, are not allowed).\n 
+         including spaces and underscores, are not allowed).\n
          Those labels MUST be consistent across subjects and sessions."
-         
+
   acq: " Format: acq-<label>\n
         Optional for all entities\n\n
         Definition: The acq-<label> key/value pair corresponds to a\n

@@ -48,13 +48,14 @@ from PyQt5.QtWidgets import (
 )
 
 import populse_mia.data_manager.data_loader as data_loader
+
+# Populse_MIA imports
+from populse_mia.data_manager.export_bids import ExportToBIDS
 from populse_mia.data_manager.project import (
     COLLECTION_CURRENT,
     TAG_HISTORY,
     Project,
 )
-
-# Populse_MIA imports
 from populse_mia.data_manager.project_properties import SavedProjects
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.data_browser import DataBrowser
@@ -396,7 +397,7 @@ class MainWindow(QMainWindow):
                 opened_projects.remove(self.project.folder)
             config.set_opened_projects(opened_projects)
 
-            # Change controller version if needed               
+            # Change controller version if needed
             if self.controller_version_changed:
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Warning)
@@ -445,8 +446,8 @@ class MainWindow(QMainWindow):
         self.addAction(self.action_save_as)
         self.addAction(self.action_delete)
 
-        self.action_import.setShortcut('Ctrl+I')
-        self.action_export_bids.setShortcut('Ctrl+E')
+        self.action_import.setShortcut("Ctrl+I")
+        self.action_export_bids.setShortcut("Ctrl+E")
 
         for i in range(self.config.get_max_projects()):
             self.saved_projects_actions.append(
@@ -728,14 +729,8 @@ class MainWindow(QMainWindow):
         return self.controller_version_changed
 
     def export_to_bids(self):
+        """Blabla"""
         ExportToBIDS(self.project)
-
-    def get_controller_version(self):
-        """ Gives the value of the controller_version_changed attribute.
-
-        :return: Boolean
-        """
-        return self.controller_version_changed
 
     def install_processes_pop_up(self, folder=False):
         """Open the install processes pop-up.
@@ -1371,11 +1366,7 @@ class MainWindow(QMainWindow):
             self.update_recent_projects_actions()
 
     def set_controller_version(self):
-<<<<<<< HEAD:python/populse_mia/user_interface/main_window.py
-        """ Reverses the value of the controller_version_changed attribute.
-=======
         """Reverses the value of the controller_version_changed attribute.
->>>>>>> master:populse_mia/user_interface/main_window.py
 
         From False to True and vice versa
         """
