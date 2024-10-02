@@ -1,3 +1,5 @@
+codecov:
+  repository: "populse/populse_mia"
 coverage:
   status:
     patch:
