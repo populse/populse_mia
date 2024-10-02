@@ -109,7 +109,7 @@ after_test:
 #  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then curl -Os https://uploader.codecov.io/latest/linux/codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then chmod +x codecov; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "da09d9b5-de99-476e-a0ba-81c772e65afb"; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "1e992817-cb19-4bc5-9d0b-2ad36295e6b3" -r "populse/populse_mia"; fi
 
 notifications:
   - provider: Email
