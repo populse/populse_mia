@@ -267,7 +267,7 @@ class AnaSimpleViewer2(Qt.QObject):
         self.displayedObjects = []
         self.files = []
         self.available_palettes = [
-            "B-W LINEAR",
+            "B-W_LINEAR",
             "Yellow-red",
             "RAINBOW",
             "Yellow-Red-White-Blue-Green",
