@@ -1,8 +1,5 @@
 version: 2.5.3.{build}
 
-# # Disable automatic cloning
-# skip_clone: true
-
 # Disable the default automatic build phase
 build: off
 
@@ -30,22 +27,6 @@ install:
 
 #  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
-
-  # Manually clone the repository without downloading Git LFS files
-#  - cmd: SET GIT_LFS_SKIP_SMUDGE=1
-#  - cmd: echo "Current branch:%APPVEYOR_REPO_BRANCH%"
-#  - cmd: echo "Current commit SHA:%APPVEYOR_REPO_COMMIT%"
-#  - cmd: git clone --depth=50 -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/populse/populse_mia.git C:\projects\populse-mia
-#  - cmd: cd C:\projects\populse-mia
-#  - cmd: git checkout -qf %APPVEYOR_REPO_COMMIT%  # Checkout the current commit SHA
-  - sh: export GIT_LFS_SKIP_SMUDGE=1
-  - sh: echo "Current branch:$APPVEYOR_REPO_BRANCH"
-  - sh: echo "Current commit SHA:$APPVEYOR_REPO_COMMIT"
-  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 -q --branch=$APPVEYOR_REPO_BRANCH https://github.com/populse/populse_mia.git /home/appveyor/projects/populse-mia; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then cd /home/appveyor/projects/populse-mia; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 -q --branch=$APPVEYOR_REPO_BRANCH https://github.com/populse/populse_mia.git /Users/appveyor/projects/populse-mia; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then cd /Users/appveyor/projects/populse-mia; fi
-  - sh: git checkout -qf $APPVEYOR_REPO_COMMIT  # Checkout the current commit SHA
 
   - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - sh: export PATH=~/venv3.9/bin:~/venv3.9/lib:$PATH
@@ -130,7 +111,8 @@ after_test:
 #  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then curl -Os https://uploader.codecov.io/latest/linux/codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then chmod +x codecov; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "1e992817-cb19-4bc5-9d0b-2ad36295e6b3" -r "populse/populse_mia"; fi
+#  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "1e992817-cb19-4bc5-9d0b-2ad36295e6b3" -r "populse/populse_mia"; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "1e992817-cb19-4bc5-9d0b-2ad36295e6b3"; fi
 
 notifications:
   - provider: Email
