@@ -8,6 +8,7 @@ build: off
 
 environment:
   GIT_CLONE_PROTECTION_ACTIVE: false
+  GIT_LFS_SKIP_SMUDGE: 1
 
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
@@ -21,15 +22,6 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
       PYTHON: "~/venv3.9"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdDYk1yZyk/W/2UtL1oBEDzX9Mk6YUXJKS3gTrZaK+ScAzPUkm7UlXwwpzSYZjKIkYzpi3WKSRKuDc7VRVk43hIhmwaIzcmpHAXtbgxAGRYembgz+kLDGtkhlP4i8n5GfNWvkkfbS0pu2w2dZQB7EGFFtopfvzBokKltjAYOnP89GCAo4MTfx6kmv1tpm1SDbCAGHJPuN+81B47+v0uGw3KG+AX+1ezPv1MCBQl5V2J4MI6vomyaHz6/UNBZ6rpsrZBYRljwWbyH5E5fqLdep/kO9sEuiXxTrCTLnUPSrR0+h0f8HlgWCaqxO+OUyDoQMI3xsUn4sMpoASi8jkDgd51vGbzkQHyjy2hYzjs47GAvLLtGfTJYQBVcfXEoZaKQUJhqjR7TUdY4bSBOxIPR9qlA9fLFwlQsC3++0m4roM/0SyoDVTz0I6lp1TsYRMKxEJSM90ewCAK8UnN6gEqmOz5ezOFpVsnpz4bZ7vCGaJa/6ODfOhEvl5bFUK40+GxSk= otavio@otavio-UX430UAR
-
-before_build:
-  # Set environment variable to skip downloading LFS files
-  - cmd: SET GIT_LFS_SKIP_SMUDGE=1
-  - cmd: echo "Current branch:%APPVEYOR_REPO_BRANCH%"
-  - cmd: echo "Current commit SHA:%APPVEYOR_REPO_COMMIT%"
-  - cmd: git clone --depth=50 -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/populse/populse_mia.git C:\projects\populse-mia
-  - cmd: cd C:\projects\populse-mia
-  - cmd: git checkout -qf %APPVEYOR_REPO_COMMIT%  # Checkout the current commit SHA
 
 install:
   - cmd: echo "     ** windows build **"
