@@ -1,7 +1,7 @@
 version: 2.5.3.{build}
 
-# Disable automatic cloning
-skip_clone: true
+# # Disable automatic cloning
+# skip_clone: true
 
 # Disable the default automatic build phase
 build: off
