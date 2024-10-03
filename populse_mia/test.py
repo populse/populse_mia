@@ -68,6 +68,7 @@ from PyQt5.QtCore import (
     Qt,
     QThread,
     QTimer,
+    qInstallMessageHandler,
 )
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (
@@ -296,6 +297,28 @@ if "NO_ET" not in os.environ:
 
 if "NIPYPE_NO_ET" not in os.environ:
     os.environ["NIPYPE_NO_ET"] = "1"
+
+# List of unwanted messages to filter out in stdout
+unwanted_messages = [
+    "QPixmap::scaleHeight: Pixmap is a null pixmap",
+]
+
+
+def qt_message_handler(mode, context, message):
+    """Custom Qt message handler to filter out specific messages"""
+
+    for unwanted_message in unwanted_messages:
+
+        if message.strip() == unwanted_message:
+            return
+
+        elif unwanted_message in message:
+            # Remove the unwanted message but keep the rest of the line
+            message = message.replace(unwanted_message, "").strip()
+
+    # Output the remaining message (if any)
+    if message:
+        sys.stderr.write(message + "\n")
 
 
 class TestMIACase(unittest.TestCase):
@@ -10637,4 +10660,6 @@ class Test_Z_MIAOthers(TestMIACase):
 
 
 if __name__ == "__main__":
+    # Install the custom Qt message handler
+    qInstallMessageHandler(qt_message_handler)
     unittest.main()
