@@ -32,14 +32,14 @@ install:
 
   # Manually clone the repository without downloading Git LFS files
   - cmd: SET GIT_LFS_SKIP_SMUDGE=1
-  - cmd: echo "Current branch: %APPVEYOR_REPO_BRANCH%"
-  - cmd: echo "Current commit SHA: %APPVEYOR_REPO_COMMIT%"
+#  - cmd: echo 'Current branch: %APPVEYOR_REPO_BRANCH%'
+#  - cmd: echo 'Current commit SHA: %APPVEYOR_REPO_COMMIT%'
   - cmd: git clone --depth=50 -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/populse/populse_mia.git C:\projects\populse-mia
   - cmd: cd C:\projects\populse-mia
   - cmd: git checkout -qf %APPVEYOR_REPO_COMMIT%  # Checkout the current commit SHA
   - sh: export GIT_LFS_SKIP_SMUDGE=1
-  - sh: echo "Current branch: $APPVEYOR_REPO_BRANCH"
-  - sh: echo "Current commit SHA: $APPVEYOR_REPO_COMMIT"
+#  - sh: echo 'Current branch: $APPVEYOR_REPO_BRANCH'
+#  - sh: echo 'Current commit SHA: $APPVEYOR_REPO_COMMIT'
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 -q --branch=$APPVEYOR_REPO_BRANCH https://github.com/populse/populse_mia.git /home/appveyor/projects/populse-mia; fi
   - sh: if [[ $(uname -s) == Linux ]]; then cd /home/appveyor/projects/populse-mia; fi
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 -q --branch=$APPVEYOR_REPO_BRANCH https://github.com/populse/populse_mia.git /Users/appveyor/projects/populse-mia; fi
