@@ -24,7 +24,7 @@ import sys
 import tempfile
 
 # PyQt5 imports
-from PyQt5.QtCore import QCoreApplication, qInstallMessageHandler, Qt
+from PyQt5.QtCore import QCoreApplication, Qt, qInstallMessageHandler
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # main_window = None
@@ -425,6 +425,7 @@ def main():
         launch_mia(app)
         os.chdir(cwd)
 
+
 def qt_message_handler(mode, context, message):
     """Custom Qt message handler to filter out specific messages"""
     for unwanted_message in unwanted_messages:
@@ -439,6 +440,7 @@ def qt_message_handler(mode, context, message):
     # Output the remaining message (if any)
     if message:
         sys.stderr.write(message + "\n")
+
 
 if __name__ == "__main__":
     # this will only be executed when this module is run directly
