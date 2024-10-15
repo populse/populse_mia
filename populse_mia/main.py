@@ -24,7 +24,7 @@ import sys
 import tempfile
 
 # PyQt5 imports
-from PyQt5.QtCore import QCoreApplication, Qt
+from PyQt5.QtCore import QCoreApplication, qInstallMessageHandler, Qt
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # main_window = None
@@ -425,7 +425,28 @@ def main():
         launch_mia(app)
         os.chdir(cwd)
 
+def qt_message_handler(mode, context, message):
+    """Custom Qt message handler to filter out specific messages"""
+    for unwanted_message in unwanted_messages:
+
+        if message.strip() == unwanted_message:
+            return
+
+        elif unwanted_message in message:
+            # Remove the unwanted message but keep the rest of the line
+            message = message.replace(unwanted_message, "").strip()
+
+    # Output the remaining message (if any)
+    if message:
+        sys.stderr.write(message + "\n")
 
 if __name__ == "__main__":
     # this will only be executed when this module is run directly
+    # list of unwanted messages to filter out in stdout
+    unwanted_messages = [
+        "QPixmap::scaleHeight: Pixmap is a null pixmap",
+    ]
+
+    # Install the custom Qt message handler
+    qInstallMessageHandler(qt_message_handler)
     main()
