@@ -293,7 +293,7 @@ class Project:
                 None,
                 None,
             )
-            # TODO Maybe remove checksum tag from populse_mia.itial table
+            # TODO Maybe remove checksum tag from populse_mia.initial table
             self.session.add_field(
                 COLLECTION_CURRENT,
                 TAG_TYPE,

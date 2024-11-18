@@ -470,7 +470,12 @@ def launch_mia(app):
 
     if not lock_file.tryLock(100):
         # software already opened in another instance
-        pass
+        print(
+            "\nAnother instance of Mia is already running.\n"
+            "It is currently not possible to start two instances of Mia at "
+            "the same time..."
+        )
+        return
 
     else:
         # no instances of the software is opened, the list of opened projects
