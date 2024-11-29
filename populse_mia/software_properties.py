@@ -187,11 +187,11 @@ class Config:
         """Initialization of the Config class
 
         :Parameters:
-            - :config_path: str (optional). If provided, the configuration file
-               will be loaded/saved from the given directory. Otherwise, the
-               regular heuristics will be used to determine the config path.
-               This option allows to use an alternative config directory (for
-               tests for instance).
+            - :properties_path: str (optional). If provided, the configuration
+               file will be loaded/saved from the given directory. Otherwise,
+               the regular heuristics will be used to determine the config
+               path. This option allows to use an alternative config directory
+               (for tests for instance).
         """
 
         if properties_path is not None:
