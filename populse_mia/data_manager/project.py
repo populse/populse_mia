@@ -175,14 +175,15 @@ class Project:
             )
 
         db_folder = os.path.join(self.folder, "database")
+        os.makedirs(db_folder, exist_ok=True)
+        file_path = os.path.join(db_folder, "mia.db")
 
-        if not os.path.exists(db_folder):
-            os.makedirs(db_folder)
+        with open(file_path, "a"):
+            os.utime(file_path, None)
 
-        db = "sqlite:///" + os.path.join(db_folder, "mia.db")
-        self.database = DatabaseMIA(db)
-        self.session = self.database.__enter__()
-        self.session.add_field_attributes_collection()
+        db_path = f"sqlite://{file_path}"
+        self.database = DatabaseMIA(db_path)
+        # self.session.add_field_attributes_collection()
 
         if new_project:
             if not os.path.exists(self.folder):
@@ -239,41 +240,54 @@ class Project:
                 )
 
             # Adding current and initial collections
-            self.session.add_collection(
-                COLLECTION_CURRENT,
-                TAG_FILENAME,
-                True,
-                TAG_ORIGIN_BUILTIN,
-                None,
-                None,
-            )
-            self.session.add_collection(
-                COLLECTION_INITIAL,
-                TAG_FILENAME,
-                True,
-                TAG_ORIGIN_BUILTIN,
-                None,
-                None,
-            )
-            self.session.add_collection(
-                COLLECTION_BRICK,
-                BRICK_ID,
-                False,
-                TAG_ORIGIN_BUILTIN,
-                None,
-                None,
-            )
-            self.session.add_collection(
-                COLLECTION_HISTORY,
-                HISTORY_ID,
-                False,
-                TAG_ORIGIN_BUILTIN,
-                None,
-                None,
-            )
+            # self.session.add_collection(
+            #     COLLECTION_CURRENT,
+            #     TAG_FILENAME,
+            #     True,
+            #     TAG_ORIGIN_BUILTIN,
+            #     None,
+            #     None,
+            # )
+            # self.session.add_collection(
+            #     COLLECTION_INITIAL,
+            #     TAG_FILENAME,
+            #     True,
+            #     TAG_ORIGIN_BUILTIN,
+            #     None,
+            #     None,
+            # )
+            # self.session.add_collection(
+            #     COLLECTION_BRICK,
+            #     BRICK_ID,
+            #     False,
+            #     TAG_ORIGIN_BUILTIN,
+            #     None,
+            #     None,
+            # )
+            # self.session.add_collection(
+            #     COLLECTION_HISTORY,
+            #     HISTORY_ID,
+            #     False,
+            #     TAG_ORIGIN_BUILTIN,
+            #     None,
+            #     None,
+            # )
 
             # Tags manually added
-            self.session.add_field(
+            # self.session.add_field(
+            #     COLLECTION_CURRENT,
+            #     TAG_CHECKSUM,
+            #     FIELD_TYPE_STRING,
+            #     "Path checksum",
+            #     False,
+            #     TAG_ORIGIN_BUILTIN,
+            #     None,
+            #     None,
+            # )
+            with self.database.storage.data() as db:
+                print("db: ", db)
+
+            self.database.add_field(
                 COLLECTION_CURRENT,
                 TAG_CHECKSUM,
                 FIELD_TYPE_STRING,
