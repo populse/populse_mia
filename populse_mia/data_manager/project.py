@@ -183,7 +183,6 @@ class Project:
 
         db_path = f"sqlite://{file_path}"
         self.database = DatabaseMIA(db_path)
-        # self.session.add_field_attributes_collection()
 
         if new_project:
             if not os.path.exists(self.folder):
@@ -239,15 +238,16 @@ class Project:
                     allow_unicode=True,
                 )
 
+            self.database.add_field_attributes_collection()
             # Adding current and initial collections
-            # self.session.add_collection(
-            #     COLLECTION_CURRENT,
-            #     TAG_FILENAME,
-            #     True,
-            #     TAG_ORIGIN_BUILTIN,
-            #     None,
-            #     None,
-            # )
+            self.database.add_collection(
+                COLLECTION_CURRENT,
+                TAG_FILENAME,
+                True,
+                TAG_ORIGIN_BUILTIN,
+                None,
+                None,
+            )
             # self.session.add_collection(
             #     COLLECTION_INITIAL,
             #     TAG_FILENAME,
