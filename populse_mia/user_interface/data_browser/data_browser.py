@@ -200,7 +200,7 @@ class DataBrowser(QWidget):
 
         # Main table that will display the tags
         self.table_data = TableDataBrowser(
-            project, self, self.project.session.get_shown_tags(), True, True
+            project, self, self.project.database.get_shown_tags(), True, True
         )
         self.table_data.setObjectName("table_data")
 

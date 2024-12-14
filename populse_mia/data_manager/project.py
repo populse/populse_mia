@@ -248,45 +248,31 @@ class Project:
                 None,
                 None,
             )
-            # self.session.add_collection(
-            #     COLLECTION_INITIAL,
-            #     TAG_FILENAME,
-            #     True,
-            #     TAG_ORIGIN_BUILTIN,
-            #     None,
-            #     None,
-            # )
-            # self.session.add_collection(
-            #     COLLECTION_BRICK,
-            #     BRICK_ID,
-            #     False,
-            #     TAG_ORIGIN_BUILTIN,
-            #     None,
-            #     None,
-            # )
-            # self.session.add_collection(
-            #     COLLECTION_HISTORY,
-            #     HISTORY_ID,
-            #     False,
-            #     TAG_ORIGIN_BUILTIN,
-            #     None,
-            #     None,
-            # )
-
+            self.database.add_collection(
+                COLLECTION_INITIAL,
+                TAG_FILENAME,
+                True,
+                TAG_ORIGIN_BUILTIN,
+                None,
+                None,
+            )
+            self.database.add_collection(
+                COLLECTION_BRICK,
+                BRICK_ID,
+                False,
+                TAG_ORIGIN_BUILTIN,
+                None,
+                None,
+            )
+            self.database.add_collection(
+                COLLECTION_HISTORY,
+                HISTORY_ID,
+                False,
+                TAG_ORIGIN_BUILTIN,
+                None,
+                None,
+            )
             # Tags manually added
-            # self.session.add_field(
-            #     COLLECTION_CURRENT,
-            #     TAG_CHECKSUM,
-            #     FIELD_TYPE_STRING,
-            #     "Path checksum",
-            #     False,
-            #     TAG_ORIGIN_BUILTIN,
-            #     None,
-            #     None,
-            # )
-            with self.database.storage.data() as db:
-                print("db: ", db)
-
             self.database.add_field(
                 COLLECTION_CURRENT,
                 TAG_CHECKSUM,
@@ -297,7 +283,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_INITIAL,
                 TAG_CHECKSUM,
                 FIELD_TYPE_STRING,
@@ -307,8 +293,8 @@ class Project:
                 None,
                 None,
             )
-            # TODO Maybe remove checksum tag from populse_mia.initial table
-            self.session.add_field(
+            # TODO Maybe remove checksum tag from populse_mia.initial table?
+            self.database.add_field(
                 COLLECTION_CURRENT,
                 TAG_TYPE,
                 FIELD_TYPE_STRING,
@@ -318,7 +304,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_INITIAL,
                 TAG_TYPE,
                 FIELD_TYPE_STRING,
@@ -328,7 +314,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_CURRENT,
                 TAG_EXP_TYPE,
                 FIELD_TYPE_STRING,
@@ -338,7 +324,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_INITIAL,
                 TAG_EXP_TYPE,
                 FIELD_TYPE_STRING,
@@ -348,7 +334,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_CURRENT,
                 TAG_BRICKS,
                 FIELD_TYPE_LIST_STRING,
@@ -358,7 +344,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_INITIAL,
                 TAG_BRICKS,
                 FIELD_TYPE_LIST_STRING,
@@ -368,7 +354,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_CURRENT,
                 TAG_HISTORY,
                 FIELD_TYPE_STRING,
@@ -378,7 +364,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_INITIAL,
                 TAG_HISTORY,
                 FIELD_TYPE_STRING,
@@ -389,7 +375,7 @@ class Project:
                 None,
             )
 
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_BRICK,
                 BRICK_NAME,
                 FIELD_TYPE_STRING,
@@ -399,7 +385,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_BRICK,
                 BRICK_INPUTS,
                 FIELD_TYPE_JSON,
@@ -409,7 +395,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_BRICK,
                 BRICK_OUTPUTS,
                 FIELD_TYPE_JSON,
@@ -419,7 +405,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_BRICK,
                 BRICK_INIT,
                 FIELD_TYPE_STRING,
@@ -429,7 +415,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_BRICK,
                 BRICK_INIT_TIME,
                 FIELD_TYPE_DATETIME,
@@ -439,7 +425,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_BRICK,
                 BRICK_EXEC,
                 FIELD_TYPE_STRING,
@@ -449,7 +435,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_BRICK,
                 BRICK_EXEC_TIME,
                 FIELD_TYPE_DATETIME,
@@ -460,7 +446,7 @@ class Project:
                 None,
             )
 
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_HISTORY,
                 HISTORY_PIPELINE,
                 FIELD_TYPE_STRING,
@@ -470,7 +456,7 @@ class Project:
                 None,
                 None,
             )
-            self.session.add_field(
+            self.database.add_field(
                 COLLECTION_HISTORY,
                 HISTORY_BRICKS,
                 FIELD_TYPE_LIST_STRING,
@@ -483,12 +469,16 @@ class Project:
 
             # Adding default tags for the clinical mode
             if config.get_use_clinical() is True:
+
                 for clinical_tag in CLINICAL_TAGS:
+
                     if clinical_tag == "Age":
                         field_type = FIELD_TYPE_INTEGER
+
                     else:
                         field_type = FIELD_TYPE_STRING
-                    self.session.add_field(
+
+                    self.database.add_field(
                         COLLECTION_CURRENT,
                         clinical_tag,
                         field_type,
@@ -498,7 +488,7 @@ class Project:
                         None,
                         None,
                     )
-                    self.session.add_field(
+                    self.database.add_field(
                         COLLECTION_INITIAL,
                         clinical_tag,
                         field_type,
@@ -509,7 +499,7 @@ class Project:
                         None,
                     )
 
-        self.session.commit()
+        # self.session.commit()
 
         self.properties = self.loadProperties()
 

@@ -235,34 +235,9 @@ class DatabaseMIA(DatabaseEngine):
             with self.storage.schema() as schema:
                 schema.add_collection(name, primary_key)
 
-            index = f"{name}|{primary_key}"
-            super(DatabaseMIA, self).add_values(
-                FIELD_ATTRIBUTES_COLLECTION,
-                index,
-                {
-                    "visibility": visibility,
-                    "origin": origin,
-                    "unit": unit,
-                    "default_value": default_value,
-                },
+            self.update_field_att_col(
+                name, primary_key, visibility, origin, unit, default_value
             )
-
-        # super(DatabaseMIA, self).add_collection(name, primary_key)
-        # self.add_document(
-        #     FIELD_ATTRIBUTES_COLLECTION,
-        #     {
-        #         "index": "%s|%s" % (name, primary_key),
-        #         "field": primary_key,
-        #         "visibility": visibility,
-        #         "origin": origin,
-        #         "unit": unit,
-        #         "default_value": default_value,
-        #     },
-        # )
-        raise NotImplementedError(
-            "This method (add_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
 
     def add_field_attributes_collection(self):
         """Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in
@@ -322,7 +297,6 @@ class DatabaseMIA(DatabaseEngine):
         unit,
         default_value,
         index=False,
-        flush=True,
     ):
         """Add a field to the database, if it does not already exist.
 
@@ -339,29 +313,43 @@ class DatabaseMIA(DatabaseEngine):
         :param unit: Origin of the field, in [TAG_UNIT_MS, TAG_UNIT_MM,
                      TAG_UNIT_DEGREE, TAG_UNIT_HZPIXEL, TAG_UNIT_MHZ]
         :param default_value: Default_value of the field, can be str or None
-        :param flush: bool to know if the table classes must be updated (put
-                      False if in the middle of filling fields) => True by
-                      default
         """
-        # super(DatabaseSessionMIA, self).add_field(
-        #     collection, name, field_type, description
-        # )
-        # self.add_document(
-        #     FIELD_ATTRIBUTES_COLLECTION,
-        #     {
-        #         "index": "%s|%s" % (collection, name),
-        #         "field": name,
-        #         "visibility": visibility,
-        #         "origin": origin,
-        #         "unit": unit,
-        #         "default_value": default_value,
-        #     },
-        # )
-        with self.storage.data() as db:
-            print("db: ", db)
-        raise NotImplementedError(
-            "This method (add_field) is not yet available in DatabaseMIA "
-            "class."
+        with self.storage.schema() as schema:
+            schema.add_field(collection, name, field_type, description)
+
+        self.update_field_att_col(
+            collection, name, visibility, origin, unit, default_value
+        )
+
+    def update_field_att_col(
+        self, collection, field_name, visibility, origin, unit, default_value
+    ):
+        """Updates the attributes of a field in the database for a specific
+        collection.
+
+        This method constructs an index using the provided collection and
+        field_name ('collection|field_name'), and then updates the field's
+        attributes in the FIELD_ATTRIBUTES_COLLECTION.
+
+        Parameters:
+            collection (str): The name of the collection the field belongs to.
+            field_name (str): The name of the field to update.
+            visibility (bool): The visibility status of the field.
+            origin (str): The origin or source of the field.
+            unit (str): The unit of measurement for the field.
+            default_value (Any): The default value to assign to the field.
+        """
+
+        index = f"{collection}|{field_name}"
+        super(DatabaseMIA, self).add_values(
+            FIELD_ATTRIBUTES_COLLECTION,
+            index,
+            {
+                "visibility": visibility,
+                "origin": origin,
+                "unit": unit,
+                "default_value": default_value,
+            },
         )
 
     def add_fields(self, fields):
@@ -459,15 +447,24 @@ class DatabaseMIA(DatabaseEngine):
 
         :return: the list of visible tags
         """
-        # visible_names = []
-        # names_set = set()
-        # for i in self.filter_documents(
-        #     FIELD_ATTRIBUTES_COLLECTION, "{visibility} == true"
-        # ):
-        #     if i.field not in names_set:
-        #         names_set.add(i.field)
-        #         visible_names.append(i.field)  # respect list order
-        # return visible_names
+        visible_names = []
+        names_set = set()
+
+        for i in super(DatabaseMIA, self).filter_documents(
+            FIELD_ATTRIBUTES_COLLECTION, "{visibility} == true"
+        ):
+
+            if i:
+                # TODO: the first key in the dict is the primary key ?
+                tag = i[next(iter(i))]
+                tag = tag.split("|")[1]
+
+                if tag not in names_set:
+                    names_set.add(tag)
+                    visible_names.append(tag)
+
+        return visible_names
+
         raise NotImplementedError(
             "This method (get_shown_tags) is not yet available in "
             "DatabaseMIA class."
