@@ -225,12 +225,12 @@ class DatabaseMIA:
         """
         with self.storage.data() as dbs:
             return dbs.has_collection(collection_name)
-        
+
     def collection_names(self):
         """Retrieve the names of all collections in the storage database."""
         with self.storage.data() as dbs:
             return dbs.collection_names()
-        
+
     def add_values(self, collection_name, primary_key, values_dict):
         """Store or update a record in the specified collection.
 
@@ -307,21 +307,21 @@ class DatabaseMIA:
             "This method (remove_collection) is not yet available in "
             "DatabaseMIA class."
         )
-    
+
     def get_collection(self, name):
         """Returns the collection row of the collection"""
         raise NotImplementedError(
             "This method (get_collection) is not yet available in "
             "DatabaseMIA class."
         )
-    
+
     def get_collections(self):
         """Gives the list of all collection rows."""
         raise NotImplementedError(
             "This method (get_collections) is not yet available in "
             "DatabaseMIA class."
         )
-    
+
     def get_collections_names(self):
         """Gives the list of all collection names."""
         raise NotImplementedError(
@@ -343,16 +343,16 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             fields_names = list(dbs[collection].keys())
             return fields_names if fields_names else None
-       
+
     def get_value(self, collection, document_id, field):
-        """ Gives the current value of <collection, document, field>."""
+        """Gives the current value of <collection, document, field>."""
         raise NotImplementedError(
             "This method (get_value) is not yet available in "
             "DatabaseMIA class."
         )
 
     def set_value(self, collection, document_id, field, new_value):
-        """ Sets the value associated to <collection, document, field> if
+        """Sets the value associated to <collection, document, field> if
         it exists.
         """
         raise NotImplementedError(
@@ -381,8 +381,9 @@ class DatabaseMIA:
             "DatabaseMIA class."
         )
 
-    def get_document(self, collection, document_id, fields=None,
-                     as_list=False):
+    def get_document(
+        self, collection, document_id, fields=None, as_list=False
+    ):
         """Gives a document instance given a collection and a
         document identifier."""
         raise NotImplementedError(
@@ -390,8 +391,9 @@ class DatabaseMIA:
             "DatabaseMIA class."
         )
 
-    def get_documents(self, collection, fields=None, as_list=False,
-                      document_ids=None ):
+    def get_documents(
+        self, collection, fields=None, as_list=False, document_ids=None
+    ):
         """Gives the list of all document rows, given a collection.
 
         :param collection: Documents collection (str, must be existing)
@@ -406,24 +408,23 @@ class DatabaseMIA:
             # To write latter
             return []
 
-
         return []
 
     def get_documents_names(self, collection):
         """Gives the list of all document names, given a collection.
-        
+
         :param collection: Documents collection (str, must be existing)
-        
+
         :return: List of all document names of the collection if it exists,
                  None otherwise
         """
         if self.has_collection(collection):
-             primary_key = self.primary_key(collection)
-             # to write latter
-             return []
-            
+            # primary_key = self.primary_key(collection)
+            # to write latter
+            return []
+
         return []
-    
+
     def primary_key(self, collection):
         """Retrieve the primary key of the specified collection.
 
