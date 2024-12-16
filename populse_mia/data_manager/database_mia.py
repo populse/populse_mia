@@ -23,9 +23,6 @@ populse_db and some of its methods
 # Populse_db imports
 from populse_db.storage import Storage
 
-# populse_mia imports
-from populse_mia.data_manager.database import DatabaseEngine
-
 # Tag unit
 TAG_UNIT_MS = "ms"
 TAG_UNIT_MM = "mm"
@@ -165,7 +162,7 @@ HISTORY_BRICKS = "Bricks uuid"
 # ]
 
 
-class DatabaseMIA(DatabaseEngine):
+class DatabaseMIA:
     """
     Class overriding the default behavior of populse_db.
 
@@ -215,6 +212,71 @@ class DatabaseMIA(DatabaseEngine):
         """
         self.storage = None
 
+    def has_collection(self, collection_name):
+        """Checks if a collection with the specified name exists
+        in the database.
+
+        Parameters:
+        - collection_name (str): The name of the collection to check.
+
+        Returns:
+        - bool: `True` if the collection exists, otherwise `False`.
+
+        """
+        with self.storage.data() as dbs:
+            return dbs.has_collection(collection_name)
+        
+    def collection_names(self):
+        """Retrieve the names of all collections in the storage database."""
+        with self.storage.data() as dbs:
+            return dbs.collection_names()
+        
+    def add_values(self, collection_name, primary_key, values_dict):
+        """Store or update a record in the specified collection.
+
+        Args:
+        collection_name (str): The name of the collection where the record
+                               will be stored.
+        primary_key (str): The unique key used to identify the record.
+        values_dict (dict): A dictionary containing the data to store
+                            or update.
+        """
+        with self.storage.data(write=True) as dbs:
+            dbs[collection_name][primary_key] = values_dict
+
+    def filter_documents(
+        self, collection, filter_query, fields=None, as_list=False
+    ):
+        """
+        Iterates over the collection documents selected by filter_query
+
+        Each item yield is a row of the collection table returned
+
+        filter_query can be the result of self.filter_query() or a string
+        containing a filter (in this case self.filter_query() is called to
+        get the actual query)
+
+        :param collection: Filter collection (str, must be existing)
+        :param filter_query: Filter query (str)
+
+            - A filter row must be written this way:
+              {<field>} <operator> "<value>"
+            - The operator must be in
+              ('==', '!=', '<=', '>=', '<', '>', 'IN', 'ILIKE', 'LIKE')
+            - The filter rows can be linked with ' AND ' or ' OR '
+            - Example:
+              "((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))"
+        """
+
+        if not self.has_collection(collection):
+            raise ValueError(
+                "The collection {0} does not exist".format(collection)
+            )
+
+        with self.storage.data() as dbs:
+            for i in dbs[collection].search(filter_query):
+                yield i
+
     def add_collection(
         self, name, primary_key, visibility, origin, unit, default_value
     ):
@@ -228,7 +290,7 @@ class DatabaseMIA(DatabaseEngine):
         :param default_value: Primary key default value
         """
         self.add_field_attributes_collection()
-        has_collection = super(DatabaseMIA, self).has_collection(name)
+        has_collection = self.has_collection(name)
 
         if not has_collection:
 
@@ -239,6 +301,159 @@ class DatabaseMIA(DatabaseEngine):
                 name, primary_key, visibility, origin, unit, default_value
             )
 
+    def remove_collection(self, name):
+        """Removes a collection."""
+        raise NotImplementedError(
+            "This method (remove_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+    
+    def get_collection(self, name):
+        """Returns the collection row of the collection"""
+        raise NotImplementedError(
+            "This method (get_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+    
+    def get_collections(self):
+        """Gives the list of all collection rows."""
+        raise NotImplementedError(
+            "This method (get_collections) is not yet available in "
+            "DatabaseMIA class."
+        )
+    
+    def get_collections_names(self):
+        """Gives the list of all collection names."""
+        raise NotImplementedError(
+            "This method (get_collections_names) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_fields_names(self, collection):
+        """Retrieve the list of all field names in the specified collection.
+
+        Args:
+        collection (str): The name of the collection to retrieve field names
+                          from. The collection must exist in the database.
+
+        Returns:
+            list: A list of all field names in the collection if it exists.
+            None: If the collection has no fields or does not exist.
+        """
+        with self.storage.data() as dbs:
+            fields_names = list(dbs[collection].keys())
+            return fields_names if fields_names else None
+       
+    def get_value(self, collection, document_id, field):
+        """ Gives the current value of <collection, document, field>."""
+        raise NotImplementedError(
+            "This method (get_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def set_value(self, collection, document_id, field, new_value):
+        """ Sets the value associated to <collection, document, field> if
+        it exists.
+        """
+        raise NotImplementedError(
+            "This method (set_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def set_values(self, collection, document_id, values):
+        """Sets the values of a <collection, document, field> if it exists."""
+        raise NotImplementedError(
+            "This method (set_values) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_value(self, collection, document_id, field):
+        """Removes the value <collection, document, field> if it exists."""
+        raise NotImplementedError(
+            "This method (remove_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def add_value(self, collection, document_id, field, value):
+        """Adds a value for <collection, document_id, field>"""
+        raise NotImplementedError(
+            "This method (add_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_document(self, collection, document_id, fields=None,
+                     as_list=False):
+        """Gives a document instance given a collection and a
+        document identifier."""
+        raise NotImplementedError(
+            "This method (get_document) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_documents(self, collection, fields=None, as_list=False,
+                      document_ids=None ):
+        """Gives the list of all document rows, given a collection.
+
+        :param collection: Documents collection (str, must be existing)
+        :param fileds:
+        :param as_list:
+        :param document_ids:
+
+        :return: List of all document rows of the collection if it exists,
+                 None otherwise
+        """
+        if self.has_collection(collection):
+            # To write latter
+            return []
+
+
+        return []
+
+    def get_documents_names(self, collection):
+        """Gives the list of all document names, given a collection.
+        
+        :param collection: Documents collection (str, must be existing)
+        
+        :return: List of all document names of the collection if it exists,
+                 None otherwise
+        """
+        if self.has_collection(collection):
+             primary_key = self.primary_key(collection)
+             # to write latter
+             return []
+            
+        return []
+    
+    def primary_key(self, collection):
+        """Retrieve the primary key of the specified collection.
+
+        This method returns the first key from the specified collection within
+        the database.
+
+        Args:
+            collection (str): The name of the collection to retrieve the
+                              primary key from.
+
+        Returns:
+            str: The first key in the collection, representing the primary key.
+        """
+        with self.storage.data() as dbs:
+            return next(iter(dbs[collection].keys()))
+
+    def add_document(self, collection, document, create_missing_fields=True):
+        """Adds a document to a collection."""
+        raise NotImplementedError(
+            "This method (add_document) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_document(self, collection, document_id):
+        """Removes a document in the collection."""
+        raise NotImplementedError(
+            "This method (remove_document) is not yet available in "
+            "DatabaseMIA class."
+        )
+
     def add_field_attributes_collection(self):
         """Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in
         the database.
@@ -247,9 +462,7 @@ class DatabaseMIA(DatabaseEngine):
         fields to it such as 'visibility', 'origin', 'unit', and
         'default_value'.
         """
-        has_collection = super(DatabaseMIA, self).has_collection(
-            FIELD_ATTRIBUTES_COLLECTION
-        )
+        has_collection = self.has_collection(FIELD_ATTRIBUTES_COLLECTION)
 
         if not has_collection:
 
@@ -341,7 +554,7 @@ class DatabaseMIA(DatabaseEngine):
         """
 
         index = f"{collection}|{field_name}"
-        super(DatabaseMIA, self).add_values(
+        self.add_values(
             FIELD_ATTRIBUTES_COLLECTION,
             index,
             {
@@ -450,7 +663,7 @@ class DatabaseMIA(DatabaseEngine):
         visible_names = []
         names_set = set()
 
-        for i in super(DatabaseMIA, self).filter_documents(
+        for i in self.filter_documents(
             FIELD_ATTRIBUTES_COLLECTION, "{visibility} == true"
         ):
 

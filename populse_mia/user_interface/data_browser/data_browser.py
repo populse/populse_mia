@@ -2011,7 +2011,7 @@ class TableDataBrowser(QTableWidget):
 
         # Sorting the list of tags in alphabetical order,
         # but keeping FileName first
-        tags = self.project.session.get_fields_names(COLLECTION_CURRENT)
+        tags = self.project.database.get_fields_names(COLLECTION_CURRENT)
         tags.remove(TAG_CHECKSUM)
         tags.remove(TAG_FILENAME)
         tags.remove(TAG_HISTORY)
@@ -2892,7 +2892,7 @@ class TableDataBrowser(QTableWidget):
         self.setSortingEnabled(False)
         self.clearSelection()  # Selection cleared when switching project
         # The list of scans to visualize
-        self.scans_to_visualize = self.project.session.get_documents_names(
+        self.scans_to_visualize = self.project.database.get_documents_names(
             COLLECTION_CURRENT
         )
         self.scans_to_search = list(self.scans_to_visualize)
