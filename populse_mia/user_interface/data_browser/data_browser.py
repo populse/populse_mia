@@ -2028,17 +2028,17 @@ class TableDataBrowser(QTableWidget):
             self.setHorizontalHeaderItem(column, item)
 
             item.setText(tag_name)
-            element = self.project.session.get_field(
+            element = self.project.database.get_field_attrib(
                 COLLECTION_CURRENT, tag_name
             )
             if element is not None:
                 item.setToolTip(
                     "Description: "
-                    + str(element.description)
+                    + str(element["description"])
                     + "\nUnit: "
-                    + str(element.unit)
+                    + str(element["unit"])
                     + "\nType: "
-                    + str(element.field_type)
+                    + str(element["field_type"])
                 )
 
                 # Set column type

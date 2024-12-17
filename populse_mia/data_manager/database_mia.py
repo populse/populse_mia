@@ -20,8 +20,65 @@ populse_db and some of its methods
 
 # from datetime import datetime
 
+from populse_db.database import FIELD_TYPE_STRING, type_to_str
+
 # Populse_db imports
 from populse_db.storage import Storage
+
+# ALL_TYPES,
+# FIELD_TYPE_BOOLEAN,
+# FIELD_TYPE_DATE,
+# FIELD_TYPE_DATETIME,
+# FIELD_TYPE_FLOAT,
+# FIELD_TYPE_INTEGER,
+# FIELD_TYPE_JSON,; FIELD_TYPE_LIST_BOOLEAN,
+# FIELD_TYPE_LIST_DATE,
+# FIELD_TYPE_LIST_DATETIME,
+# FIELD_TYPE_LIST_FLOAT,
+# FIELD_TYPE_LIST_INTEGER,
+# FIELD_TYPE_LIST_JSON,
+# FIELD_TYPE_LIST_STRING,
+# FIELD_TYPE_LIST_TIME,
+# FIELD_TYPE_TIME,
+
+
+# Field types
+# FIELD_TYPE_STRING = "string"
+# FIELD_TYPE_INTEGER = "int"
+# FIELD_TYPE_FLOAT = "float"
+# FIELD_TYPE_BOOLEAN = "boolean"
+# FIELD_TYPE_DATE = "date"
+# FIELD_TYPE_DATETIME = "datetime"
+# FIELD_TYPE_TIME = "time"
+# FIELD_TYPE_JSON = "json"
+# FIELD_TYPE_LIST_STRING = "list_string"
+# FIELD_TYPE_LIST_INTEGER = "list_int"
+# FIELD_TYPE_LIST_FLOAT = "list_float"
+# FIELD_TYPE_LIST_BOOLEAN = "list_boolean"
+# FIELD_TYPE_LIST_DATE = "list_date"
+# FIELD_TYPE_LIST_DATETIME = "list_datetime"
+# FIELD_TYPE_LIST_TIME = "list_time"
+# FIELD_TYPE_LIST_JSON = "list_json"
+
+# ALL_TYPES = {
+#     FIELD_TYPE_LIST_STRING,
+#     FIELD_TYPE_LIST_INTEGER,
+#     FIELD_TYPE_LIST_FLOAT,
+#     FIELD_TYPE_LIST_BOOLEAN,
+#     FIELD_TYPE_LIST_DATE,
+#     FIELD_TYPE_LIST_DATETIME,
+#     FIELD_TYPE_LIST_TIME,
+#     FIELD_TYPE_LIST_JSON,
+#     FIELD_TYPE_STRING,
+#     FIELD_TYPE_INTEGER,
+#     FIELD_TYPE_FLOAT,
+#     FIELD_TYPE_BOOLEAN,
+#     FIELD_TYPE_DATE,
+#     FIELD_TYPE_DATETIME,
+#     FIELD_TYPE_TIME,
+#     FIELD_TYPE_JSON,
+# }
+
 
 # Tag unit
 TAG_UNIT_MS = "ms"
@@ -212,6 +269,76 @@ class DatabaseMIA:
         """
         self.storage = None
 
+    def add_collection(
+        self,
+        collection_name,
+        primary_key,
+        visibility,
+        origin,
+        unit,
+        default_value,
+    ):
+        """Add a new collection to the storage database, if it does not
+        already exist.
+
+        This method overrides the default behavior to add a collection with
+        additional field attributes, ensuring proper schema updates and
+        collection initialization.
+
+        Parameters:
+            collection_name (str): The name of the new collection.
+            primary_key (str): The primary key column for the collection.
+            visibility (bool): Visibility of the primary key field.
+            origin (str): Origin of the primary key field.
+            unit (str): Unit of the primary key field.
+            default_value (Any): Default value for the primary key field.
+        """
+        self.add_field_attributes_collection()
+
+        if self.has_collection(collection_name):
+            return
+
+        with self.storage.schema() as schema:
+            schema.add_collection(collection_name, primary_key)
+
+        self.update_field_att_col(
+            collection_name=collection_name,
+            field_name=primary_key,
+            visibility=visibility,
+            origin=origin,
+            unit=unit,
+            default_value=default_value,
+            description=f"Primary_key of the document "
+            f"collection {collection_name}",
+            field_type=FIELD_TYPE_STRING,
+        )
+
+    def collection_names(self):
+        """Retrieve the names of all collections in the storage database."""
+        with self.storage.data() as dbs:
+            return dbs.collection_names()
+
+    def get_collection(self, name):
+        """Returns the collection row of the collection"""
+        raise NotImplementedError(
+            "This method (get_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_collections(self):
+        """Gives the list of all collection rows."""
+        raise NotImplementedError(
+            "This method (get_collections) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_collections_names(self):
+        """Gives the list of all collection names."""
+        raise NotImplementedError(
+            "This method (get_collections_names) is not yet available in "
+            "DatabaseMIA class. See collection_names method instead."
+        )
+
     def has_collection(self, collection_name):
         """Checks if a collection with the specified name exists
         in the database.
@@ -226,10 +353,163 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return dbs.has_collection(collection_name)
 
-    def collection_names(self):
-        """Retrieve the names of all collections in the storage database."""
+    def remove_collection(self, name):
+        """Removes a collection."""
+        raise NotImplementedError(
+            "This method (remove_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_fields_names(self, collection):
+        """Retrieve the list of all field names in the specified collection.
+
+        Args:
+        collection (str): The name of the collection to retrieve field names
+                          from. The collection must exist in the database.
+
+        Returns:
+            list: A list of all field names in the collection if it exists.
+            None: If the collection has no fields or does not exist.
+        """
         with self.storage.data() as dbs:
-            return dbs.collection_names()
+            fields_names = list(dbs[collection].keys())
+            return fields_names if fields_names else None
+
+    def add_field(
+        self,
+        collection_name,
+        field_name,
+        field_type,
+        description,
+        visibility,
+        origin,
+        unit,
+        default_value,
+        index=False,
+    ):
+        """Add a field to the database, if it does not already exist.
+
+        :param collection_name: field collection (str)
+        :param field_name: field name (str)
+        :param field_type: field type (string, int, float, boolean, date,
+                           datetime, time, list_string, list_int, list_float,
+                           list_boolean, list_date, list_datetime or list_time)
+        :param description: field description (str or None)
+        :param visibility: Bool to know if the field is visible in the
+                           databrowser
+        :param origin: To know the origin of a field,
+                       in [TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER]
+        :param unit: Origin of the field, in [TAG_UNIT_MS, TAG_UNIT_MM,
+                     TAG_UNIT_DEGREE, TAG_UNIT_HZPIXEL, TAG_UNIT_MHZ]
+        :param default_value: Default_value of the field, can be str or None
+        """
+        with self.storage.schema() as schema:
+            schema.add_field(collection_name, field_name, field_type)
+
+        self.update_field_att_col(
+            collection_name=collection_name,
+            field_name=field_name,
+            visibility=visibility,
+            origin=origin,
+            unit=unit,
+            default_value=default_value,
+            description=description,
+            field_type=field_type,
+        )
+
+    def add_fields(self, fields):
+        """Add the list of fields.
+
+        :param fields: list of fields (collection, name, type, description,
+                       visibility, origin, unit, default_value)
+        """
+
+        # for field in fields:
+        #     # Adding each field
+        #     self.add_field(
+        #         field[0],
+        #         field[1],
+        #         field[2],
+        #         field[3],
+        #         field[4],
+        #         field[5],
+        #         field[6],
+        #         field[7],
+        #         False,
+        #     )
+        raise NotImplementedError(
+            "This method (add_fields) is not yet available in DatabaseMIA "
+            "class."
+        )
+
+    def remove_field(self, collection, fields):
+        """
+        Removes a field in the collection
+
+        :param collection: Field collection (str, must be existing)
+
+        :param field: Field name (str, must be existing), or list of fields
+         (list of str, must all be existing)
+
+        :raise ValueError: - If the collection does not exist
+                           - If the field does not exist
+        """
+        # super(DatabaseSessionMIA, self).remove_field(collection, fields)
+        # if isinstance(fields, str):
+        #     fields = [fields]
+        # for field in fields:
+        #     self.remove_document(
+        #         FIELD_ATTRIBUTES_COLLECTION, "%s|%s" % (collection, field)
+        #     )
+        raise NotImplementedError(
+            "This method (remove_field) is not yet available in DatabaseMIA "
+            "class."
+        )
+
+    def get_field_attrib(self, collection_name, field_name):
+        """
+        Retrieve the attributes of a specific field in a collection
+        from the storage.
+
+        Args:
+            collection_name (str): The name of the collection.
+            field_name (str): The name of the field within the collection.
+
+        Returns:
+            dict: The attributes of the specified field.
+        """
+        with self.storage.data() as dbs:
+            return dbs[FIELD_ATTRIBUTES_COLLECTION][
+                f"{collection_name}|{field_name}"
+            ].get()
+
+    def get_fields(self, collection):
+        """Retrieves all fields from the specified collection in the database.
+
+        This method first fetches all fields associated with the given
+        collection. For each field, it then attempts to retrieve
+        additional attributes from the `FIELD_ATTRIBUTES_COLLECTION` using a
+        specific index format. These attributes (like 'visibility', 'origin',
+        'unit', 'default_value') are set on each field object."""
+        # fields = super(DatabaseSessionMIA, self).get_fields(collection)
+        # for field in fields:
+        #     name = field.field_name
+        #     index = "%s|%s" % (collection, name)
+        #     attrs = self.get_document(FIELD_ATTRIBUTES_COLLECTION, index)
+        #     for i in ("visibility", "origin", "unit", "default_value"):
+        #         setattr(field, i, getattr(attrs, i, None))
+        # return fields
+        raise NotImplementedError(
+            "This method (get_fields) is not yet available in DatabaseMIA "
+            "class."
+        )
+
+    def add_value(self, collection, document_id, field, value):
+        """Adds a value for <collection, document_id, field>"""
+        raise NotImplementedError(
+            "This method (add_value) is not yet available in "
+            "DatabaseMIA class."
+        )
 
     def add_values(self, collection_name, primary_key, values_dict):
         """Store or update a record in the specified collection.
@@ -243,6 +523,43 @@ class DatabaseMIA:
         """
         with self.storage.data(write=True) as dbs:
             dbs[collection_name][primary_key] = values_dict
+
+    def get_value(self, collection, document_id, field):
+        """Gives the current value of <collection, document, field>."""
+        raise NotImplementedError(
+            "This method (get_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def set_value(self, collection, document_id, field, new_value):
+        """Sets the value associated to <collection, document, field> if
+        it exists.
+        """
+        raise NotImplementedError(
+            "This method (set_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_value(self, collection, document_id, field):
+        """Removes the value <collection, document, field> if it exists."""
+        raise NotImplementedError(
+            "This method (remove_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def add_document(self, collection, document, create_missing_fields=True):
+        """Adds a document to a collection."""
+        raise NotImplementedError(
+            "This method (add_document) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_document(self, collection, document_id):
+        """Removes a document in the collection."""
+        raise NotImplementedError(
+            "This method (remove_document) is not yet available in "
+            "DatabaseMIA class."
+        )
 
     def filter_documents(
         self, collection, filter_query, fields=None, as_list=False
@@ -276,110 +593,6 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             for i in dbs[collection].search(filter_query):
                 yield i
-
-    def add_collection(
-        self, name, primary_key, visibility, origin, unit, default_value
-    ):
-        """Override the method adding a collection of populse_db.
-
-        :param name: New collection name
-        :param primary_key: New collection primary_key column
-        :param visibility: Primary key visibility
-        :param origin: Primary key origin
-        :param unit: Primary key unit
-        :param default_value: Primary key default value
-        """
-        self.add_field_attributes_collection()
-        has_collection = self.has_collection(name)
-
-        if not has_collection:
-
-            with self.storage.schema() as schema:
-                schema.add_collection(name, primary_key)
-
-            self.update_field_att_col(
-                name, primary_key, visibility, origin, unit, default_value
-            )
-
-    def remove_collection(self, name):
-        """Removes a collection."""
-        raise NotImplementedError(
-            "This method (remove_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_collection(self, name):
-        """Returns the collection row of the collection"""
-        raise NotImplementedError(
-            "This method (get_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_collections(self):
-        """Gives the list of all collection rows."""
-        raise NotImplementedError(
-            "This method (get_collections) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_collections_names(self):
-        """Gives the list of all collection names."""
-        raise NotImplementedError(
-            "This method (get_collections_names) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_fields_names(self, collection):
-        """Retrieve the list of all field names in the specified collection.
-
-        Args:
-        collection (str): The name of the collection to retrieve field names
-                          from. The collection must exist in the database.
-
-        Returns:
-            list: A list of all field names in the collection if it exists.
-            None: If the collection has no fields or does not exist.
-        """
-        with self.storage.data() as dbs:
-            fields_names = list(dbs[collection].keys())
-            return fields_names if fields_names else None
-
-    def get_value(self, collection, document_id, field):
-        """Gives the current value of <collection, document, field>."""
-        raise NotImplementedError(
-            "This method (get_value) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def set_value(self, collection, document_id, field, new_value):
-        """Sets the value associated to <collection, document, field> if
-        it exists.
-        """
-        raise NotImplementedError(
-            "This method (set_value) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def set_values(self, collection, document_id, values):
-        """Sets the values of a <collection, document, field> if it exists."""
-        raise NotImplementedError(
-            "This method (set_values) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def remove_value(self, collection, document_id, field):
-        """Removes the value <collection, document, field> if it exists."""
-        raise NotImplementedError(
-            "This method (remove_value) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def add_value(self, collection, document_id, field, value):
-        """Adds a value for <collection, document_id, field>"""
-        raise NotImplementedError(
-            "This method (add_value) is not yet available in "
-            "DatabaseMIA class."
-        )
 
     def get_document(
         self, collection, document_id, fields=None, as_list=False
@@ -441,20 +654,6 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return next(iter(dbs[collection].keys()))
 
-    def add_document(self, collection, document, create_missing_fields=True):
-        """Adds a document to a collection."""
-        raise NotImplementedError(
-            "This method (add_document) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def remove_document(self, collection, document_id):
-        """Removes a document in the collection."""
-        raise NotImplementedError(
-            "This method (remove_document) is not yet available in "
-            "DatabaseMIA class."
-        )
-
     def add_field_attributes_collection(self):
         """Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in
         the database.
@@ -478,7 +677,7 @@ class DatabaseMIA:
                     FIELD_ATTRIBUTES_COLLECTION,
                     "visibility",
                     bool,
-                    "Visibility of the index field in " "the DataBrowser",
+                    "Visibility of the index field in the DataBrowser",
                 )
                 schema.add_field(
                     FIELD_ATTRIBUTES_COLLECTION,
@@ -499,44 +698,29 @@ class DatabaseMIA:
                     str,
                     "Default value of the index field",
                 )
+                schema.add_field(
+                    FIELD_ATTRIBUTES_COLLECTION,
+                    "description",
+                    str,
+                    "Description of the index field",
+                )
+                schema.add_field(
+                    FIELD_ATTRIBUTES_COLLECTION,
+                    "field_type",
+                    str,
+                    "Type of the index field",
+                )
 
-    def add_field(
+    def update_field_att_col(
         self,
-        collection,
-        name,
-        field_type,
-        description,
+        collection_name,
+        field_name,
         visibility,
         origin,
         unit,
         default_value,
-        index=False,
-    ):
-        """Add a field to the database, if it does not already exist.
-
-        :param collection: field collection (str)
-        :param name: field name (str)
-        :param field_type: field type (string, int, float, boolean, date,
-                           datetime, time, list_string, list_int, list_float,
-                           list_boolean, list_date, list_datetime or list_time)
-        :param description: field description (str or None)
-        :param visibility: Bool to know if the field is visible in the
-                           databrowser
-        :param origin: To know the origin of a field,
-                       in [TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER]
-        :param unit: Origin of the field, in [TAG_UNIT_MS, TAG_UNIT_MM,
-                     TAG_UNIT_DEGREE, TAG_UNIT_HZPIXEL, TAG_UNIT_MHZ]
-        :param default_value: Default_value of the field, can be str or None
-        """
-        with self.storage.schema() as schema:
-            schema.add_field(collection, name, field_type, description)
-
-        self.update_field_att_col(
-            collection, name, visibility, origin, unit, default_value
-        )
-
-    def update_field_att_col(
-        self, collection, field_name, visibility, origin, unit, default_value
+        description,
+        field_type,
     ):
         """Updates the attributes of a field in the database for a specific
         collection.
@@ -546,15 +730,18 @@ class DatabaseMIA:
         attributes in the FIELD_ATTRIBUTES_COLLECTION.
 
         Parameters:
-            collection (str): The name of the collection the field belongs to.
+            collection_name (str): The name of the collection the field
+                                   belongs to.
             field_name (str): The name of the field to update.
             visibility (bool): The visibility status of the field.
             origin (str): The origin or source of the field.
             unit (str): The unit of measurement for the field.
             default_value (Any): The default value to assign to the field.
+            description (str): The description of the field.
+            field_type: The type of the field.
         """
 
-        index = f"{collection}|{field_name}"
+        index = f"{collection_name}|{field_name}"
         self.add_values(
             FIELD_ATTRIBUTES_COLLECTION,
             index,
@@ -563,97 +750,9 @@ class DatabaseMIA:
                 "origin": origin,
                 "unit": unit,
                 "default_value": default_value,
+                "description": description,
+                "field_type": type_to_str(field_type),
             },
-        )
-
-    def add_fields(self, fields):
-        """Add the list of fields.
-
-        :param fields: list of fields (collection, name, type, description,
-                       visibility, origin, unit, default_value)
-        """
-
-        # for field in fields:
-        #     # Adding each field
-        #     self.add_field(
-        #         field[0],
-        #         field[1],
-        #         field[2],
-        #         field[3],
-        #         field[4],
-        #         field[5],
-        #         field[6],
-        #         field[7],
-        #         False,
-        #     )
-        raise NotImplementedError(
-            "This method (add_fields) is not yet available in DatabaseMIA "
-            "class."
-        )
-
-    def remove_field(self, collection, fields):
-        """
-        Removes a field in the collection
-
-        :param collection: Field collection (str, must be existing)
-
-        :param field: Field name (str, must be existing), or list of fields
-         (list of str, must all be existing)
-
-        :raise ValueError: - If the collection does not exist
-                           - If the field does not exist
-        """
-        # super(DatabaseSessionMIA, self).remove_field(collection, fields)
-        # if isinstance(fields, str):
-        #     fields = [fields]
-        # for field in fields:
-        #     self.remove_document(
-        #         FIELD_ATTRIBUTES_COLLECTION, "%s|%s" % (collection, field)
-        #     )
-        raise NotImplementedError(
-            "This method (remove_field) is not yet available in DatabaseMIA "
-            "class."
-        )
-
-    def get_field(self, collection, name):
-        """Retrieves a field from the specified collection in the database.
-
-        This method first attempts to get the field. If the field is found,
-        it then retrieves additional attributes from the
-        `FIELD_ATTRIBUTES_COLLECTION` using a specific index format. The
-        retrieved attributes (like 'visibility', 'origin', 'unit',
-        'default_value') are then set on the field object."""
-        # field = super(DatabaseSessionMIA, self).get_field(collection, name)
-        # if field is not None:
-        #     index = "%s|%s" % (collection, name)
-        #     attrs = self.get_document(FIELD_ATTRIBUTES_COLLECTION, index)
-        #     for i in ("visibility", "origin", "unit", "default_value"):
-        #         setattr(field, i, getattr(attrs, i, None))
-        # return field
-        raise NotImplementedError(
-            "This method (get_field) is not yet available in DatabaseMIA "
-            "class."
-        )
-
-    def get_fields(self, collection):
-        """Retrieves all fields from the specified collection in the database.
-
-        This method first fetches all fields associated with the given
-        collection. For each field, it then attempts to retrieve
-        additional attributes from the `FIELD_ATTRIBUTES_COLLECTION` using a
-        specific index format. These attributes (like 'visibility', 'origin',
-        'unit', 'default_value') are set on each field object."""
-        # fields = super(DatabaseSessionMIA, self).get_fields(collection)
-        # for field in fields:
-        #     name = field.field_name
-        #     index = "%s|%s" % (collection, name)
-        #     attrs = self.get_document(FIELD_ATTRIBUTES_COLLECTION, index)
-        #     for i in ("visibility", "origin", "unit", "default_value"):
-        #         setattr(field, i, getattr(attrs, i, None))
-        # return fields
-        raise NotImplementedError(
-            "This method (get_fields) is not yet available in DatabaseMIA "
-            "class."
         )
 
     def get_shown_tags(self):
@@ -678,11 +777,6 @@ class DatabaseMIA:
                     visible_names.append(tag)
 
         return visible_names
-
-        raise NotImplementedError(
-            "This method (get_shown_tags) is not yet available in "
-            "DatabaseMIA class."
-        )
 
     def set_shown_tags(self, fields_shown, *args, **kwargs):
         """Set the list of visible tags.
