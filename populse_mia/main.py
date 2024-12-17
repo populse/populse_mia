@@ -19,6 +19,7 @@ mia's GUI.
 # for details.
 ###############################################################################
 
+import argparse
 import os
 import sys
 import tempfile
@@ -30,7 +31,7 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 # main_window = None
 
 
-def main():
+def main(args):
     """Make basic configuration check, then actual launch of Mia.
 
     Checks if Mia is called from the site/dist packages (`user mode`) or from a
@@ -422,7 +423,7 @@ def main():
 
     with tempfile.TemporaryDirectory() as temp_work_dir:
         os.chdir(temp_work_dir)
-        launch_mia(app)
+        launch_mia(app, args)
         os.chdir(cwd)
 
 
@@ -443,6 +444,19 @@ def qt_message_handler(mode, context, message):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Populse Mia Application Entry Point."
+    )
+    parser.add_argument(
+        "--multi_instance",
+        type=bool,
+        default=False,
+        help="Set the value of multi_instance.",
+    )
+    args = parser.parse_args()
+
+    # Print the multi_instance argument value
+    print(f"--multi_instance is set to: {args.multi_instance}")
     # this will only be executed when this module is run directly
     # list of unwanted messages to filter out in stdout
     unwanted_messages = [
@@ -451,4 +465,4 @@ if __name__ == "__main__":
 
     # Install the custom Qt message handler
     qInstallMessageHandler(qt_message_handler)
-    main()
+    main(args)

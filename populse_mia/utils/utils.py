@@ -363,7 +363,7 @@ def check_value_type(value, value_type, is_subvalue=False):
                 return False
 
 
-def launch_mia(app):
+def launch_mia(app, args):
     """Actual launch of the Mia software.
 
     Overload the sys.excepthook handler with the _my_excepthook private
@@ -468,7 +468,7 @@ def launch_mia(app):
         QDir.temp().absoluteFilePath("lock_file_populse_mia.lock")
     )
 
-    if not lock_file.tryLock(100):
+    if not lock_file.tryLock(100) and args.multi_instance is False:
         # software already opened in another instance
         print(
             "\nAnother instance of Mia is already running.\n"
@@ -478,8 +478,8 @@ def launch_mia(app):
         return
 
     else:
-        # no instances of the software is opened, the list of opened projects
-        # can be cleared
+        # no instances of the software is opened, or args.multi_instance
+        # is set to True, so the list of opened projects can be cleared
         config = Config()
         config.set_opened_projects([])
 
