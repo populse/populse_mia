@@ -111,13 +111,6 @@ from populse_mia.user_interface.pop_ups import (
     PopUpShowHistory,
 )
 
-# from populse_mia.utils.utils import (
-#     check_value_type,
-#     set_item_data,
-#     table_to_database,
-# )
-
-
 # Variable shown everywhere when no value for the tag
 not_defined_value = "*Not Defined*"
 
@@ -1013,22 +1006,19 @@ class TableDataBrowser(QTableWidget):
 
     def add_columns(self):
         """Add columns."""
-
         # import set_item_data only here to prevent circular import issue
         from populse_mia.utils import set_item_data
 
         self.itemChanged.disconnect()
-
         self.itemSelectionChanged.disconnect()
-
-        tags = self.project.session.get_fields_names(COLLECTION_CURRENT)
+        tags = self.project.database.get_fields_names(COLLECTION_CURRENT)
         tags.remove(TAG_CHECKSUM)
         tags.remove(TAG_FILENAME)
         tags.remove(TAG_HISTORY)
         tags = sorted(tags)
         tags.insert(0, TAG_FILENAME)
 
-        visible = self.project.session.get_shown_tags()
+        visible = self.project.database.get_shown_tags()
 
         # Adding missing columns
 
@@ -1863,24 +1853,10 @@ class TableDataBrowser(QTableWidget):
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
 
-        # Quick fix for #168 populse_mia issue
-        # try:
-        #
-        #    if getattr(self.data_browser.main_window, 'test', False):
-        #        from PyQt5.QtTest import QTest
-        #        QTest.qWait(100)
-        #
-        # except AttributeError:
-        #    # Not a unit test case!
-        #    pass
-
         idx = 0
         row = 0
+        primary_key = self.project.database.primary_key(COLLECTION_CURRENT)
 
-        dbs = self.project.session
-
-        collection_row = dbs.get_collection(COLLECTION_CURRENT)
-        primary_key = collection_row.primary_key
         if self.scans_to_visualize:
             req = "%s IN [%s]" % (
                 primary_key,
@@ -1891,7 +1867,9 @@ class TableDataBrowser(QTableWidget):
                     ]
                 ),
             )
-            scans = dbs.filter_documents(COLLECTION_CURRENT, req)
+            scans = self.project.database.filter_documents(
+                COLLECTION_CURRENT, req
+            )
         else:
             scans = []
         tags = [
@@ -1899,8 +1877,12 @@ class TableDataBrowser(QTableWidget):
             for column in range(len(self.horizontalHeader()))
         ]
         tag_types = {
-            field.field_name: field.field_type
-            for field in dbs.get_fields(COLLECTION_CURRENT)
+            field_name: self.project.database.get_field_attrib(
+                COLLECTION_CURRENT, field_name
+            )["field_type"]
+            for field_name in self.project.database.get_fields_names(
+                COLLECTION_CURRENT
+            )
         }
         tag_types = [tag_types[tag] for tag in tags]
 
@@ -2032,29 +2014,28 @@ class TableDataBrowser(QTableWidget):
                 COLLECTION_CURRENT, tag_name
             )
             if element is not None:
+                from populse_mia.utils import type_name
+
                 item.setToolTip(
-                    "Description: "
-                    + str(element["description"])
-                    + "\nUnit: "
-                    + str(element["unit"])
-                    + "\nType: "
-                    + str(element["field_type"])
+                    f"Description: {element['description']}"
+                    f"\nUnit: {element['unit']}"
+                    f"\nType: {type_name(element['field_type'])}"
                 )
 
                 # Set column type
-                if element.field_type == FIELD_TYPE_FLOAT:
+                if element["field_type"] == FIELD_TYPE_FLOAT:
                     self.setItemDelegateForColumn(
                         column, NumberFormatDelegate(self)
                     )
-                elif element.field_type == FIELD_TYPE_DATETIME:
+                elif element["field_type"] == FIELD_TYPE_DATETIME:
                     self.setItemDelegateForColumn(
                         column, DateTimeFormatDelegate(self)
                     )
-                elif element.field_type == FIELD_TYPE_DATE:
+                elif element["field_type"] == FIELD_TYPE_DATE:
                     self.setItemDelegateForColumn(
                         column, DateFormatDelegate(self)
                     )
-                elif element.field_type == FIELD_TYPE_TIME:
+                elif element["field_type"] == FIELD_TYPE_TIME:
                     self.setItemDelegateForColumn(
                         column, TimeFormatDelegate(self)
                     )
@@ -2067,7 +2048,7 @@ class TableDataBrowser(QTableWidget):
                     else:
                         self.setColumnHidden(column, True)
                 else:
-                    if element.visibility:
+                    if element["visibility"]:
                         self.setColumnHidden(column, False)
 
                     else:
@@ -2747,9 +2728,7 @@ class TableDataBrowser(QTableWidget):
             self.item(row, 0).text() if self.item(row, 0) else None
             for row in range(self.rowCount())
         ]
-        dbs = self.project.session
-        collection_row = dbs.get_collection(COLLECTION_CURRENT)
-        primary_key = collection_row.primary_key
+        primary_key = self.project.database.primary_key(COLLECTION_CURRENT)
 
         if scans:
             req = "%s IN [%s]" % (
@@ -2761,14 +2740,25 @@ class TableDataBrowser(QTableWidget):
                     ]
                 ),
             )
-            documents = dbs.filter_documents(COLLECTION_CURRENT, req)
-            documents_init = dbs.filter_documents(COLLECTION_INITIAL, req)
+            documents = self.project.database.filter_documents(
+                COLLECTION_CURRENT, req
+            )
+            documents_init = self.project.databas.filter_documents(
+                COLLECTION_INITIAL, req
+            )
 
         else:
             documents = []
             documents_init = []
 
-        fields = {f.field_name: f for f in dbs.get_fields(COLLECTION_CURRENT)}
+        fields = {
+            field_name: self.project.database.get_field_attrib(
+                COLLECTION_CURRENT, field_name
+            )
+            for field_name in self.project.database.get_fields_names(
+                COLLECTION_CURRENT
+            )
+        }
         table_scans = {
             self.item(row, 0).text(): row for row in range(self.rowCount())
         }

@@ -322,7 +322,7 @@ class MainWindow(QMainWindow):
         if self.project.isTempProject:
             if (
                 len(
-                    self.project.session.get_documents_names(
+                    self.project.database.get_documents_names(
                         COLLECTION_CURRENT
                     )
                 )
@@ -604,7 +604,7 @@ class MainWindow(QMainWindow):
                 self.msg.setIcon(QMessageBox.Critical)
                 self.msg.setText("Invalid projects folder path")
                 self.msg.setInformativeText(
-                    "The projects folder path in MIA preferences is invalid!"
+                    "The projects folder path in Mia preferences is invalid!"
                 )
                 self.msg.setWindowTitle("Error")
                 yes_button = self.msg.addButton(
@@ -691,7 +691,7 @@ class MainWindow(QMainWindow):
             self.msg.setIcon(QMessageBox.Critical)
             self.msg.setText("Invalid projects folder path")
             self.msg.setInformativeText(
-                "The projects folder path in MIA preferences is invalid!"
+                "The projects folder path in Mia preferences is invalid!"
             )
             self.msg.setWindowTitle("Error")
             yes_button = self.msg.addButton(
@@ -877,7 +877,7 @@ class MainWindow(QMainWindow):
                 self.msg.setIcon(QMessageBox.Critical)
                 self.msg.setText("Invalid projects folder path")
                 self.msg.setInformativeText(
-                    "The projects folder path in MIA preferences is invalid!"
+                    "The projects folder path in Mia preferences is invalid!"
                 )
                 self.msg.setWindowTitle("Error")
                 yes_button = self.msg.addButton(
@@ -948,7 +948,7 @@ class MainWindow(QMainWindow):
                 relative_path = os.path.relpath(project_name)
                 self.switch_project(relative_path, name)
                 # We switch the project
-                field_names = self.project.session.get_fields_names(
+                field_names = self.project.database.get_fields_names(
                     COLLECTION_CURRENT
                 )
                 documents = self.project.session.get_documents_names(
@@ -1142,7 +1142,7 @@ class MainWindow(QMainWindow):
             self.msg.setIcon(QMessageBox.Critical)
             self.msg.setText("Invalid projects folder path")
             self.msg.setInformativeText(
-                "The projects folder path in MIA preferences is invalid!"
+                "The projects folder path in Mia preferences is invalid!"
             )
             self.msg.setWindowTitle("Error")
             yes_button = self.msg.addButton(
@@ -1602,21 +1602,21 @@ class MainWindow(QMainWindow):
                         return False
 
                     # We check for valid version of the project
-
-                    if not (temp_database.session.get_fields_names)(
-                        COLLECTION_CURRENT
-                    ) or (
-                        TAG_HISTORY
-                        not in (temp_database.session.get_fields_names)(
+                    try:
+                        field_names = temp_database.database.get_fields_names(
                             COLLECTION_CURRENT
                         )
-                    ):
+
+                    except ValueError:
+                        field_names = None
+
+                    if (not field_names) or (TAG_HISTORY not in field_names):
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
                         msg.setText(
                             "The project cannot be read by Mia. Please check "
-                            "if the version of the project is compatible with "
-                            "the version of the running mia..."
+                            "if the project version is compatible with "
+                            "the Mia version..."
                         )
                         msg.setWindowTitle("Warning")
                         msg.setStandardButtons(QMessageBox.Ok)
@@ -1693,7 +1693,7 @@ class MainWindow(QMainWindow):
         ):
             # data_browser refreshed after working with pipelines
             old_scans = self.data_browser.table_data.scans_to_visualize
-            documents = self.project.session.get_documents_names(
+            documents = self.project.database.get_documents_names(
                 COLLECTION_CURRENT
             )
 
@@ -1733,7 +1733,7 @@ class MainWindow(QMainWindow):
             == "Data Viewer"
         ):
             self.data_viewer.load_viewer(self.data_viewer.current_viewer())
-            documents = self.project.session.get_documents_names(
+            documents = self.project.database.get_documents_names(
                 COLLECTION_CURRENT
             )
             self.data_viewer.set_documents(self.project, documents)
@@ -1743,7 +1743,7 @@ class MainWindow(QMainWindow):
             == "Pipeline Manager"
         ):
             if self.data_browser.data_sent is False:
-                scans = self.project.session.get_documents_names(
+                scans = self.project.database.get_documents_names(
                     COLLECTION_CURRENT
                 )
                 self.pipeline_manager.scan_list = scans

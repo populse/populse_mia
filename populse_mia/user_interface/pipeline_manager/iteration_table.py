@@ -86,7 +86,7 @@ class IterationTable(QWidget):
         self.project = project
 
         if not scan_list:
-            self.scan_list = self.project.session.get_documents_names(
+            self.scan_list = self.project.database.get_documents_names(
                 COLLECTION_CURRENT
             )
         else:

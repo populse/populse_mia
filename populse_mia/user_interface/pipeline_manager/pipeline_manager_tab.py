@@ -206,7 +206,7 @@ class PipelineManagerTab(QWidget):
         self.init_clicked = False
         self.test_init = False
         if len(scan_list) < 1:
-            self.scan_list = self.project.session.get_documents_names(
+            self.scan_list = self.project.database.get_documents_names(
                 COLLECTION_CURRENT
             )
         else:
@@ -256,7 +256,7 @@ class PipelineManagerTab(QWidget):
             self.project, self.scan_list, self, self.main_window
         )
         self.nodeController.visibles_tags = (
-            self.project.session.get_shown_tags()
+            self.project.database.get_shown_tags()
         )
 
         self.iterationTable = IterationTable(

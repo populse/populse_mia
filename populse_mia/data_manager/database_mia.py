@@ -20,7 +20,7 @@ populse_db and some of its methods
 
 # from datetime import datetime
 
-from populse_db.database import FIELD_TYPE_STRING, type_to_str
+from populse_db.database import FIELD_TYPE_STRING, str_to_type, type_to_str
 
 # Populse_db imports
 from populse_db.storage import Storage
@@ -479,9 +479,11 @@ class DatabaseMIA:
             dict: The attributes of the specified field.
         """
         with self.storage.data() as dbs:
-            return dbs[FIELD_ATTRIBUTES_COLLECTION][
+            attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
                 f"{collection_name}|{field_name}"
             ].get()
+            attributes["field_type"] = str_to_type(attributes["field_type"])
+            return attributes
 
     def get_fields(self, collection):
         """Retrieves all fields from the specified collection in the database.
@@ -618,7 +620,12 @@ class DatabaseMIA:
                  None otherwise
         """
         if self.has_collection(collection):
-            # To write latter
+            print("#########")
+            print(
+                "Please note that the get_documents() function is not "
+                "fully written......!"
+            )
+            print("#########")
             return []
 
         return []
@@ -632,6 +639,12 @@ class DatabaseMIA:
                  None otherwise
         """
         if self.has_collection(collection):
+            print("#########")
+            print(
+                "Please note that the get_documents() function is not "
+                "fully written......!"
+            )
+            print("#########")
             # primary_key = self.primary_key(collection)
             # to write latter
             return []

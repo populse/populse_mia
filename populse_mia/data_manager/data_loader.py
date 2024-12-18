@@ -190,7 +190,7 @@ class ImportWorker(QThread):
                 )
 
                 document_not_existing = (
-                    self.project.session.get_document(
+                    self.project.database.get_document(
                         COLLECTION_CURRENT, file_database_path
                     )
                     is None

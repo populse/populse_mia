@@ -14,6 +14,7 @@ Module that contains multiple functions used across Mia.
         - set_item_data
         - set_projects_directory_as_default
         - table_to_database
+        - type_name
         - verCmp
         - verify_processes
         - verify_setup
@@ -35,6 +36,7 @@ import pkgutil
 import re
 import sys
 import traceback
+import types
 from datetime import date, datetime, time
 from functools import partial
 from pathlib import Path
@@ -715,6 +717,26 @@ def table_to_database(value, value_type):
             )
 
         return list_to_return
+
+
+def type_name(t):
+    """
+    Returns the name of a type or a string representation for generic
+    aliases.
+
+    Parameters:
+        t: The type to get the name or representation for.
+           This can be a regular type (e.g., `str`, `list`) or a generic
+           alias (e.g., `list[str]`).
+
+    Returns:
+    str: The name of the type (e.g., 'str') or the string representation of
+         the generic alias (e.g., 'list[str]').
+    """
+    if isinstance(t, types.GenericAlias):
+        return str(t)
+
+    return t.__name__
 
 
 def verCmp(first_ver, sec_ver, comp):
