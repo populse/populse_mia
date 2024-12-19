@@ -31,8 +31,10 @@ import json
 import os.path
 import threading
 import traceback
-from datetime import datetime
-from time import sleep, time
+from datetime import date, datetime
+from datetime import time as datetime_time
+from time import sleep
+from time import time as time_time
 
 # Populse_db imports
 from populse_db.database import (
@@ -73,6 +75,25 @@ from populse_mia.data_manager.project import (
     TYPE_BVEC_BVAL,
     TYPE_NII,
 )
+
+FIELD_TYPE_MAPPING = {
+    "string": str,
+    "int": int,
+    "float": float,
+    "boolean": bool,
+    "date": date,
+    "datetime": datetime,
+    "time": datetime_time,
+    "json": dict,
+    "list_string": list[str],
+    "list_int": list[int],
+    "list_float": list[float],
+    "list_boolean": list[bool],
+    "list_date": list[date],
+    "list_datetime": list[datetime],
+    "list_time": list[datetime_time],
+    "list_json": list[dict],
+}
 
 
 class ImportProgress(QProgressDialog):
@@ -141,7 +162,7 @@ class ImportWorker(QThread):
         """Override the QThread run method. Executed when the worker is
         started, fills the database and updates the progress.
         """
-        begin = time()
+        begin = time_time()
 
         raw_data_folder = os.path.relpath(
             os.path.join(self.project.folder, "data", "raw_data")
@@ -225,6 +246,10 @@ class ImportWorker(QThread):
                         description = None
                         unit = None
                         tag_type = FIELD_TYPE_STRING
+                        # visibility?
+                        # origin?
+                        # default_value?
+                        # index?
 
                         if isinstance(properties, dict):
                             format = properties["format"]
@@ -236,7 +261,9 @@ class ImportWorker(QThread):
                                 unit = properties["units"]
 
                             if properties["type"] != "":
-                                tag_type = properties["type"]
+                                tag_type = FIELD_TYPE_MAPPING.get(
+                                    properties["type"], properties["type"]
+                                )
 
                             value = properties["value"]
 
@@ -339,7 +366,7 @@ class ImportWorker(QThread):
 
                         # TODO time lists
 
-                        tag_row = self.project.session.get_field(
+                        tag_row = self.project.database.get_field(
                             COLLECTION_CURRENT, tag_name
                         )
 
@@ -348,29 +375,34 @@ class ImportWorker(QThread):
                             and tag_name not in tags_names_added
                         ):
                             # Adding the tag as it's not in the database yet
+                            # TODO: Do we want default_value=value?
                             tags_added.append(
-                                [
-                                    COLLECTION_CURRENT,
-                                    tag_name,
-                                    tag_type,
-                                    description,
-                                    False,
-                                    TAG_ORIGIN_BUILTIN,
-                                    unit,
-                                    None,
-                                ]
+                                {
+                                    "collection_name": COLLECTION_CURRENT,
+                                    "field_name": tag_name,
+                                    "field_type": tag_type,
+                                    "description": description,
+                                    "visibility": False,
+                                    "origin": TAG_ORIGIN_BUILTIN,
+                                    "unit": unit,
+                                    "default_value": None,
+                                    # "default_value": value,
+                                    "index": False,
+                                }
                             )
                             tags_added.append(
-                                [
-                                    COLLECTION_INITIAL,
-                                    tag_name,
-                                    tag_type,
-                                    description,
-                                    False,
-                                    TAG_ORIGIN_BUILTIN,
-                                    unit,
-                                    None,
-                                ]
+                                {
+                                    "collection_name": COLLECTION_INITIAL,
+                                    "field_name": tag_name,
+                                    "field_type": tag_type,
+                                    "description": description,
+                                    "visibility": False,
+                                    "origin": TAG_ORIGIN_BUILTIN,
+                                    "unit": unit,
+                                    "default_value": None,
+                                    # "default_value": value,
+                                    "index": False,
+                                }
                             )
                             tags_names_added.append(tag_name)
 
@@ -439,28 +471,30 @@ class ImportWorker(QThread):
                         ):
                             # Adding the tag as it's not in the database yet
                             tags_added.append(
-                                [
-                                    COLLECTION_CURRENT,
-                                    tag_name,
-                                    tag_type,
-                                    description,
-                                    False,
-                                    TAG_ORIGIN_BUILTIN,
-                                    unit,
-                                    None,
-                                ]
+                                {
+                                    "collection_name": COLLECTION_CURRENT,
+                                    "field_name": tag_name,
+                                    "field_type": tag_type,
+                                    "description": description,
+                                    "visibility": False,
+                                    "origin": TAG_ORIGIN_BUILTIN,
+                                    "unit": unit,
+                                    "default_value": None,
+                                    "index": False,
+                                }
                             )
                             tags_added.append(
-                                [
-                                    COLLECTION_INITIAL,
-                                    tag_name,
-                                    tag_type,
-                                    description,
-                                    False,
-                                    TAG_ORIGIN_BUILTIN,
-                                    unit,
-                                    None,
-                                ]
+                                {
+                                    "collection_name": COLLECTION_INITIAL,
+                                    "field_name": tag_name,
+                                    "field_type": tag_type,
+                                    "description": description,
+                                    "visibility": False,
+                                    "origin": TAG_ORIGIN_BUILTIN,
+                                    "unit": unit,
+                                    "default_value": None,
+                                    "index": False,
+                                }
                             )
                             tags_names_added.append(tag_name)
 
@@ -666,13 +700,15 @@ class ImportWorker(QThread):
                         )
 
         # Missing values added thanks to default values
-        for tag in self.project.session.get_fields(COLLECTION_CURRENT):
-            if tag.origin == TAG_ORIGIN_USER:
+        for tag in self.project.database.get_field_attrib(COLLECTION_CURRENT):
+            if tag["origin"] == TAG_ORIGIN_USER:
                 for scan in self.scans_added:
                     if (
-                        tag.default_value is not None
-                        and self.project.session.get_value(
-                            COLLECTION_CURRENT, scan[0], tag.field_name
+                        tag["default_value"] is not None
+                        and self.project.database.get_value(
+                            COLLECTION_CURRENT,
+                            scan[0],
+                            tag["index"].split("|")[-1],
                         )
                         is None
                     ):
@@ -685,37 +721,35 @@ class ImportWorker(QThread):
                                 tag.default_value,
                             ]
                         )
-                        documents[scan][tag.field_name] = tag.default_value
+                        documents[scan][tag["field_name"]] = tag[
+                            "default_value"
+                        ]
 
         self.notifyProgress.emit(1)
         sleep(0.1)
-
-        self.project.session.add_fields(tags_added)
-
+        self.project.database.add_fields(tags_added)
         self.notifyProgress.emit(2)
         sleep(0.1)
-
-        current_paths = self.project.session.get_documents_names(
+        current_paths = self.project.database.get_documents_names(
             COLLECTION_CURRENT
         )
 
         for document in documents:
             if document in current_paths:
-                self.project.session.remove_document(
+                self.project.database.remove_document(
                     COLLECTION_CURRENT, document
                 )
-                self.project.session.remove_document(
+                self.project.database.remove_document(
                     COLLECTION_INITIAL, document
                 )
 
-            self.project.session.add_document(
-                COLLECTION_CURRENT, documents[document], flush=False
+            self.project.database.add_values(
+                COLLECTION_CURRENT, document, documents[document]
             )
-            self.project.session.add_document(
-                COLLECTION_INITIAL, documents[document], flush=False
+            self.project.database.add_values(
+                COLLECTION_INITIAL, document, documents[document]
             )
 
-        self.project.session.commit()
         self.notifyProgress.emit(3)
         sleep(0.1)
 
@@ -726,8 +760,8 @@ class ImportWorker(QThread):
         self.project.redos.clear()
 
         print("\nData export duration in the database:")
-        print("read_log time: " + str(round(time() - begin, 2)) + " s\n")
-        # print("read_log time: " + str(time() - begin))
+        print("read_log time: " + str(round(time_time() - begin, 2)) + " s\n")
+        # print("read_log time: " + str(time_time() - begin))
 
         # pr.disable()
         # pr.print_stats(sort='time')

@@ -332,13 +332,6 @@ class DatabaseMIA:
             "DatabaseMIA class."
         )
 
-    def get_collections_names(self):
-        """Gives the list of all collection names."""
-        raise NotImplementedError(
-            "This method (get_collections_names) is not yet available in "
-            "DatabaseMIA class. See collection_names method instead."
-        )
-
     def has_collection(self, collection_name):
         """Checks if a collection with the specified name exists
         in the database.
@@ -418,29 +411,25 @@ class DatabaseMIA:
         )
 
     def add_fields(self, fields):
-        """Add the list of fields.
-
-        :param fields: list of fields (collection, name, type, description,
-                       visibility, origin, unit, default_value)
         """
+        Adds a list of fields to the collection.
 
-        # for field in fields:
-        #     # Adding each field
-        #     self.add_field(
-        #         field[0],
-        #         field[1],
-        #         field[2],
-        #         field[3],
-        #         field[4],
-        #         field[5],
-        #         field[6],
-        #         field[7],
-        #         False,
-        #     )
-        raise NotImplementedError(
-            "This method (add_fields) is not yet available in DatabaseMIA "
-            "class."
-        )
+        Each field should be a dictionary containing the following keys:
+        - collection_name: The collection to which the field belongs.
+        - field_name: The name of the field.
+        - field_type: The data type of the field.
+        - description: A brief description of the field.
+        - visibility: The visibility status of the field.
+        - origin: The origin of the field.
+        - unit: The unit associated with the field.
+        - default_value: The default value of the field.
+        - index:
+
+        :param fields: List of dictionaries, each representing a
+                       field's attributes.
+        """
+        for field in fields:
+            self.add_field(**field)
 
     def remove_field(self, collection, fields):
         """
@@ -466,24 +455,57 @@ class DatabaseMIA:
             "class."
         )
 
-    def get_field_attrib(self, collection_name, field_name):
+    def get_field_attrib(self, collection_name, field_name=None):
         """
-        Retrieve the attributes of a specific field in a collection
+        Retrieve attributes of a specific field or all fields in a collection
         from the storage.
 
         Args:
             collection_name (str): The name of the collection.
-            field_name (str): The name of the field within the collection.
+            field_name (str, optional): The name of a specific field within
+            the collection. If not provided, attributes for all fields in the
+            collection will be retrieved.
 
         Returns:
-            dict: The attributes of the specified field.
+            dict or list of dict: Attributes of the specified field as a
+            dictionary, or a list of dictionaries with attributes for all
+            fields if `field_name` is not provided.
         """
         with self.storage.data() as dbs:
-            attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
-                f"{collection_name}|{field_name}"
-            ].get()
-            attributes["field_type"] = str_to_type(attributes["field_type"])
-            return attributes
+
+            if field_name:
+                attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
+                    f"{collection_name}|{field_name}"
+                ].get()
+                attributes["field_type"] = str_to_type(
+                    attributes["field_type"]
+                )
+                return attributes
+
+            return [
+                {
+                    **dbs[FIELD_ATTRIBUTES_COLLECTION][
+                        f"{collection_name}|{field}"
+                    ].get(),
+                    "field_type": str_to_type(
+                        dbs[FIELD_ATTRIBUTES_COLLECTION][
+                            f"{collection_name}|{field}"
+                        ].get()["field_type"]
+                    ),
+                }
+                for field in self.get_fields_names(collection_name)
+            ]
+
+    def get_field(self, collection_name, field_name):
+        """blabla"""
+
+        print("#########")
+        print(
+            "Please note that the get_field() function is not "
+            "fully written......!"
+        )
+        print("#########")
+        return None
 
     def get_fields(self, collection):
         """Retrieves all fields from the specified collection in the database.
@@ -501,10 +523,6 @@ class DatabaseMIA:
         #     for i in ("visibility", "origin", "unit", "default_value"):
         #         setattr(field, i, getattr(attrs, i, None))
         # return fields
-        raise NotImplementedError(
-            "This method (get_fields) is not yet available in DatabaseMIA "
-            "class."
-        )
 
     def add_value(self, collection, document_id, field, value):
         """Adds a value for <collection, document_id, field>"""
@@ -601,6 +619,15 @@ class DatabaseMIA:
     ):
         """Gives a document instance given a collection and a
         document identifier."""
+
+        print("#########")
+        print(
+            "Please note that the get_document() function is not "
+            "fully written......!"
+        )
+        print("#########")
+        return None
+
         raise NotImplementedError(
             "This method (get_document) is not yet available in "
             "DatabaseMIA class."
@@ -631,23 +658,20 @@ class DatabaseMIA:
         return []
 
     def get_documents_names(self, collection):
-        """Gives the list of all document names, given a collection.
+        """Retrieve a list of all document names in the specified collection.
 
-        :param collection: Documents collection (str, must be existing)
+        Args:
+            collection (str): The name of the collection to retrieve document
+                              names from. The collection must already exist.
 
-        :return: List of all document names of the collection if it exists,
-                 None otherwise
+        Returns:
+            list[str]: A list of document names if the collection exists,
+                       otherwise an empty list.
         """
         if self.has_collection(collection):
-            print("#########")
-            print(
-                "Please note that the get_documents() function is not "
-                "fully written......!"
-            )
-            print("#########")
-            # primary_key = self.primary_key(collection)
-            # to write latter
-            return []
+
+            with self.storage.data() as dbs:
+                return [item["FileName"] for item in dbs[collection].get()]
 
         return []
 

@@ -802,7 +802,7 @@ class MainWindow(QMainWindow):
             new_scans = data_loader.read_log(self.project, self)
 
             # Table updated
-            documents = self.project.session.get_documents_names(
+            documents = self.project.database.get_documents_names(
                 COLLECTION_CURRENT
             )
             self.data_browser.table_data.scans_to_visualize = documents
@@ -951,7 +951,7 @@ class MainWindow(QMainWindow):
                 field_names = self.project.database.get_fields_names(
                     COLLECTION_CURRENT
                 )
-                documents = self.project.session.get_documents_names(
+                documents = self.project.database.get_documents_names(
                     COLLECTION_CURRENT
                 )
                 self.data_viewer.set_documents(self.project, documents)
