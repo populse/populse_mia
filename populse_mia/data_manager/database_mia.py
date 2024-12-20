@@ -772,30 +772,6 @@ class DatabaseMIA:
             "DatabaseMIA class."
         )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def get_collection(self, name):
         """Returns the collection row of the collection"""
         raise NotImplementedError(

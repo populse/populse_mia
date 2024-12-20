@@ -1037,11 +1037,12 @@ class TableDataBrowser(QTableWidget):
 
                 if tag_object is not None:
                     from populse_mia.utils import type_name
+
                     item.setToolTip(
-                    f"Description: {tag_object['description']}"
-                    f"\nUnit: {tag_object['unit']}"
-                    f"\nType: {type_name(tag_object['field_type'])}"
-                )
+                        f"Description: {tag_object['description']}"
+                        f"\nUnit: {tag_object['unit']}"
+                        f"\nType: {type_name(tag_object['field_type'])}"
+                    )
 
                 # Set column type
                 if tag_object["field_type"] == FIELD_TYPE_FLOAT:

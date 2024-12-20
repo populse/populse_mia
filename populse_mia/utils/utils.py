@@ -569,22 +569,26 @@ def set_item_data(item, value, value_type):
 
         if expected_type is datetime:
             return (
-                QDateTime(value) if isinstance(value, datetime)
-                else QDateTime(datetime.strptime(value,
-                                                 "%d/%m/%Y %H:%M:%S.%f"))
+                QDateTime(value)
+                if isinstance(value, datetime)
+                else QDateTime(
+                    datetime.strptime(value, "%d/%m/%Y %H:%M:%S.%f")
+                )
             )
 
         elif expected_type is date:
             return (
-                QDate(value) if isinstance(value, date)
+                QDate(value)
+                if isinstance(value, date)
                 else QDate(datetime.strptime(value, "%d/%m/%Y").date())
             )
 
         elif expected_type is time:
             return (
-                QTime(value) if isinstance(value, time)
+                QTime(value)
+                if isinstance(value, time)
                 else QTime(datetime.strptime(value, "%H:%M:%S.%f").time())
-        )
+            )
 
         elif expected_type is float:
             return float(value)
@@ -616,6 +620,7 @@ def set_item_data(item, value, value_type):
 
     except Exception as e:
         raise ValueError(f"Failed to set item data: {e}")
+
 
 def set_projects_directory_as_default(dialog):
     """
