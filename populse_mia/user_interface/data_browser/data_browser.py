@@ -1021,10 +1021,9 @@ class TableDataBrowser(QTableWidget):
         visible = self.project.database.get_shown_tags()
 
         # Adding missing columns
-
         for tag in tags:
-            # Tag added only if it's not already in the table
 
+            # Tag added only if it's not already in the table
             if self.get_tag_column(tag) is None:
                 column_index = self.get_index_insertion(tag)
                 self.insertColumn(column_index)
@@ -1032,46 +1031,41 @@ class TableDataBrowser(QTableWidget):
                 item = QtWidgets.QTableWidgetItem()
                 self.setHorizontalHeaderItem(column_index, item)
                 item.setText(tag)
-                tag_object = self.project.session.get_field(
+                tag_object = self.project.database.get_field_attrib(
                     COLLECTION_CURRENT, tag
                 )
 
                 if tag_object is not None:
+                    from populse_mia.utils import type_name
                     item.setToolTip(
-                        "Description: "
-                        + str(tag_object.description)
-                        + "\nUnit: "
-                        + str(tag_object.unit)
-                        + "\nType: "
-                        + str(tag_object.field_type)
-                    )
+                    f"Description: {tag_object['description']}"
+                    f"\nUnit: {tag_object['unit']}"
+                    f"\nType: {type_name(tag_object['field_type'])}"
+                )
 
                 # Set column type
-
-                if tag_object.field_type == FIELD_TYPE_FLOAT:
+                if tag_object["field_type"] == FIELD_TYPE_FLOAT:
                     self.setItemDelegateForColumn(
                         column_index, NumberFormatDelegate(self)
                     )
-                elif tag_object.field_type == FIELD_TYPE_DATETIME:
+                elif tag_object["field_type"] == FIELD_TYPE_DATETIME:
                     self.setItemDelegateForColumn(
                         column_index, DateTimeFormatDelegate(self)
                     )
-                elif tag_object.field_type == FIELD_TYPE_DATE:
+                elif tag_object["field_type"] == FIELD_TYPE_DATE:
                     self.setItemDelegateForColumn(
                         column_index, DateFormatDelegate(self)
                     )
-                elif tag_object.field_type == FIELD_TYPE_TIME:
+                elif tag_object["field_type"] == FIELD_TYPE_TIME:
                     self.setItemDelegateForColumn(
                         column_index, TimeFormatDelegate(self)
                     )
 
                 # Hide the column if not visible
-
                 if tag in visible:
                     self.setColumnHidden(column_index, True)
 
                 # Rows filled for the column being added
-
                 for row in range(0, self.rowCount()):
                     item = QtWidgets.QTableWidgetItem()
                     self.setItem(row, column_index, item)
@@ -1099,7 +1093,7 @@ class TableDataBrowser(QTableWidget):
 
                     if (
                         tag_name
-                        not in self.project.session.get_fields_names(
+                        not in self.project.database.get_fields_names(
                             COLLECTION_CURRENT
                         )
                         and tag_name != TAG_FILENAME
@@ -1179,7 +1173,7 @@ class TableDataBrowser(QTableWidget):
                         item.setFlags(item.flags() & ~Qt.ItemIsEditable)
                         set_item_data(item, scan, FIELD_TYPE_STRING)
                     else:
-                        cur_value = self.project.session.get_value(
+                        cur_value = self.project.database.get_value(
                             COLLECTION_CURRENT, scan, tag
                         )
                         if cur_value is not None:

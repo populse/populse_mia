@@ -40,6 +40,7 @@ import types
 from datetime import date, datetime, time
 from functools import partial
 from pathlib import Path
+from typing import get_args, get_origin
 
 # Capsul imports
 import capsul.api as capsul_api  # noqa E402
@@ -540,99 +541,81 @@ def set_filters_directory_as_default(dialog):
 
 def set_item_data(item, value, value_type):
     """
-    Sets the item data in the data browser.
+    Sets the data for a given item in the data browser based on the
+    expected type.
 
-    :param item: item to set
-    :param value: new item value
-    :param value_type: new value type
+    This function prepares the input `value` according to the specified
+    `value_type`, converting it into a format suitable for PyQt's `QVariant`.
+    It supports both primitive types (e.g., `int`, `str`, `float`) and more
+    complex types like `datetime`, `date`, `time`, and lists of these types.
+
+    :param item: The item to update (expected to support `setData` method).
+    :param value: The new value to set for the item.
+    :param value_type: The expected type of the value, which can be a
+                       standard Python type (e.g., `str`, `int`, `float`,
+                       `bool`) or a `typing`-based list type (e.g.,
+                       `list[int]`, `list[datetime]`).
     """
 
-    if value_type.startswith("list_"):
-        if isinstance(value, str):
-            value = ast.literal_eval(value)
+    def prepare_value(value, expected_type):
+        """
+        Prepares the input value according to its expected type.
 
-        if value_type == FIELD_TYPE_LIST_DATE:
-            new_list = []
+        :param value: The value to prepare.
+        :param expected_type: The expected type of the value.
+        :return: The prepared value suitable for use in a PyQt item.
 
-            for subvalue in value:
-                new_list.append(subvalue.strftime("%d/%m/%Y"))
+        """
 
-            value = new_list
+        if expected_type is datetime:
+            return (
+                QDateTime(value) if isinstance(value, datetime)
+                else QDateTime(datetime.strptime(value,
+                                                 "%d/%m/%Y %H:%M:%S.%f"))
+            )
 
-        elif value_type == FIELD_TYPE_LIST_DATETIME:
-            new_list = []
+        elif expected_type is date:
+            return (
+                QDate(value) if isinstance(value, date)
+                else QDate(datetime.strptime(value, "%d/%m/%Y").date())
+            )
 
-            for subvalue in value:
-                new_list.append(subvalue.strftime("%d/%m/%Y %H:%M:%S.%f"))
+        elif expected_type is time:
+            return (
+                QTime(value) if isinstance(value, time)
+                else QTime(datetime.strptime(value, "%H:%M:%S.%f").time())
+        )
 
-            value = new_list
+        elif expected_type is float:
+            return float(value)
 
-        elif value_type == FIELD_TYPE_LIST_TIME:
-            new_list = []
+        elif expected_type is int:
+            return int(value)
 
-            for subvalue in value:
-                new_list.append(subvalue.strftime("%H:%M:%S.%f"))
+        elif expected_type is bool:
+            return bool(value)
 
-            value = new_list
+        elif expected_type is str:
+            return str(value)
 
-        value_prepared = str(value)
+        elif expected_type is dict:
+            return value  # Assume valid JSON-like dict
+
+        elif get_origin(expected_type) is list:
+            list_type = get_args(expected_type)[0]
+            return [prepare_value(v, list_type) for v in value]
+
+        else:
+            raise TypeError(f"Unsupported type: {expected_type}")
+
+    try:
+        # Prepare the value according to its type
+        value_prepared = prepare_value(value, value_type)
+        # Set the prepared value in the item
         item.setData(Qt.EditRole, QVariant(value_prepared))
 
-    elif value_type == FIELD_TYPE_DATETIME:
-        if isinstance(value, datetime):
-            value_prepared = QDateTime(value)
-
-        elif isinstance(value, QDateTime):
-            value_prepared = value
-
-        elif isinstance(value, str):
-            format = "%d/%m/%Y %H:%M:%S.%f"
-            value_prepared = QDateTime(datetime.strptime(value, format))
-
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_DATE:
-        if isinstance(value, date):
-            value_prepared = QDate(value)
-
-        elif isinstance(value, QDate):
-            value_prepared = value
-
-        elif isinstance(value, str):
-            format = "%d/%m/%Y"
-            value_prepared = QDate(datetime.strptime(value, format).date())
-
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_TIME:
-        if isinstance(value, time):
-            value_prepared = QTime(value)
-
-        elif isinstance(value, QTime):
-            value_prepared = value
-
-        elif isinstance(value, str):
-            format = "%H:%M:%S.%f"
-            value_prepared = QTime(datetime.strptime(value, format).time())
-
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_FLOAT:
-        value_prepared = float(value)
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_INTEGER:
-        value_prepared = int(value)
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_BOOLEAN:
-        value_prepared = value
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_STRING:
-        value_prepared = str(value)
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
+    except Exception as e:
+        raise ValueError(f"Failed to set item data: {e}")
 
 def set_projects_directory_as_default(dialog):
     """

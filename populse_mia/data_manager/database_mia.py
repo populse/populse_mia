@@ -318,20 +318,6 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return dbs.collection_names()
 
-    def get_collection(self, name):
-        """Returns the collection row of the collection"""
-        raise NotImplementedError(
-            "This method (get_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_collections(self):
-        """Gives the list of all collection rows."""
-        raise NotImplementedError(
-            "This method (get_collections) is not yet available in "
-            "DatabaseMIA class."
-        )
-
     def has_collection(self, collection_name):
         """Checks if a collection with the specified name exists
         in the database.
@@ -345,13 +331,6 @@ class DatabaseMIA:
         """
         with self.storage.data() as dbs:
             return dbs.has_collection(collection_name)
-
-    def remove_collection(self, name):
-        """Removes a collection."""
-        raise NotImplementedError(
-            "This method (remove_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
 
     def get_fields_names(self, collection):
         """Retrieve the list of all field names in the specified collection.
@@ -430,30 +409,6 @@ class DatabaseMIA:
         """
         for field in fields:
             self.add_field(**field)
-
-    def remove_field(self, collection, fields):
-        """
-        Removes a field in the collection
-
-        :param collection: Field collection (str, must be existing)
-
-        :param field: Field name (str, must be existing), or list of fields
-         (list of str, must all be existing)
-
-        :raise ValueError: - If the collection does not exist
-                           - If the field does not exist
-        """
-        # super(DatabaseSessionMIA, self).remove_field(collection, fields)
-        # if isinstance(fields, str):
-        #     fields = [fields]
-        # for field in fields:
-        #     self.remove_document(
-        #         FIELD_ATTRIBUTES_COLLECTION, "%s|%s" % (collection, field)
-        #     )
-        raise NotImplementedError(
-            "This method (remove_field) is not yet available in DatabaseMIA "
-            "class."
-        )
 
     def get_field_attrib(self, collection_name, field_name=None):
         """
@@ -544,42 +499,27 @@ class DatabaseMIA:
         with self.storage.data(write=True) as dbs:
             dbs[collection_name][primary_key] = values_dict
 
-    def get_value(self, collection, document_id, field):
-        """Gives the current value of <collection, document, field>."""
-        raise NotImplementedError(
-            "This method (get_value) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def set_value(self, collection, document_id, field, new_value):
-        """Sets the value associated to <collection, document, field> if
-        it exists.
+    def get_value(self, collection, primary_key, field):
         """
-        raise NotImplementedError(
-            "This method (set_value) is not yet available in "
-            "DatabaseMIA class."
-        )
+        Retrieves the current value of a specific field in a document from
+        the specified collection.
 
-    def remove_value(self, collection, document_id, field):
-        """Removes the value <collection, document, field> if it exists."""
-        raise NotImplementedError(
-            "This method (remove_value) is not yet available in "
-            "DatabaseMIA class."
-        )
+        This method accesses the underlying storage to fetch the value of a
+        given field within a document, identified by its primary key, in the
+        specified collection.
 
-    def add_document(self, collection, document, create_missing_fields=True):
-        """Adds a document to a collection."""
-        raise NotImplementedError(
-            "This method (add_document) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def remove_document(self, collection, document_id):
-        """Removes a document in the collection."""
-        raise NotImplementedError(
-            "This method (remove_document) is not yet available in "
-            "DatabaseMIA class."
-        )
+        :param collection: The name of the collection containing the document.
+        :type collection: str
+        :param primary_key: The unique identifier (primary key) of the
+                            document.
+        :type primary_key: str
+        :param field: The name of the field within the document to retrieve.
+        :type field: str
+        :return: The current value of the specified field.
+        :rtype: Any
+        """
+        with self.storage.data() as dbs:
+            return dbs[collection][primary_key][field].get()
 
     def filter_documents(
         self, collection, filter_query, fields=None, as_list=False
@@ -829,5 +769,104 @@ class DatabaseMIA:
         #     )
         raise NotImplementedError(
             "This method (set_shown_tags) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def get_collection(self, name):
+        """Returns the collection row of the collection"""
+        raise NotImplementedError(
+            "This method (get_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_collections(self):
+        """Gives the list of all collection rows."""
+        raise NotImplementedError(
+            "This method (get_collections) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_collection(self, name):
+        """Removes a collection."""
+        raise NotImplementedError(
+            "This method (remove_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_field(self, collection, fields):
+        """
+        Removes a field in the collection
+
+        :param collection: Field collection (str, must be existing)
+
+        :param field: Field name (str, must be existing), or list of fields
+         (list of str, must all be existing)
+
+        :raise ValueError: - If the collection does not exist
+                           - If the field does not exist
+        """
+        # super(DatabaseSessionMIA, self).remove_field(collection, fields)
+        # if isinstance(fields, str):
+        #     fields = [fields]
+        # for field in fields:
+        #     self.remove_document(
+        #         FIELD_ATTRIBUTES_COLLECTION, "%s|%s" % (collection, field)
+        #     )
+        raise NotImplementedError(
+            "This method (remove_field) is not yet available in DatabaseMIA "
+            "class."
+        )
+
+    def set_value(self, collection, document_id, field, new_value):
+        """Sets the value associated to <collection, document, field> if
+        it exists.
+        """
+        raise NotImplementedError(
+            "This method (set_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_value(self, collection, document_id, field):
+        """Removes the value <collection, document, field> if it exists."""
+        raise NotImplementedError(
+            "This method (remove_value) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def add_document(self, collection, document, create_missing_fields=True):
+        """Adds a document to a collection."""
+        raise NotImplementedError(
+            "This method (add_document) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def remove_document(self, collection, document_id):
+        """Removes a document in the collection."""
+        raise NotImplementedError(
+            "This method (remove_document) is not yet available in "
             "DatabaseMIA class."
         )
