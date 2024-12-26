@@ -606,11 +606,11 @@ class MiniViewer(QWidget):
         :param idx: index of the image
         """
         # Looking for the tag value to display as a legend of the thumbnail
-        for scan in self.project.session.get_documents_names(
+        for scan in self.project.database.get_documents_names(
             COLLECTION_CURRENT
         ):
             if scan == file_path_base_name:
-                value = self.project.session.get_value(
+                value = self.project.database.get_value(
                     COLLECTION_CURRENT, scan, self.config.getThumbnailTag()
                 )
                 if value is not None:

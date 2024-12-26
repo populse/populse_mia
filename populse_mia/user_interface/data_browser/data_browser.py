@@ -1182,9 +1182,9 @@ class TableDataBrowser(QTableWidget):
                                 set_item_data(
                                     item,
                                     cur_value,
-                                    self.project.session.get_field(
+                                    self.project.database.get_field_attrib(
                                         COLLECTION_CURRENT, tag
-                                    ).field_type,
+                                    )["field_type"],
                                 )
                             else:
                                 # Tag bricks, display list with buttons
@@ -2726,19 +2726,15 @@ class TableDataBrowser(QTableWidget):
         primary_key = self.project.database.primary_key(COLLECTION_CURRENT)
 
         if scans:
-            req = "%s IN [%s]" % (
-                primary_key,
-                ", ".join(
-                    [
-                        '"%s"' % x.replace("\\", "\\\\").replace('"', '"')
-                        for x in self.scans_to_visualize
-                    ]
-                ),
-            )
+            escaped_scans = [
+                scan.replace("\\", "\\\\") for scan in self.scans_to_visualize
+            ]
+            joined_scans = ", ".join(f'"{scan}"' for scan in escaped_scans)
+            req = f"{primary_key} IN [{joined_scans}]"
             documents = self.project.database.filter_documents(
                 COLLECTION_CURRENT, req
             )
-            documents_init = self.project.databas.filter_documents(
+            documents_init = self.project.database.filter_documents(
                 COLLECTION_INITIAL, req
             )
 
@@ -2816,7 +2812,7 @@ class TableDataBrowser(QTableWidget):
                                 color.setRgb(245, 175, 175)  # Red
 
                         # Raw tag
-                        elif fields[tag].origin == TAG_ORIGIN_BUILTIN:
+                        elif fields[tag]["origin"] == TAG_ORIGIN_BUILTIN:
                             current_value = scan[tag]
                             initial_value = scan_init[tag]
 
