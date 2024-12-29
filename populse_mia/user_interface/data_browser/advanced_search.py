@@ -271,9 +271,7 @@ class AdvancedSearch(QWidget):
                 )
             else:
                 self.dataBrowser.table_data.scans_to_visualize = (
-                    self.project.session.get_documents_names(
-                        COLLECTION_CURRENT
-                    )
+                    self.project.session.get_document_names(COLLECTION_CURRENT)
                 )
 
         self.dataBrowser.table_data.update_visualized_rows(old_rows)

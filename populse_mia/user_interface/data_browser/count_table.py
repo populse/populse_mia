@@ -468,7 +468,7 @@ class CountTable(QDialog):
 
         tag_name = self.push_buttons[idx].text()
         values = []
-        for scan in self.project.session.get_documents_names(
+        for scan in self.project.session.get_document_names(
             COLLECTION_CURRENT
         ):
             current_value = self.project.session.get_value(

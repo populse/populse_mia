@@ -1258,7 +1258,7 @@ class Project:
                         value_to_add[3],
                     )
                 table.add_rows(
-                    self.session.get_documents_names(COLLECTION_CURRENT)
+                    self.session.get_document_names(COLLECTION_CURRENT)
                 )
 
             # if action == "remove_scans":
@@ -1606,7 +1606,7 @@ class Project:
             #     # The third element is the list of removed values
             #     values_removed = to_undo[2]
             #     self.reput_values(values_removed)
-            #     table.add_rows(self.session.get_documents_names(
+            #     table.add_rows(self.session.get_document_names(
             #         COLLECTION_CURRENT))
             if action == "modified_values":
                 # To revert a value changed in the databrowser,

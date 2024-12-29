@@ -910,7 +910,7 @@ class TestMIADataBrowser(TestMIACase):
         # Asserts that the document was added into the data browser
         # A regular '.split('/')' will not work in Windows OS
         filename = os.path.split(
-            session.get_documents_names(COLLECTION_CURRENT)[0]
+            session.get_document_names(COLLECTION_CURRENT)[0]
         )[-1]
         self.assertTrue(filename in DOCUMENT_1)
 
@@ -987,7 +987,7 @@ class TestMIADataBrowser(TestMIACase):
             )
         )
 
-        for document in self.main_window.project.session.get_documents_names(
+        for document in self.main_window.project.session.get_document_names(
             COLLECTION_CURRENT
         ):
             self.assertEqual(
@@ -997,7 +997,7 @@ class TestMIADataBrowser(TestMIACase):
                 "def_value",
             )
 
-        for document in self.main_window.project.session.get_documents_names(
+        for document in self.main_window.project.session.get_document_names(
             COLLECTION_INITIAL
         ):
             self.assertEqual(
@@ -1478,7 +1478,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(test_row.origin, TAG_ORIGIN_USER)
         self.assertEqual(test_row.visibility, True)
 
-        for document in self.main_window.project.session.get_documents_names(
+        for document in self.main_window.project.session.get_document_names(
             COLLECTION_CURRENT
         ):
             self.assertEqual(
@@ -1490,7 +1490,7 @@ class TestMIADataBrowser(TestMIACase):
                 ),
             )
 
-        for document in self.main_window.project.session.get_documents_names(
+        for document in self.main_window.project.session.get_document_names(
             COLLECTION_INITIAL
         ):
             self.assertEqual(
@@ -1981,7 +1981,7 @@ class TestMIADataBrowser(TestMIACase):
             "MIA - Multiparametric Image Analysis (Admin mode) - project_8",
         )
 
-        documents = self.main_window.project.session.get_documents_names(
+        documents = self.main_window.project.session.get_document_names(
             COLLECTION_CURRENT
         )
 
@@ -2031,7 +2031,7 @@ class TestMIADataBrowser(TestMIACase):
             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
             "pvm-000220_000.nii" in documents
         )
-        documents = self.main_window.project.session.get_documents_names(
+        documents = self.main_window.project.session.get_document_names(
             COLLECTION_INITIAL
         )
         self.assertEqual(len(documents), 9)
@@ -3687,7 +3687,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             9,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_CURRENT
                 )
             ),
@@ -3695,7 +3695,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             9,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_INITIAL
                 )
             ),
@@ -3709,7 +3709,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_CURRENT
                 )
             ),
@@ -3717,7 +3717,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_INITIAL
                 )
             ),
@@ -3732,7 +3732,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_CURRENT
                 )
             ),
@@ -3740,7 +3740,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_INITIAL
                 )
             ),
@@ -3955,13 +3955,13 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(TAG_BRICKS in tags)
         self.assertTrue(TAG_HISTORY in tags)
         self.assertEqual(
-            self.main_window.project.session.get_documents_names(
+            self.main_window.project.session.get_document_names(
                 COLLECTION_CURRENT
             ),
             [],
         )
         self.assertEqual(
-            self.main_window.project.session.get_documents_names(
+            self.main_window.project.session.get_document_names(
                 COLLECTION_INITIAL
             ),
             [],
@@ -4532,7 +4532,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Gets information regarding the fist scan, located in the
         # 'derived_data' of the project
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
         DOCUMENT_1_NAME = os.path.split(DOCUMENT_1)[-1].split(".")[0]
@@ -6779,7 +6779,7 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
 
@@ -6936,10 +6936,10 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
-        DOCUMENT_2 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_2 = (self.main_window.project.session.get_document_names)(
             "current"
         )[1]
 
@@ -7060,7 +7060,7 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
 
@@ -7175,10 +7175,10 @@ class TestMIANodeController(TestMIACase):
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Get the 2 first documents/records
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
-        DOCUMENT_2 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_2 = (self.main_window.project.session.get_document_names)(
             "current"
         )[1]
 
@@ -7276,7 +7276,7 @@ class TestMIANodeController(TestMIACase):
 
         # Opens a filter for the plug "in_files", now with a "scans_list"
         node_controller.scan_list = (
-            self.main_window.project.session.get_documents_names
+            self.main_window.project.session.get_document_names
         )("current")
         node_controller.display_filter(
             "inputs", "in_files", parameters, input_process
@@ -8289,10 +8289,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
 
-        DOCUMENT_1 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_1 = self.main_window.project.session.get_document_names(
             "current"
         )[0]
-        DOCUMENT_2 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_2 = self.main_window.project.session.get_document_names(
             "current"
         )[1]
 
@@ -8381,7 +8381,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_1 = self.main_window.project.session.get_document_names(
             "current"
         )[0]
 
@@ -9479,7 +9479,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
 
-        DOCUMENT_1 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_1 = self.main_window.project.session.get_document_names(
             "current"
         )[0]
 
@@ -10534,7 +10534,7 @@ class Test_Z_MIAOthers(TestMIACase):
 
         # Sends the data browser scans to the pipeline manager and updates the
         # iterated tags
-        SCANS_LIST = iter_table.project.session.get_documents_names("current")
+        SCANS_LIST = iter_table.project.session.get_document_names("current")
         ppl_manager.scan_list = SCANS_LIST
         iter_table.update_iterated_tag()
 

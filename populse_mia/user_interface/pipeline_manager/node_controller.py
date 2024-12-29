@@ -184,7 +184,7 @@ class PlugFilter(QWidget):
         # If there is no element in scans_list, this means that all the scans
         # of the database needs to be taken into account
         else:
-            self.scans_list = self.project.session.get_documents_names(
+            self.scans_list = self.project.session.get_document_names(
                 COLLECTION_CURRENT
             )
 

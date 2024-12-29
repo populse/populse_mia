@@ -206,7 +206,7 @@ class PipelineManagerTab(QWidget):
         self.init_clicked = False
         self.test_init = False
         if len(scan_list) < 1:
-            self.scan_list = self.project.database.get_documents_names(
+            self.scan_list = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
         else:
@@ -3656,7 +3656,7 @@ class PipelineManagerTab(QWidget):
         # print('update_scans_list:', sum(all_iterations_list, []))
         if not self.pipelineEditorTabs.scan_list:
             self.pipelineEditorTabs.scan_list = (
-                self.project.session.get_documents_names(COLLECTION_CURRENT)
+                self.project.session.get_document_names(COLLECTION_CURRENT)
             )
         self.pipelineEditorTabs.update_scans_list()
 

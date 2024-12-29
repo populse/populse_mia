@@ -86,7 +86,7 @@ class IterationTable(QWidget):
         self.project = project
 
         if not scan_list:
-            self.scan_list = self.project.database.get_documents_names(
+            self.scan_list = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
         else:
@@ -209,7 +209,7 @@ class IterationTable(QWidget):
         """
         tag_name = self.push_buttons[idx].text()
         values = []
-        for scan in self.project.session.get_documents_names(
+        for scan in self.project.session.get_document_names(
             COLLECTION_CURRENT
         ):
             current_value = self.project.session.get_value(
@@ -370,7 +370,7 @@ class IterationTable(QWidget):
         if len(self.main_window.pipeline_manager.scan_list) > 0:
             self.scan_list = self.main_window.pipeline_manager.scan_list
         else:
-            self.scan_list = self.project.session.get_documents_names(
+            self.scan_list = self.project.session.get_document_names(
                 COLLECTION_CURRENT
             )
 
@@ -405,7 +405,7 @@ class IterationTable(QWidget):
 
         # Updating the scan list
         if not self.scan_list:
-            self.scan_list = self.project.session.get_documents_names(
+            self.scan_list = self.project.session.get_document_names(
                 COLLECTION_CURRENT
             )
 
@@ -530,7 +530,7 @@ class IterationTable(QWidget):
         """
 
         tag_values_list = []
-        scans_names = self.project.session.get_documents_names(
+        scans_names = self.project.session.get_document_names(
             COLLECTION_CURRENT
         )
 

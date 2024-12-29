@@ -120,7 +120,6 @@ class ImportProgress(QProgressDialog):
         self.setMinimumDuration(0)
         self.setValue(0)
         self.setMinimumWidth(350)  # For mac OS
-
         self.worker = ImportWorker(project, self)
         self.worker.finished.connect(self.close)
         self.worker.notifyProgress.connect(self.onProgress)
@@ -366,7 +365,7 @@ class ImportWorker(QThread):
 
                         # TODO time lists
 
-                        tag_row = self.project.database.get_field(
+                        tag_row = self.project.database.get_field_attrib(
                             COLLECTION_CURRENT, tag_name
                         )
 
@@ -730,7 +729,7 @@ class ImportWorker(QThread):
         self.project.database.add_fields(tags_added)
         self.notifyProgress.emit(2)
         sleep(0.1)
-        current_paths = self.project.database.get_documents_names(
+        current_paths = self.project.database.get_document_names(
             COLLECTION_CURRENT
         )
 
@@ -828,7 +827,7 @@ def verify_scans(project):
 
     # Returning the files that are problematic
     return_list = []
-    for scan in project.session.get_documents_names(COLLECTION_CURRENT):
+    for scan in project.session.get_document_names(COLLECTION_CURRENT):
         file_name = scan
         file_path = os.path.relpath(os.path.join(project.folder, file_name))
 

@@ -316,7 +316,7 @@ class DataBrowser(QWidget):
                 self.advanced_search.scans_list
             )
             self.table_data.scans_to_search = (
-                self.project.session.get_documents_names(COLLECTION_CURRENT)
+                self.project.session.get_document_names(COLLECTION_CURRENT)
             )
             self.project.currentFilter.nots = []
             self.project.currentFilter.values = []
@@ -622,9 +622,7 @@ class DataBrowser(QWidget):
 
         # We open the advanced search + search_bar
         old_scans = self.table_data.scans_to_visualize
-        documents = self.project.session.get_documents_names(
-            COLLECTION_CURRENT
-        )
+        documents = self.project.session.get_document_names(COLLECTION_CURRENT)
         self.table_data.scans_to_visualize = documents
         self.table_data.scans_to_search = documents
         self.table_data.update_visualized_rows(old_scans)
@@ -664,7 +662,7 @@ class DataBrowser(QWidget):
         # Each value of the tags to remove are stored in the history
         values_removed = []
         for tag in tag_names_to_remove:
-            for scan in self.project.session.get_documents_names(
+            for scan in self.project.session.get_document_names(
                 COLLECTION_CURRENT
             ):
                 current_value = self.project.session.get_value(
@@ -1682,10 +1680,10 @@ class TableDataBrowser(QTableWidget):
                 row = item.row()
                 self.coordinates.append([row, column])
                 tag_name = self.horizontalHeaderItem(column).text()
-                tag_object = self.project.session.get_field(
+                tag_object = self.project.database.get_field_attrib(
                     COLLECTION_CURRENT, tag_name
                 )
-                tag_type = tag_object.field_type
+                tag_type = tag_object["field_type"]
                 scan_name = self.item(row, 0).text()
 
                 if tag_name == TAG_BRICKS:
@@ -1700,8 +1698,12 @@ class TableDataBrowser(QTableWidget):
                 if tag_type not in self.types:
                     self.types.append(tag_type)
 
-                if tag_type.startswith("list_"):
-                    database_value = self.project.session.get_value(
+                # if tag_type.startswith("list_"):
+                if (
+                    hasattr(tag_type, "__origin__")
+                    and tag_type.__origin__ is list
+                ):
+                    database_value = self.project.database.get_value(
                         COLLECTION_CURRENT, scan_name, tag_name
                     )
                     self.old_database_values.append(database_value)
@@ -1778,7 +1780,7 @@ class TableDataBrowser(QTableWidget):
                 for i in range(0, len(self.coordinates)):
                     new_item = QTableWidgetItem()
                     old_value = self.old_database_values[i]
-                    new_cur_value = self.project.session.get_value(
+                    new_cur_value = self.project.database.get_value(
                         COLLECTION_CURRENT, self.scans_list[i], self.tags[i]
                     )
 
@@ -1796,9 +1798,9 @@ class TableDataBrowser(QTableWidget):
                     set_item_data(
                         new_item,
                         new_cur_value,
-                        self.project.session.get_field(
+                        self.project.database.get_field_attrib(
                             COLLECTION_CURRENT, self.tags[i]
-                        ).field_type,
+                        )["field_type"],
                     )
                     self.setItem(
                         self.coordinates[i][0],
@@ -1818,6 +1820,7 @@ class TableDataBrowser(QTableWidget):
             self.setMouseTracking(True)
 
             self.resizeColumnsToContents()  # Columns re-sized
+            self.resizeRowsToContents()
 
         except Exception as e:
             print(e)
@@ -2873,7 +2876,7 @@ class TableDataBrowser(QTableWidget):
         self.setSortingEnabled(False)
         self.clearSelection()  # Selection cleared when switching project
         # The list of scans to visualize
-        self.scans_to_visualize = self.project.database.get_documents_names(
+        self.scans_to_visualize = self.project.database.get_document_names(
             COLLECTION_CURRENT
         )
         self.scans_to_search = list(self.scans_to_visualize)
@@ -2987,7 +2990,7 @@ class TableDataBrowser(QTableWidget):
         """Display the visualized tags pop-up."""
 
         # Old list of columns
-        old_tags = self.project.session.get_shown_tags()
+        old_tags = self.project.database.get_shown_tags()
         self.pop_up = PopUpProperties(
             self.project, self.data_browser, old_tags
         )

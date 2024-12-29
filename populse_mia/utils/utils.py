@@ -37,7 +37,7 @@ import re
 import sys
 import traceback
 import types
-from datetime import date, datetime, time
+from datetime import datetime
 from functools import partial
 from pathlib import Path
 from typing import get_args, get_origin
@@ -55,6 +55,7 @@ from populse_db.database import (
     FIELD_TYPE_DATETIME,
     FIELD_TYPE_FLOAT,
     FIELD_TYPE_INTEGER,
+    FIELD_TYPE_JSON,
     FIELD_TYPE_LIST_BOOLEAN,
     FIELD_TYPE_LIST_DATE,
     FIELD_TYPE_LIST_DATETIME,
@@ -566,48 +567,67 @@ def set_item_data(item, value, value_type):
         :return: The prepared value suitable for use in a PyQt item.
 
         """
+        if expected_type is FIELD_TYPE_DATETIME:
 
-        if expected_type is datetime:
-            return (
-                QDateTime(value)
-                if isinstance(value, datetime)
-                else QDateTime(
-                    datetime.strptime(value, "%d/%m/%Y %H:%M:%S.%f")
+            if isinstance(value, FIELD_TYPE_DATETIME):
+                return QDateTime(value)
+
+            elif isinstance(value, FIELD_TYPE_STRING):
+                return QDateTime(
+                    FIELD_TYPE_STRING.strptime(value, "%d/%m/%Y %H:%M:%S.%f")
                 )
-            )
 
-        elif expected_type is date:
-            return (
-                QDate(value)
-                if isinstance(value, date)
-                else QDate(datetime.strptime(value, "%d/%m/%Y").date())
-            )
+            elif isinstance(value, QDateTime):
+                return value
 
-        elif expected_type is time:
-            return (
-                QTime(value)
-                if isinstance(value, time)
-                else QTime(datetime.strptime(value, "%H:%M:%S.%f").time())
-            )
+        elif expected_type is FIELD_TYPE_DATE:
 
-        elif expected_type is float:
-            return float(value)
+            if isinstance(value, FIELD_TYPE_DATE):
+                return QDate(value)
 
-        elif expected_type is int:
-            return int(value)
+            elif isinstance(value, FIELD_TYPE_STRING):
+                return QDate(
+                    FIELD_TYPE_DATETIME.strptime(value, "%d/%m/%Y").date()
+                )
 
-        elif expected_type is bool:
-            return bool(value)
+            elif isinstance(value, QDate):
+                return value
 
-        elif expected_type is str:
-            return str(value)
+        elif expected_type is FIELD_TYPE_TIME:
 
-        elif expected_type is dict:
+            if isinstance(value, FIELD_TYPE_TIME):
+                return QTime(value)
+
+            elif isinstance(value, FIELD_TYPE_STRING):
+                return QTime(
+                    FIELD_TYPE_DATETIME.strptime(value, "%H:%M:%S.%f").time()
+                )
+
+            elif isinstance(value, QTime):
+                return value
+
+        elif expected_type is FIELD_TYPE_FLOAT:
+            return FIELD_TYPE_FLOAT(value)
+
+        elif expected_type is FIELD_TYPE_INTEGER:
+            return FIELD_TYPE_INTEGER(value)
+
+        elif expected_type is FIELD_TYPE_BOOLEAN:
+            return FIELD_TYPE_BOOLEAN(value)
+
+        elif expected_type is FIELD_TYPE_STRING:
+            return FIELD_TYPE_STRING(value)
+
+        elif expected_type is FIELD_TYPE_JSON:
             return value  # Assume valid JSON-like dict
 
         elif get_origin(expected_type) is list:
-            list_type = get_args(expected_type)[0]
-            return [prepare_value(v, list_type) for v in value]
+            sub_value_type = get_args(expected_type)[0]
+
+            if isinstance(value, FIELD_TYPE_STRING):
+                value = ast.literal_eval(value)
+
+            return [prepare_value(v, sub_value_type) for v in value]
 
         else:
             raise TypeError(f"Unsupported type: {expected_type}")
@@ -615,6 +635,12 @@ def set_item_data(item, value, value_type):
     try:
         # Prepare the value according to its type
         value_prepared = prepare_value(value, value_type)
+
+        # If the value is a list, convert it to a string for
+        # PyQt compatibility
+        if get_origin(value_type) is list:
+            value_prepared = FIELD_TYPE_STRING(value_prepared)
+
         # Set the prepared value in the item
         item.setData(Qt.EditRole, QVariant(value_prepared))
 

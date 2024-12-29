@@ -322,7 +322,7 @@ class MainWindow(QMainWindow):
         if self.project.isTempProject:
             if (
                 len(
-                    self.project.database.get_documents_names(
+                    self.project.database.get_document_names(
                         COLLECTION_CURRENT
                     )
                 )
@@ -802,7 +802,7 @@ class MainWindow(QMainWindow):
             new_scans = data_loader.read_log(self.project, self)
 
             # Table updated
-            documents = self.project.database.get_documents_names(
+            documents = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
             self.data_browser.table_data.scans_to_visualize = documents
@@ -951,7 +951,7 @@ class MainWindow(QMainWindow):
                 field_names = self.project.database.get_fields_names(
                     COLLECTION_CURRENT
                 )
-                documents = self.project.database.get_documents_names(
+                documents = self.project.database.get_document_names(
                     COLLECTION_CURRENT
                 )
                 self.data_viewer.set_documents(self.project, documents)
@@ -1015,8 +1015,7 @@ class MainWindow(QMainWindow):
         # If it's unnamed project, we can remove the whole project
         if self.project.isTempProject:
             # close database, and files
-            self.project.session = None
-            self.project.database.__exit__(None, None, None)
+            self.project.database.close()
             self.project.database = None
             shutil.rmtree(folder)
 
@@ -1036,7 +1035,7 @@ class MainWindow(QMainWindow):
             #    file_name, file_extension = os.path.splitext(scan)
             #    file_in_database = False
             #
-            #    for database_scan in self.project.session.get_documents_names(
+            #    for database_scan in self.project.session.get_document_names(
             #        COLLECTION_CURRENT
             #    ):
             #        if file_name in database_scan:
@@ -1693,7 +1692,7 @@ class MainWindow(QMainWindow):
         ):
             # data_browser refreshed after working with pipelines
             old_scans = self.data_browser.table_data.scans_to_visualize
-            documents = self.project.database.get_documents_names(
+            documents = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
 
@@ -1733,7 +1732,7 @@ class MainWindow(QMainWindow):
             == "Data Viewer"
         ):
             self.data_viewer.load_viewer(self.data_viewer.current_viewer())
-            documents = self.project.database.get_documents_names(
+            documents = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
             self.data_viewer.set_documents(self.project, documents)
@@ -1743,7 +1742,7 @@ class MainWindow(QMainWindow):
             == "Pipeline Manager"
         ):
             if self.data_browser.data_sent is False:
-                scans = self.project.database.get_documents_names(
+                scans = self.project.database.get_document_names(
                     COLLECTION_CURRENT
                 )
                 self.pipeline_manager.scan_list = scans

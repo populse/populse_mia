@@ -529,7 +529,7 @@ class PopUpAddPath(QDialog):
         for path, path_type in zip(path_list, path_type_list):
             docInDb = [
                 os.path.basename(i)
-                for i in self.project.session.get_documents_names(
+                for i in self.project.session.get_document_names(
                     COLLECTION_CURRENT
                 )
             ]
@@ -590,15 +590,11 @@ class PopUpAddPath(QDialog):
                 # Databrowser updated
 
                 (self.databrowser.table_data.scans_to_visualize) = (
-                    self.project.session.get_documents_names(
-                        COLLECTION_CURRENT
-                    )
+                    self.project.session.get_document_names(COLLECTION_CURRENT)
                 )
 
                 (self.databrowser.table_data.scans_to_search) = (
-                    self.project.session.get_documents_names(
-                        COLLECTION_CURRENT
-                    )
+                    self.project.session.get_document_names(COLLECTION_CURRENT)
                 )
                 self.databrowser.table_data.add_columns()
                 self.databrowser.table_data.fill_headers()
@@ -4729,7 +4725,7 @@ class PopUpProperties(QDialog):
 
         # The 'Visualized tags" tab
         self.tab_tags = PopUpVisualizedTags(
-            self.project, self.project.session.get_shown_tags()
+            self.project, self.project.database.get_shown_tags()
         )
         self.tab_tags.setObjectName("tab_tags")
         self.tab_widget.addTab(
@@ -4777,7 +4773,7 @@ class PopUpProperties(QDialog):
             new_visibilities.append(visible_tag)
 
         new_visibilities.append(TAG_FILENAME)
-        self.project.session.set_shown_tags(new_visibilities)
+        self.project.database.set_shown_tags(new_visibilities)
         history_maker.append(new_visibilities)
 
         self.project.undos.append(history_maker)
@@ -4786,7 +4782,7 @@ class PopUpProperties(QDialog):
 
         # Columns updated
         self.databrowser.table_data.update_visualized_columns(
-            self.old_tags, self.project.session.get_shown_tags()
+            self.old_tags, self.project.database.get_shown_tags()
         )
         self.accept()
         self.close()
@@ -5951,7 +5947,7 @@ class PopUpShowHistory(QDialog):
 
         value_scan = None
 
-        for scan in self.project.session.get_documents_names(
+        for scan in self.project.session.get_document_names(
             COLLECTION_CURRENT
         ):
             if scan in str(value):
@@ -6400,7 +6396,7 @@ class PopUpVisualizedTags(QWidget):
         self.left_tags = []  # List that will keep track on
         # the tags on the left (invisible tags)
 
-        for tag in project.session.get_fields_names(COLLECTION_CURRENT):
+        for tag in project.database.get_fields_names(COLLECTION_CURRENT):
             if (
                 tag != TAG_CHECKSUM
                 and tag != TAG_FILENAME

@@ -25,23 +25,6 @@ from populse_db.database import FIELD_TYPE_STRING, str_to_type, type_to_str
 # Populse_db imports
 from populse_db.storage import Storage
 
-# ALL_TYPES,
-# FIELD_TYPE_BOOLEAN,
-# FIELD_TYPE_DATE,
-# FIELD_TYPE_DATETIME,
-# FIELD_TYPE_FLOAT,
-# FIELD_TYPE_INTEGER,
-# FIELD_TYPE_JSON,; FIELD_TYPE_LIST_BOOLEAN,
-# FIELD_TYPE_LIST_DATE,
-# FIELD_TYPE_LIST_DATETIME,
-# FIELD_TYPE_LIST_FLOAT,
-# FIELD_TYPE_LIST_INTEGER,
-# FIELD_TYPE_LIST_JSON,
-# FIELD_TYPE_LIST_STRING,
-# FIELD_TYPE_LIST_TIME,
-# FIELD_TYPE_TIME,
-
-
 # Field types
 # FIELD_TYPE_STRING = "string"
 # FIELD_TYPE_INTEGER = "int"
@@ -79,6 +62,41 @@ from populse_db.storage import Storage
 #     FIELD_TYPE_JSON,
 # }
 
+# FIELD_TYPE_STRING = str
+# FIELD_TYPE_INTEGER = int
+# FIELD_TYPE_FLOAT = float
+# FIELD_TYPE_BOOLEAN = bool
+# FIELD_TYPE_DATE = date
+# FIELD_TYPE_DATETIME = datetime
+# FIELD_TYPE_TIME = time
+# FIELD_TYPE_JSON = dict
+# FIELD_TYPE_LIST_STRING = list[str]
+# FIELD_TYPE_LIST_INTEGER = list[int]
+# FIELD_TYPE_LIST_FLOAT = list[float]
+# FIELD_TYPE_LIST_BOOLEAN = list[bool]
+# FIELD_TYPE_LIST_DATE = list[date]
+# FIELD_TYPE_LIST_DATETIME = list[datetime]
+# FIELD_TYPE_LIST_TIME = list[time]
+# FIELD_TYPE_LIST_JSON = list[dict]
+
+# ALL_TYPES = {
+#     FIELD_TYPE_LIST_STRING,
+#     FIELD_TYPE_LIST_INTEGER,
+#     FIELD_TYPE_LIST_FLOAT,
+#     FIELD_TYPE_LIST_BOOLEAN,
+#     FIELD_TYPE_LIST_DATE,
+#     FIELD_TYPE_LIST_DATETIME,
+#     FIELD_TYPE_LIST_TIME,
+#     FIELD_TYPE_LIST_JSON,
+#     FIELD_TYPE_STRING,
+#     FIELD_TYPE_INTEGER,
+#     FIELD_TYPE_FLOAT,
+#     FIELD_TYPE_BOOLEAN,
+#     FIELD_TYPE_DATE,
+#     FIELD_TYPE_DATETIME,
+#     FIELD_TYPE_TIME,
+#     FIELD_TYPE_JSON,
+# }
 
 # Tag unit
 TAG_UNIT_MS = "ms"
@@ -432,35 +450,43 @@ class DatabaseMIA:
                 attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
                     f"{collection_name}|{field_name}"
                 ].get()
+
+                if attributes is not None:
+                    attributes["field_type"] = str_to_type(
+                        attributes["field_type"]
+                    )
+
+                return attributes
+
+            attributes_list = []
+
+            for field in self.get_fields_names(collection_name):
+                attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
+                    f"{collection_name}|{field}"
+                ].get()
+
+            if attributes is not None:
                 attributes["field_type"] = str_to_type(
                     attributes["field_type"]
                 )
-                return attributes
+                attributes_list.append(attributes)
 
-            return [
-                {
-                    **dbs[FIELD_ATTRIBUTES_COLLECTION][
-                        f"{collection_name}|{field}"
-                    ].get(),
-                    "field_type": str_to_type(
-                        dbs[FIELD_ATTRIBUTES_COLLECTION][
-                            f"{collection_name}|{field}"
-                        ].get()["field_type"]
-                    ),
-                }
-                for field in self.get_fields_names(collection_name)
-            ]
+        return attributes_list
 
     def get_field(self, collection_name, field_name):
         """blabla"""
 
-        print("#########")
-        print(
-            "Please note that the get_field() function is not "
-            "fully written......!"
+        # print("#########")
+        # print(
+        #     "Please note that the get_field() function is obsolete. "
+        #     "Use get_field_attrib instead ......!"
+        # )
+        # print("#########")
+        # return None
+        raise NotImplementedError(
+            "This method (get_field) is not yet available in "
+            "DatabaseMIA class."
         )
-        print("#########")
-        return None
 
     def get_fields(self, collection):
         """Retrieves all fields from the specified collection in the database.
@@ -478,13 +504,15 @@ class DatabaseMIA:
         #     for i in ("visibility", "origin", "unit", "default_value"):
         #         setattr(field, i, getattr(attrs, i, None))
         # return fields
-
-    def add_value(self, collection, document_id, field, value):
-        """Adds a value for <collection, document_id, field>"""
         raise NotImplementedError(
-            "This method (add_value) is not yet available in "
+            "This method (get_fields) is not yet available in "
             "DatabaseMIA class."
         )
+
+    def add_value(self, collection_name, primary_key, field, value):
+        """Adds a value for <collection, document_id, field>"""
+        with self.storage.data(write=True) as dbs:
+            dbs[collection_name][primary_key][field] = value
 
     def add_values(self, collection_name, primary_key, values_dict):
         """Store or update a record in the specified collection.
@@ -554,50 +582,47 @@ class DatabaseMIA:
             for i in dbs[collection].search(filter_query):
                 yield i
 
-    def get_document(
-        self, collection, document_id, fields=None, as_list=False
-    ):
-        """Gives a document instance given a collection and a
-        document identifier."""
+    def get_document(self, collection, document_id):
+        """
+        Retrieves a document from the specified collection using its
+        identifier.
 
-        print("#########")
-        print(
-            "Please note that the get_document() function is not "
-            "fully written......!"
-        )
-        print("#########")
-        return None
+        :param collection: Name of the document collection (str).
+                           Must exist.
+        :param document_id: Identifier of the document to
+                            retrieve (str or int).
 
-        raise NotImplementedError(
-            "This method (get_document) is not yet available in "
-            "DatabaseMIA class."
-        )
+        :return: The document instance if found, otherwise None.
+        """
+        if not self.has_collection(collection):
+            return None
 
-    def get_documents(
-        self, collection, fields=None, as_list=False, document_ids=None
-    ):
-        """Gives the list of all document rows, given a collection.
+        with self.storage.data() as dbs:
+            return dbs[collection][document_id].get()
 
-        :param collection: Documents collection (str, must be existing)
-        :param fileds:
-        :param as_list:
-        :param document_ids:
+    def get_documents(self, collection):
+        """
+        Retrieves all document rows from the specified collection.
 
-        :return: List of all document rows of the collection if it exists,
-                 None otherwise
+        This method yields each document row in the collection if the
+        collection exists. If the collection does not exist, an empty
+        generator is returned.
+
+        :param collection: Name of the document collection (str).
+                           Must be an existing collection.
+
+        :return: An iterator over the document rows, or an empty generator
+                 if the collection does not exist.
         """
         if self.has_collection(collection):
-            print("#########")
-            print(
-                "Please note that the get_documents() function is not "
-                "fully written......!"
-            )
-            print("#########")
-            return []
 
-        return []
+            with self.storage.data() as dbs:
+                yield from dbs[collection].get()
 
-    def get_documents_names(self, collection):
+        else:
+            return iter(())
+
+    def get_document_names(self, collection):
         """Retrieve a list of all document names in the specified collection.
 
         Args:
@@ -610,8 +635,10 @@ class DatabaseMIA:
         """
         if self.has_collection(collection):
 
+            primary_key = self.primary_key(collection)
+
             with self.storage.data() as dbs:
-                return [item["FileName"] for item in dbs[collection].get()]
+                return [item[primary_key] for item in dbs[collection].get()]
 
         return []
 
@@ -755,22 +782,23 @@ class DatabaseMIA:
 
         return visible_names
 
-    def set_shown_tags(self, fields_shown, *args, **kwargs):
+    def set_shown_tags(self, fields_shown):
         """Set the list of visible tags.
 
         :param fields_shown: list of visible tags
         """
-        # for field in self.get_documents(FIELD_ATTRIBUTES_COLLECTION):
-        #     self.set_value(
-        #         FIELD_ATTRIBUTES_COLLECTION,
-        #         field.index,
-        #         "visibility",
-        #         field.field in fields_shown,
-        #     )
-        raise NotImplementedError(
-            "This method (set_shown_tags) is not yet available in "
-            "DatabaseMIA class."
-        )
+
+        doc_names = self.get_document_names(FIELD_ATTRIBUTES_COLLECTION)
+
+        with self.storage.data(write=True) as dbs:
+
+            for doc_name in doc_names:
+                collection, field = doc_name.split("|")
+
+                if collection == "current":
+                    dbs[FIELD_ATTRIBUTES_COLLECTION][doc_name][
+                        "visibility"
+                    ] = (field in fields_shown)
 
     def get_collection(self, name):
         """Returns the collection row of the collection"""
