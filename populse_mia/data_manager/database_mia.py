@@ -612,7 +612,8 @@ class DatabaseMIA:
                            Must be an existing collection.
 
         :return: An iterator over the document rows, or an empty generator
-                 if the collection does not exist.
+                 if the collection does not exist or the collection has no
+                 document.
         """
         if self.has_collection(collection):
 
@@ -620,7 +621,7 @@ class DatabaseMIA:
                 yield from dbs[collection].get()
 
         else:
-            return iter(())
+            yield from iter(())
 
     def get_document_names(self, collection):
         """Retrieve a list of all document names in the specified collection.

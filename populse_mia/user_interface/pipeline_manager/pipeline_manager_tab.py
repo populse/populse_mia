@@ -3602,7 +3602,7 @@ class PipelineManagerTab(QWidget):
         self.nodeController.project = project
         self.pipelineEditorTabs.project = project
         self.nodeController.visibles_tags = (
-            self.project.session.get_shown_tags()
+            self.project.database.get_shown_tags()
         )
         self.iterationTable.project = project
 

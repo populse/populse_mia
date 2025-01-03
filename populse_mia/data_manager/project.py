@@ -1766,118 +1766,236 @@ class Project:
         return obsolete
 
     def update_db_for_paths(self, new_path=None):
-        """Update the history and brick tables with a new project file.
+        """Update database paths when renaming or loading a project.
 
-        Necessary when a project is renamed or when a new project is loaded
-        from outside.
+        This method updates the `HISTORY` and `BRICK` collections in the
+        database to reflect a new project file path. It is useful when a
+        project is renamed or a new project is loaded from outside. The
+        method identifies the old output directory path and replaces it
+        with the new path in relevant database entries.
+
+        If no output directory is found in the history, the method prints a
+        warning, and no changes are made.
+
+        Parameters:
+            new_path (str, optional): The new project path. If not provided,
+                                      the current project folder path is used.
         """
-        hist_brick = self.session.get_documents(
-            COLLECTION_HISTORY,
-            fields=[HISTORY_ID, HISTORY_BRICKS],
-            as_list=True,
-        )
+        hist_brick = self.database.get_documents(COLLECTION_HISTORY)
+        old_path = None
 
-        if hist_brick is not None and hist_brick != []:
-            old_path = None
-            force_break_loop = False
+        # Check if hist_brick is empty
+        try:
+            first_item = next(hist_brick)
 
-            for list_hist_brick in hist_brick:
-                if list_hist_brick[0] is not None:
-                    for brick_id in list_hist_brick[1]:
-                        if brick_id is not None:
-                            inputs = self.session.get_value(
-                                COLLECTION_BRICK, brick_id, BRICK_INPUTS
-                            )
-                            old_path = inputs.get("output_directory")
-
-                            if old_path is not None:
-                                tmp = old_path.partition(
-                                    os.path.join("data", "derived_data")
-                                )
-
-                                if tmp[0] != old_path:
-                                    old_path = tmp[0]
-                                    force_break_loop = True
-                                    break
-
-                if force_break_loop:
-                    break
-
-        elif hist_brick == []:
+        except StopIteration:
             old_path = False
 
-        if old_path is None:
-            print(
-                "\nUpdating the paths in the database when renaming the "
-                "project:\n"
-                "No changes in the HISTORY and BRICK collections are made "
-                "because the output_directory has not been found. The "
-                "renamed project may be corrupted ...!\n"
-            )
+        # Prepend the first item back to the iterator
+        if old_path is not False:
+            hist_brick = iter([first_item, *hist_brick])
 
-        if old_path is False:
-            # The project has no calculation history: There is nothing to do
-            # and no message to print.
-            pass
+        # Process the iterator and update paths in a single pass
+        for list_hist_brick in hist_brick:
 
-        else:
-            if new_path is None:
-                new_path = os.path.join(
-                    os.path.abspath(os.path.normpath(self.folder)), ""
+            if not list_hist_brick or list_hist_brick[0] is None:
+                continue
+
+            hist_id, brick_ids = list_hist_brick[0], list_hist_brick[1]
+
+            for brick_id in brick_ids or []:
+
+                if not brick_id:
+                    continue
+
+                inputs = self.database.get_value(
+                    COLLECTION_BRICK, brick_id, BRICK_INPUTS
                 )
 
-            print(
-                "\nUpdating the paths in the database when renaming the "
-                "project:\n"
-                "Changing {0} with {1} ...!\n".format(old_path, new_path)
-            )
+                if not inputs:
+                    continue
 
-            for list_hist_brick in hist_brick:
-                if list_hist_brick[0] is not None:
-                    hist_id = list_hist_brick[0]
-                    old_pipeline_xml = self.session.get_value(
-                        COLLECTION_HISTORY, hist_id, HISTORY_PIPELINE
+                if old_path is None:
+                    old_path = inputs.get("output_directory")
+
+                    if old_path:
+                        tmp = old_path.partition(
+                            os.path.join("data", "derived_data")
+                        )
+                        old_path = tmp[0] if tmp[0] != old_path else old_path
+
+                # If the old_path is determined, update entries
+                if old_path:
+                    inputs_string = json.dumps(inputs)
+                    new_inputs_string = inputs_string.replace(
+                        old_path, new_path or ""
                     )
+                    new_inputs = json.loads(new_inputs_string)
+                    self.database.set_value(
+                        COLLECTION_BRICK, brick_id, BRICK_INPUTS, new_inputs
+                    )
+                    outputs = self.database.get_value(
+                        COLLECTION_BRICK, brick_id, BRICK_OUTPUTS
+                    )
+
+                    if outputs:
+                        outputs_string = json.dumps(outputs)
+                        new_outputs_string = outputs_string.replace(
+                            old_path, new_path or ""
+                        )
+                        new_outputs = json.loads(new_outputs_string)
+                        self.database.set_value(
+                            COLLECTION_BRICK,
+                            brick_id,
+                            BRICK_OUTPUTS,
+                            new_outputs,
+                        )
+
+            # Update the history pipeline if hist_id is valid
+            if old_path and hist_id:
+                old_pipeline_xml = self.database.get_value(
+                    COLLECTION_HISTORY, hist_id, HISTORY_PIPELINE
+                )
+
+                if old_pipeline_xml:
                     new_pipeline_xml = old_pipeline_xml.replace(
-                        old_path, new_path
+                        old_path, new_path or ""
                     )
-                    self.session.set_value(
+                    self.database.set_value(
                         COLLECTION_HISTORY,
                         hist_id,
                         HISTORY_PIPELINE,
                         new_pipeline_xml,
                     )
 
-                    if list_hist_brick[1] is not None:
-                        for brick_id in list_hist_brick[1]:
-                            if brick_id is not None:
-                                inputs = self.session.get_value(
-                                    COLLECTION_BRICK, brick_id, BRICK_INPUTS
-                                )
+        # Handle cases where no valid old_path was found
+        if old_path is None:
+            print(
+                "\nUpdating the paths in the database when renaming the "
+                "project:\nNo changes in the HISTORY and BRICK collections "
+                "are made because the output_directory has not been found. "
+                "The renamed project may be corrupted ...!\n"
+            )
 
-                                inputs_string = json.dumps(inputs)
-                                new_inputs_string = inputs_string.replace(
-                                    old_path, new_path
-                                )
-                                new_inputs = json.loads(new_inputs_string)
-                                self.session.set_value(
-                                    COLLECTION_BRICK,
-                                    brick_id,
-                                    BRICK_INPUTS,
-                                    new_inputs,
-                                )
-                                outputs = self.session.get_value(
-                                    COLLECTION_BRICK, brick_id, BRICK_OUTPUTS
-                                )
+        elif old_path is False:
+            # The project has no calculation history: There is nothing to do
+            # and no message to print.
+            return
 
-                                ouputs_string = json.dumps(outputs)
-                                new_outputs_string = ouputs_string.replace(
-                                    old_path, new_path
-                                )
-                                new_ouputs = json.loads(new_outputs_string)
-                                self.session.set_value(
-                                    COLLECTION_BRICK,
-                                    brick_id,
-                                    BRICK_OUTPUTS,
-                                    new_ouputs,
-                                )
+        else:
+            print(
+                f"\nUpdating the paths in the database when renaming the "
+                f"project:\nChanging {old_path} with "
+                f"{new_path or os.path.abspath(self.folder)} ...!\n"
+            )
+
+        # hist_brick = self.database.get_documents(
+        #     COLLECTION_HISTORY,
+        #     #fields=[HISTORY_ID, HISTORY_BRICKS],
+        #     #as_list=True,
+        # )
+
+        # if hist_brick is not None and hist_brick != []:
+        #     old_path = None
+        #     force_break_loop = False
+
+        #     for list_hist_brick in hist_brick:
+        #         if list_hist_brick[0] is not None:
+        #             for brick_id in list_hist_brick[1]:
+        #                 if brick_id is not None:
+        #                     inputs = self.session.get_value(
+        #                         COLLECTION_BRICK, brick_id, BRICK_INPUTS
+        #                     )
+        #                     old_path = inputs.get("output_directory")
+
+        #                     if old_path is not None:
+        #                         tmp = old_path.partition(
+        #                             os.path.join("data", "derived_data")
+        #                         )
+
+        #                         if tmp[0] != old_path:
+        #                             old_path = tmp[0]
+        #                             force_break_loop = True
+        #                             break
+
+        #         if force_break_loop:
+        #             break
+
+        # elif hist_brick == []:
+        #     old_path = False
+
+        # if old_path is None:
+        #     print(
+        #         "\nUpdating the paths in the database when renaming the "
+        #         "project:\n"
+        #         "No changes in the HISTORY and BRICK collections are made "
+        #         "because the output_directory has not been found. The "
+        #         "renamed project may be corrupted ...!\n"
+        #     )
+
+        # if old_path is False:
+        #     # The project has no calculation history: There is nothing to do
+        #     # and no message to print.
+        #     pass
+
+        # else:
+        #     if new_path is None:
+        #         new_path = os.path.join(
+        #             os.path.abspath(os.path.normpath(self.folder)), ""
+        #         )
+
+        #     print(
+        #         "\nUpdating the paths in the database when renaming the "
+        #         "project:\n"
+        #         "Changing {0} with {1} ...!\n".format(old_path, new_path)
+        #     )
+
+        #     for list_hist_brick in hist_brick:
+        #         if list_hist_brick[0] is not None:
+        #             hist_id = list_hist_brick[0]
+        #             old_pipeline_xml = self.session.get_value(
+        #                 COLLECTION_HISTORY, hist_id, HISTORY_PIPELINE
+        #             )
+        #             new_pipeline_xml = old_pipeline_xml.replace(
+        #                 old_path, new_path
+        #             )
+        #             self.session.set_value(
+        #                 COLLECTION_HISTORY,
+        #                 hist_id,
+        #                 HISTORY_PIPELINE,
+        #                 new_pipeline_xml,
+        #             )
+
+        #             if list_hist_brick[1] is not None:
+        #                 for brick_id in list_hist_brick[1]:
+        #                     if brick_id is not None:
+        #                         inputs = self.session.get_value(
+        #                             COLLECTION_BRICK, brick_id, BRICK_INPUTS
+        #                         )
+
+        #                         inputs_string = json.dumps(inputs)
+        #                         new_inputs_string = inputs_string.replace(
+        #                             old_path, new_path
+        #                         )
+        #                         new_inputs = json.loads(new_inputs_string)
+        #                         self.session.set_value(
+        #                             COLLECTION_BRICK,
+        #                             brick_id,
+        #                             BRICK_INPUTS,
+        #                             new_inputs,
+        #                         )
+        #                         outputs = self.session.get_value(
+        #                             COLLECTION_BRICK, brick_id, BRICK_OUTPUTS
+        #                         )
+
+        #                         ouputs_string = json.dumps(outputs)
+        #                         new_outputs_string = ouputs_string.replace(
+        #                             old_path, new_path
+        #                         )
+        #                         new_ouputs = json.loads(new_outputs_string)
+        #                         self.session.set_value(
+        #                             COLLECTION_BRICK,
+        #                             brick_id,
+        #                             BRICK_OUTPUTS,
+        #                             new_ouputs,
+        #                         )
