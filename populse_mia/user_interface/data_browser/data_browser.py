@@ -952,25 +952,27 @@ class TableDataBrowser(QTableWidget):
         self.insertColumn(column)
         item = QtWidgets.QTableWidgetItem()
         self.setHorizontalHeaderItem(column, item)
-        tag_object = self.project.session.get_field(COLLECTION_CURRENT, tag)
+        tag_attrib = self.project.database.get_field_attrib(
+            COLLECTION_CURRENT, tag
+        )
         item.setText(tag)
         item.setToolTip(
             "Description: "
-            + str(tag_object.description)
+            + str(tag_attrib["description"])
             + "\nUnit: "
-            + str(tag_object.unit)
+            + str(tag_attrib["unit"])
             + "\nType: "
-            + str(tag_object.field_type)
+            + str(tag_attrib["field_type"])
         )
 
         # Set column type
-        if tag_object.field_type == FIELD_TYPE_FLOAT:
+        if tag_attrib["field_type"] == FIELD_TYPE_FLOAT:
             self.setItemDelegateForColumn(column, NumberFormatDelegate(self))
-        elif tag_object.field_type == FIELD_TYPE_DATETIME:
+        elif tag_attrib["field_type"] == FIELD_TYPE_DATETIME:
             self.setItemDelegateForColumn(column, DateTimeFormatDelegate(self))
-        elif tag_object.field_type == FIELD_TYPE_DATE:
+        elif tag_attrib["field_type"] == FIELD_TYPE_DATE:
             self.setItemDelegateForColumn(column, DateFormatDelegate(self))
-        elif tag_object.field_type == FIELD_TYPE_TIME:
+        elif tag_attrib["field_type"] == FIELD_TYPE_TIME:
             self.setItemDelegateForColumn(column, TimeFormatDelegate(self))
         else:
             self.setItemDelegateForColumn(column, None)
@@ -979,11 +981,11 @@ class TableDataBrowser(QTableWidget):
             item = QtWidgets.QTableWidgetItem()
             self.setItem(row, column, item)
             scan = self.item(row, 0).text()
-            cur_value = self.project.session.get_value(
+            cur_value = self.project.database.get_value(
                 COLLECTION_CURRENT, scan, tag
             )
             if cur_value is not None:
-                set_item_data(item, cur_value, tag_object.field_type)
+                set_item_data(item, cur_value, tag_attrib["field_type"])
             else:
                 set_item_data(item, not_defined_value, FIELD_TYPE_STRING)
                 font = item.font()
@@ -1009,7 +1011,7 @@ class TableDataBrowser(QTableWidget):
 
         self.itemChanged.disconnect()
         self.itemSelectionChanged.disconnect()
-        tags = self.project.database.get_fields_names(COLLECTION_CURRENT)
+        tags = self.project.database.get_field_names(COLLECTION_CURRENT)
         tags.remove(TAG_CHECKSUM)
         tags.remove(TAG_FILENAME)
         tags.remove(TAG_HISTORY)
@@ -1092,7 +1094,7 @@ class TableDataBrowser(QTableWidget):
 
                     if (
                         tag_name
-                        not in self.project.database.get_fields_names(
+                        not in self.project.database.get_field_names(
                             COLLECTION_CURRENT
                         )
                         and tag_name != TAG_FILENAME
@@ -1874,11 +1876,17 @@ class TableDataBrowser(QTableWidget):
             self.horizontalHeaderItem(column).text()
             for column in range(len(self.horizontalHeader()))
         ]
+        # TODO: In the following tag_types object, we use the default
+        #       str type if the type is not retrieved by get_field_attrib().
+        #       This can cause problems in certain situations ...
         tag_types = {
-            field_name: self.project.database.get_field_attrib(
-                COLLECTION_CURRENT, field_name
-            )["field_type"]
-            for field_name in self.project.database.get_fields_names(
+            field_name: (
+                self.project.database.get_field_attrib(
+                    COLLECTION_CURRENT, field_name
+                )
+                or {}
+            ).get("field_type", str)
+            for field_name in self.project.database.get_field_names(
                 COLLECTION_CURRENT
             )
         }
@@ -1991,7 +1999,7 @@ class TableDataBrowser(QTableWidget):
 
         # Sorting the list of tags in alphabetical order,
         # but keeping FileName first
-        tags = self.project.database.get_fields_names(COLLECTION_CURRENT)
+        tags = self.project.database.get_field_names(COLLECTION_CURRENT)
         tags.remove(TAG_CHECKSUM)
         tags.remove(TAG_FILENAME)
         tags.remove(TAG_HISTORY)
@@ -2356,7 +2364,7 @@ class TableDataBrowser(QTableWidget):
                 scans_removed.append(scan_object)
 
                 # Adding removed values to history
-                for tag in self.project.session.get_fields_names(
+                for tag in self.project.session.get_field_names(
                     COLLECTION_CURRENT
                 ):
                     if tag != TAG_FILENAME:
@@ -2749,7 +2757,7 @@ class TableDataBrowser(QTableWidget):
             field_name: self.project.database.get_field_attrib(
                 COLLECTION_CURRENT, field_name
             )
-            for field_name in self.project.database.get_fields_names(
+            for field_name in self.project.database.get_field_names(
                 COLLECTION_CURRENT
             )
         }

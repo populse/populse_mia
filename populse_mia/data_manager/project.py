@@ -57,16 +57,16 @@ TAG_EXP_TYPE = "Exp Type"
 TAG_FILENAME = "FileName"
 TAG_BRICKS = "History"
 TAG_HISTORY = "Full history"
-CLINICAL_TAGS = [
-    "Site",
-    "Spectro",
-    "MR",
-    "PatientRef",
-    "Pathology",
-    "Age",
-    "Sex",
-    "Message",
-]
+CLINICAL_TAGS = {
+    "Site": "the site where the NMR spectrometer is installed",
+    "Spectro": "the NMR spectrometer used",
+    "MR": "the field strength of the NMR spectrometer",
+    "PatientRef": "the patient's anonymous reference",
+    "Pathology": "the patient's pathology",
+    "Age": "the patient's age",
+    "Sex": "the patient's gender",
+    "Message": "a brief message about the patient",
+}
 BRICK_ID = "ID"
 BRICK_NAME = "Name"
 BRICK_INPUTS = "Input(s)"
@@ -499,10 +499,7 @@ class Project:
                         default_value=None,
                     )
 
-        # self.session.commit()
-
         self.properties = self.loadProperties()
-
         self._unsavedModifications = False
         self.undos = []
         self.redos = []
@@ -516,52 +513,53 @@ class Project:
         return_tags = []
 
         for clinical_tag in CLINICAL_TAGS:
-            if clinical_tag not in self.session.get_fields_names(
+
+            if clinical_tag not in self.database.get_field_names(
                 COLLECTION_CURRENT
             ):
+
                 if clinical_tag == "Age":
                     field_type = FIELD_TYPE_INTEGER
 
                 else:
                     field_type = FIELD_TYPE_STRING
 
-                self.session.add_field(
-                    COLLECTION_CURRENT,
-                    clinical_tag,
-                    field_type,
-                    clinical_tag,
-                    True,
-                    TAG_ORIGIN_BUILTIN,
-                    None,
-                    None,
+                self.database.add_field(
+                    collection_name=COLLECTION_CURRENT,
+                    field_name=clinical_tag,
+                    field_type=field_type,
+                    description=CLINICAL_TAGS[clinical_tag],
+                    visibility=True,
+                    origin=TAG_ORIGIN_BUILTIN,
+                    unit=None,
+                    default_value=None,
                 )
-                self.session.add_field(
-                    COLLECTION_INITIAL,
-                    clinical_tag,
-                    field_type,
-                    clinical_tag,
-                    True,
-                    TAG_ORIGIN_BUILTIN,
-                    None,
-                    None,
+                self.database.add_field(
+                    collection_name=COLLECTION_INITIAL,
+                    field_name=clinical_tag,
+                    field_type=field_type,
+                    description=clinical_tag,
+                    visibility=True,
+                    origin=TAG_ORIGIN_BUILTIN,
+                    unit=None,
+                    default_value=None,
                 )
 
-                for scan in self.session.get_documents(COLLECTION_CURRENT):
-                    self.session.add_value(
-                        COLLECTION_CURRENT,
-                        getattr(scan, TAG_FILENAME),
-                        clinical_tag,
-                        None,
+                for scan in self.database.get_documents(COLLECTION_CURRENT):
+                    self.database.add_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan[TAG_FILENAME],
+                        field=clinical_tag,
+                        value=None,
                     )
-                    self.session.add_value(
-                        COLLECTION_INITIAL,
-                        getattr(scan, TAG_FILENAME),
-                        clinical_tag,
-                        None,
+                    self.database.add_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=scan[TAG_FILENAME],
+                        field=clinical_tag,
+                        value=None,
                     )
 
                 return_tags.append(clinical_tag)
-                self.session.commit()
 
         return return_tags
 
@@ -639,14 +637,13 @@ class Project:
         return_tags = []
 
         for clinical_tag in CLINICAL_TAGS:
-            if clinical_tag in self.session.get_fields_names(
+
+            if clinical_tag in self.database.get_field_names(
                 COLLECTION_CURRENT
             ):
-                self.session.remove_field(COLLECTION_CURRENT, clinical_tag)
-                self.session.remove_field(COLLECTION_INITIAL, clinical_tag)
-
+                self.database.remove_field(COLLECTION_CURRENT, clinical_tag)
+                self.database.remove_field(COLLECTION_INITIAL, clinical_tag)
                 return_tags.append(clinical_tag)
-                self.session.commit()
 
         return return_tags
 
@@ -1785,17 +1782,9 @@ class Project:
         old_path = None
 
         # Check if hist_brick is empty
-        try:
-            first_item = next(hist_brick)
-
-        except StopIteration:
+        if not hist_brick:
             old_path = False
 
-        # Prepend the first item back to the iterator
-        if old_path is not False:
-            hist_brick = iter([first_item, *hist_brick])
-
-        # Process the iterator and update paths in a single pass
         for list_hist_brick in hist_brick:
 
             if not list_hist_brick or list_hist_brick[0] is None:

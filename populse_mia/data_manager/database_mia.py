@@ -319,7 +319,7 @@ class DatabaseMIA:
         with self.storage.schema() as schema:
             schema.add_collection(collection_name, primary_key)
 
-        self.update_field_att_col(
+        self.update_field_attributes(
             collection_name=collection_name,
             field_name=primary_key,
             visibility=visibility,
@@ -350,7 +350,7 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return dbs.has_collection(collection_name)
 
-    def get_fields_names(self, collection):
+    def get_field_names(self, collection):
         """Retrieve the list of all field names in the specified collection.
 
         Args:
@@ -396,7 +396,7 @@ class DatabaseMIA:
         with self.storage.schema() as schema:
             schema.add_field(collection_name, field_name, field_type)
 
-        self.update_field_att_col(
+        self.update_field_attributes(
             collection_name=collection_name,
             field_name=field_name,
             visibility=visibility,
@@ -427,6 +427,34 @@ class DatabaseMIA:
         """
         for field in fields:
             self.add_field(**field)
+
+    def remove_field(self, collection_name, field_name):
+        """
+        Removes a specified field in the collection_name
+
+        This method updates the schema to remove the specified field from the
+        collection and handles associated attributes cleanup.
+
+        :param collection_name: The name of the collection from which the field
+                                will be removed (str, must be existing).
+
+        :param field_name: The name of the field to remove (str, must
+                           be existing).
+
+        :raise ValueError: - If the collection_name does not exist
+                           - If the field_name does not exist
+        """
+        try:
+            with self.storage.schema() as schema:
+                schema.remove_field(collection_name, field_name)
+
+        except KeyError as e:
+            raise ValueError(
+                f"Error removing field '{field_name}' from "
+                f"collection '{collection_name}': {e}"
+            )
+
+        self.remove_field_attributes(collection_name, field_name)
 
     def get_field_attrib(self, collection_name, field_name=None):
         """
@@ -460,18 +488,18 @@ class DatabaseMIA:
 
             attributes_list = []
 
-            for field in self.get_fields_names(collection_name):
+            for field_name in self.get_field_names(collection_name):
                 attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
-                    f"{collection_name}|{field}"
+                    f"{collection_name}|{field_name}"
                 ].get()
 
-            if attributes is not None:
-                attributes["field_type"] = str_to_type(
-                    attributes["field_type"]
-                )
-                attributes_list.append(attributes)
+                if attributes is not None:
+                    attributes["field_type"] = str_to_type(
+                        attributes["field_type"]
+                    )
+                    attributes_list.append(attributes)
 
-        return attributes_list
+            return attributes_list
 
     def get_field(self, collection_name, field_name):
         """blabla"""
@@ -602,26 +630,26 @@ class DatabaseMIA:
 
     def get_documents(self, collection):
         """
-        Retrieves all document rows from the specified collection.
+        Retrieve all documents from the specified collection.
 
-        This method yields each document row in the collection if the
-        collection exists. If the collection does not exist, an empty
-        generator is returned.
+        This method checks if the specified collection exists. If it does,
+        the method fetches and returns a list of all document rows in the
+        collection. If the collection does not exist, an empty list is
+        returned.
 
         :param collection: Name of the document collection (str).
-                           Must be an existing collection.
+                           The collection must already exist in the database.
 
-        :return: An iterator over the document rows, or an empty generator
-                 if the collection does not exist or the collection has no
-                 document.
+        :return: A list of document rows if the collection exists,
+                 or an empty list if the collection does not exist.
         """
         if self.has_collection(collection):
 
             with self.storage.data() as dbs:
-                yield from dbs[collection].get()
+                return dbs[collection].get()
 
         else:
-            yield from iter(())
+            return []
 
     def get_document_names(self, collection):
         """Retrieve a list of all document names in the specified collection.
@@ -642,6 +670,34 @@ class DatabaseMIA:
                 return [item[primary_key] for item in dbs[collection].get()]
 
         return []
+
+    def remove_document(self, collection_name, document_id):
+        """
+        Remove a document from a specified collection.
+
+        This method deletes the document identified by `document_id` from
+        the given collection in the storage.
+
+        Args:
+            collection_name (str): The name of the collection
+                                   containing the document.
+            document_id (str): The unique identifier of the document to
+                               be removed.
+
+        Raises:
+            KeyError: If the collection or the document does not exist.
+        """
+        try:
+
+            with self.storage.data(write=True) as dbs:
+                del dbs[collection_name][document_id]
+
+        except KeyError as e:
+            raise KeyError(
+                f"Failed to remove document with "
+                f"ID '{document_id}' from "
+                f"collection '{collection_name}': {e}"
+            )
 
     def primary_key(self, collection):
         """Retrieve the primary key of the specified collection.
@@ -716,7 +772,40 @@ class DatabaseMIA:
                     "Type of the index field",
                 )
 
-    def update_field_att_col(
+    def remove_field_attributes(
+        self,
+        collection_name,
+        field_name,
+    ):
+        """
+        Remove attributes associated with a specific field in a collection.
+
+        This method deletes the document storing metadata or attributes for
+        the specified field in the given collection.
+
+        Args:
+            collection_name (str): The name of the collection containing
+                                   the field.
+            field_name (str): The name of the field whose attributes are
+                              to be removed.
+
+        Raises:
+            ValueError: If the attributes document does not exist or cannot
+                        be removed.
+        """
+        index = f"{collection_name}|{field_name}"
+
+        try:
+            self.remove_document(FIELD_ATTRIBUTES_COLLECTION, index)
+
+        except KeyError as e:
+            raise ValueError(
+                f"Failed to remove attributes for "
+                f"field '{field_name}' in "
+                f"collection '{collection_name}': {e}"
+            )
+
+    def update_field_attributes(
         self,
         collection_name,
         field_name,
@@ -822,30 +911,6 @@ class DatabaseMIA:
             "DatabaseMIA class."
         )
 
-    def remove_field(self, collection, fields):
-        """
-        Removes a field in the collection
-
-        :param collection: Field collection (str, must be existing)
-
-        :param field: Field name (str, must be existing), or list of fields
-         (list of str, must all be existing)
-
-        :raise ValueError: - If the collection does not exist
-                           - If the field does not exist
-        """
-        # super(DatabaseSessionMIA, self).remove_field(collection, fields)
-        # if isinstance(fields, str):
-        #     fields = [fields]
-        # for field in fields:
-        #     self.remove_document(
-        #         FIELD_ATTRIBUTES_COLLECTION, "%s|%s" % (collection, field)
-        #     )
-        raise NotImplementedError(
-            "This method (remove_field) is not yet available in DatabaseMIA "
-            "class."
-        )
-
     def set_value(self, collection, document_id, field, new_value):
         """Sets the value associated to <collection, document, field> if
         it exists.
@@ -866,12 +931,5 @@ class DatabaseMIA:
         """Adds a document to a collection."""
         raise NotImplementedError(
             "This method (add_document) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def remove_document(self, collection, document_id):
-        """Removes a document in the collection."""
-        raise NotImplementedError(
-            "This method (remove_document) is not yet available in "
             "DatabaseMIA class."
         )

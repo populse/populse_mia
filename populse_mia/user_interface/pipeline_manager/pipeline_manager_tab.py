@@ -678,7 +678,7 @@ class PipelineManagerTab(QWidget):
         db_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.project.folder)), ""
         )
-        field_names = self.project.session.get_fields_names(COLLECTION_CURRENT)
+        field_names = self.project.session.get_field_names(COLLECTION_CURRENT)
         all_cvalues = {}
         all_ivalues = {}
 
@@ -858,7 +858,7 @@ class PipelineManagerTab(QWidget):
                     )
 
                 if tag_to_add["name"] not in (
-                    self.project.session.get_fields_names
+                    self.project.session.get_field_names
                 )(COLLECTION_INITIAL):
                     (self.project.session.add_field)(
                         COLLECTION_INITIAL,
@@ -2756,7 +2756,7 @@ class PipelineManagerTab(QWidget):
         pl = len(proj_dir)
 
         tag_list = set(
-            self.project.session.get_fields_names(COLLECTION_CURRENT)
+            self.project.session.get_field_names(COLLECTION_CURRENT)
         )
         attributes = {k: v for k, v in attributes.items() if k in tag_list}
 

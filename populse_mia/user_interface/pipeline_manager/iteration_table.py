@@ -320,7 +320,7 @@ class IterationTable(QWidget):
         # fmt: off
         ui_select = PopUpSelectTagCountTable(
             self.project,
-            self.project.session.get_fields_names(COLLECTION_CURRENT),
+            self.project.session.get_field_names(COLLECTION_CURRENT),
             self.main_window.pipeline_manager.pipelineEditorTabs.
             get_current_editor().iterated_tag,
         )
@@ -352,7 +352,7 @@ class IterationTable(QWidget):
 
         popUp = PopUpSelectTagCountTable(
             self.project,
-            self.project.session.get_fields_names(COLLECTION_CURRENT),
+            self.project.session.get_field_names(COLLECTION_CURRENT),
             self.push_buttons[idx].text(),
         )
         if popUp.exec_() and popUp.selected_tag is not None:
@@ -424,7 +424,7 @@ class IterationTable(QWidget):
             for idx in range(len(self.push_buttons)):
                 # FIXME should not use GUI text values !!
                 header_name = self.push_buttons[idx].text().replace("&", "")
-                if header_name not in self.project.session.get_fields_names(
+                if header_name not in self.project.session.get_field_names(
                     COLLECTION_CURRENT
                 ):
                     print("{0} not in the project's tags".format(header_name))

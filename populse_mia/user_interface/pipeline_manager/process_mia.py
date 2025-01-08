@@ -158,7 +158,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         if not project:
             return attributes
 
-        fields = project.session.get_fields_names(COLLECTION_CURRENT)
+        fields = project.session.get_field_names(COLLECTION_CURRENT)
         pfields = [field for field in fields if attributes.trait(field)]
         if not pfields:
             return attributes
@@ -1148,7 +1148,7 @@ class ProcessMIA(Process):
         db_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.project.folder)), ""
         )
-        field_names = self.project.session.get_fields_names(COLLECTION_CURRENT)
+        field_names = self.project.session.get_field_names(COLLECTION_CURRENT)
         rel_out_file = out_file.replace(
             os.path.abspath(self.project.folder), ""
         )
@@ -1349,7 +1349,7 @@ class ProcessMIA(Process):
                     )
 
                 if tag_to_add["name"] not in (
-                    self.project.session.get_fields_names
+                    self.project.session.get_field_names
                 )(COLLECTION_INITIAL):
                     (self.project.session.add_field)(
                         COLLECTION_INITIAL,

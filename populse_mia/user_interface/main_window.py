@@ -902,7 +902,7 @@ class MainWindow(QMainWindow):
 
                     # We switch the project
                     self.switch_project(project_name, self.exPopup.name)
-                    field_names = self.project.session.get_fields_names(
+                    field_names = self.project.session.get_field_names(
                         COLLECTION_CURRENT
                     )
 
@@ -948,7 +948,7 @@ class MainWindow(QMainWindow):
                 relative_path = os.path.relpath(project_name)
                 self.switch_project(relative_path, name)
                 # We switch the project
-                field_names = self.project.database.get_fields_names(
+                field_names = self.project.database.get_field_names(
                     COLLECTION_CURRENT
                 )
                 documents = self.project.database.get_document_names(
@@ -1601,7 +1601,7 @@ class MainWindow(QMainWindow):
 
                     # We check for valid version of the project
                     try:
-                        field_names = temp_database.database.get_fields_names(
+                        field_names = temp_database.database.get_field_names(
                             COLLECTION_CURRENT
                         )
 

@@ -445,7 +445,7 @@ class AttributesFilter(PlugFilter):
         if points:
             for point in points:
                 row = point.row()
-                for tag_name in self.project.session.get_fields_names(
+                for tag_name in self.project.session.get_field_names(
                     COLLECTION_CURRENT
                 ):
                     # We get the FileName of the scan from the first row
@@ -458,7 +458,7 @@ class AttributesFilter(PlugFilter):
             filter = self.table_data.get_current_filter()
             for i in range(len(filter)):
                 scan_name = filter[i]
-                for tag_name in self.project.session.get_fields_names(
+                for tag_name in self.project.session.get_field_names(
                     COLLECTION_CURRENT
                 ):
                     value = self.project.session.get_value(

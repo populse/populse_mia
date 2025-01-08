@@ -563,7 +563,7 @@ class CountTable(QDialog):
 
         pop_up = PopUpSelectTagCountTable(
             self.project,
-            self.project.session.get_fields_names(COLLECTION_CURRENT),
+            self.project.session.get_field_names(COLLECTION_CURRENT),
             self.push_buttons[idx].text(),
         )
         if pop_up.exec_():

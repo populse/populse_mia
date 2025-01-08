@@ -785,7 +785,7 @@ class PopUpAddTag(QDialog):
         # Tag name checked
         if (
             self.text_edit_tag_name.text()
-            in self.project.session.get_fields_names(COLLECTION_CURRENT)
+            in self.project.session.get_field_names(COLLECTION_CURRENT)
         ):
             name_already_exists = True
 
@@ -1028,7 +1028,7 @@ class PopUpCloneTag(QDialog):
 
         self.setLayout(vbox)
 
-        tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
+        tags_lists = project.session.get_field_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
         tags_lists.remove(TAG_HISTORY)
         for tag in tags_lists:
@@ -1102,7 +1102,7 @@ class PopUpCloneTag(QDialog):
 
         _translate = QtCore.QCoreApplication.translate
         return_list = []
-        tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
+        tags_lists = project.session.get_field_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
         tags_lists.remove(TAG_HISTORY)
         if str_search != "":
@@ -1816,7 +1816,7 @@ class PopUpMultipleSort(QDialog):
             self.values_list.insert(idx, [])
         if self.values_list[idx] is not None:
             self.values_list[idx] = []
-        for scan in self.project.session.get_fields_names(COLLECTION_CURRENT):
+        for scan in self.project.session.get_field_names(COLLECTION_CURRENT):
             current_value = self.project.session.get_value(
                 COLLECTION_CURRENT, scan, tag_name
             )
@@ -1880,7 +1880,7 @@ class PopUpMultipleSort(QDialog):
         self.order = self.combo_box.itemText(self.combo_box.currentIndex())
 
         for push_button in self.push_buttons:
-            if push_button.text() in self.project.session.get_fields_names(
+            if push_button.text() in self.project.session.get_field_names(
                 COLLECTION_CURRENT
             ):
                 self.list_tags.append(push_button.text())
@@ -5590,14 +5590,14 @@ class PopUpTagSelection(QDialog):
 
         return_list = []
         if str_search != "":
-            for tag in self.project.session.get_fields_names(
+            for tag in self.project.session.get_field_names(
                 COLLECTION_CURRENT
             ):
                 if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                     if str_search.upper() in tag.upper():
                         return_list.append(tag)
         else:
-            for tag in self.project.session.get_fields_names(
+            for tag in self.project.session.get_field_names(
                 COLLECTION_CURRENT
             ):
                 if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
@@ -5632,7 +5632,7 @@ class PopUpSelectTag(PopUpTagSelection):
         self.config = Config()
 
         # Filling the list and checking the thumbnail tag
-        for tag in self.project.session.get_fields_names(COLLECTION_CURRENT):
+        for tag in self.project.database.get_field_names(COLLECTION_CURRENT):
             if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
@@ -6396,7 +6396,7 @@ class PopUpVisualizedTags(QWidget):
         self.left_tags = []  # List that will keep track on
         # the tags on the left (invisible tags)
 
-        for tag in project.database.get_fields_names(COLLECTION_CURRENT):
+        for tag in project.database.get_field_names(COLLECTION_CURRENT):
             if (
                 tag != TAG_CHECKSUM
                 and tag != TAG_FILENAME

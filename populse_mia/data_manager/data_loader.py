@@ -743,10 +743,14 @@ class ImportWorker(QThread):
                 )
 
             self.project.database.add_values(
-                COLLECTION_CURRENT, document, documents[document]
+                collection_name=COLLECTION_CURRENT,
+                primary_key=document,
+                values_dict=documents[document],
             )
             self.project.database.add_values(
-                COLLECTION_INITIAL, document, documents[document]
+                collection_name=COLLECTION_INITIAL,
+                primary_key=document,
+                values_dict=documents[document],
             )
 
         self.notifyProgress.emit(3)

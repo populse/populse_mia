@@ -245,7 +245,10 @@ class ModifyTable(QDialog):
 
                 # Database updated for every cell
                 self.project.database.add_value(
-                    COLLECTION_CURRENT, scan, tag, database_value
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan,
+                    field=tag,
+                    value=database_value,
                 )
 
             self.close()
