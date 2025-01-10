@@ -721,14 +721,13 @@ def table_to_database(value, value_type):
             format = "%H:%M:%S.%f"
             return datetime.strptime(value, format).time()
 
-    elif value_type.startswith("list_"):
+    elif get_origin(value_type) is list:
         old_list = ast.literal_eval(value)
         list_to_return = []
+        element_type = get_args(value_type)[0]
 
         for old_element in old_list:
-            list_to_return.append(
-                table_to_database(old_element, value_type.replace("list_", ""))
-            )
+            list_to_return.append(table_to_database(old_element, element_type))
 
         return list_to_return
 

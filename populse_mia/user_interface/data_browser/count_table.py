@@ -52,7 +52,7 @@ class CountTable(QDialog):
     selected by the user.
     When, the "Count scans" button is clicked, a table is created with all the
     combinations possible for the values of the first n-1 tags. Then,
-    the m values that can take the  last tag are displayed in the header of
+    the m values that can take the last tag are displayed in the header of
     the m last columns of the table. The cells are then filled with a green
     plus or a red cross depending on if there is at least a scan that has
     all the tags values or not.
@@ -217,7 +217,7 @@ class CountTable(QDialog):
             if len(tag_values) == 0:
                 return
         if (
-            self.project.session.get_field(
+            self.project.database.get_field_attrib(
                 COLLECTION_CURRENT, self.push_buttons[-1].text()
             )
             is None
@@ -274,9 +274,9 @@ class CountTable(QDialog):
             for col in range(len(self.values_list) - 1):
                 item = QTableWidgetItem()
                 tag_name = self.push_buttons[col].text()
-                tag_type = self.project.session.get_field(
+                tag_type = self.project.database.get_field_attrib(
                     COLLECTION_CURRENT, tag_name
-                ).field_type
+                )["field_type"]
                 set_item_data(item, cell_text[col], tag_type)
                 self.table.setItem(row, col, item)
 
@@ -360,9 +360,9 @@ class CountTable(QDialog):
         # idx_last_tag corresponds to the index of the (n-1)th tag
         self.idx_last_tag = idx_end
         last_tag = self.push_buttons[len(self.values_list) - 1].text()
-        last_tag_type = self.project.session.get_field(
+        last_tag_type = self.project.database.get_field_attrib(
             COLLECTION_CURRENT, last_tag
-        ).field_type
+        )["field_type"]
         for header_name in self.values_list[-1]:
             idx_end += 1
             item = QTableWidgetItem()
@@ -397,18 +397,18 @@ class CountTable(QDialog):
                     tag_name = self.table.horizontalHeaderItem(
                         idx_first_columns
                     ).text()
-                    tag_type = self.project.session.get_field(
+                    tag_type = self.project.database.get_field_attrib(
                         COLLECTION_CURRENT, tag_name
-                    ).field_type
+                    )["field_type"]
                     value_str = self.table.item(row, idx_first_columns).data(
                         Qt.EditRole
                     )
                     value_database = table_to_database(value_str, tag_type)
                     tag_list.append([tag_name, value_database])
                 tag_last_columns = self.push_buttons[-1].text()
-                tag_last_columns_type = self.project.session.get_field(
+                tag_last_columns_type = self.project.database.get_field_attrib(
                     COLLECTION_CURRENT, tag_last_columns
-                ).field_type
+                )["field_type"]
                 value_last_columns_str = self.table.horizontalHeaderItem(
                     col
                 ).data(Qt.EditRole)
@@ -423,7 +423,7 @@ class CountTable(QDialog):
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 # Getting the list of the scans that corresponds to the couples
                 # tag_name/tag_values
-                generator_scans = self.project.session.filter_documents(
+                generator_scans = self.project.database.filter_documents(
                     COLLECTION_CURRENT, self.prepare_filter(tag_list)
                 )
 
@@ -468,10 +468,10 @@ class CountTable(QDialog):
 
         tag_name = self.push_buttons[idx].text()
         values = []
-        for scan in self.project.session.get_document_names(
+        for scan in self.project.database.get_document_names(
             COLLECTION_CURRENT
         ):
-            current_value = self.project.session.get_value(
+            current_value = self.project.database.get_value(
                 COLLECTION_CURRENT, scan, tag_name
             )
             if current_value is not None:
@@ -563,7 +563,7 @@ class CountTable(QDialog):
 
         pop_up = PopUpSelectTagCountTable(
             self.project,
-            self.project.session.get_field_names(COLLECTION_CURRENT),
+            self.project.database.get_field_names(COLLECTION_CURRENT),
             self.push_buttons[idx].text(),
         )
         if pop_up.exec_():

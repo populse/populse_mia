@@ -5,7 +5,7 @@ populse_db and some of its methods
 :Contains:
    Class:
       - DatabaseMIA
-      - DatabaseSessionMIA
+
 
 """
 
@@ -486,56 +486,24 @@ class DatabaseMIA:
 
                 return attributes
 
-            attributes_list = []
+            elif field_name is None:
+                attributes_list = []
 
-            for field_name in self.get_field_names(collection_name):
-                attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
-                    f"{collection_name}|{field_name}"
-                ].get()
+                for field_name in self.get_field_names(collection_name):
+                    attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
+                        f"{collection_name}|{field_name}"
+                    ].get()
 
-                if attributes is not None:
-                    attributes["field_type"] = str_to_type(
-                        attributes["field_type"]
-                    )
-                    attributes_list.append(attributes)
+                    if attributes is not None:
+                        attributes["field_type"] = str_to_type(
+                            attributes["field_type"]
+                        )
+                        attributes_list.append(attributes)
 
-            return attributes_list
+                return attributes_list
 
-    def get_field(self, collection_name, field_name):
-        """blabla"""
-
-        # print("#########")
-        # print(
-        #     "Please note that the get_field() function is obsolete. "
-        #     "Use get_field_attrib instead ......!"
-        # )
-        # print("#########")
-        # return None
-        raise NotImplementedError(
-            "This method (get_field) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_fields(self, collection):
-        """Retrieves all fields from the specified collection in the database.
-
-        This method first fetches all fields associated with the given
-        collection. For each field, it then attempts to retrieve
-        additional attributes from the `FIELD_ATTRIBUTES_COLLECTION` using a
-        specific index format. These attributes (like 'visibility', 'origin',
-        'unit', 'default_value') are set on each field object."""
-        # fields = super(DatabaseSessionMIA, self).get_fields(collection)
-        # for field in fields:
-        #     name = field.field_name
-        #     index = "%s|%s" % (collection, name)
-        #     attrs = self.get_document(FIELD_ATTRIBUTES_COLLECTION, index)
-        #     for i in ("visibility", "origin", "unit", "default_value"):
-        #         setattr(field, i, getattr(attrs, i, None))
-        # return fields
-        raise NotImplementedError(
-            "This method (get_fields) is not yet available in "
-            "DatabaseMIA class."
-        )
+            else:
+                return None
 
     def add_value(self, collection_name, primary_key, field, value):
         """Adds a value for <collection, document_id, field>"""
@@ -609,6 +577,8 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             for i in dbs[collection].search(filter_query):
                 yield i
+        # with self.storage.data() as dbs:
+        #      return dbs[collection].search(filter_query)
 
     def get_document(self, collection, document_id):
         """
@@ -908,6 +878,42 @@ class DatabaseMIA:
         """Removes a collection."""
         raise NotImplementedError(
             "This method (remove_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_field(self, collection_name, field_name):
+        """blabla"""
+
+        # print("#########")
+        # print(
+        #     "Please note that the get_field() function is obsolete. "
+        #     "Use get_field_attrib instead ......!"
+        # )
+        # print("#########")
+        # return None
+        raise NotImplementedError(
+            "This method (get_field) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_fields(self, collection):
+        """Retrieves all fields from the specified collection in the database.
+
+        This method first fetches all fields associated with the given
+        collection. For each field, it then attempts to retrieve
+        additional attributes from the `FIELD_ATTRIBUTES_COLLECTION` using a
+        specific index format. These attributes (like 'visibility', 'origin',
+        'unit', 'default_value') are set on each field object."""
+        # fields = super(DatabaseSessionMIA, self).get_fields(collection)
+        # for field in fields:
+        #     name = field.field_name
+        #     index = "%s|%s" % (collection, name)
+        #     attrs = self.get_document(FIELD_ATTRIBUTES_COLLECTION, index)
+        #     for i in ("visibility", "origin", "unit", "default_value"):
+        #         setattr(field, i, getattr(attrs, i, None))
+        # return fields
+        raise NotImplementedError(
+            "This method (get_fields) is not yet available in "
             "DatabaseMIA class."
         )
 

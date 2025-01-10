@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 """This module is dedicated to pipeline history."""
 
+##########################################################################
+# Populse_mia - Copyright (C) IRMaGe/CEA, 2018
+# Distributed under the terms of the CeCILL license, as published by
+# the CEA-CNRS-INRIA. Refer to the LICENSE file or to
+# http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
+# for details.
+##########################################################################
+
 import os.path as osp
 
 import traits.api as traits
@@ -456,17 +464,39 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
     tmp_filename = "<temp>"
 
     def _get_tmp_param(proc):
-        """Blabla"""
+        """
+        Identifies a process parameter associated with a temporary value.
+
+        This helper function searches through the input parameters of
+        a process (`proc`) to find one that references a temporary
+        filename (`<temp>`) in its value.
+
+        Args:
+            proc: The process object whose input parameters are being
+                  nspected.
+
+        Returns:
+            tuple:
+                A tuple of the form `(proc, param)` where:
+                    - `proc` is the process object.
+                    - `param` is the name of the parameter
+                      referencing `<temp>`.
+                    If no matching parameter is found, returns
+                    `(None, None)`.
+        """
 
         for param, value in proc.brick[BRICK_INPUTS].items():
+
             if data_in_value(value, tmp_filename, project):
                 return (proc, param)
+
         return (None, None)  # failed...
 
     # look first from proc outputs history (which is more direct, less error-
     # prone, and a more limited search)
     for name, value in proc.brick[BRICK_OUTPUTS].items():
         filenames = get_filenames_in_value(value, project, allow_temp=False)
+
         for filename in filenames:
             hprocs = get_direct_proc_ancestors(
                 filename,

@@ -344,7 +344,7 @@ class PlugFilter(QWidget):
                     tag_name = tag_name[1:]
                 # We get the FileName of the scan from the first row
                 scan_name = self.table_data.item(row, 0).text()
-                value = self.project.session.get_value(
+                value = self.project.database.get_value(
                     COLLECTION_CURRENT, scan_name, tag_name
                 )
                 if tag_name == TAG_FILENAME:
@@ -357,7 +357,7 @@ class PlugFilter(QWidget):
             for i in range(len(filter)):
                 scan_name = filter[i]
                 tag_name = self.push_button_tag_filter.text()
-                value = self.project.session.get_value(
+                value = self.project.database.get_value(
                     COLLECTION_CURRENT, scan_name, tag_name
                 )
                 if tag_name == TAG_FILENAME:

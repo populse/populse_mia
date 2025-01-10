@@ -17,6 +17,8 @@ Contains:
 ##########################################################################
 
 import os
+import traceback
+from typing import get_origin
 
 # Populse_db imports
 from populse_db.database import (
@@ -133,7 +135,7 @@ class AdvancedSearch(QWidget):
             for tag in self.tags_list:
                 field_choice.addItem(tag)
         else:
-            for tag in self.project.session.get_shown_tags():
+            for tag in self.project.database.get_shown_tags():
                 field_choice.addItem(tag)
         field_choice.model().sort(0)
         field_choice.addItem("All visualized tags")
@@ -241,9 +243,13 @@ class AdvancedSearch(QWidget):
                     getattr(document, TAG_FILENAME) for document in result
                 ]
 
-            except Exception as e:
-                print(e)
-
+            except Exception:
+                print(
+                    "Exception occurred in populse_mia.user_interface."
+                    "data_browser.advanced_search.AdvancedSearch."
+                    "apply_filter():"
+                )
+                traceback.print_exc()
                 # Error message if the search can't be done,
                 # and visualization of all scans in the data_browser
                 msg = QMessageBox()
@@ -302,30 +308,36 @@ class AdvancedSearch(QWidget):
         """
 
         tag_name = field.currentText()
-        tag_row = self.project.session.get_field(COLLECTION_CURRENT, tag_name)
-        no_operators_tags = [i for i in ALL_TYPES if i.startswith("list_")]
+        tag_row = self.project.database.get_field_attrib(
+            COLLECTION_CURRENT, tag_name
+        )
+        no_operators_tags = [t for t in ALL_TYPES if get_origin(t) is list]
         no_operators_tags.append(FIELD_TYPE_STRING)
         no_operators_tags.append(FIELD_TYPE_BOOLEAN)
         no_operators_tags.append(None)
 
         if (
-            tag_row is not None and tag_row.field_type in no_operators_tags
+            tag_row is not None and tag_row["field_type"] in no_operators_tags
         ) or tag_name == "All visualized tags":
             condition.removeItem(condition.findText("<"))
             condition.removeItem(condition.findText(">"))
             condition.removeItem(condition.findText("<="))
             condition.removeItem(condition.findText(">="))
             condition.removeItem(condition.findText("BETWEEN"))
-        elif tag_row is None or tag_row.field_type not in no_operators_tags:
+        elif tag_row is None or tag_row["field_type"] not in no_operators_tags:
             operators_to_reput = ["<", ">", "<=", ">=", "BETWEEN"]
             for operator in operators_to_reput:
                 is_op_existing = condition.findText(operator) != -1
                 if not is_op_existing:
                     condition.addItem(operator)
 
-        if tag_row is not None and tag_row.field_type.startswith("list_"):
+        if (tag_row is not None) and (
+            get_origin(tag_row["field_type"]) is list
+        ):
             condition.removeItem(condition.findText("IN"))
-        elif tag_row is None or not tag_row.field_type.startswith("list_"):
+        elif (tag_row is None) or (
+            not get_origin(tag_row["field_type"]) is list
+        ):
             operators_to_reput = ["IN"]
             for operator in operators_to_reput:
                 is_op_existing = condition.findText(operator) != -1
@@ -402,7 +414,7 @@ class AdvancedSearch(QWidget):
                         nots.append(child.currentText())
 
         operators = ["<", ">", "<=", ">=", "BETWEEN"]
-        no_operators_tags = [i for i in ALL_TYPES if i.startswith("list_")]
+        no_operators_tags = [t for t in ALL_TYPES if get_origin(t) is list]
         no_operators_tags.append(FIELD_TYPE_STRING)
         no_operators_tags.append(FIELD_TYPE_BOOLEAN)
 
@@ -440,14 +452,12 @@ class AdvancedSearch(QWidget):
             filter_query = self.prepare_filters(
                 links, fields, conditions, values, nots, self.scans_list
             )
-            result = self.project.session.filter_documents(
+            result = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter_query
             )
 
             # data_browser updated with the new selection
-            result_names = [
-                getattr(document, TAG_FILENAME) for document in result
-            ]
+            result_names = [document[TAG_FILENAME] for document in result]
 
             if not self.from_pipeline:
                 self.project.currentFilter.nots = nots
@@ -456,9 +466,13 @@ class AdvancedSearch(QWidget):
                 self.project.currentFilter.links = links
                 self.project.currentFilter.conditions = conditions
 
-        except Exception as e:
-            print(e)
-
+        except Exception:
+            print(
+                "Exception occurred in populse_mia.user_interface."
+                "data_browser.advanced_search.AdvancedSearch."
+                "launch_search():"
+            )
+            traceback.print_exc()
             # Error message if the search can't be done, and visualization
             # of all scans in the databrowser
             msg = QMessageBox()

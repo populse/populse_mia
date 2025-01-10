@@ -316,7 +316,7 @@ class DataBrowser(QWidget):
                 self.advanced_search.scans_list
             )
             self.table_data.scans_to_search = (
-                self.project.session.get_document_names(COLLECTION_CURRENT)
+                self.project.database.get_document_names(COLLECTION_CURRENT)
             )
             self.project.currentFilter.nots = []
             self.project.currentFilter.values = []
@@ -720,22 +720,22 @@ class DataBrowser(QWidget):
             # Scans with at least a not defined value
             if str_search == not_defined_value:
                 filter = self.search_bar.prepare_not_defined_filter(
-                    self.project.session.get_shown_tags()
+                    self.project.database.get_shown_tags()
                 )
             # Scans matching the search
             else:
                 filter = self.search_bar.prepare_filter(
                     str_search,
-                    self.project.session.get_shown_tags(),
+                    self.project.database.get_shown_tags(),
                     self.table_data.scans_to_search,
                 )
 
-            generator = self.project.session.filter_documents(
+            generator = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter
             )
 
             # Creating the list of scans
-            return_list = [getattr(scan, TAG_FILENAME) for scan in generator]
+            return_list = [scan[TAG_FILENAME] for scan in generator]
 
         self.table_data.scans_to_visualize = return_list
 
@@ -1787,7 +1787,7 @@ class TableDataBrowser(QTableWidget):
                     )
 
                     if new_cur_value is None:
-                        new_cur_value = "*Not Defined*"
+                        new_cur_value = not_defined_value
 
                     modified_values.append(
                         [

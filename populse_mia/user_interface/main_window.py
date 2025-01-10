@@ -98,34 +98,76 @@ _ipsubprocs = []
 
 
 class _ProcDeleter(threading.Thread):
-    """Used by open_shell."""
+    """A helper class to manage the lifecycle of a subprocess.
+
+    This class is used internally by `MainWindow.open_shell()` to handle
+    subprocesses in a thread-safe manner. It ensures proper cleanup of the
+    subprocess when it is no longer needed and updates global state
+    variables as required.
+
+    Attributes:
+        o: The subprocess object to manage.
+
+    Methods:
+        __del__():
+            Ensures the subprocess is terminated and updates global
+            state variables related to the subprocess.
+        run():
+            Waits for the subprocess to complete and cleans up global
+            references to it.
+    """
 
     def __init__(self, o):
+        """
+        Initializes the _ProcDeleter thread with the given subprocess.
+
+        Args:
+            o: The subprocess object to be managed by this thread.
+        """
         threading.Thread.__init__(self)
         self.o = o
 
     def __del__(self):
-        """Blabla"""
+        """
+        Ensures proper cleanup when the _ProcDeleter instance is deleted.
+
+        This method attempts to terminate the managed subprocess (`o`).
+        If the subprocess is associated with a console, it also updates
+        the global `console_shell_running` variable to indicate that the
+        console is no longer active.
+        """
 
         try:
             self.o.kill()
+
         except Exception:
             pass
+
         if getattr(self, "console", False):
             global console_shell_running
             console_shell_running = False
 
     def run(self):
-        """Blabla"""
+        """
+        Runs the thread to wait for the subprocess to finish.
+
+        This method waits for the subprocess to terminate by calling
+        `communicate` on the managed subprocess object. It then removes
+        itself from the global list `_ipsubprocs` in a thread-safe manner.
+        """
 
         try:
             self.o.communicate()
+
         except Exception as e:
             print("exception in ipython process:", e)
+
         global _ipsubprocs
+
         try:
             with _ipsubprocs_lock:
                 _ipsubprocs.remove(self)
+
         except Exception:
             pass
 
@@ -1448,7 +1490,32 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def run_ipconsole_kernel(mode="qtconsole"):
-        """blabla"""
+        """
+        Starts and initializes an IPython kernel with support for
+        a Qt-based GUI.
+
+        This method is designed to set up and run an IPython kernel
+        for interactive computing, with the specified mode (defaulting
+        to `qtconsole`). It handles initialization of the kernel and
+        associated event loops, ensuring proper integration with Qt-based
+        applications.
+
+        Args:
+            mode (str): The mode for running the IPython kernel. Default is
+                        "qtconsole". It determines the GUI integration mode
+                        of the kernel.
+
+        Returns:
+            IPKernelApp: The instance of the IPython kernel application.
+
+        Notes:
+            - The method ensures that the kernel is properly initialized if
+              it hasn't been set up already.
+            - To support Qt-based GUIs, the Qt event loop is properly
+              integrated with the IPython kernel.
+            - Special handling for Tornado versions >= 4.5 ensures
+              compatibility with its callback mechanism.
+        """
 
         print("run_ipconsole_kernel:", mode)
         import IPython  # noqa: F401
@@ -1466,7 +1533,8 @@ class MainWindow(QMainWindow):
 
         if not app.initialized() or not app.kernel:
             print("running IP console kernel")
-            app.hb_port = 50042  # don't know why this is not set automatically
+            # don't know why this is not set automatically
+            app.hb_port = 50042
             app.initialize(
                 [
                     mode,
@@ -1474,9 +1542,9 @@ class MainWindow(QMainWindow):
                     "--KernelApp.parent_appname='ipython-%s'" % mode,
                 ]
             )
-            # in ipython >= 1.2, app.start() blocks until a ctrl-c is issued in
-            # the terminal. Seems to block in tornado.ioloop.PollIOLoop.start()
-            #
+            # in ipython >= 1.2, app.start() blocks until a ctrl-c is issued
+            # in the terminal. Seems to block in
+            # tornado.ioloop.PollIOLoop.start()
             # So, don't call app.start because it would begin a zmq/tornado
             # loop instead we must just initialize its callback.
             # if app.poller is not None:
@@ -1493,17 +1561,56 @@ class MainWindow(QMainWindow):
                 # list + explicit locking
 
                 def my_start_ioloop_callbacks(self):
-                    """Blabla"""
+                    """
+                    Executes pending callbacks in the Tornado
+                    IOLoop (Tornado >= 4.5).
+
+                    This method processes the `_callbacks` deque in the
+                    Tornado IOLoop, executing each callback in the order
+                    they were added. The use of `popleft` ensures efficient
+                    removal of executed callbacks.
+
+                    Notes:
+                        - Tornado 4.5 and later versions use a `deque`
+                          for `_callbacks`, allowing lock-free access to
+                          pending callbacks.
+
+                    Raises:
+                        AttributeError: If `_callbacks` is not defined for
+                                        the IOLoop instance.
+                    """
 
                     if hasattr(self, "_callbacks"):
                         ncallbacks = len(self._callbacks)
+
                         for i in range(ncallbacks):
                             self._run_callback(self._callbacks.popleft())
 
             else:
 
                 def my_start_ioloop_callbacks(self):
-                    """Blabla"""
+                    """
+                    Executes pending callbacks in the Tornado IOLoop
+                    (Tornado < 4.5).
+
+                    This method processes the `_callbacks` list in the
+                    Tornado IOLoop, executing each callback in the order
+                    they were added. The method ensures thread safety by
+                    using a lock (`_callback_lock`) to protect access to
+                    the `_callbacks` list during execution.
+
+                    Notes:
+                        - Tornado versions before 4.5 use a list
+                          (`_callbacks`) for pending callbacks, requiring
+                          explicit locking to avoid race conditions.
+                        - After processing all callbacks, the `_callbacks`
+                          list is reset to an empty list.
+
+                    Raises:
+                        AttributeError: If `_callbacks` or `_callback_lock`
+                                        is not defined for the IOLoop
+                                        instance.
+                    """
 
                     with self._callback_lock:
                         callbacks = self._callbacks
