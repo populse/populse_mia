@@ -209,7 +209,7 @@ class IterationTable(QWidget):
         """
         tag_name = self.push_buttons[idx].text()
         values = []
-        for scan in self.project.session.get_document_names(
+        for scan in self.project.database.get_document_names(
             COLLECTION_CURRENT
         ):
             current_value = self.project.session.get_value(
@@ -320,7 +320,7 @@ class IterationTable(QWidget):
         # fmt: off
         ui_select = PopUpSelectTagCountTable(
             self.project,
-            self.project.session.get_field_names(COLLECTION_CURRENT),
+            self.project.database.get_field_names(COLLECTION_CURRENT),
             self.main_window.pipeline_manager.pipelineEditorTabs.
             get_current_editor().iterated_tag,
         )
@@ -352,7 +352,7 @@ class IterationTable(QWidget):
 
         popUp = PopUpSelectTagCountTable(
             self.project,
-            self.project.session.get_field_names(COLLECTION_CURRENT),
+            self.project.database.get_field_names(COLLECTION_CURRENT),
             self.push_buttons[idx].text(),
         )
         if popUp.exec_() and popUp.selected_tag is not None:
@@ -370,7 +370,7 @@ class IterationTable(QWidget):
         if len(self.main_window.pipeline_manager.scan_list) > 0:
             self.scan_list = self.main_window.pipeline_manager.scan_list
         else:
-            self.scan_list = self.project.session.get_document_names(
+            self.scan_list = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
 
@@ -405,7 +405,7 @@ class IterationTable(QWidget):
 
         # Updating the scan list
         if not self.scan_list:
-            self.scan_list = self.project.session.get_document_names(
+            self.scan_list = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
 
@@ -424,7 +424,7 @@ class IterationTable(QWidget):
             for idx in range(len(self.push_buttons)):
                 # FIXME should not use GUI text values !!
                 header_name = self.push_buttons[idx].text().replace("&", "")
-                if header_name not in self.project.session.get_field_names(
+                if header_name not in self.project.database.get_field_names(
                     COLLECTION_CURRENT
                 ):
                     print("{0} not in the project's tags".format(header_name))
@@ -530,7 +530,7 @@ class IterationTable(QWidget):
         """
 
         tag_values_list = []
-        scans_names = self.project.session.get_document_names(
+        scans_names = self.project.database.get_document_names(
             COLLECTION_CURRENT
         )
 

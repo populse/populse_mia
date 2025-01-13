@@ -305,14 +305,14 @@ class PlugFilter(QWidget):
             # Scans with at least a not defined value
             if str_search == not_defined_value:
                 filter = self.prepare_not_defined_filter(
-                    self.project.session.get_shown_tags()
+                    self.project.database.get_shown_tags()
                 )
 
             # Scans matching the search
             else:
                 filter = self.rapid_search.prepare_filter(
                     str_search,
-                    self.project.session.get_shown_tags(),
+                    self.project.database.get_shown_tags(),
                     self.table_data.scans_to_search,
                 )
 
@@ -445,7 +445,7 @@ class AttributesFilter(PlugFilter):
         if points:
             for point in points:
                 row = point.row()
-                for tag_name in self.project.session.get_field_names(
+                for tag_name in self.project.database.get_field_names(
                     COLLECTION_CURRENT
                 ):
                     # We get the FileName of the scan from the first row
@@ -458,7 +458,7 @@ class AttributesFilter(PlugFilter):
             filter = self.table_data.get_current_filter()
             for i in range(len(filter)):
                 scan_name = filter[i]
-                for tag_name in self.project.session.get_field_names(
+                for tag_name in self.project.database.get_field_names(
                     COLLECTION_CURRENT
                 ):
                     value = self.project.session.get_value(
@@ -846,7 +846,7 @@ class FilterWidget(QWidget):
 
         self.setWindowTitle("Filter - " + node_name)
         self.project = project
-        self.visible_tags = self.project.session.get_shown_tags()
+        self.visible_tags = self.project.database.get_shown_tags()
         self.node = node
         self.process = node.process
         self.main_window = main_window
@@ -1000,13 +1000,13 @@ class FilterWidget(QWidget):
             # Scans with at least a not defined value
             if str_search == not_defined_value:
                 filter = self.prepare_not_defined_filter(
-                    self.project.session.get_shown_tags()
+                    self.project.database.get_shown_tags()
                 )
             # Scans matching the search
             else:
                 filter = self.rapid_search.prepare_filter(
                     str_search,
-                    self.project.session.get_shown_tags(),
+                    self.project.database.get_shown_tags(),
                     old_scan_list,
                 )
 

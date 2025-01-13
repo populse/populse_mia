@@ -529,7 +529,7 @@ class PopUpAddPath(QDialog):
         for path, path_type in zip(path_list, path_type_list):
             docInDb = [
                 os.path.basename(i)
-                for i in self.project.session.get_document_names(
+                for i in self.project.database.get_document_names(
                     COLLECTION_CURRENT
                 )
             ]
@@ -590,11 +590,15 @@ class PopUpAddPath(QDialog):
                 # Databrowser updated
 
                 (self.databrowser.table_data.scans_to_visualize) = (
-                    self.project.session.get_document_names(COLLECTION_CURRENT)
+                    self.project.database.get_document_names(
+                        COLLECTION_CURRENT
+                    )
                 )
 
                 (self.databrowser.table_data.scans_to_search) = (
-                    self.project.session.get_document_names(COLLECTION_CURRENT)
+                    self.project.database.get_document_names(
+                        COLLECTION_CURRENT
+                    )
                 )
                 self.databrowser.table_data.add_columns()
                 self.databrowser.table_data.fill_headers()
@@ -785,7 +789,7 @@ class PopUpAddTag(QDialog):
         # Tag name checked
         if (
             self.text_edit_tag_name.text()
-            in self.project.session.get_field_names(COLLECTION_CURRENT)
+            in self.project.database.get_field_names(COLLECTION_CURRENT)
         ):
             name_already_exists = True
 
@@ -1028,7 +1032,7 @@ class PopUpCloneTag(QDialog):
 
         self.setLayout(vbox)
 
-        tags_lists = project.session.get_field_names(COLLECTION_CURRENT)
+        tags_lists = project.database.get_field_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
         tags_lists.remove(TAG_HISTORY)
         for tag in tags_lists:
@@ -1049,11 +1053,16 @@ class PopUpCloneTag(QDialog):
         :param project: current project
 
         """
-
         name_already_exists = False
-        for tag in project.session.get_fields(COLLECTION_CURRENT):
-            if tag.field_name == self.line_edit_new_tag_name.text():
+
+        for tag in project.database.get_field_attrib(COLLECTION_CURRENT):
+
+            if (
+                tag["index"].split("|")[1]
+                == self.line_edit_new_tag_name.text()
+            ):
                 name_already_exists = True
+
         if name_already_exists:
             self.msg = QMessageBox()
             self.msg.setIcon(QMessageBox.Critical)
@@ -1063,6 +1072,7 @@ class PopUpCloneTag(QDialog):
             self.msg.setStandardButtons(QMessageBox.Ok)
             self.msg.buttonClicked.connect(self.msg.close)
             self.msg.show()
+
         elif self.line_edit_new_tag_name.text() == "":
             self.msg = QMessageBox()
             self.msg.setIcon(QMessageBox.Critical)
@@ -1072,6 +1082,7 @@ class PopUpCloneTag(QDialog):
             self.msg.setStandardButtons(QMessageBox.Ok)
             self.msg.buttonClicked.connect(self.msg.close)
             self.msg.show()
+
         elif len(self.list_widget_tags.selectedItems()) == 0:
             self.msg = QMessageBox()
             self.msg.setIcon(QMessageBox.Critical)
@@ -1081,6 +1092,7 @@ class PopUpCloneTag(QDialog):
             self.msg.setStandardButtons(QMessageBox.Ok)
             self.msg.buttonClicked.connect(self.msg.close)
             self.msg.show()
+
         else:
             self.accept()
             self.tag_to_replace = self.list_widget_tags.selectedItems()[
@@ -1102,7 +1114,7 @@ class PopUpCloneTag(QDialog):
 
         _translate = QtCore.QCoreApplication.translate
         return_list = []
-        tags_lists = project.session.get_field_names(COLLECTION_CURRENT)
+        tags_lists = project.database.get_field_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
         tags_lists.remove(TAG_HISTORY)
         if str_search != "":
@@ -1816,7 +1828,7 @@ class PopUpMultipleSort(QDialog):
             self.values_list.insert(idx, [])
         if self.values_list[idx] is not None:
             self.values_list[idx] = []
-        for scan in self.project.session.get_field_names(COLLECTION_CURRENT):
+        for scan in self.project.database.get_field_names(COLLECTION_CURRENT):
             current_value = self.project.session.get_value(
                 COLLECTION_CURRENT, scan, tag_name
             )
@@ -1866,7 +1878,7 @@ class PopUpMultipleSort(QDialog):
 
         pop_up = PopUpSelectTagCountTable(
             self.project,
-            self.project.session.get_shown_tags(),
+            self.project.database.get_shown_tags(),
             self.push_buttons[idx].text(),
         )
 
@@ -1880,7 +1892,7 @@ class PopUpMultipleSort(QDialog):
         self.order = self.combo_box.itemText(self.combo_box.currentIndex())
 
         for push_button in self.push_buttons:
-            if push_button.text() in self.project.session.get_field_names(
+            if push_button.text() in self.project.database.get_field_names(
                 COLLECTION_CURRENT
             ):
                 self.list_tags.append(push_button.text())
@@ -5030,8 +5042,8 @@ class PopUpRemoveTag(QDialog):
 
         self.setLayout(vbox)
 
-        for tag in self.project.session.get_fields(COLLECTION_CURRENT):
-            if tag.origin == TAG_ORIGIN_USER:
+        for tag in self.project.database.get_field_attrib(COLLECTION_CURRENT):
+            if tag["origin"] == TAG_ORIGIN_USER:
                 item = QtWidgets.QListWidgetItem()
                 self.list_widget_tags.addItem(item)
                 item.setText(_translate("Dialog", tag.field_name))
@@ -5065,16 +5077,28 @@ class PopUpRemoveTag(QDialog):
 
         if str_search != "":
             return_list = []
-            for tag in self.project.session.get_fields(COLLECTION_CURRENT):
-                if tag.origin == TAG_ORIGIN_USER:
+
+            for tag in self.project.database.get_field_attrib(
+                COLLECTION_CURRENT
+            ):
+
+                if tag["origin"] == TAG_ORIGIN_USER:
+
                     if str_search.upper() in tag.name.upper():
                         return_list.append(tag.name)
+
         else:
             return_list = []
-            for tag in self.project.session.get_fields(COLLECTION_CURRENT):
-                if tag.origin == TAG_ORIGIN_USER:
+
+            for tag in self.project.database.get_field_attrib(
+                COLLECTION_CURRENT
+            ):
+
+                if tag["origin"] == TAG_ORIGIN_USER:
                     return_list.append(tag.name)
+
         self.list_widget_tags.clear()
+
         for tag_name in return_list:
             item = QtWidgets.QListWidgetItem()
             self.list_widget_tags.addItem(item)
@@ -5590,14 +5614,14 @@ class PopUpTagSelection(QDialog):
 
         return_list = []
         if str_search != "":
-            for tag in self.project.session.get_field_names(
+            for tag in self.project.database.get_field_names(
                 COLLECTION_CURRENT
             ):
                 if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                     if str_search.upper() in tag.upper():
                         return_list.append(tag)
         else:
-            for tag in self.project.session.get_field_names(
+            for tag in self.project.database.get_field_names(
                 COLLECTION_CURRENT
             ):
                 if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
@@ -5947,7 +5971,7 @@ class PopUpShowHistory(QDialog):
 
         value_scan = None
 
-        for scan in self.project.session.get_document_names(
+        for scan in self.project.database.get_document_names(
             COLLECTION_CURRENT
         ):
             if scan in str(value):

@@ -362,8 +362,8 @@ class DatabaseMIA:
             None: If the collection has no fields or does not exist.
         """
         with self.storage.data() as dbs:
-            fields_names = list(dbs[collection].keys())
-            return fields_names if fields_names else None
+            field_names = list(dbs[collection].keys())
+            return field_names if field_names else None
 
     def add_field(
         self,
@@ -893,27 +893,6 @@ class DatabaseMIA:
         # return None
         raise NotImplementedError(
             "This method (get_field) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_fields(self, collection):
-        """Retrieves all fields from the specified collection in the database.
-
-        This method first fetches all fields associated with the given
-        collection. For each field, it then attempts to retrieve
-        additional attributes from the `FIELD_ATTRIBUTES_COLLECTION` using a
-        specific index format. These attributes (like 'visibility', 'origin',
-        'unit', 'default_value') are set on each field object."""
-        # fields = super(DatabaseSessionMIA, self).get_fields(collection)
-        # for field in fields:
-        #     name = field.field_name
-        #     index = "%s|%s" % (collection, name)
-        #     attrs = self.get_document(FIELD_ATTRIBUTES_COLLECTION, index)
-        #     for i in ("visibility", "origin", "unit", "default_value"):
-        #         setattr(field, i, getattr(attrs, i, None))
-        # return fields
-        raise NotImplementedError(
-            "This method (get_fields) is not yet available in "
             "DatabaseMIA class."
         )
 

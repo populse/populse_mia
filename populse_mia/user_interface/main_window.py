@@ -944,7 +944,7 @@ class MainWindow(QMainWindow):
 
                     # We switch the project
                     self.switch_project(project_name, self.exPopup.name)
-                    field_names = self.project.session.get_field_names(
+                    field_names = self.project.database.get_field_names(
                         COLLECTION_CURRENT
                     )
 
@@ -1019,7 +1019,7 @@ class MainWindow(QMainWindow):
     def project_properties_pop_up(self):
         """Open the project properties pop-up"""
 
-        old_tags = self.project.session.get_shown_tags()
+        old_tags = self.project.database.get_shown_tags()
         self.pop_up_settings = PopUpProperties(
             self.project, self.data_browser, old_tags
         )
@@ -1028,7 +1028,7 @@ class MainWindow(QMainWindow):
 
         if self.pop_up_settings.exec():
             self.data_browser.table_data.update_visualized_columns(
-                old_tags, self.project.session.get_shown_tags()
+                old_tags, self.project.database.get_shown_tags()
             )
 
     def redo(self):

@@ -1255,7 +1255,7 @@ class Project:
                         value_to_add[3],
                     )
                 table.add_rows(
-                    self.session.get_document_names(COLLECTION_CURRENT)
+                    self.database.get_document_names(COLLECTION_CURRENT)
                 )
 
             # if action == "remove_scans":
@@ -1318,9 +1318,9 @@ class Project:
                         set_item_data(
                             item,
                             new_value,
-                            self.session.get_field(
+                            self.database.get_field_attrib(
                                 COLLECTION_CURRENT, tag
-                            ).field_type,
+                            )["field_type"],
                         )
                 table.update_colors()
                 table.itemChanged.connect(table.change_cell_color)
@@ -1328,13 +1328,13 @@ class Project:
             if action == "modified_visibilities":
                 # To revert the modifications of the visualized tags
                 # Old list of columns
-                old_tags = self.session.get_shown_tags()
+                old_tags = self.database.get_shown_tags()
                 # List of the tags shown before the modification (Tag objects)
                 showed_tags = to_redo[2]
-                self.session.set_shown_tags(showed_tags)
+                self.database.set_shown_tags(showed_tags)
                 # Columns updated
                 table.update_visualized_columns(
-                    old_tags, self.session.get_shown_tags()
+                    old_tags, self.database.get_shown_tags()
                 )
 
     def reput_values(self, values):
@@ -1648,9 +1648,9 @@ class Project:
                         set_item_data(
                             item,
                             old_value,
-                            self.session.get_field(
+                            self.database.get_field_attrib(
                                 COLLECTION_CURRENT, tag
-                            ).field_type,
+                            )["field_type"],
                         )
                         # If the new value is None,
                         # the not defined font must be removed
@@ -1664,14 +1664,14 @@ class Project:
             if action == "modified_visibilities":
                 # To revert the modifications of the visualized tags
                 # Old list of columns
-                old_tags = self.session.get_shown_tags()
+                old_tags = self.database.get_shown_tags()
                 # List of the tags visible before the modification
                 # (Tag objects)
                 visible = to_undo[1]
-                self.session.set_shown_tags(visible)
+                self.database.set_shown_tags(visible)
                 # Columns updated
                 table.update_visualized_columns(
-                    old_tags, self.session.get_shown_tags()
+                    old_tags, self.database.get_shown_tags()
                 )
 
     @property

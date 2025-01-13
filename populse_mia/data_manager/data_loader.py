@@ -365,12 +365,12 @@ class ImportWorker(QThread):
 
                         # TODO time lists
 
-                        tag_row = self.project.database.get_field_attrib(
+                        tag_attrib = self.project.database.get_field_attrib(
                             COLLECTION_CURRENT, tag_name
                         )
 
                         if (
-                            tag_row is None
+                            tag_attrib is None
                             and tag_name not in tags_names_added
                         ):
                             # Adding the tag as it's not in the database yet
@@ -460,12 +460,12 @@ class ImportWorker(QThread):
                         description = "Associated NIfTI file"
                         unit = None
 
-                        tag_row = self.project.session.get_field(
+                        tag_attrib = self.project.database.get_field_attrib(
                             COLLECTION_CURRENT, tag_name
                         )
 
                         if (
-                            tag_row is None
+                            tag_attrib is None
                             and tag_name not in tags_names_added
                         ):
                             # Adding the tag as it's not in the database yet
@@ -831,7 +831,7 @@ def verify_scans(project):
 
     # Returning the files that are problematic
     return_list = []
-    for scan in project.session.get_document_names(COLLECTION_CURRENT):
+    for scan in project.database.get_document_names(COLLECTION_CURRENT):
         file_name = scan
         file_path = os.path.relpath(os.path.join(project.folder, file_name))
 

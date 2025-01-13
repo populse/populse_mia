@@ -154,7 +154,7 @@ class MiaViewer(Qt.QWidget, DataViewer):
         self.table_data = TableDataBrowser(
             self.project,
             self,
-            self.project.session.get_shown_tags(),
+            self.project.database.get_shown_tags(),
             False,
             True,
             link_viewer=False,
@@ -321,13 +321,13 @@ class MiaViewer(Qt.QWidget, DataViewer):
             # Scans with at least a not defined value
             if str_search == not_defined_value:
                 filter = self.search_bar.prepare_not_defined_filter(
-                    self.project.session.get_shown_tags()
+                    self.project.database.get_shown_tags()
                 )
             # Scans matching the search
             else:
                 filter = self.search_bar.prepare_filter(
                     str_search,
-                    self.project.session.get_shown_tags(),
+                    self.project.database.get_shown_tags(),
                     self.table_data.scans_to_search,
                 )
 

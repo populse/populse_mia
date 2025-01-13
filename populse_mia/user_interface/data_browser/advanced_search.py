@@ -220,7 +220,7 @@ class AdvancedSearch(QWidget):
 
             # Replacing all visualized tags by the current list of visible tags
             if fields[i][0] == "All visualized tags":
-                fields[i] = self.project.session.get_shown_tags()
+                fields[i] = self.project.database.get_shown_tags()
 
             row[3].setCurrentText(conditions[i])
             row[4].setText(str(values[i]))
@@ -277,7 +277,9 @@ class AdvancedSearch(QWidget):
                 )
             else:
                 self.dataBrowser.table_data.scans_to_visualize = (
-                    self.project.session.get_document_names(COLLECTION_CURRENT)
+                    self.project.database.get_document_names(
+                        COLLECTION_CURRENT
+                    )
                 )
 
         self.dataBrowser.table_data.update_visualized_rows(old_rows)
@@ -308,7 +310,7 @@ class AdvancedSearch(QWidget):
         """
 
         tag_name = field.currentText()
-        tag_row = self.project.database.get_field_attrib(
+        tag_attrib = self.project.database.get_field_attrib(
             COLLECTION_CURRENT, tag_name
         )
         no_operators_tags = [t for t in ALL_TYPES if get_origin(t) is list]
@@ -317,30 +319,40 @@ class AdvancedSearch(QWidget):
         no_operators_tags.append(None)
 
         if (
-            tag_row is not None and tag_row["field_type"] in no_operators_tags
+            tag_attrib is not None
+            and tag_attrib["field_type"] in no_operators_tags
         ) or tag_name == "All visualized tags":
             condition.removeItem(condition.findText("<"))
             condition.removeItem(condition.findText(">"))
             condition.removeItem(condition.findText("<="))
             condition.removeItem(condition.findText(">="))
             condition.removeItem(condition.findText("BETWEEN"))
-        elif tag_row is None or tag_row["field_type"] not in no_operators_tags:
+
+        elif (
+            tag_attrib is None
+            or tag_attrib["field_type"] not in no_operators_tags
+        ):
             operators_to_reput = ["<", ">", "<=", ">=", "BETWEEN"]
+
             for operator in operators_to_reput:
                 is_op_existing = condition.findText(operator) != -1
+
                 if not is_op_existing:
                     condition.addItem(operator)
 
-        if (tag_row is not None) and (
-            get_origin(tag_row["field_type"]) is list
+        if (tag_attrib is not None) and (
+            get_origin(tag_attrib["field_type"]) is list
         ):
             condition.removeItem(condition.findText("IN"))
-        elif (tag_row is None) or (
-            not get_origin(tag_row["field_type"]) is list
+
+        elif (tag_attrib is None) or (
+            not get_origin(tag_attrib["field_type"]) is list
         ):
             operators_to_reput = ["IN"]
+
             for operator in operators_to_reput:
                 is_op_existing = condition.findText(operator) != -1
+
                 if not is_op_existing:
                     condition.addItem(operator)
 
@@ -404,7 +416,7 @@ class AdvancedSearch(QWidget):
                         else:
                             if replace_all_by_fields:
                                 fields.append(
-                                    self.project.session.get_shown_tags()
+                                    self.project.database.get_shown_tags()
                                 )
                             else:
                                 fields.append([child.currentText()])
