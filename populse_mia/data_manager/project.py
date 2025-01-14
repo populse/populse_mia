@@ -1197,6 +1197,7 @@ class Project:
                     tag_unit,
                     tag_default_value,
                 )
+
                 # Adding all the values associated
                 for value in values:
                     self.session.add_value(
@@ -1212,14 +1213,15 @@ class Project:
                 # To remove the tags, we need the names
                 # The second element is a list of the removed tags (Tag class)
                 tags_removed = to_redo[1]
+
                 for i in range(0, len(tags_removed)):
                     # We reput each tag in the tag list, keeping
                     # all the tags params
                     tag_to_remove = tags_removed[i][0].field_name
-                    self.session.remove_field(
+                    self.database.remove_field(
                         COLLECTION_CURRENT, tag_to_remove
                     )
-                    self.session.remove_field(
+                    self.database.remove_field(
                         COLLECTION_INITIAL, tag_to_remove
                     )
                     column_to_remove = table.get_tag_column(tag_to_remove)
@@ -1230,6 +1232,7 @@ class Project:
                 # associated to the scans
                 # The second element is a list of the scans to add
                 scans_added = to_redo[1]
+
                 # We add all the scans
                 for i in range(0, len(scans_added)):
                     # We remove each scan added
@@ -1237,9 +1240,11 @@ class Project:
                     self.session.add_document(COLLECTION_CURRENT, scan_to_add)
                     self.session.add_document(COLLECTION_INITIAL, scan_to_add)
                     table.scans_to_visualize.append(scan_to_add)
+
                 # We add all the values
                 # The third element is a list of the values to add
                 values_added = to_redo[2]
+
                 for i in range(0, len(values_added)):
                     value_to_add = values_added[i]
                     self.session.add_value(
@@ -1254,6 +1259,7 @@ class Project:
                         value_to_add[1],
                         value_to_add[3],
                     )
+
                 table.add_rows(
                     self.database.get_document_names(COLLECTION_CURRENT)
                 )
@@ -1284,6 +1290,7 @@ class Project:
                 # (reset or value changed)
                 modified_values = to_redo[1]
                 table.itemChanged.disconnect()
+
                 for i in range(0, len(modified_values)):
                     # Each modified value is a list of 3 elements:
                     # scan, tag, and old_value
@@ -1292,10 +1299,10 @@ class Project:
                     tag = value_to_restore[1]
                     old_value = value_to_restore[2]
                     new_value = value_to_restore[3]
-
                     item = table.item(
                         table.get_scan_row(scan), table.get_tag_column(tag)
                     )
+
                     if old_value is None:
                         # Font reput to normal in case it was a not
                         # defined cell
@@ -1303,9 +1310,11 @@ class Project:
                         font.setItalic(False)
                         font.setBold(False)
                         item.setFont(font)
+
                     self.session.set_value(
                         COLLECTION_CURRENT, scan, tag, new_value
                     )
+
                     if new_value is None:
                         font = item.font()
                         font.setItalic(True)
@@ -1314,14 +1323,16 @@ class Project:
                         set_item_data(
                             item, not_defined_value, FIELD_TYPE_STRING
                         )
+
                     else:
                         set_item_data(
                             item,
                             new_value,
-                            self.database.get_field_attrib(
+                            self.database.get_field_attributes(
                                 COLLECTION_CURRENT, tag
                             )["field_type"],
                         )
+
                 table.update_colors()
                 table.itemChanged.connect(table.change_cell_color)
 
@@ -1516,14 +1527,16 @@ class Project:
             # remove_tags, add_scans, remove_scans, or modified_values)
             action = to_undo[0]
             self.unsavedModifications = True
+
             if action == "add_tag":
                 # For removing the tag added, we just have to memorize
                 # the tag name, and remove it
                 tag_to_remove = to_undo[1]
-                self.session.remove_field(COLLECTION_CURRENT, tag_to_remove)
-                self.session.remove_field(COLLECTION_INITIAL, tag_to_remove)
+                self.database.remove_field(COLLECTION_CURRENT, tag_to_remove)
+                self.databse.remove_field(COLLECTION_INITIAL, tag_to_remove)
                 column_to_remove = table.get_tag_column(tag_to_remove)
                 table.removeColumn(column_to_remove)
+
             if action == "remove_tags":
                 # To reput the removed tags, we need to reput the
                 # tag in the tag list,
@@ -1556,19 +1569,23 @@ class Project:
                         tag_to_reput.unit,
                         tag_to_reput.default_value,
                     )
+
                 # The third element is a list of tags values (Value class)
                 values_removed = to_undo[2]
                 self.reput_values(values_removed)
+
                 for i in range(0, len(tags_removed)):
                     # We reput each tag in the tag list,
                     # keeping all the tags params
                     tag_to_reput = tags_removed[i][0]
                     column = table.get_index_insertion(tag_to_reput.field_name)
                     table.add_column(column, tag_to_reput.field_name)
+
             if action == "add_scans":
                 # To remove added scans, we just need their file name
                 # The second element is a list of added scans to remove
                 scans_added = to_undo[1]
+
                 for i in range(0, len(scans_added)):
                     # We remove each scan added
                     scan_to_remove = scans_added[i]
@@ -1580,6 +1597,7 @@ class Project:
                     )
                     table.removeRow(table.get_scan_row(scan_to_remove))
                     table.scans_to_visualize.remove(scan_to_remove)
+
                 table.itemChanged.disconnect()
                 table.update_colors()
                 table.itemChanged.connect(table.change_cell_color)
@@ -1605,6 +1623,7 @@ class Project:
             #     self.reput_values(values_removed)
             #     table.add_rows(self.session.get_document_names(
             #         COLLECTION_CURRENT))
+
             if action == "modified_values":
                 # To revert a value changed in the databrowser,
                 # we need two things:
@@ -1613,6 +1632,7 @@ class Project:
                 modified_values = to_undo[1]
                 # or value changed)
                 table.itemChanged.disconnect()
+
                 for i in range(0, len(modified_values)):
                     # Each modified value is a list of 3 elements:
                     # scan, tag, and old_value
@@ -1624,6 +1644,7 @@ class Project:
                     item = table.item(
                         table.get_scan_row(scan), table.get_tag_column(tag)
                     )
+
                     if old_value is None:
                         # If the cell was not defined before, we reput it
                         self.session.remove_value(
@@ -1639,6 +1660,7 @@ class Project:
                         font.setItalic(True)
                         font.setBold(True)
                         item.setFont(font)
+
                     else:
                         # If the cell was there before,
                         # we just set it to the old value
@@ -1648,10 +1670,11 @@ class Project:
                         set_item_data(
                             item,
                             old_value,
-                            self.database.get_field_attrib(
+                            self.database.get_field_attributes(
                                 COLLECTION_CURRENT, tag
                             )["field_type"],
                         )
+
                         # If the new value is None,
                         # the not defined font must be removed
                         if new_value is None:
@@ -1659,8 +1682,10 @@ class Project:
                             font.setItalic(False)
                             font.setBold(False)
                             item.setFont(font)
+
                 table.update_colors()
                 table.itemChanged.connect(table.change_cell_color)
+
             if action == "modified_visibilities":
                 # To revert the modifications of the visualized tags
                 # Old list of columns

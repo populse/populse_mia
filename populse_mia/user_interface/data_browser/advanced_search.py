@@ -310,7 +310,7 @@ class AdvancedSearch(QWidget):
         """
 
         tag_name = field.currentText()
-        tag_attrib = self.project.database.get_field_attrib(
+        tag_attrib = self.project.database.get_field_attributes(
             COLLECTION_CURRENT, tag_name
         )
         no_operators_tags = [t for t in ALL_TYPES if get_origin(t) is list]
@@ -401,27 +401,39 @@ class AdvancedSearch(QWidget):
         values = []
         links = []
         nots = []
+
         for row in self.rows:
+
             for widget in row:
+
                 if widget is not None:
                     child = widget
                     child_name = child.objectName()
+
                     if child_name == "link":
                         links.append(child.currentText())
+
                     elif child_name == "condition":
                         conditions.append(child.currentText())
+
                     elif child_name == "field":
+
                         if child.currentText() != "All visualized tags":
                             fields.append([child.currentText()])
+
                         else:
+
                             if replace_all_by_fields:
                                 fields.append(
                                     self.project.database.get_shown_tags()
                                 )
+
                             else:
                                 fields.append([child.currentText()])
+
                     elif child_name == "value":
                         values.append(child.displayText())
+
                     elif child_name == "not":
                         nots.append(child.currentText())
 
@@ -432,21 +444,28 @@ class AdvancedSearch(QWidget):
 
         # Converting BETWEEN and IN values into lists
         for i in range(0, len(conditions)):
+
             if conditions[i] == "BETWEEN" or conditions[i] == "IN":
                 values[i] = values[i].split("; ")
+
             if conditions[i] == "IN":
+
                 for tag in fields[i].copy():
-                    tag_row = self.project.session.get_field(
+                    tag_attrib = self.project.database.get_field_attributes(
                         COLLECTION_CURRENT, tag
                     )
-                    if tag_row.type.startswith("list_"):
+
+                    if get_origin(tag_attrib["field_type"]) is list:
                         fields[i].remove(tag)
+
             elif conditions[i] in operators:
+
                 for tag in fields[i].copy():
-                    tag_row = self.project.session.get_field(
+                    tag_attrib = self.project.database.get_field_attributes(
                         COLLECTION_CURRENT, tag
                     )
-                    if tag_row.type in no_operators_tags:
+
+                    if tag_attrib["field_type"] in no_operators_tags:
                         fields[i].remove(tag)
 
         return fields, conditions, values, links, nots

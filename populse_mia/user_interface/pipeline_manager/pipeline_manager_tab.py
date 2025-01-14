@@ -554,16 +554,23 @@ class PipelineManagerTab(QWidget):
 
         if isinstance(p_value, (list, TraitListObject)):
             inner_trait = trait.handler.inner_traits()[0]
+
             for i, elt in enumerate(p_value):
                 new_attributes = {}
+
                 for k, v in attributes.items():
+
                     if isinstance(v, list) and v:
+
                         if len(v) > i:
                             new_attributes[k] = v[i]
+
                         else:
                             new_attributes[k] = v[-1]
+
                     else:
                         new_attributes[k] = v
+
                 self.add_plug_value_to_database(
                     elt,
                     brick_id,
@@ -576,6 +583,7 @@ class PipelineManagerTab(QWidget):
                     inputs,
                     new_attributes,
                 )
+
             return
 
         if not is_file_trait(trait, allow_dir=True) or p_value in (
@@ -600,6 +608,7 @@ class PipelineManagerTab(QWidget):
             return
 
         p_value = p_value.replace(os.path.abspath(self.project.folder), "")
+
         if p_value and p_value[0] in ["\\", "/"]:
             p_value = p_value[1:]
 
@@ -607,9 +616,11 @@ class PipelineManagerTab(QWidget):
         # no exception is raised
         # but the user is warned
         already_in_db = False
+
         if self.project.session.get_document(COLLECTION_CURRENT, p_value):
             already_in_db = True
             print("Path {0} already in database.".format(p_value))
+
         else:
             self.project.session.add_document(COLLECTION_CURRENT, p_value)
             self.project.session.add_document(COLLECTION_INITIAL, p_value)
@@ -619,14 +630,19 @@ class PipelineManagerTab(QWidget):
 
         # Type tag
         filename, file_extension = os.path.splitext(p_value)
+
         if file_extension == ".gz":
             filename, file_extension = os.path.splitext(filename)
+
         ptype = TYPE_UNKNOWN
+
         if file_extension in (".nii", ".mnc", ".ima", ".img"):
             # (not all nifti but all volumes, image "scans")
             ptype = TYPE_NII
+
         elif file_extension == ".mat":
             ptype = TYPE_MAT
+
         elif file_extension == ".txt":
             ptype = TYPE_TXT
 
@@ -736,22 +752,32 @@ class PipelineManagerTab(QWidget):
             # they are all the same, there is no ambiguity
             eq = True
             first = None
+
             for param, cvalues in all_cvalues.items():
+
                 if first is None:
                     first = cvalues
+
                 else:
                     eq = cvalues == first
+
                     if not eq:
                         break
+
             if eq:
                 first = None
+
                 for param, ivalues in all_ivalues.items():
+
                     if first is None:
                         first = ivalues
+
                     else:
                         eq = ivalues == first
+
                         if not eq:
                             break
+
             if eq:
                 # all values equal, no ambiguity
                 k, v = next(iter(all_cvalues.items()))
@@ -775,12 +801,14 @@ class PipelineManagerTab(QWidget):
                     inheritance_dict[old_value] = value
                     all_cvalues = {param: all_cvalues[param]}
                     all_ivalues = {param: all_ivalues[param]}
+
                 elif node_name + plug_name in self.key:
                     param = self.key[node_name + plug_name]
                     value = parent_files[param]
                     inheritance_dict[old_value] = value
                     all_cvalues = {param: all_cvalues[param]}
                     all_ivalues = {param: all_ivalues[param]}
+
                 elif not attributes and not already_in_db:
                     # (if there are attributes from completion, use them
                     # without asking)
@@ -799,18 +827,25 @@ class PipelineManagerTab(QWidget):
                     )
                     pop_up.exec()
                     self.ignore_node = pop_up.everything
+
                     if pop_up.ignore:
                         inheritance_dict = None
+
                         if pop_up.all is True:
                             self.ignore[node_name] = True
+
                         else:
                             self.ignore[node_name + plug_name] = True
+
                     else:
                         value = pop_up.value
+
                         if pop_up.all is True:
                             self.key[node_name] = pop_up.key
+
                         else:
                             self.key[node_name + plug_name] = pop_up.key
+
                         inheritance_dict[old_value] = value
                         all_cvalues = {pop_up.key: all_cvalues[pop_up.key]}
                         all_ivalues = {pop_up.key: all_ivalues[pop_up.key]}
@@ -843,32 +878,39 @@ class PipelineManagerTab(QWidget):
         )
 
         if own_tags:
+
             # own_tags may insert new fields in the database
             for tag_to_add in own_tags:
+
                 if tag_to_add["name"] not in field_names:
-                    (self.project.session.add_field)(
-                        COLLECTION_CURRENT,
-                        tag_to_add["name"],
-                        tag_to_add["field_type"],
-                        tag_to_add["description"],
-                        tag_to_add["visibility"],
-                        tag_to_add["origin"],
-                        tag_to_add["unit"],
-                        tag_to_add["default_value"],
+
+                    self.project.database.add_field(
+                        {
+                            "collection_name": COLLECTION_CURRENT,
+                            "field_name": tag_to_add["name"],
+                            "field_type": tag_to_add["field_type"],
+                            "description": tag_to_add["description"],
+                            "visibility": tag_to_add["visibility"],
+                            "origin": tag_to_add["origin"],
+                            "unit": tag_to_add["unit"],
+                            "default_value": tag_to_add["default_value"],
+                        }
                     )
 
                 if tag_to_add["name"] not in (
-                    self.project.database.get_field_names
-                )(COLLECTION_INITIAL):
-                    (self.project.session.add_field)(
-                        COLLECTION_INITIAL,
-                        tag_to_add["name"],
-                        tag_to_add["field_type"],
-                        tag_to_add["description"],
-                        tag_to_add["visibility"],
-                        tag_to_add["origin"],
-                        tag_to_add["unit"],
-                        tag_to_add["default_value"],
+                    self.project.database.get_field_names(COLLECTION_INITIAL)
+                ):
+                    self.project.database.add_field(
+                        {
+                            "collection_name": COLLECTION_INITIAL,
+                            "field_name": tag_to_add["name"],
+                            "field_type": tag_to_add["field_type"],
+                            "description": tag_to_add["description"],
+                            "visibility": tag_to_add["visibility"],
+                            "origin": tag_to_add["origin"],
+                            "unit": tag_to_add["unit"],
+                            "default_value": tag_to_add["default_value"],
+                        }
                     )
 
                 cvalues[tag_to_add["name"]] = tag_to_add["value"]
@@ -878,20 +920,25 @@ class PipelineManagerTab(QWidget):
         self.project.session.set_values(COLLECTION_INITIAL, p_value, ivalues)
 
         if tags2del:
+
             for tag_to_del in tags2del:
+
                 try:
                     self.project.session.remove_value(
                         COLLECTION_CURRENT, p_value, tag_to_del
                     )
+
                 except ValueError:
                     # The collection does not exist
                     # or the field does not exist
                     # or the document does not exist
                     pass
+
                 try:
                     self.project.session.remove_value(
                         COLLECTION_INITIAL, p_value, tag_to_del
                     )
+
                 except ValueError:
                     # The collection does not exist
                     # or the field does not exist
@@ -1343,21 +1390,18 @@ class PipelineManagerTab(QWidget):
         :param process: process instance of the corresponding node
         :return:
         """
+        # config = Config()
 
-        """
-        config = Config()
+        # if not config.isControlV1():
+        #     Node_Controller = CapsulNodeController
 
-        if not config.isControlV1():
-            Node_Controller = CapsulNodeController
+        # else:
+        #     Node_Controller = NodeController
 
-        else:
-            Node_Controller = NodeController
-
-        self.nodeController = Node_Controller(
-            self.project, self.scan_list, self, self.main_window)
-        self.nodeController.visibles_tags = \
-            self.project.session.get_shown_tags()
-        """
+        # self.nodeController = Node_Controller(
+        #     self.project, self.scan_list, self, self.main_window)
+        # self.nodeController.visibles_tags = \
+        #     self.project.session.get_shown_tags()
 
         self.nodeController.display_parameters(
             node_name, process, self.pipelineEditorTabs.get_current_pipeline()

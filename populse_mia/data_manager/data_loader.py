@@ -162,11 +162,9 @@ class ImportWorker(QThread):
         started, fills the database and updates the progress.
         """
         begin = time_time()
-
         raw_data_folder = os.path.relpath(
             os.path.join(self.project.folder, "data", "raw_data")
         )
-
         # Checking all the export logs from MRIManager and taking the most
         # recent
         list_logs = glob.glob(os.path.join(raw_data_folder, "logExport*.json"))
@@ -183,17 +181,19 @@ class ImportWorker(QThread):
         # For history
         historyMaker = list()
         historyMaker.append("add_scans")
+
         with self.lock:
             self.scans_added = []
+
         values_added = []
         tags_added = []
         tags_names_added = []
         documents = {}
-
         # List of tags to remove
         tags_to_remove = ["Dataset data file", "Dataset header file"]
 
         for dict_log in list_dict_log:
+
             if dict_log["StatusExport"] == "Export ok":
                 file_name = dict_log["NameFile"]
                 path_name = raw_data_folder
@@ -217,6 +217,7 @@ class ImportWorker(QThread):
                 )
 
                 if document_not_existing:
+
                     with self.lock:
                         # Scan added to history
                         self.scans_added.append(file_database_path)
@@ -225,22 +226,18 @@ class ImportWorker(QThread):
                 documents[file_database_path][
                     TAG_FILENAME
                 ] = file_database_path
-
                 # print('\ntags_from_file(file_name, path_name): ',
                 # tags_from_file(file_name, path_name))
 
                 # For each tag in each scan
                 for tag in tags_from_file(file_name, path_name):
+
                     # We do the tag only if it's not in the tags to remove
                     if tag[0] not in tags_to_remove:
                         tag_name = tag[0]
-
                         # print('\ntag_name: ', tag_name)
-
                         properties = tag[1]
-
                         # print('properties: ', properties)
-
                         format = ""
                         description = None
                         unit = None
@@ -267,8 +264,10 @@ class ImportWorker(QThread):
                             value = properties["value"]
 
                         else:
+
                             if isinstance(properties, list):
                                 value = properties[0]
+
                             else:
                                 value = properties
 
@@ -307,14 +306,17 @@ class ImportWorker(QThread):
                                 tag_type = FIELD_TYPE_TIME
 
                         if tag_name != "Json_Version":
+
                             # Preparing value and type
                             if hasattr(value, "__len__") and not isinstance(
                                 value, str
                             ):
+
                                 if (
                                     len(value) == 1
                                     and isinstance(value[0], list)
                                 ) or (len(value) != 1):
+
                                     if tag_type == FIELD_TYPE_STRING:
                                         tag_type = FIELD_TYPE_LIST_STRING
 
@@ -346,14 +348,15 @@ class ImportWorker(QThread):
                                         value_prepared.append(value_single[0])
 
                                     value = value_prepared
+
                         # print('value: ', value)
                         # print('tag_type: ', tag_type)
-
                         if (
                             tag_type == FIELD_TYPE_DATETIME
                             or tag_type == FIELD_TYPE_DATE
                             or tag_type == FIELD_TYPE_TIME
                         ):
+
                             if value is not None and value != "":
                                 value = datetime.strptime(value, format)
 
@@ -364,9 +367,10 @@ class ImportWorker(QThread):
                                     value = value.date()
 
                         # TODO time lists
-
-                        tag_attrib = self.project.database.get_field_attrib(
-                            COLLECTION_CURRENT, tag_name
+                        tag_attrib = (
+                            self.project.database.get_field_attributes(
+                                COLLECTION_CURRENT, tag_name
+                            )
                         )
 
                         if (
@@ -386,7 +390,6 @@ class ImportWorker(QThread):
                                     "unit": unit,
                                     "default_value": None,
                                     # "default_value": value,
-                                    "index": False,
                                 }
                             )
                             tags_added.append(
@@ -400,13 +403,13 @@ class ImportWorker(QThread):
                                     "unit": unit,
                                     "default_value": None,
                                     # "default_value": value,
-                                    "index": False,
                                 }
                             )
                             tags_names_added.append(tag_name)
 
                         # The value is accepted if it's not empty or null
                         if value is not None and value != "":
+
                             if document_not_existing:
                                 values_added.append(
                                     [
@@ -416,6 +419,7 @@ class ImportWorker(QThread):
                                         value,
                                     ]
                                 )  # Value added to history
+
                             documents[file_database_path][tag_name] = value
 
                 if document_not_existing:
@@ -433,6 +437,7 @@ class ImportWorker(QThread):
                     values_added.append(
                         [file_database_path, TAG_TYPE, TYPE_NII, TYPE_NII]
                     )
+
                 documents[file_database_path][TAG_CHECKSUM] = original_md5
                 documents[file_database_path][TAG_TYPE] = TYPE_NII
 
@@ -459,9 +464,10 @@ class ImportWorker(QThread):
                         tag_type = FIELD_TYPE_STRING
                         description = "Associated NIfTI file"
                         unit = None
-
-                        tag_attrib = self.project.database.get_field_attrib(
-                            COLLECTION_CURRENT, tag_name
+                        tag_attrib = (
+                            self.project.database.get_field_attributes(
+                                COLLECTION_CURRENT, tag_name
+                            )
                         )
 
                         if (
@@ -479,7 +485,6 @@ class ImportWorker(QThread):
                                     "origin": TAG_ORIGIN_BUILTIN,
                                     "unit": unit,
                                     "default_value": None,
-                                    "index": False,
                                 }
                             )
                             tags_added.append(
@@ -492,12 +497,12 @@ class ImportWorker(QThread):
                                     "origin": TAG_ORIGIN_BUILTIN,
                                     "unit": unit,
                                     "default_value": None,
-                                    "index": False,
                                 }
                             )
                             tags_names_added.append(tag_name)
 
                     if os.path.exists(bvec_path) and os.path.exists(bval_path):
+
                         # Index BVEC FSL format in the database
                         with open(bvec_path, "rb") as bvec_file:
                             original_md5_bvec = hashlib.md5(
@@ -507,7 +512,6 @@ class ImportWorker(QThread):
                         bvec_database_path = os.path.relpath(
                             bvec_path, self.project.folder
                         )
-
                         document_not_existing = (
                             self.project.session.get_document(
                                 COLLECTION_CURRENT, bvec_database_path
@@ -516,9 +520,11 @@ class ImportWorker(QThread):
                         )
 
                         if document_not_existing:
+
                             with self.lock:
                                 # Scan added to history
                                 self.scans_added.append(bvec_database_path)
+
                         documents[bvec_database_path] = {}
                         documents[bvec_database_path][
                             TAG_FILENAME
@@ -544,7 +550,6 @@ class ImportWorker(QThread):
                                     TYPE_BVEC,
                                 ]
                             )
-
                             # Value added to history
                             values_added.append(
                                 [
@@ -568,6 +573,7 @@ class ImportWorker(QThread):
                             original_md5_bval = hashlib.md5(
                                 bval_file.read()
                             ).hexdigest()
+
                         bval_database_path = os.path.relpath(
                             bval_path, self.project.folder
                         )
@@ -580,9 +586,11 @@ class ImportWorker(QThread):
                         )
 
                         if document_not_existing:
+
                             with self.lock:
                                 # Scan added to history
                                 self.scans_added.append(bval_database_path)
+
                         documents[bval_database_path] = {}
                         documents[bval_database_path][
                             TAG_FILENAME
@@ -625,7 +633,9 @@ class ImportWorker(QThread):
                         documents[bval_database_path][tag_name] = str(
                             file_database_path
                         )
+
                     if os.path.exists(bvec_bval_mrtrix_path):
+
                         # Index BVEC/BVAL MRTRIX format in the database
                         with open(
                             bvec_bval_mrtrix_path, "rb"
@@ -637,7 +647,6 @@ class ImportWorker(QThread):
                         bvec_bval_mrtrix_database_path = os.path.relpath(
                             bvec_bval_mrtrix_path, self.project.folder
                         )
-
                         document_not_existing = (
                             self.project.session.get_document(
                                 COLLECTION_CURRENT,
@@ -647,11 +656,13 @@ class ImportWorker(QThread):
                         )
 
                         if document_not_existing:
+
                             with self.lock:
                                 # Scan added to history
                                 self.scans_added.append(
                                     bvec_bval_mrtrix_database_path
                                 )
+
                         documents[bvec_bval_mrtrix_database_path] = {}
                         documents[bvec_bval_mrtrix_database_path][
                             TAG_FILENAME
@@ -677,7 +688,6 @@ class ImportWorker(QThread):
                                     TYPE_BVEC_BVAL,
                                 ]
                             )
-
                             # Value added to history
                             values_added.append(
                                 [
@@ -699,9 +709,14 @@ class ImportWorker(QThread):
                         )
 
         # Missing values added thanks to default values
-        for tag in self.project.database.get_field_attrib(COLLECTION_CURRENT):
+        for tag in self.project.database.get_field_attributes(
+            COLLECTION_CURRENT
+        ):
+
             if tag["origin"] == TAG_ORIGIN_USER:
+
                 for scan in self.scans_added:
+
                     if (
                         tag["default_value"] is not None
                         and self.project.database.get_value(
@@ -734,6 +749,7 @@ class ImportWorker(QThread):
         )
 
         for document in documents:
+
             if document in current_paths:
                 self.project.database.remove_document(
                     COLLECTION_CURRENT, document
@@ -761,11 +777,9 @@ class ImportWorker(QThread):
         historyMaker.append(values_added)
         self.project.undos.append(historyMaker)
         self.project.redos.clear()
-
         print("\nData export duration in the database:")
         print("read_log time: " + str(round(time_time() - begin, 2)) + " s\n")
         # print("read_log time: " + str(time_time() - begin))
-
         # pr.disable()
         # pr.print_stats(sort='time')
         # prof.print_stats()

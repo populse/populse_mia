@@ -1055,7 +1055,7 @@ class PopUpCloneTag(QDialog):
         """
         name_already_exists = False
 
-        for tag in project.database.get_field_attrib(COLLECTION_CURRENT):
+        for tag in project.database.get_field_attributes(COLLECTION_CURRENT):
 
             if (
                 tag["index"].split("|")[1]
@@ -5042,7 +5042,9 @@ class PopUpRemoveTag(QDialog):
 
         self.setLayout(vbox)
 
-        for tag in self.project.database.get_field_attrib(COLLECTION_CURRENT):
+        for tag in self.project.database.get_field_attributes(
+            COLLECTION_CURRENT
+        ):
             if tag["origin"] == TAG_ORIGIN_USER:
                 item = QtWidgets.QListWidgetItem()
                 self.list_widget_tags.addItem(item)
@@ -5078,7 +5080,7 @@ class PopUpRemoveTag(QDialog):
         if str_search != "":
             return_list = []
 
-            for tag in self.project.database.get_field_attrib(
+            for tag in self.project.database.get_field_attributes(
                 COLLECTION_CURRENT
             ):
 
@@ -5090,7 +5092,7 @@ class PopUpRemoveTag(QDialog):
         else:
             return_list = []
 
-            for tag in self.project.database.get_field_attrib(
+            for tag in self.project.database.get_field_attributes(
                 COLLECTION_CURRENT
             ):
 

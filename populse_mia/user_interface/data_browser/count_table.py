@@ -217,7 +217,7 @@ class CountTable(QDialog):
             if len(tag_values) == 0:
                 return
         if (
-            self.project.database.get_field_attrib(
+            self.project.database.get_field_attributes(
                 COLLECTION_CURRENT, self.push_buttons[-1].text()
             )
             is None
@@ -274,7 +274,7 @@ class CountTable(QDialog):
             for col in range(len(self.values_list) - 1):
                 item = QTableWidgetItem()
                 tag_name = self.push_buttons[col].text()
-                tag_type = self.project.database.get_field_attrib(
+                tag_type = self.project.database.get_field_attributes(
                     COLLECTION_CURRENT, tag_name
                 )["field_type"]
                 set_item_data(item, cell_text[col], tag_type)
@@ -360,7 +360,7 @@ class CountTable(QDialog):
         # idx_last_tag corresponds to the index of the (n-1)th tag
         self.idx_last_tag = idx_end
         last_tag = self.push_buttons[len(self.values_list) - 1].text()
-        last_tag_type = self.project.database.get_field_attrib(
+        last_tag_type = self.project.database.get_field_attributes(
             COLLECTION_CURRENT, last_tag
         )["field_type"]
         for header_name in self.values_list[-1]:
@@ -397,7 +397,7 @@ class CountTable(QDialog):
                     tag_name = self.table.horizontalHeaderItem(
                         idx_first_columns
                     ).text()
-                    tag_type = self.project.database.get_field_attrib(
+                    tag_type = self.project.database.get_field_attributes(
                         COLLECTION_CURRENT, tag_name
                     )["field_type"]
                     value_str = self.table.item(row, idx_first_columns).data(
@@ -406,9 +406,11 @@ class CountTable(QDialog):
                     value_database = table_to_database(value_str, tag_type)
                     tag_list.append([tag_name, value_database])
                 tag_last_columns = self.push_buttons[-1].text()
-                tag_last_columns_type = self.project.database.get_field_attrib(
-                    COLLECTION_CURRENT, tag_last_columns
-                )["field_type"]
+                tag_last_columns_type = (
+                    self.project.database.get_field_attributes(
+                        COLLECTION_CURRENT, tag_last_columns
+                    )["field_type"]
+                )
                 value_last_columns_str = self.table.horizontalHeaderItem(
                     col
                 ).data(Qt.EditRole)

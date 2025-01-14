@@ -287,6 +287,8 @@ class DatabaseMIA:
         """
         self.storage = None
 
+    # -- Collections management --
+
     def add_collection(
         self,
         collection_name,
@@ -350,6 +352,8 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return dbs.has_collection(collection_name)
 
+    # -- Fields / tags management --
+
     def get_field_names(self, collection):
         """Retrieve the list of all field names in the specified collection.
 
@@ -365,53 +369,12 @@ class DatabaseMIA:
             field_names = list(dbs[collection].keys())
             return field_names if field_names else None
 
-    def add_field(
-        self,
-        collection_name,
-        field_name,
-        field_type,
-        description,
-        visibility,
-        origin,
-        unit,
-        default_value,
-        index=False,
-    ):
-        """Add a field to the database, if it does not already exist.
-
-        :param collection_name: field collection (str)
-        :param field_name: field name (str)
-        :param field_type: field type (string, int, float, boolean, date,
-                           datetime, time, list_string, list_int, list_float,
-                           list_boolean, list_date, list_datetime or list_time)
-        :param description: field description (str or None)
-        :param visibility: Bool to know if the field is visible in the
-                           databrowser
-        :param origin: To know the origin of a field,
-                       in [TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER]
-        :param unit: Origin of the field, in [TAG_UNIT_MS, TAG_UNIT_MM,
-                     TAG_UNIT_DEGREE, TAG_UNIT_HZPIXEL, TAG_UNIT_MHZ]
-        :param default_value: Default_value of the field, can be str or None
+    def add_field(self, fields):
         """
-        with self.storage.schema() as schema:
-            schema.add_field(collection_name, field_name, field_type)
+        Adds one or more fields to the collection.
 
-        self.update_field_attributes(
-            collection_name=collection_name,
-            field_name=field_name,
-            visibility=visibility,
-            origin=origin,
-            unit=unit,
-            default_value=default_value,
-            description=description,
-            field_type=field_type,
-        )
-
-    def add_fields(self, fields):
-        """
-        Adds a list of fields to the collection.
-
-        Each field should be a dictionary containing the following keys:
+        Each field should be represented as a dictionary containing
+        the following keys:
         - collection_name: The collection to which the field belongs.
         - field_name: The name of the field.
         - field_type: The data type of the field.
@@ -420,13 +383,35 @@ class DatabaseMIA:
         - origin: The origin of the field.
         - unit: The unit associated with the field.
         - default_value: The default value of the field.
-        - index:
 
-        :param fields: List of dictionaries, each representing a
-                       field's attributes.
+        :param fields: A dictionary representing a single field's attributes,
+                       or a list of dictionaries representing multiple
+                       fields' attributes.
         """
+
+        # Ensure fields is always a list for consistent processing
+        if isinstance(fields, dict):
+            fields = [fields]
+
         for field in fields:
-            self.add_field(**field)
+
+            with self.storage.schema() as schema:
+                schema.add_field(
+                    field["collection_name"],
+                    field["field_name"],
+                    field["field_type"],
+                )
+
+            self.update_field_attributes(
+                collection_name=field["collection_name"],
+                field_name=field["field_name"],
+                visibility=field["visibility"],
+                origin=field["origin"],
+                unit=field["unit"],
+                default_value=field["default_value"],
+                description=field["description"],
+                field_type=field["field_type"],
+            )
 
     def remove_field(self, collection_name, field_name):
         """
@@ -456,234 +441,7 @@ class DatabaseMIA:
 
         self.remove_field_attributes(collection_name, field_name)
 
-    def get_field_attrib(self, collection_name, field_name=None):
-        """
-        Retrieve attributes of a specific field or all fields in a collection
-        from the storage.
-
-        Args:
-            collection_name (str): The name of the collection.
-            field_name (str, optional): The name of a specific field within
-            the collection. If not provided, attributes for all fields in the
-            collection will be retrieved.
-
-        Returns:
-            dict or list of dict: Attributes of the specified field as a
-            dictionary, or a list of dictionaries with attributes for all
-            fields if `field_name` is not provided.
-        """
-        with self.storage.data() as dbs:
-
-            if field_name:
-                attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
-                    f"{collection_name}|{field_name}"
-                ].get()
-
-                if attributes is not None:
-                    attributes["field_type"] = str_to_type(
-                        attributes["field_type"]
-                    )
-
-                return attributes
-
-            elif field_name is None:
-                attributes_list = []
-
-                for field_name in self.get_field_names(collection_name):
-                    attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
-                        f"{collection_name}|{field_name}"
-                    ].get()
-
-                    if attributes is not None:
-                        attributes["field_type"] = str_to_type(
-                            attributes["field_type"]
-                        )
-                        attributes_list.append(attributes)
-
-                return attributes_list
-
-            else:
-                return None
-
-    def add_value(self, collection_name, primary_key, field, value):
-        """Adds a value for <collection, document_id, field>"""
-        with self.storage.data(write=True) as dbs:
-            dbs[collection_name][primary_key][field] = value
-
-    def add_values(self, collection_name, primary_key, values_dict):
-        """Store or update a record in the specified collection.
-
-        Args:
-        collection_name (str): The name of the collection where the record
-                               will be stored.
-        primary_key (str): The unique key used to identify the record.
-        values_dict (dict): A dictionary containing the data to store
-                            or update.
-        """
-        with self.storage.data(write=True) as dbs:
-            dbs[collection_name][primary_key] = values_dict
-
-    def get_value(self, collection, primary_key, field):
-        """
-        Retrieves the current value of a specific field in a document from
-        the specified collection.
-
-        This method accesses the underlying storage to fetch the value of a
-        given field within a document, identified by its primary key, in the
-        specified collection.
-
-        :param collection: The name of the collection containing the document.
-        :type collection: str
-        :param primary_key: The unique identifier (primary key) of the
-                            document.
-        :type primary_key: str
-        :param field: The name of the field within the document to retrieve.
-        :type field: str
-        :return: The current value of the specified field.
-        :rtype: Any
-        """
-        with self.storage.data() as dbs:
-            return dbs[collection][primary_key][field].get()
-
-    def filter_documents(
-        self, collection, filter_query, fields=None, as_list=False
-    ):
-        """
-        Iterates over the collection documents selected by filter_query
-
-        Each item yield is a row of the collection table returned
-
-        filter_query can be the result of self.filter_query() or a string
-        containing a filter (in this case self.filter_query() is called to
-        get the actual query)
-
-        :param collection: Filter collection (str, must be existing)
-        :param filter_query: Filter query (str)
-
-            - A filter row must be written this way:
-              {<field>} <operator> "<value>"
-            - The operator must be in
-              ('==', '!=', '<=', '>=', '<', '>', 'IN', 'ILIKE', 'LIKE')
-            - The filter rows can be linked with ' AND ' or ' OR '
-            - Example:
-              "((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))"
-        """
-
-        if not self.has_collection(collection):
-            raise ValueError(
-                "The collection {0} does not exist".format(collection)
-            )
-
-        with self.storage.data() as dbs:
-            for i in dbs[collection].search(filter_query):
-                yield i
-        # with self.storage.data() as dbs:
-        #      return dbs[collection].search(filter_query)
-
-    def get_document(self, collection, document_id):
-        """
-        Retrieves a document from the specified collection using its
-        identifier.
-
-        :param collection: Name of the document collection (str).
-                           Must exist.
-        :param document_id: Identifier of the document to
-                            retrieve (str or int).
-
-        :return: The document instance if found, otherwise None.
-        """
-        if not self.has_collection(collection):
-            return None
-
-        with self.storage.data() as dbs:
-            return dbs[collection][document_id].get()
-
-    def get_documents(self, collection):
-        """
-        Retrieve all documents from the specified collection.
-
-        This method checks if the specified collection exists. If it does,
-        the method fetches and returns a list of all document rows in the
-        collection. If the collection does not exist, an empty list is
-        returned.
-
-        :param collection: Name of the document collection (str).
-                           The collection must already exist in the database.
-
-        :return: A list of document rows if the collection exists,
-                 or an empty list if the collection does not exist.
-        """
-        if self.has_collection(collection):
-
-            with self.storage.data() as dbs:
-                return dbs[collection].get()
-
-        else:
-            return []
-
-    def get_document_names(self, collection):
-        """Retrieve a list of all document names in the specified collection.
-
-        Args:
-            collection (str): The name of the collection to retrieve document
-                              names from. The collection must already exist.
-
-        Returns:
-            list[str]: A list of document names if the collection exists,
-                       otherwise an empty list.
-        """
-        if self.has_collection(collection):
-
-            primary_key = self.primary_key(collection)
-
-            with self.storage.data() as dbs:
-                return [item[primary_key] for item in dbs[collection].get()]
-
-        return []
-
-    def remove_document(self, collection_name, document_id):
-        """
-        Remove a document from a specified collection.
-
-        This method deletes the document identified by `document_id` from
-        the given collection in the storage.
-
-        Args:
-            collection_name (str): The name of the collection
-                                   containing the document.
-            document_id (str): The unique identifier of the document to
-                               be removed.
-
-        Raises:
-            KeyError: If the collection or the document does not exist.
-        """
-        try:
-
-            with self.storage.data(write=True) as dbs:
-                del dbs[collection_name][document_id]
-
-        except KeyError as e:
-            raise KeyError(
-                f"Failed to remove document with "
-                f"ID '{document_id}' from "
-                f"collection '{collection_name}': {e}"
-            )
-
-    def primary_key(self, collection):
-        """Retrieve the primary key of the specified collection.
-
-        This method returns the first key from the specified collection within
-        the database.
-
-        Args:
-            collection (str): The name of the collection to retrieve the
-                              primary key from.
-
-        Returns:
-            str: The first key in the collection, representing the primary key.
-        """
-        with self.storage.data() as dbs:
-            return next(iter(dbs[collection].keys()))
+    # -- field attributes management --
 
     def add_field_attributes_collection(self):
         """Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in
@@ -819,6 +577,241 @@ class DatabaseMIA:
             },
         )
 
+    def get_field_attributes(self, collection_name, field_name=None):
+        """
+        Retrieve attributes of a specific field or all fields in a collection
+        from the storage.
+
+        Args:
+            collection_name (str): The name of the collection.
+            field_name (str, optional): The name of a specific field within
+            the collection. If not provided, attributes for all fields in the
+            collection will be retrieved.
+
+        Returns:
+            dict or list of dict: Attributes of the specified field as a
+            dictionary, or a list of dictionaries with attributes for all
+            fields if `field_name` is not provided.
+        """
+        with self.storage.data() as dbs:
+
+            if field_name:
+                attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
+                    f"{collection_name}|{field_name}"
+                ].get()
+
+                if attributes is not None:
+                    attributes["field_type"] = str_to_type(
+                        attributes["field_type"]
+                    )
+
+                return attributes
+
+            elif field_name is None:
+                attributes_list = []
+
+                for field_name in self.get_field_names(collection_name):
+                    attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
+                        f"{collection_name}|{field_name}"
+                    ].get()
+
+                    if attributes is not None:
+                        attributes["field_type"] = str_to_type(
+                            attributes["field_type"]
+                        )
+                        attributes_list.append(attributes)
+
+                return attributes_list
+
+            else:
+                return None
+
+    # -- Values management --
+
+    def add_value(self, collection_name, primary_key, field, value):
+        """Adds a value for <collection, document_id, field>"""
+        with self.storage.data(write=True) as dbs:
+            dbs[collection_name][primary_key][field] = value
+
+    def add_values(self, collection_name, primary_key, values_dict):
+        """Store or update a record in the specified collection.
+
+        Args:
+        collection_name (str): The name of the collection where the record
+                               will be stored.
+        primary_key (str): The unique key used to identify the record.
+        values_dict (dict): A dictionary containing the data to store
+                            or update.
+        """
+        with self.storage.data(write=True) as dbs:
+            dbs[collection_name][primary_key] = values_dict
+
+    def get_value(self, collection, primary_key, field):
+        """
+        Retrieves the current value of a specific field in a document from
+        the specified collection.
+
+        This method accesses the underlying storage to fetch the value of a
+        given field within a document, identified by its primary key, in the
+        specified collection.
+
+        :param collection: The name of the collection containing the document.
+        :type collection: str
+        :param primary_key: The unique identifier (primary key) of the
+                            document.
+        :type primary_key: str
+        :param field: The name of the field within the document to retrieve.
+        :type field: str
+        :return: The current value of the specified field.
+        :rtype: Any
+        """
+        with self.storage.data() as dbs:
+            return dbs[collection][primary_key][field].get()
+
+    # -- Documents management --
+
+    def filter_documents(
+        self, collection, filter_query, fields=None, as_list=False
+    ):
+        """
+        Iterates over the collection documents selected by filter_query
+
+        Each item yield is a row of the collection table returned
+
+        filter_query can be the result of self.filter_query() or a string
+        containing a filter (in this case self.filter_query() is called to
+        get the actual query)
+
+        :param collection: Filter collection (str, must be existing)
+        :param filter_query: Filter query (str)
+
+            - A filter row must be written this way:
+              {<field>} <operator> "<value>"
+            - The operator must be in
+              ('==', '!=', '<=', '>=', '<', '>', 'IN', 'ILIKE', 'LIKE')
+            - The filter rows can be linked with ' AND ' or ' OR '
+            - Example:
+              "((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))"
+        """
+
+        if not self.has_collection(collection):
+            raise ValueError(
+                "The collection {0} does not exist".format(collection)
+            )
+
+        with self.storage.data() as dbs:
+            for i in dbs[collection].search(filter_query):
+                yield i
+        # with self.storage.data() as dbs:
+        #      return dbs[collection].search(filter_query)
+
+    def get_document(self, collection, document_id):
+        """
+        Retrieves a document from the specified collection using its
+        identifier.
+
+        :param collection: Name of the document collection (str).
+                           Must exist.
+        :param document_id: Identifier of the document to
+                            retrieve (str or int).
+
+        :return: The document instance if found, otherwise None.
+        """
+        if not self.has_collection(collection):
+            return None
+
+        with self.storage.data() as dbs:
+            return dbs[collection][document_id].get()
+
+    def get_documents(self, collection):
+        """
+        Retrieve all documents from the specified collection.
+
+        This method checks if the specified collection exists. If it does,
+        the method fetches and returns a list of all document rows in the
+        collection. If the collection does not exist, an empty list is
+        returned.
+
+        :param collection: Name of the document collection (str).
+                           The collection must already exist in the database.
+
+        :return: A list of document rows if the collection exists,
+                 or an empty list if the collection does not exist.
+        """
+        if self.has_collection(collection):
+
+            with self.storage.data() as dbs:
+                return dbs[collection].get()
+
+        else:
+            return []
+
+    def get_document_names(self, collection):
+        """Retrieve a list of all document names in the specified collection.
+
+        Args:
+            collection (str): The name of the collection to retrieve document
+                              names from. The collection must already exist.
+
+        Returns:
+            list[str]: A list of document names if the collection exists,
+                       otherwise an empty list.
+        """
+        if self.has_collection(collection):
+
+            primary_key = self.primary_key(collection)
+
+            with self.storage.data() as dbs:
+                return [item[primary_key] for item in dbs[collection].get()]
+
+        return []
+
+    def remove_document(self, collection_name, document_id):
+        """
+        Remove a document from a specified collection.
+
+        This method deletes the document identified by `document_id` from
+        the given collection in the storage.
+
+        Args:
+            collection_name (str): The name of the collection
+                                   containing the document.
+            document_id (str): The unique identifier of the document to
+                               be removed.
+
+        Raises:
+            KeyError: If the collection or the document does not exist.
+        """
+        try:
+
+            with self.storage.data(write=True) as dbs:
+                del dbs[collection_name][document_id]
+
+        except KeyError as e:
+            raise KeyError(
+                f"Failed to remove document with "
+                f"ID '{document_id}' from "
+                f"collection '{collection_name}': {e}"
+            )
+
+    # -- Utility --
+
+    def primary_key(self, collection):
+        """Retrieve the primary key of the specified collection.
+
+        This method returns the first key from the specified collection within
+        the database.
+
+        Args:
+            collection (str): The name of the collection to retrieve the
+                              primary key from.
+
+        Returns:
+            str: The first key in the collection, representing the primary key.
+        """
+        with self.storage.data() as dbs:
+            return next(iter(dbs[collection].keys()))
+
     def get_shown_tags(self):
         """Give the list of visible tags.
 
@@ -860,6 +853,8 @@ class DatabaseMIA:
                         "visibility"
                     ] = (field in fields_shown)
 
+    # -- Currently obsoletes --
+
     def get_collection(self, name):
         """Returns the collection row of the collection"""
         raise NotImplementedError(
@@ -887,7 +882,7 @@ class DatabaseMIA:
         # print("#########")
         # print(
         #     "Please note that the get_field() function is obsolete. "
-        #     "Use get_field_attrib instead ......!"
+        #     "Use get_field_attributes instead ......!"
         # )
         # print("#########")
         # return None

@@ -227,28 +227,32 @@ class DataBrowser(QWidget):
         from populse_mia.utils import table_to_database
 
         values = []
-
         # We add the tag and a value for each scan in the Database
-        self.project.session.add_field(
-            COLLECTION_CURRENT,
-            new_tag_name,
-            tag_type,
-            new_tag_description,
-            True,
-            TAG_ORIGIN_USER,
-            new_tag_unit,
-            new_default_value,
+        self.project.database.add_field(
+            {
+                "collection_name": COLLECTION_CURRENT,
+                "field_name": new_tag_name,
+                "field_type": tag_type,
+                "description": new_tag_description,
+                "visibility": True,
+                "origin": TAG_ORIGIN_USER,
+                "unit": new_tag_unit,
+                "default_value": new_default_value,
+            }
         )
-        self.project.session.add_field(
-            COLLECTION_INITIAL,
-            new_tag_name,
-            tag_type,
-            new_tag_description,
-            True,
-            TAG_ORIGIN_USER,
-            new_tag_unit,
-            new_default_value,
+        self.project.database.add_field(
+            {
+                "collection_name": COLLECTION_INITIAL,
+                "field_name": new_tag_name,
+                "field_type": tag_type,
+                "description": new_tag_description,
+                "visibility": True,
+                "origin": TAG_ORIGIN_USER,
+                "unit": new_tag_unit,
+                "default_value": new_default_value,
+            }
         )
+
         for scan in self.project.session.get_documents(COLLECTION_CURRENT):
             self.project.unsavedModifications = True
             self.project.session.add_value(
@@ -284,7 +288,6 @@ class DataBrowser(QWidget):
         ]
         self.project.undos.append(history_maker)
         self.project.redos.clear()
-
         # New tag added to the table
         column = self.table_data.get_index_insertion(new_tag_name)
         self.table_data.add_column(column, new_tag_name)
@@ -337,31 +340,35 @@ class DataBrowser(QWidget):
         values = []
 
         # We add the new tag in the Database
-        tag_cloned_curr = self.project.database.get_field_attrib(
+        tag_cloned_curr = self.project.database.get_field_attributes(
             COLLECTION_CURRENT, tag_to_clone
         )
-        tag_cloned_init = self.project.session.get_field_attrib(
+        tag_cloned_init = self.project.database.get_field_attributes(
             COLLECTION_INITIAL, tag_to_clone
         )
         self.project.database.add_field(
-            collection_name=COLLECTION_CURRENT,
-            field_name=new_tag_name,
-            field_type=tag_cloned_curr["field_type"],
-            description=tag_cloned_curr["description"],
-            visibility=True,
-            origin=TAG_ORIGIN_USER,
-            unit=tag_cloned_curr["unit"],
-            default_value=tag_cloned_curr["default_value"],
+            {
+                "collection_name": COLLECTION_CURRENT,
+                "field_name": new_tag_name,
+                "field_type": tag_cloned_curr["field_type"],
+                "description": tag_cloned_curr["description"],
+                "visibility": True,
+                "origin": TAG_ORIGIN_USER,
+                "unit": tag_cloned_curr["unit"],
+                "default_value": tag_cloned_curr["default_value"],
+            }
         )
         self.project.database.add_field(
-            collection_name=COLLECTION_INITIAL,
-            field_name=new_tag_name,
-            field_type=tag_cloned_init["field_type"],
-            description=tag_cloned_init["description"],
-            visibility=True,
-            origin=TAG_ORIGIN_USER,
-            unit=tag_cloned_init["unit"],
-            default_value=tag_cloned_init["default_value"],
+            {
+                "collection_name": COLLECTION_INITIAL,
+                "field_name": new_tag_name,
+                "field_type": tag_cloned_init["field_type"],
+                "description": tag_cloned_init["description"],
+                "visibility": True,
+                "origin": TAG_ORIGIN_USER,
+                "unit": tag_cloned_init["unit"],
+                "default_value": tag_cloned_init["default_value"],
+            }
         )
         self.project.unsavedModifications = True
 
@@ -657,7 +664,7 @@ class DataBrowser(QWidget):
         # Each Tag row to remove is put in the history
         for tag in tag_names_to_remove:
             self.project.unsavedModifications = True
-            tag_attrib = self.project.database.get_field_attrib(
+            tag_attrib = self.project.database.get_field_attributes(
                 COLLECTION_CURRENT, tag
             )
             tags_removed.append([tag_attrib])
@@ -689,8 +696,8 @@ class DataBrowser(QWidget):
 
         # Tags removed from the Database and table
         for tag in tag_names_to_remove:
-            self.project.session.remove_field(COLLECTION_CURRENT, tag)
-            self.project.session.remove_field(COLLECTION_INITIAL, tag)
+            self.project.database.remove_field(COLLECTION_CURRENT, tag)
+            self.project.database.remove_field(COLLECTION_INITIAL, tag)
             self.table_data.removeColumn(self.table_data.get_tag_column(tag))
 
         # Selection updated
@@ -956,7 +963,7 @@ class TableDataBrowser(QTableWidget):
         self.insertColumn(column)
         item = QtWidgets.QTableWidgetItem()
         self.setHorizontalHeaderItem(column, item)
-        tag_attrib = self.project.database.get_field_attrib(
+        tag_attrib = self.project.database.get_field_attributes(
             COLLECTION_CURRENT, tag
         )
         item.setText(tag)
@@ -1037,7 +1044,7 @@ class TableDataBrowser(QTableWidget):
                 item = QtWidgets.QTableWidgetItem()
                 self.setHorizontalHeaderItem(column_index, item)
                 item.setText(tag)
-                tag_attrib = self.project.database.get_field_attrib(
+                tag_attrib = self.project.database.get_field_attributes(
                     COLLECTION_CURRENT, tag
                 )
 
@@ -1187,7 +1194,7 @@ class TableDataBrowser(QTableWidget):
                                 set_item_data(
                                     item,
                                     cur_value,
-                                    self.project.database.get_field_attrib(
+                                    self.project.database.get_field_attributes(
                                         COLLECTION_CURRENT, tag
                                     )["field_type"],
                                 )
@@ -1288,7 +1295,7 @@ class TableDataBrowser(QTableWidget):
             if tag_name == "PatientName":
                 new_value = new_value.replace(" ", "")
 
-            tag_attrib = self.project.database.get_field_attrib(
+            tag_attrib = self.project.database.get_field_attributes(
                 COLLECTION_CURRENT, tag_name
             )
             tag_type = tag_attrib["field_type"]
@@ -1379,7 +1386,7 @@ class TableDataBrowser(QTableWidget):
                 tag_name = self.horizontalHeaderItem(col).text()
                 database_value = table_to_database(
                     new_value,
-                    self.project.database.get_field_attrib(
+                    self.project.database.get_field_attributes(
                         COLLECTION_CURRENT, tag_name
                     )["field_type"],
                 )
@@ -1422,7 +1429,7 @@ class TableDataBrowser(QTableWidget):
                     set_item_data(
                         item,
                         new_value,
-                        self.project.database.get_field_attrib(
+                        self.project.database.get_field_attributes(
                             COLLECTION_CURRENT, tag_name
                         )["field_type"],
                     )
@@ -1688,7 +1695,7 @@ class TableDataBrowser(QTableWidget):
                 row = item.row()
                 self.coordinates.append([row, column])
                 tag_name = self.horizontalHeaderItem(column).text()
-                tag_attrib = self.project.database.get_field_attrib(
+                tag_attrib = self.project.database.get_field_attributes(
                     COLLECTION_CURRENT, tag_name
                 )
                 tag_type = tag_attrib["field_type"]
@@ -1805,7 +1812,7 @@ class TableDataBrowser(QTableWidget):
                     set_item_data(
                         new_item,
                         new_cur_value,
-                        self.project.database.get_field_attrib(
+                        self.project.database.get_field_attributes(
                             COLLECTION_CURRENT, self.tags[i]
                         )["field_type"],
                     )
@@ -1873,18 +1880,21 @@ class TableDataBrowser(QTableWidget):
             scans = self.project.database.filter_documents(
                 COLLECTION_CURRENT, req
             )
+
         else:
             scans = []
+
         tags = [
             self.horizontalHeaderItem(column).text()
             for column in range(len(self.horizontalHeader()))
         ]
         # TODO: In the following tag_types object, we use the default
-        #       str type if the type is not retrieved by get_field_attrib().
-        #       This can cause problems in certain situations ...
+        #       str type if the type is not retrieved by
+        #       get_field_attributes(). This can cause problems in
+        #       certain situations ...
         tag_types = {
             field_name: (
-                self.project.database.get_field_attrib(
+                self.project.database.get_field_attributes(
                     COLLECTION_CURRENT, field_name
                 )
                 or {}
@@ -2020,7 +2030,7 @@ class TableDataBrowser(QTableWidget):
             item = QtWidgets.QTableWidgetItem()
             self.setHorizontalHeaderItem(column, item)
             item.setText(tag_name)
-            tag_attrib = self.project.database.get_field_attrib(
+            tag_attrib = self.project.database.get_field_attributes(
                 COLLECTION_CURRENT, tag_name
             )
 
@@ -2157,7 +2167,7 @@ class TableDataBrowser(QTableWidget):
 
         for tag_name in list_tags_name:
             list_tags.append(
-                self.project.database.get_field_attrib(
+                self.project.database.get_field_attributes(
                     COLLECTION_CURRENT, tag_name
                 )
             )
@@ -2463,7 +2473,7 @@ class TableDataBrowser(QTableWidget):
                     set_item_data(
                         self.item(row, col),
                         initial_value,
-                        self.project.database.get_field_attrib(
+                        self.project.database.get_field_attributes(
                             COLLECTION_CURRENT, tag_name
                         )["field_type"],
                     )
@@ -2524,7 +2534,7 @@ class TableDataBrowser(QTableWidget):
                         set_item_data(
                             self.item(row_iter, col),
                             initial_value,
-                            self.project.database.get_field_attrib(
+                            self.project.database.get_field_attributes(
                                 COLLECTION_CURRENT, tag_name
                             )["field_type"],
                         )
@@ -2588,7 +2598,7 @@ class TableDataBrowser(QTableWidget):
                         set_item_data(
                             self.item(row, column),
                             initial_value,
-                            self.project.database.get_field_attrib(
+                            self.project.database.get_field_attributes(
                                 COLLECTION_CURRENT, tag
                             )["field_type"],
                         )
@@ -2769,7 +2779,7 @@ class TableDataBrowser(QTableWidget):
             documents_init = []
 
         fields = {
-            field_name: self.project.database.get_field_attrib(
+            field_name: self.project.database.get_field_attributes(
                 COLLECTION_CURRENT, field_name
             )
             for field_name in self.project.database.get_field_names(

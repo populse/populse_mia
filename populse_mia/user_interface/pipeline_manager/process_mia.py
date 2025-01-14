@@ -1117,6 +1117,7 @@ class ProcessMIA(Process):
         plug_name = None
 
         for i in self.user_traits():
+
             try:
                 if out_file in getattr(self, i, "___nothing___"):
                     plug_name = i
@@ -1229,22 +1230,32 @@ class ProcessMIA(Process):
             # they are all the same, there is no ambiguity
             eq = True
             first = None
+
             for param, cvalues in all_cvalues.items():
+
                 if first is None:
                     first = cvalues
+
                 else:
                     eq = cvalues == first
+
                     if not eq:
                         break
+
             if eq:
                 first = None
+
                 for param, ivalues in all_ivalues.items():
+
                     if first is None:
                         first = ivalues
+
                     else:
                         eq = ivalues == first
+
                         if not eq:
                             break
+
             if eq:
                 # all values equal, no ambiguity
                 k, v = next(iter(all_cvalues.items()))
@@ -1308,18 +1319,25 @@ class ProcessMIA(Process):
                     )
                     pop_up.exec()
                     ProcessMIA.ignore_node = pop_up.everything
+
                     if pop_up.ignore:
                         self.inheritance_dict = {}
+
                         if pop_up.all is True:
                             ProcessMIA.ignore[node_name] = True
+
                         else:
                             ProcessMIA.ignore[node_name + plug_name] = True
+
                     else:
                         value = pop_up.value
+
                         if pop_up.all is True:
                             ProcessMIA.key[node_name] = pop_up.key
+
                         else:
                             ProcessMIA.key[node_name + plug_name] = pop_up.key
+
                         self.inheritance_dict[out_file]["parent"] = value
                         all_cvalues = {pop_up.key: all_cvalues[pop_up.key]}
                         all_ivalues = {pop_up.key: all_ivalues[pop_up.key]}
@@ -1336,30 +1354,35 @@ class ProcessMIA(Process):
             # We want to add a tag or modify the value of a tag.
 
             for tag_to_add in own_tags:
+
                 if tag_to_add["name"] not in field_names:
-                    (self.project.session.add_field)(
-                        COLLECTION_CURRENT,
-                        tag_to_add["name"],
-                        tag_to_add["field_type"],
-                        tag_to_add["description"],
-                        tag_to_add["visibility"],
-                        tag_to_add["origin"],
-                        tag_to_add["unit"],
-                        tag_to_add["default_value"],
+                    self.project.database.add_field(
+                        {
+                            "collection_name": COLLECTION_CURRENT,
+                            "field_name": tag_to_add["name"],
+                            "field_type": tag_to_add["field_type"],
+                            "description": tag_to_add["description"],
+                            "visibility": tag_to_add["visibility"],
+                            "origin": tag_to_add["origin"],
+                            "unit": tag_to_add["unit"],
+                            "default_value": tag_to_add["default_value"],
+                        }
                     )
 
                 if tag_to_add["name"] not in (
                     self.project.database.get_field_names
                 )(COLLECTION_INITIAL):
-                    (self.project.session.add_field)(
-                        COLLECTION_INITIAL,
-                        tag_to_add["name"],
-                        tag_to_add["field_type"],
-                        tag_to_add["description"],
-                        tag_to_add["visibility"],
-                        tag_to_add["origin"],
-                        tag_to_add["unit"],
-                        tag_to_add["default_value"],
+                    self.project.session.add_field(
+                        {
+                            "collection_name": COLLECTION_INITIAL,
+                            "field_name": tag_to_add["name"],
+                            "field_type": tag_to_add["field_type"],
+                            "description": tag_to_add["description"],
+                            "visibility": tag_to_add["visibility"],
+                            "origin": tag_to_add["origin"],
+                            "unit": tag_to_add["unit"],
+                            "default_value": tag_to_add["default_value"],
+                        }
                     )
 
                 cvalues[tag_to_add["name"]] = tag_to_add["value"]
@@ -1376,6 +1399,7 @@ class ProcessMIA(Process):
             del_dbFieldValue(self.project, out_file, tags2del)
 
         if cvalues:
+
             if not self.project.session.get_document(
                 COLLECTION_CURRENT, rel_out_file
             ):
@@ -1388,6 +1412,7 @@ class ProcessMIA(Process):
             )
 
         if ivalues:
+
             if not self.project.session.get_document(
                 COLLECTION_INITIAL, rel_out_file
             ):

@@ -210,7 +210,7 @@ class ModifyTable(QDialog):
             for cell in range(0, len(self.scans)):
                 scan = self.scans[cell]
                 tag = self.tags[cell]
-                tag_attrib = self.project.database.get_field_attrib(
+                tag_attrib = self.project.database.get_field_attributes(
                     COLLECTION_CURRENT, tag
                 )
                 tag_type = tag_attrib["field_type"]
