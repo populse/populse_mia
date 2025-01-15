@@ -1372,7 +1372,7 @@ class ProcessMIA(Process):
                 if tag_to_add["name"] not in (
                     self.project.database.get_field_names
                 )(COLLECTION_INITIAL):
-                    self.project.session.add_field(
+                    self.project.database.add_field(
                         {
                             "collection_name": COLLECTION_INITIAL,
                             "field_name": tag_to_add["name"],

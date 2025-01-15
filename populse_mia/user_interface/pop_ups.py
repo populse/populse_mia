@@ -559,14 +559,16 @@ class PopUpAddPath(QDialog):
                     self.project.folder, "data", "downloaded_data", filename
                 )
                 shutil.copy(path, copy_path)
+
                 with open(path, "rb") as scan_file:
                     data = scan_file.read()
                     checksum = hashlib.md5(data).hexdigest()
+
                 path = os.path.join("data", "downloaded_data", filename)
-                self.project.session.add_document(COLLECTION_CURRENT, path)
-                self.project.session.add_document(COLLECTION_INITIAL, path)
+                self.project.database.add_document(COLLECTION_CURRENT, path)
+                self.project.database.add_document(COLLECTION_INITIAL, path)
                 values_added = []
-                self.project.session.add_value(
+                self.project.database.add_value(
                     COLLECTION_INITIAL, path, TAG_TYPE, path_type
                 )
                 self.project.session.add_value(
@@ -5048,7 +5050,7 @@ class PopUpRemoveTag(QDialog):
             if tag["origin"] == TAG_ORIGIN_USER:
                 item = QtWidgets.QListWidgetItem()
                 self.list_widget_tags.addItem(item)
-                item.setText(_translate("Dialog", tag.field_name))
+                item.setText(_translate("Dialog", tag["index"].split("|")[1]))
 
         self.setLayout(vbox)
 

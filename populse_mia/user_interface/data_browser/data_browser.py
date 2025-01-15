@@ -253,23 +253,23 @@ class DataBrowser(QWidget):
             }
         )
 
-        for scan in self.project.session.get_documents(COLLECTION_CURRENT):
+        for scan in self.project.database.get_documents(COLLECTION_CURRENT):
             self.project.unsavedModifications = True
-            self.project.session.add_value(
+            self.project.database.add_value(
                 COLLECTION_CURRENT,
-                getattr(scan, TAG_FILENAME),
+                scan[TAG_FILENAME],
                 new_tag_name,
                 table_to_database(new_default_value, tag_type),
             )
-            self.project.session.add_value(
+            self.project.database.add_value(
                 COLLECTION_INITIAL,
-                getattr(scan, TAG_FILENAME),
+                scan[TAG_FILENAME],
                 new_tag_name,
                 table_to_database(new_default_value, tag_type),
             )
             values.append(
                 [
-                    getattr(scan, TAG_FILENAME),
+                    scan[TAG_FILENAME],
                     new_tag_name,
                     table_to_database(new_default_value, tag_type),
                     table_to_database(new_default_value, tag_type),
@@ -372,32 +372,32 @@ class DataBrowser(QWidget):
         )
         self.project.unsavedModifications = True
 
-        for scan in self.project.session.get_documents(COLLECTION_CURRENT):
+        for scan in self.project.database.get_documents(COLLECTION_CURRENT):
             # If the tag to clone has a value, we add this value with the
             # new tag name in the Database
-            cloned_cur_value = self.project.session.get_value(
-                COLLECTION_CURRENT, getattr(scan, TAG_FILENAME), tag_to_clone
+            cloned_cur_value = self.project.database.get_value(
+                COLLECTION_CURRENT, scan[TAG_FILENAME], tag_to_clone
             )
-            cloned_init_value = self.project.session.get_value(
-                COLLECTION_INITIAL, getattr(scan, TAG_FILENAME), tag_to_clone
+            cloned_init_value = self.project.database.get_value(
+                COLLECTION_INITIAL, scan[TAG_FILENAME], tag_to_clone
             )
 
             if cloned_cur_value is not None or cloned_init_value is not None:
-                self.project.session.add_value(
+                self.project.database.add_value(
                     COLLECTION_CURRENT,
-                    getattr(scan, TAG_FILENAME),
+                    scan[TAG_FILENAME],
                     new_tag_name,
                     cloned_cur_value,
                 )
-                self.project.session.add_value(
+                self.project.database.add_value(
                     COLLECTION_INITIAL,
-                    getattr(scan, TAG_FILENAME),
+                    scan[TAG_FILENAME],
                     new_tag_name,
                     cloned_init_value,
                 )
                 values.append(
                     [
-                        getattr(scan, TAG_FILENAME),
+                        scan[TAG_FILENAME],
                         new_tag_name,
                         cloned_cur_value,
                         cloned_init_value,
@@ -678,10 +678,10 @@ class DataBrowser(QWidget):
             for scan in self.project.database.get_document_names(
                 COLLECTION_CURRENT
             ):
-                current_value = self.project.session.get_value(
+                current_value = self.project.database.get_value(
                     COLLECTION_CURRENT, scan, tag
                 )
-                initial_value = self.project.session.get_value(
+                initial_value = self.project.database.get_value(
                     COLLECTION_INITIAL, scan, tag
                 )
 
@@ -1414,7 +1414,7 @@ class TableDataBrowser(QTableWidget):
                         modified_values.append(
                             [scan_path, tag_name, None, database_value]
                         )
-                        self.project.session.add_value(
+                        self.project.database.add_value(
                             COLLECTION_CURRENT,
                             scan_path,
                             tag_name,

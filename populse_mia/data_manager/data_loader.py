@@ -741,7 +741,7 @@ class ImportWorker(QThread):
 
         self.notifyProgress.emit(1)
         sleep(0.1)
-        self.project.database.add_fields(tags_added)
+        self.project.database.add_field(tags_added)
         self.notifyProgress.emit(2)
         sleep(0.1)
         current_paths = self.project.database.get_document_names(

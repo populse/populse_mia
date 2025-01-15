@@ -670,6 +670,14 @@ class DatabaseMIA:
 
     # -- Documents management --
 
+    def add_document(self, collection, document):
+        """Adds a document to a collection."""
+        if self.has_collection(collection):
+            primary_key = self.primary_key(collection)
+
+            with self.storage.data(write=True) as dbs:
+                dbs[collection][document] = {primary_key: document}
+
     def filter_documents(
         self, collection, filter_query, fields=None, as_list=False
     ):
@@ -758,7 +766,6 @@ class DatabaseMIA:
                        otherwise an empty list.
         """
         if self.has_collection(collection):
-
             primary_key = self.primary_key(collection)
 
             with self.storage.data() as dbs:
@@ -904,12 +911,5 @@ class DatabaseMIA:
         """Removes the value <collection, document, field> if it exists."""
         raise NotImplementedError(
             "This method (remove_value) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def add_document(self, collection, document, create_missing_fields=True):
-        """Adds a document to a collection."""
-        raise NotImplementedError(
-            "This method (add_document) is not yet available in "
             "DatabaseMIA class."
         )

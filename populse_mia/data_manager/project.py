@@ -273,198 +273,237 @@ class Project:
                 default_value=None,
             )
             # Tags manually added
+
             self.database.add_field(
-                collection_name=COLLECTION_CURRENT,
-                field_name=TAG_CHECKSUM,
-                field_type=FIELD_TYPE_STRING,
-                description="Path checksum",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_CURRENT,
+                    "field_name": TAG_CHECKSUM,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Path checksum",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
+            )
+            # TODO Maybe remove checksum tag from populse_mia initial table?
+            self.database.add_field(
+                {
+                    "collection_name": COLLECTION_INITIAL,
+                    "field_name": TAG_CHECKSUM,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Path checksum",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_INITIAL,
-                field_name=TAG_CHECKSUM,
-                field_type=FIELD_TYPE_STRING,
-                description="Path checksum",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
-            )
-            # TODO Maybe remove checksum tag from populse_mia.initial table?
-            self.database.add_field(
-                collection_name=COLLECTION_CURRENT,
-                field_name=TAG_TYPE,
-                field_type=FIELD_TYPE_STRING,
-                description="Path type",
-                visibility=True,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_CURRENT,
+                    "field_name": TAG_TYPE,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Path type",
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_INITIAL,
-                field_name=TAG_TYPE,
-                field_type=FIELD_TYPE_STRING,
-                description="Path type",
-                visibility=True,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_INITIAL,
+                    "field_name": TAG_TYPE,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Path type",
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_CURRENT,
-                field_name=TAG_EXP_TYPE,
-                field_type=FIELD_TYPE_STRING,
-                description="Path exp type",
-                visibility=True,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_CURRENT,
+                    "field_name": TAG_EXP_TYPE,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Path exp type",
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_INITIAL,
-                field_name=TAG_EXP_TYPE,
-                field_type=FIELD_TYPE_STRING,
-                description="Path exp type",
-                visibility=True,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_INITIAL,
+                    "field_name": TAG_EXP_TYPE,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Path exp type",
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_CURRENT,
-                field_name=TAG_BRICKS,
-                field_type=FIELD_TYPE_LIST_STRING,
-                description="Path bricks",
-                visibility=True,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_CURRENT,
+                    "field_name": TAG_BRICKS,
+                    "field_type": FIELD_TYPE_LIST_STRING,
+                    "description": "Path bricks",
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_INITIAL,
-                field_name=TAG_BRICKS,
-                field_type=FIELD_TYPE_LIST_STRING,
-                description="Path bricks",
-                visibility=True,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_INITIAL,
+                    "field_name": TAG_BRICKS,
+                    "field_type": FIELD_TYPE_LIST_STRING,
+                    "description": "Path bricks",
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_CURRENT,
-                field_name=TAG_HISTORY,
-                field_type=FIELD_TYPE_STRING,
-                description="History uuid",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_CURRENT,
+                    "field_name": TAG_HISTORY,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "History uuid",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_INITIAL,
-                field_name=TAG_HISTORY,
-                field_type=FIELD_TYPE_STRING,
-                description="History uuid",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_INITIAL,
+                    "field_name": TAG_HISTORY,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "History uuid",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
 
             self.database.add_field(
-                collection_name=COLLECTION_BRICK,
-                field_name=BRICK_NAME,
-                field_type=FIELD_TYPE_STRING,
-                description="Brick name",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_BRICK,
+                    "field_name": BRICK_NAME,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Brick name",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_BRICK,
-                field_name=BRICK_INPUTS,
-                field_type=FIELD_TYPE_JSON,
-                description="Brick input(s)",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_BRICK,
+                    "field_name": BRICK_INPUTS,
+                    "field_type": FIELD_TYPE_JSON,
+                    "description": "Brick input(s)",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_BRICK,
-                field_name=BRICK_OUTPUTS,
-                field_type=FIELD_TYPE_JSON,
-                description="Brick output(s)",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_BRICK,
+                    "field_name": BRICK_OUTPUTS,
+                    "field_type": FIELD_TYPE_JSON,
+                    "description": "Brick output(s)",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_BRICK,
-                field_name=BRICK_INIT,
-                field_type=FIELD_TYPE_STRING,
-                description="Brick init status",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_BRICK,
+                    "field_name": BRICK_INIT,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Brick init status",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_BRICK,
-                field_name=BRICK_INIT_TIME,
-                field_type=FIELD_TYPE_DATETIME,
-                description="Brick init time",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_BRICK,
+                    "field_name": BRICK_INIT_TIME,
+                    "field_type": FIELD_TYPE_DATETIME,
+                    "description": "Brick init time",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_BRICK,
-                field_name=BRICK_EXEC,
-                field_type=FIELD_TYPE_STRING,
-                description="Brick exec status",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_BRICK,
+                    "field_name": BRICK_EXEC,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Brick exec status",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_BRICK,
-                field_name=BRICK_EXEC_TIME,
-                field_type=FIELD_TYPE_DATETIME,
-                description="Brick exec time",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_BRICK,
+                    "field_name": BRICK_EXEC_TIME,
+                    "field_type": FIELD_TYPE_DATETIME,
+                    "description": "Brick exec time",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
 
             self.database.add_field(
-                collection_name=COLLECTION_HISTORY,
-                field_name=HISTORY_PIPELINE,
-                field_type=FIELD_TYPE_STRING,
-                description="Pipeline XML",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_HISTORY,
+                    "field_name": HISTORY_PIPELINE,
+                    "field_type": FIELD_TYPE_STRING,
+                    "description": "Pipeline XML",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
             self.database.add_field(
-                collection_name=COLLECTION_HISTORY,
-                field_name=HISTORY_BRICKS,
-                field_type=FIELD_TYPE_LIST_STRING,
-                description="Bricks list",
-                visibility=False,
-                origin=TAG_ORIGIN_BUILTIN,
-                unit=None,
-                default_value=None,
+                {
+                    "collection_name": COLLECTION_HISTORY,
+                    "field_name": HISTORY_BRICKS,
+                    "field_type": FIELD_TYPE_LIST_STRING,
+                    "description": "Bricks list",
+                    "visibility": False,
+                    "origin": TAG_ORIGIN_BUILTIN,
+                    "unit": None,
+                    "default_value": None,
+                }
             )
 
             # Adding default tags for the clinical mode
@@ -479,24 +518,28 @@ class Project:
                         field_type = FIELD_TYPE_STRING
 
                     self.database.add_field(
-                        collection_name=COLLECTION_CURRENT,
-                        field_name=clinical_tag,
-                        field_type=field_type,
-                        description=clinical_tag,
-                        visibility=True,
-                        origin=TAG_ORIGIN_BUILTIN,
-                        unit=None,
-                        default_value=None,
+                        {
+                            "collection_name": COLLECTION_CURRENT,
+                            "field_name": clinical_tag,
+                            "field_type": field_type,
+                            "description": CLINICAL_TAGS[clinical_tag],
+                            "visibility": True,
+                            "origin": TAG_ORIGIN_BUILTIN,
+                            "unit": None,
+                            "default_value": None,
+                        }
                     )
                     self.database.add_field(
-                        collection_name=COLLECTION_INITIAL,
-                        field_name=clinical_tag,
-                        field_type=field_type,
-                        description=clinical_tag,
-                        visibility=True,
-                        origin=TAG_ORIGIN_BUILTIN,
-                        unit=None,
-                        default_value=None,
+                        {
+                            "collection_name": COLLECTION_INITIAL,
+                            "field_name": clinical_tag,
+                            "field_type": field_type,
+                            "description": CLINICAL_TAGS[clinical_tag],
+                            "visibility": True,
+                            "origin": TAG_ORIGIN_BUILTIN,
+                            "unit": None,
+                            "default_value": None,
+                        }
                     )
 
         self.properties = self.loadProperties()
@@ -525,24 +568,28 @@ class Project:
                     field_type = FIELD_TYPE_STRING
 
                 self.database.add_field(
-                    collection_name=COLLECTION_CURRENT,
-                    field_name=clinical_tag,
-                    field_type=field_type,
-                    description=CLINICAL_TAGS[clinical_tag],
-                    visibility=True,
-                    origin=TAG_ORIGIN_BUILTIN,
-                    unit=None,
-                    default_value=None,
+                    {
+                        "collection_name": COLLECTION_CURRENT,
+                        "field_name": clinical_tag,
+                        "field_type": field_type,
+                        "description": CLINICAL_TAGS[clinical_tag],
+                        "visibility": True,
+                        "origin": TAG_ORIGIN_BUILTIN,
+                        "unit": None,
+                        "default_value": None,
+                    }
                 )
                 self.database.add_field(
-                    collection_name=COLLECTION_INITIAL,
-                    field_name=clinical_tag,
-                    field_type=field_type,
-                    description=clinical_tag,
-                    visibility=True,
-                    origin=TAG_ORIGIN_BUILTIN,
-                    unit=None,
-                    default_value=None,
+                    {
+                        "collection_name": COLLECTION_INITIAL,
+                        "field_name": clinical_tag,
+                        "field_type": field_type,
+                        "description": CLINICAL_TAGS[clinical_tag],
+                        "visibility": True,
+                        "origin": TAG_ORIGIN_BUILTIN,
+                        "unit": None,
+                        "default_value": None,
+                    }
                 )
 
                 for scan in self.database.get_documents(COLLECTION_CURRENT):
@@ -1177,25 +1224,29 @@ class Project:
                 tag_description = to_redo[5]
                 values = to_redo[6]  # List of values stored
                 # Adding the tag
-                self.session.add_field(
-                    COLLECTION_CURRENT,
-                    tag_to_add,
-                    tag_type,
-                    tag_description,
-                    True,
-                    TAG_ORIGIN_USER,
-                    tag_unit,
-                    tag_default_value,
+                self.database.add_field(
+                    {
+                        "collection_name": COLLECTION_CURRENT,
+                        "field_name": tag_to_add,
+                        "field_type": tag_type,
+                        "description": tag_description,
+                        "visibility": True,
+                        "origin": TAG_ORIGIN_USER,
+                        "unit": tag_unit,
+                        "default_value": tag_default_value,
+                    }
                 )
-                self.session.add_field(
-                    COLLECTION_INITIAL,
-                    tag_to_add,
-                    tag_type,
-                    tag_description,
-                    True,
-                    TAG_ORIGIN_USER,
-                    tag_unit,
-                    tag_default_value,
+                self.database.add_field(
+                    {
+                        "collection_name": COLLECTION_INITIAL,
+                        "field_name": tag_to_add,
+                        "field_type": tag_type,
+                        "description": tag_description,
+                        "visibility": True,
+                        "origin": TAG_ORIGIN_USER,
+                        "unit": tag_unit,
+                        "default_value": tag_default_value,
+                    }
                 )
 
                 # Adding all the values associated
@@ -1495,6 +1546,7 @@ class Project:
 
         old_order = self.properties["sort_order"]
         self.properties["sort_order"] = order
+
         if old_order != order:
             self.unsavedModifications = True
 
@@ -1533,7 +1585,7 @@ class Project:
                 # the tag name, and remove it
                 tag_to_remove = to_undo[1]
                 self.database.remove_field(COLLECTION_CURRENT, tag_to_remove)
-                self.databse.remove_field(COLLECTION_INITIAL, tag_to_remove)
+                self.database.remove_field(COLLECTION_INITIAL, tag_to_remove)
                 column_to_remove = table.get_tag_column(tag_to_remove)
                 table.removeColumn(column_to_remove)
 
@@ -1549,25 +1601,29 @@ class Project:
                     # We reput each tag in the tag list, keeping
                     # all the tags params
                     tag_to_reput = tags_removed[i][0]
-                    self.session.add_field(
-                        COLLECTION_CURRENT,
-                        tag_to_reput.field_name,
-                        tag_to_reput.field_type,
-                        tag_to_reput.description,
-                        tag_to_reput.visibility,
-                        tag_to_reput.origin,
-                        tag_to_reput.unit,
-                        tag_to_reput.default_value,
+                    self.database.add_field(
+                        {
+                            "collection_name": COLLECTION_CURRENT,
+                            "field_name": tag_to_reput.field_name,
+                            "field_type": tag_to_reput.field_type,
+                            "description": tag_to_reput.description,
+                            "visibility": tag_to_reput.visibility,
+                            "origin": tag_to_reput.origin,
+                            "unit": tag_to_reput.unit,
+                            "default_value": tag_to_reput.default_value,
+                        }
                     )
-                    self.session.add_field(
-                        COLLECTION_INITIAL,
-                        tag_to_reput.field_name,
-                        tag_to_reput.field_type,
-                        tag_to_reput.description,
-                        tag_to_reput.visibility,
-                        tag_to_reput.origin,
-                        tag_to_reput.unit,
-                        tag_to_reput.default_value,
+                    self.databse.add_field(
+                        {
+                            "collection_name": COLLECTION_INITIAL,
+                            "field_name": tag_to_reput.field_name,
+                            "field_type": tag_to_reput.field_type,
+                            "description": tag_to_reput.description,
+                            "visibility": tag_to_reput.visibility,
+                            "origin": tag_to_reput.origin,
+                            "unit": tag_to_reput.unit,
+                            "default_value": tag_to_reput.default_value,
+                        }
                     )
 
                 # The third element is a list of tags values (Value class)
