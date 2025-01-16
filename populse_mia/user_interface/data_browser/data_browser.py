@@ -2432,7 +2432,7 @@ class TableDataBrowser(QTableWidget):
                         os.remove(full_scan_path)
 
         for scan in scans_removed:
-            scan_name = getattr(scan, TAG_FILENAME)
+            scan_name = scan[TAG_FILENAME]
             self.removeRow(self.get_scan_row(scan_name))
             self.project.unsavedModifications = True
 
