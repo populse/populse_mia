@@ -69,7 +69,6 @@ class ModifyTable(QDialog):
         """
         super().__init__()
         self.setModal(True)
-
         # Variables init
         self.types = types
         self.scans = scans
@@ -78,40 +77,31 @@ class ModifyTable(QDialog):
         self.value = value
         # The table that will be filled
         self.table = QTableWidget()
-
         # Filling the table
         self.fill_table()
-
         # Ok button
         ok_button = QPushButton("Ok")
         ok_button.clicked.connect(self.update_table_values)
-
         # Cancel button
         cancel_button = QPushButton("Cancel")
         cancel_button.clicked.connect(self.close)
-
         # + button (add one more element to a list)
         plus_button = QPushButton("+")
         plus_button.setToolTip("Add one more element to the list")
         plus_button.clicked.connect(self.add_item)
-
         # - button (remove last element from a list)
         minus_button = QPushButton("-")
         minus_button.setToolTip("Remove the last element of the list")
         minus_button.clicked.connect(self.rem_last_item)
-
         # Layouts
         self.v_box_final = QVBoxLayout()
         self.h_box_final = QHBoxLayout()
-
         self.h_box_final.addWidget(ok_button)
         self.h_box_final.addWidget(cancel_button)
         self.h_box_final.addWidget(plus_button)
         self.h_box_final.addWidget(minus_button)
-
         self.v_box_final.addWidget(self.table)
         self.v_box_final.addLayout(self.h_box_final)
-
         self.setLayout(self.v_box_final)
 
     def add_item(self):
@@ -177,9 +167,10 @@ class ModifyTable(QDialog):
         for i in range(0, self.table.columnCount()):
             item = self.table.item(0, i)
             text = item.text()
-
             valid_type = True
+
             for tag_type in self.types:
+
                 if not check_value_type(text, tag_type, True):
                     valid_type = False
                     type_problem = tag_type
@@ -189,6 +180,7 @@ class ModifyTable(QDialog):
             if not valid_type:
                 # Error dialog if invalid cell
                 valid = False
+
                 if test is False:
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
@@ -206,6 +198,7 @@ class ModifyTable(QDialog):
                 break
 
         if valid:
+
             # Database updated only if valid type for every cell
             for cell in range(0, len(self.scans)):
                 scan = self.scans[cell]
@@ -224,20 +217,26 @@ class ModifyTable(QDialog):
 
                     if tag_type == FIELD_TYPE_LIST_INTEGER:
                         database_value.append(int(text))
+
                     elif tag_type == FIELD_TYPE_LIST_FLOAT:
                         database_value.append(float(text))
+
                     elif tag_type == FIELD_TYPE_LIST_STRING:
                         database_value.append(str(text))
+
                     elif tag_type == FIELD_TYPE_LIST_BOOLEAN:
                         database_value.append(eval(text))
+
                     elif tag_type == FIELD_TYPE_LIST_DATE:
                         format = "%d/%m/%Y"
                         subvalue = datetime.strptime(text, format).date()
                         database_value.append(subvalue)
+
                     elif tag_type == FIELD_TYPE_LIST_DATETIME:
                         format = "%d/%m/%Y %H:%M:%S.%f"
                         subvalue = datetime.strptime(text, format)
                         database_value.append(subvalue)
+
                     elif tag_type == FIELD_TYPE_LIST_TIME:
                         format = "%H:%M:%S.%f"
                         subvalue = datetime.strptime(text, format).time()

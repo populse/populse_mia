@@ -159,9 +159,7 @@ class DataBrowser(QWidget):
         self.project = project
         self.main_window = main_window
         self.data_sent = False
-
         super(DataBrowser, self).__init__()
-
         # Define actions
         self.add_tag_action = QAction("Add tag", self, shortcut="Ctrl+A")
         self.clone_tag_action = QAction("Clone tag", self)
@@ -170,12 +168,10 @@ class DataBrowser(QWidget):
         self.open_filter_action = QAction(
             "Open filter", self, shortcut="Ctrl+F"
         )
-
         # Initialize MIA functions
         self.search_bar = RapidSearch(self)
         self.viewer = MiniViewer(self.project)
         self.advanced_search = AdvancedSearch(self.project, self)
-
         # Initialize Qt objects
         self.addRowLabel = ClickableLabel()
         self.frame_table_data = QtWidgets.QFrame(self)
@@ -191,17 +187,14 @@ class DataBrowser(QWidget):
         self.frame_test = QFrame()
         self.visualized_tags_button = QPushButton()
         self.count_table_button = QPushButton()
-
         # Main table that will display the tags
         self.table_data = TableDataBrowser(
             project, self, self.project.database.get_shown_tags(), True, True
         )
         self.table_data.setObjectName("table_data")
-
         # LAYOUTS #
         self.create_toolbar_view()
         self.create_layout()
-
         # Image viewer updated
         self.connect_toolbar()
         self.connect_actions()
@@ -338,7 +331,6 @@ class DataBrowser(QWidget):
         """
 
         values = []
-
         # We add the new tag in the Database
         tag_cloned_curr = self.project.database.get_field_attributes(
             COLLECTION_CURRENT, tag_to_clone
@@ -416,7 +408,6 @@ class DataBrowser(QWidget):
         ]
         self.project.undos.append(history_maker)
         self.project.redos.clear()
-
         # New tag added to the table
         column = self.table_data.get_index_insertion(new_tag_name)
         self.table_data.add_column(column, new_tag_name)
@@ -447,21 +438,26 @@ class DataBrowser(QWidget):
             self.splitter_vertical.minimumHeight()
         ):
             self.viewer.setHidden(True)
+
         else:
             self.viewer.setHidden(False)
             items = self.table_data.selectedItems()
-
             full_names = []
+
             for item in items:
                 row = item.row()
                 full_name = self.table_data.item(row, 0).text()
+
                 if full_name.endswith(".nii"):
+
                     if not os.path.isfile(os.sep + full_name):
                         full_name = os.path.relpath(
                             os.path.join(self.project.folder, full_name)
                         )
+
                     else:
                         full_name = os.sep + full_name
+
                     if full_name not in full_names:
                         full_names.append(full_name)
 
@@ -492,7 +488,6 @@ class DataBrowser(QWidget):
         tags_menu.addAction(self.clone_tag_action)
         tags_menu.addAction(self.remove_tag_action)
         tags_tool_button.setMenu(tags_menu)
-
         filters_tool_button = QToolButton()
         filters_tool_button.setText("Filters")
         filters_tool_button.setPopupMode(QToolButton.MenuButtonPopup)
@@ -500,26 +495,19 @@ class DataBrowser(QWidget):
         filters_menu.addAction(self.save_filter_action)
         filters_menu.addAction(self.open_filter_action)
         filters_tool_button.setMenu(filters_menu)
-
         sources_images_dir = Config().getSourceImageDir()
         self.button_cross.setStyleSheet("background-color:rgb(255, 255, 255);")
         self.button_cross.setIcon(
             QIcon(os.path.join(sources_images_dir, "gray_cross.png"))
         )
-
         search_bar_layout = QHBoxLayout()
         search_bar_layout.setSpacing(0)
         search_bar_layout.addWidget(self.search_bar)
         search_bar_layout.addWidget(self.button_cross)
-
         self.advanced_search_button.setText("Advanced search")
-
         self.frame_test.setLayout(search_bar_layout)
-
         self.visualized_tags_button.setText("Visualized tags")
-
         self.count_table_button.setText("Count table")
-
         self.menu_toolbar.addWidget(tags_tool_button)
         self.menu_toolbar.addSeparator()
         self.menu_toolbar.addWidget(filters_tool_button)
@@ -537,15 +525,11 @@ class DataBrowser(QWidget):
         self.frame_table_data.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_table_data.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_table_data.setObjectName("frame_table_data")
-
         vbox_table = QVBoxLayout()
         vbox_table.addWidget(self.table_data)
-
         # Add path button under the table
         hbox_layout = QHBoxLayout()
-
         sources_images_dir = Config().getSourceImageDir()
-
         self.addRowLabel.setObjectName("plus")
         add_row_picture = QPixmap(
             os.path.relpath(os.path.join(sources_images_dir, "green_plus.png"))
@@ -557,18 +541,13 @@ class DataBrowser(QWidget):
             "Add data without using the MRI converter tool (File>Import)"
         )
         self.addRowLabel.clicked.connect(self.table_data.add_path)
-
         hbox_layout.addWidget(self.addRowLabel)
-
         hbox_layout.addStretch(1)
-
         self.send_documents_to_pipeline_button.clicked.connect(
             self.send_documents_to_pipeline
         )
         hbox_layout.addWidget(self.send_documents_to_pipeline_button)
-
         vbox_table.addLayout(hbox_layout)
-
         self.frame_table_data.setLayout(vbox_table)
 
         # VISUALIZATION
@@ -579,13 +558,10 @@ class DataBrowser(QWidget):
         self.frame_visualization.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_visualization.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_visualization.setObjectName("frame_5")
-
         self.viewer.setObjectName("viewer")
         self.viewer.adjustSize()
-
         hbox_viewer = QHBoxLayout()
         hbox_viewer.addWidget(self.viewer)
-
         self.frame_visualization.setLayout(hbox_viewer)
 
         # ADVANCED SEARCH
@@ -594,7 +570,6 @@ class DataBrowser(QWidget):
         self.frame_advanced_search.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_advanced_search.setObjectName("frame_search")
         self.frame_advanced_search.setHidden(True)
-
         layout_search = QGridLayout()
         layout_search.addWidget(self.advanced_search)
         self.frame_advanced_search.setLayout(layout_search)
@@ -605,15 +580,14 @@ class DataBrowser(QWidget):
         self.splitter_vertical.addWidget(self.frame_table_data)
         self.splitter_vertical.addWidget(self.frame_visualization)
         self.splitter_vertical.splitterMoved.connect(self.move_splitter)
-
         vbox_splitter = QVBoxLayout(self)
         vbox_splitter.addWidget(self.menu_toolbar)
         vbox_splitter.addWidget(self.splitter_vertical)
-
         self.setLayout(vbox_splitter)
 
     def move_splitter(self):
         """Check if the viewer's splitter is at its lowest position."""
+
         if self.splitter_vertical.sizes()[1] != (
             self.splitter_vertical.minimumHeight()
         ):
@@ -629,7 +603,6 @@ class DataBrowser(QWidget):
         """Apply the current filter."""
 
         filter_to_apply = self.project.currentFilter
-
         # We open the advanced search + search_bar
         old_scans = self.table_data.scans_to_visualize
         documents = self.project.database.get_document_names(
@@ -638,7 +611,6 @@ class DataBrowser(QWidget):
         self.table_data.scans_to_visualize = documents
         self.table_data.scans_to_search = documents
         self.table_data.update_visualized_rows(old_scans)
-
         self.search_bar.setText(filter_to_apply.search_bar)
 
         if len(filter_to_apply.nots) > 0:
@@ -729,12 +701,15 @@ class DataBrowser(QWidget):
         # Every scan taken if empty search
         if str_search == "":
             return_list = self.table_data.scans_to_search
+
         else:
+
             # Scans with at least a not defined value
             if str_search == not_defined_value:
                 filter = self.search_bar.prepare_not_defined_filter(
                     self.project.database.get_shown_tags()
                 )
+
             # Scans matching the search
             else:
                 filter = self.search_bar.prepare_filter(
@@ -746,24 +721,19 @@ class DataBrowser(QWidget):
             generator = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter
             )
-
             # Creating the list of scans
             return_list = [scan[TAG_FILENAME] for scan in generator]
 
         self.table_data.scans_to_visualize = return_list
-
         # Rows updated
         self.table_data.update_visualized_rows(old_scan_list)
-
         self.project.currentFilter.search_bar = str_search
 
     def send_documents_to_pipeline(self):
         """Send the current list of scans to the Pipeline Manager."""
 
         current_scans = self.table_data.get_current_filter()
-
         # Displays a popup with the list of scans
-
         self.show_selection = PopUpDataBrowserCurrentSelection(
             self.project, self, current_scans, self.main_window
         )
@@ -781,7 +751,6 @@ class DataBrowser(QWidget):
         self.table_data.project = database
         self.viewer.project = database
         self.advanced_search.project = database
-
         # We hide the advanced search when switching project
         self.frame_advanced_search.setHidden(True)
 
@@ -910,7 +879,6 @@ class TableDataBrowser(QTableWidget):
         """
 
         super().__init__()
-
         self.project = project
         self.data_browser = data_browser
         self.tags_to_display = tags_to_display
@@ -918,31 +886,31 @@ class TableDataBrowser(QTableWidget):
         self.activate_selection = activate_selection
         self.link_viewer = link_viewer
         self.bricks = {}
-
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-
         # It allows to move the columns (except the first column name)
         self.horizontalHeader().setSectionsMovable(True)
-
         # It allows the automatic sort
         self.setSortingEnabled(True)
-
         # Adding a custom context menu
         self.setContextMenuPolicy(Qt.CustomContextMenu)
+
         if self.activate_selection and link_viewer:
             self.customContextMenuRequested.connect(self.context_menu_table)
+
         self.itemChanged.connect(self.change_cell_color)
+
         if activate_selection:
             self.itemSelectionChanged.connect(self.selection_changed)
+
         else:
             self.setSelectionMode(QAbstractItemView.NoSelection)
+
         self.horizontalHeader().sortIndicatorChanged.connect(self.sort_updated)
         self.horizontalHeader().sectionDoubleClicked.connect(
             self.select_all_column
         )
         self.horizontalHeader().sectionMoved.connect(self.section_moved)
         self.verticalHeader().setMinimumSectionSize(30)
-
         self.update_table(True)
 
         if not self.update_values:
@@ -1030,7 +998,6 @@ class TableDataBrowser(QTableWidget):
         tags.remove(TAG_HISTORY)
         tags = sorted(tags)
         tags.insert(0, TAG_FILENAME)
-
         visible = self.project.database.get_shown_tags()
 
         # Adding missing columns
@@ -1062,14 +1029,17 @@ class TableDataBrowser(QTableWidget):
                     self.setItemDelegateForColumn(
                         column_index, NumberFormatDelegate(self)
                     )
+
                 elif tag_attrib["field_type"] == FIELD_TYPE_DATETIME:
                     self.setItemDelegateForColumn(
                         column_index, DateTimeFormatDelegate(self)
                     )
+
                 elif tag_attrib["field_type"] == FIELD_TYPE_DATE:
                     self.setItemDelegateForColumn(
                         column_index, DateFormatDelegate(self)
                     )
+
                 elif tag_attrib["field_type"] == FIELD_TYPE_TIME:
                     self.setItemDelegateForColumn(
                         column_index, TimeFormatDelegate(self)
@@ -1145,7 +1115,6 @@ class TableDataBrowser(QTableWidget):
         self.setSortingEnabled(False)
         self.itemSelectionChanged.disconnect()
         self.itemChanged.disconnect()
-
         cells_number = len(rows) * self.columnCount()
         self.progress = QProgressDialog(
             "Please wait while the paths are being added...",
@@ -1163,10 +1132,11 @@ class TableDataBrowser(QTableWidget):
         self.progress.setModal(True)
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
-
         self.setVisible(False)
         idx = 0
+
         for scan in rows:
+
             # Scan added only if it's not already in the table
             if self.get_scan_row(scan) is None:
                 rowCount = self.rowCount()
@@ -1177,7 +1147,6 @@ class TableDataBrowser(QTableWidget):
                     idx += 1
                     self.progress.setValue(idx)
                     QApplication.processEvents()
-
                     item = QtWidgets.QTableWidgetItem()
                     tag = self.horizontalHeaderItem(column).text()
 
@@ -1185,11 +1154,14 @@ class TableDataBrowser(QTableWidget):
                         # name tag, not editable
                         item.setFlags(item.flags() & ~Qt.ItemIsEditable)
                         set_item_data(item, scan, FIELD_TYPE_STRING)
+
                     else:
                         cur_value = self.project.database.get_value(
                             COLLECTION_CURRENT, scan, tag
                         )
+
                         if cur_value is not None:
+
                             if tag != TAG_BRICKS:
                                 set_item_data(
                                     item,
@@ -1198,6 +1170,7 @@ class TableDataBrowser(QTableWidget):
                                         COLLECTION_CURRENT, tag
                                     )["field_type"],
                                 )
+
                             else:
                                 # Tag bricks, display list with buttons
                                 widget = QWidget()
@@ -1205,7 +1178,6 @@ class TableDataBrowser(QTableWidget):
                                     QApplication.instance().thread()
                                 )
                                 layout = QVBoxLayout()
-
                                 brick_uuid = cur_value[-1]
                                 brick_name = self.project.session.get_value(
                                     COLLECTION_BRICK, brick_uuid, BRICK_NAME
@@ -1215,18 +1187,21 @@ class TableDataBrowser(QTableWidget):
                                     QApplication.instance().thread()
                                 )
                                 self.bricks[brick_name_button] = brick_uuid
-                                if "FileName" in scan:
+
+                                if TAG_FILENAME in scan:
                                     brick_name_button.clicked.connect(
                                         partial(
                                             self.show_brick_history,
-                                            scan["FileName"],
+                                            scan[TAG_FILENAME],
                                         )
                                     )
+
                                 layout.addWidget(brick_name_button)
                                 widget.setLayout(layout)
                                 self.setCellWidget(rowCount, column, widget)
 
                         else:
+
                             if tag != TAG_BRICKS:
                                 set_item_data(
                                     item, not_defined_value, FIELD_TYPE_STRING
@@ -1235,29 +1210,25 @@ class TableDataBrowser(QTableWidget):
                                 font.setItalic(True)
                                 font.setBold(True)
                                 item.setFont(font)
+
                             else:
                                 set_item_data(item, "", FIELD_TYPE_STRING)
                                 # bricks not editable
                                 item.setFlags(
                                     item.flags() & ~Qt.ItemIsEditable
                                 )
+
                     self.setItem(rowCount, column, item)
 
         # Crash if self.setSortingEnabled(True) because it calls sortByColumn()
         # self.setSortingEnabled(False)
-
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
-
         # Selection updated
         self.update_selection()
-
         self.update_colors()
-
         self.itemSelectionChanged.connect(self.selection_changed)
-
         self.itemChanged.connect(self.change_cell_color)
-
         self.progress.close()
         self.setVisible(True)
 
@@ -1278,9 +1249,8 @@ class TableDataBrowser(QTableWidget):
 
         self.itemChanged.disconnect()
         new_value = item_origin.data(Qt.EditRole)
-
-        cells_types = []  # Will contain the type list of the selection
-
+        # Will contain the type list of the selection
+        cells_types = []
         # To reset the first cell already changed
         # self.fill_cells_update_table()
 
@@ -1452,8 +1422,8 @@ class TableDataBrowser(QTableWidget):
         history_maker = []
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
+
         for point in points:
             row = point.row()
             col = point.column()
@@ -1487,9 +1457,7 @@ class TableDataBrowser(QTableWidget):
         """
 
         self.itemChanged.disconnect()
-
         self.menu = QMenu(self)
-
         self.action_reset_cell = self.menu.addAction("Reset cell(s)")
         self.action_reset_column = self.menu.addAction("Reset column(s)")
         self.action_reset_row = self.menu.addAction("Reset row(s)")
@@ -1507,7 +1475,6 @@ class TableDataBrowser(QTableWidget):
             "Send documents to the Pipeline Manager"
         )
         self.action_display_file = self.menu.addAction("Tries to read a file")
-
         action = self.menu.exec_(self.mapToGlobal(position))
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
@@ -1519,25 +1486,30 @@ class TableDataBrowser(QTableWidget):
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.reset_cell)
             msg.exec()
+
         elif action == self.action_reset_column:
             msg.setText("You are about to reset columns.")
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.reset_column)
             msg.exec()
+
         elif action == self.action_reset_row:
             msg.setText("You are about to reset rows.")
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.reset_row)
             msg.exec()
+
         if action == self.action_clear_cell:
             msg.setText("You are about to clear cells.")
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.clear_cell)
             msg.exec()
+
         elif action == self.action_add_scan:
             self.itemChanged.connect(self.change_cell_color)
             self.add_path()
             self.itemChanged.disconnect()
+
         elif action == self.action_remove_scan:
             msg.setText(
                 "You are about to remove a scan from the project."
@@ -1547,23 +1519,29 @@ class TableDataBrowser(QTableWidget):
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.remove_scan)
             msg.exec()
+
         elif action == self.action_sort_column:
             self.sort_column(0)
+
         elif action == self.action_sort_column_descending:
             self.sort_column(1)
+
         elif action == self.action_visualized_tags:
             self.visualized_tags_pop_up()
+
         elif action == self.action_select_column:
             self.select_all_columns()
+
         elif action == self.action_multiple_sort:
             self.multiple_sort_pop_up()
+
         elif action == self.action_send_documents_to_pipeline:
             self.data_browser.send_documents_to_pipeline()
+
         elif action == self.action_display_file:
             self.display_file()
 
         self.update_colors()
-
         # Signals reconnected
         self.itemChanged.connect(self.change_cell_color)
 
@@ -1577,25 +1555,34 @@ class TableDataBrowser(QTableWidget):
         :param name: string of the brick id
         """
         doc = self.project.session.get_document(COLLECTION_BRICK, name)
+
         if doc is not None:
             inputs = set()
             todo = list(doc["Input(s)"].values())
+
             while todo:
                 value = todo.pop(0)
+
                 if isinstance(value, str):
                     inputs.add(value)
+
                 elif isinstance(value, list):
                     todo += value
+
             outputs = set()
             todo = list(doc["Output(s)"].values())
+
             while todo:
                 value = todo.pop(0)
+
                 if isinstance(value, str):
                     outputs.add(value)
+
                 elif isinstance(value, list):
                     todo += value
 
             for output in outputs:
+
                 if (output != "") and (output not in inputs):
                     doc_delete = os.path.relpath(value, self.project.folder)
                     scan_object = self.project.session.get_document(
@@ -1605,14 +1592,18 @@ class TableDataBrowser(QTableWidget):
                         as_list=True,
                     )
                     row = None
+
                     if scan_object is not None:
                         bricks = scan_object[1]
+
                         if bricks and name in bricks:
                             bricks = [
                                 brick for brick in bricks if brick != name
                             ]
+
                         if not bricks or len(bricks) == 0:
                             row = self.get_scan_row(doc_delete)
+
                         else:
                             self.project.session.set_value(
                                 COLLECTION_CURRENT,
@@ -1620,15 +1611,18 @@ class TableDataBrowser(QTableWidget):
                                 TAG_BRICKS,
                                 bricks,
                             )
+
                     if row is not None:
                         self.removeRow(row)
                         self.project.session.remove_document(
                             COLLECTION_CURRENT, doc_delete
                         )
+
                         try:
                             self.project.session.remove_document(
                                 COLLECTION_INITIAL, doc_delete
                             )
+
                         except ValueError:
                             pass
 
@@ -1690,6 +1684,7 @@ class TableDataBrowser(QTableWidget):
         self.tags = []  # List of table tags
 
         try:
+
             for item in self.selectedItems():
                 column = item.column()
                 row = item.row()
@@ -1719,7 +1714,6 @@ class TableDataBrowser(QTableWidget):
                         COLLECTION_CURRENT, scan_name, tag_name
                     )
                     self.old_database_values.append(database_value)
-
                     table_value = item.data(Qt.EditRole)
 
                     try:
@@ -1830,7 +1824,6 @@ class TableDataBrowser(QTableWidget):
                 self.itemChanged.connect(self.change_cell_color)
 
             self.setMouseTracking(True)
-
             self.resizeColumnsToContents()  # Columns re-sized
             self.resizeRowsToContents()
 
@@ -1862,7 +1855,6 @@ class TableDataBrowser(QTableWidget):
         self.progress.setModal(True)
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
-
         idx = 0
         row = 0
         primary_key = self.project.database.primary_key(COLLECTION_CURRENT)
@@ -1955,7 +1947,7 @@ class TableDataBrowser(QTableWidget):
                                 brick_name_button.clicked.connect(
                                     partial(
                                         self.show_brick_history,
-                                        scan["FileName"],
+                                        scan[TAG_FILENAME],
                                     )
                                 )
                                 layout.addWidget(brick_name_button)
@@ -1986,6 +1978,7 @@ class TableDataBrowser(QTableWidget):
                 self.setItem(row, column, item)
 
             row += 1
+
         # We apply the saved sort when the project is opened or after the
         # tab is changed
         # Saved sort applied if it exists
@@ -2097,11 +2090,15 @@ class TableDataBrowser(QTableWidget):
         """
 
         return_list = []
+
         if self.activate_selection and len(self.scans) > 0:
+
             for scan in self.scans:
                 return_list.append(scan[0])
+
         else:
             return_list = self.scans_to_visualize
+
         return return_list
 
     def get_index_insertion(self, to_insert):
@@ -2112,8 +2109,10 @@ class TableDataBrowser(QTableWidget):
         """
 
         for column in range(1, len(self.horizontalHeader())):
+
             if self.horizontalHeaderItem(column).text() > to_insert:
                 return column
+
         return self.columnCount()
 
     def get_scan_row(self, scan):
@@ -2127,6 +2126,7 @@ class TableDataBrowser(QTableWidget):
         for row in range(0, self.rowCount()):
             item = self.item(row, 0)
             scan_name = item.text()
+
             if scan_name == scan:
                 return row
 
@@ -2140,6 +2140,7 @@ class TableDataBrowser(QTableWidget):
         for column in range(0, self.columnCount()):
             item = self.horizontalHeaderItem(column)
             tag_name = item.text()
+
             if tag_name == tag:
                 return column
 
@@ -2171,6 +2172,7 @@ class TableDataBrowser(QTableWidget):
                     COLLECTION_CURRENT, tag_name
                 )
             )
+
         list_sort = []
 
         for scan in self.scans_to_visualize:
@@ -2299,6 +2301,7 @@ class TableDataBrowser(QTableWidget):
                                 bricks_copy = {**self.bricks}
 
                                 for key, value in bricks_copy.items():
+
                                     if (
                                         value == brick_uuid
                                         and key
@@ -2312,7 +2315,6 @@ class TableDataBrowser(QTableWidget):
                                         )
 
                                 del bricks_copy
-
                                 brick_name_button.clicked.connect(
                                     partial(
                                         self.show_brick_history,
@@ -2320,6 +2322,7 @@ class TableDataBrowser(QTableWidget):
                                     )
                                 )
                                 layout.addWidget(brick_name_button)
+
                             widget.setLayout(layout)
                             self.setCellWidget(old_row, column, widget)
                             self.setItem(old_row, column, item_wrong_row)
@@ -2357,7 +2360,6 @@ class TableDataBrowser(QTableWidget):
         """Remove documents from table and project."""
 
         points = self.selectedIndexes()
-
         # history_maker = []
         # history_maker.append("remove_scans")
         scans_removed = []
@@ -2369,14 +2371,16 @@ class TableDataBrowser(QTableWidget):
         for point in points:
             row = point.row()
             scan_path = self.item(row, 0).text()
-            scan_object = self.project.session.get_document(
+            scan_object = self.project.database.get_document(
                 COLLECTION_CURRENT, scan_path
             )
 
             if scan_object is not None:
+
                 if (scan_path in scan_list) and (
                     self.data_browser.data_sent is True
                 ):
+
                     if not repeat_pop_up:
                         self.pop = PopUpRemoveScan(scan_path, len(points))
                         self.pop.exec()
@@ -2392,11 +2396,12 @@ class TableDataBrowser(QTableWidget):
                 for tag in self.project.database.get_field_names(
                     COLLECTION_CURRENT
                 ):
+
                     if tag != TAG_FILENAME:
-                        current_value = self.project.session.get_value(
+                        current_value = self.project.database.get_value(
                             COLLECTION_CURRENT, scan_path, tag
                         )
-                        initial_value = self.project.session.get_value(
+                        initial_value = self.project.database.get_value(
                             COLLECTION_INITIAL, scan_path, tag
                         )
 
@@ -2408,10 +2413,10 @@ class TableDataBrowser(QTableWidget):
                             )
 
                 self.scans_to_visualize.remove(scan_path)
-                self.project.session.remove_document(
+                self.project.database.remove_document(
                     COLLECTION_CURRENT, scan_path
                 )
-                self.project.session.remove_document(
+                self.project.database.remove_document(
                     COLLECTION_INITIAL, scan_path
                 )
 
@@ -2446,9 +2451,7 @@ class TableDataBrowser(QTableWidget):
         history_maker = []
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
-
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
@@ -2458,14 +2461,15 @@ class TableDataBrowser(QTableWidget):
             tag_name = self.horizontalHeaderItem(col).text()
             # We get the FileName of the scan from the first row
             scan_name = self.item(row, 0).text()
-
             current_value = self.project.session.get_value(
                 COLLECTION_CURRENT, scan_name, tag_name
             )
             initial_value = self.project.session.get_value(
                 COLLECTION_INITIAL, scan_name, tag_name
             )
+
             if initial_value is not None:
+
                 try:
                     self.project.session.set_value(
                         COLLECTION_CURRENT, scan_name, tag_name, initial_value
@@ -2481,8 +2485,10 @@ class TableDataBrowser(QTableWidget):
                     modified_values.append(
                         [scan_name, tag_name, current_value, initial_value]
                     )
+
                 except ValueError:
                     has_unreset_values = True
+
             else:
                 has_unreset_values = True
 
@@ -2507,9 +2513,7 @@ class TableDataBrowser(QTableWidget):
         history_maker = list()
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
-
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
@@ -2527,6 +2531,7 @@ class TableDataBrowser(QTableWidget):
                     COLLECTION_CURRENT, scan, tag_name
                 )
                 if initial_value is not None:
+
                     try:
                         self.project.session.set_value(
                             COLLECTION_CURRENT, scan, tag_name, initial_value
@@ -2542,8 +2547,10 @@ class TableDataBrowser(QTableWidget):
                         modified_values.append(
                             [scan, tag_name, current_value, initial_value]
                         )
+
                     except ValueError:
                         has_unreset_values = True
+
                 else:
                     has_unreset_values = True
 
@@ -2567,9 +2574,7 @@ class TableDataBrowser(QTableWidget):
         history_maker = []
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
-
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
@@ -2588,6 +2593,7 @@ class TableDataBrowser(QTableWidget):
                 initial_value = self.project.session.get_value(
                     COLLECTION_INITIAL, scan_name, tag
                 )
+
                 if initial_value is not None:
                     # We reset the value only if it exists
 
@@ -2606,6 +2612,7 @@ class TableDataBrowser(QTableWidget):
                         modified_values.append(
                             [scan_name, tag, current_value, initial_value]
                         )
+
                     except ValueError:
                         has_unreset_values = True
 
@@ -2633,9 +2640,7 @@ class TableDataBrowser(QTableWidget):
         """
         # The logical index is not used in this method but it is returned by
         # the event we're connected to.
-
         self.itemSelectionChanged.disconnect()
-
         # We need to disconnect the sectionMoved signal, otherwise infinite
         # call to this function
         self.horizontalHeader().sectionMoved.disconnect()
@@ -2648,12 +2653,9 @@ class TableDataBrowser(QTableWidget):
 
         # We reconnect the signal
         self.horizontalHeader().sectionMoved.connect(self.section_moved)
-
         # Selection updated
         self.update_selection()
-
         self.itemSelectionChanged.connect(self.selection_changed)
-
         self.update()
 
     def select_all_column(self, col):
@@ -2669,9 +2671,11 @@ class TableDataBrowser(QTableWidget):
         self.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
         points = self.selectedIndexes()
         self.clearSelection()
+
         for point in points:
             col = point.column()
             self.selectColumn(col)
+
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
     def selection_changed(self):
@@ -2686,7 +2690,9 @@ class TableDataBrowser(QTableWidget):
             scan_name = self.item(row, 0).text()
             tag_name = self.horizontalHeaderItem(column).text()
             scan_already_in_list = False
+
             for scan in self.scans:
+
                 if scan[0] == scan_name:
                     # Scan already in the list, we append the column
                     scan[1].append(tag_name)
@@ -2722,11 +2728,9 @@ class TableDataBrowser(QTableWidget):
         """
 
         self.itemChanged.connect(self.change_cell_color)
-
         self.horizontalHeader().setSortIndicator(
             self.currentItem().column(), order
         )
-
         self.itemChanged.disconnect()
 
     def sort_updated(self, column, order):
@@ -2828,11 +2832,13 @@ class TableDataBrowser(QTableWidget):
                 even = row_even[row]
 
                 for column, tag in zip(table_tags, tags):
+
                     if not self.isColumnHidden(column):
                         item = self.item(row, column)
                         color = QColor()
 
                         if column == 0:
+
                             if even:
                                 color.setRgb(255, 255, 255)  # White
 
@@ -2841,6 +2847,7 @@ class TableDataBrowser(QTableWidget):
 
                         # Avoid issues after switching tab and not saving
                         elif scan[tag] is None:
+
                             if even:
                                 color.setRgb(245, 215, 215)  # Pink
 
@@ -2853,6 +2860,7 @@ class TableDataBrowser(QTableWidget):
                             initial_value = scan_init[tag]
 
                             if current_value != initial_value:
+
                                 if even:
                                     color.setRgb(200, 230, 245)  # Cyan
 
@@ -2860,6 +2868,7 @@ class TableDataBrowser(QTableWidget):
                                     color.setRgb(150, 215, 230)  # Blue
 
                             else:
+
                                 if even:
                                     color.setRgb(255, 255, 255)  # White
 
@@ -2868,6 +2877,7 @@ class TableDataBrowser(QTableWidget):
 
                         # User tag
                         else:
+
                             if even:
                                 color.setRgb(245, 215, 215)  # Pink
 
@@ -2893,7 +2903,9 @@ class TableDataBrowser(QTableWidget):
             row = self.get_scan_row(scan_selected)
             # We select the columns of the row if it was selected
             tags = scan[1]
+
             for tag in tags:
+
                 if self.get_tag_column(tag) is not None:
                     item_to_select = self.item(row, self.get_tag_column(tag))
                     item_to_select.setSelected(True)
@@ -2919,21 +2931,16 @@ class TableDataBrowser(QTableWidget):
             self.scans = []
 
         self.itemChanged.disconnect()
-
         self.setRowCount(len(self.scans_to_visualize))
-
         # Sort visual management
         self.fill_headers(take_tags_to_update)
         # Cells filled
         self.fill_cells_update_table()
-
         self.itemChanged.disconnect()
-
         # Columns and rows resized
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
         self.update_colors()
-
         # When the user changes one item of the table, the background
         # will change
         self.itemChanged.connect(self.change_cell_color)
@@ -2946,11 +2953,13 @@ class TableDataBrowser(QTableWidget):
         """
 
         self.itemChanged.disconnect()
+
         if self.activate_selection:
             self.itemSelectionChanged.disconnect()
 
         # Tags that are not visible anymore are hidden
         for tag in old_tags:
+
             if tag not in showed:
                 self.setColumnHidden(self.get_tag_column(tag), True)
 
@@ -2963,6 +2972,7 @@ class TableDataBrowser(QTableWidget):
             hasattr(self.data_browser, "frame_advanced_search")
             and not self.data_browser.frame_advanced_search.isHidden()
         ):
+
             for row in self.data_browser.advanced_search.rows:
                 fields = row[2]
                 fields.clear()
@@ -2995,14 +3005,17 @@ class TableDataBrowser(QTableWidget):
 
         # Scans that are not visible anymore are hidden
         for scan in old_scans:
+
             if scan not in self.scans_to_visualize:
                 row = self.get_scan_row(scan)
+
                 if row is not None:
                     self.setRowHidden(row, True)
 
         # Scans that became visible must be visible
         for scan in self.scans_to_visualize:
             row = self.get_scan_row(scan)
+
             if row is not None:
                 self.setRowHidden(row, False)
 

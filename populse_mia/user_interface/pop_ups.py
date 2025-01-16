@@ -196,22 +196,18 @@ class DefaultValueListCreation(QDialog):
         """
 
         super().__init__()
-
         self.setModal(True)
-
         # Current type chosen
         self.type = type
-
         self.parent = parent
         self.setWindowTitle("Adding a " + self.type.replace("_", " of "))
-
         # The table that will be filled
         self.table = QtWidgets.QTableWidget()
         self.table.setRowCount(1)
-
         value = self.parent.text()
 
         if value != "":
+
             try:
                 list_value = ast.literal_eval(value)
 
@@ -234,15 +230,12 @@ class DefaultValueListCreation(QDialog):
             self.default_init_table()
 
         self.resize_table()
-
         # Ok button
         self.ok_button = QtWidgets.QPushButton("Ok")
         self.ok_button.clicked.connect(self.update_default_value)
-
         # Cancel button
         cancel_button = QtWidgets.QPushButton("Cancel")
         cancel_button.clicked.connect(self.close)
-
         # Button to add an element to the list
         sources_images_dir = Config().getSourceImageDir()
         self.add_element_label = ClickableLabel()
@@ -253,7 +246,6 @@ class DefaultValueListCreation(QDialog):
         add_element_picture = add_element_picture.scaledToHeight(15)
         self.add_element_label.setPixmap(add_element_picture)
         self.add_element_label.clicked.connect(self.add_element)
-
         # Button to remove the last element of the list
         self.remove_element_label = ClickableLabel()
         self.remove_element_label.setObjectName("minus")
@@ -263,22 +255,17 @@ class DefaultValueListCreation(QDialog):
         remove_element_picture = remove_element_picture.scaledToHeight(20)
         self.remove_element_label.setPixmap(remove_element_picture)
         self.remove_element_label.clicked.connect(self.remove_element)
-
         # Layouts
         self.v_box_final = QVBoxLayout()
         self.h_box_final = QHBoxLayout()
         self.list_layout = QHBoxLayout()
-
         self.h_box_final.addWidget(self.ok_button)
         self.h_box_final.addWidget(cancel_button)
-
         self.list_layout.addWidget(self.table)
         self.list_layout.addWidget(self.remove_element_label)
         self.list_layout.addWidget(self.add_element_label)
-
         self.v_box_final.addLayout(self.list_layout)
         self.v_box_final.addLayout(self.h_box_final)
-
         self.setLayout(self.v_box_final)
 
     def add_element(self):
@@ -314,13 +301,16 @@ class DefaultValueListCreation(QDialog):
         total_width = 0
         total_height = 0
         i = 0
+
         while i < self.table.columnCount():
             total_width += self.table.columnWidth(i)
             total_height += self.table.rowHeight(i)
             i += 1
+
         if total_width + 20 < 900:
             self.table.setFixedWidth(total_width + 20)
             self.table.setFixedHeight(total_height + 25)
+
         else:
             self.table.setFixedWidth(900)
             self.table.setFixedHeight(total_height + 40)
@@ -337,27 +327,37 @@ class DefaultValueListCreation(QDialog):
             text = item.text()
 
             try:
+
                 if self.type == FIELD_TYPE_LIST_INTEGER:
                     database_value.append(int(text))
+
                 elif self.type == FIELD_TYPE_LIST_FLOAT:
                     database_value.append(float(text))
+
                 elif self.type == FIELD_TYPE_LIST_BOOLEAN:
+
                     if text == "True":
                         database_value.append(True)
+
                     elif text == "False":
                         database_value.append(False)
+
                     else:
                         raise ValueError("Not a boolean value")
+
                 elif self.type == FIELD_TYPE_LIST_STRING:
                     database_value.append(str(text))
+
                 elif self.type == FIELD_TYPE_LIST_DATE:
                     format = "%d/%m/%Y"
                     datetime.strptime(text, format).date()
                     database_value.append(text)
+
                 elif self.type == FIELD_TYPE_LIST_DATETIME:
                     format = "%d/%m/%Y %H:%M:%S.%f"
                     datetime.strptime(text, format)
                     database_value.append(text)
+
                 elif self.type == FIELD_TYPE_LIST_TIME:
                     format = "%H:%M:%S.%f"
                     datetime.strptime(text, format).time()
@@ -441,9 +441,7 @@ class PopUpAddPath(QDialog):
         self.databrowser = databrowser
         self.setWindowTitle("Add a document")
         self.setModal(True)
-
         vbox_layout = QVBoxLayout()
-
         hbox_layout = QHBoxLayout()
         file_label = QLabel("File: ")
         self.file_line_edit = QLineEdit()
@@ -455,14 +453,12 @@ class PopUpAddPath(QDialog):
         hbox_layout.addWidget(self.file_line_edit)
         hbox_layout.addWidget(file_button)
         vbox_layout.addLayout(hbox_layout)
-
         hbox_layout = QHBoxLayout()
         type_label = QLabel("Type: ")
         self.type_line_edit = QLineEdit()
         hbox_layout.addWidget(type_label)
         hbox_layout.addWidget(self.type_line_edit)
         vbox_layout.addLayout(hbox_layout)
-
         hbox_layout = QHBoxLayout()
         self.ok_button = QPushButton("Ok")
         self.ok_button.clicked.connect(self.save_path)
@@ -571,32 +567,28 @@ class PopUpAddPath(QDialog):
                 self.project.database.add_value(
                     COLLECTION_INITIAL, path, TAG_TYPE, path_type
                 )
-                self.project.session.add_value(
+                self.project.database.add_value(
                     COLLECTION_CURRENT, path, TAG_TYPE, path_type
                 )
                 values_added.append([path, TAG_TYPE, path_type, path_type])
-                self.project.session.add_value(
+                self.project.database.add_value(
                     COLLECTION_INITIAL, path, TAG_CHECKSUM, checksum
                 )
-                self.project.session.add_value(
+                self.project.database.add_value(
                     COLLECTION_CURRENT, path, TAG_CHECKSUM, checksum
                 )
                 values_added.append([path, TAG_CHECKSUM, checksum, checksum])
-
                 # For history
                 history_maker.append([path])
                 history_maker.append(values_added)
                 self.project.undos.append(history_maker)
                 self.project.redos.clear()
-
                 # Databrowser updated
-
                 (self.databrowser.table_data.scans_to_visualize) = (
                     self.project.database.get_document_names(
                         COLLECTION_CURRENT
                     )
                 )
-
                 (self.databrowser.table_data.scans_to_search) = (
                     self.project.database.get_document_names(
                         COLLECTION_CURRENT
@@ -609,6 +601,7 @@ class PopUpAddPath(QDialog):
                 self.databrowser.frame_advanced_search.setHidden(True)
                 self.databrowser.advanced_search.rows = []
                 self.close()
+
             else:
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Warning)
@@ -649,49 +642,39 @@ class PopUpAddTag(QDialog):
         self.project = project
         self.databrowser = databrowser
         self.type = FIELD_TYPE_STRING  # Type is string by default
-
         self.setObjectName("Add a tag")
-
         # The 'OK' push button
         self.push_button_ok = QtWidgets.QPushButton(self)
         self.push_button_ok.setObjectName("push_button_ok")
-
         # The 'Tag name' label
         self.label_tag_name = QtWidgets.QLabel(self)
         self.label_tag_name.setTextFormat(QtCore.Qt.AutoText)
         self.label_tag_name.setObjectName("tag_name")
-
         # The 'Tag name' text edit
         self.text_edit_tag_name = QtWidgets.QLineEdit(self)
         self.text_edit_tag_name.setObjectName("textEdit_tag_name")
-
         # The 'Default value' label
         self.label_default_value = QtWidgets.QLabel(self)
         self.label_default_value.setTextFormat(QtCore.Qt.AutoText)
         self.label_default_value.setObjectName("default_value")
-
         # The 'Default value' text edit
         self.text_edit_default_value = DefaultValueQLineEdit(self)
         self.text_edit_default_value.setObjectName("textEdit_default_value")
         # By default the tag is a string
         self.text_edit_default_value.setText("Undefined")
-
         # The 'Description value' label
         self.label_description_value = QtWidgets.QLabel(self)
         self.label_description_value.setTextFormat(QtCore.Qt.AutoText)
         self.label_description_value.setObjectName("description_value")
-
         # The 'Description value' text edit
         self.text_edit_description_value = QtWidgets.QLineEdit(self)
         self.text_edit_description_value.setObjectName(
             "textEdit_description_value"
         )
-
         # The 'Unit value' label
         self.label_unit_value = QtWidgets.QLabel(self)
         self.label_unit_value.setTextFormat(QtCore.Qt.AutoText)
         self.label_unit_value.setObjectName("unit_value")
-
         # The 'Unit value' text edit
         self.combo_box_unit = QtWidgets.QComboBox(self)
         self.combo_box_unit.setObjectName("combo_box_unit")
@@ -701,12 +684,10 @@ class PopUpAddTag(QDialog):
         self.combo_box_unit.addItem(TAG_UNIT_MHZ)
         self.combo_box_unit.addItem(TAG_UNIT_HZPIXEL)
         self.combo_box_unit.addItem(TAG_UNIT_DEGREE)
-
         # The 'Type' label
         self.label_type = QtWidgets.QLabel(self)
         self.label_type.setTextFormat(QtCore.Qt.AutoText)
         self.label_type.setObjectName("type")
-
         # The 'Type' text edit
         self.combo_box_type = QtWidgets.QComboBox(self)
         self.combo_box_type.setObjectName("combo_box_type")
@@ -725,7 +706,6 @@ class PopUpAddTag(QDialog):
         self.combo_box_type.addItem("Datetime List")
         self.combo_box_type.addItem("Time List")
         self.combo_box_type.currentTextChanged.connect(self.on_activated)
-
         # Layouts
         v_box_labels = QVBoxLayout()
         v_box_labels.addWidget(self.label_tag_name)
@@ -733,7 +713,6 @@ class PopUpAddTag(QDialog):
         v_box_labels.addWidget(self.label_description_value)
         v_box_labels.addWidget(self.label_unit_value)
         v_box_labels.addWidget(self.label_type)
-
         v_box_edits = QVBoxLayout()
         v_box_edits.addWidget(self.text_edit_tag_name)
         default_layout = QHBoxLayout()
@@ -742,22 +721,17 @@ class PopUpAddTag(QDialog):
         v_box_edits.addWidget(self.text_edit_description_value)
         v_box_edits.addWidget(self.combo_box_unit)
         v_box_edits.addWidget(self.combo_box_type)
-
         h_box_top = QHBoxLayout()
         h_box_top.addLayout(v_box_labels)
         h_box_top.addSpacing(50)
         h_box_top.addLayout(v_box_edits)
-
         h_box_ok = QHBoxLayout()
         h_box_ok.addStretch(1)
         h_box_ok.addWidget(self.push_button_ok)
-
         v_box_total = QVBoxLayout()
         v_box_total.addLayout(h_box_top)
         v_box_total.addLayout(h_box_ok)
-
         self.setLayout(v_box_total)
-
         # Filling the title of the labels and push buttons
         _translate = QtCore.QCoreApplication.translate
         self.push_button_ok.setText(_translate("Add a tag", "OK"))
@@ -770,10 +744,8 @@ class PopUpAddTag(QDialog):
         )
         self.label_unit_value.setText(_translate("Add a tag", "Unit:"))
         self.label_type.setText(_translate("Add a tag", "Tag type:"))
-
         # Connecting the OK push button
         self.push_button_ok.clicked.connect(self.ok_action)
-
         self.setMinimumWidth(700)
         self.setWindowTitle("Add a tag")
         self.setModal(True)
@@ -888,42 +860,53 @@ class PopUpAddTag(QDialog):
         if text == "String":
             self.type = FIELD_TYPE_STRING
             self.text_edit_default_value.setText("Undefined")
+
         elif text == "Integer":
             self.type = FIELD_TYPE_INTEGER
             self.text_edit_default_value.setText("0")
+
         elif text == "Float":
             self.type = FIELD_TYPE_FLOAT
             self.text_edit_default_value.setText("0.0")
+
         elif text == "Boolean":
             self.type = FIELD_TYPE_BOOLEAN
             self.text_edit_default_value.setText("True")
+
         elif text == "Date":
             self.type = FIELD_TYPE_DATE
             date_value = datetime.now()
             date_format = date_value.strftime("%d/%m/%Y")
             self.text_edit_default_value.setText(date_format)
+
         elif text == "Datetime":
             self.type = FIELD_TYPE_DATETIME
             datetime_value = datetime.now()
             datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
             self.text_edit_default_value.setText(datetime_format)
+
         elif text == "Time":
             self.type = FIELD_TYPE_TIME
             time_value = datetime.now()
             time_format = time_value.strftime("%H:%M:%S.%f")
             self.text_edit_default_value.setText(time_format)
+
         elif text == "String List":
             self.type = FIELD_TYPE_LIST_STRING
             self.text_edit_default_value.setText("['Undefined', 'Undefined']")
+
         elif text == "Integer List":
             self.type = FIELD_TYPE_LIST_INTEGER
             self.text_edit_default_value.setText("[0, 0]")
+
         elif text == "Float List":
             self.type = FIELD_TYPE_LIST_FLOAT
             self.text_edit_default_value.setText("[0.0, 0.0]")
+
         elif text == "Boolean List":
             self.type = FIELD_TYPE_LIST_BOOLEAN
             self.text_edit_default_value.setText("[True, True]")
+
         elif text == "Date List":
             self.type = FIELD_TYPE_LIST_DATE
             date_value = datetime.now()
@@ -931,6 +914,7 @@ class PopUpAddTag(QDialog):
             self.text_edit_default_value.setText(
                 "{}".format([date_format, date_format])
             )
+
         elif text == "Datetime List":
             self.type = FIELD_TYPE_LIST_DATETIME
             datetime_value = datetime.now()
@@ -938,6 +922,7 @@ class PopUpAddTag(QDialog):
             self.text_edit_default_value.setText(
                 "{}".format([datetime_format, datetime_format])
             )
+
         elif text == "Time List":
             self.type = FIELD_TYPE_LIST_TIME
             time_value = datetime.now()
@@ -971,23 +956,18 @@ class PopUpCloneTag(QDialog):
 
         super().__init__()
         self.setWindowTitle("Clone a tag")
-
         self.databrowser = databrowser
         self.project = project
         self.setModal(True)
-
         _translate = QtCore.QCoreApplication.translate
         self.setObjectName("Clone a tag")
-
         # The 'OK' push button
         self.push_button_ok = QtWidgets.QPushButton(self)
         self.push_button_ok.setObjectName("push_button_ok")
         self.push_button_ok.setText(_translate("Clone a tag", "OK"))
-
         # The 'New tag name' text edit
         self.line_edit_new_tag_name = QtWidgets.QLineEdit(self)
         self.line_edit_new_tag_name.setObjectName("lineEdit_new_tag_name")
-
         # The 'New tag name' label
         self.label_new_tag_name = QtWidgets.QLabel(self)
         self.label_new_tag_name.setTextFormat(QtCore.Qt.AutoText)
@@ -995,13 +975,11 @@ class PopUpCloneTag(QDialog):
         self.label_new_tag_name.setText(
             _translate("Clone a tag", "New tag name:")
         )
-
         hbox_buttons = QHBoxLayout()
         hbox_buttons.addWidget(self.label_new_tag_name)
         hbox_buttons.addWidget(self.line_edit_new_tag_name)
         hbox_buttons.addStretch(1)
         hbox_buttons.addWidget(self.push_button_ok)
-
         # The "Tag list" label
         self.label_tag_list = QtWidgets.QLabel(self)
         self.label_tag_list.setTextFormat(QtCore.Qt.AutoText)
@@ -1009,42 +987,36 @@ class PopUpCloneTag(QDialog):
         self.label_tag_list.setText(
             _translate("Clone a tag", "Available tags:")
         )
-
         self.search_bar = QtWidgets.QLineEdit(self)
         self.search_bar.setObjectName("lineEdit_search_bar")
         self.search_bar.setPlaceholderText("Search")
         self.search_bar.textChanged.connect(partial(self.search_str, project))
-
         hbox_top = QHBoxLayout()
         hbox_top.addWidget(self.label_tag_list)
         hbox_top.addStretch(1)
         hbox_top.addWidget(self.search_bar)
-
         # The list of tags
         self.list_widget_tags = QtWidgets.QListWidget(self)
         self.list_widget_tags.setObjectName("listWidget_tags")
         self.list_widget_tags.setSelectionMode(
             QtWidgets.QAbstractItemView.SingleSelection
         )
-
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_top)
         vbox.addWidget(self.list_widget_tags)
         vbox.addLayout(hbox_buttons)
-
         self.setLayout(vbox)
-
         tags_lists = project.database.get_field_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
         tags_lists.remove(TAG_HISTORY)
+
         for tag in tags_lists:
             item = QtWidgets.QListWidgetItem()
             self.list_widget_tags.addItem(item)
             item.setText(_translate("Dialog", tag))
+
         self.list_widget_tags.sortItems()
-
         self.setLayout(vbox)
-
         # Connecting the OK push button
         self.push_button_ok.clicked.connect(lambda: self.ok_action(project))
 
@@ -1119,19 +1091,26 @@ class PopUpCloneTag(QDialog):
         tags_lists = project.database.get_field_names(COLLECTION_CURRENT)
         tags_lists.remove(TAG_CHECKSUM)
         tags_lists.remove(TAG_HISTORY)
+
         if str_search != "":
+
             for tag in tags_lists:
+
                 if str_search.upper() in tag.upper():
                     return_list.append(tag)
+
         else:
+
             for tag in tags_lists:
                 return_list.append(tag)
 
         self.list_widget_tags.clear()
+
         for tag_name in return_list:
             item = QtWidgets.QListWidgetItem()
             self.list_widget_tags.addItem(item)
             item.setText(_translate("Dialog", tag_name))
+
         self.list_widget_tags.sortItems()
 
 
@@ -1165,37 +1144,29 @@ class PopUpClosePipeline(QDialog):
         """
 
         super().__init__()
-
         self.pipeline_name = pipeline_name
-
         self.bool_exit = False
         self.bool_save_as = False
-
         self.setWindowTitle("Confirm pipeline closing")
-
         label = QLabel(self)
         label.setText(
             "Do you want to close the pipeline without saving "
             + self.pipeline_name
             + "?"
         )
-
         self.push_button_save_as = QPushButton("Save", self)
         self.push_button_do_not_save = QPushButton("Do not save", self)
         self.push_button_cancel = QPushButton("Cancel", self)
-
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         hbox.addWidget(self.push_button_save_as)
         hbox.addWidget(self.push_button_do_not_save)
         hbox.addWidget(self.push_button_cancel)
         hbox.addStretch(1)
-
         vbox = QVBoxLayout()
         vbox.addWidget(label)
         vbox.addLayout(hbox)
         self.setLayout(vbox)
-
         self.push_button_save_as.clicked.connect(self.save_as_clicked)
         self.push_button_do_not_save.clicked.connect(self.do_not_save_clicked)
         self.push_button_cancel.clicked.connect(self.cancel_clicked)
@@ -1255,9 +1226,7 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         self.main_window = main_window
         self.setWindowTitle("Confirm the selection")
         self.setModal(True)
-
         vbox_layout = QVBoxLayout()
-
         # Adding databrowser table
         databrowser_table = data_browser.TableDataBrowser(
             self.project, self.databrowser, [TAG_FILENAME], False, False
@@ -1302,6 +1271,7 @@ class PopUpDeletedProject(QMessageBox):
         super().__init__()
 
         message = "These projects have been renamed, moved or deleted:\n"
+
         for deleted_project in deleted_projects:
             message += "- {0}\n".format(deleted_project)
 
@@ -1326,23 +1296,19 @@ class PopUpDeleteProject(QDialog):
         """Initialization."""
 
         super().__init__()
-
         self.setWindowTitle("Delete project")
-
         config = Config()
         self.project_path = config.getPathToProjectsFolder()
         self.main_window = main_window
-
         project_list = os.listdir(self.project_path)
-
         self.v_box = QVBoxLayout()
-
         # Label
         self.label = QLabel("Select projects to delete:")
         self.v_box.addWidget(self.label)
-
         self.check_boxes = []
+
         for project in project_list:
+
             if os.path.isdir(os.path.join(self.project_path, project)):
                 check_box = QCheckBox(project)
                 self.check_boxes.append(check_box)
@@ -1350,46 +1316,44 @@ class PopUpDeleteProject(QDialog):
 
         self.h_box_bottom = QHBoxLayout()
         self.h_box_bottom.addStretch(1)
-
         # The 'OK' push button
         self.push_button_ok = QtWidgets.QPushButton("OK")
         self.push_button_ok.setObjectName("pushButton_ok")
         self.push_button_ok.clicked.connect(self.ok_clicked)
         self.h_box_bottom.addWidget(self.push_button_ok)
-
         # The 'Cancel' push button
         self.push_button_cancel = QtWidgets.QPushButton("Cancel")
         self.push_button_cancel.setObjectName("pushButton_cancel")
         self.push_button_cancel.clicked.connect(self.close)
         self.h_box_bottom.addWidget(self.push_button_cancel)
-
         self.scroll = QScrollArea()
         self.widget = QWidget()
         self.widget.setLayout(self.v_box)
         self.scroll.setWidget(self.widget)
-
         self.final = QVBoxLayout()
         self.final.addWidget(self.scroll)
-
         self.final_layout = QVBoxLayout()
         self.final_layout.addLayout(self.final)
         self.final_layout.addLayout(self.h_box_bottom)
-
         self.setLayout(self.final_layout)
 
     def ok_clicked(self):
         """Delete the selected projects after confirmation."""
 
         final_values = []
+
         for check_box in self.check_boxes:
+
             if check_box.isChecked():
                 final_values.append(check_box.text())
 
         reply = None
         config = Config()
         opened_projects = config.get_opened_projects()
+
         for name in final_values:
             project = os.path.join(self.project_path, name)
+
             if reply != QMessageBox.YesToAll and reply != QMessageBox.NoToAll:
                 msgtext = (
                     "Do you really want to delete the " + name + " project ?"
@@ -1406,12 +1370,15 @@ class PopUpDeleteProject(QDialog):
                     | QMessageBox.YesToAll
                     | QMessageBox.NoToAll,
                 )
+
             if reply == QMessageBox.Yes or reply == QMessageBox.YesToAll:
+
                 if os.path.abspath(
                     self.main_window.project.folder
                 ) == os.path.abspath(project):
                     self.main_window.project = Project(None, True)
                     self.main_window.update_project("")
+
                 if (
                     os.path.relpath(project)
                     in self.main_window.saved_projects.pathsList
@@ -1420,6 +1387,7 @@ class PopUpDeleteProject(QDialog):
                         os.path.relpath(project)
                     )
                     self.main_window.update_recent_projects_actions()
+
                 if os.path.relpath(project) in opened_projects:
                     opened_projects.remove(os.path.relpath(project))
 
