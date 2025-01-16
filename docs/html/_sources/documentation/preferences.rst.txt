@@ -80,7 +80,7 @@ POPULSE third party preferences
 External resources preferences
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    * Some processes may require external data to function correctly (such as ROIs, templates, etc.). The folder containing this resource data can be defined here. The `following data <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ can be used by default.
+    * Some processes may require external data to function correctly (such as ROIs, templates, etc.). The folder containing this resource data can be defined here. The `following data <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_resources>`_ can be used by default.
 
 .. _pipeline-label:
 

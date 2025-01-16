@@ -14,7 +14,7 @@ Populse_MIA's user documentation
 
 This page is a user guide for Populse_Mia.
 
-A minimal data set (~500 MB, zip file with Bruker, Philips and NIfTI data) can be downloaded `here <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers/-/archive/main/miadatausers-main.zip>`__ to allow users to quickly start using and testing Mia.
+A minimal data set (in BIDS format) can be downloaded `here <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_data_users>`__ to allow users to quickly start using and testing Mia.
 
 Software presentation
 ---------------------
