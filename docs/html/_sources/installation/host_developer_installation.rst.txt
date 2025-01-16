@@ -49,11 +49,11 @@ To use the whole populse project in developer mode on host (and have the latest 
 
 * You can also download the following folders:
 
-      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
+      * `mia_resources <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_resources>`_ : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
 
-      * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
+      * `mia_ut_data <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data>`_ : it contains data for unit tests in populse_mia
 
-      * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
+      * `mia_data_users <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_data_users>`_ : it contains initial user data for using / testing Mia
 
 |
 
@@ -126,8 +126,8 @@ All the dependencies should be install with populse_mia project.
 
 * You can also download the following folders:
 
-      * `miaresources <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miaresources>`_ : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
+      * `mia_resources <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_resources>`_ : it contains useful resources like templates for mia_processes (necessary to run correctly bricks and pipeline). To add to Mia preferences (external resources).
 
-      * `miautdata <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata>`_ : it contains data for unit tests in populse_mia
+      * `mia_ut_data <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data>`_ : it contains data for unit tests in populse_mia
 
-      * `miadatausers <https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miadatausers>`_ : it contains initial user data for using / testing Mia
+      * `mia_data_users <https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_data_users>`_ : it contains initial user data for using / testing Mia

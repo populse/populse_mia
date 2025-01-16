@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.main &#8212; populse_mia 2.5.3-dev+9cb3d556d documentation</title>
+    <title>populse_mia.main &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../_static/documentation_options.js?v=bd736f96"></script>
+    <script src="../../_static/documentation_options.js?v=fdbc8fe9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 2.5.3-dev+9cb3d556d documentation</span></a></h1>
+          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -56,7 +56,7 @@
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">qInstallMessageHandler</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
 
 <span class="c1"># main_window = None</span>
@@ -461,8 +461,34 @@
 
 
 
+<div class="viewcode-block" id="qt_message_handler">
+<a class="viewcode-back" href="../../populse_mia.html#populse_mia.main.qt_message_handler">[docs]</a>
+<span class="k">def</span> <span class="nf">qt_message_handler</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom Qt message handler to filter out specific messages&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">unwanted_message</span> <span class="ow">in</span> <span class="n">unwanted_messages</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="n">unwanted_message</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">elif</span> <span class="n">unwanted_message</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+            <span class="c1"># Remove the unwanted message but keep the rest of the line</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">unwanted_message</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="c1"># Output the remaining message (if any)</span>
+    <span class="k">if</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="c1"># this will only be executed when this module is run directly</span>
+    <span class="c1"># list of unwanted messages to filter out in stdout</span>
+    <span class="n">unwanted_messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;QPixmap::scaleHeight: Pixmap is a null pixmap&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Install the custom Qt message handler</span>
+    <span class="n">qInstallMessageHandler</span><span class="p">(</span><span class="n">qt_message_handler</span><span class="p">)</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
