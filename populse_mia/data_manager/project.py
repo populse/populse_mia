@@ -1251,10 +1251,10 @@ class Project:
 
                 # Adding all the values associated
                 for value in values:
-                    self.session.add_value(
+                    self.database.add_value(
                         COLLECTION_CURRENT, value[0], value[1], value[2]
                     )
-                    self.session.add_value(
+                    self.database.add_value(
                         COLLECTION_INITIAL, value[0], value[1], value[3]
                     )
                 column = table.get_index_insertion(tag_to_add)

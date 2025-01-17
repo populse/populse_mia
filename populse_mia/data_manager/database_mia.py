@@ -629,19 +629,41 @@ class DatabaseMIA:
     # -- Values management --
 
     def add_value(self, collection_name, primary_key, field, value):
-        """Adds a value for <collection, document_id, field>"""
+        """
+        Add a value to a specific field in a document within a collection.
+
+        This method updates the value of a specified field for a given
+        document (identified by its primary key) within the specified
+        collection in the database.
+
+        Parameters:
+            collection_name (str): The name of the collection containing the
+                                   document.
+            primary_key (str): The unique identifier of the document to be
+                               updated.
+            field (str): The name of the field to be updated in the document.
+            value (Any): The value to be assigned to the specified field.
+        """
         with self.storage.data(write=True) as dbs:
             dbs[collection_name][primary_key][field] = value
 
     def add_values(self, collection_name, primary_key, values_dict):
-        """Store or update a record in the specified collection.
+        """
+        Store or update a record in the specified collection.
 
-        Args:
-        collection_name (str): The name of the collection where the record
-                               will be stored.
-        primary_key (str): The unique key used to identify the record.
-        values_dict (dict): A dictionary containing the data to store
-                            or update.
+        This method either stores a new record or updates an existing record
+        in the specified collection, using the provided primary key. The
+        fields of the record are set according to the data in the provided
+        dictionary.
+
+        Parameters:
+            collection_name (str): The name of the collection where the record
+                                   will be stored or updated.
+            primary_key (str): The unique key used to identify the record.
+            values_dict (dict): A dictionary containing the data to store or
+                                update in the record. Keys represent field
+                                names, and values represent the corresponding
+                                data.
         """
         with self.storage.data(write=True) as dbs:
             dbs[collection_name][primary_key] = values_dict
@@ -707,11 +729,17 @@ class DatabaseMIA:
                 "The collection {0} does not exist".format(collection)
             )
 
-        with self.storage.data() as dbs:
-            for i in dbs[collection].search(filter_query):
-                yield i
         # with self.storage.data() as dbs:
-        #      return dbs[collection].search(filter_query)
+        #     for i in dbs[collection].search(filter_query):
+        #         yield i
+        # TODO: We do not use yield because it causes errors such as
+        #       "database already open." I believe the code should be
+        #       improved to prevent this exception. For now, to save time,
+        #       we are not exploring the use of yield. However, it will
+        #       likely need to be implemented later for memory
+        #       management reasons.
+        with self.storage.data() as dbs:
+            return dbs[collection].search(filter_query)
 
     def get_document(self, collection, document_id):
         """
@@ -832,7 +860,10 @@ class DatabaseMIA:
         ):
 
             if i:
-                # TODO: the first key in the dict is the primary key ?
+                # TODO: The first key in the dict is the primary key ?
+                #       Another safer solution would be to use the "index"
+                #       key. Indeed, we know that it is the primary key for
+                #       the collection FIELD_ATTRIBUTES_COLLECTION.
                 tag = i[next(iter(i))]
                 tag = tag.split("|")[1]
 
@@ -903,8 +934,8 @@ class DatabaseMIA:
         it exists.
         """
         raise NotImplementedError(
-            "This method (set_value) is not yet available in "
-            "DatabaseMIA class."
+            "Please note that the set_value() function is obsolete. "
+            "Use add_value() instead ......!"
         )
 
     def remove_value(self, collection, document_id, field):

@@ -55,6 +55,7 @@ import shutil
 import subprocess
 from datetime import datetime
 from functools import partial
+from typing import get_origin
 
 import yaml
 
@@ -200,7 +201,9 @@ class DefaultValueListCreation(QDialog):
         # Current type chosen
         self.type = type
         self.parent = parent
-        self.setWindowTitle("Adding a " + self.type.replace("_", " of "))
+        self.setWindowTitle(
+            f"Adding a list " f"of {self.type.__args__[0].__name__}"
+        )
         # The table that will be filled
         self.table = QtWidgets.QTableWidget()
         self.table.setRowCount(1)
@@ -370,10 +373,8 @@ class DefaultValueListCreation(QDialog):
                 msg.setIcon(QMessageBox.Warning)
                 msg.setText("Invalid value")
                 msg.setInformativeText(
-                    "The value "
-                    + text
-                    + " is invalid with the type "
-                    + self.type
+                    f"The value {text} is invalid with "
+                    f"the type {str(self.type)}"
                 )
                 msg.setWindowTitle("Warning")
                 msg.setStandardButtons(QMessageBox.Ok)
@@ -406,8 +407,7 @@ class DefaultValueQLineEdit(QtWidgets.QLineEdit):
         :param event: used ?
 
         """
-
-        if self.parent.type.startswith("list_"):
+        if get_origin(self.parent.type) is list:
             # We display the pop up to create the list if the checkbox is
             # checked, otherwise we do nothing
             self.list_creation = DefaultValueListCreation(
@@ -810,7 +810,6 @@ class PopUpAddTag(QDialog):
                 self.text_edit_default_value.text().replace(" ", "")
             )
 
-        # Default value checked
         wrong_default_value_type = not check_value_type(
             self.text_edit_default_value.text(), self.type, False
         )

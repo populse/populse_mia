@@ -186,10 +186,8 @@ class ModifyTable(QDialog):
                     msg.setIcon(QMessageBox.Warning)
                     msg.setText("Invalid value")
                     msg.setInformativeText(
-                        "The value "
-                        + text
-                        + " is invalid with the type "
-                        + type_problem
+                        f"The value {text} is invalid with "
+                        f"the type {str(type_problem)}"
                     )
                     msg.setWindowTitle("Warning")
                     msg.setStandardButtons(QMessageBox.Ok)

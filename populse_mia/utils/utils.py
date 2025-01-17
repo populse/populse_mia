@@ -56,13 +56,6 @@ from populse_db.database import (
     FIELD_TYPE_FLOAT,
     FIELD_TYPE_INTEGER,
     FIELD_TYPE_JSON,
-    FIELD_TYPE_LIST_BOOLEAN,
-    FIELD_TYPE_LIST_DATE,
-    FIELD_TYPE_LIST_DATETIME,
-    FIELD_TYPE_LIST_FLOAT,
-    FIELD_TYPE_LIST_INTEGER,
-    FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_TIME,
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
 )
@@ -257,16 +250,47 @@ def check_value_type(value, value_type, is_subvalue=False):
     """
     Checks the type of new value in a table cell (QTableWidget).
 
-    :param value: Value of the cell
-    :param value_type: Type expected
+    :param value: Value of the cell (always a str, can be a string
+                  representation of a list)
+    :param value_type: Type expected (can be list[str], list[int], etc.)
     :param is_subvalue: To know if the value is a subvalue of a list
-    :returns: True if the value is valid to replace the old
-              one, False otherwise
+    :returns: True if the value is valid to replace the old one,
+              False otherwise
     """
 
-    if (value_type == FIELD_TYPE_INTEGER) or (
-        value_type == FIELD_TYPE_LIST_INTEGER and is_subvalue
+    # Convert the string value into a list if it is a list-like string
+    if isinstance(value, str) and (
+        value.startswith("[") and value.endswith("]")
     ):
+
+        try:
+            # safely evaluate the string as a list
+            value = ast.literal_eval(value)
+
+        except Exception:
+            # If it's not a valid list, return False
+            return False
+
+    # Check if value_type is a list (e.g., list[int], list[str], etc.)
+    if hasattr(value_type, "__origin__") and value_type.__origin__ is list:
+        # Extract the element type from the list (e.g., int for list[int])
+        element_type = value_type.__args__[0]
+
+        if is_subvalue:
+            # Check for a single element against the list's element
+            # type (e.g., "10" against list[int])
+            return check_value_type(value, element_type)
+
+        # Otherwise, validate if value is a list and all elements
+        # match the element type
+        if isinstance(value, list):
+            return all(check_value_type(v, element_type) for v in value)
+
+        return False
+
+    # Handle other types as before (int, float, boolean, string, etc.)
+    elif value_type == FIELD_TYPE_INTEGER:
+
         try:
             int(value)
             return True
@@ -274,9 +298,8 @@ def check_value_type(value, value_type, is_subvalue=False):
         except Exception:
             return False
 
-    elif (value_type == FIELD_TYPE_FLOAT) or (
-        value_type == FIELD_TYPE_LIST_FLOAT and is_subvalue
-    ):
+    elif value_type == FIELD_TYPE_FLOAT:
+
         try:
             float(value)
             return True
@@ -284,19 +307,11 @@ def check_value_type(value, value_type, is_subvalue=False):
         except Exception:
             return False
 
-    elif (value_type == FIELD_TYPE_BOOLEAN) or (
-        value_type == FIELD_TYPE_LIST_BOOLEAN and is_subvalue
-    ):
-        return (
-            value == "True"
-            or value is True
-            or value == "False"
-            or value is False
-        )
+    elif value_type == FIELD_TYPE_BOOLEAN:
+        return value in ["True", True, "False", False]
 
-    elif (value_type == FIELD_TYPE_STRING) or (
-        value_type == FIELD_TYPE_LIST_STRING and is_subvalue
-    ):
+    elif value_type == FIELD_TYPE_STRING:
+
         try:
             str(value)
             return True
@@ -304,30 +319,13 @@ def check_value_type(value, value_type, is_subvalue=False):
         except Exception:
             return False
 
-    elif (
-        isinstance(value_type, str)
-        and value_type.startswith("list_")
-        and not is_subvalue
-    ):
-        if isinstance(value, str):
-            value = ast.literal_eval(value)
+    elif value_type == FIELD_TYPE_DATE:
 
-        is_valid_value = True
-
-        for subvalue in value:
-            if not check_value_type(subvalue, value_type, True):
-                is_valid_value = False
-                break
-
-        return is_valid_value
-
-    elif (value_type == FIELD_TYPE_DATE) or (
-        value_type == FIELD_TYPE_LIST_DATE and is_subvalue
-    ):
         if isinstance(value, QDate):
             return True
 
         elif isinstance(value, str):
+
             try:
                 format = "%d/%m/%Y"
                 datetime.strptime(value, format).date()
@@ -336,13 +334,13 @@ def check_value_type(value, value_type, is_subvalue=False):
             except Exception:
                 return False
 
-    elif (value_type == FIELD_TYPE_DATETIME) or (
-        value_type == FIELD_TYPE_LIST_DATETIME and is_subvalue
-    ):
+    elif value_type == FIELD_TYPE_DATETIME:
+
         if isinstance(value, QDateTime):
             return True
 
         elif isinstance(value, str):
+
             try:
                 format = "%d/%m/%Y %H:%M:%S.%f"
                 datetime.strptime(value, format)
@@ -351,13 +349,13 @@ def check_value_type(value, value_type, is_subvalue=False):
             except Exception:
                 return False
 
-    elif (value_type == FIELD_TYPE_TIME) or (
-        value_type == FIELD_TYPE_LIST_TIME and is_subvalue
-    ):
+    elif value_type == FIELD_TYPE_TIME:
+
         if isinstance(value, QTime):
             return True
 
         elif isinstance(value, str):
+
             try:
                 format = "%H:%M:%S.%f"
                 datetime.strptime(value, format).time()
@@ -365,6 +363,8 @@ def check_value_type(value, value_type, is_subvalue=False):
 
             except Exception:
                 return False
+
+    return False
 
 
 def launch_mia(app, args):

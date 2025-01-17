@@ -718,11 +718,11 @@ class DataBrowser(QWidget):
                     self.table_data.scans_to_search,
                 )
 
-            generator = self.project.database.filter_documents(
+            filtered_scans = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter
             )
             # Creating the list of scans
-            return_list = [scan[TAG_FILENAME] for scan in generator]
+            return_list = [scan[TAG_FILENAME] for scan in filtered_scans]
 
         self.table_data.scans_to_visualize = return_list
         # Rows updated
@@ -1332,10 +1332,8 @@ class TableDataBrowser(QTableWidget):
             msg.setIcon(QMessageBox.Warning)
             msg.setText("Invalid value")
             msg.setInformativeText(
-                "The value "
-                + str(new_value)
-                + " is invalid with the type "
-                + type_problem
+                f"The value {str(new_value)} is invalid "
+                f"with the type {str(type_problem)}"
             )
             msg.setWindowTitle("Warning")
             msg.setStandardButtons(QMessageBox.Ok)
@@ -1363,7 +1361,7 @@ class TableDataBrowser(QTableWidget):
 
                 # We only set the cell if it's not the tag name
                 if tag_name != TAG_FILENAME:
-                    old_value = self.project.session.get_value(
+                    old_value = self.project.database.get_value(
                         COLLECTION_CURRENT, scan_path, tag_name
                     )
 
@@ -1372,7 +1370,7 @@ class TableDataBrowser(QTableWidget):
                         modified_values.append(
                             [scan_path, tag_name, old_value, database_value]
                         )
-                        self.project.session.set_value(
+                        self.project.database.add_value(
                             COLLECTION_CURRENT,
                             scan_path,
                             tag_name,
@@ -1708,7 +1706,7 @@ class TableDataBrowser(QTableWidget):
                 if tag_type not in self.types:
                     self.types.append(tag_type)
 
-                # if tag_type.startswith("list_"):
+                # if tag_type is a list:
                 if get_origin(tag_type) is list:
                     database_value = self.project.database.get_value(
                         COLLECTION_CURRENT, scan_name, tag_name
@@ -2771,7 +2769,7 @@ class TableDataBrowser(QTableWidget):
             ]
             joined_scans = ", ".join(f'"{scan}"' for scan in escaped_scans)
             req = f"{primary_key} IN [{joined_scans}]"
-            documents = self.project.database.filter_documents(
+            documents_curr = self.project.database.filter_documents(
                 COLLECTION_CURRENT, req
             )
             documents_init = self.project.database.filter_documents(
@@ -2779,7 +2777,7 @@ class TableDataBrowser(QTableWidget):
             )
 
         else:
-            documents = []
+            documents_curr = []
             documents_init = []
 
         fields = {
@@ -2809,8 +2807,7 @@ class TableDataBrowser(QTableWidget):
             if not self.isRowHidden(ro):
                 even = not even
 
-        for scan_row, scan_i in enumerate(zip(documents, documents_init)):
-            scan, scan_init = scan_i
+        for scan, scan_init in zip(documents_curr, documents_init):
 
             try:
                 row = table_scans[scan[tags[0]]]

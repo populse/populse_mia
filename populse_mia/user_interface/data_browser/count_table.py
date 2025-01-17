@@ -425,14 +425,12 @@ class CountTable(QDialog):
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 # Getting the list of the scans that corresponds to the couples
                 # tag_name/tag_values
-                generator_scans = self.project.database.filter_documents(
+                filtered_scans = self.project.database.filter_documents(
                     COLLECTION_CURRENT, self.prepare_filter(tag_list)
                 )
 
                 # List of scans created, given the generator
-                list_scans = [
-                    getattr(scan, TAG_FILENAME) for scan in generator_scans
-                ]
+                list_scans = [scan[TAG_FILENAME] for scan in filtered_scans]
 
                 sources_images_dir = Config().getSourceImageDir()
                 if list_scans:
