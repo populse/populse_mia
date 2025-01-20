@@ -565,17 +565,33 @@ class PopUpAddPath(QDialog):
                 self.project.database.add_document(COLLECTION_INITIAL, path)
                 values_added = []
                 self.project.database.add_value(
-                    COLLECTION_INITIAL, path, TAG_TYPE, path_type
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=path,
+                    values_dict={TAG_TYPE: path_type},
+                    # field=TAG_TYPE,
+                    # value=path_type
                 )
                 self.project.database.add_value(
-                    COLLECTION_CURRENT, path, TAG_TYPE, path_type
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=path,
+                    values_dict={TAG_TYPE: path_type},
+                    # field=TAG_TYPE,
+                    # value=path_type
                 )
                 values_added.append([path, TAG_TYPE, path_type, path_type])
                 self.project.database.add_value(
-                    COLLECTION_INITIAL, path, TAG_CHECKSUM, checksum
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=path,
+                    values_dict={TAG_CHECKSUM: checksum},
+                    # field=TAG_CHECKSUM,
+                    # value=checksum
                 )
                 self.project.database.add_value(
-                    COLLECTION_CURRENT, path, TAG_CHECKSUM, checksum
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=path,
+                    values_dict={TAG_CHECKSUM: checksum},
+                    # field=TAG_CHECKSUM,
+                    # value=checksum
                 )
                 values_added.append([path, TAG_CHECKSUM, checksum, checksum])
                 # For history
@@ -1798,8 +1814,8 @@ class PopUpMultipleSort(QDialog):
         if self.values_list[idx] is not None:
             self.values_list[idx] = []
         for scan in self.project.database.get_field_names(COLLECTION_CURRENT):
-            current_value = self.project.session.get_value(
-                COLLECTION_CURRENT, scan, tag_name
+            current_value = self.project.database.get_value(
+                collection=COLLECTION_CURRENT, primary_key=scan, field=tag_name
             )
             if current_value not in self.values_list[idx]:
                 self.values_list[idx].append(current_value)
@@ -5739,8 +5755,10 @@ class PopUpShowHistory(QDialog):
         self.setWindowTitle("History of " + scan)
 
         brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
-        full_brick_name = project.session.get_value(
-            COLLECTION_BRICK, brick_uuid, BRICK_NAME
+        full_brick_name = project.database.get_value(
+            collection=COLLECTION_BRICK,
+            primary_key=brick_uuid,
+            field=BRICK_NAME,
         ).split(".")
 
         layout = QVBoxLayout()
@@ -5754,24 +5772,30 @@ class PopUpShowHistory(QDialog):
         self.table.setHorizontalScrollMode(
             QtWidgets.QAbstractItemView.ScrollPerPixel
         )
-        history_uuid = self.project.session.get_value(
-            COLLECTION_CURRENT, scan, TAG_HISTORY
+        history_uuid = self.project.database.get_value(
+            collection=COLLECTION_CURRENT, primary_key=scan, field=TAG_HISTORY
         )
 
         self.unitary_pipeline = False
         self.uuid_idx = 0
         if history_uuid is not None:
-            self.pipeline_xml = self.project.session.get_value(
-                COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE
+            self.pipeline_xml = self.project.database.get_value(
+                collection=COLLECTION_HISTORY,
+                primary_key=history_uuid,
+                field=HISTORY_PIPELINE,
             )
-            if self.pipeline_xml is not None:
-                self.brick_list = self.project.session.get_value(
-                    COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS
-                )
 
+            if self.pipeline_xml is not None:
+                self.brick_list = self.project.database.get_value(
+                    collection=COLLECTION_HISTORY,
+                    primary_key=history_uuid,
+                    field=HISTORY_BRICKS,
+                )
                 engine = Config.get_capsul_engine()
+
                 try:
                     pipeline = engine.get_process_instance(self.pipeline_xml)
+
                 except Exception:
                     pipeline = None
 
@@ -5879,8 +5903,8 @@ class PopUpShowHistory(QDialog):
 
         bricks = {}
         for uuid in self.brick_list:
-            full_brick_name = self.project.session.get_value(
-                COLLECTION_BRICK, uuid, BRICK_NAME
+            full_brick_name = self.project.database.get_value(
+                collection=COLLECTION_BRICK, primary_key=uuid, field=BRICK_NAME
             )
             list_full_brick_name = full_brick_name.split(".")
 
@@ -6005,8 +6029,10 @@ class PopUpShowHistory(QDialog):
                             ) = self.find_process_from_plug(plug)
                             for uuid in bricks.values():
                                 full_brick_name = (
-                                    self.project.session.get_value(
-                                        COLLECTION_BRICK, uuid[0], BRICK_NAME
+                                    self.project.database.get_value(
+                                        collection=COLLECTION_BRICK,
+                                        primary_key=uuid[0],
+                                        field=BRICK_NAME,
                                     )
                                 )
                                 if (
@@ -6014,19 +6040,28 @@ class PopUpShowHistory(QDialog):
                                     == full_node_name + process_name
                                 ):
                                     if plug.output:
-                                        plugs = self.project.session.get_value(
-                                            COLLECTION_BRICK,
-                                            uuid[self.uuid_idx],
-                                            BRICK_OUTPUTS,
+                                        plugs = (
+                                            self.project.database.get_value(
+                                                collection=COLLECTION_BRICK,
+                                                primary_key=uuid[
+                                                    self.uuid_idx
+                                                ],
+                                                field=BRICK_OUTPUTS,
+                                            )
                                         )
                                         outputs_dict[plug_name] = plugs[
                                             inner_plug_name
                                         ]
+
                                     else:
-                                        plugs = self.project.session.get_value(
-                                            COLLECTION_BRICK,
-                                            uuid[self.uuid_idx],
-                                            BRICK_INPUTS,
+                                        plugs = (
+                                            self.project.database.get_value(
+                                                collection=COLLECTION_BRICK,
+                                                primary_key=uuid[
+                                                    self.uuid_idx
+                                                ],
+                                                field=BRICK_INPUTS,
+                                            )
                                         )
                                         inputs_dict[plug_name] = plugs[
                                             inner_plug_name

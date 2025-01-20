@@ -596,14 +596,16 @@ class Project:
                     self.database.add_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=scan[TAG_FILENAME],
-                        field=clinical_tag,
-                        value=None,
+                        values_dict={clinical_tag: None},
+                        # field=clinical_tag,
+                        # value=None,
                     )
                     self.database.add_value(
                         collection_name=COLLECTION_INITIAL,
                         primary_key=scan[TAG_FILENAME],
-                        field=clinical_tag,
-                        value=None,
+                        values_dict={clinical_tag: None},
+                        # field=clinical_tag,
+                        # value=None,
                     )
 
                 return_tags.append(clinical_tag)
@@ -739,7 +741,7 @@ class Project:
             bricks = pbricks
 
         # filter jobs actually in MIA database
-        docs = self.session.get_documents(
+        docs = self.database.get_documents(
             COLLECTION_BRICK,
             document_ids=list(bricks.keys()),
             fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS],
@@ -1033,28 +1035,38 @@ class Project:
 
         for hist in hist_docs:
             hist_id = hist[0]
+
             if hist_id is None:
                 continue
+
             if hist[1] is None:
                 orphan_hist.add(hist_id)
                 continue
 
             values = set()
+
             for brid in hist[1]:
-                brick_doc = self.session.get_value(
-                    COLLECTION_BRICK, brid, BRICK_OUTPUTS
+                brick_doc = self.database.get_value(
+                    collection=COLLECTION_BRICK,
+                    primary_key=brid,
+                    field=BRICK_OUTPUTS,
                 )
+
                 if brick_doc is None:
                     todo = []
+
                 else:
                     todo = list(brick_doc.values())
 
                 while todo:
                     value = todo.pop(0)
+
                     if isinstance(value, (list, set, tuple)):
                         todo += value
+
                     elif isinstance(value, str):
                         path = os.path.abspath(os.path.normpath(value))
+
                         if path.startswith(proj_dir):
                             value = path[lp:]
                             values.add(value)
@@ -1067,8 +1079,11 @@ class Project:
             )
             used = False
             orphan_files = set()
+
             for doc in docs:
+
                 if doc[1] and hist_id == doc[1]:
+
                     if doc[0].startswith("scripts/") or not os.path.exists(
                         os.path.join(self.folder, doc[0])
                     ):
@@ -1077,9 +1092,11 @@ class Project:
                         # non-existing files can be cleared too.
                         orphan_files.add(doc[0])
                         continue
+
                     used = True
                     used_hist.add(hist_id)
                     break
+
             if not used:
                 orphan_hist.add(hist_id)
                 orphan_bricks.update(hist[1])
@@ -1252,10 +1269,16 @@ class Project:
                 # Adding all the values associated
                 for value in values:
                     self.database.add_value(
-                        COLLECTION_CURRENT, value[0], value[1], value[2]
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=value[0],
+                        values_dict={value[1]: value[2]},
+                        # COLLECTION_CURRENT, value[0], value[1], value[2]
                     )
                     self.database.add_value(
-                        COLLECTION_INITIAL, value[0], value[1], value[3]
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=value[0],
+                        values_dict={value[1]: value[3]},
+                        # COLLECTION_INITIAL, value[0], value[1], value[3]
                     )
                 column = table.get_index_insertion(tag_to_add)
                 table.add_column(column, tag_to_add)
@@ -1298,17 +1321,23 @@ class Project:
 
                 for i in range(0, len(values_added)):
                     value_to_add = values_added[i]
-                    self.session.add_value(
-                        COLLECTION_CURRENT,
-                        value_to_add[0],
-                        value_to_add[1],
-                        value_to_add[2],
+                    self.database.add_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=value_to_add[0],
+                        values_dict={value_to_add[1]: value_to_add[2]},
+                        # COLLECTION_CURRENT,
+                        # value_to_add[0],
+                        # value_to_add[1],
+                        # value_to_add[2],
                     )
-                    self.session.add_value(
-                        COLLECTION_INITIAL,
-                        value_to_add[0],
-                        value_to_add[1],
-                        value_to_add[3],
+                    self.database.add_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=value_to_add[0],
+                        values_dict={value_to_add[1]: value_to_add[3]},
+                        # COLLECTION_INITIAL,
+                        # value_to_add[0],
+                        # value_to_add[1],
+                        # value_to_add[3],
                     )
 
                 table.add_rows(
@@ -1362,8 +1391,12 @@ class Project:
                         font.setBold(False)
                         item.setFont(font)
 
-                    self.session.set_value(
-                        COLLECTION_CURRENT, scan, tag, new_value
+                    # self.session.set_value(
+                    self.database.add_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan,
+                        values_dict={tag: new_value},
+                        # COLLECTION_CURRENT, scan, tag, new_value
                     )
 
                     if new_value is None:
@@ -1408,17 +1441,23 @@ class Project:
         for i in range(0, len(values)):
             # We reput each value, exactly the same as it was before
             valueToReput = values[i]
-            self.session.add_value(
-                COLLECTION_CURRENT,
-                valueToReput[0],
-                valueToReput[1],
-                valueToReput[2],
+            self.database.add_value(
+                collection_name=COLLECTION_CURRENT,
+                primary_key=valueToReput[0],
+                values_dict={valueToReput[1]: valueToReput[2]},
+                # COLLECTION_CURRENT,
+                # valueToReput[0],
+                # valueToReput[1],
+                # valueToReput[2],
             )
-            self.session.add_value(
-                COLLECTION_INITIAL,
-                valueToReput[0],
-                valueToReput[1],
-                valueToReput[3],
+            self.database.add_value(
+                collection_name=COLLECTION_INITIAL,
+                primary_key=valueToReput[0],
+                values_dict={valueToReput[1]: valueToReput[3]},
+                # COLLECTION_INITIAL,
+                # valueToReput[0],
+                # valueToReput[1],
+                # valueToReput[3],
             )
 
     def saveConfig(self):
@@ -1720,8 +1759,12 @@ class Project:
                     else:
                         # If the cell was there before,
                         # we just set it to the old value
-                        self.session.set_value(
-                            COLLECTION_CURRENT, scan, tag, old_value
+                        # self.session.set_value(
+                        self.database.add_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan,
+                            values_dict={tag: old_value},
+                            # COLLECTION_CURRENT, scan, tag, old_value
                         )
                         set_item_data(
                             item,
@@ -1834,8 +1877,12 @@ class Project:
                         "->",
                         new_bricks,
                     )
-                    self.session.set_value(
-                        COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks
+                    # self.session.set_value(
+                    self.database.add_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=output,
+                        values_dict={TAG_BRICKS: new_bricks},
+                        # COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks
                     )
 
         for bricks in scan_bricks.values():
@@ -1879,7 +1926,9 @@ class Project:
                     continue
 
                 inputs = self.database.get_value(
-                    COLLECTION_BRICK, brick_id, BRICK_INPUTS
+                    collection=COLLECTION_BRICK,
+                    primary_key=brick_id,
+                    field=BRICK_INPUTS,
                 )
 
                 if not inputs:
@@ -1901,11 +1950,17 @@ class Project:
                         old_path, new_path or ""
                     )
                     new_inputs = json.loads(new_inputs_string)
-                    self.database.set_value(
-                        COLLECTION_BRICK, brick_id, BRICK_INPUTS, new_inputs
+                    # self.database.set_value(
+                    self.database.add_value(
+                        collection_name=COLLECTION_BRICK,
+                        primary_key=brick_id,
+                        values_dict={BRICK_INPUTS: new_inputs},
+                        # COLLECTION_BRICK, brick_id, BRICK_INPUTS, new_inputs
                     )
                     outputs = self.database.get_value(
-                        COLLECTION_BRICK, brick_id, BRICK_OUTPUTS
+                        collection=COLLECTION_BRICK,
+                        primary_key=brick_id,
+                        field=BRICK_OUTPUTS,
                     )
 
                     if outputs:
@@ -1914,28 +1969,38 @@ class Project:
                             old_path, new_path or ""
                         )
                         new_outputs = json.loads(new_outputs_string)
-                        self.database.set_value(
-                            COLLECTION_BRICK,
-                            brick_id,
-                            BRICK_OUTPUTS,
-                            new_outputs,
+                        # self.database.set_value(
+                        self.database.add_value(
+                            collection_name=COLLECTION_BRICK,
+                            primary_key=brick_id,
+                            values_dict={BRICK_OUTPUTS: new_outputs},
+                            #     COLLECTION_BRICK,
+                            #     brick_id,
+                            #     BRICK_OUTPUTS,
+                            #     new_outputs,
                         )
 
             # Update the history pipeline if hist_id is valid
             if old_path and hist_id:
                 old_pipeline_xml = self.database.get_value(
-                    COLLECTION_HISTORY, hist_id, HISTORY_PIPELINE
+                    collection=COLLECTION_HISTORY,
+                    primary_key=hist_id,
+                    field=HISTORY_PIPELINE,
                 )
 
                 if old_pipeline_xml:
                     new_pipeline_xml = old_pipeline_xml.replace(
                         old_path, new_path or ""
                     )
-                    self.database.set_value(
-                        COLLECTION_HISTORY,
-                        hist_id,
-                        HISTORY_PIPELINE,
-                        new_pipeline_xml,
+                    # self.database.set_value(
+                    self.database.add_value(
+                        collection_name=COLLECTION_HISTORY,
+                        primary_key=hist_id,
+                        values_dict={HISTORY_PIPELINE: new_pipeline_xml},
+                        # COLLECTION_HISTORY,
+                        # hist_id,
+                        # HISTORY_PIPELINE,
+                        # new_pipeline_xml,
                     )
 
         # Handle cases where no valid old_path was found

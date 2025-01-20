@@ -186,7 +186,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     continue
 
                 rel_value = ap[pl:]
-                document = project.session.get_document(
+                document = project.database.get_document(
                     COLLECTION_CURRENT, rel_value, fields=pfields, as_list=True
                 )
                 if document:
@@ -1175,28 +1175,25 @@ class ProcessMIA(Process):
                 cvalues = {}
                 break
 
-            cur_in_scan = self.project.session.get_document(
+            cur_in_scan = self.project.database.get_document(
                 COLLECTION_CURRENT, rel_in_file
             )
 
             if cur_in_scan is not None:
                 # tags in COLLECTION_CURRENT for in_file
                 cvalues = {
-                    field: getattr(cur_in_scan, field)
+                    field: cur_in_scan[field]
                     for field in field_names
                     if field not in banished_tags
                 }
 
-                init_in_scan = self.project.session.get_document(
+                init_in_scan = self.project.database.get_document(
                     COLLECTION_INITIAL, rel_in_file
                 )
 
                 if init_in_scan is not None:
                     # tags in COLLECTION_CURRENT for in_file
-                    ivalues = {
-                        field: getattr(init_in_scan, field)
-                        for field in cvalues
-                    }
+                    ivalues = {field: init_in_scan[field] for field in cvalues}
                 else:
                     ivalues = {}
                     # FIXME: In this case, do we want a message in stdout like
@@ -1400,26 +1397,34 @@ class ProcessMIA(Process):
 
         if cvalues:
 
-            if not self.project.session.get_document(
+            if not self.project.database.get_document(
                 COLLECTION_CURRENT, rel_out_file
             ):
-                self.project.session.add_document(
+                self.project.database.add_document(
                     COLLECTION_CURRENT, rel_out_file
                 )
 
-            self.project.session.set_values(
-                COLLECTION_CURRENT, rel_out_file, cvalues
+            # self.project.session.set_values(
+            self.project.database.add_value(
+                collection_name=COLLECTION_CURRENT,
+                primary_key=rel_out_file,
+                values_dict=cvalues,
+                # COLLECTION_CURRENT, rel_out_file, cvalues
             )
 
         if ivalues:
 
-            if not self.project.session.get_document(
+            if not self.project.database.get_document(
                 COLLECTION_INITIAL, rel_out_file
             ):
-                self.project.session.add_document(
+                self.project.database.add_document(
                     COLLECTION_INITIAL, rel_out_file
                 )
 
-            self.project.session.set_values(
-                COLLECTION_INITIAL, rel_out_file, ivalues
+            # self.project.session.set_values(
+            self.project.database.add_value(
+                collection_name=COLLECTION_INITIAL,
+                primary_key=rel_out_file,
+                values_dict=ivalues,
+                # COLLECTION_INITIAL, rel_out_file, ivalues
             )

@@ -244,8 +244,9 @@ class ModifyTable(QDialog):
                 self.project.database.add_value(
                     collection_name=COLLECTION_CURRENT,
                     primary_key=scan,
-                    field=tag,
-                    value=database_value,
+                    values_dict={tag: database_value},
+                    # field=tag,
+                    # value=database_value,
                 )
 
             self.close()

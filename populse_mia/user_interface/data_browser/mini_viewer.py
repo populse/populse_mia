@@ -611,7 +611,9 @@ class MiniViewer(QWidget):
         ):
             if scan == file_path_base_name:
                 value = self.project.database.get_value(
-                    COLLECTION_CURRENT, scan, self.config.getThumbnailTag()
+                    collection=COLLECTION_CURRENT,
+                    primary_key=scan,
+                    field=self.config.getThumbnailTag(),
                 )
                 if value is not None:
                     self.label_description[idx].setText(

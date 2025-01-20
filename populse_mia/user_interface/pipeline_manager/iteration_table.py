@@ -209,16 +209,19 @@ class IterationTable(QWidget):
         """
         tag_name = self.push_buttons[idx].text()
         values = []
+
         for scan in self.project.database.get_document_names(
             COLLECTION_CURRENT
         ):
-            current_value = self.project.session.get_value(
-                COLLECTION_CURRENT, scan, tag_name
+            current_value = self.project.database.get_value(
+                collection=COLLECTION_CURRENT, primary_key=scan, field=tag_name
             )
+
             if current_value is not None:
                 values.append(current_value)
 
         idx_to_fill = len(self.values_list)
+
         while len(self.values_list) <= idx:
             self.values_list.insert(idx_to_fill, [])
             idx_to_fill += 1
@@ -227,6 +230,7 @@ class IterationTable(QWidget):
             self.values_list[idx] = []
 
         for value in values:
+
             if value not in self.values_list[idx]:
                 self.values_list[idx].append(value)
 
@@ -243,7 +247,6 @@ class IterationTable(QWidget):
             get_current_editor().all_tag_values_list
         )
         # fmt: on
-
         ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
 
         if ui_iteration.exec_():
@@ -270,26 +273,21 @@ class IterationTable(QWidget):
 
         first_v_layout = QVBoxLayout()
         first_v_layout.addWidget(self.check_box_iterate)
-
         second_v_layout = QVBoxLayout()
         second_v_layout.addWidget(self.label_iterate)
         second_v_layout.addWidget(self.iterated_tag_label)
-
         third_v_layout = QVBoxLayout()
         third_v_layout.addWidget(self.iterated_tag_push_button)
         hbox = QHBoxLayout()
         hbox.addWidget(self.combo_box)
         hbox.addWidget(self.filter_button)
         third_v_layout.addLayout(hbox)
-
         top_layout = QHBoxLayout()
         top_layout.addLayout(first_v_layout)
         top_layout.addLayout(second_v_layout)
         top_layout.addLayout(third_v_layout)
-
         self.v_layout.addLayout(top_layout)
         self.v_layout.addWidget(self.iteration_table)
-
         self.h_box = QHBoxLayout()
         self.h_box.setSpacing(10)
         self.h_box.addWidget(self.label_tags)
@@ -300,7 +298,6 @@ class IterationTable(QWidget):
         self.h_box.addWidget(self.add_tag_label)
         self.h_box.addWidget(self.remove_tag_label)
         self.h_box.addStretch(1)
-
         self.v_layout.addLayout(self.h_box)
 
     def remove_tag(self):
@@ -324,9 +321,10 @@ class IterationTable(QWidget):
             self.main_window.pipeline_manager.pipelineEditorTabs.
             get_current_editor().iterated_tag,
         )
-        # fmt: on
 
+        # fmt: on
         if ui_select.exec_():
+
             # fmt: off
             if (
                 self.main_window.pipeline_manager.pipelineEditorTabs.
@@ -369,21 +367,23 @@ class IterationTable(QWidget):
 
         if len(self.main_window.pipeline_manager.scan_list) > 0:
             self.scan_list = self.main_window.pipeline_manager.scan_list
+
         else:
             self.scan_list = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
 
         self.combo_box.clear()
+
         if tag_name is None:
             self.iterated_tag_push_button.setText("Select")
             self.iterated_tag_label.setText("Select a tag")
             self.iteration_table.clear()
             self.iteration_table.setColumnCount(len(self.push_buttons))
+
         else:
             self.iterated_tag_push_button.setText(tag_name)
             self.iterated_tag_label.setText(tag_name + ":")
-
             # duplicate the values list to have the initial, unfiltered, one
             # fmt: off
             self.all_tag_values = list(
@@ -419,11 +419,13 @@ class IterationTable(QWidget):
             get_current_editor().iterated_tag
             is not None
         ):
+
             # fmt: on
             # Headers
             for idx in range(len(self.push_buttons)):
                 # FIXME should not use GUI text values !!
                 header_name = self.push_buttons[idx].text().replace("&", "")
+
                 if header_name not in self.project.database.get_field_names(
                     COLLECTION_CURRENT
                 ):
@@ -456,26 +458,27 @@ class IterationTable(QWidget):
             scans_res = [
                 getattr(document, TAG_FILENAME) for document in scans_list
             ]
-
             # Taking the intersection between the found database scans and the
             # user selection in the data_browser
             self.iteration_scans = list(
                 set(scans_res).intersection(self.scan_list)
             )
             self.iteration_table.setRowCount(len(self.iteration_scans))
-
             # Filling the table cells
             row = -1
+
             for scan_name in self.iteration_scans:
                 row += 1
+
                 for idx in range(len(self.push_buttons)):
                     tag_name = self.push_buttons[idx].text().replace("&", "")
-
                     item = QTableWidgetItem()
                     item.setText(
                         str(
-                            self.project.session.get_value(
-                                COLLECTION_CURRENT, scan_name, tag_name
+                            self.project.database.get_value(
+                                collection=COLLECTION_CURRENT,
+                                primary_key=scan_name,
+                                field=tag_name
                             )
                         )
                     )
@@ -514,9 +517,9 @@ class IterationTable(QWidget):
                 all_iterations_scans.append(
                     list(set(scans_res).intersection(self.scan_list))
                 )
+
             self.all_iterations_scans = all_iterations_scans
             # self.scans = True
-
             # This will change the scans list in the current
             # Pipeline Manager tab
             self.iteration_table_updated.emit(
@@ -540,8 +543,10 @@ class IterationTable(QWidget):
         scans_names = list(set(scans_names).intersection(self.scan_list))
 
         for scan_name in scans_names:
-            tag_value = self.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, selected_tag
+            tag_value = self.project.database.get_value(
+                collection=COLLECTION_CURRENT,
+                primary_key=scan_name,
+                field=selected_tag,
             )
 
             if str(tag_value) not in tag_values_list:

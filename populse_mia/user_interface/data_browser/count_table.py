@@ -472,7 +472,7 @@ class CountTable(QDialog):
             COLLECTION_CURRENT
         ):
             current_value = self.project.database.get_value(
-                COLLECTION_CURRENT, scan, tag_name
+                collection=COLLECTION_CURRENT, primary_key=scan, field=tag_name
             )
             if current_value is not None:
                 values.append(current_value)

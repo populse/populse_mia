@@ -500,10 +500,20 @@ class PipelineManagerTab(QWidget):
 
         # Adding I/O to database history
         # Setting brick init state if init finished correctly
-        self.project.session.set_values(
-            COLLECTION_BRICK,
-            job.uuid,
-            {BRICK_INPUTS: inputs, BRICK_OUTPUTS: outputs, BRICK_INIT: "Done"},
+        # self.project.session.set_values(
+        self.project.database.add_value(
+            collection_name=COLLECTION_BRICK,
+            primary_key=job.uuid,
+            values_dict={
+                BRICK_INPUTS: inputs,
+                BRICK_OUTPUTS: outputs,
+                BRICK_INIT: "Done",
+            },
+            # COLLECTION_BRICK,
+            # job.uuid,
+            # {BRICK_INPUTS: inputs,
+            #  BRICK_OUTPUTS: outputs,
+            #  BRICK_INIT: "Done"},
         )
 
     def _set_anim_frame(self):
@@ -916,8 +926,18 @@ class PipelineManagerTab(QWidget):
                 cvalues[tag_to_add["name"]] = tag_to_add["value"]
                 ivalues[tag_to_add["name"]] = tag_to_add["value"]
 
-        self.project.session.set_values(COLLECTION_CURRENT, p_value, cvalues)
-        self.project.session.set_values(COLLECTION_INITIAL, p_value, ivalues)
+        # self.project.session.set_values(COLLECTION_CURRENT, p_value, cvalues)
+        self.project.database.add_value(
+            collection_name=COLLECTION_CURRENT,
+            primary_key=p_value,
+            values_dict=cvalues,
+        )
+        # self.project.session.set_values(COLLECTION_INITIAL, p_value, ivalues)
+        self.project.database.add_value(
+            collection_name=COLLECTION_INITIAL,
+            primary_key=p_value,
+            values_dict=ivalues,
+        )
 
         if tags2del:
 
@@ -2252,12 +2272,15 @@ class PipelineManagerTab(QWidget):
                 pipeline_tools.save_pipeline(pipeline, buffer, format="xml")
 
             pipeline_xml = buffer.getvalue()
-            self.project.session.set_values(
-                COLLECTION_HISTORY,
-                history_id,
-                {HISTORY_PIPELINE: pipeline_xml},
+            # self.project.session.set_values(
+            self.project.database.add_value(
+                collection_name=COLLECTION_HISTORY,
+                primary_key=history_id,
+                values_dict={HISTORY_PIPELINE: pipeline_xml},
+                # COLLECTION_HISTORY,
+                # history_id,
+                # {HISTORY_PIPELINE: pipeline_xml},
             )
-
             # add process characteristics in the database
             # if init is otherwise OK
             for job in self.workflow.jobs:
@@ -2313,15 +2336,24 @@ class PipelineManagerTab(QWidget):
                                     '"{0}" brick.'.format(node_name)
                                 )
 
-                            self.project.session.set_values(
-                                COLLECTION_BRICK,
-                                brick_id,
-                                {
+                            # self.project.session.set_values(
+                            self.project.database.add_value(
+                                collection_name=COLLECTION_BRICK,
+                                primary_key=brick_id,
+                                values_dict={
                                     BRICK_NAME: node_name,
                                     BRICK_INIT_TIME: datetime.datetime.now(),
                                     BRICK_INIT: "Not Done",
                                     BRICK_EXEC: "Not Done",
                                 },
+                                # COLLECTION_BRICK,
+                                # brick_id,
+                                # {
+                                #  BRICK_NAME: node_name,
+                                #  BRICK_INIT_TIME: datetime.datetime.now(),
+                                #  BRICK_INIT: "Not Done",
+                                #  BRICK_EXEC: "Not Done",
+                                # },
                             )
 
                             self._register_node_io_in_database(
@@ -2329,10 +2361,14 @@ class PipelineManagerTab(QWidget):
                             )
 
             # add bricklist into history collection
-            self.project.session.set_values(
-                COLLECTION_HISTORY,
-                history_id,
-                {HISTORY_BRICKS: self.brick_list},
+            # self.project.session.set_values(
+            self.project.database.add_value(
+                collection_name=COLLECTION_HISTORY,
+                primary_key=history_id,
+                values_dict={HISTORY_BRICKS: self.brick_list},
+                # COLLECTION_HISTORY,
+                # history_id,
+                # {HISTORY_BRICKS: self.brick_list},
             )
 
         self.register_completion_attributes(pipeline)
@@ -2631,10 +2667,14 @@ class PipelineManagerTab(QWidget):
                 # no real info about exec time
                 exec_date = datetime.datetime.now()
             print("set exec status on:", brid, exec_date)
-            self.project.session.set_values(
-                COLLECTION_BRICK,
-                brid,
-                {BRICK_EXEC: "Done", BRICK_EXEC_TIME: exec_date},
+            # self.project.session.set_values(
+            self.project.database.add_value(
+                collection_name=COLLECTION_BRICK,
+                primary_key=brid,
+                values_dict={BRICK_EXEC: "Done", BRICK_EXEC_TIME: exec_date},
+                # COLLECTION_BRICK,
+                # brid,
+                # {BRICK_EXEC: "Done", BRICK_EXEC_TIME: exec_date},
             )
 
         # now cleanup earlier history of data
@@ -2827,11 +2867,19 @@ class PipelineManagerTab(QWidget):
 
             for value in values:
                 try:
-                    self.project.session.set_values(
-                        COLLECTION_CURRENT, value, attributes
+                    # self.project.session.set_values(
+                    self.project.database.add_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=value,
+                        values_dict=attributes,
+                        # COLLECTION_CURRENT, value, attributes
                     )
-                    self.project.session.set_values(
-                        COLLECTION_INITIAL, value, attributes
+                    # self.project.session.set_values(
+                    self.project.database.add_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=value,
+                        values_dict=attributes,
+                        # COLLECTION_INITIAL, value, attributes
                     )
 
                 except ValueError:

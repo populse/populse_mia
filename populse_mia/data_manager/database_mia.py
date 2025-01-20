@@ -25,6 +25,7 @@ from populse_db.database import FIELD_TYPE_STRING, str_to_type, type_to_str
 # Populse_db imports
 from populse_db.storage import Storage
 
+# V2 field types (obsolete now)
 # Field types
 # FIELD_TYPE_STRING = "string"
 # FIELD_TYPE_INTEGER = "int"
@@ -42,7 +43,6 @@ from populse_db.storage import Storage
 # FIELD_TYPE_LIST_DATETIME = "list_datetime"
 # FIELD_TYPE_LIST_TIME = "list_time"
 # FIELD_TYPE_LIST_JSON = "list_json"
-
 # ALL_TYPES = {
 #     FIELD_TYPE_LIST_STRING,
 #     FIELD_TYPE_LIST_INTEGER,
@@ -62,6 +62,7 @@ from populse_db.storage import Storage
 #     FIELD_TYPE_JSON,
 # }
 
+# V3 field types
 # FIELD_TYPE_STRING = str
 # FIELD_TYPE_INTEGER = int
 # FIELD_TYPE_FLOAT = float
@@ -78,7 +79,6 @@ from populse_db.storage import Storage
 # FIELD_TYPE_LIST_DATETIME = list[datetime]
 # FIELD_TYPE_LIST_TIME = list[time]
 # FIELD_TYPE_LIST_JSON = list[dict]
-
 # ALL_TYPES = {
 #     FIELD_TYPE_LIST_STRING,
 #     FIELD_TYPE_LIST_INTEGER,
@@ -98,13 +98,13 @@ from populse_db.storage import Storage
 #     FIELD_TYPE_JSON,
 # }
 
+# Special attributes for the database
 # Tag unit
 TAG_UNIT_MS = "ms"
 TAG_UNIT_MM = "mm"
 TAG_UNIT_DEGREE = "degree"
 TAG_UNIT_HZPIXEL = "Hz/pixel"
 TAG_UNIT_MHZ = "MHz"
-
 ALL_UNITS = [
     TAG_UNIT_MS,
     TAG_UNIT_MM,
@@ -155,7 +155,7 @@ HISTORY_ID = "ID"
 HISTORY_PIPELINE = "Pipeline xml"
 HISTORY_BRICKS = "Bricks uuid"
 
-# Shemas
+# Shema (not in use currently)
 # schemas = [
 #     {
 #         "version": "1.0.0",
@@ -261,7 +261,7 @@ class DatabaseMIA:
     def __init__(
         self,
         database_engine,
-        schema_name="populse_mia.data_manager.database_mia",
+        # schema_name="populse_mia.data_manager.database_mia",
     ):
         """ "Constructor"""
         # Initialize the storage with the provided database engine
@@ -397,9 +397,9 @@ class DatabaseMIA:
 
             with self.storage.schema() as schema:
                 schema.add_field(
-                    field["collection_name"],
-                    field["field_name"],
-                    field["field_type"],
+                    collection_name=field["collection_name"],
+                    field_name=field["field_name"],
+                    field_type=field["field_type"],
                 )
 
             self.update_field_attributes(
@@ -457,47 +457,51 @@ class DatabaseMIA:
 
             with self.storage.schema() as schema:
                 schema.add_collection(
-                    FIELD_ATTRIBUTES_COLLECTION,
+                    name=FIELD_ATTRIBUTES_COLLECTION,
                     primary_key="index",
-                    # description="The index name of the field as: "
-                    # "collection name|collection primary_key column nam"
+                    # description="The primary key name of the "
+                    #             "collection as: "
+                    #             "collection name|collection primary_key "
+                    #             "column name"
                 )
                 schema.add_field(
-                    FIELD_ATTRIBUTES_COLLECTION,
-                    "visibility",
-                    bool,
-                    "Visibility of the index field in the DataBrowser",
+                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                    field_name="visibility",
+                    field_type=bool,
+                    description="Visibility of the index field in "
+                    "the DataBrowser",
                 )
                 schema.add_field(
-                    FIELD_ATTRIBUTES_COLLECTION,
-                    "origin",
-                    str,
-                    "Define the origin of the index "
-                    "field, TAG_ORIGIN_BUILTIN or TAG_ORIGIN_USER",
+                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                    field_name="origin",
+                    field_type=str,
+                    description="Define the origin of the index "
+                    "field, TAG_ORIGIN_BUILTIN or "
+                    "TAG_ORIGIN_USER",
                 )
                 schema.add_field(
-                    FIELD_ATTRIBUTES_COLLECTION,
-                    "unit",
-                    str,
-                    "Unit of the index field",
+                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                    field_name="unit",
+                    field_type=str,
+                    description="Unit of the index field",
                 )
                 schema.add_field(
-                    FIELD_ATTRIBUTES_COLLECTION,
-                    "default_value",
-                    str,
-                    "Default value of the index field",
+                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                    field_name="default_value",
+                    field_type=str,
+                    description="Default value of the index field",
                 )
                 schema.add_field(
-                    FIELD_ATTRIBUTES_COLLECTION,
-                    "description",
-                    str,
-                    "Description of the index field",
+                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                    field_name="description",
+                    field_type=str,
+                    description="Description of the index field",
                 )
                 schema.add_field(
-                    FIELD_ATTRIBUTES_COLLECTION,
-                    "field_type",
-                    str,
-                    "Type of the index field",
+                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                    field_name="field_type",
+                    field_type=str,
+                    description="Type of the index field",
                 )
 
     def remove_field_attributes(
@@ -564,7 +568,7 @@ class DatabaseMIA:
         """
 
         index = f"{collection_name}|{field_name}"
-        self.add_values(
+        self.add_value(
             FIELD_ATTRIBUTES_COLLECTION,
             index,
             {
@@ -628,26 +632,45 @@ class DatabaseMIA:
 
     # -- Values management --
 
-    def add_value(self, collection_name, primary_key, field, value):
-        """
-        Add a value to a specific field in a document within a collection.
+    # def add_value(self, collection_name, primary_key, field, value):
+    #     """
+    #     Add a value to a specific field in a document within a collection.
 
-        This method updates the value of a specified field for a given
-        document (identified by its primary key) within the specified
-        collection in the database.
+    #     This method updates the value of a specified field for a given
+    #     document (identified by its primary key) within the specified
+    #     collection in the database.
 
-        Parameters:
-            collection_name (str): The name of the collection containing the
-                                   document.
-            primary_key (str): The unique identifier of the document to be
-                               updated.
-            field (str): The name of the field to be updated in the document.
-            value (Any): The value to be assigned to the specified field.
-        """
-        with self.storage.data(write=True) as dbs:
-            dbs[collection_name][primary_key][field] = value
+    #     Parameters:
+    #         collection_name (str): The name of the collection containing the
+    #                                document.
+    #         primary_key (str): The unique identifier of the document to be
+    #                            updated.
+    #         field (str): The name of the field to be updated in the document.
+    #         value (Any): The value to be assigned to the specified field.
+    #     """
+    #     with self.storage.data(write=True) as dbs:
+    #         dbs[collection_name][primary_key][field] = value
 
-    def add_values(self, collection_name, primary_key, values_dict):
+    # def add_value(self, collection_name, primary_key, values_dict):
+    #     """
+    #     Add a value to a specific field in a document within a collection.
+
+    #     This method updates the value of a specified field for a given
+    #     document (identified by its primary key) within the specified
+    #     collection in the database.
+
+    #     Parameters:
+    #         collection_name (str): The name of the collection containing the
+    #                                document.
+    #         primary_key (str): The unique identifier of the document to be
+    #                            updated.
+    #         field (str): The name of the field to be updated in the document.
+    #         value (Any): The value to be assigned to the specified field.
+    #     """
+    #     with self.storage.data(write=True) as dbs:
+    #         dbs[collection_name][primary_key] = values_dict
+
+    def add_value(self, collection_name, primary_key, values_dict):
         """
         Store or update a record in the specified collection.
 
@@ -693,7 +716,23 @@ class DatabaseMIA:
     # -- Documents management --
 
     def add_document(self, collection, document):
-        """Adds a document to a collection."""
+        """
+        Adds a document to a specified collection in the storage.
+
+        If the specified collection exists, the document is added to it.
+        The method assigns a primary key to the document based on the
+        collection's primary key configuration. The changes are saved
+        to the storage.
+
+        Parameters:
+        ----------
+        collection : str
+                     The name of the collection where the document should
+                     be added.
+        document : str
+                   The document name to be added.
+        """
+
         if self.has_collection(collection):
             primary_key = self.primary_key(collection)
 
@@ -893,6 +932,25 @@ class DatabaseMIA:
 
     # -- Currently obsoletes --
 
+    def get_field(self, collection_name, field_name):
+        """blabla"""
+
+        raise NotImplementedError(
+            "This method (get_field) is obsolete and is no longer "
+            "available in the DatabaseMIA class. Use get_field_attributes "
+            " instead ......!"
+        )
+
+    def set_value(self, collection, document_id, field, new_value):
+        """Sets the value associated to <collection, document, field> if
+        it exists.
+        """
+        raise NotImplementedError(
+            "This method (set_value) is obsolete and is no longer "
+            "available in the DatabaseMIA class. Use add_value "
+            " instead ......!"
+        )
+
     def get_collection(self, name):
         """Returns the collection row of the collection"""
         raise NotImplementedError(
@@ -912,30 +970,6 @@ class DatabaseMIA:
         raise NotImplementedError(
             "This method (remove_collection) is not yet available in "
             "DatabaseMIA class."
-        )
-
-    def get_field(self, collection_name, field_name):
-        """blabla"""
-
-        # print("#########")
-        # print(
-        #     "Please note that the get_field() function is obsolete. "
-        #     "Use get_field_attributes instead ......!"
-        # )
-        # print("#########")
-        # return None
-        raise NotImplementedError(
-            "This method (get_field) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def set_value(self, collection, document_id, field, new_value):
-        """Sets the value associated to <collection, document, field> if
-        it exists.
-        """
-        raise NotImplementedError(
-            "Please note that the set_value() function is obsolete. "
-            "Use add_value() instead ......!"
         )
 
     def remove_value(self, collection, document_id, field):
