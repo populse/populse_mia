@@ -743,9 +743,9 @@ class Project:
         # filter jobs actually in MIA database
         docs = self.database.get_documents(
             COLLECTION_BRICK,
-            document_ids=list(bricks.keys()),
+            primary_keys=list(bricks.keys()),
             fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS],
-            as_list=True,
+            # as_list=True,
         )
         docs = {
             brid: {"brick_exec": brick_exec, "outputs": outputs}

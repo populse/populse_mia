@@ -361,7 +361,9 @@ class MainWindow(QMainWindow):
         :return: Boolean. True if there are unsaved modifications,
            False otherwise
         """
+
         if self.project.isTempProject:
+
             if (
                 len(
                     self.project.database.get_document_names(

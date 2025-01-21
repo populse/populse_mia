@@ -798,17 +798,20 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return dbs[collection][document_id].get()
 
-    def get_documents(self, collection):
+    def get_documents(self, collection, primary_keys=None, fields=None):
         """
         Retrieve all documents from the specified collection.
 
         This method checks if the specified collection exists. If it does,
         the method fetches and returns a list of all document rows in the
-        collection. If the collection does not exist, an empty list is
-        returned.
+        collection, filtered by primary keys and fields if provided.
+        If the collection does not exist, an empty list is returned.
 
         :param collection: Name of the document collection (str).
                            The collection must already exist in the database.
+        :param primary_keys: List of primary keys to filter documents (list
+                             of str).
+        :param fields: List of fields to include in the result (list of str).
 
         :return: A list of document rows if the collection exists,
                  or an empty list if the collection does not exist.
@@ -816,7 +819,28 @@ class DatabaseMIA:
         if self.has_collection(collection):
 
             with self.storage.data() as dbs:
-                return dbs[collection].get()
+                docs = dbs[collection].get()
+
+                # If no filtering is required, return all documents
+                if primary_keys is None and fields is None:
+                    return docs
+
+                # Filter documents by primary keys
+                if primary_keys is not None:
+                    docs = [
+                        doc
+                        for doc in docs
+                        if doc.get("FileName") in primary_keys
+                    ]
+
+                # If fields are provided, reduce the documents to those fields
+                if fields is not None:
+                    docs = [
+                        {field: doc.get(field) for field in fields}
+                        for doc in docs
+                    ]
+
+                return docs
 
         else:
             return []
