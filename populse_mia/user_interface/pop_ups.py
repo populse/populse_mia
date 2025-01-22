@@ -600,16 +600,11 @@ class PopUpAddPath(QDialog):
                 self.project.undos.append(history_maker)
                 self.project.redos.clear()
                 # Databrowser updated
-                (self.databrowser.table_data.scans_to_visualize) = (
-                    self.project.database.get_document_names(
-                        COLLECTION_CURRENT
-                    )
+                scans = self.project.database.get_document_names(
+                    COLLECTION_CURRENT
                 )
-                (self.databrowser.table_data.scans_to_search) = (
-                    self.project.database.get_document_names(
-                        COLLECTION_CURRENT
-                    )
-                )
+                self.databrowser.table_data.scans_to_visualize = scans
+                self.databrowser.table_data.scans_to_search = scans
                 self.databrowser.table_data.add_columns()
                 self.databrowser.table_data.fill_headers()
                 self.databrowser.table_data.add_rows([path])

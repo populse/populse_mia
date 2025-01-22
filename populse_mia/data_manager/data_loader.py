@@ -771,7 +771,6 @@ class ImportWorker(QThread):
 
         self.notifyProgress.emit(3)
         sleep(0.1)
-
         # For history
         historyMaker.append(self.scans_added)
         historyMaker.append(values_added)
@@ -800,6 +799,7 @@ def read_log(project, main_window):
 
     with main_window.progress.worker.lock:
         scans_added = list(main_window.progress.worker.scans_added)
+
     return scans_added
 
 
@@ -845,13 +845,16 @@ def verify_scans(project):
 
     # Returning the files that are problematic
     return_list = []
+
     for scan in project.database.get_document_names(COLLECTION_CURRENT):
         file_name = scan
         file_path = os.path.relpath(os.path.join(project.folder, file_name))
 
         if os.path.exists(file_path):
+
             # If the file exists, we do the checksum
             with open(file_path, "rb") as scan_file:
+
                 try:
                     data = scan_file.read()
 

@@ -82,17 +82,42 @@ from populse_mia.user_interface.pop_ups import (
 from . import type_editors
 
 if sys.version_info[0] >= 3:
+    # In Python 3, str is equivalent to unicode in Python 2
     unicode = str
 
     def values(d):
-        """blabla"""
+        """
+        Return a list of all values in the dictionary.
+
+        In Python 3, `dict.values()` returns a view, which is then
+        converted to a list. This function ensures compatibility
+        across Python versions by returning a list of the dictionary's values.
+
+        Args:
+            d (dict): The dictionary from which to retrieve values.
+
+        Returns:
+            list: A list of values in the dictionary.
+        """
 
         return list(d.values())
 
 else:
 
     def values(d):
-        """blabla"""
+        """
+        Return a list of all values in the dictionary.
+
+        In Python 2, `dict.values()` returns a list directly, so no
+        conversion is necessary. This function ensures compatibility
+        across Python versions by returning a list of the dictionary's values.
+
+        Args:
+            d (dict): The dictionary from which to retrieve values.
+
+        Returns:
+            list: A list of values in the dictionary.
+        """
 
         return d.values()
 
@@ -172,10 +197,13 @@ class PlugFilter(QWidget):
 
         if scans_list:
             scans_list_copy = []
+
             for scan in scans_list:
                 scan_no_pfolder = scan.replace(self.project.folder, "")
+
                 if scan_no_pfolder[0] in ["\\", "/"]:
                     scan_no_pfolder = scan_no_pfolder[1:]
+
                 if scan_no_pfolder not in doc_list:
                     scans_list_copy.append(scan_no_pfolder)
 
@@ -184,12 +212,11 @@ class PlugFilter(QWidget):
         # If there is no element in scans_list, this means that all the scans
         # of the database needs to be taken into account
         else:
-            self.scans_list = self.project.session.get_document_names(
+            self.scans_list = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
 
         self.setWindowTitle("Filter - " + node_name + " - " + plug_name)
-
         # Graphical components
         self.table_data = TableDataBrowser(
             self.project,
@@ -199,18 +226,14 @@ class PlugFilter(QWidget):
             True,
             link_viewer=False,
         )
-
         # Reducing the list of scans to selection
         all_scans = self.table_data.scans_to_visualize
         self.table_data.scans_to_visualize = self.scans_list
         self.table_data.scans_to_search = self.scans_list
         self.table_data.update_visualized_rows(all_scans)
-
         search_bar_layout = QHBoxLayout()
-
         self.rapid_search = RapidSearch(self)
         self.rapid_search.textChanged.connect(partial(self.search_str))
-
         sources_images_dir = Config().getSourceImageDir()
         self.button_cross = QToolButton()
         self.button_cross.setStyleSheet("background-color:rgb(255, 255, 255);")
@@ -218,10 +241,8 @@ class PlugFilter(QWidget):
             QIcon(os.path.join(sources_images_dir, "gray_cross.png"))
         )
         self.button_cross.clicked.connect(self.reset_search_bar)
-
         search_bar_layout.addWidget(self.rapid_search)
         search_bar_layout.addWidget(self.button_cross)
-
         self.advanced_search = AdvancedSearch(
             self.project,
             self,
@@ -230,19 +251,14 @@ class PlugFilter(QWidget):
             from_pipeline=True,
         )
         self.advanced_search.show_search()
-
         push_button_tags = QPushButton("Visualized tags")
         push_button_tags.clicked.connect(self.update_tags)
-
         self.push_button_tag_filter = QPushButton(TAG_FILENAME)
         self.push_button_tag_filter.clicked.connect(self.update_tag_to_filter)
-
         push_button_ok = QPushButton("OK")
         push_button_ok.clicked.connect(self.ok_clicked)
-
         push_button_cancel = QPushButton("Cancel")
         push_button_cancel.clicked.connect(self.close)
-
         # Layout
         buttons_layout = QHBoxLayout()
         buttons_layout.addWidget(push_button_tags)
@@ -250,15 +266,12 @@ class PlugFilter(QWidget):
         buttons_layout.addStretch(1)
         buttons_layout.addWidget(push_button_ok)
         buttons_layout.addWidget(push_button_cancel)
-
         main_layout = QVBoxLayout()
         main_layout.addLayout(search_bar_layout)
         main_layout.addWidget(self.advanced_search)
         main_layout.addWidget(self.table_data)
         main_layout.addLayout(buttons_layout)
-
         self.setLayout(main_layout)
-
         screen_resolution = QApplication.instance().desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
         self.setMinimumWidth(round(0.6 * width))
