@@ -1176,24 +1176,28 @@ class ProcessMIA(Process):
                 break
 
             cur_in_scan = self.project.database.get_document(
-                COLLECTION_CURRENT, rel_in_file
+                collection_name=COLLECTION_CURRENT, primary_keys=rel_in_file
             )
 
-            if cur_in_scan is not None:
+            if cur_in_scan:
                 # tags in COLLECTION_CURRENT for in_file
                 cvalues = {
-                    field: cur_in_scan[field]
+                    field: cur_in_scan[0][field]
                     for field in field_names
                     if field not in banished_tags
                 }
 
                 init_in_scan = self.project.database.get_document(
-                    COLLECTION_INITIAL, rel_in_file
+                    collection_name=COLLECTION_INITIAL,
+                    primary_keys=rel_in_file,
                 )
 
-                if init_in_scan is not None:
+                if init_in_scan:
                     # tags in COLLECTION_CURRENT for in_file
-                    ivalues = {field: init_in_scan[field] for field in cvalues}
+                    ivalues = {
+                        field: init_in_scan[0][field] for field in cvalues
+                    }
+
                 else:
                     ivalues = {}
                     # FIXME: In this case, do we want a message in stdout like
@@ -1206,16 +1210,15 @@ class ProcessMIA(Process):
 
             else:
                 print(
-                    "{0} brick initialization warning:\n"
-                    "    {1} has no tags registered yet.\n"
-                    "    So, {2} cannot inherit its tags...\n"
-                    "    This can lead to a subsequent issue during "
-                    "initialization!!\n".format(
-                        self.context_name, in_file, out_file
-                    )
+                    f"{self.context_name} brick initialization warning:\n"
+                    f"{in_file} has no tags registered yet.\n"
+                    f"So, {out_file} cannot inherit its tags...\n"
+                    f"This can lead to a subsequent issue during "
+                    f"initialization!!\n"
                 )
                 ivalues = {}
                 cvalues = {}
+
         # If there are several possible inputs: there is more work
         if (
             not ProcessMIA.ignore_node
@@ -1298,8 +1301,9 @@ class ProcessMIA(Process):
                     # circular import issue
                     # isort: off
                     # fmt: off
-                    from populse_mia.user_interface.pop_ups import \
+                    from populse_mia.user_interface.pop_ups import (
                         PopUpInheritanceDict
+                    )
                     # isort: on
                     # fmt: on
                     # FIXME: As we don't have access here to the
@@ -1398,7 +1402,7 @@ class ProcessMIA(Process):
         if cvalues:
 
             if not self.project.database.get_document(
-                COLLECTION_CURRENT, rel_out_file
+                collection_name=COLLECTION_CURRENT, primary_keys=rel_out_file
             ):
                 self.project.database.add_document(
                     COLLECTION_CURRENT, rel_out_file
@@ -1415,7 +1419,7 @@ class ProcessMIA(Process):
         if ivalues:
 
             if not self.project.database.get_document(
-                COLLECTION_INITIAL, rel_out_file
+                collection_name=COLLECTION_INITIAL, primary_keys=rel_out_file
             ):
                 self.project.database.add_document(
                     COLLECTION_INITIAL, rel_out_file

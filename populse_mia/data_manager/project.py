@@ -35,11 +35,8 @@ from populse_db.database import (
     FIELD_TYPE_STRING,
 )
 
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_BUILTIN,
-    TAG_ORIGIN_USER,
-    DatabaseMIA,
-)
+from populse_mia.data_manager import TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER
+from populse_mia.data_manager.database_mia import DatabaseMIA
 from populse_mia.data_manager.filter import Filter
 
 # Populse_MIA imports
@@ -1112,24 +1109,31 @@ class Project:
         # docs = self.session.filter_documents(
         # COLLECTION_CURRENT, filter_query, fields=[TAG_FILENAME],
         # as_list=True)
-        docs = self.session.get_documents(
-            COLLECTION_CURRENT, fields=[TAG_FILENAME, TAG_BRICKS], as_list=True
+        docs = self.database.get_document(
+            collection_name=COLLECTION_CURRENT,
+            fields=[TAG_FILENAME, TAG_BRICKS],
         )
         orphan = set()
+
         for doc in docs:
-            if doc[1]:
+
+            if doc[TAG_BRICKS] is not None:
                 bricks = list(
-                    self.session.get_documents(
-                        COLLECTION_BRICK,
-                        document_ids=doc[1],
+                    self.session.get_document(
+                        collection_name=COLLECTION_BRICK,
+                        primary_keys=doc[TAG_BRICKS],
                         fields=[BRICK_ID],
-                        as_list=True,
                     )
                 )
+
                 if bricks:
                     continue
-            if not os.path.exists(os.path.join(self.folder, doc[0])):
-                orphan.add(doc[0])
+
+            if not os.path.exists(
+                os.path.join(self.folder, doc[TAG_FILENAME])
+            ):
+                orphan.add(doc[TAG_FILENAME])
+
         return orphan
 
     def getSortedTag(self):

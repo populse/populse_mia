@@ -74,10 +74,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_BUILTIN,
-    TAG_ORIGIN_USER,
-)
+from populse_mia.data_manager import TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER
 from populse_mia.data_manager.project import (
     BRICK_NAME,
     COLLECTION_BRICK,
@@ -246,7 +243,9 @@ class DataBrowser(QWidget):
             }
         )
 
-        for scan in self.project.database.get_documents(COLLECTION_CURRENT):
+        for scan in self.project.database.get_document(
+            collection_name=COLLECTION_CURRENT
+        ):
             self.project.unsavedModifications = True
             self.project.database.add_value(
                 collection_name=COLLECTION_CURRENT,
@@ -374,7 +373,9 @@ class DataBrowser(QWidget):
         )
         self.project.unsavedModifications = True
 
-        for scan in self.project.database.get_documents(COLLECTION_CURRENT):
+        for scan in self.project.database.get_document(
+            collection_name=COLLECTION_CURRENT
+        ):
             # If the tag to clone has a value, we add this value with the
             # new tag name in the Database
             cloned_cur_value = self.project.database.get_value(
@@ -1580,11 +1581,13 @@ class TableDataBrowser(QTableWidget):
 
         :param name: string of the brick id
         """
-        doc = self.project.database.get_document(COLLECTION_BRICK, name)
+        doc = self.project.database.get_document(
+            collection_name=COLLECTION_BRICK, primary_keys=name
+        )
 
-        if doc is not None:
+        if doc:
             inputs = set()
-            todo = list(doc["Input(s)"].values())
+            todo = list(doc[0]["Input(s)"].values())
 
             while todo:
                 value = todo.pop(0)
@@ -1596,7 +1599,7 @@ class TableDataBrowser(QTableWidget):
                     todo += value
 
             outputs = set()
-            todo = list(doc["Output(s)"].values())
+            todo = list(doc[0]["Output(s)"].values())
 
             while todo:
                 value = todo.pop(0)
@@ -1611,16 +1614,15 @@ class TableDataBrowser(QTableWidget):
 
                 if (output != "") and (output not in inputs):
                     doc_delete = os.path.relpath(value, self.project.folder)
-                    scan_object = self.project.session.get_document(
-                        COLLECTION_CURRENT,
-                        doc_delete,
+                    scan_object = self.project.database.get_document(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_keys=doc_delete,
                         fields=[TAG_FILENAME, TAG_BRICKS],
-                        as_list=True,
                     )
                     row = None
 
-                    if scan_object is not None:
-                        bricks = scan_object[1]
+                    if scan_object:
+                        bricks = scan_object[0][TAG_BRICKS]
 
                         if bricks and name in bricks:
                             bricks = [
@@ -2416,10 +2418,11 @@ class TableDataBrowser(QTableWidget):
             row = point.row()
             scan_path = self.item(row, 0).text()
             scan_object = self.project.database.get_document(
-                COLLECTION_CURRENT, scan_path
+                collection_name=COLLECTION_CURRENT,
+                primary_keys=scan_path,
             )
 
-            if scan_object is not None:
+            if not scan_object:
 
                 if (scan_path in scan_list) and (
                     self.data_browser.data_sent is True

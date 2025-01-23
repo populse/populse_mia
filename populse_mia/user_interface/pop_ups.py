@@ -115,7 +115,7 @@ from PyQt5.QtWidgets import (
 )
 
 # Populse_mia imports
-from populse_mia.data_manager.database_mia import (
+from populse_mia.data_manager import (
     TAG_ORIGIN_USER,
     TAG_UNIT_DEGREE,
     TAG_UNIT_HZPIXEL,

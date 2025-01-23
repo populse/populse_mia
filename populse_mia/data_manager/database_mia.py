@@ -20,10 +20,16 @@ populse_db and some of its methods
 
 # from datetime import datetime
 
-from populse_db.database import FIELD_TYPE_STRING, str_to_type, type_to_str
+from populse_db.database import str_to_type, type_to_str
 
 # Populse_db imports
 from populse_db.storage import Storage
+
+# Special attributes for the database
+from populse_mia.data_manager import (
+    FIELD_ATTRIBUTES_COLLECTION,
+    FIELD_TYPE_STRING,
+)
 
 # V2 field types (obsolete now)
 # Field types
@@ -98,62 +104,6 @@ from populse_db.storage import Storage
 #     FIELD_TYPE_JSON,
 # }
 
-# Special attributes for the database
-# Tag unit
-TAG_UNIT_MS = "ms"
-TAG_UNIT_MM = "mm"
-TAG_UNIT_DEGREE = "degree"
-TAG_UNIT_HZPIXEL = "Hz/pixel"
-TAG_UNIT_MHZ = "MHz"
-ALL_UNITS = [
-    TAG_UNIT_MS,
-    TAG_UNIT_MM,
-    TAG_UNIT_DEGREE,
-    TAG_UNIT_HZPIXEL,
-    TAG_UNIT_MHZ,
-]
-
-# Collections
-COLLECTION_CURRENT = "current"
-COLLECTION_INITIAL = "initial"
-COLLECTION_BRICK = "brick"
-COLLECTION_HISTORY = "history"
-FIELD_ATTRIBUTES_COLLECTION = "mia_field_attributes"
-
-# Mia tags
-TAG_ORIGIN_BUILTIN = "builtin"
-TAG_ORIGIN_USER = "user"
-TAG_CHECKSUM = "Checksum"
-TAG_TYPE = "Type"
-TAG_EXP_TYPE = "Exp Type"
-TAG_FILENAME = "FileName"
-TAG_BRICKS = "History"
-TAG_HISTORY = "Full history"
-CLINICAL_TAGS = [
-    "Site",
-    "Spectro",
-    "MR",
-    "PatientRef",
-    "Pathology",
-    "Age",
-    "Sex",
-    "Message",
-]
-
-# Bricks
-BRICK_ID = "ID"
-BRICK_NAME = "Name"
-BRICK_INPUTS = "Input(s)"
-BRICK_OUTPUTS = "Output(s)"
-BRICK_INIT = "Init"
-BRICK_EXEC = "Exec"
-BRICK_INIT_TIME = "Init Time"
-BRICK_EXEC_TIME = "Exec Time"
-
-# History
-HISTORY_ID = "ID"
-HISTORY_PIPELINE = "Pipeline xml"
-HISTORY_BRICKS = "Bricks uuid"
 
 # Shema (not in use currently)
 # schemas = [
@@ -632,44 +582,6 @@ class DatabaseMIA:
 
     # -- Values management --
 
-    # def add_value(self, collection_name, primary_key, field, value):
-    #     """
-    #     Add a value to a specific field in a document within a collection.
-
-    #     This method updates the value of a specified field for a given
-    #     document (identified by its primary key) within the specified
-    #     collection in the database.
-
-    #     Parameters:
-    #         collection_name (str): The name of the collection containing the
-    #                                document.
-    #         primary_key (str): The unique identifier of the document to be
-    #                            updated.
-    #         field (str): The name of the field to be updated in the document.
-    #         value (Any): The value to be assigned to the specified field.
-    #     """
-    #     with self.storage.data(write=True) as dbs:
-    #         dbs[collection_name][primary_key][field] = value
-
-    # def add_value(self, collection_name, primary_key, values_dict):
-    #     """
-    #     Add a value to a specific field in a document within a collection.
-
-    #     This method updates the value of a specified field for a given
-    #     document (identified by its primary key) within the specified
-    #     collection in the database.
-
-    #     Parameters:
-    #         collection_name (str): The name of the collection containing the
-    #                                document.
-    #         primary_key (str): The unique identifier of the document to be
-    #                            updated.
-    #         field (str): The name of the field to be updated in the document.
-    #         value (Any): The value to be assigned to the specified field.
-    #     """
-    #     with self.storage.data(write=True) as dbs:
-    #         dbs[collection_name][primary_key] = values_dict
-
     def add_value(self, collection_name, primary_key, values_dict):
         """
         Store or update a record in the specified collection.
@@ -780,70 +692,76 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return dbs[collection].search(filter_query)
 
-    def get_document(self, collection, document_id):
-        """
-        Retrieves a document from the specified collection using its
-        identifier.
+    # def get_document(self, collection, document_id):
+    #     """
+    #     Retrieves a document from the specified collection using its
+    #     identifier.
 
-        :param collection: Name of the document collection (str).
-                           Must exist.
-        :param document_id: Identifier of the document to
-                            retrieve (str or int).
+    #     :param collection: Name of the document collection (str).
+    #                        Must exist.
+    #     :param document_id: Identifier of the document to
+    #                         retrieve (str or int).
 
-        :return: The document instance if found, otherwise None.
+    #     :return: The document instance if found, otherwise None.
+    #     """
+    #     if not self.has_collection(collection):
+    #         return None
+
+    #     with self.storage.data() as dbs:
+    #         return dbs[collection][document_id].get()
+
+    def get_document(self, collection_name, primary_keys=None, fields=None):
         """
-        if not self.has_collection(collection):
-            return None
+        Retrieve documents from the specified collection with optional
+        filtering.
+
+        This method checks if the specified collection exists. If it does, it
+        retrieves documents from the collection, optionally filtering by
+        primary keys and selecting specific fields. If the collection does not
+        exist, an empty list is returned.
+
+        :param collection_name: Name of the document collection (str). The
+                                collection must already exist in the database.
+        :param primary_keys: A single primary key or a list of primary keys to
+                             filter documents (str or list of str). If None,
+                             no filtering by primary keys is applied.
+        :param fields: A single field or a list of fields to include in the
+                       result (str or list of str). If None, all fields are
+                       included.
+
+        :return: A list of documents matching the specified criteria, or an
+                 empty list if the collection does not exist.
+        """
+
+        if not self.has_collection(collection_name):
+            return []
 
         with self.storage.data() as dbs:
-            return dbs[collection][document_id].get()
+            documents = dbs[collection_name].get()
 
-    def get_documents(self, collection, primary_keys=None, fields=None):
-        """
-        Retrieve all documents from the specified collection.
+        # Filter by primary keys if provided
+        if primary_keys:
+            primary_key_field = self.primary_key(collection_name)
+            primary_keys = (
+                set(primary_keys)
+                if isinstance(primary_keys, list)
+                else {primary_keys}
+            )
+            documents = [
+                doc
+                for doc in documents
+                if doc.get(primary_key_field) in primary_keys
+            ]
 
-        This method checks if the specified collection exists. If it does,
-        the method fetches and returns a list of all document rows in the
-        collection, filtered by primary keys and fields if provided.
-        If the collection does not exist, an empty list is returned.
+        # Select specific fields if provided
+        if fields:
+            fields = set(fields) if isinstance(fields, list) else {fields}
+            documents = [
+                {field: doc.get(field) for field in fields}
+                for doc in documents
+            ]
 
-        :param collection: Name of the document collection (str).
-                           The collection must already exist in the database.
-        :param primary_keys: List of primary keys to filter documents (list
-                             of str).
-        :param fields: List of fields to include in the result (list of str).
-
-        :return: A list of document rows if the collection exists,
-                 or an empty list if the collection does not exist.
-        """
-        if self.has_collection(collection):
-
-            with self.storage.data() as dbs:
-                docs = dbs[collection].get()
-
-                # If no filtering is required, return all documents
-                if primary_keys is None and fields is None:
-                    return docs
-
-                # Filter documents by primary keys
-                if primary_keys is not None:
-                    docs = [
-                        doc
-                        for doc in docs
-                        if doc.get("FileName") in primary_keys
-                    ]
-
-                # If fields are provided, reduce the documents to those fields
-                if fields is not None:
-                    docs = [
-                        {field: doc.get(field) for field in fields}
-                        for doc in docs
-                    ]
-
-                return docs
-
-        else:
-            return []
+        return documents
 
     def get_document_names(self, collection):
         """Retrieve a list of all document names in the specified collection.
@@ -905,9 +823,12 @@ class DatabaseMIA:
                               primary key from.
 
         Returns:
-            str: The first key in the collection, representing the primary key.
+            str: The first key in the collection, representing the primary
+                 key.
         """
         with self.storage.data() as dbs:
+            # TODO: Are we sure that the primary key is ALWAYS the first
+            #       element in the dbs[collection].keys() dict_keys list?
             return next(iter(dbs[collection].keys()))
 
     def get_shown_tags(self):
