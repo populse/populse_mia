@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from populse_mia.data_manager.project import COLLECTION_CURRENT, TAG_FILENAME
+from populse_mia.data_manager import COLLECTION_CURRENT, TAG_FILENAME
 from populse_mia.software_properties import Config
 
 # MIA imports

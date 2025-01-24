@@ -52,7 +52,7 @@ from soma.controller.trait_utils import relax_exists_constraint
 from soma.utils.weak_proxy import get_ref
 
 # Populse_MIA imports
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     COLLECTION_INITIAL,
     TAG_BRICKS,
@@ -124,7 +124,6 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         """
 
         super(MIAProcessCompletionEngine, self).__init__(process, name)
-
         self.fallback_engine = fallback_engine
         self.completion_progress = 0.0
         self.completion_progress_total = 0.0
@@ -145,21 +144,25 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         # re-route to underlying fallback engine
         attributes = self.fallback_engine.get_attribute_values()
         process = self.process
+
         if isinstance(process, ProcessNode):
             process = process.process
+
         if not isinstance(process, Process):
             return attributes
 
         if not hasattr(process, "get_study_config"):
             return attributes
-        study_config = process.get_study_config()
 
+        study_config = process.get_study_config()
         project = getattr(study_config, "project", None)
+
         if not project:
             return attributes
 
         fields = project.database.get_field_names(COLLECTION_CURRENT)
         pfields = [field for field in fields if attributes.trait(field)]
+
         if not pfields:
             return attributes
 
@@ -171,17 +174,22 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         for param, par_value in process.get_inputs().items():
             # update value from given forced input
             par_value = process_inputs.get(param, par_value)
+
             if isinstance(par_value, list):
                 par_values = par_value
+
             else:
                 par_values = [par_value]
 
             fvalues = [[] for field in pfields]
+
             for value in par_values:
+
                 if not isinstance(value, str):
                     continue
 
                 ap = os.path.abspath(os.path.realpath(value))
+
                 if not ap.startswith(proj_dir):
                     continue
 
@@ -189,10 +197,14 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 document = project.database.get_document(
                     COLLECTION_CURRENT, rel_value, fields=pfields, as_list=True
                 )
+
                 if document:
+
                     for fvalue, dvalue in zip(fvalues, document):
                         fvalue.append(dvalue if dvalue is not None else "")
+
                 else:
+
                     # ignore this input not in the database
                     for fvalue in fvalues:
                         fvalue.append(None)
@@ -209,9 +221,12 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 [all([x is None for x in y]) for y in fvalues]
             ):
                 if isinstance(par_value, list):
+
                     for field, value in zip(pfields, fvalues):
                         setattr(attributes, field, value)
+
                 else:
+
                     for field, value in zip(pfields, fvalues):
                         setattr(attributes, field, value[0])
 
@@ -260,9 +275,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             # if hasattr(process, "use_project") and process.use_project:
             #    process.project = project
             process.project = project
-
             # set output_directory
             out_dir = None
+
             if process.trait("output_directory"):
                 out_dir = os.path.abspath(
                     os.path.join(project.folder, "data", "derived_data")
@@ -277,6 +292,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 )
 
             if output_dir is True and out_dir is not None:
+
                 # ensure this output_directory exists since it is not
                 # actually an output but an input, and thus it is supposed
                 # to exist in Capsul.
@@ -312,6 +328,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     tname = "spm_script_file"
 
                 if tname:
+
                     if hasattr(process, "_nipype_interface"):
                         iscript = (
                             process._nipype_interface.mlab.inputs.script_file
@@ -381,7 +398,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             self.complete_nipype_common(in_process)
 
         if not isinstance(in_process, ProcessMIA):
+
             if not isinstance(in_process, Pipeline):
+
                 if (
                     getattr(in_process, "context_name", in_process.name).split(
                         "."
@@ -415,6 +434,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                         )
                     )
                     # fmt: on
+
                 else:
                     print(
                         "\n. {0} ({1}) regular node ...".format(
@@ -463,7 +483,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 pass
 
             else:
+
                 if not hasattr(in_process, "project"):
+
                     if hasattr(in_process, "get_study_config"):
                         study_config = in_process.get_study_config()
                         project = getattr(study_config, "project", None)
@@ -472,6 +494,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                             in_process.project = project
 
                 if hasattr(in_process, "project"):
+
                     for out in auto_inheritance_dict:
                         ProcessMIA.tags_inheritance(
                             in_process,
@@ -486,8 +509,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
             # self.completion_progress = 0.
             # self.completion_progress_total = 1.
-
             name = getattr(self.process, "context_name", self.process.name)
+
             if name.split(".")[0] == "Pipeline":
                 node_name = ".".join(name.split(".")[1:])
 
@@ -545,7 +568,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     pass
 
                 else:
+
                     if not hasattr(in_process, "project"):
+
                         if hasattr(in_process, "get_study_config"):
                             study_config = in_process.get_study_config()
                             project = getattr(study_config, "project", None)
@@ -554,6 +579,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                                 in_process.project = project
 
                     if hasattr(in_process, "project"):
+
                         for out in auto_inheritance_dict:
                             ProcessMIA.tags_inheritance(
                                 in_process,
@@ -568,7 +594,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             #       node the inheritance between plugs and not between
             #       filenames (that changes over iteration)
             project = self.get_project(in_process)
+
             if project is not None:
+
                 # record completion order to perform 2nd pass tags recording
                 # and indexation
                 if not hasattr(project, "node_inheritance_history"):
@@ -582,6 +610,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 # Create a copy of current inheritance dict
                 if node_name not in project.node_inheritance_history:
                     project.node_inheritance_history[node_name] = []
+
                 if hasattr(node, "inheritance_dict"):
                     project.node_inheritance_history[node_name].append(
                         node.inheritance_dict
@@ -612,6 +641,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 key: (bool(plug.links_to) or bool(plug.links_from))
                 for key, plug in node.plugs.items()
             }
+
         else:
             is_plugged = None  # we cannot get this info
 
@@ -640,14 +670,18 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             return  # the process is not really configured
 
         for parameter, value in outputs.items():
+
             if parameter == "notInDb" or process.is_parameter_protected(
                 parameter
             ):
                 # special non-param or set manually:
                 continue
+
             try:
                 setattr(process, parameter, value)
+
             except Exception as e:
+
                 if verbose:
                     print("Exception:", e)
                     print("param:", parameter)
@@ -773,9 +807,10 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
         engine_factory = None
         if hasattr(process, "get_study_config"):
             study_config = process.get_study_config()
-
             engine = study_config.engine
+
             if "capsul.engine.module.attributes" in engine._loaded_modules:
+
                 try:
                     former_factory = "builtin"  # TODO how to store this ?
                     engine_factory = engine._modules_data["attributes"][
@@ -789,7 +824,6 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
             engine_factory = BuiltinProcessCompletionEngineFactory()
 
         fallback = engine_factory.get_completion_engine(process, name=name)
-
         # iteration
         in_process = process
 
@@ -852,6 +886,7 @@ class ProcessMIA(Process):
         if hasattr(self, "process") and isinstance(
             self.process, NipypeProcess
         ):
+
             for mia_output in self.user_traits():
                 wrapped_output = self.trait(mia_output).nipype_process_name
 
@@ -878,6 +913,7 @@ class ProcessMIA(Process):
             )
 
         if self.requirement is not None and "spm" in self.requirement:
+
             if "use_mcr" not in self.user_traits():
                 self.add_trait(
                     "use_mcr", traits.Bool(optional=True, userlevel=1)
@@ -990,7 +1026,6 @@ class ProcessMIA(Process):
                 data = np.transpose(data, (1, 0, 2, 3))
 
             # TODO: Should transpose for ndim>4 cases be implemented?
-
             data = np.flip(data, axis=0)
 
         return header, data
@@ -1035,8 +1070,10 @@ class ProcessMIA(Process):
 
     def relax_nipype_exists_constraints(self):
         """Relax the exists constraint of the process.inputs traits"""
+
         if hasattr(self, "process") and hasattr(self.process, "inputs"):
             ni_inputs = self.process.inputs
+
             for name, trait in ni_inputs.traits().items():
                 relax_exists_constraint(trait)
 
@@ -1046,6 +1083,7 @@ class ProcessMIA(Process):
         """
         if self.requirement:
             return {req: "any" for req in self.requirement}
+
         return {}
 
     def run_process_mia(self):
@@ -1056,6 +1094,7 @@ class ProcessMIA(Process):
             self.process.output_directory = self.output_directory
 
         if self.requirement is not None and "spm" in self.requirement:
+
             if self.spm_script_file:
                 self.process._spm_script_file = self.spm_script_file
 
@@ -1119,6 +1158,7 @@ class ProcessMIA(Process):
         for i in self.user_traits():
 
             try:
+
                 if out_file in getattr(self, i, "___nothing___"):
                     plug_name = i
 

@@ -31,13 +31,18 @@ import json
 import os.path
 import threading
 import traceback
-from datetime import date, datetime
-from datetime import time as datetime_time
+from datetime import datetime
 from time import sleep
 from time import time as time_time
 
-# Populse_db imports
-from populse_db.database import (
+# PyQt5 imports
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtWidgets import QProgressDialog
+
+# Populse_mia import
+from populse_mia.data_manager import (
+    COLLECTION_CURRENT,
+    COLLECTION_INITIAL,
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME,
@@ -50,47 +55,19 @@ from populse_db.database import (
     FIELD_TYPE_LIST_INTEGER,
     FIELD_TYPE_LIST_STRING,
     FIELD_TYPE_LIST_TIME,
+    FIELD_TYPE_MAPPING,
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
-)
-
-# PyQt5 imports
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
-from PyQt5.QtWidgets import QProgressDialog
-
-from populse_mia.data_manager import TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER
-
-# Populse_MIA imports
-from populse_mia.data_manager.project import (
-    COLLECTION_CURRENT,
-    COLLECTION_INITIAL,
     TAG_CHECKSUM,
     TAG_FILENAME,
+    TAG_ORIGIN_BUILTIN,
+    TAG_ORIGIN_USER,
     TAG_TYPE,
     TYPE_BVAL,
     TYPE_BVEC,
     TYPE_BVEC_BVAL,
     TYPE_NII,
 )
-
-FIELD_TYPE_MAPPING = {
-    "string": str,
-    "int": int,
-    "float": float,
-    "boolean": bool,
-    "date": date,
-    "datetime": datetime,
-    "time": datetime_time,
-    "json": dict,
-    "list_string": list[str],
-    "list_int": list[int],
-    "list_float": list[float],
-    "list_boolean": list[bool],
-    "list_date": list[date],
-    "list_datetime": list[datetime],
-    "list_time": list[datetime_time],
-    "list_json": list[dict],
-}
 
 
 class ImportProgress(QProgressDialog):

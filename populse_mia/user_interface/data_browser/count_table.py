@@ -34,7 +34,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 
-from populse_mia.data_manager.project import COLLECTION_CURRENT, TAG_FILENAME
+from populse_mia.data_manager import COLLECTION_CURRENT, TAG_FILENAME
 
 # Populse_MIA imports
 from populse_mia.software_properties import Config

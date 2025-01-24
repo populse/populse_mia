@@ -48,18 +48,6 @@ import dateutil.parser
 import yaml
 from packaging import version
 
-# Populse_db imports
-from populse_db.database import (
-    FIELD_TYPE_BOOLEAN,
-    FIELD_TYPE_DATE,
-    FIELD_TYPE_DATETIME,
-    FIELD_TYPE_FLOAT,
-    FIELD_TYPE_INTEGER,
-    FIELD_TYPE_JSON,
-    FIELD_TYPE_STRING,
-    FIELD_TYPE_TIME,
-)
-
 # PyQt5 imports
 from PyQt5.QtCore import QDate, QDateTime, QDir, QLockFile, Qt, QTime, QVariant
 from PyQt5.QtWidgets import (
@@ -77,6 +65,17 @@ from PyQt5.QtWidgets import (
 
 # Soma-base imports
 from soma.qt_gui.qtThread import QtThreadCall  # noqa E402
+
+from populse_mia.data_manager import (
+    FIELD_TYPE_BOOLEAN,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATETIME,
+    FIELD_TYPE_FLOAT,
+    FIELD_TYPE_INTEGER,
+    FIELD_TYPE_JSON,
+    FIELD_TYPE_STRING,
+    FIELD_TYPE_TIME,
+)
 
 # Populse_mia imports
 from populse_mia.data_manager.project import Project  # noqa E402

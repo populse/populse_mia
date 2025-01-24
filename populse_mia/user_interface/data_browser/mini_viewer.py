@@ -45,7 +45,7 @@ from PyQt5.QtWidgets import (
 # from scipy.ndimage import rotate  # to work with NumPy arrays
 from skimage.transform import resize
 
-from populse_mia.data_manager.project import COLLECTION_CURRENT
+from populse_mia.data_manager import COLLECTION_CURRENT
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.user_interface.pop_ups import ClickableLabel, PopUpSelectTag

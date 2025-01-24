@@ -26,64 +26,43 @@ from capsul.api import Pipeline
 from capsul.pipeline import pipeline_tools
 from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
 
-# Populse_db imports
-from populse_db.database import (
+# Populse_mia imports
+from populse_mia.data_manager import (
+    BRICK_EXEC,
+    BRICK_EXEC_TIME,
+    BRICK_ID,
+    BRICK_INIT,
+    BRICK_INIT_TIME,
+    BRICK_INPUTS,
+    BRICK_NAME,
+    BRICK_OUTPUTS,
+    CLINICAL_TAGS,
+    COLLECTION_BRICK,
+    COLLECTION_CURRENT,
+    COLLECTION_HISTORY,
+    COLLECTION_INITIAL,
     FIELD_TYPE_DATETIME,
     FIELD_TYPE_INTEGER,
     FIELD_TYPE_JSON,
     FIELD_TYPE_LIST_STRING,
     FIELD_TYPE_STRING,
+    HISTORY_BRICKS,
+    HISTORY_ID,
+    HISTORY_PIPELINE,
+    TAG_BRICKS,
+    TAG_CHECKSUM,
+    TAG_EXP_TYPE,
+    TAG_FILENAME,
+    TAG_HISTORY,
+    TAG_ORIGIN_BUILTIN,
+    TAG_ORIGIN_USER,
+    TAG_TYPE,
 )
-
-from populse_mia.data_manager import TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER
 from populse_mia.data_manager.database_mia import DatabaseMIA
 from populse_mia.data_manager.filter import Filter
 
 # Populse_MIA imports
 from populse_mia.software_properties import Config
-
-COLLECTION_CURRENT = "current"
-COLLECTION_INITIAL = "initial"
-COLLECTION_BRICK = "brick"
-COLLECTION_HISTORY = "history"
-
-# MIA tags
-TAG_CHECKSUM = "Checksum"
-TAG_TYPE = "Type"
-TAG_EXP_TYPE = "Exp Type"
-TAG_FILENAME = "FileName"
-TAG_BRICKS = "History"
-TAG_HISTORY = "Full history"
-CLINICAL_TAGS = {
-    "Site": "the site where the NMR spectrometer is installed",
-    "Spectro": "the NMR spectrometer used",
-    "MR": "the field strength of the NMR spectrometer",
-    "PatientRef": "the patient's anonymous reference",
-    "Pathology": "the patient's pathology",
-    "Age": "the patient's age",
-    "Sex": "the patient's gender",
-    "Message": "a brief message about the patient",
-}
-BRICK_ID = "ID"
-BRICK_NAME = "Name"
-BRICK_INPUTS = "Input(s)"
-BRICK_OUTPUTS = "Output(s)"
-BRICK_INIT = "Init"
-BRICK_EXEC = "Exec"
-BRICK_INIT_TIME = "Init Time"
-BRICK_EXEC_TIME = "Exec Time"
-
-HISTORY_ID = "ID"
-HISTORY_PIPELINE = "Pipeline xml"
-HISTORY_BRICKS = "Bricks uuid"
-
-TYPE_BVEC = "Bvec"
-TYPE_BVAL = "Bval"
-TYPE_BVEC_BVAL = "Bvec_bval_MRTRIX"
-TYPE_NII = "Scan"
-TYPE_MAT = "Matrix"
-TYPE_TXT = "Text"
-TYPE_UNKNOWN = "Unknown"
 
 
 class Project:

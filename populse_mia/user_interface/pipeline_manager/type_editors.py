@@ -91,12 +91,12 @@ class PopulseFileControlWidget(FileControlWidget):
             label_class=label_class,
             user_data=user_data,
         )
+
         if user_data is None:
             user_data = {}
+
         widget.user_data = user_data  # regular File does not store data
-
         layout = widget.layout()
-
         project = user_data.get("project")
         scan_list = user_data.get("scan_list")
         connected_inputs = user_data.get("connected_inputs", set())
@@ -139,12 +139,13 @@ class PopulseFileControlWidget(FileControlWidget):
             )
             layout.addWidget(button)
             widget.filter_b = button
-
             # Set a callback on the browse button
             control_class = parent.get_control_class(trait)
             node_name = getattr(parent.controller, "name", None)
+
             if node_name is None:
                 node_name = parent.controller.__class__.__name__
+
             browse_hook = partial(
                 control_class.filter_clicked,
                 weak_proxy(widget),
@@ -186,7 +187,6 @@ class PopulseFileControlWidget(FileControlWidget):
         )
         widget.pop_up.setWindowModality(Qt.Qt.WindowModal)
         widget.pop_up.show()
-
         widget.pop_up.plug_value_changed.connect(
             partial(
                 PopulseFileControlWidget.update_plug_value_from_filter,
@@ -308,10 +308,13 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         # If the list contains only one element, setting
         # this element as the plug value
         len_list = len(filter_res_list)
+
         if len_list >= 1:
             res = six.text_type(filter_res_list[0])
+
             if not os.path.isdir(res):
                 res = os.path.dirname(res)
+
         else:
             res = traits.Undefined
 
@@ -371,12 +374,11 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
             label_class=label_class,
             user_data=user_data,
         )
-
         layout = widget.layout()
-
         project = user_data.get("project")
         scan_list = user_data.get("scan_list")
         connected_inputs = user_data.get("connected_inputs", set())
+
         if (
             project
             and scan_list
@@ -396,8 +398,10 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
             # Set a callback on the browse button
             control_class = parent.get_control_class(trait)
             node_name = getattr(parent.controller, "name", None)
+
             if node_name is None:
                 node_name = parent.controller.__class__.__name__
+
             browse_hook = partial(
                 control_class.filter_clicked,
                 weak_proxy(widget),
@@ -563,10 +567,13 @@ class PopulseUndefinedControlWidget(object):
 
         # Create the label associated with the string widget
         control_label = control_name
+
         if label_class is None:
             label_class = QtGui.QLabel
+
         if control_label is not None:
             label = label_class(control_label, parent)
+
         else:
             label = None
 
@@ -612,6 +619,7 @@ class PopulseUndefinedControlWidget(object):
                     control_name, new_trait_value
                 )
             )
+
         elif reset_invalid_value:
             # invalid, reset GUI to older value
             old_trait_value = getattr(

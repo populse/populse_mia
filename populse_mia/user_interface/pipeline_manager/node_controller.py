@@ -57,20 +57,21 @@ from PyQt5.QtWidgets import (
 from soma.controller import trait_ids
 from traits.api import TraitError, Undefined
 
-# Populse_MIA imports
-from populse_mia.data_manager.filter import Filter
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
+    NOT_DEFINED_VALUE,
     TAG_FILENAME,
 )
+
+# Populse_MIA imports
+from populse_mia.data_manager.filter import Filter
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.advanced_search import (
     AdvancedSearch,
 )
 from populse_mia.user_interface.data_browser.data_browser import (
     TableDataBrowser,
-    not_defined_value,
 )
 from populse_mia.user_interface.data_browser.rapid_search import RapidSearch
 from populse_mia.user_interface.pipeline_manager.process_mia import ProcessMIA
@@ -316,7 +317,7 @@ class PlugFilter(QWidget):
             return_list = self.table_data.scans_to_search
         else:
             # Scans with at least a not defined value
-            if str_search == not_defined_value:
+            if str_search == NOT_DEFINED_VALUE:
                 filter = self.prepare_not_defined_filter(
                     self.project.database.get_shown_tags()
                 )
@@ -1029,7 +1030,7 @@ class FilterWidget(QWidget):
         else:
 
             # Scans with at least a not defined value
-            if str_search == not_defined_value:
+            if str_search == NOT_DEFINED_VALUE:
                 filter = self.prepare_not_defined_filter(
                     self.project.database.get_shown_tags()
                 )

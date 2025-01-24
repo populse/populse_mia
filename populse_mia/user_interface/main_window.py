@@ -48,11 +48,12 @@ from PyQt5.QtWidgets import (
 )
 
 import populse_mia.data_manager.data_loader as data_loader
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
+    CLINICAL_TAGS,
     COLLECTION_CURRENT,
     TAG_HISTORY,
-    Project,
 )
+from populse_mia.data_manager.project import Project
 
 # Populse_MIA imports
 from populse_mia.data_manager.project_properties import SavedProjects
@@ -79,18 +80,6 @@ from populse_mia.user_interface.pop_ups import (
     PopUpSaveProjectAs,
     PopUpSeeAllProjects,
 )
-
-CLINICAL_TAGS = [
-    "Site",
-    "Spectro",
-    "MR",
-    "PatientRef",
-    "Pathology",
-    "Age",
-    "Sex",
-    "Message",
-]
-
 
 console_shell_running = False
 _ipsubprocs_lock = threading.RLock()

@@ -19,7 +19,7 @@ Contains:
 from PyQt5.QtWidgets import QLineEdit
 
 # Populse_MIA imports
-from populse_mia.data_manager.project import TAG_BRICKS, TAG_FILENAME
+from populse_mia.data_manager import TAG_BRICKS, TAG_FILENAME
 
 
 class RapidSearch(QLineEdit):
