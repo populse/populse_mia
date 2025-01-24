@@ -80,16 +80,20 @@ class Project:
         - del_clinical_tags: remove clinical tags to the project
         - files_in_project: return file / directory names within the
                             project folder
-        - finished_bricks: blabla
+        - finished_bricks: retrieves a dictionary of finished bricks from
+                           workflows
         - get_data_history: get the processing history for the given data file
         - getDate: return the date of creation of the project
-        - get_finished_bricks_in_pipeline: blabla
-        - get_finished_bricks_in_workflows: blabla
+        - get_finished_bricks_in_pipeline: retrieves a dictionary of finished
+                                           bricks from a given pipeline
+        - get_finished_bricks_in_workflows: retrieves a dictionary of finished
+                                            bricks from a workflow
         - getFilter: return a Filter object
         - getFilterName: input box to get the name of the filter to save
         - getName: return the name of the project
-        - get_orphan_bricks: blabla
-        - get_orphan_history: blabla
+        - get_orphan_bricks: identifies orphan bricks and their associated
+                             weak files
+        - get_orphan_history: identifies orphan history entries
         - get_orphan_nonexsiting_files: get orphan files which do not exist
                                         from the database
         - getSortedTag: return the sorted tag of the project
@@ -161,6 +165,7 @@ class Project:
         self.database = DatabaseMIA(db_path)
 
         if new_project:
+
             if not os.path.exists(self.folder):
                 os.makedirs(self.folder)
 
@@ -192,16 +197,20 @@ class Project:
 
             # Properties file created
             os.mkdir(os.path.join(self.folder, "properties"))
+
             if self.isTempProject:
                 name = "Unnamed project"
+
             else:
                 name = os.path.basename(self.folder)
+
             properties = dict(
                 name=name,
                 date=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
                 sorted_tag=TAG_FILENAME,
                 sort_order=0,
             )
+
             with open(
                 os.path.join(self.folder, "properties", "properties.yml"),
                 "w",
@@ -249,7 +258,6 @@ class Project:
                 default_value=None,
             )
             # Tags manually added
-
             self.database.add_field(
                 {
                     "collection_name": COLLECTION_CURRENT,
@@ -594,19 +602,26 @@ class Project:
         """
         obsolete, orphan_files = self.get_orphan_bricks(bricks)
         print("really orphan:", obsolete)
+
         for brick in obsolete:
             print("remove obsolete brick:", brick)
+
             try:
                 self.session.remove_document(COLLECTION_BRICK, brick)
+
             except ValueError:
                 pass  # malformed database, the brick doesn't exist
+
         for doc in orphan_files:
             print("remove orphan file:", doc)
+
             try:
                 self.session.remove_document(COLLECTION_CURRENT, doc)
                 self.session.remove_document(COLLECTION_INITIAL, doc)
+
             except ValueError:
                 pass  # malformed database, the file doesn't exist
+
             if os.path.exists(os.path.join(self.folder, doc)):
                 os.unlink(os.path.join(self.folder, doc))
 
@@ -617,25 +632,35 @@ class Project:
         obs_hist, obs_bricks, orphan_files = self.get_orphan_history()
         print("orphan histories:", obs_hist)
         print("orphan bricks:", obs_bricks)
+
         for hist in obs_hist:
             print("remove obsolete history:", hist)
+
             try:
                 self.session.remove_document(COLLECTION_HISTORY, hist)
+
             except ValueError:
                 pass  # malformed database, the brick doesn't exist
+
         for brick in obs_bricks:
             print("remove obsolete brick:", brick)
+
             try:
                 self.session.remove_document(COLLECTION_BRICK, brick)
+
             except ValueError:
                 pass  # malformed database, the brick doesn't exist
+
         for doc in orphan_files:
             print("remove orphan file:", doc)
+
             try:
                 self.session.remove_document(COLLECTION_CURRENT, doc)
                 self.session.remove_document(COLLECTION_INITIAL, doc)
+
             except ValueError:
                 pass  # malformed database, the file doesn't exist
+
             if os.path.exists(os.path.join(self.folder, doc)):
                 os.unlink(os.path.join(self.folder, doc))
 
@@ -644,13 +669,17 @@ class Project:
         Remove orphan files which do not exist from the database
         """
         orphan_files = self.get_orphan_nonexsiting_files()
+
         for doc in orphan_files:
             print("remove orphan file:", doc)
+
             try:
-                self.session.remove_document(COLLECTION_CURRENT, doc)
-                self.session.remove_document(COLLECTION_INITIAL, doc)
+                self.database.remove_document(COLLECTION_CURRENT, doc)
+                self.database.remove_document(COLLECTION_INITIAL, doc)
+
             except ValueError:
                 pass  # malformed database, the file doesn't exist
+
             if os.path.exists(os.path.join(self.folder, doc)):
                 os.unlink(os.path.join(self.folder, doc))
 
@@ -687,20 +716,25 @@ class Project:
             os.path.abspath(os.path.normpath(self.folder)), ""
         )
         pl = len(proj_dir)
-
         values = set()
         tval = [files]
+
         while tval:
             value = tval.pop(0)
+
             if isinstance(value, (list, tuple, set)):
                 tval += value
                 continue
+
             if isinstance(value, dict):
                 tval += value.values()
                 continue
+
             if not isinstance(value, str):
                 continue
+
             aval = os.path.abspath(os.path.normpath(value))
+
             if not aval.startswith(proj_dir):
                 continue
 
@@ -709,28 +743,63 @@ class Project:
         return values
 
     def finished_bricks(self, engine, pipeline=None, include_done=False):
-        """blabla"""
+        """
+        Retrieves a dictionary of finished bricks from workflows and/or
+        pipelines, filters them based on their execution status, and updates
+        their metadata with additional information from the Mia database.
+
+        Args:
+            engine (object): The engine instance used to retrieve finished
+                             bricks.
+            pipeline (object, optional): The pipeline object to filter bricks
+                                         specific to a pipeline.
+            include_done (bool, optional): If True, includes all bricks
+                                           regardless of their execution
+                                           status. If False, only includes
+                                           bricks with execution status
+                                           "Not Done".
+
+        Returns:
+            dict: A dictionary containing the filtered and updated bricks.
+            Each key represents a brick ID, and the value is a dictionary with
+            metadata about the brick, including its execution status
+            and outputs.
+        """
         bricks = self.get_finished_bricks_in_workflows(engine)
+
         if pipeline:
-            pbricks = self.get_finished_bricks_in_pipeline(engine, pipeline)
+            pbricks = self.get_finished_bricks_in_pipeline(pipeline)
             pbricks.update(bricks)
             bricks = pbricks
 
         # filter jobs actually in MIA database
-        docs = self.database.get_documents(
+        docs = self.database.get_document(
             COLLECTION_BRICK,
             primary_keys=list(bricks.keys()),
             fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS],
-            # as_list=True,
         )
         docs = {
-            brid: {"brick_exec": brick_exec, "outputs": outputs}
-            for brid, brick_exec, outputs in docs
-            if include_done or brick_exec == "Not Done"
+            doc[BRICK_ID]: {
+                "brick_exec": doc[BRICK_EXEC],
+                "outputs": doc[BRICK_OUTPUTS],
+            }
+            for doc in docs
+            if include_done or doc[BRICK_EXEC] == "Not Done"
         }
 
         def updated(d1, d2):
-            """Blabla"""
+            """
+            Updates the contents of the first dictionary (`d1`) with the
+            key-value pairs from the second dictionary (`d2`).
+
+            Args:
+                d1 (dict): The dictionary to be updated.
+                d2 (dict): The dictionary containing new key-value pairs to
+                           merge into `d1`.
+
+            Returns:
+                dict: The updated dictionary (`d1`) after merging with `d2`.
+            """
 
             d1.update(d2)
             return d1
@@ -752,12 +821,16 @@ class Project:
             """update the outputs set with file/dir names in output, relative
             to the project directory"""
             todo = [output]
+
             while todo:
                 output = todo.pop(0)
+
                 if isinstance(output, (list, set, tuple)):
                     todo += output
+
                 elif isinstance(output, str):
                     path = os.path.abspath(os.path.normpath(output))
+
                     if path.startswith(proj_dir):  # and os.path.exists(path):
                         # record only existing files
                         output = path[lp:]
@@ -767,7 +840,9 @@ class Project:
 
         for brid, brdesc in bricks.items():
             out_data = brdesc["outputs"]
+
             if out_data:
+
                 for param, output in out_data.items():
                     _update_set(outputs, output)
 
@@ -800,12 +875,29 @@ class Project:
 
         return self.properties["date"]
 
-    def get_finished_bricks_in_pipeline(self, engine, pipeline):
-        """blabla"""
+    def get_finished_bricks_in_pipeline(self, pipeline):
+        """
+        Retrieves a dictionary of finished processes (bricks) from a given
+        pipeline, including nested pipelines, if any.
+
+        Args:
+            pipeline (Pipeline or Process): The pipeline or single process to
+                                            analyze. If a single process is
+                                            provided, it will be treated as a
+                                            minimal pipeline.
+
+        Returns:
+            dict: A dictionary where keys are process UUIDs (brick IDs) and
+                  values are dictionaries containing the associated process
+                  instances.
+
+        """
+
         if not isinstance(pipeline, Pipeline):
             # it's a single process...
             procs = {}
             brid = getattr(pipeline, "uuid", None)
+
             if brid is not None:
                 procs[brid] = {"process": pipeline}
 
@@ -819,8 +911,10 @@ class Project:
         ]
 
         all_nodes = list(nodes_list)
+
         while nodes_list:
             node_name, node = nodes_list.pop(0)
+
             if hasattr(node, "process"):
                 process = node.process
 
@@ -837,47 +931,72 @@ class Project:
         procs = {}
 
         for node_name, node in all_nodes:
+
             if isinstance(node, ProcessNode):
                 process = node.process
                 brid = getattr(process, "uuid", None)
+
                 if brid is not None:
                     procs[brid] = {"process": process}
 
         return procs
 
     def get_finished_bricks_in_workflows(self, engine):
-        """blabla"""
+        """
+        Retrieves a dictionary of finished bricks (jobs) from Soma-Workflow
+        workflows.
+
+        Args:
+            engine (object): The engine instance used to interact with the
+            study configuration and Soma-Workflow module.
+
+        Returns:
+            dict: A dictionary where keys are brick IDs (UUIDs) and values are
+                  dictionaries containing metadata about each finished job,
+                  including:
+                    - `workflow`: The workflow ID in which the job is
+                                  contained.
+                    - `job`: The Soma-Workflow job instance.
+                    - `job_id`: The ID of the job in Soma-Workflow.
+                    - `swf_status`: The status information for the job in
+                                    Soma-Workflow.
+        """
         # import soma_workflow.client as swclient
         # from soma_workflow import constants
 
         swm = engine.study_config.modules["SomaWorkflowConfig"]
         swm.connect_resource(engine.connected_to())
         controller = swm.get_workflow_controller()
-
         jobs = {}
 
         for wf_id in controller.workflows():
             wf_st = controller.workflow_elements_status(wf_id)
-
             finished_jobs = {}
+
             for job_st in wf_st[0]:
                 job_id = job_st[0]
+
                 if job_st[1] != "done" or job_st[3][0] != "finished_regularly":
                     continue
+
                 finished_jobs[job_id] = job_st
 
             if not finished_jobs:
                 continue
 
             wf = controller.workflow(wf_id)
+
             for job in wf.jobs:
                 brid = getattr(job, "uuid", None)
+
                 if not brid:
                     continue
+
                 # get engine job
                 ejob = wf.job_mapping[job]
                 job_id = ejob.job_id
                 status = finished_jobs.get(job_id, None)
+
                 if not status:
                     continue
 
@@ -897,6 +1016,7 @@ class Project:
         :returns: Filter object
         """
         for filterObject in self.filters:
+
             if filterObject.name == filter:
                 return filterObject
 
@@ -911,6 +1031,7 @@ class Project:
         text, ok_pressed = QInputDialog.getText(
             None, "Save a filter", "Filter name: ", QLineEdit.Normal, ""
         )
+
         if ok_pressed and text != "":
             return text
 
@@ -924,10 +1045,29 @@ class Project:
         return self.properties["name"]
 
     def get_orphan_bricks(self, bricks=None):
-        """blabla"""
+        """
+        Identifies orphan bricks and their associated weak files.
+
+        Args:
+            bricks (list or set, optional): A list or set of brick IDs to
+                                            filter the search. If None, all
+                                            bricks in the database are
+                                            considered. Defaults to None.
+
+        Returns:
+            tuple: A tuple containing two sets:
+                - `orphan` (set): Brick IDs considered orphaned, meaning they
+                                  have no valid or existing outputs linked to
+                                  the current database.
+                - `orphan_weak_files` (set): Paths to weak files associated
+                                             with orphaned bricks, such as
+                                             script files or files that no
+                                             longer exist.
+        """
         orphan = set()
         orphan_weak_files = set()
         used_bricks = set()
+
         if bricks is not None and not isinstance(bricks, list):
             bricks = list(bricks)
 
@@ -937,7 +1077,6 @@ class Project:
             fields=[BRICK_ID, BRICK_OUTPUTS],
             as_list=True,
         )
-
         proj_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.folder)), ""
         )
@@ -945,23 +1084,30 @@ class Project:
 
         for brick in brick_docs:
             brid = brick[0]
+
             if brid is None:
                 continue
+
             if brick[1] is None:
                 orphan.add(brid)
                 continue
 
             todo = list(brick[1].values())
             values = set()
+
             while todo:
                 value = todo.pop(0)
+
                 if isinstance(value, (list, set, tuple)):
                     todo += value
+
                 elif isinstance(value, str):
                     path = os.path.abspath(os.path.normpath(value))
+
                     if path.startswith(proj_dir):
                         value = path[lp:]
                         values.add(value)
+
             docs = self.session.get_documents(
                 COLLECTION_CURRENT,
                 document_ids=list(values),
@@ -970,8 +1116,11 @@ class Project:
             )
             used = False
             orphan_files = set()
+
             for doc in docs:
+
                 if doc[1] and brid in doc[1]:
+
                     if doc[0].startswith("scripts/") or not os.path.exists(
                         os.path.join(self.folder, doc[0])
                     ):
@@ -980,30 +1129,47 @@ class Project:
                         # non-existing files can be cleared too.
                         orphan_files.add(doc[0])
                         continue
+
                     used = True
                     used_bricks.add(brid)
                     break
+
             if not used:
                 orphan.add(brid)
                 orphan_weak_files.update(orphan_files)
+
         if bricks:
             orphan.update(brid for brid in bricks if brid not in used_bricks)
 
         return (orphan, orphan_weak_files)
 
     def get_orphan_history(self):
-        """blabla"""
+        """
+        Identifies orphan history entries, their associated orphan bricks,
+        and weak files.
+
+        Returns:
+            tuple: A tuple containing three sets:
+                - `orphan_hist` (set): History IDs that are considered
+                                       orphaned, meaning they are no longer
+                                       associated with any current document
+                                       in the database.
+                - `orphan_bricks` (set): Brick IDs associated with orphan
+                                         history entries.
+                - `orphan_weak_files` (set): Paths to weak files (e.g., script
+                                             files or non-existent files)
+                                             associated with orphan history
+                                             entries.
+
+        """
         orphan_hist = set()
         orphan_bricks = set()
         orphan_weak_files = set()
         used_hist = set()
-
-        hist_docs = self.session.get_documents(
-            COLLECTION_HISTORY,
+        hist_docs = self.session.get_document(
+            collection_name=COLLECTION_HISTORY,
             fields=[HISTORY_ID, HISTORY_BRICKS],
-            as_list=True,
         )
-
         proj_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.folder)), ""
         )
@@ -1147,15 +1313,16 @@ class Project:
 
         self.currentFilter = Filter(None, [], [], [], [], [], "")
         self.filters = []
-
         filters_folder = os.path.join(self.folder, "filters")
 
         for filename in glob.glob(os.path.join(filters_folder, "*")):
             filter, extension = os.path.splitext(os.path.basename(filename))
+
             # make sure this gets closed automatically
             # as soon as we are done reading
             with open(filename, "r") as f:
                 data = json.load(f)
+
             filter_object = Filter(
                 filter,
                 data["nots"],
@@ -1176,9 +1343,12 @@ class Project:
         with open(
             os.path.join(self.folder, "properties", "properties.yml"), "r"
         ) as stream:
+
             try:
+
                 if verCmp(yaml.__version__, "5.1", "sup"):
                     return yaml.load(stream, Loader=yaml.FullLoader)
+
                 else:
                     return yaml.load(stream)
 
@@ -1263,6 +1433,7 @@ class Project:
                         values_dict={value[1]: value[3]},
                         # COLLECTION_INITIAL, value[0], value[1], value[3]
                     )
+
                 column = table.get_index_insertion(tag_to_add)
                 table.add_column(column, tag_to_add)
 
@@ -1472,7 +1643,6 @@ class Project:
         self.currentFilter.values = values
         self.currentFilter.links = links
         self.currentFilter.nots = nots
-
         # Getting the path
         filters_path = os.path.join(self.folder, "filters")
 
@@ -1501,6 +1671,7 @@ class Project:
                 msg.exec()
 
             else:
+
                 # Json filter file written
                 with open(file_path, "w") as outfile:
                     new_filter = Filter(
@@ -1844,13 +2015,16 @@ class Project:
 
         obsolete = set()
         used = set()
+
         for output in data:
             o_hist = self.get_data_history(output)
             p_hist = o_hist["processes"]
             used.update(p_hist)
             old_bricks = scan_bricks.get(output)
+
             if old_bricks:
                 new_bricks = [brid for brid in old_bricks if brid in p_hist]
+
                 if len(new_bricks) != len(old_bricks):
                     print(
                         "update file history for:",
@@ -1869,8 +2043,10 @@ class Project:
                     )
 
         for bricks in scan_bricks.values():
+
             if bricks:
                 obsolete.update(brick for brick in bricks if brick not in used)
+
         return obsolete
 
     def update_db_for_paths(self, new_path=None):
@@ -1889,7 +2065,9 @@ class Project:
             new_path (str, optional): The new project path. If not provided,
                                       the current project folder path is used.
         """
-        hist_brick = self.database.get_documents(COLLECTION_HISTORY)
+        hist_brick = self.database.get_document(
+            collection_name=COLLECTION_HISTORY
+        )
         old_path = None
 
         # Check if hist_brick is empty

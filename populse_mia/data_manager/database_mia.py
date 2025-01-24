@@ -577,6 +577,25 @@ class DatabaseMIA:
             with self.storage.data(write=True) as dbs:
                 dbs[collection][document] = {primary_key: document}
 
+    def has_document(self, collection_name, primary_key):
+        """
+        Checks if a document with the specified primary key exists in the
+        given collection.
+
+        Args:
+            collection_name (str): The name of the collection.
+            primary_key (str): The primary key of the document to check.
+
+        Returns:
+            bool: True if the document exists, False otherwise.
+        """
+
+        if not self.has_collection(collection_name):
+            return False
+
+        with self.storage.data() as dbs:
+            return primary_key in dbs[collection_name].get()
+
     def filter_documents(
         self, collection, filter_query, fields=None, as_list=False
     ):

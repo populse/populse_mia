@@ -1066,7 +1066,7 @@ class TableDataBrowser(QTableWidget):
                     item = QtWidgets.QTableWidgetItem()
                     self.setItem(row, column_index, item)
                     scan = self.item(row, 0).text()
-                    cur_value = self.project.session.get_value(
+                    cur_value = self.project.database.get_value(
                         collection=COLLECTION_CURRENT,
                         primary_key=scan,
                         field=tag,

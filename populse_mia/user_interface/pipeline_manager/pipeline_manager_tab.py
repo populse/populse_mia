@@ -661,13 +661,13 @@ class PipelineManagerTab(QWidget):
         # but the user is warned
         already_in_db = False
 
-        if self.project.session.get_document(COLLECTION_CURRENT, p_value):
+        if self.project.database.has_document(COLLECTION_CURRENT, p_value):
             already_in_db = True
             print("Path {0} already in database.".format(p_value))
 
         else:
-            self.project.session.add_document(COLLECTION_CURRENT, p_value)
-            self.project.session.add_document(COLLECTION_INITIAL, p_value)
+            self.project.database.add_document(COLLECTION_CURRENT, p_value)
+            self.project.database.add_document(COLLECTION_INITIAL, p_value)
 
         # Adding the new brick to the output files
         bricks = [brick_id]
@@ -756,8 +756,8 @@ class PipelineManagerTab(QWidget):
                 all_ivalues = {}
                 break
 
-            scan = self.project.session.get_document(
-                COLLECTION_CURRENT, relfile
+            scan = self.project.database.get_document(
+                collection_name=COLLECTION_CURRENT, primary_keys=relfile
             )
 
             if scan:
@@ -774,14 +774,15 @@ class PipelineManagerTab(QWidget):
                     ]
                 )
                 cvalues = {
-                    field: getattr(scan, field)
+                    field: scan[0][field]
                     for field in field_names
                     if field not in banished_tags
                 }
-                iscan = self.project.session.get_document(
-                    COLLECTION_INITIAL, relfile
+                iscan = self.project.database.get_document(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_keys=relfile,
                 )
-                ivalues = {field: getattr(iscan, field) for field in cvalues}
+                ivalues = {field: iscan[0][field] for field in cvalues}
                 all_cvalues[param] = cvalues
                 all_ivalues[param] = ivalues
 
@@ -2447,7 +2448,7 @@ class PipelineManagerTab(QWidget):
         if init_result:
             # add pipeline to the history collection
             history_id = str(uuid.uuid4())
-            self.project.session.add_document(COLLECTION_HISTORY, history_id)
+            self.project.database.add_document(COLLECTION_HISTORY, history_id)
             # serialize pipeline
             buffer = io.StringIO()
 
@@ -2515,7 +2516,7 @@ class PipelineManagerTab(QWidget):
                             self.brick_list.append(brick_id)
 
                             try:
-                                self.project.session.add_document(
+                                self.project.database.add_document(
                                     COLLECTION_BRICK, brick_id
                                 )
                             except ValueError:
@@ -2531,8 +2532,8 @@ class PipelineManagerTab(QWidget):
                                 #                          brick_id)
                                 init_result = False
                                 init_messages.append(
-                                    "Error while setting job uuid on "
-                                    '"{0}" brick.'.format(node_name)
+                                    f"Error while setting job uuid on "
+                                    f"'{node_name}' brick."
                                 )
 
                             # self.project.session.set_values(
@@ -3713,7 +3714,9 @@ class PipelineManagerTab(QWidget):
                 if path.startswith(proj_dir):
                     rpath = path[pl:]
 
-                    if project.session.has_document(COLLECTION_CURRENT, rpath):
+                    if project.database.has_document(
+                        COLLECTION_CURRENT, rpath
+                    ):
                         # we'd better use rpath, but inheritance_dict
                         # is using full paths.
                         values[key] = path
