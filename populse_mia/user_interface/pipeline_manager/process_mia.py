@@ -195,7 +195,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
                 rel_value = ap[pl:]
                 document = project.database.get_document(
-                    COLLECTION_CURRENT, rel_value, fields=pfields, as_list=True
+                    collection_name=COLLECTION_CURRENT,
+                    primary_keys=rel_value,
+                    fields=pfields,
                 )
 
                 if document:

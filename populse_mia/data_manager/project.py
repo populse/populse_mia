@@ -576,7 +576,9 @@ class Project:
                     }
                 )
 
-                for scan in self.database.get_documents(COLLECTION_CURRENT):
+                for scan in self.database.get_document(
+                    collection_name=COLLECTION_CURRENT
+                ):
                     self.database.add_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=scan[TAG_FILENAME],
@@ -637,7 +639,9 @@ class Project:
             print("remove obsolete history:", hist)
 
             try:
-                self.session.remove_document(COLLECTION_HISTORY, hist)
+                self.database.remove_document(
+                    collection_name=COLLECTION_HISTORY, primary_key=hist
+                )
 
             except ValueError:
                 pass  # malformed database, the brick doesn't exist
@@ -646,7 +650,9 @@ class Project:
             print("remove obsolete brick:", brick)
 
             try:
-                self.session.remove_document(COLLECTION_BRICK, brick)
+                self.database.remove_document(
+                    collection_name=COLLECTION_BRICK, primary_key=brick
+                )
 
             except ValueError:
                 pass  # malformed database, the brick doesn't exist
@@ -655,8 +661,12 @@ class Project:
             print("remove orphan file:", doc)
 
             try:
-                self.session.remove_document(COLLECTION_CURRENT, doc)
-                self.session.remove_document(COLLECTION_INITIAL, doc)
+                self.database.remove_document(
+                    collection_name=COLLECTION_CURRENT, primary_key=doc
+                )
+                self.database.remove_document(
+                    collection_name=COLLECTION_INITIAL, primary_key=doc
+                )
 
             except ValueError:
                 pass  # malformed database, the file doesn't exist
@@ -774,8 +784,8 @@ class Project:
 
         # filter jobs actually in MIA database
         docs = self.database.get_document(
-            COLLECTION_BRICK,
-            primary_keys=list(bricks.keys()),
+            collection_name=COLLECTION_BRICK,
+            primary_keys=list(bricks),
             fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS],
         )
         docs = {
@@ -1071,11 +1081,10 @@ class Project:
         if bricks is not None and not isinstance(bricks, list):
             bricks = list(bricks)
 
-        brick_docs = self.session.get_document(
-            COLLECTION_BRICK,
-            document_ids=bricks,
+        brick_docs = self.database.get_document(
+            collection_name=COLLECTION_BRICK,
+            primary_keys=bricks,
             fields=[BRICK_ID, BRICK_OUTPUTS],
-            as_list=True,
         )
         proj_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.folder)), ""
@@ -1083,16 +1092,16 @@ class Project:
         lp = len(proj_dir)
 
         for brick in brick_docs:
-            brid = brick[0]
+            brid = brick[BRICK_ID]
 
             if brid is None:
                 continue
 
-            if brick[1] is None:
+            if brick[BRICK_OUTPUTS] is None:
                 orphan.add(brid)
                 continue
 
-            todo = list(brick[1].values())
+            todo = list(brick[BRICK_OUTPUTS].values())
             values = set()
 
             while todo:
@@ -1108,26 +1117,27 @@ class Project:
                         value = path[lp:]
                         values.add(value)
 
-            docs = self.session.get_documents(
-                COLLECTION_CURRENT,
-                document_ids=list(values),
+            docs = self.database.get_document(
+                collection_name=COLLECTION_CURRENT,
+                primary_keys=list(values),
                 fields=[TAG_FILENAME, TAG_BRICKS],
-                as_list=True,
             )
             used = False
             orphan_files = set()
 
             for doc in docs:
 
-                if doc[1] and brid in doc[1]:
+                if doc[TAG_BRICKS] and brid in doc[TAG_BRICKS]:
 
-                    if doc[0].startswith("scripts/") or not os.path.exists(
-                        os.path.join(self.folder, doc[0])
+                    if doc[TAG_FILENAME].startswith(
+                        "scripts/"
+                    ) or not os.path.exists(
+                        os.path.join(self.folder, doc[TAG_FILENAME])
                     ):
                         # script files are "weak" and should not prevent
                         # brick deletion.
                         # non-existing files can be cleared too.
-                        orphan_files.add(doc[0])
+                        orphan_files.add(doc[TAG_FILENAME])
                         continue
 
                     used = True
@@ -1166,7 +1176,7 @@ class Project:
         orphan_bricks = set()
         orphan_weak_files = set()
         used_hist = set()
-        hist_docs = self.session.get_document(
+        hist_docs = self.database.get_document(
             collection_name=COLLECTION_HISTORY,
             fields=[HISTORY_ID, HISTORY_BRICKS],
         )
@@ -1176,18 +1186,18 @@ class Project:
         lp = len(proj_dir)
 
         for hist in hist_docs:
-            hist_id = hist[0]
+            hist_id = hist[HISTORY_ID]
 
             if hist_id is None:
                 continue
 
-            if hist[1] is None:
+            if hist[HISTORY_BRICKS] is None:
                 orphan_hist.add(hist_id)
                 continue
 
             values = set()
 
-            for brid in hist[1]:
+            for brid in hist[HISTORY_BRICKS]:
                 brick_doc = self.database.get_value(
                     collection=COLLECTION_BRICK,
                     primary_key=brid,
@@ -1213,26 +1223,27 @@ class Project:
                             value = path[lp:]
                             values.add(value)
 
-            docs = self.session.get_documents(
-                COLLECTION_CURRENT,
-                document_ids=list(values),
+            docs = self.database.get_document(
+                collection_name=COLLECTION_CURRENT,
+                primary_keys=list(values),
                 fields=[TAG_FILENAME, TAG_HISTORY],
-                as_list=True,
             )
             used = False
             orphan_files = set()
 
             for doc in docs:
 
-                if doc[1] and hist_id == doc[1]:
+                if doc[TAG_HISTORY] and hist_id == doc[TAG_HISTORY]:
 
-                    if doc[0].startswith("scripts/") or not os.path.exists(
-                        os.path.join(self.folder, doc[0])
+                    if doc[TAG_FILENAME].startswith(
+                        "scripts/"
+                    ) or not os.path.exists(
+                        os.path.join(self.folder, doc[TAG_FILENAME])
                     ):
                         # script files are "weak" and should not prevent
                         # brick deletion.
                         # non-existing files can be cleared too.
-                        orphan_files.add(doc[0])
+                        orphan_files.add(doc[TAG_FILENAME])
                         continue
 
                     used = True
@@ -1241,7 +1252,7 @@ class Project:
 
             if not used:
                 orphan_hist.add(hist_id)
-                orphan_bricks.update(hist[1])
+                orphan_bricks.update(hist[HISTORY_BRICKS])
                 orphan_weak_files.update(orphan_files)
 
         return orphan_hist, orphan_bricks, orphan_weak_files
@@ -1264,7 +1275,7 @@ class Project:
 
             if doc[TAG_BRICKS] is not None:
                 bricks = list(
-                    self.session.get_document(
+                    self.database.get_document(
                         collection_name=COLLECTION_BRICK,
                         primary_keys=doc[TAG_BRICKS],
                         fields=[BRICK_ID],
@@ -1985,69 +1996,66 @@ class Project:
 
         self.unsavedModifications = False
 
-    def update_data_history(self, data):
-        """
-        Cleanup earlier history of given data by removing from their bricks
-        list those which correspond to obsolete runs (data has been re-written
-        by more recent runs). This function only updates data status (bricks
-        list), it does not remove obsolete bricks from the database.
-
-        Returns
-        -------
-        a set of obsolete bricks that might become orphan: they are not used
-        any longer in input data history, and were in the previous ones. But
-        they still can be used in other data.
-        """
-        #
-        scan_bricks = list(
-            self.session.get_documents(
-                COLLECTION_CURRENT,
-                document_ids=list(data),
-                fields=[TAG_FILENAME, TAG_BRICKS],
-                as_list=True,
-            )
-        )
-        scan_bricks = {
-            brick[0]: brick[1]
-            for brick in scan_bricks
-            if brick and brick[0] is not None
-        }
-
-        obsolete = set()
-        used = set()
-
-        for output in data:
-            o_hist = self.get_data_history(output)
-            p_hist = o_hist["processes"]
-            used.update(p_hist)
-            old_bricks = scan_bricks.get(output)
-
-            if old_bricks:
-                new_bricks = [brid for brid in old_bricks if brid in p_hist]
-
-                if len(new_bricks) != len(old_bricks):
-                    print(
-                        "update file history for:",
-                        output,
-                        ":",
-                        old_bricks,
-                        "->",
-                        new_bricks,
-                    )
-                    # self.session.set_value(
-                    self.database.add_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=output,
-                        values_dict={TAG_BRICKS: new_bricks},
-                        # COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks
-                    )
-
-        for bricks in scan_bricks.values():
-
-            if bricks:
-                obsolete.update(brick for brick in bricks if brick not in used)
-
-        return obsolete
+    # def update_data_history(self, data):
+    #     """
+    #     Cleanup earlier history of given data by removing from their bricks
+    #     list those which correspond to obsolete runs (data has been
+    #     re-written by more recent runs). This function only updates data
+    #     status (bricks list), it does not remove obsolete bricks from the
+    #     database. This method seems to be obsolete and is no longer used in
+    #     Mia (see populse_mia.user_interface.pipeline_manager.
+    #     pipeline_manager_tab.PipelineManagerTab.garbage_collect()). This is
+    #     why this method is currently commented on.
+    #     Returns
+    #     -------
+    #     a set of obsolete bricks that might become orphan: they are not used
+    #     any longer in input data history, and were in the previous ones. But
+    #     they still can be used in other data.
+    #     """
+    #     #
+    #     scan_bricks = self.database.get_document(
+    #         collection_name=COLLECTION_CURRENT,
+    #         primary_keys=list(data),
+    #         fields=[TAG_FILENAME, TAG_BRICKS],
+    #     )
+    #     scan_bricks = {
+    #         brick[TAG_FILENAME]: brick[TAG_BRICKS]
+    #         for brick in scan_bricks
+    #         if brick and brick[TAG_FILENAME] is not None
+    #     }
+    #
+    #     obsolete = set()
+    #     used = set()
+    #
+    #     for output in data:
+    #         o_hist = self.get_data_history(output)
+    #         p_hist = o_hist["processes"]
+    #         used.update(p_hist)
+    #         old_bricks = scan_bricks.get(output)
+    #
+    #         if old_bricks:
+    #             new_bricks = [brid for brid in old_bricks if brid in p_hist]
+    #
+    #             if len(new_bricks) != len(old_bricks):
+    #                 print(
+    #                     f"update file history for"
+    #                     f": {output}: {old_bricks} -> {new_bricks}"
+    #                 )
+    #                 # self.session.set_value(
+    #                 self.database.add_value(
+    #                     collection_name=COLLECTION_CURRENT,
+    #                     primary_key=output,
+    #                     values_dict={TAG_BRICKS: new_bricks},
+    #                     # COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks
+    #                 )
+    #
+    #     for bricks in scan_bricks.values():
+    #
+    #         if bricks:
+    #             obsolete.update(brick for brick in bricks
+    #                             if brick not in used)
+    #
+    #     return obsolete
 
     def update_db_for_paths(self, new_path=None):
         """Update database paths when renaming or loading a project.
@@ -2076,10 +2084,11 @@ class Project:
 
         for list_hist_brick in hist_brick:
 
-            if not list_hist_brick or list_hist_brick[0] is None:
+            if not list_hist_brick or list_hist_brick[HISTORY_ID] is None:
                 continue
 
-            hist_id, brick_ids = list_hist_brick[0], list_hist_brick[1]
+            hist_id = list_hist_brick[HISTORY_ID]
+            brick_ids = list_hist_brick[HISTORY_BRICKS]
 
             for brick_id in brick_ids or []:
 

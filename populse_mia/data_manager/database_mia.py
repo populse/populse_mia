@@ -727,7 +727,7 @@ class DatabaseMIA:
 
         return []
 
-    def remove_document(self, collection_name, document_id):
+    def remove_document(self, collection_name, primary_key):
         """
         Remove a document from a specified collection.
 
@@ -737,7 +737,7 @@ class DatabaseMIA:
         Args:
             collection_name (str): The name of the collection
                                    containing the document.
-            document_id (str): The unique identifier of the document to
+            primary_key (str): The unique identifier of the document to
                                be removed.
 
         Raises:
@@ -746,12 +746,12 @@ class DatabaseMIA:
         try:
 
             with self.storage.data(write=True) as dbs:
-                del dbs[collection_name][document_id]
+                del dbs[collection_name][primary_key]
 
         except KeyError as e:
             raise KeyError(
                 f"Failed to remove document with "
-                f"ID '{document_id}' from "
+                f"ID '{primary_key}' from "
                 f"collection '{collection_name}': {e}"
             )
 

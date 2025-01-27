@@ -58,6 +58,7 @@ from soma.controller import trait_ids
 from traits.api import TraitError, Undefined
 
 from populse_mia.data_manager import (
+    BRICK_OUTPUTS,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     NOT_DEFINED_VALUE,
@@ -185,14 +186,21 @@ class PlugFilter(QWidget):
 
         # Verifying that the scan names begin not with a "/" or a "\"
         doc_list = []
+
         for brick in self.main_window.pipeline_manager.brick_list:
-            doc = self.project.session.get_document(COLLECTION_BRICK, brick)
-            if doc is not None:
-                for key in doc["Output(s)"]:
-                    if isinstance(doc["Output(s)"][key], str):
-                        if doc["Output(s)"][key] != "":
+            doc = self.project.database.get_document(
+                collection_name=COLLECTION_BRICK, primary_keys=brick
+            )
+
+            if doc:
+
+                for key in doc[BRICK_OUTPUTS]:
+
+                    if isinstance(doc[BRICK_OUTPUTS][key], str):
+
+                        if doc[BRICK_OUTPUTS][key] != "":
                             doc_delete = os.path.relpath(
-                                doc["Output(s)"][key], self.project.folder
+                                doc[BRICK_OUTPUTS][key], self.project.folder
                             )
                             doc_list.append(doc_delete)
 
@@ -299,7 +307,6 @@ class PlugFilter(QWidget):
         self.rapid_search.setText("")
         self.advanced_search.rows = []
         self.advanced_search.show_search()
-
         # All rows reput
         old_scan_list = self.table_data.scans_to_visualize
         self.table_data.scans_to_visualize = self.scans_list
@@ -315,7 +322,9 @@ class PlugFilter(QWidget):
         # Every scan taken if empty search
         if str_search == "":
             return_list = self.table_data.scans_to_search
+
         else:
+
             # Scans with at least a not defined value
             if str_search == NOT_DEFINED_VALUE:
                 filter = self.prepare_not_defined_filter(
@@ -333,13 +342,11 @@ class PlugFilter(QWidget):
             generator = self.project.session.filter_documents(
                 COLLECTION_CURRENT, filter
             )
-
             # Creating the list of scans
             return_list = [getattr(scan, TAG_FILENAME) for scan in generator]
 
         self.table_data.scans_to_visualize = return_list
         self.advanced_search.scans_list = return_list
-
         # Rows updated
         self.table_data.update_visualized_rows(old_scan_list)
 
@@ -470,7 +477,6 @@ class AttributesFilter(PlugFilter):
         """Close the widget"""
         self.close()
         attributes = {}
-
         points = self.table_data.selectedIndexes()
 
         # If the user has selected some items
@@ -599,7 +605,6 @@ class CapsulNodeController(QWidget):
 
         userlevel = Config().get_user_level()
         self.process = process
-
         # force initializing the completion engine
         ProcessCompletionEngine.get_completion_engine(process)
         # fmt: off
@@ -720,6 +725,7 @@ class CapsulNodeController(QWidget):
             old_node_name = self.node_name
 
         if isinstance(self.process, ProcessIteration):
+
             if not new_node_name.startswith("iterated_"):
                 new_node_name = "iterated_" + new_node_name
                 self.line_edit_node_name.setText(new_node_name)
@@ -1251,7 +1257,6 @@ class NodeController(QWidget):
             self.clearLayout(self)
 
         self.v_box_final = QVBoxLayout()
-
         # Node name
         label_node_name = QLabel()
         label_node_name.setText("Node name:")
@@ -1311,7 +1316,6 @@ class NodeController(QWidget):
                 h_box = QHBoxLayout()
                 h_box.addWidget(label_input)
                 h_box.addWidget(self.line_edit_input[idx])
-
                 # Adding the possibility to filter pipeline global
                 # inputs except if the input is "database_scans"
                 # which means that the scans will be filtered with InputFilter
@@ -1498,48 +1502,50 @@ class NodeController(QWidget):
             )
 
     def rename_subprocesses(self, node, parent_node_name):
-        """Change the name of a node."""
+        """
+        Change the name of a node and its subprocesses recursively.
 
-        if (
-            getattr(node.process, "context_name", node.process.name).split(
-                "."
-            )[0]
-            == "Pipeline"
-        ):
+        This method updates the `context_name` attribute of a node and its
+        subprocesses, adjusting the naming scheme based on the parent node's
+        name. If the node's process is part of a pipeline, it will append the
+        parent node's name to the context name, preserving any additional
+        parts of the original context name. The recursion ensures that all
+        subprocesses within the given node are renamed accordingly.
 
-            if (
-                len(
-                    getattr(
-                        node.process, "context_name", node.process.name
-                    ).split(".")
-                )
-                >= 3
-            ):
+        Parameters
+        ----------
+        node : Node
+               The node whose `context_name` is to be renamed.
+        parent_node_name : str
+                           The name of the parent node to be used as part of
+                           the new `context_name`.
+        """
+
+        # Update context_name for the node's process
+        context_name = getattr(node.process, "context_name", node.process.name)
+        context_parts = context_name.split(".")
+
+        if context_parts[0] == "Pipeline":
+            # If there are additional parts in the context_name,
+            # append the parent_node_name
+            if len(context_parts) >= 3:
                 node.process.context_name = (
-                    "Pipeline."
-                    + parent_node_name
-                    + "."
-                    + ".".join(
-                        getattr(
-                            node.process, "context_name", node.process.name
-                        ).split(".")[2:]
-                    )
+                    f"Pipeline.{parent_node_name}."
+                    + ".".join(context_parts[2:])
                 )
 
             else:
-                node.process.context_name = "Pipeline." + parent_node_name
+                node.process.context_name = f"Pipeline.{parent_node_name}"
 
         else:
             node.process.context_name = parent_node_name
 
+        # Recursively rename subprocesses if the node is a PipelineNode
         if isinstance(node, PipelineNode):
 
             for name, subnode in node.process.nodes.items():
 
-                if name == "":
-                    continue
-
-                else:
+                if name:  # Skip empty names
                     self.rename_subprocesses(subnode, parent_node_name)
 
     def update_parameters(self, process=None):

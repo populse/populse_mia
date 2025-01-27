@@ -59,7 +59,9 @@ from PyQt5.QtWidgets import (
 )
 
 from populse_mia.data_manager import (
+    BRICK_INPUTS,
     BRICK_NAME,
+    BRICK_OUTPUTS,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     COLLECTION_INITIAL,
@@ -1582,7 +1584,7 @@ class TableDataBrowser(QTableWidget):
 
         if doc:
             inputs = set()
-            todo = list(doc[0]["Input(s)"].values())
+            todo = list(doc[0][BRICK_INPUTS].values())
 
             while todo:
                 value = todo.pop(0)
@@ -1594,7 +1596,7 @@ class TableDataBrowser(QTableWidget):
                     todo += value
 
             outputs = set()
-            todo = list(doc[0]["Output(s)"].values())
+            todo = list(doc[0][BRICK_OUTPUTS].values())
 
             while todo:
                 value = todo.pop(0)
@@ -2417,7 +2419,7 @@ class TableDataBrowser(QTableWidget):
                 primary_keys=scan_path,
             )
 
-            if not scan_object:
+            if scan_object:
 
                 if (scan_path in scan_list) and (
                     self.data_browser.data_sent is True
@@ -2432,7 +2434,7 @@ class TableDataBrowser(QTableWidget):
                     if cancel:
                         continue
 
-                scans_removed.append(scan_object)
+                scans_removed.append(scan_object[0])
 
                 # Adding removed values to history
                 for tag in self.project.database.get_field_names(

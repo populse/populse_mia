@@ -183,11 +183,9 @@ class ImportWorker(QThread):
                     file_path, self.project.folder
                 )
 
-                document_not_existing = (
-                    self.project.database.get_document(
-                        COLLECTION_CURRENT, file_database_path
-                    )
-                    is None
+                document_not_existing = not self.project.database.get_document(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_keys=file_database_path,
                 )
 
                 if document_not_existing:
@@ -487,10 +485,10 @@ class ImportWorker(QThread):
                             bvec_path, self.project.folder
                         )
                         document_not_existing = (
-                            self.project.session.get_document(
-                                COLLECTION_CURRENT, bvec_database_path
+                            not self.project.database.get_document(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_keys=bvec_database_path,
                             )
-                            is None
                         )
 
                         if document_not_existing:
@@ -553,10 +551,10 @@ class ImportWorker(QThread):
                         )
 
                         document_not_existing = (
-                            self.project.session.get_document(
-                                COLLECTION_CURRENT, bval_database_path
+                            not self.project.database.get_document(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_keys=bval_database_path,
                             )
-                            is None
                         )
 
                         if document_not_existing:
@@ -622,11 +620,10 @@ class ImportWorker(QThread):
                             bvec_bval_mrtrix_path, self.project.folder
                         )
                         document_not_existing = (
-                            self.project.session.get_document(
-                                COLLECTION_CURRENT,
-                                bvec_bval_mrtrix_database_path,
+                            not self.project.database.get_document(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_keys=bvec_bval_mrtrix_database_path,
                             )
-                            is None
                         )
 
                         if document_not_existing:

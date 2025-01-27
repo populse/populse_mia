@@ -53,76 +53,115 @@ def data_history_pipeline(filename, project):
     Processing bricks which are not used, probably part of earlier runs which
     have been orphaned because the data file has been overwritten, are not
     listed in this history.
+
+    Parameters
+    ----------
+    filename : str
+               The name of the file whose processing history is being
+               retrieved.
+    project : Project
+              The project object containing the database and other relevant
+              details.
+
+    Returns
+    -------
+    pipeline : Pipeline
+        A `Pipeline` object containing the history of the data file,
+        represented as a collection of fake processes and their connections,
+        or `None` if no relevant history is found.
     """
 
     procs, links = get_data_history_processes(filename, project)
 
     if procs:
         pipeline = Pipeline()
+
         for proc in procs.values():
+
             if proc.used:
                 pproc = brick_to_process(proc.brick, project)
                 proc.process = pproc
                 name = pproc.name
+
                 if name in pipeline.nodes:
                     name = "%s_%s" % (name, pproc.uuid.replace("-", "_"))
+
                 pproc.node_name = name
                 pipeline.add_process(name, pproc)
 
         for link in links:
+
             if link[0] is None:
                 src = link[1]
+
                 if src not in pipeline.traits():
                     pipeline.export_parameter(
                         link[2].process.node_name, link[3], src
                     )
                     src = None
+
                 elif pipeline.trait(src).output:
                     # already taken as an output: export under another name
                     done = False
                     n = 0
+
                     while not done:
                         src2 = "%s_%d" % (src, n)
+
                         if src2 not in pipeline.traits():
                             pipeline.export_parameter(
                                 link[2].process.node_name, link[3], src2
                             )
                             src = None
                             done = True
+
                         elif not pipeline.trait(src2).output:
                             src = src2
                             done = True
+
                         n += 1
+
             else:
                 src = "%s.%s" % (link[0].process.node_name, link[1])
+
             if link[2] is None:
                 dst = link[3]
+
                 if dst not in pipeline.traits():
                     pipeline.export_parameter(
                         link[0].process.node_name, link[1], dst
                     )
                     dst = None
+
                 elif not pipeline.trait(dst).output:
                     # already taken as an input: export under another name
                     done = False
                     n = 0
+
                     while not done:
                         dst2 = "%s_%d" % (dst, n)
+
                         if dst2 not in pipeline.traits():
                             pipeline.export_parameter(
                                 link[0].process.node_name, link[1], dst2
                             )
                             dst = None
                             done = True
+
                         elif pipeline.trait(dst2).output:
                             dst = dst2
                             done = True
+
                         n += 1
+
             else:
                 dst = "%s.%s" % (link[2].process.node_name, link[3])
+
             if src is not None and dst is not None:
+
                 try:
                     pipeline.add_link("%s->%s" % (src, dst))
+
                 except ValueError as e:
                     print(e)
 
@@ -140,9 +179,24 @@ def get_data_history_bricks(filename, project):
     This is just a fileterd version of :func:`get_data_history_processes` (like
     :func:`data_history_pipeline` in another shape), which only returns the set
     of brick elements actually used in the "useful" history of the data.
+
+     Parameters
+    ----------
+    filename : str
+               The name of the file for which the processing history is being
+               retrieved.
+    project : Project
+              The project object containing the database and other relevant
+              information.
+
+    Returns
+    -------
+    bricks : set
+        A set of brick elements (each representing a processing step) that
+        are part of the "useful" history of the given data file.
     """
 
-    procs, links = get_data_history_processes(filename, project)
+    procs, _ = get_data_history_processes(filename, project)
     bricks = {proc.brick for proc in procs.values() if proc.used}
     return bricks
 
@@ -159,18 +213,33 @@ def get_data_history(filename, project):
     - `processes`: processing bricks set from each ancestor data which
       lead to the given one. Elements are process (brick) UUIDs.
 
+     Parameters
+    ----------
+    filename : str
+               The name of the file for which the processing history is
+               being retrieved.
+    project : Project
+              The project object containing the database and other relevant
+              information.
+
     Returns
     -------
     history: dict
+        A dictionary containing:
+        - `"processes"`: A set of UUIDs representing the processing bricks
+                         involved.
+        - `"parent_files"`: A set of filenames that were used to produce
+                            the data.
     """
     procs, links = get_data_history_processes(filename, project)
-
     # parse input files
-
     parent_files = set()
+
     for proc in procs.values():
+
         if not proc.used:
             continue
+
         for value in proc.brick[BRICK_INPUTS].values():
             filenames = get_filenames_in_value(
                 value, project, allow_temp=False
@@ -201,6 +270,14 @@ def get_data_history_processes(filename, project):
     Processing bricks which are not used, probably part of earlier runs which
     have been orphaned because the data file has been overwritten, are either
     not listed in this history, or have their ``used`` property set to False.
+
+    Parameters
+    ----------
+    filename : str
+               The name of the file for which the history is being retrieved.
+    project : Project
+              The project object containing the database and other relevant
+              information.
 
     Returns
     -------
@@ -327,13 +404,9 @@ def get_data_history_processes(filename, project):
                 links.add((proc, name, None, name))
 
     print(
-        "history of:",
-        filename,
-        ":",
-        len([p for p in procs.values() if p.used]),
-        "processes, ",
-        len(links),
-        "links",
+        f"history of: {filename}: "
+        f"{len([p for p in procs.values() if p.used])} processes, "
+        f"{len(links)} links"
     )
     return procs, links
 
@@ -477,6 +550,18 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
 
     ``proc`` should be a :class:`ProtoProcess` instance
 
+     Parameters
+    ----------
+    proc : ProtoProcess
+           The process whose ancestors need to be determined. This should be
+           an instance of :class:`ProtoProcess`.
+    project : object
+              The project object, which provides access to the session and
+              other necessary functionalities for processing.
+    procs : dict
+            A dictionary of processes, where keys are process IDs and values
+            are :class:`ProtoProcess` instances.
+
     Returns
     -------
     new_procs: dict
@@ -567,7 +652,9 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
         # bricks = session.filter_documents(
         # COLLECTION_BRICK, '{%s} <= "%s"' % (BRICK_EXEC_TIME, proc.exec_time))
         candidates = {}
-        bricks = project.database.get_documents(COLLECTION_BRICK)
+        bricks = project.database.get_document(
+            collection_name=COLLECTION_BRICK
+        )
 
         for brick in bricks:
 
@@ -635,47 +722,107 @@ def find_procs_with_output(procs, filename, project):
     """
 
     sprocs = {}
+
     for proc in procs:
+
         for name, value in proc.brick[BRICK_OUTPUTS].items():
+
             if data_in_value(value, filename, project):
                 sprocs.setdefault(proc.brick[BRICK_EXEC_TIME], []).append(
                     (proc, name)
                 )
+
     return sprocs
 
 
 def data_in_value(value, filename, project):
     """
-    Looks if the given filename is part of the given value. The value may ba a
-    list, a tuple, or a dict, and may include several layers, which are parsed.
+    Check if the given filename is part of the provided value.
 
-    The input filename may be the temp value "<temp>", or a filename in its
-    "short" version (relative path to the project database data directory).
+    This function recursively searches through the `value` (which can be a
+    string, list, tuple, or dictionary) to determine if it contains the
+    specified filename. The filename can either be the special placeholder
+    "<temp>" or a "short" filename (a relative path within the project's
+    database data directory).
+
+    Parameters
+    ----------
+    value : str, list, tuple, or dict
+            The data structure to search. It can be:
+            - A string (representing a file path),
+            - A list or tuple containing multiple file paths,
+            - A dictionary where file paths are stored as values.
+    filename : str
+               The filename to search for. It can be either:
+               - The special placeholder "<temp>" indicating a temporary
+                 value, or
+               - A relative file path to the project database data directory.
+    project : object
+              The project object, which contains the project's folder path as
+              an attribute (`project.folder`).
+
+    Returns
+    -------
+    bool
+        True if the filename is found in the value, False otherwise.
     """
 
     if isinstance(value, str):
+
         if filename != "<temp>":
             proj_dir = osp.join(osp.abspath(osp.normpath(project.folder)), "")
             filename = osp.join(proj_dir, filename)
+
         return value == filename
+
     if isinstance(value, (list, tuple)):
+
         for val in value:
+
             if data_in_value(val, filename, project):
                 return True
+
         return False
+
     if hasattr(value, "values"):
+
         for val in value.values():
+
             if data_in_value(val, filename, project):
                 return True
+
     return False
 
 
 def is_data_entry(filename, project, allow_temp=True):
     """
-    Checks if the input filename is a database entry. The return value is
-    either the relative path to the database data directory, or "<temp>" if
-    filename is this value and allow_temp is True (which is the default), or
-    None if it is not in the database.
+    Determines if the given `filename` is a valid database entry within the
+    specified `project`.
+
+    This function checks whether the input `filename` is either a recognized
+    temporary value ("<temp>") or a file located within the project's database
+    data directory. If the `filename` is valid, it returns either the relative
+    path to the database data directory or "<temp>" (if allowed). If the file
+    is not found in the database, the function returns `None`.
+
+    Parameters
+    ----------
+    filename : str
+               The full path or special value "<temp>" to be checked.
+    project : object
+              The project object that provides access to the database and
+              folder structure.
+    allow_temp : bool, optional
+                 If `True`, allows the special value "<temp>" to be considered
+                 a valid entry. Defaults to `True`.
+
+    Returns
+    -------
+    str or None
+        - The relative path to the project's database data directory if the
+          `filename` is a valid database entry.
+        - "<temp>" if the input is "<temp>" and `allow_temp` is `True`.
+        - `None` if the `filename` is not a valid database entry.
     """
 
     if allow_temp and filename == "<temp>":
@@ -704,18 +851,40 @@ def get_filenames_in_value(value, project, allow_temp=True):
     is the default). Other non-indexed filenames are considered to be read-only
     static data (such as templates, atlases or other software-related data),
     and are not retained.
+
+    Parameters
+    ----------
+    value : object
+            The value to parse. It may be a single string, a list, tuple, or
+            dictionary, or a nested combination of these types.
+    project : object
+              The project object that provides access to the database.
+    allow_temp : bool, optional
+                 If `True`, the temporary filename "<temp>" is included in the
+                 results. Defaults to `True`.
+
+    Returns
+    -------
+    set
+        A set of filenames that are database entries or the temporary filename
+        "<temp>" (if allowed).
     """
 
     values = [value]
     filenames = set()
+
     while values:
         value = values.pop(0)
+
         if isinstance(value, str):
             nvalue = is_data_entry(value, project, allow_temp=allow_temp)
+
             if nvalue:
                 filenames.add(nvalue)
+
         elif isinstance(value, (list, tuple)):
             values.extend(value)
+
         elif hasattr(value, "values"):
             values.extend(value.values())
 
@@ -732,9 +901,28 @@ def get_history_brick_process(brick_id, project, before_exec_time=None):
     discarded.
 
     If discarded (or nor found in the database), the return value is None.
+
+     Parameters
+    ----------
+    brick_id : str
+               The unique identifier (UUID) of the brick to retrieve.
+    project : object
+              The project object, which provides access to the database.
+    before_exec_time : str, optional
+                       An execution time filter. If provided, bricks executed
+                       after this timestamp will be discarded.
+
+    Returns
+    -------
+    ProtoProcess or None
+        A :class:`ProtoProcess` instance representing the brick if it meets
+        the criteria; otherwise, `None`.
+
     """
 
-    binfo = project.database.get_document(COLLECTION_BRICK, brick_id)
+    binfo = project.database.get_document(
+        collection_name=COLLECTION_BRICK, primary_keys=brick_id
+    )
 
     if binfo is None:
         return None
@@ -763,11 +951,30 @@ def brick_to_process(brick, project):
     which cannot do any actual processing, but which represents its parameters
     with values (traits and values). The process gets a ``name`` and an
     ``uuid`` from the brick, and also an ``exec_time``.
+
+     Parameters
+    ----------
+    brick : dict or str
+            The brick database entry to convert. If a string is provided, it
+            is treated as the brick's unique ID, and the corresponding brick
+            document is retrieved from the project's database.
+    project : object
+              The project object, which provides access to the database and
+              its documents.
+
+    Returns
+    -------
+    Process or None
+        A :class:`~capsul.process.process.Process` instance representing the
+        brick's parameters and values. Returns `None` if the brick is not
+        found.
     """
 
     if isinstance(brick, str):
         # brick is an id
-        brick = project.database.get_document(COLLECTION_BRICK, brick)
+        brick = project.database.get_document(
+            collection_name=COLLECTION_BRICK, primary_keys=brick
+        )
 
     if brick is None:
         return None

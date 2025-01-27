@@ -5743,7 +5743,9 @@ class PopUpShowHistory(QDialog):
         self.project = project
         self.setWindowTitle("History of " + scan)
 
-        brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
+        brick_row = project.databse.get_document(
+            collection_name=COLLECTION_BRICK, primary_keys=brick_uuid
+        )
         full_brick_name = project.database.get_value(
             collection=COLLECTION_BRICK,
             primary_key=brick_uuid,
@@ -5764,9 +5766,9 @@ class PopUpShowHistory(QDialog):
         history_uuid = self.project.database.get_value(
             collection=COLLECTION_CURRENT, primary_key=scan, field=TAG_HISTORY
         )
-
         self.unitary_pipeline = False
         self.uuid_idx = 0
+
         if history_uuid is not None:
             self.pipeline_xml = self.project.database.get_value(
                 collection=COLLECTION_HISTORY,
@@ -5789,17 +5791,22 @@ class PopUpShowHistory(QDialog):
                     pipeline = None
 
                 if pipeline is not None:
+
                     # handle case of pipeline node alone --> exploded view
                     # (e.g. a pipeline alone and plug exported)
                     if len(pipeline.nodes) == 2:
+
                         for key in pipeline.nodes.keys():
+
                             if key != "":
+
                                 if isinstance(
                                     pipeline.nodes[key], PipelineNode
                                 ):
                                     pipeline = pipeline.nodes[key].process
                                     full_brick_name.pop(0)
                                     self.unitary_pipeline = True
+
                     # handle cases of named pipeline/brick without being a
                     # single Pipeline node (e.g. a pipeline alone without
                     # exporting plugs)
@@ -5823,22 +5830,28 @@ class PopUpShowHistory(QDialog):
                     (self.pipeline_view.process_clicked.connect)(
                         self.node_selected
                     )
-
                     bricks = self.find_associated_bricks(full_brick_name[0])
+
                     for bricks_uuids in bricks.values():
+
                         for i in range(0, len(bricks_uuids)):
+
                             if bricks_uuids[i] == brick_uuid:
                                 self.uuid_idx = i
                                 break
+
                         else:
                             continue
+
                         break
 
                     selected_name = full_brick_name[0]
+
                     try:
                         self.node_selected(
                             selected_name, pipeline.nodes[selected_name]
                         )
+
                     except Exception:
                         print(
                             "\nerror in naming association brick\\pipeline, "
@@ -5846,26 +5859,24 @@ class PopUpShowHistory(QDialog):
                         )
                         pass
 
-        inputs = getattr(brick_row, BRICK_INPUTS)
-        outputs = getattr(brick_row, BRICK_OUTPUTS)
+        inputs = getattr(brick_row[0], BRICK_INPUTS)
+        outputs = getattr(brick_row[0], BRICK_OUTPUTS)
 
         for k in self.banished_param:
             outputs.pop(k, None)
             inputs.pop(k, None)
 
-        brick_name = getattr(brick_row, BRICK_NAME)
-        init = getattr(brick_row, BRICK_INIT)
-        init_time = getattr(brick_row, BRICK_INIT_TIME)
-        exec = getattr(brick_row, BRICK_INIT)
-        exec_time = getattr(brick_row, BRICK_INIT_TIME)
+        brick_name = getattr(brick_row[0], BRICK_NAME)
+        init = getattr(brick_row[0], BRICK_INIT)
+        init_time = getattr(brick_row[0], BRICK_INIT_TIME)
+        exec = getattr(brick_row[0], BRICK_INIT)
+        exec_time = getattr(brick_row[0], BRICK_INIT_TIME)
         self.update_table(
             inputs, outputs, brick_name, init, init_time, exec, exec_time
         )
         self.splitter.addWidget(self.table)
-
         layout.addWidget(self.splitter)
         self.setLayout(layout)
-
         screen_resolution = QApplication.instance().desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
         self.setGeometry(300, 200, round(0.6 * width), round(0.4 * height))
@@ -5979,23 +5990,24 @@ class PopUpShowHistory(QDialog):
             full_node_name = process.full_name
 
         if bricks:
+
             if len(bricks) == 1:
-                brick_row = self.project.session.get_document(
-                    COLLECTION_BRICK,
-                    next(iter(bricks.values()))[self.uuid_idx],
+                brick_row = self.project.database.get_document(
+                    collection_name=COLLECTION_BRICK,
+                    primary_keys=next(iter(bricks.values()))[self.uuid_idx],
                 )
-                inputs = getattr(brick_row, BRICK_INPUTS)
-                outputs = getattr(brick_row, BRICK_OUTPUTS)
+                inputs = getattr(brick_row[0], BRICK_INPUTS)
+                outputs = getattr(brick_row[0], BRICK_OUTPUTS)
 
                 for k in self.banished_param:
                     outputs.pop(k, None)
                     inputs.pop(k, None)
 
-                brick_name = getattr(brick_row, BRICK_NAME)
-                init = getattr(brick_row, BRICK_INIT)
-                init_time = getattr(brick_row, BRICK_INIT_TIME)
-                exec = getattr(brick_row, BRICK_INIT)
-                exec_time = getattr(brick_row, BRICK_INIT_TIME)
+                brick_name = getattr(brick_row[0], BRICK_NAME)
+                init = getattr(brick_row[0], BRICK_INIT)
+                init_time = getattr(brick_row[0], BRICK_INIT_TIME)
+                exec = getattr(brick_row[0], BRICK_INIT)
+                exec_time = getattr(brick_row[0], BRICK_INIT_TIME)
                 self.update_table(
                     inputs,
                     outputs,
@@ -6009,13 +6021,17 @@ class PopUpShowHistory(QDialog):
                 # subpipeline case
                 inputs_dict = {}
                 outputs_dict = {}
+
                 if isinstance(process, PipelineNode):
+
                     for plug_name, plug in process.plugs.items():
+
                         if plug.activated:
                             (
                                 process_name,
                                 inner_plug_name,
                             ) = self.find_process_from_plug(plug)
+
                             for uuid in bricks.values():
                                 full_brick_name = (
                                     self.project.database.get_value(
@@ -6024,10 +6040,12 @@ class PopUpShowHistory(QDialog):
                                         field=BRICK_NAME,
                                     )
                                 )
+
                                 if (
                                     full_brick_name
                                     == full_node_name + process_name
                                 ):
+
                                     if plug.output:
                                         plugs = (
                                             self.project.database.get_value(
@@ -6063,8 +6081,10 @@ class PopUpShowHistory(QDialog):
                 self.update_table(inputs_dict, outputs_dict, full_node_name)
 
             for name, gnode in self.pipeline_view.scene.gnodes.items():
+
                 if name == node_name:
                     gnode.fonced_viewer(False)
+
                 else:
                     gnode.fonced_viewer(True)
 
