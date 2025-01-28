@@ -1443,8 +1443,8 @@ class ProcessMIA(Process):
 
         if cvalues:
 
-            if not self.project.database.get_document(
-                collection_name=COLLECTION_CURRENT, primary_keys=rel_out_file
+            if not self.project.database.has_document(
+                collection_name=COLLECTION_CURRENT, primary_key=rel_out_file
             ):
                 self.project.database.add_document(
                     COLLECTION_CURRENT, rel_out_file
@@ -1460,8 +1460,8 @@ class ProcessMIA(Process):
 
         if ivalues:
 
-            if not self.project.database.get_document(
-                collection_name=COLLECTION_INITIAL, primary_keys=rel_out_file
+            if not self.project.database.has_document(
+                collection_name=COLLECTION_INITIAL, primary_key=rel_out_file
             ):
                 self.project.database.add_document(
                     COLLECTION_INITIAL, rel_out_file

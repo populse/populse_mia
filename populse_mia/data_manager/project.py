@@ -1274,12 +1274,10 @@ class Project:
         for doc in docs:
 
             if doc[TAG_BRICKS] is not None:
-                bricks = list(
-                    self.database.get_document(
-                        collection_name=COLLECTION_BRICK,
-                        primary_keys=doc[TAG_BRICKS],
-                        fields=[BRICK_ID],
-                    )
+                bricks = self.database.get_document(
+                    collection_name=COLLECTION_BRICK,
+                    primary_keys=doc[TAG_BRICKS],
+                    fields=[BRICK_ID],
                 )
 
                 if bricks:

@@ -661,7 +661,9 @@ class PipelineManagerTab(QWidget):
         # but the user is warned
         already_in_db = False
 
-        if self.project.database.has_document(COLLECTION_CURRENT, p_value):
+        if self.project.database.has_document(
+            collection_name=COLLECTION_CURRENT, primary_key=p_value
+        ):
             already_in_db = True
             print("Path {0} already in database.".format(p_value))
 
@@ -3715,7 +3717,7 @@ class PipelineManagerTab(QWidget):
                     rpath = path[pl:]
 
                     if project.database.has_document(
-                        COLLECTION_CURRENT, rpath
+                        collection_name=COLLECTION_CURRENT, primary_key=rpath
                     ):
                         # we'd better use rpath, but inheritance_dict
                         # is using full paths.

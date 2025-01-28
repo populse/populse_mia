@@ -347,27 +347,16 @@ class MainWindow(QMainWindow):
         """Check if there are differences between the current project and the
         database.
 
-        :return: Boolean. True if there are unsaved modifications,
-           False otherwise
+        :returns:
+            Bool: True if there are unsaved modifications, False otherwise
         """
 
         if self.project.isTempProject:
+            return bool(
+                self.project.database.get_document_names(COLLECTION_CURRENT)
+            )
 
-            if (
-                len(
-                    self.project.database.get_document_names(
-                        COLLECTION_CURRENT
-                    )
-                )
-                > 0
-            ):
-                return True
-            else:
-                return False
-        elif self.project.hasUnsavedModifications():
-            return True
-        else:
-            return False
+        return self.project.hasUnsavedModifications()
 
     def check_database(self):
         """Check if files in database have been modified since first import."""

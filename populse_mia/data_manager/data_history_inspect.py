@@ -587,7 +587,7 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
 
         Args:
             proc: The process object whose input parameters are being
-                  nspected.
+                  inspected.
 
         Returns:
             tuple:
@@ -837,7 +837,9 @@ def is_data_entry(filename, project, allow_temp=True):
     filename = filename[len(proj_dir):]
     # fmt: on
 
-    if project.database.has_document(COLLECTION_CURRENT, filename):
+    if project.database.has_document(
+        collection_name=COLLECTION_CURRENT, primary_key=filename
+    ):
         return filename
 
     return None
@@ -924,23 +926,23 @@ def get_history_brick_process(brick_id, project, before_exec_time=None):
         collection_name=COLLECTION_BRICK, primary_keys=brick_id
     )
 
-    if binfo is None:
+    if not binfo:
         return None
 
-    exec_status = binfo[BRICK_EXEC]
+    exec_status = binfo[0][BRICK_EXEC]
 
     if exec_status != "Done":
         return None
 
-    exec_time = binfo[BRICK_EXEC_TIME]
+    exec_time = binfo[0][BRICK_EXEC_TIME]
     print(brick_id, "exec_time:", exec_time, ", before:", before_exec_time)
 
     if before_exec_time and exec_time > before_exec_time:
         # ignore later runs
         return None
 
-    print(brick_id, ":", binfo[BRICK_NAME])
-    proc = ProtoProcess(binfo)
+    print(brick_id, ": ", binfo[0][BRICK_NAME])
+    proc = ProtoProcess(binfo[0])
     return proc
 
 
@@ -976,15 +978,15 @@ def brick_to_process(brick, project):
             collection_name=COLLECTION_BRICK, primary_keys=brick
         )
 
-    if brick is None:
+    if not brick:
         return None
 
-    inputs = brick[BRICK_INPUTS]
-    outputs = brick[BRICK_OUTPUTS]
+    inputs = brick[0][BRICK_INPUTS]
+    outputs = brick[0][BRICK_OUTPUTS]
     proc = Process()
-    proc.name = brick[BRICK_NAME].split(".")[-1]
-    proc.uuid = brick[BRICK_ID]
-    proc.exec_time = brick[BRICK_EXEC_TIME]
+    proc.name = brick[0][BRICK_NAME].split(".")[-1]
+    proc.uuid = brick[0][BRICK_ID]
+    proc.exec_time = brick[0][BRICK_EXEC_TIME]
 
     for name, value in inputs.items():
         proc.add_trait(name, traits.Any(output=False, optional=True))

@@ -5859,18 +5859,18 @@ class PopUpShowHistory(QDialog):
                         )
                         pass
 
-        inputs = getattr(brick_row[0], BRICK_INPUTS)
-        outputs = getattr(brick_row[0], BRICK_OUTPUTS)
+        inputs = brick_row[0][BRICK_INPUTS]
+        outputs = brick_row[0][BRICK_OUTPUTS]
 
         for k in self.banished_param:
             outputs.pop(k, None)
             inputs.pop(k, None)
 
-        brick_name = getattr(brick_row[0], BRICK_NAME)
-        init = getattr(brick_row[0], BRICK_INIT)
-        init_time = getattr(brick_row[0], BRICK_INIT_TIME)
-        exec = getattr(brick_row[0], BRICK_INIT)
-        exec_time = getattr(brick_row[0], BRICK_INIT_TIME)
+        brick_name = brick_row[0][BRICK_NAME]
+        init = brick_row[0][BRICK_INIT]
+        init_time = brick_row[0][BRICK_INIT_TIME]
+        exec = brick_row[0][BRICK_INIT]
+        exec_time = brick_row[0][BRICK_INIT_TIME]
         self.update_table(
             inputs, outputs, brick_name, init, init_time, exec, exec_time
         )
@@ -5996,18 +5996,18 @@ class PopUpShowHistory(QDialog):
                     collection_name=COLLECTION_BRICK,
                     primary_keys=next(iter(bricks.values()))[self.uuid_idx],
                 )
-                inputs = getattr(brick_row[0], BRICK_INPUTS)
-                outputs = getattr(brick_row[0], BRICK_OUTPUTS)
+                inputs = brick_row[0][BRICK_INPUTS]
+                outputs = brick_row[0][BRICK_OUTPUTS]
 
                 for k in self.banished_param:
                     outputs.pop(k, None)
                     inputs.pop(k, None)
 
-                brick_name = getattr(brick_row[0], BRICK_NAME)
-                init = getattr(brick_row[0], BRICK_INIT)
-                init_time = getattr(brick_row[0], BRICK_INIT_TIME)
-                exec = getattr(brick_row[0], BRICK_INIT)
-                exec_time = getattr(brick_row[0], BRICK_INIT_TIME)
+                brick_name = brick_row[0][BRICK_NAME]
+                init = brick_row[0][BRICK_INIT]
+                init_time = brick_row[0][BRICK_INIT_TIME]
+                exec = brick_row[0][BRICK_INIT]
+                exec_time = brick_row[0][BRICK_INIT_TIME]
                 self.update_table(
                     inputs,
                     outputs,

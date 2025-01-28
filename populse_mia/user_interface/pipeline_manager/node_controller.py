@@ -194,13 +194,13 @@ class PlugFilter(QWidget):
 
             if doc:
 
-                for key in doc[BRICK_OUTPUTS]:
+                for key in doc[0][BRICK_OUTPUTS]:
 
-                    if isinstance(doc[BRICK_OUTPUTS][key], str):
+                    if isinstance(doc[0][BRICK_OUTPUTS][key], str):
 
-                        if doc[BRICK_OUTPUTS][key] != "":
+                        if doc[0][BRICK_OUTPUTS][key] != "":
                             doc_delete = os.path.relpath(
-                                doc[BRICK_OUTPUTS][key], self.project.folder
+                                doc[0][BRICK_OUTPUTS][key], self.project.folder
                             )
                             doc_list.append(doc_delete)
 
@@ -225,7 +225,7 @@ class PlugFilter(QWidget):
                 COLLECTION_CURRENT
             )
 
-        self.setWindowTitle("Filter - " + node_name + " - " + plug_name)
+        self.setWindowTitle(f"Filter - {node_name} - {plug_name}")
         # Graphical components
         self.table_data = TableDataBrowser(
             self.project,

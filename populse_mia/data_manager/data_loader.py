@@ -182,10 +182,9 @@ class ImportWorker(QThread):
                 file_database_path = os.path.relpath(
                     file_path, self.project.folder
                 )
-
-                document_not_existing = not self.project.database.get_document(
+                document_not_existing = not self.project.database.has_document(
                     collection_name=COLLECTION_CURRENT,
-                    primary_keys=file_database_path,
+                    primary_key=file_database_path,
                 )
 
                 if document_not_existing:
@@ -485,9 +484,9 @@ class ImportWorker(QThread):
                             bvec_path, self.project.folder
                         )
                         document_not_existing = (
-                            not self.project.database.get_document(
+                            not self.project.database.has_document(
                                 collection_name=COLLECTION_CURRENT,
-                                primary_keys=bvec_database_path,
+                                primary_key=bvec_database_path,
                             )
                         )
 
@@ -549,11 +548,10 @@ class ImportWorker(QThread):
                         bval_database_path = os.path.relpath(
                             bval_path, self.project.folder
                         )
-
                         document_not_existing = (
-                            not self.project.database.get_document(
+                            not self.project.database.has_document(
                                 collection_name=COLLECTION_CURRENT,
-                                primary_keys=bval_database_path,
+                                primary_key=bval_database_path,
                             )
                         )
 
@@ -620,9 +618,9 @@ class ImportWorker(QThread):
                             bvec_bval_mrtrix_path, self.project.folder
                         )
                         document_not_existing = (
-                            not self.project.database.get_document(
+                            not self.project.database.has_document(
                                 collection_name=COLLECTION_CURRENT,
-                                primary_keys=bvec_bval_mrtrix_database_path,
+                                primary_key=bvec_bval_mrtrix_database_path,
                             )
                         )
 
