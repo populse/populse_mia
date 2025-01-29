@@ -333,12 +333,12 @@ class MiaViewer(Qt.QWidget, DataViewer):
                     self.table_data.scans_to_search,
                 )
 
-            generator = self.project.session.filter_documents(
+            generator = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter
             )
 
             # Creating the list of scans
-            return_list = [getattr(scan, TAG_FILENAME) for scan in generator]
+            return_list = [scan[TAG_FILENAME] for scan in generator]
 
         self.table_data.scans_to_visualize = return_list
 

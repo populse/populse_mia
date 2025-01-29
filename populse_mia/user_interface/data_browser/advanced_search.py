@@ -249,13 +249,11 @@ class AdvancedSearch(QWidget):
                 filter_query = self.prepare_filters(
                     links, fields, conditions, values, nots, self.scans_list
                 )
-                result = self.project.session.filter_documents(
+                result = self.project.database.filter_documents(
                     COLLECTION_CURRENT, filter_query
                 )
                 # data_browser updated with the new selection
-                result_names = [
-                    getattr(document, TAG_FILENAME) for document in result
-                ]
+                result_names = [document[TAG_FILENAME] for document in result]
 
             except Exception:
                 print(

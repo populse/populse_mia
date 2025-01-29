@@ -981,22 +981,22 @@ class PipelineManagerTab(QWidget):
             for tag_to_del in tags2del:
 
                 try:
-                    self.project.session.remove_value(
+                    self.project.database.remove_value(
                         COLLECTION_CURRENT, p_value, tag_to_del
                     )
 
-                except ValueError:
+                except KeyError:
                     # The collection does not exist
                     # or the field does not exist
                     # or the document does not exist
                     pass
 
                 try:
-                    self.project.session.remove_value(
+                    self.project.database.remove_value(
                         COLLECTION_INITIAL, p_value, tag_to_del
                     )
 
-                except ValueError:
+                except KeyError:
                     # The collection does not exist
                     # or the field does not exist
                     # or the document does not exist

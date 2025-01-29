@@ -433,12 +433,10 @@ class IterationTable(QWidget):
             )
             current_text = self.combo_box.currentText().replace("&", "")
             filter_query = f'({{{iterated_tag}}} == "{current_text}")'
-            scans_list = self.project.session.filter_documents(
+            scans_list = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter_query
             )
-            scans_res = [
-                getattr(document, TAG_FILENAME) for document in scans_list
-            ]
+            scans_res = [document[TAG_FILENAME] for document in scans_list]
             # Taking the intersection between the found database scans and the
             # user selection in the data_browser
             self.iteration_scans = list(
@@ -483,11 +481,11 @@ class IterationTable(QWidget):
                 )
                 filter_query = f'({{{iterated_tag}}} == "{tag_value}")'
                 # fmt: on
-                scans_list = self.project.session.filter_documents(
+                scans_list = self.project.database.filter_documents(
                     COLLECTION_CURRENT, filter_query
                 )
                 scans_res = [
-                    getattr(document, TAG_FILENAME) for document in scans_list
+                    document[TAG_FILENAME] for document in scans_list
                 ]
                 all_iterations_scans.append(
                     list(set(scans_res).intersection(self.scan_list))

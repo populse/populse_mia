@@ -87,12 +87,10 @@ class Filter:
         rapid_filter = data_browser.rapid_search.RapidSearch.prepare_filter(
             self.search_bar, tags, scans
         )
-        rapid_result = current_project.session.filter_documents(
+        rapid_result = current_project.database.filter_documents(
             project.COLLECTION_CURRENT, rapid_filter
         )
-        rapid_list = [
-            getattr(scan, project.TAG_FILENAME) for scan in rapid_result
-        ]
+        rapid_list = [scan[project.TAG_FILENAME] for scan in rapid_result]
         advanced_filter = (
             data_browser.advanced_search.AdvancedSearch.prepare_filters(
                 self.links,
@@ -103,13 +101,11 @@ class Filter:
                 rapid_list,
             )
         )
-        advanced_result = current_project.session.filter_documents(
+        advanced_result = current_project.database.filter_documents(
             project.COLLECTION_CURRENT, advanced_filter
         )
 
-        final_result = [
-            getattr(scan, project.TAG_FILENAME) for scan in advanced_result
-        ]
+        final_result = [scan[project.TAG_FILENAME] for scan in advanced_result]
         return final_result
 
     def json_format(self):

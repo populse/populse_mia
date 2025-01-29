@@ -492,35 +492,22 @@ class CountTable(QDialog):
     @staticmethod
     def prepare_filter(couples):
         """
-        Prepares the filter in order to fill the count table
+        Prepares the filter in order to fill the count table.
 
         :param couples: (tag, value) couples
         :return: Str query of the corresponding filter
         """
+        query_parts = []
 
-        query = ""
-
-        and_to_write = False
-
-        for couple in couples:
-            tag = couple[0]
-            value = couple[1]
-
-            # No AND for the first condition
-            if and_to_write:
-                query += " AND "
-
-            and_to_write = True
+        for tag, value in couples:
 
             if isinstance(value, list):
-                query += "({" + tag + "} == " + str(value) + ")"
+                query_parts.append(f"({{{tag}}} == {value})")
 
             else:
-                query += "({" + tag + '} == "' + str(value) + '")'
+                query_parts.append(f'({{{tag}}} == "{value}")')
 
-        query = "(" + query + ")"
-
-        return query
+        return f"({' AND '.join(query_parts)})"
 
     def refresh_layout(self):
         """

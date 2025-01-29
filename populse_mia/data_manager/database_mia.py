@@ -551,6 +551,33 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return dbs[collection][primary_key][field].get()
 
+    def remove_value(self, collection_name, primary_key, field):
+        """
+        Removes the specified field from a document in the given collection,
+        if it exists. Raises a KeyError if the field, collection, or document
+        is not found.
+
+        :param collection_name: The name of the collection containing
+                                the document (str).
+        :param primary_key: The primary key of the document in
+                            the collection (str).
+        :param field: The field to be removed from the document (str).
+
+        :raises KeyError: If the collection or document cannot be found.
+        """
+
+        try:
+
+            with self.storage.data(write=True) as dbs:
+                del dbs[collection_name][primary_key][field]
+
+        except Exception as e:
+            raise KeyError(
+                f"Failed to remove the '{field}' for "
+                f"document ID '{primary_key}' in "
+                f"collection '{collection_name}': {e}"
+            ) from e
+
     # -- Documents management --
 
     def add_document(self, collection, document):
@@ -596,9 +623,7 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return primary_key in dbs[collection_name].get()
 
-    def filter_documents(
-        self, collection, filter_query, fields=None, as_list=False
-    ):
+    def filter_documents(self, collection, filter_query):
         """
         Iterates over the collection documents selected by filter_query
 
@@ -731,7 +756,7 @@ class DatabaseMIA:
         """
         Remove a document from a specified collection.
 
-        This method deletes the document identified by `document_id` from
+        This method deletes the document identified by `primary_key` from
         the given collection in the storage.
 
         Args:
@@ -748,7 +773,7 @@ class DatabaseMIA:
             with self.storage.data(write=True) as dbs:
                 del dbs[collection_name][primary_key]
 
-        except KeyError as e:
+        except Exception as e:
             raise KeyError(
                 f"Failed to remove document with "
                 f"ID '{primary_key}' from "
@@ -859,12 +884,5 @@ class DatabaseMIA:
         """Removes a collection."""
         raise NotImplementedError(
             "This method (remove_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def remove_value(self, collection, document_id, field):
-        """Removes the value <collection, document, field> if it exists."""
-        raise NotImplementedError(
-            "This method (remove_value) is not yet available in "
             "DatabaseMIA class."
         )

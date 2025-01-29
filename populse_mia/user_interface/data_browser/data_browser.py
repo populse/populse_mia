@@ -1459,7 +1459,7 @@ class TableDataBrowser(QTableWidget):
             )
             # For history
             modified_values.append([scan_name, tag_name, current_value, None])
-            self.project.session.remove_value(
+            self.project.database.remove_value(
                 COLLECTION_CURRENT, scan_name, tag_name
             )
             item = self.item(row, col)
@@ -1643,19 +1643,19 @@ class TableDataBrowser(QTableWidget):
 
                     if row is not None:
                         self.removeRow(row)
-                        self.project.session.remove_document(
+                        self.project.database.remove_document(
                             COLLECTION_CURRENT, doc_delete
                         )
 
                         try:
-                            self.project.session.remove_document(
+                            self.project.database.remove_document(
                                 COLLECTION_INITIAL, doc_delete
                             )
 
-                        except ValueError:
+                        except KeyError:
                             pass
 
-            self.project.session.remove_document(COLLECTION_BRICK, name)
+            self.project.database.remove_document(COLLECTION_BRICK, name)
 
         self.resizeColumnsToContents()
 
@@ -1893,15 +1893,12 @@ class TableDataBrowser(QTableWidget):
         primary_key = self.project.database.primary_key(COLLECTION_CURRENT)
 
         if self.scans_to_visualize:
-            req = "%s IN [%s]" % (
-                primary_key,
-                ", ".join(
-                    [
-                        '"%s"' % x.replace("\\", "\\\\").replace('"', '"')
-                        for x in self.scans_to_visualize
-                    ]
-                ),
-            )
+            escaped_scans = [
+                scan.replace("\\", "\\\\").replace('"', '\\"')
+                for scan in self.scans_to_visualize
+            ]
+            joined_scans = ", ".join(f'"{scan}"' for scan in escaped_scans)
+            req = f"{primary_key} IN [{joined_scans}]"
             scans = self.project.database.filter_documents(
                 COLLECTION_CURRENT, req
             )
@@ -2215,7 +2212,7 @@ class TableDataBrowser(QTableWidget):
 
             for tag in list_tags:
                 current_value = str(
-                    self.project.session.get_value(
+                    self.project.database.get_value(
                         collection=COLLECTION_CURRENT,
                         primary_key=scan,
                         field=tag["index"].split("|")[1],

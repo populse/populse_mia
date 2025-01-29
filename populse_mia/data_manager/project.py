@@ -49,6 +49,7 @@ from populse_mia.data_manager import (
     HISTORY_BRICKS,
     HISTORY_ID,
     HISTORY_PIPELINE,
+    NOT_DEFINED_VALUE,
     TAG_BRICKS,
     TAG_CHECKSUM,
     TAG_EXP_TYPE,
@@ -609,19 +610,19 @@ class Project:
             print("remove obsolete brick:", brick)
 
             try:
-                self.session.remove_document(COLLECTION_BRICK, brick)
+                self.database.remove_document(COLLECTION_BRICK, brick)
 
-            except ValueError:
+            except KeyError:
                 pass  # malformed database, the brick doesn't exist
 
         for doc in orphan_files:
             print("remove orphan file:", doc)
 
             try:
-                self.session.remove_document(COLLECTION_CURRENT, doc)
-                self.session.remove_document(COLLECTION_INITIAL, doc)
+                self.database.remove_document(COLLECTION_CURRENT, doc)
+                self.database.remove_document(COLLECTION_INITIAL, doc)
 
-            except ValueError:
+            except KeyError:
                 pass  # malformed database, the file doesn't exist
 
             if os.path.exists(os.path.join(self.folder, doc)):
@@ -643,7 +644,7 @@ class Project:
                     collection_name=COLLECTION_HISTORY, primary_key=hist
                 )
 
-            except ValueError:
+            except KeyError:
                 pass  # malformed database, the brick doesn't exist
 
         for brick in obs_bricks:
@@ -654,7 +655,7 @@ class Project:
                     collection_name=COLLECTION_BRICK, primary_key=brick
                 )
 
-            except ValueError:
+            except KeyError:
                 pass  # malformed database, the brick doesn't exist
 
         for doc in orphan_files:
@@ -668,7 +669,7 @@ class Project:
                     collection_name=COLLECTION_INITIAL, primary_key=doc
                 )
 
-            except ValueError:
+            except KeyError:
                 pass  # malformed database, the file doesn't exist
 
             if os.path.exists(os.path.join(self.folder, doc)):
@@ -687,7 +688,7 @@ class Project:
                 self.database.remove_document(COLLECTION_CURRENT, doc)
                 self.database.remove_document(COLLECTION_INITIAL, doc)
 
-            except ValueError:
+            except KeyError:
                 pass  # malformed database, the file doesn't exist
 
             if os.path.exists(os.path.join(self.folder, doc)):
@@ -1377,9 +1378,6 @@ class Project:
             - modified_visibilities
         """
         # To avoid circular imports
-        from populse_mia.user_interface.data_browser.data_browser import (
-            not_defined_value,
-        )
         from populse_mia.utils import set_item_data
 
         # We can redo if we have an action to make again
@@ -1474,8 +1472,8 @@ class Project:
                 for i in range(0, len(scans_added)):
                     # We remove each scan added
                     scan_to_add = scans_added[i]
-                    self.session.add_document(COLLECTION_CURRENT, scan_to_add)
-                    self.session.add_document(COLLECTION_INITIAL, scan_to_add)
+                    self.database.add_document(COLLECTION_CURRENT, scan_to_add)
+                    self.database.add_document(COLLECTION_INITIAL, scan_to_add)
                     table.scans_to_visualize.append(scan_to_add)
 
                 # We add all the values
@@ -1568,7 +1566,7 @@ class Project:
                         font.setBold(True)
                         item.setFont(font)
                         set_item_data(
-                            item, not_defined_value, FIELD_TYPE_STRING
+                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
                         )
 
                     else:
@@ -1766,9 +1764,6 @@ class Project:
         """
 
         # To avoid circular imports
-        from populse_mia.user_interface.data_browser.data_browser import (
-            not_defined_value,
-        )
         from populse_mia.utils import set_item_data
 
         # We can undo if we have an action to revert
@@ -1847,10 +1842,10 @@ class Project:
                 for i in range(0, len(scans_added)):
                     # We remove each scan added
                     scan_to_remove = scans_added[i]
-                    self.session.remove_document(
+                    self.databse.remove_document(
                         COLLECTION_CURRENT, scan_to_remove
                     )
-                    self.session.remove_document(
+                    self.database.remove_document(
                         COLLECTION_INITIAL, scan_to_remove
                     )
                     table.removeRow(table.get_scan_row(scan_to_remove))
@@ -1905,14 +1900,14 @@ class Project:
 
                     if old_value is None:
                         # If the cell was not defined before, we reput it
-                        self.session.remove_value(
+                        self.database.remove_value(
                             COLLECTION_CURRENT, scan, tag
                         )
-                        self.session.remove_value(
+                        self.database.remove_value(
                             COLLECTION_INITIAL, scan, tag
                         )
                         set_item_data(
-                            item, not_defined_value, FIELD_TYPE_STRING
+                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
                         )
                         font = item.font()
                         font.setItalic(True)

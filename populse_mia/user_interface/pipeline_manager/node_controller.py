@@ -339,11 +339,11 @@ class PlugFilter(QWidget):
                     self.table_data.scans_to_search,
                 )
 
-            generator = self.project.session.filter_documents(
+            scans = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter
             )
             # Creating the list of scans
-            return_list = [getattr(scan, TAG_FILENAME) for scan in generator]
+            return_list = [scan[TAG_FILENAME] for scan in scans]
 
         self.table_data.scans_to_visualize = return_list
         self.advanced_search.scans_list = return_list
@@ -1049,12 +1049,12 @@ class FilterWidget(QWidget):
                     old_scan_list,
                 )
 
-            generator = self.project.session.filter_documents(
+            scans = self.project.database.filter_documents(
                 COLLECTION_CURRENT, filter
             )
 
             # Creating the list of scans
-            return_list = [getattr(scan, TAG_FILENAME) for scan in generator]
+            return_list = [scan[TAG_FILENAME] for scan in scans]
 
         self.table_data.scans_to_visualize = return_list
         self.advanced_search.scans_list = return_list
