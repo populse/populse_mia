@@ -45,9 +45,8 @@ from PyQt5.QtWidgets import (
 # from scipy.ndimage import rotate  # to work with NumPy arrays
 from skimage.transform import resize
 
-from populse_mia.data_manager import COLLECTION_CURRENT
+from populse_mia.data_manager import COLLECTION_CURRENT, NOT_DEFINED_VALUE
 from populse_mia.software_properties import Config
-from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.user_interface.pop_ups import ClickableLabel, PopUpSelectTag
 
 
@@ -621,7 +620,7 @@ class MiniViewer(QWidget):
                     )
                 else:
                     self.label_description[idx].setText(
-                        data_browser.not_defined_value[: self.nb_char_max]
+                        NOT_DEFINED_VALUE[: self.nb_char_max]
                     )
                 self.label_description[idx].setToolTip(
                     os.path.basename(self.config.getThumbnailTag())

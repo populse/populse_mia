@@ -1810,7 +1810,7 @@ class Project:
                             "default_value": tag_to_reput.default_value,
                         }
                     )
-                    self.databse.add_field(
+                    self.database.add_field(
                         {
                             "collection_name": COLLECTION_INITIAL,
                             "field_name": tag_to_reput.field_name,
@@ -1842,7 +1842,7 @@ class Project:
                 for i in range(0, len(scans_added)):
                     # We remove each scan added
                     scan_to_remove = scans_added[i]
-                    self.databse.remove_document(
+                    self.database.remove_document(
                         COLLECTION_CURRENT, scan_to_remove
                     )
                     self.database.remove_document(

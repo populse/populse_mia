@@ -5743,7 +5743,7 @@ class PopUpShowHistory(QDialog):
         self.project = project
         self.setWindowTitle("History of " + scan)
 
-        brick_row = project.databse.get_document(
+        brick_row = project.database.get_document(
             collection_name=COLLECTION_BRICK, primary_keys=brick_uuid
         )
         full_brick_name = project.database.get_value(

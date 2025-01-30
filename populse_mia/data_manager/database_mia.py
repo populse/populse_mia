@@ -526,6 +526,13 @@ class DatabaseMIA:
                                 names, and values represent the corresponding
                                 data.
         """
+        with self.storage.data() as dbs:
+            dic = dbs[collection_name][primary_key].get()
+
+        if dic is not None:
+            filtered_dic = {k: v for k, v in dic.items() if v is not None}
+            values_dict.update(filtered_dic)
+
         with self.storage.data(write=True) as dbs:
             dbs[collection_name][primary_key] = values_dict
 
