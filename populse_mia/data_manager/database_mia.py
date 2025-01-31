@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Module that contains class to override the default behaviour of
-populse_db and some of its methods
+"""
+Module containing a class that provides tools adapted to Mia for
+interacting with the populse_db API.
 
 :Contains:
    Class:
       - DatabaseMIA
-
-
 """
-
 
 ##########################################################################
 # Populse_mia - Copyright (C) IRMaGe/CEA, 2018
@@ -17,8 +15,6 @@ populse_db and some of its methods
 # http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 # for details.
 ##########################################################################
-
-# from datetime import datetime
 
 from populse_db.database import str_to_type, type_to_str
 
@@ -115,23 +111,46 @@ from populse_mia.data_manager import (
 
 class DatabaseMIA:
     """
-    Class overriding the default behavior of populse_db.
+    Class providing tools for interacting with a database,
+    under the supervision of populse_db.
 
     .. Methods:
-        - add_collection: overrides the method adding a collection
-        - add_field_attributes_collection: add the
-                                           FIELD_ATTRIBUTES_COLLECTION
-                                           collection (for internal
+        - add_collection: add a new collection to the database.
+        - collection_names: retrieve the names of all collections
+                            in the database.
+        - has_collection: checks if a collection exists in the database.
+        - get_field_names: retrieve the list of all field names in the
+                           specified collection.
+        - add_field:  adds one or more fields to a collection.
+        - remove_field:  removes a field in a collection.
+        - add_field_attributes_collection: ensures that the
+                                           `FIELD_ATTRIBUTES_COLLECTION`
+                                           collection is available in the
+                                           database (for internal
                                            operation of populse_mia
-                                           and associated fields)
-        - add_field: adds a field to the database, if it does not already
-                     exist
-        - add_fields: adds the list of fields
-        - remove_field:  removes a field in the collection
-        - get_field: get a field of a collection
-        - get_fields: get all the fields of a collection
-        - get_shown_tags: gives the list of visible tags
-        - set_shown_tags: sets the list of visible tags
+                                           and associated fields).
+        - remove_field_attributes: remove attributes associated with a
+                                   specific field in a collection.
+        - update_field_attributes: updates the attributes of a field in
+                                   the database.
+        - get_field_attributes: retrieve attributes of a specific field or
+                                all fields in a collection.
+        - add_value: store or update a record in the specified collection.
+        - get_value: retrieves the current value of a specific field.
+        - remove_value: removes the value for a field.
+        - add_document: adds a document in a collection.
+        - has_document: checks if a document exists in a collection.
+        - filter_documents: retrieve documents from a specified collection
+                            that match a given filter.
+        - get_document: Retrieve documents from a specified collection with
+                         optional filtering.
+        - get_document_names: retrieve a list of all document names in the
+                              specified collection.
+        - remove_document: remove a document from a specified collection.
+        - primary_key: retrieve the primary key of the specified collection.
+        - get_shown_tags: give the list of visible tags.
+        - set_shown_tags: set the list of visible tags.
+
     """
 
     def __init__(
@@ -526,15 +545,19 @@ class DatabaseMIA:
                                 names, and values represent the corresponding
                                 data.
         """
-        with self.storage.data() as dbs:
-            dic = dbs[collection_name][primary_key].get()
 
-        if dic is not None:
-            filtered_dic = {k: v for k, v in dic.items() if v is not None}
-            values_dict.update(filtered_dic)
+        with self.storage.data() as dbs:
+            existing_record = dbs[collection_name][primary_key].get() or {}
+
+        # Preserve non-null values from the existing record and update with
+        # new values
+        filtered_record = {
+            k: v for k, v in existing_record.items() if v is not None
+        }
+        updated_record = {**filtered_record, **values_dict}
 
         with self.storage.data(write=True) as dbs:
-            dbs[collection_name][primary_key] = values_dict
+            dbs[collection_name][primary_key] = updated_record
 
     def get_value(self, collection, primary_key, field):
         """
@@ -632,24 +655,38 @@ class DatabaseMIA:
 
     def filter_documents(self, collection, filter_query):
         """
-        Iterates over the collection documents selected by filter_query
+        Retrieve documents from a specified collection that match a given
+        filter.
 
-        Each item yield is a row of the collection table returned
+        This method searches for documents in the specified collection based
+        on the provided filter query. It returns the results as a list of
+        rows from the collection table.
 
-        filter_query can be the result of self.filter_query() or a string
-        containing a filter (in this case self.filter_query() is called to
-        get the actual query)
+        The `filter_query` can either be:
+            - The result of `self.filter_query()`.
+            - A string defining a filter.
 
-        :param collection: Filter collection (str, must be existing)
-        :param filter_query: Filter query (str)
-
-            - A filter row must be written this way:
-              {<field>} <operator> "<value>"
-            - The operator must be in
-              ('==', '!=', '<=', '>=', '<', '>', 'IN', 'ILIKE', 'LIKE')
-            - The filter rows can be linked with ' AND ' or ' OR '
+        **Filter Query Format:**
+            - A filter condition must follow this syntax:
+                `{<field>} <operator> "<value>"`.
+            - Supported operators:
+                `==`, `!=`, `<=`, `>=`, `<`, `>`, `IN`, `ILIKE`, `LIKE`.
+            - Multiple filter conditions can be combined using `AND` or `OR`.
             - Example:
-              "((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))"
+                ```
+                "((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))"
+                ```
+
+        **Note:**
+        Due to potential database access issues such as
+        `"database already open."`, this implementation currently returns a
+        list instead of using `yield`. However, using `yield` may be
+        reconsidered in the future for better memory management.
+
+        :param collection: The name of the collection to filter
+                           (str, must exist).
+        :param filter_query: The filter query to apply (str).
+        :return: A list of rows matching the filter criteria.
         """
 
         if not self.has_collection(collection):
@@ -853,15 +890,6 @@ class DatabaseMIA:
                     ] = (field in fields_shown)
 
     # -- Currently obsoletes --
-
-    def get_field(self, collection_name, field_name):
-        """blabla"""
-
-        raise NotImplementedError(
-            "This method (get_field) is obsolete and is no longer "
-            "available in the DatabaseMIA class. Use get_field_attributes "
-            " instead ......!"
-        )
 
     def set_value(self, collection, document_id, field, new_value):
         """Sets the value associated to <collection, document, field> if
