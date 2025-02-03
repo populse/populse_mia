@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Make populse_mia accessible as a module.
+"""Make populse_mia accessible as a module.
 
 For example by using python3 -m populse_mia.
 
