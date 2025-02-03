@@ -580,14 +580,14 @@ class Project:
                 for scan in self.database.get_document(
                     collection_name=COLLECTION_CURRENT
                 ):
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=scan[TAG_FILENAME],
                         values_dict={clinical_tag: None},
                         # field=clinical_tag,
                         # value=None,
                     )
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_INITIAL,
                         primary_key=scan[TAG_FILENAME],
                         values_dict={clinical_tag: None},
@@ -1200,7 +1200,7 @@ class Project:
 
             for brid in hist[HISTORY_BRICKS]:
                 brick_doc = self.database.get_value(
-                    collection=COLLECTION_BRICK,
+                    collection_name=COLLECTION_BRICK,
                     primary_key=brid,
                     field=BRICK_OUTPUTS,
                 )
@@ -1428,13 +1428,13 @@ class Project:
 
                 # Adding all the values associated
                 for value in values:
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=value[0],
                         values_dict={value[1]: value[2]},
                         # COLLECTION_CURRENT, value[0], value[1], value[2]
                     )
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_INITIAL,
                         primary_key=value[0],
                         values_dict={value[1]: value[3]},
@@ -1482,7 +1482,7 @@ class Project:
 
                 for i in range(0, len(values_added)):
                     value_to_add = values_added[i]
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=value_to_add[0],
                         values_dict={value_to_add[1]: value_to_add[2]},
@@ -1491,7 +1491,7 @@ class Project:
                         # value_to_add[1],
                         # value_to_add[2],
                     )
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_INITIAL,
                         primary_key=value_to_add[0],
                         values_dict={value_to_add[1]: value_to_add[3]},
@@ -1553,7 +1553,7 @@ class Project:
                         item.setFont(font)
 
                     # self.session.set_value(
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=scan,
                         values_dict={tag: new_value},
@@ -1602,7 +1602,7 @@ class Project:
         for i in range(0, len(values)):
             # We reput each value, exactly the same as it was before
             valueToReput = values[i]
-            self.database.add_value(
+            self.database.set_value(
                 collection_name=COLLECTION_CURRENT,
                 primary_key=valueToReput[0],
                 values_dict={valueToReput[1]: valueToReput[2]},
@@ -1611,7 +1611,7 @@ class Project:
                 # valueToReput[1],
                 # valueToReput[2],
             )
-            self.database.add_value(
+            self.database.set_value(
                 collection_name=COLLECTION_INITIAL,
                 primary_key=valueToReput[0],
                 values_dict={valueToReput[1]: valueToReput[3]},
@@ -1918,7 +1918,7 @@ class Project:
                         # If the cell was there before,
                         # we just set it to the old value
                         # self.session.set_value(
-                        self.database.add_value(
+                        self.database.set_value(
                             collection_name=COLLECTION_CURRENT,
                             primary_key=scan,
                             values_dict={tag: old_value},
@@ -2035,7 +2035,7 @@ class Project:
     #                     f": {output}: {old_bricks} -> {new_bricks}"
     #                 )
     #                 # self.session.set_value(
-    #                 self.database.add_value(
+    #                 self.database.set_value(
     #                     collection_name=COLLECTION_CURRENT,
     #                     primary_key=output,
     #                     values_dict={TAG_BRICKS: new_bricks},
@@ -2089,7 +2089,7 @@ class Project:
                     continue
 
                 inputs = self.database.get_value(
-                    collection=COLLECTION_BRICK,
+                    collection_name=COLLECTION_BRICK,
                     primary_key=brick_id,
                     field=BRICK_INPUTS,
                 )
@@ -2114,14 +2114,14 @@ class Project:
                     )
                     new_inputs = json.loads(new_inputs_string)
                     # self.database.set_value(
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_BRICK,
                         primary_key=brick_id,
                         values_dict={BRICK_INPUTS: new_inputs},
                         # COLLECTION_BRICK, brick_id, BRICK_INPUTS, new_inputs
                     )
                     outputs = self.database.get_value(
-                        collection=COLLECTION_BRICK,
+                        collection_name=COLLECTION_BRICK,
                         primary_key=brick_id,
                         field=BRICK_OUTPUTS,
                     )
@@ -2133,7 +2133,7 @@ class Project:
                         )
                         new_outputs = json.loads(new_outputs_string)
                         # self.database.set_value(
-                        self.database.add_value(
+                        self.database.set_value(
                             collection_name=COLLECTION_BRICK,
                             primary_key=brick_id,
                             values_dict={BRICK_OUTPUTS: new_outputs},
@@ -2146,7 +2146,7 @@ class Project:
             # Update the history pipeline if hist_id is valid
             if old_path and hist_id:
                 old_pipeline_xml = self.database.get_value(
-                    collection=COLLECTION_HISTORY,
+                    collection_name=COLLECTION_HISTORY,
                     primary_key=hist_id,
                     field=HISTORY_PIPELINE,
                 )
@@ -2156,7 +2156,7 @@ class Project:
                         old_path, new_path or ""
                     )
                     # self.database.set_value(
-                    self.database.add_value(
+                    self.database.set_value(
                         collection_name=COLLECTION_HISTORY,
                         primary_key=hist_id,
                         values_dict={HISTORY_PIPELINE: new_pipeline_xml},

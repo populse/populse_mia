@@ -460,7 +460,9 @@ def get_direct_proc_ancestors(
     """
 
     bricks = project.database.get_value(
-        collection=COLLECTION_CURRENT, primary_key=filename, field=TAG_BRICKS
+        collection_name=COLLECTION_CURRENT,
+        primary_key=filename,
+        field=TAG_BRICKS,
     )
     print("bricks for:", filename, ":", bricks)
     new_procs = {}

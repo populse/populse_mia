@@ -610,7 +610,7 @@ class MiniViewer(QWidget):
         ):
             if scan == file_path_base_name:
                 value = self.project.database.get_value(
-                    collection=COLLECTION_CURRENT,
+                    collection_name=COLLECTION_CURRENT,
                     primary_key=scan,
                     field=self.config.getThumbnailTag(),
                 )

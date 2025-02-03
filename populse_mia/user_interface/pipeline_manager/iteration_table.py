@@ -202,7 +202,9 @@ class IterationTable(QWidget):
             COLLECTION_CURRENT
         ):
             current_value = self.project.database.get_value(
-                collection=COLLECTION_CURRENT, primary_key=scan, field=tag_name
+                collection_name=COLLECTION_CURRENT,
+                primary_key=scan,
+                field=tag_name,
             )
 
             if current_value is not None:
@@ -455,7 +457,7 @@ class IterationTable(QWidget):
                     item.setText(
                         str(
                             self.project.database.get_value(
-                                collection=COLLECTION_CURRENT,
+                                collection_name=COLLECTION_CURRENT,
                                 primary_key=scan_name,
                                 field=tag_name
                             )
@@ -517,7 +519,7 @@ class IterationTable(QWidget):
 
         for scan_name in scans_names:
             tag_value = self.project.database.get_value(
-                collection=COLLECTION_CURRENT,
+                collection_name=COLLECTION_CURRENT,
                 primary_key=scan_name,
                 field=selected_tag,
             )

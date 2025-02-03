@@ -116,12 +116,12 @@ class DatabaseMIA:
 
     .. Methods:
         - add_collection: add a new collection to the database.
-        - collection_names: retrieve the names of all collections
-                            in the database.
+        - get_collection_names: retrieve the names of all collections
+                                in the database.
         - has_collection: checks if a collection exists in the database.
         - get_field_names: retrieve the list of all field names in the
                            specified collection.
-        - add_field:  adds one or more fields to a collection.
+        - add_field: adds one or more fields to a collection.
         - remove_field:  removes a field in a collection.
         - add_field_attributes_collection: ensures that the
                                            `FIELD_ATTRIBUTES_COLLECTION`
@@ -135,7 +135,7 @@ class DatabaseMIA:
                                    the database.
         - get_field_attributes: retrieve attributes of a specific field or
                                 all fields in a collection.
-        - add_value: store or update a record in the specified collection.
+        - set_value: store or update a record in the specified collection.
         - get_value: retrieves the current value of a specific field.
         - remove_value: removes the value for a field.
         - add_document: adds a document in a collection.
@@ -147,7 +147,8 @@ class DatabaseMIA:
         - get_document_names: retrieve a list of all document names in the
                               specified collection.
         - remove_document: remove a document from a specified collection.
-        - primary_key: retrieve the primary key of the specified collection.
+        - get_primary_key_name: retrieve the primary key of the specified
+                                collection.
         - get_shown_tags: give the list of visible tags.
         - set_shown_tags: set the list of visible tags.
 
@@ -200,13 +201,12 @@ class DatabaseMIA:
         additional field attributes, ensuring proper schema updates and
         collection initialization.
 
-        Parameters:
-            collection_name (str): The name of the new collection.
-            primary_key (str): The primary key column for the collection.
-            visibility (bool): Visibility of the primary key field.
-            origin (str): Origin of the primary key field.
-            unit (str): Unit of the primary key field.
-            default_value (Any): Default value for the primary key field.
+        :param collection_name (str): The name of the new collection.
+        :param primary_key (str): The primary key column for the collection.
+        :param visibility (bool): Visibility of the primary key field.
+        :param origin (str): Origin of the primary key field.
+        :param unit (str): Unit of the primary key field.
+        :param default_value (Any): Default value for the primary key field.
         """
         self.add_field_attributes_collection()
 
@@ -228,40 +228,31 @@ class DatabaseMIA:
             field_type=FIELD_TYPE_STRING,
         )
 
-    def collection_names(self):
-        """Retrieve the names of all collections in the storage database."""
-        with self.storage.data() as dbs:
-            return dbs.collection_names()
-
     def has_collection(self, collection_name):
-        """Checks if a collection with the specified name exists
-        in the database.
+        """
+         Checks if a collection with the specified name exists in the database.
 
-        Parameters:
-        - collection_name (str): The name of the collection to check.
-
-        Returns:
-        - bool: `True` if the collection exists, otherwise `False`.
-
+        :param collection_name (str): The name of the collection to check.
+         :returns (bool): `True` if the collection exists, otherwise `False`.
         """
         with self.storage.data() as dbs:
             return dbs.has_collection(collection_name)
 
     # -- Fields / tags management --
 
-    def get_field_names(self, collection):
-        """Retrieve the list of all field names in the specified collection.
+    def get_field_names(self, collection_name):
+        """
+        Retrieve the list of all field names in the specified collection.
 
-        Args:
-        collection (str): The name of the collection to retrieve field names
-                          from. The collection must exist in the database.
-
-        Returns:
-            list: A list of all field names in the collection if it exists.
-            None: If the collection has no fields or does not exist.
+        :param collection_name (str): The name of the collection to retrieve
+                                      field names from. The collection must
+                                      exist in the database.
+        :returns (list | None): A list of all field names in the collection
+                                if it exists, or `None` if the collection has
+                                no fields or does not exist.
         """
         with self.storage.data() as dbs:
-            field_names = list(dbs[collection].keys())
+            field_names = list(dbs[collection_name].keys())
             return field_names if field_names else None
 
     def add_field(self, fields):
@@ -270,18 +261,20 @@ class DatabaseMIA:
 
         Each field should be represented as a dictionary containing
         the following keys:
-        - collection_name: The collection to which the field belongs.
-        - field_name: The name of the field.
-        - field_type: The data type of the field.
-        - description: A brief description of the field.
-        - visibility: The visibility status of the field.
-        - origin: The origin of the field.
-        - unit: The unit associated with the field.
-        - default_value: The default value of the field.
 
-        :param fields: A dictionary representing a single field's attributes,
-                       or a list of dictionaries representing multiple
-                       fields' attributes.
+        - `collection_name` (str): The collection to which the field belongs.
+        - `field_name` (str): The name of the field.
+        - `field_type` (str): The data type of the field.
+        - `description` (str): A brief description of the field.
+        - `visibility` (bool): The visibility status of the field.
+        - `origin` (str): The origin of the field.
+        - `unit` (str): The unit associated with the field.
+        - `default_value` (Any): The default value of the field.
+
+        :param fields (dict | list[dict]): A dictionary representing a single
+                                           field's attributes, or a list of
+                                           dictionaries representing multiple
+                                           fields' attributes.
         """
 
         # Ensure fields is always a list for consistent processing
@@ -315,14 +308,11 @@ class DatabaseMIA:
         This method updates the schema to remove the specified field from the
         collection and handles associated attributes cleanup.
 
-        :param collection_name: The name of the collection from which the field
-                                will be removed (str, must be existing).
-
-        :param field_name: The name of the field to remove (str, must
-                           be existing).
-
-        :raise ValueError: - If the collection_name does not exist
-                           - If the field_name does not exist
+        :param collection_name (str): The name of the collection from which
+                                      the field will be removed (must exist).
+        :param field_name (str): The name of the field to remove (must exist).
+        :raises ValueError: If the `collection_name` does not exist or if
+                            the `field_name` does not exist.
         """
         try:
             with self.storage.schema() as schema:
@@ -399,26 +389,19 @@ class DatabaseMIA:
                     description="Type of the index field",
                 )
 
-    def remove_field_attributes(
-        self,
-        collection_name,
-        field_name,
-    ):
+    def remove_field_attributes(self, collection_name, field_name):
         """
         Remove attributes associated with a specific field in a collection.
 
         This method deletes the document storing metadata or attributes for
         the specified field in the given collection.
 
-        Args:
-            collection_name (str): The name of the collection containing
-                                   the field.
-            field_name (str): The name of the field whose attributes are
-                              to be removed.
-
-        Raises:
-            ValueError: If the attributes document does not exist or cannot
-                        be removed.
+        :param collection_name (str): The name of the collection containing
+                                      the field.
+        :param field_name (str): The name of the field whose attributes are
+                                 to be removed.
+        :raises ValueError: If the attributes document does not exist or
+                            cannot be removed.
         """
         index = f"{collection_name}|{field_name}"
 
@@ -450,20 +433,19 @@ class DatabaseMIA:
         field_name ('collection|field_name'), and then updates the field's
         attributes in the FIELD_ATTRIBUTES_COLLECTION.
 
-        Parameters:
-            collection_name (str): The name of the collection the field
-                                   belongs to.
-            field_name (str): The name of the field to update.
-            visibility (bool): The visibility status of the field.
-            origin (str): The origin or source of the field.
-            unit (str): The unit of measurement for the field.
-            default_value (Any): The default value to assign to the field.
-            description (str): The description of the field.
-            field_type: The type of the field.
+        :param collection_name (str): The name of the collection the field
+                                      belongs to.
+        :param field_name (str): The name of the field to update.
+        :param visibility (bool): The visibility status of the field.
+        :param origin (str): The origin or source of the field.
+        :param unit (str): The unit of measurement for the field.
+        :param default_value (Any): The default value to assign to the field.
+        :param description (str): The description of the field.
+        :param field_type (Any): The type of the field.
         """
 
         index = f"{collection_name}|{field_name}"
-        self.add_value(
+        self.set_value(
             FIELD_ATTRIBUTES_COLLECTION,
             index,
             {
@@ -481,16 +463,15 @@ class DatabaseMIA:
         Retrieve attributes of a specific field or all fields in a collection
         from the storage.
 
-        Args:
-            collection_name (str): The name of the collection.
-            field_name (str, optional): The name of a specific field within
-            the collection. If not provided, attributes for all fields in the
-            collection will be retrieved.
-
-        Returns:
-            dict or list of dict: Attributes of the specified field as a
-            dictionary, or a list of dictionaries with attributes for all
-            fields if `field_name` is not provided.
+        :param collection_name (str): The name of the collection.
+        :param field_name (str, optional): The name of a specific field within
+                                           the collection. If not provided,
+                                           attributes for all fields in the
+                                           collection will be retrieved.
+        :returns (dict | list[dict]): Attributes of the specified field as a
+                                      dictionary, or a list of dictionaries
+                                      with attributes for all fields if
+                                      `field_name` is not provided.
         """
         with self.storage.data() as dbs:
 
@@ -527,7 +508,7 @@ class DatabaseMIA:
 
     # -- Values management --
 
-    def add_value(self, collection_name, primary_key, values_dict):
+    def set_value(self, collection_name, primary_key, values_dict):
         """
         Store or update a record in the specified collection.
 
@@ -536,14 +517,13 @@ class DatabaseMIA:
         fields of the record are set according to the data in the provided
         dictionary.
 
-        Parameters:
-            collection_name (str): The name of the collection where the record
-                                   will be stored or updated.
-            primary_key (str): The unique key used to identify the record.
-            values_dict (dict): A dictionary containing the data to store or
-                                update in the record. Keys represent field
-                                names, and values represent the corresponding
-                                data.
+        :param collection_name (str): The name of the collection where the
+                                      record will be stored or updated.
+        :param primary_key (str): The unique key used to identify the record.
+        :param values_dict (dict): A dictionary containing the data to store
+                                   or update in the record. Keys represent
+                                   field names, and values represent the
+                                   corresponding data.
         """
 
         with self.storage.data() as dbs:
@@ -559,7 +539,7 @@ class DatabaseMIA:
         with self.storage.data(write=True) as dbs:
             dbs[collection_name][primary_key] = updated_record
 
-    def get_value(self, collection, primary_key, field):
+    def get_value(self, collection_name, primary_key, field):
         """
         Retrieves the current value of a specific field in a document from
         the specified collection.
@@ -568,18 +548,16 @@ class DatabaseMIA:
         given field within a document, identified by its primary key, in the
         specified collection.
 
-        :param collection: The name of the collection containing the document.
-        :type collection: str
-        :param primary_key: The unique identifier (primary key) of the
-                            document.
-        :type primary_key: str
-        :param field: The name of the field within the document to retrieve.
-        :type field: str
-        :return: The current value of the specified field.
-        :rtype: Any
+        :param collection_name (str): The name of the collection containing
+                                      the document.
+        :param primary_key (str): The unique identifier (primary key) of the
+                                  document.
+        :param field (str): The name of the field within the document to
+                            retrieve.
+        :returns (Any): The current value of the specified field.
         """
         with self.storage.data() as dbs:
-            return dbs[collection][primary_key][field].get()
+            return dbs[collection_name][primary_key][field].get()
 
     def remove_value(self, collection_name, primary_key, field):
         """
@@ -587,12 +565,11 @@ class DatabaseMIA:
         if it exists. Raises a KeyError if the field, collection, or document
         is not found.
 
-        :param collection_name: The name of the collection containing
-                                the document (str).
-        :param primary_key: The primary key of the document in
-                            the collection (str).
-        :param field: The field to be removed from the document (str).
-
+        :param collection_name (str): The name of the collection containing
+                                      the document.
+        :param primary_key (str): The primary key of the document in the
+                                  collection.
+        :param field (str): The field to be removed from the document.
         :raises KeyError: If the collection or document cannot be found.
         """
 
@@ -610,7 +587,7 @@ class DatabaseMIA:
 
     # -- Documents management --
 
-    def add_document(self, collection, document):
+    def add_document(self, collection_name, document):
         """
         Adds a document to a specified collection in the storage.
 
@@ -619,32 +596,25 @@ class DatabaseMIA:
         collection's primary key configuration. The changes are saved
         to the storage.
 
-        Parameters:
-        ----------
-        collection : str
-                     The name of the collection where the document should
-                     be added.
-        document : str
-                   The document name to be added.
+        :param collection_name (str): The name of the collection where the
+                                      document should be added.
+        :param document (str): The document name to be added.
         """
 
-        if self.has_collection(collection):
-            primary_key = self.primary_key(collection)
+        if self.has_collection(collection_name):
+            primary_key = self.get_primary_key_name(collection_name)
 
             with self.storage.data(write=True) as dbs:
-                dbs[collection][document] = {primary_key: document}
+                dbs[collection_name][document] = {primary_key: document}
 
     def has_document(self, collection_name, primary_key):
         """
         Checks if a document with the specified primary key exists in the
         given collection.
 
-        Args:
-            collection_name (str): The name of the collection.
-            primary_key (str): The primary key of the document to check.
-
-        Returns:
-            bool: True if the document exists, False otherwise.
+        :param collection_name (str): The name of the collection.
+        :param primary_key (str): The primary key of the document to check.
+        :returns (bool): `True` if the document exists, `False` otherwise.
         """
 
         if not self.has_collection(collection_name):
@@ -653,7 +623,7 @@ class DatabaseMIA:
         with self.storage.data() as dbs:
             return primary_key in dbs[collection_name].get()
 
-    def filter_documents(self, collection, filter_query):
+    def filter_documents(self, collection_name, filter_query):
         """
         Retrieve documents from a specified collection that match a given
         filter.
@@ -683,19 +653,19 @@ class DatabaseMIA:
         list instead of using `yield`. However, using `yield` may be
         reconsidered in the future for better memory management.
 
-        :param collection: The name of the collection to filter
-                           (str, must exist).
-        :param filter_query: The filter query to apply (str).
-        :return: A list of rows matching the filter criteria.
+        :param collection_name (str): The name of the collection to filter
+                                      (must exist).
+        :param filter_query (str): The filter query to apply.
+        :returns (list): A list of rows matching the filter criteria.
         """
 
-        if not self.has_collection(collection):
+        if not self.has_collection(collection_name):
             raise ValueError(
-                "The collection {0} does not exist".format(collection)
+                f"The collection {collection_name} does not exist..."
             )
 
         # with self.storage.data() as dbs:
-        #     for i in dbs[collection].search(filter_query):
+        #     for i in dbs[collection_name].search(filter_query):
         #         yield i
         # TODO: We do not use yield because it causes errors such as
         #       "database already open." I believe the code should be
@@ -704,25 +674,7 @@ class DatabaseMIA:
         #       likely need to be implemented later for memory
         #       management reasons.
         with self.storage.data() as dbs:
-            return dbs[collection].search(filter_query)
-
-    # def get_document(self, collection, document_id):
-    #     """
-    #     Retrieves a document from the specified collection using its
-    #     identifier.
-
-    #     :param collection: Name of the document collection (str).
-    #                        Must exist.
-    #     :param document_id: Identifier of the document to
-    #                         retrieve (str or int).
-
-    #     :return: The document instance if found, otherwise None.
-    #     """
-    #     if not self.has_collection(collection):
-    #         return None
-
-    #     with self.storage.data() as dbs:
-    #         return dbs[collection][document_id].get()
+            return dbs[collection_name].search(filter_query)
 
     def get_document(self, collection_name, primary_keys=None, fields=None):
         """
@@ -734,17 +686,22 @@ class DatabaseMIA:
         primary keys and selecting specific fields. If the collection does not
         exist, an empty list is returned.
 
-        :param collection_name: Name of the document collection (str). The
-                                collection must already exist in the database.
-        :param primary_keys: A single primary key or a list of primary keys to
-                             filter documents (str or list of str). If None,
-                             no filtering by primary keys is applied.
-        :param fields: A single field or a list of fields to include in the
-                       result (str or list of str). If None, all fields are
-                       included.
-
-        :return: A list of documents matching the specified criteria, or an
-                 empty list if the collection does not exist.
+        :param collection_name (str): Name of the document collection. The
+                                      collection must already exist in the
+                                      database.
+        :param primary_keys (str | list[str], optional): A single primary key
+                                                         or a list of primary
+                                                         keys to filter
+                                                         documents. If None,
+                                                         no filtering by
+                                                         primary keys is
+                                                         applied.
+        :param fields (str | list[str], optional): A single field or a list of
+                                                   fields to include in the
+                                                   result. If None, all fields
+                                                   are included.
+        :returns (list): A list of documents matching the specified criteria,
+                         or an empty list if the collection does not exist.
         """
 
         if not self.has_collection(collection_name):
@@ -755,7 +712,7 @@ class DatabaseMIA:
 
         # Filter by primary keys if provided
         if primary_keys:
-            primary_key_field = self.primary_key(collection_name)
+            primary_key_field = self.get_primary_key_name(collection_name)
             primary_keys = (
                 set(primary_keys)
                 if isinstance(primary_keys, list)
@@ -777,22 +734,23 @@ class DatabaseMIA:
 
         return documents
 
-    def get_document_names(self, collection):
-        """Retrieve a list of all document names in the specified collection.
-
-        Args:
-            collection (str): The name of the collection to retrieve document
-                              names from. The collection must already exist.
-
-        Returns:
-            list[str]: A list of document names if the collection exists,
-                       otherwise an empty list.
+    def get_document_names(self, collection_name):
         """
-        if self.has_collection(collection):
-            primary_key = self.primary_key(collection)
+        Retrieve a list of all document names in the specified collection.
+
+        :param collection_name (str): The name of the collection to retrieve
+                                      document names from. The collection must
+                                      already exist.
+        :returns (list[str]): A list of document names if the collection
+                              exists, otherwise an empty list.
+        """
+        if self.has_collection(collection_name):
+            primary_key = self.get_primary_key_name(collection_name)
 
             with self.storage.data() as dbs:
-                return [item[primary_key] for item in dbs[collection].get()]
+                return [
+                    item[primary_key] for item in dbs[collection_name].get()
+                ]
 
         return []
 
@@ -803,14 +761,11 @@ class DatabaseMIA:
         This method deletes the document identified by `primary_key` from
         the given collection in the storage.
 
-        Args:
-            collection_name (str): The name of the collection
-                                   containing the document.
-            primary_key (str): The unique identifier of the document to
-                               be removed.
-
-        Raises:
-            KeyError: If the collection or the document does not exist.
+        :param collection_name (str): The name of the collection containing
+                                      the document.
+        :param primary_key (str): The unique identifier of the document to be
+                                  removed.
+        :raises KeyError: If the collection or the document does not exist.
         """
         try:
 
@@ -826,29 +781,28 @@ class DatabaseMIA:
 
     # -- Utility --
 
-    def primary_key(self, collection):
-        """Retrieve the primary key of the specified collection.
+    def get_primary_key_name(self, collection_name):
+        """
+        Retrieve the primary key of the specified collection.
 
         This method returns the first key from the specified collection within
         the database.
 
-        Args:
-            collection (str): The name of the collection to retrieve the
-                              primary key from.
-
-        Returns:
-            str: The first key in the collection, representing the primary
-                 key.
+        :param collection_name (str): The name of the collection to retrieve
+                                      the primary key from.
+        :returns (str): The first key in the collection, representing the
+                        primary key.
         """
         with self.storage.data() as dbs:
             # TODO: Are we sure that the primary key is ALWAYS the first
             #       element in the dbs[collection].keys() dict_keys list?
-            return next(iter(dbs[collection].keys()))
+            return next(iter(dbs[collection_name].keys()))
 
     def get_shown_tags(self):
-        """Give the list of visible tags.
+        """
+        Give the list of visible tags.
 
-        :return: the list of visible tags
+        :returns (list): The list of visible tags.
         """
         visible_names = []
         names_set = set()
@@ -872,9 +826,10 @@ class DatabaseMIA:
         return visible_names
 
     def set_shown_tags(self, fields_shown):
-        """Set the list of visible tags.
+        """
+        Set the list of visible tags.
 
-        :param fields_shown: list of visible tags
+        :param fields_shown (list): A list of visible tags.
         """
 
         doc_names = self.get_document_names(FIELD_ATTRIBUTES_COLLECTION)
@@ -890,16 +845,6 @@ class DatabaseMIA:
                     ] = (field in fields_shown)
 
     # -- Currently obsoletes --
-
-    def set_value(self, collection, document_id, field, new_value):
-        """Sets the value associated to <collection, document, field> if
-        it exists.
-        """
-        raise NotImplementedError(
-            "This method (set_value) is obsolete and is no longer "
-            "available in the DatabaseMIA class. Use add_value "
-            " instead ......!"
-        )
 
     def get_collection(self, name):
         """Returns the collection row of the collection"""
@@ -919,5 +864,14 @@ class DatabaseMIA:
         """Removes a collection."""
         raise NotImplementedError(
             "This method (remove_collection) is not yet available in "
+            "DatabaseMIA class."
+        )
+
+    def get_collection_names(self):
+        """Retrieve the names of all collections in the storage database."""
+        # with self.storage.data() as dbs:
+        #     return dbs.collection_names()
+        raise NotImplementedError(
+            "This method (get_collection_names) is not yet available in "
             "DatabaseMIA class."
         )

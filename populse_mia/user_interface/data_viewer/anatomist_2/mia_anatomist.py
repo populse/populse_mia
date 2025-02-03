@@ -237,7 +237,7 @@ class MiaViewer(Qt.QWidget, DataViewer):
                 # We get the FileName of the scan from the first row
                 scan_name = self.table_data.item(row, 0).text()
                 value = self.project.database.get_value(
-                    collection=COLLECTION_CURRENT,
+                    collection_name=COLLECTION_CURRENT,
                     primary_key=scan_name,
                     field=TAG_FILENAME,
                 )

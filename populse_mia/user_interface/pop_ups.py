@@ -558,14 +558,14 @@ class PopUpAddPath(QDialog):
                 self.project.database.add_document(COLLECTION_CURRENT, path)
                 self.project.database.add_document(COLLECTION_INITIAL, path)
                 values_added = []
-                self.project.database.add_value(
+                self.project.database.set_value(
                     collection_name=COLLECTION_INITIAL,
                     primary_key=path,
                     values_dict={TAG_TYPE: path_type},
                     # field=TAG_TYPE,
                     # value=path_type
                 )
-                self.project.database.add_value(
+                self.project.database.set_value(
                     collection_name=COLLECTION_CURRENT,
                     primary_key=path,
                     values_dict={TAG_TYPE: path_type},
@@ -573,14 +573,14 @@ class PopUpAddPath(QDialog):
                     # value=path_type
                 )
                 values_added.append([path, TAG_TYPE, path_type, path_type])
-                self.project.database.add_value(
+                self.project.database.set_value(
                     collection_name=COLLECTION_INITIAL,
                     primary_key=path,
                     values_dict={TAG_CHECKSUM: checksum},
                     # field=TAG_CHECKSUM,
                     # value=checksum
                 )
-                self.project.database.add_value(
+                self.project.database.set_value(
                     collection_name=COLLECTION_CURRENT,
                     primary_key=path,
                     values_dict={TAG_CHECKSUM: checksum},
@@ -1804,7 +1804,9 @@ class PopUpMultipleSort(QDialog):
             self.values_list[idx] = []
         for scan in self.project.database.get_field_names(COLLECTION_CURRENT):
             current_value = self.project.database.get_value(
-                collection=COLLECTION_CURRENT, primary_key=scan, field=tag_name
+                collection_name=COLLECTION_CURRENT,
+                primary_key=scan,
+                field=tag_name,
             )
             if current_value not in self.values_list[idx]:
                 self.values_list[idx].append(current_value)
@@ -5747,7 +5749,7 @@ class PopUpShowHistory(QDialog):
             collection_name=COLLECTION_BRICK, primary_keys=brick_uuid
         )
         full_brick_name = project.database.get_value(
-            collection=COLLECTION_BRICK,
+            collection_name=COLLECTION_BRICK,
             primary_key=brick_uuid,
             field=BRICK_NAME,
         ).split(".")
@@ -5764,21 +5766,23 @@ class PopUpShowHistory(QDialog):
             QtWidgets.QAbstractItemView.ScrollPerPixel
         )
         history_uuid = self.project.database.get_value(
-            collection=COLLECTION_CURRENT, primary_key=scan, field=TAG_HISTORY
+            collection_name=COLLECTION_CURRENT,
+            primary_key=scan,
+            field=TAG_HISTORY,
         )
         self.unitary_pipeline = False
         self.uuid_idx = 0
 
         if history_uuid is not None:
             self.pipeline_xml = self.project.database.get_value(
-                collection=COLLECTION_HISTORY,
+                collection_name=COLLECTION_HISTORY,
                 primary_key=history_uuid,
                 field=HISTORY_PIPELINE,
             )
 
             if self.pipeline_xml is not None:
                 self.brick_list = self.project.database.get_value(
-                    collection=COLLECTION_HISTORY,
+                    collection_name=COLLECTION_HISTORY,
                     primary_key=history_uuid,
                     field=HISTORY_BRICKS,
                 )
@@ -5904,7 +5908,9 @@ class PopUpShowHistory(QDialog):
         bricks = {}
         for uuid in self.brick_list:
             full_brick_name = self.project.database.get_value(
-                collection=COLLECTION_BRICK, primary_key=uuid, field=BRICK_NAME
+                collection_name=COLLECTION_BRICK,
+                primary_key=uuid,
+                field=BRICK_NAME,
             )
             list_full_brick_name = full_brick_name.split(".")
 
@@ -6035,7 +6041,7 @@ class PopUpShowHistory(QDialog):
                             for uuid in bricks.values():
                                 full_brick_name = (
                                     self.project.database.get_value(
-                                        collection=COLLECTION_BRICK,
+                                        collection_name=COLLECTION_BRICK,
                                         primary_key=uuid[0],
                                         field=BRICK_NAME,
                                     )
@@ -6049,7 +6055,9 @@ class PopUpShowHistory(QDialog):
                                     if plug.output:
                                         plugs = (
                                             self.project.database.get_value(
-                                                collection=COLLECTION_BRICK,
+                                                collection_name=(
+                                                    COLLECTION_BRICK
+                                                ),
                                                 primary_key=uuid[
                                                     self.uuid_idx
                                                 ],
@@ -6063,7 +6071,9 @@ class PopUpShowHistory(QDialog):
                                     else:
                                         plugs = (
                                             self.project.database.get_value(
-                                                collection=COLLECTION_BRICK,
+                                                collection_name=(
+                                                    COLLECTION_BRICK
+                                                ),
                                                 primary_key=uuid[
                                                     self.uuid_idx
                                                 ],

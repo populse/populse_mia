@@ -1451,7 +1451,7 @@ class ProcessMIA(Process):
                 )
 
             # self.project.session.set_values(
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_CURRENT,
                 primary_key=rel_out_file,
                 values_dict=cvalues,
@@ -1468,7 +1468,7 @@ class ProcessMIA(Process):
                 )
 
             # self.project.session.set_values(
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_INITIAL,
                 primary_key=rel_out_file,
                 values_dict=ivalues,

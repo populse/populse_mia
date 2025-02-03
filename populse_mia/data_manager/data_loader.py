@@ -689,7 +689,7 @@ class ImportWorker(QThread):
                     if (
                         tag["default_value"] is not None
                         and self.project.database.get_value(
-                            collection=COLLECTION_CURRENT,
+                            collection_name=COLLECTION_CURRENT,
                             primary_key=scan[0],
                             field=tag["index"].split("|")[-1],
                         )
@@ -727,12 +727,12 @@ class ImportWorker(QThread):
                     COLLECTION_INITIAL, document
                 )
 
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_CURRENT,
                 primary_key=document,
                 values_dict=documents[document],
             )
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_INITIAL,
                 primary_key=document,
                 values_dict=documents[document],
@@ -842,7 +842,7 @@ def verify_scans(project):
                     actual_md5 = hashlib.md5(data).hexdigest()
 
             initial_checksum = project.database.get_value(
-                collection=COLLECTION_CURRENT,
+                collection_name=COLLECTION_CURRENT,
                 primary_key=scan,
                 field=TAG_CHECKSUM,
             )

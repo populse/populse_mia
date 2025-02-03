@@ -239,7 +239,7 @@ class ModifyTable(QDialog):
                         database_value.append(subvalue)
 
                 # Database updated for every cell
-                self.project.database.add_value(
+                self.project.database.set_value(
                     collection_name=COLLECTION_CURRENT,
                     primary_key=scan,
                     values_dict={tag: database_value},

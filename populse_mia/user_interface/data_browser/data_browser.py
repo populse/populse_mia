@@ -244,7 +244,7 @@ class DataBrowser(QWidget):
             collection_name=COLLECTION_CURRENT
         ):
             self.project.unsavedModifications = True
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_CURRENT,
                 primary_key=scan[TAG_FILENAME],
                 values_dict={
@@ -255,7 +255,7 @@ class DataBrowser(QWidget):
                 # field=new_tag_name,
                 # value=table_to_database(new_default_value, tag_type),
             )
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_INITIAL,
                 primary_key=scan[TAG_FILENAME],
                 values_dict={
@@ -376,25 +376,25 @@ class DataBrowser(QWidget):
             # If the tag to clone has a value, we add this value with the
             # new tag name in the Database
             cloned_cur_value = self.project.database.get_value(
-                collection=COLLECTION_CURRENT,
+                collection_name=COLLECTION_CURRENT,
                 primary_key=scan[TAG_FILENAME],
                 field=tag_to_clone,
             )
             cloned_init_value = self.project.database.get_value(
-                collection=COLLECTION_INITIAL,
+                collection_name=COLLECTION_INITIAL,
                 primary_key=scan[TAG_FILENAME],
                 field=tag_to_clone,
             )
 
             if cloned_cur_value is not None or cloned_init_value is not None:
-                self.project.database.add_value(
+                self.project.database.set_value(
                     collection_name=COLLECTION_CURRENT,
                     primary_key=scan[TAG_FILENAME],
                     values_dict={new_tag_name: cloned_cur_value},
                     # field=new_tag_name,
                     # value=cloned_cur_value,
                 )
-                self.project.database.add_value(
+                self.project.database.set_value(
                     collection_name=COLLECTION_INITIAL,
                     primary_key=scan[TAG_FILENAME],
                     values_dict={new_tag_name: cloned_init_value},
@@ -665,10 +665,14 @@ class DataBrowser(QWidget):
                 COLLECTION_CURRENT
             ):
                 current_value = self.project.database.get_value(
-                    collection=COLLECTION_CURRENT, primary_key=scan, field=tag
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan,
+                    field=tag,
                 )
                 initial_value = self.project.database.get_value(
-                    collection=COLLECTION_INITIAL, primary_key=scan, field=tag
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=scan,
+                    field=tag,
                 )
 
                 if current_value is not None or initial_value is not None:
@@ -979,7 +983,7 @@ class TableDataBrowser(QTableWidget):
             self.setItem(row, column, item)
             scan = self.item(row, 0).text()
             cur_value = self.project.database.get_value(
-                collection=COLLECTION_CURRENT, primary_key=scan, field=tag
+                collection_name=COLLECTION_CURRENT, primary_key=scan, field=tag
             )
 
             if cur_value is not None:
@@ -1069,7 +1073,7 @@ class TableDataBrowser(QTableWidget):
                     self.setItem(row, column_index, item)
                     scan = self.item(row, 0).text()
                     cur_value = self.project.database.get_value(
-                        collection=COLLECTION_CURRENT,
+                        collection_name=COLLECTION_CURRENT,
                         primary_key=scan,
                         field=tag,
                     )
@@ -1173,7 +1177,7 @@ class TableDataBrowser(QTableWidget):
 
                     else:
                         cur_value = self.project.database.get_value(
-                            collection=COLLECTION_CURRENT,
+                            collection_name=COLLECTION_CURRENT,
                             primary_key=scan,
                             field=tag,
                         )
@@ -1198,7 +1202,7 @@ class TableDataBrowser(QTableWidget):
                                 layout = QVBoxLayout()
                                 brick_uuid = cur_value[-1]
                                 brick_name = self.project.database.get_value(
-                                    collection=COLLECTION_BRICK,
+                                    collection_name=COLLECTION_BRICK,
                                     primary_key=brick_uuid,
                                     field=BRICK_NAME,
                                 )
@@ -1382,7 +1386,7 @@ class TableDataBrowser(QTableWidget):
                 # We only set the cell if it's not the tag name
                 if tag_name != TAG_FILENAME:
                     old_value = self.project.database.get_value(
-                        collection=COLLECTION_CURRENT,
+                        collection_name=COLLECTION_CURRENT,
                         primary_key=scan_path,
                         field=tag_name,
                     )
@@ -1392,7 +1396,7 @@ class TableDataBrowser(QTableWidget):
                         modified_values.append(
                             [scan_path, tag_name, old_value, database_value]
                         )
-                        self.project.database.add_value(
+                        self.project.database.set_value(
                             collection_name=COLLECTION_CURRENT,
                             primary_key=scan_path,
                             values_dict={tag_name: database_value},
@@ -1405,7 +1409,7 @@ class TableDataBrowser(QTableWidget):
                         modified_values.append(
                             [scan_path, tag_name, None, database_value]
                         )
-                        self.project.database.add_value(
+                        self.project.database.set_value(
                             collection_name=COLLECTION_CURRENT,
                             primary_key=scan_path,
                             values_dict={tag_name: database_value},
@@ -1453,7 +1457,7 @@ class TableDataBrowser(QTableWidget):
             scan_name = self.item(row, 0).text()
             # We get the FileName of the scan from the first row
             current_value = self.project.database.get_value(
-                collection=COLLECTION_CURRENT,
+                collection_name=COLLECTION_CURRENT,
                 primary_key=scan_name,
                 field=tag_name,
             )
@@ -1631,7 +1635,7 @@ class TableDataBrowser(QTableWidget):
 
                         else:
                             # self.project.session.set_value(
-                            self.project.database.add_value(
+                            self.project.database.set_value(
                                 collection_name=COLLECTION_CURRENT,
                                 primary_key=doc_delete,
                                 values_dict={TAG_BRICKS: bricks},
@@ -1740,7 +1744,7 @@ class TableDataBrowser(QTableWidget):
                 # if tag_type is a list:
                 if get_origin(tag_type) is list:
                     database_value = self.project.database.get_value(
-                        collection=COLLECTION_CURRENT,
+                        collection_name=COLLECTION_CURRENT,
                         primary_key=scan_name,
                         field=tag_name,
                     )
@@ -1820,7 +1824,7 @@ class TableDataBrowser(QTableWidget):
                     new_item = QTableWidgetItem()
                     old_value = self.old_database_values[i]
                     new_cur_value = self.project.database.get_value(
-                        collection=COLLECTION_CURRENT,
+                        collection_name=COLLECTION_CURRENT,
                         primary_key=self.scans_list[i],
                         field=self.tags[i],
                     )
@@ -1890,7 +1894,9 @@ class TableDataBrowser(QTableWidget):
         self.progress.show()
         idx = 0
         row = 0
-        primary_key = self.project.database.primary_key(COLLECTION_CURRENT)
+        primary_key = self.project.database.get_primary_key_name(
+            COLLECTION_CURRENT
+        )
 
         if self.scans_to_visualize:
             escaped_scans = [
@@ -1965,7 +1971,7 @@ class TableDataBrowser(QTableWidget):
                             layout = QVBoxLayout()
                             brick_uuid = current_value[-1]
                             brick_name = self.project.database.get_value(
-                                collection=COLLECTION_BRICK,
+                                collection_name=COLLECTION_BRICK,
                                 primary_key=brick_uuid,
                                 field=BRICK_NAME,
                             )
@@ -2213,7 +2219,7 @@ class TableDataBrowser(QTableWidget):
             for tag in list_tags:
                 current_value = str(
                     self.project.database.get_value(
-                        collection=COLLECTION_CURRENT,
+                        collection_name=COLLECTION_CURRENT,
                         primary_key=scan,
                         field=tag["index"].split("|")[1],
                     )
@@ -2264,13 +2270,13 @@ class TableDataBrowser(QTableWidget):
                             )
                             layout = QVBoxLayout()
                             cur_val = self.project.database.get_value(
-                                collection=COLLECTION_CURRENT,
+                                collection_name=COLLECTION_CURRENT,
                                 primary_key=scan,
                                 field=TAG_BRICKS,
                             )
                             brick_uuid = cur_val[0]
                             brick_name = self.project.database.get_value(
-                                collection=COLLECTION_BRICK,
+                                collection_name=COLLECTION_BRICK,
                                 primary_key=brick_uuid,
                                 field=BRICK_NAME,
                             )
@@ -2321,13 +2327,13 @@ class TableDataBrowser(QTableWidget):
                             )
                             layout = QVBoxLayout()
                             cur_val = self.project.database.get_value(
-                                collection=COLLECTION_CURRENT,
+                                collection_name=COLLECTION_CURRENT,
                                 primary_key=self.item(old_row, 0).text(),
                                 field=TAG_BRICKS,
                             )
                             brick_uuid = cur_val[0]
                             brick_name = self.project.database.get_value(
-                                collection=COLLECTION_BRICK,
+                                collection_name=COLLECTION_BRICK,
                                 primary_key=brick_uuid,
                                 field=BRICK_NAME,
                             )
@@ -2440,12 +2446,12 @@ class TableDataBrowser(QTableWidget):
 
                     if tag != TAG_FILENAME:
                         current_value = self.project.database.get_value(
-                            collection=COLLECTION_CURRENT,
+                            collection_name=COLLECTION_CURRENT,
                             primary_key=scan_path,
                             field=tag,
                         )
                         initial_value = self.project.database.get_value(
-                            collection=COLLECTION_INITIAL,
+                            collection_name=COLLECTION_INITIAL,
                             primary_key=scan_path,
                             field=tag,
                         )
@@ -2507,12 +2513,12 @@ class TableDataBrowser(QTableWidget):
             # We get the FileName of the scan from the first row
             scan_name = self.item(row, 0).text()
             current_value = self.project.database.get_value(
-                collection=COLLECTION_CURRENT,
+                collection_name=COLLECTION_CURRENT,
                 primary_key=scan_name,
                 field=tag_name,
             )
             initial_value = self.project.database.get_value(
-                collection=COLLECTION_INITIAL,
+                collection_name=COLLECTION_INITIAL,
                 primary_key=scan_name,
                 field=tag_name,
             )
@@ -2520,7 +2526,7 @@ class TableDataBrowser(QTableWidget):
             if initial_value is not None:
 
                 try:
-                    self.project.database.add_value(
+                    self.project.database.set_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=scan_name,
                         values_dict={tag_name: initial_value},
@@ -2578,19 +2584,19 @@ class TableDataBrowser(QTableWidget):
                 # We get the FileName of the scan from the first column
                 scan = self.item(row_iter, 0).text()
                 initial_value = self.project.database.get_value(
-                    collection=COLLECTION_INITIAL,
+                    collection_name=COLLECTION_INITIAL,
                     primary_key=scan,
                     field=tag_name,
                 )
                 current_value = self.project.database.get_value(
-                    collection=COLLECTION_CURRENT,
+                    collection_name=COLLECTION_CURRENT,
                     primary_key=scan,
                     field=tag_name,
                 )
                 if initial_value is not None:
 
                     try:
-                        self.project.database.add_value(
+                        self.project.database.set_value(
                             collection_name=COLLECTION_CURRENT,
                             primary_key=scan,
                             values_dict={tag_name: initial_value},
@@ -2648,12 +2654,12 @@ class TableDataBrowser(QTableWidget):
                 # We get the tag name from the header
                 tag = self.horizontalHeaderItem(column).text()
                 current_value = self.project.database.get_value(
-                    collection=COLLECTION_CURRENT,
+                    collection_name=COLLECTION_CURRENT,
                     primary_key=scan_name,
                     field=tag,
                 )
                 initial_value = self.project.database.get_value(
-                    collection=COLLECTION_INITIAL,
+                    collection_name=COLLECTION_INITIAL,
                     primary_key=scan_name,
                     field=tag,
                 )
@@ -2662,7 +2668,7 @@ class TableDataBrowser(QTableWidget):
                     # We reset the value only if it exists
 
                     try:
-                        self.project.database.add_value(
+                        self.project.database.set_value(
                             collection_name=COLLECTION_CURRENT,
                             primary_key=scan_name,
                             values_dict={tag: initial_value},
@@ -2830,7 +2836,9 @@ class TableDataBrowser(QTableWidget):
             self.item(row, 0).text() if self.item(row, 0) else None
             for row in range(self.rowCount())
         ]
-        primary_key = self.project.database.primary_key(COLLECTION_CURRENT)
+        primary_key = self.project.database.get_primary_key_name(
+            COLLECTION_CURRENT
+        )
 
         if scans:
             escaped_scans = [

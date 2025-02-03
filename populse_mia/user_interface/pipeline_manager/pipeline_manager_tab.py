@@ -535,7 +535,7 @@ class PipelineManagerTab(QWidget):
         # Adding I/O to database history
         # Setting brick init state if init finished correctly
         # self.project.session.set_values(
-        self.project.database.add_value(
+        self.project.database.set_value(
             collection_name=COLLECTION_BRICK,
             primary_key=job.uuid,
             values_dict={
@@ -964,13 +964,13 @@ class PipelineManagerTab(QWidget):
                 ivalues[tag_to_add["name"]] = tag_to_add["value"]
 
         # self.project.session.set_values(COLLECTION_CURRENT, p_value, cvalues)
-        self.project.database.add_value(
+        self.project.database.set_value(
             collection_name=COLLECTION_CURRENT,
             primary_key=p_value,
             values_dict=cvalues,
         )
         # self.project.session.set_values(COLLECTION_INITIAL, p_value, ivalues)
-        self.project.database.add_value(
+        self.project.database.set_value(
             collection_name=COLLECTION_INITIAL,
             primary_key=p_value,
             values_dict=ivalues,
@@ -2471,7 +2471,7 @@ class PipelineManagerTab(QWidget):
 
             pipeline_xml = buffer.getvalue()
             # self.project.session.set_values(
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_HISTORY,
                 primary_key=history_id,
                 values_dict={HISTORY_PIPELINE: pipeline_xml},
@@ -2539,7 +2539,7 @@ class PipelineManagerTab(QWidget):
                                 )
 
                             # self.project.session.set_values(
-                            self.project.database.add_value(
+                            self.project.database.set_value(
                                 collection_name=COLLECTION_BRICK,
                                 primary_key=brick_id,
                                 values_dict={
@@ -2563,7 +2563,7 @@ class PipelineManagerTab(QWidget):
 
             # add bricklist into history collection
             # self.project.session.set_values(
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_HISTORY,
                 primary_key=history_id,
                 values_dict={HISTORY_BRICKS: self.brick_list},
@@ -2873,7 +2873,7 @@ class PipelineManagerTab(QWidget):
 
             print("set exec status on:", brid, exec_date)
             # self.project.session.set_values(
-            self.project.database.add_value(
+            self.project.database.set_value(
                 collection_name=COLLECTION_BRICK,
                 primary_key=brid,
                 values_dict={BRICK_EXEC: "Done", BRICK_EXEC_TIME: exec_date},
@@ -3087,14 +3087,14 @@ class PipelineManagerTab(QWidget):
 
                 try:
                     # self.project.session.set_values(
-                    self.project.database.add_value(
+                    self.project.database.set_value(
                         collection_name=COLLECTION_CURRENT,
                         primary_key=value,
                         values_dict=attributes,
                         # COLLECTION_CURRENT, value, attributes
                     )
                     # self.project.session.set_values(
-                    self.project.database.add_value(
+                    self.project.database.set_value(
                         collection_name=COLLECTION_INITIAL,
                         primary_key=value,
                         values_dict=attributes,
