@@ -28,20 +28,21 @@ version_extra = "dev"  # leave empty for release
 
 # Expected by setup.py: string of form "X.Y.Z"
 if version_extra:
-    __version__ = "{0}.{1}.{2}-{3}".format(
-        version_major, version_minor, version_micro, version_extra
+    __version__ = (
+        f"{version_major}.{version_minor}.{version_micro}-{version_extra}"
     )
 
 else:
-    __version__ = "{0}.{1}.{2}".format(
+    __version__ = f"{version_major}.{version_minor}.{version_micro}".format(
         version_major, version_minor, version_micro
     )
 
 
 def get_populse_mia_gitversion():
-    """Mia version as reported by the last commit in git
+    """
+    Mia version as reported by the last commit in git.
 
-    :returns: the version or None if nothing was found
+    :returns: The short commit hash as the version or None if not found.
     """
 
     try:
@@ -54,7 +55,7 @@ def get_populse_mia_gitversion():
             )
         )
 
-    except Exception:
+    except ImportError:
         dir_mia = os.getcwd()
 
     dir_miagit = os.path.join(dir_mia, ".git")
@@ -62,30 +63,26 @@ def get_populse_mia_gitversion():
     if not os.path.exists(dir_miagit):
         return None
 
-    ver = None
-
     try:
-        gitversion, _ = subprocess.Popen(
-            "git show -s --format=%h",
-            shell=True,
+        result = subprocess.run(
+            ["git", "show", "-s", "--format=%h"],
             cwd=dir_mia,
             stdout=subprocess.PIPE,
-        ).communicate()
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True,
+        )
+        return result.stdout.strip()
 
-    except Exception:
-        pass
-
-    else:
-        ver = gitversion.decode().strip().split("-")[-1]
-
-    return ver
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
 
 
 if __version__.endswith("-dev"):
     gitversion = get_populse_mia_gitversion()
 
     if gitversion:
-        __version__ = "{0}+{1}".format(__version__, gitversion)
+        __version__ = f"{__version__}+{gitversion}"
 
 # Expected by setup.py: the status of the project
 CLASSIFIERS = [
@@ -159,4 +156,4 @@ EXTRA_REQUIRES = {
 brainvisa_build_model = "pure_python"
 
 # tests to run
-test_commands = ["%s -m populse_mia.test" % sys.executable]
+test_commands = [f"{sys.executable} -m populse_mia.test"]
