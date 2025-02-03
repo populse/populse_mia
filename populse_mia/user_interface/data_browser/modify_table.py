@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to handle updates of the databrowser table after modifications.
 

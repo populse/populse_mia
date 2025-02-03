@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Define the Mia logger.
 
@@ -25,7 +24,6 @@ import logging
 import os
 from functools import partial
 
-import six
 import traits.api as traits
 from soma.qt_gui.controls.Directory import DirectoryControlWidget
 from soma.qt_gui.controls.File import FileControlWidget
@@ -215,8 +213,8 @@ class PopulseFileControlWidget(FileControlWidget):
             if len_list > 1:
                 msg = QtWidgets.QMessageBox()
                 msg.setText(
-                    "The '{0}' parameter must by a filename, "
-                    "but a value of {1} <class 'list'> was "
+                    "The '{}' parameter must by a filename, "
+                    "but a value of {} <class 'list'> was "
                     "specified.".format(plug_name, filter_res_list)
                 )
                 msg.setIcon(QtWidgets.QMessageBox.Warning)
@@ -225,7 +223,7 @@ class PopulseFileControlWidget(FileControlWidget):
                 res = traits.Undefined
 
         # Set the selected file path to the path sub control
-        widget.path.set_value(six.text_type(res))
+        widget.path.set_value(str(res))
 
 
 class PopulseDirectoryControlWidget(DirectoryControlWidget):
@@ -309,14 +307,14 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         # this element as the plug value
         len_list = len(filter_res_list)
         if len_list >= 1:
-            res = six.text_type(filter_res_list[0])
+            res = str(filter_res_list[0])
             if not os.path.isdir(res):
                 res = os.path.dirname(res)
         else:
             res = traits.Undefined
 
         # Set the selected file path to the path sub control
-        widget.path.setText(six.text_type(res))
+        widget.path.setText(str(res))
 
 
 class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
@@ -474,7 +472,7 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
 # = PopulseDirectoryControlWidget
 
 
-class PopulseUndefinedControlWidget(object):
+class PopulseUndefinedControlWidget:
     """Control for Undefined value."""
 
     @staticmethod
@@ -608,7 +606,7 @@ class PopulseUndefinedControlWidget(object):
             )
             logger.debug(
                 "'PopulseUndefinedControlWidget' associated controller trait "
-                "'{0}' has been updated with value '{1}'.".format(
+                "'{}' has been updated with value '{}'.".format(
                     control_name, new_trait_value
                 )
             )
@@ -648,7 +646,7 @@ class PopulseUndefinedControlWidget(object):
         control_instance.setText(new_controller_value)
         logger.debug(
             "'PopulseUndefinedControlWidget' has been updated "
-            "with value '{0}'.".format(new_controller_value)
+            "with value '{}'.".format(new_controller_value)
         )
         # Set the controller trait value
         PopulseUndefinedControlWidget.update_controller(

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to define pipeline manager tab appearance, settings and methods.
 
@@ -32,8 +31,6 @@ import threading
 import time
 import traceback
 import uuid
-
-import six
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -609,7 +606,7 @@ class PipelineManagerTab(QWidget):
         already_in_db = False
         if self.project.session.get_document(COLLECTION_CURRENT, p_value):
             already_in_db = True
-            print("Path {0} already in database.".format(p_value))
+            print(f"Path {p_value} already in database.")
         else:
             self.project.session.add_document(COLLECTION_CURRENT, p_value)
             self.project.session.add_document(COLLECTION_INITIAL, p_value)
@@ -704,15 +701,13 @@ class PipelineManagerTab(QWidget):
                 # database_parent_file = scan
                 # banished_tags = set([TAG_TYPE, TAG_EXP_TYPE, TAG_BRICKS,
                 #                TAG_CHECKSUM, TAG_FILENAME])
-                banished_tags = set(
-                    [
-                        TAG_TYPE,
-                        TAG_BRICKS,
-                        TAG_CHECKSUM,
-                        TAG_FILENAME,
-                        TAG_HISTORY,
-                    ]
-                )
+                banished_tags = {
+                    TAG_TYPE,
+                    TAG_BRICKS,
+                    TAG_CHECKSUM,
+                    TAG_FILENAME,
+                    TAG_HISTORY,
+                }
                 cvalues = {
                     field: getattr(scan, field)
                     for field in field_names
@@ -999,14 +994,12 @@ class PipelineManagerTab(QWidget):
         outputs = pipeline.get_outputs().keys()
         params = (inputs, outputs)
         param_btns = [[], []]  # inputs, outputs
-        forbidden = set(
-            [
-                "nodes_activation",
-                "selection_changed",
-                "pipeline_steps",
-                "visible_groups",
-            ]
-        )
+        forbidden = {
+            "nodes_activation",
+            "selection_changed",
+            "pipeline_steps",
+            "visible_groups",
+        }
 
         for i in range(2):
             p = 0
@@ -1153,7 +1146,7 @@ class PipelineManagerTab(QWidget):
                 # destination, from the output of the ftol node
                 for link in list(pipeline.pipeline_node.plugs[plug].links_to):
                     pipeline.add_link(
-                        "%s.outputs->%s.%s" % (node_name, link[0], link[1])
+                        f"{node_name}.outputs->{link[0]}.{link[1]}"
                     )
 
                 # then remove the former pipeline plug, and re-create it by
@@ -1198,7 +1191,7 @@ class PipelineManagerTab(QWidget):
             node_name = "%s_filter" % plug
             it_pipeline.add_process(node_name, in_filter)
             it_pipeline.add_link(
-                "%s.output->%s.%s" % (node_name, iteration_name, plug)
+                f"{node_name}.output->{iteration_name}.{plug}"
             )
 
             # If database_scans is already a pipeline global input, the plug
@@ -1417,19 +1410,19 @@ class PipelineManagerTab(QWidget):
             self.last_run_log = str(e)
             print(
                 "\n When the pipeline was launched, the following "
-                "exception was raised: {0} ...".format(
+                "exception was raised: {} ...".format(
                     e,
                 )
             )
             self.main_window.statusBar().showMessage(
-                'Pipeline "{0}" has not been correctly run.'.format(
+                'Pipeline "{}" has not been correctly run.'.format(
                     self.last_pipeline_name
                 )
             )
         else:
             self.last_run_log = None
             self.main_window.statusBar().showMessage(
-                'Pipeline "{0}" has been correctly run.'.format(
+                'Pipeline "{}" has been correctly run.'.format(
                     self.last_pipeline_name
                 )
             )
@@ -1574,7 +1567,7 @@ class PipelineManagerTab(QWidget):
                 # fmt: on
 
                 else:
-                    item_name = "%s.%s" % (node_name, item)
+                    item_name = f"{node_name}.{item}"
 
                 missing_mandatory_param.append(item_name)
 
@@ -1604,14 +1597,14 @@ class PipelineManagerTab(QWidget):
                 pipeline = self.pipelineEditorTabs.get_current_pipeline()
                 name = [k for k, v in pipeline.nodes.items() if k != ""][0]
             print(
-                '\nError during initialisation of the "{0}" pipeline '
+                '\nError during initialisation of the "{}" pipeline '
                 "...!\nTraceback:".format(name)
             )
             print("".join(traceback.format_tb(e.__traceback__)), end="")
-            print("{0}: {1}\n".format(e.__class__.__name__, e))
+            print(f"{e.__class__.__name__}: {e}\n")
             self.test_init = False
             self.main_window.statusBar().showMessage(
-                'Pipeline "{0}" was not initialised successfully.'.format(name)
+                f'Pipeline "{name}" was not initialised successfully.'
             )
 
         # If the initialization fail, the run pipeline action is disabled
@@ -1673,7 +1666,7 @@ class PipelineManagerTab(QWidget):
         if name == "Pipeline" and len(pipeline.nodes) == 2:
             name = [k for k, v in pipeline.nodes.items() if k != ""][0]
         self.main_window.statusBar().showMessage(
-            '"{0}" pipeline is getting initialized. '
+            '"{}" pipeline is getting initialized. '
             "Please wait...".format(name)
         )
         QApplication.processEvents()
@@ -1700,8 +1693,8 @@ class PipelineManagerTab(QWidget):
         except Exception as e:
             init_result = False
             mssg = (
-                "Error when building the workflow for the '{0}' "
-                "pipeline:\n{1}  {2}: {3}\n".format(
+                "Error when building the workflow for the '{}' "
+                "pipeline:\n{}  {}: {}\n".format(
                     name,
                     "".join(traceback.format_tb(e.__traceback__)),
                     e.__class__.__name__,
@@ -1714,7 +1707,7 @@ class PipelineManagerTab(QWidget):
         if getattr(self.workflow, "jobs", []) == [] or init_result is False:
             init_result = False
             print(
-                '\n"{0}" pipeline was not successfully initialised...'.format(
+                '\n"{}" pipeline was not successfully initialised...'.format(
                     name
                 )
             )
@@ -1733,7 +1726,7 @@ class PipelineManagerTab(QWidget):
             except ValueError:
                 duration = time.time() - t0
 
-            print("Initialisation phase completed in {}s!".format(duration))
+            print(f"Initialisation phase completed in {duration}s!")
 
             self.msg = QMessageBox()
             self.msg.setWindowTitle("Pipeline initialization warning!")
@@ -1761,7 +1754,7 @@ class PipelineManagerTab(QWidget):
                 # fmt: on
 
             self.main_window.statusBar().showMessage(
-                '"{0}" pipeline was not initialised successfully...'.format(
+                '"{}" pipeline was not initialised successfully...'.format(
                     name
                 )
             )
@@ -1785,8 +1778,8 @@ class PipelineManagerTab(QWidget):
 
         if len(missing_mandat_param) != 0:
             mssg = (
-                "Missing mandatory parameters in '{0}' pipeline:\n    - "
-                "{1}\n".format(name, "\n    - ".join(missing_mandat_param))
+                "Missing mandatory parameters in '{}' pipeline:\n    - "
+                "{}\n".format(name, "\n    - ".join(missing_mandat_param))
             )
             init_messages.append(mssg)
             init_result = False
@@ -2096,8 +2089,8 @@ class PipelineManagerTab(QWidget):
 
         if len(req_messages) != 0:
             mssg = (
-                "The pipeline requirements are not met for '{0}' pipeline:\n"
-                "    - {1}\n".format(name, "\n    - ".join(req_messages))
+                "The pipeline requirements are not met for '{}' pipeline:\n"
+                "    - {}\n".format(name, "\n    - ".join(req_messages))
             )
             init_messages.append(mssg)
 
@@ -2127,9 +2120,9 @@ class PipelineManagerTab(QWidget):
                     # optional or not:
                     output_names = [
                         trait_name
-                        for (trait_name, trait) in six.iteritems(
+                        for (trait_name, trait) in (
                             node.traits(output=True)
-                        )
+                        ).items()
                         if trait_name
                         not in ("spm_script_file", "_spm_script_file")
                     ]
@@ -2165,7 +2158,7 @@ class PipelineManagerTab(QWidget):
                         init_result = False
                         init_messages.append(
                             "An issue has been detected when initializing the "
-                            "'{0}' brick in the '{1}' pipeline.\n"
+                            "'{}' brick in the '{}' pipeline.\n"
                             "  The pipeline cannot be launched under these "
                             "conditions...\n".format(node_name, name)
                         )
@@ -2173,16 +2166,16 @@ class PipelineManagerTab(QWidget):
         if len(missing_mandat_out_param) != 0:
             mssg = (
                 "Missing mandatory output parameter(s) for the "
-                "following brick(s) in the '{0}' pipeline:\n    - "
-                "{1}\n".format(name, "\n    - ".join(missing_mandat_out_param))
+                "following brick(s) in the '{}' pipeline:\n    - "
+                "{}\n".format(name, "\n    - ".join(missing_mandat_out_param))
             )
             init_messages.append(mssg)
 
         if len(missing_all_out_param) != 0:
             mssg = (
                 "None of the output parameters have been completed for the "
-                "following brick(s) in the '{0}' pipeline.\n    - "
-                "{1}\nPlease check the configuration and input parameters "
+                "following brick(s) in the '{}' pipeline.\n    - "
+                "{}\nPlease check the configuration and input parameters "
                 "for these bricks...".format(
                     name, "\n    - ".join(missing_all_out_param)
                 )
@@ -2266,7 +2259,7 @@ class PipelineManagerTab(QWidget):
                                 init_result = False
                                 init_messages.append(
                                     "Error while setting job uuid on "
-                                    '"{0}" brick.'.format(node_name)
+                                    '"{}" brick.'.format(node_name)
                                 )
 
                             self.project.session.set_values(
@@ -2393,12 +2386,12 @@ class PipelineManagerTab(QWidget):
                     # fmt: on
 
                 self.main_window.statusBar().showMessage(
-                    '"{0}" pipeline was not initialised successfully.'.format(
+                    '"{}" pipeline was not initialised successfully.'.format(
                         name
                     )
                 )
                 print(
-                    '\n"{0}" pipeline was not successfully '
+                    '\n"{}" pipeline was not successfully '
                     "initialised.".format(name)
                 )
 
@@ -2410,12 +2403,12 @@ class PipelineManagerTab(QWidget):
                 self.pipelineEditorTabs.get_current_editor().initialized = True
 
                 self.main_window.statusBar().showMessage(
-                    '"{0}" pipeline has been successfully initialised.'.format(
+                    '"{}" pipeline has been successfully initialised.'.format(
                         name
                     )
                 )
                 print(
-                    '\n"{0}" pipeline has been successfully '
+                    '\n"{}" pipeline has been successfully '
                     "initialised.".format(name)
                 )
 
@@ -2436,7 +2429,7 @@ class PipelineManagerTab(QWidget):
         # FIXME: I don't understand when main_pipeline can be False. If it is,
         #        we'll get an exception because duration won't be
         #        defined (done in the "if main_pipeline:"!).
-        print("Initialisation phase completed in {}s!".format(duration))
+        print(f"Initialisation phase completed in {duration}s!")
         return init_result
 
     def layout_view(self):
@@ -2810,7 +2803,7 @@ class PipelineManagerTab(QWidget):
                 name = "NoName"
             self.brick_list = []
             self.main_window.statusBar().showMessage(
-                'Pipeline "{0}" is getting run. Please wait.'.format(name)
+                f'Pipeline "{name}" is getting run. Please wait.'
             )
             QApplication.processEvents()
             self.key = {}
@@ -3525,15 +3518,15 @@ class PipelineManagerTab(QWidget):
         tmp_file = os.path.join(filename_folder, module_name + "_tmp")
 
         # Changing the "Pipeline" class name to the name of file
-        with open(filename, "r") as f:
+        with open(filename) as f:
             with open(tmp_file, "w") as tmp:
                 for line in f:
                     line = line.strip("\r\n")
                     if "class " in line:
-                        line = "class {0}(Pipeline):".format(class_name)
+                        line = f"class {class_name}(Pipeline):"
                     tmp.write(line + "\n")
 
-        with open(tmp_file, "r") as tmp:
+        with open(tmp_file) as tmp:
             with open(filename, "w") as f:
                 for line in tmp:
                     f.write(line)
@@ -3557,14 +3550,14 @@ class PipelineManagerTab(QWidget):
         )
 
         # Checking that import line is not already in the file
-        pattern = "from .{0} import {1}\n".format(module_name, class_name)
-        file = open(init_file, "r")
+        pattern = f"from .{module_name} import {class_name}\n"
+        file = open(init_file)
         flines = file.readlines()
         file.close()
         if pattern not in flines:
             with open(init_file, "a") as f:
                 print(
-                    "from .{0} import {1}".format(module_name, class_name),
+                    f"from .{module_name} import {class_name}",
                     file=f,
                 )
 
@@ -3753,7 +3746,7 @@ class RunProgress(QWidget):
     """
 
     def __init__(self, pipeline_manager, settings=None):
-        super(RunProgress, self).__init__()
+        super().__init__()
 
         self.pipeline_manager = pipeline_manager
 
@@ -3937,9 +3930,7 @@ class RunWorker(QThread):
             self.pipeline_manager.postprocess_pipeline_execution(pipeline)
 
         except (OSError, ValueError, Exception) as e:
-            print(
-                "\n{0} has not run correctly:\n{1}\n".format(pipeline.name, e)
-            )
+            print(f"\n{pipeline.name} has not run correctly:\n{e}\n")
             traceback.print_exc()
 
         del self.pipeline_manager

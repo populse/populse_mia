@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module that execute the pipeline manager tab menu actions
 and allow to edit graphically a pipeline.
@@ -26,7 +25,6 @@ Contains:
 import os
 import sys
 
-import six
 import yaml
 
 # Capsul imports
@@ -180,7 +178,7 @@ class PipelineEditor(PipelineDeveloperView):
         # End - commented on January, 4th 2020
 
         self.main_window.statusBar().showMessage(
-            "Link {0} has been deleted.".format(link)
+            f"Link {link} has been deleted."
         )
 
     def _export_plug(
@@ -236,7 +234,7 @@ class PipelineEditor(PipelineDeveloperView):
                     msg.setIcon(QMessageBox.Warning)
                     title = "populse_mia - Warning: Duplicate pipeline plug"
                     msgtext = (
-                        'The "{0}" pipeline plug already exists, do '
+                        'The "{}" pipeline plug already exists, do '
                         "you want to connect to this existing "
                         "plug ?".format(plug_name)
                     )
@@ -252,7 +250,7 @@ class PipelineEditor(PipelineDeveloperView):
                         new_name, ok = QInputDialog.getText(
                             self,
                             "Plug name Input Dialog",
-                            "The plug {0} "
+                            "The plug {} "
                             "already exists, "
                             "please choose a "
                             "new name.".format(plug_name),
@@ -304,7 +302,7 @@ class PipelineEditor(PipelineDeveloperView):
 
             except TraitError:
                 print(
-                    "Cannot export {0}.{1} plug".format(
+                    "Cannot export {}.{} plug".format(
                         temp_plug_name[0], plug_name
                     )
                 )
@@ -313,7 +311,7 @@ class PipelineEditor(PipelineDeveloperView):
                     return None
 
             except ValueError as e:
-                print("\n{}".format(e))
+                print(f"\n{e}")
 
                 if multi_export:
                     return None
@@ -344,7 +342,7 @@ class PipelineEditor(PipelineDeveloperView):
                     # End - commented on January, 4th 2020
 
                     self.main_window.statusBar().showMessage(
-                        "Plug {0} has been exported.".format(plug_name)
+                        f"Plug {plug_name} has been exported."
                     )
 
     def _release_grab_link(self, event, ret=False):
@@ -369,7 +367,7 @@ class PipelineEditor(PipelineDeveloperView):
         #         True)
         # End - commented on January, 4th 2020
         self.main_window.statusBar().showMessage(
-            "Link {0} has been added.".format(link)
+            f"Link {link} has been added."
         )
 
     def _remove_plug(
@@ -437,13 +435,13 @@ class PipelineEditor(PipelineDeveloperView):
 
             if len(tot_plug_name) == 1:
                 self.main_window.statusBar().showMessage(
-                    "'{0}' plug has been "
+                    "'{}' plug has been "
                     "removed.".format(tot_plug_name[0][0][1])
                 )
             else:
                 self.main_window.statusBar().showMessage(
-                    "{0} plugs has been "
-                    "removed.".format(tuple((i[0][1] for i in tot_plug_name)))
+                    "{} plugs has been "
+                    "removed.".format(tuple(i[0][1] for i in tot_plug_name))
                 )
 
     def add_link(
@@ -489,7 +487,7 @@ class PipelineEditor(PipelineDeveloperView):
         #         True)
         # End - commented on January, 4th 2020
         self.main_window.statusBar().showMessage(
-            "Link {0} has been added.".format(link)
+            f"Link {link} has been added."
         )
 
     def add_named_process(
@@ -511,9 +509,7 @@ class PipelineEditor(PipelineDeveloperView):
           using a redo
         :param links: list of links (using when undo/redo)
         """
-        process = super(PipelineEditor, self).add_named_process(
-            class_process, node_name
-        )
+        process = super().add_named_process(class_process, node_name)
 
         if node_name is None:
             node_name = getattr(process, "context_name", process.name).split(
@@ -567,7 +563,7 @@ class PipelineEditor(PipelineDeveloperView):
         # End - commented on January, 4th 2020
 
         self.main_window.statusBar().showMessage(
-            "Node {0} has been added.".format(node_name)
+            f"Node {node_name} has been added."
         )
 
         self.main_window.pipeline_manager.update_user_buttons_states()
@@ -596,7 +592,6 @@ class PipelineEditor(PipelineDeveloperView):
                         "properties",
                         "process_config.yml",
                     ),
-                    "r",
                 ) as stream:
                     try:
                         if verCmp(yaml.__version__, "5.1", "sup"):
@@ -669,7 +664,7 @@ class PipelineEditor(PipelineDeveloperView):
                 ):
                     # Checking the links of the node
                     link_to_del = set()
-                    for link, glink in six.iteritems(self.scene.glinks):
+                    for link, glink in self.scene.glinks.items():
                         if link[0][0] == node_name or link[1][0] == node_name:
                             self.scene.removeItem(glink)
                             link_to_del.add((link, glink))
@@ -745,11 +740,11 @@ class PipelineEditor(PipelineDeveloperView):
 
         if removed_links:
             dialog_text = (
-                "Pipeline {0} has been updated.\n"
+                "Pipeline {} has been updated.\n"
                 "Removed links:".format(node_name)
             )
             for removed_link in removed_links:
-                dialog_text += "\n{0}".format(removed_link)
+                dialog_text += f"\n{removed_link}"
 
             pop_up = QtWidgets.QMessageBox()
             pop_up.setIcon(QtWidgets.QMessageBox.Warning)
@@ -857,7 +852,7 @@ class PipelineEditor(PipelineDeveloperView):
         # End - commented on January, 4th 2020
 
         self.main_window.statusBar().showMessage(
-            "Node {0} has been deleted.".format(node_name)
+            f"Node {node_name} has been deleted."
         )
 
         for node_name, node in pipeline.nodes.items():
@@ -895,7 +890,7 @@ class PipelineEditor(PipelineDeveloperView):
         node = pipeline.nodes[node_name]
         parameter_list = []
 
-        for parameter_name, plug in six.iteritems(node.plugs):
+        for parameter_name, plug in node.plugs.items():
             if parameter_name in (
                 "nodes_activation",
                 "selection_changed",
@@ -938,7 +933,7 @@ class PipelineEditor(PipelineDeveloperView):
         # End - commented on January, 4th 2020
 
         self.main_window.statusBar().showMessage(
-            "Plugs {0} have been exported.".format(str(parameter_list))
+            f"Plugs {str(parameter_list)} have been exported."
         )
 
     def get_current_filename(self):
@@ -1020,7 +1015,7 @@ class PipelineEditor(PipelineDeveloperView):
                 msg.setIcon(QtWidgets.QMessageBox.Warning)
                 msg.setText(
                     "The pipeline will be saved with a"
-                    + ' ".py" extension instead of {0}'.format(
+                    + ' ".py" extension instead of {}'.format(
                         os.path.splitext(filename)[1]
                     )
                 )
@@ -1044,18 +1039,14 @@ class PipelineEditor(PipelineDeveloperView):
                 return None
 
         if filename:
-            posdict = dict(
-                [
-                    (key, (value.x(), value.y()))
-                    for key, value in six.iteritems(self.scene.pos)
-                ]
-            )
-            dimdict = dict(
-                [
-                    (key, (value[0], value[1]))
-                    for key, value in six.iteritems(self.scene.dim)
-                ]
-            )
+            posdict = {
+                key: (value.x(), value.y())
+                for key, value in self.scene.pos.items()
+            }
+            dimdict = {
+                key: (value[0], value[1])
+                for key, value in self.scene.dim.items()
+            }
             pipeline.node_dimension = dimdict
             old_pos = pipeline.node_position
             pipeline.node_position = posdict
@@ -1217,7 +1208,7 @@ class PipelineEditor(PipelineDeveloperView):
         # Removing links of the selected node and copy the origin/destination
         links_to_copy = []
 
-        for source_parameter, source_plug in six.iteritems(old_node.plugs):
+        for source_parameter, source_plug in old_node.plugs.items():
             for (
                 dest_node_name,
                 dest_parameter,
@@ -1299,7 +1290,7 @@ class PipelineEditor(PipelineDeveloperView):
         self.update_history(history_maker, from_undo, from_redo)
 
         self.main_window.statusBar().showMessage(
-            'Node name "{0}" has been changed to "{1}".'.format(
+            'Node name "{}" has been changed to "{}".'.format(
                 old_node_name, new_node_name
             )
         )
@@ -1351,7 +1342,7 @@ class PipelineEditor(PipelineDeveloperView):
         self.update_history(history_maker, from_undo, from_redo)
 
         self.main_window.statusBar().showMessage(
-            'Plug "{0}" of node "{1}" has been changed to "{2}".'.format(
+            'Plug "{}" of node "{}" has been changed to "{}".'.format(
                 plug_name, node_name, new_value
             )
         )
@@ -1414,7 +1405,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         :param scan_list: list of the selected database files
         :param main_window: main window of the software
         """
-        super(PipelineEditorTabs, self).__init__()
+        super().__init__()
 
         self.project = project
         self.main_window = main_window
@@ -1457,7 +1448,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         tb.setText("+")
         tb.clicked.connect(self.new_tab)
 
-        self.addTab(QtWidgets.QLabel('Add tabs by pressing "+"'), str())
+        self.addTab(QtWidgets.QLabel('Add tabs by pressing "+"'), "")
         self.setTabEnabled(1, False)
         self.tabBar().setTabButton(1, QtWidgets.QTabBar.RightSide, tb)
 
@@ -1604,7 +1595,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             in self.get_current_pipeline().user_traits().keys()
         ):
             self.get_current_pipeline().add_link(
-                "database_scans->{0}.input".format(node_name)
+                f"database_scans->{node_name}.input"
             )
         else:
             self.get_current_pipeline().export_parameter(
@@ -1884,7 +1875,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         # A unique editor name has to be automatically generated
         idx = 1
         while True and idx < 50:
-            name = "New Pipeline {0}".format(idx)
+            name = f"New Pipeline {idx}"
             if self.get_index_by_tab_name(name):
                 idx += 1
                 continue
@@ -1931,7 +1922,6 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                 "properties",
                 "process_config.yml",
             ),
-            "r",
         ) as stream:
             try:
                 if verCmp(yaml.__version__, "5.1", "sup"):
@@ -1999,33 +1989,25 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             pipeline = self.get_current_pipeline()
 
             try:
-                posdict = dict(
-                    [
-                        (key, (value.x(), value.y()))
-                        for key, value in six.iteritems(
-                            self.get_current_editor().scene.pos
-                        )
-                    ]
-                )
+                posdict = {
+                    key: (value.x(), value.y())
+                    for key, value in (
+                        self.get_current_editor().scene.pos
+                    ).items()
+                }
 
             except Exception:
-                posdict = dict(
-                    [
-                        (key, (value[0], value[1]))
-                        for key, value in six.iteritems(
-                            self.get_current_editor().scene.pos
-                        )
-                    ]
-                )
+                posdict = {
+                    key: (value[0], value[1])
+                    for key, value in (
+                        self.get_current_editor().scene.pos
+                    ).items()
+                }
 
-            dimdict = dict(
-                [
-                    (key, (value[0], value[1]))
-                    for key, value in six.iteritems(
-                        self.get_current_editor().scene.dim
-                    )
-                ]
-            )
+            dimdict = {
+                key: (value[0], value[1])
+                for key, value in (self.get_current_editor().scene.dim).items()
+            }
             pipeline.node_dimension = dimdict
             old_pos = pipeline.node_position
             pipeline.node_position = posdict
@@ -2282,7 +2264,7 @@ def save_pipeline(pipeline, filename):
     formats = {".py": save_py_pipeline, ".xml": save_xml_pipeline}
     saved = False
 
-    for ext, writer in six.iteritems(formats):
+    for ext, writer in formats.items():
         if filename.endswith(ext):
             writer(pipeline, filename)
             saved = True

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-""" Module that defines all the pop-ups used across the software
+"""Module that defines all the pop-ups used across the software
 
 :Contains:
     :Class:
@@ -538,9 +537,9 @@ class PopUpAddPath(QDialog):
             if os.path.basename(path) in docInDb:
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Warning)
-                self.msg.setText("- {0} -".format(os.path.basename(path)))
+                self.msg.setText(f"- {os.path.basename(path)} -")
                 self.msg.setInformativeText(
-                    "The document '{0}' \n "
+                    "The document '{}' \n "
                     "already exists in the Data Browser!".format(path)
                 )
                 self.msg.setWindowTitle("Warning: existing data!")
@@ -847,8 +846,8 @@ class PopUpAddTag(QDialog):
             self.msg.setIcon(QMessageBox.Critical)
             self.msg.setText("Invalid default value")
             self.msg.setInformativeText(
-                "The default value '{0}' is invalid "
-                "with the '{1}' type!".format(
+                "The default value '{}' is invalid "
+                "with the '{}' type!".format(
                     self.text_edit_default_value.text(), self.type
                 )
             )
@@ -927,21 +926,21 @@ class PopUpAddTag(QDialog):
             date_value = datetime.now()
             date_format = date_value.strftime("%d/%m/%Y")
             self.text_edit_default_value.setText(
-                "{}".format([date_format, date_format])
+                f"{[date_format, date_format]}"
             )
         elif text == "Datetime List":
             self.type = FIELD_TYPE_LIST_DATETIME
             datetime_value = datetime.now()
             datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
             self.text_edit_default_value.setText(
-                "{}".format([datetime_format, datetime_format])
+                f"{[datetime_format, datetime_format]}"
             )
         elif text == "Time List":
             self.type = FIELD_TYPE_LIST_TIME
             time_value = datetime.now()
             time_format = time_value.strftime("%H:%M:%S.%f")
             self.text_edit_default_value.setText(
-                "{}".format([time_format, time_format])
+                f"{[time_format, time_format]}"
             )
 
 
@@ -1293,7 +1292,7 @@ class PopUpDeletedProject(QMessageBox):
 
         message = "These projects have been renamed, moved or deleted:\n"
         for deleted_project in deleted_projects:
-            message += "- {0}\n".format(deleted_project)
+            message += f"- {deleted_project}\n"
 
         self.setIcon(QMessageBox.Warning)
         self.setText("Deleted projects")
@@ -3013,7 +3012,7 @@ class PopUpPreferences(QDialog):
 
         if not self.control_checkbox_changed:
             self.msg.setInformativeText(
-                "To change the controller from {0} to {1}, "
+                "To change the controller from {} to {}, "
                 "MIA must be restarted. Would you like to plan "
                 "this change for next "
                 "start-up?".format(
@@ -3024,7 +3023,7 @@ class PopUpPreferences(QDialog):
 
         else:
             self.msg.setInformativeText(
-                "Change of controller from {0} to {1} is already "
+                "Change of controller from {} to {} is already "
                 "planned for next start-up. Would you like to "
                 "cancel this "
                 "change?".format(
@@ -4005,7 +4004,7 @@ class PopUpPreferences(QDialog):
                 self.msg.setText("Invalid projects folder path")
                 self.msg.setInformativeText(
                     "The projects folder path entered "
-                    "{0} is "
+                    "{} is "
                     "invalid.".format(projects_folder)
                 )
                 self.msg.setWindowTitle("Error")
@@ -4040,7 +4039,7 @@ class PopUpPreferences(QDialog):
                 self.msg.setText("Invalid MRIFileManager.jar path")
                 self.msg.setInformativeText(
                     "The MRIFileManager.jar path "
-                    "entered {0} "
+                    "entered {} "
                     "is invalid.".format(mri_conv_path)
                 )
                 self.msg.setWindowTitle("Error")
@@ -4062,7 +4061,7 @@ class PopUpPreferences(QDialog):
                 self.msg.setText("Invalid resources folder path")
                 self.msg.setInformativeText(
                     "The resources folder path entered "
-                    "{0} is "
+                    "{} is "
                     "invalid.".format(resources_folder)
                 )
                 self.msg.setWindowTitle("Error")
@@ -4677,7 +4676,7 @@ class PopUpPreferences(QDialog):
         if extra_mess:
             extra_mess = " " + extra_mess
         self.msg.setInformativeText(
-            "The {0}{1} path entered {2} is invalid.".format(
+            "The {}{} path entered {} is invalid.".format(
                 tool, extra_mess, path
             )
         )
@@ -5375,7 +5374,7 @@ class PopUpSelectFilter(PopUpFilterSelection):
 
         """
 
-        super(PopUpSelectFilter, self).__init__(project)
+        super().__init__(project)
         self.project = project
         self.databrowser = databrowser
         self.config = Config()
@@ -5425,7 +5424,7 @@ class PopUpSelectIteration(QDialog):
         self.tag_values = tag_values
         self.final_values = []
         self.setWindowTitle(
-            "Iterate pipeline run over tag {0}".format(self.iterated_tag)
+            f"Iterate pipeline run over tag {self.iterated_tag}"
         )
 
         self.v_box = QVBoxLayout()
@@ -5631,7 +5630,7 @@ class PopUpSelectTag(PopUpTagSelection):
 
         """
 
-        super(PopUpSelectTag, self).__init__(project)
+        super().__init__(project)
         self.project = project
         self.config = Config()
 
@@ -5680,7 +5679,7 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
 
         """
 
-        super(PopUpSelectTagCountTable, self).__init__(project)
+        super().__init__(project)
 
         self.selected_tag = None
         for tag in tags_to_display:

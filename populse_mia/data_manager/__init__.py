@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Module to handle the projects and their database.
 
 Contains:

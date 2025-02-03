@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Define software version, description and requirements
 
 :Contains:
@@ -67,8 +66,7 @@ def get_populse_mia_gitversion():
         result = subprocess.run(
             ["git", "show", "-s", "--format=%h"],
             cwd=dir_mia,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             check=True,
         )

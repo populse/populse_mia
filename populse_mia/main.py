@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The first module used at the mia runtime.
 
 Basically, this module is dedicated to the initialisation of the basic
@@ -108,7 +107,7 @@ def main():
         mia_dev_dir = os.path.join(
             root_dev_dir, populse_bdir, "populse_mia", branch
         )
-        print("  . Using populse_mia package from {} ...".format(mia_dev_dir))
+        print(f"  . Using populse_mia package from {mia_dev_dir} ...")
         sys.path.insert(i, mia_dev_dir)
         pypath.append(mia_dev_dir)
         del mia_dev_dir
@@ -122,9 +121,7 @@ def main():
             capsul_dev_dir = os.path.join(
                 root_dev_dir, capsul_bdir, "capsul", branch
             )
-            print(
-                "  . Using capsul package from {} ...".format(capsul_dev_dir)
-            )
+            print(f"  . Using capsul package from {capsul_dev_dir} ...")
             sys.path.insert(i, capsul_dev_dir)
             pypath.append(capsul_dev_dir)
             del capsul_dev_dir
@@ -140,9 +137,7 @@ def main():
 
             else:
                 capsul_dir = os.path.dirname(os.path.dirname(capsul.__file__))
-                print(
-                    "  . Using capsul package from {} ...".format(capsul_dir)
-                )
+                print(f"  . Using capsul package from {capsul_dir} ...")
                 del capsul_dir
                 del capsul
 
@@ -152,7 +147,7 @@ def main():
             soma_b_dev_dir = os.path.join(
                 root_dev_dir, soma_bdir, "soma-base", branch, "python"
             )
-            print("  . Using soma package from {} ...".format(soma_b_dev_dir))
+            print(f"  . Using soma package from {soma_b_dev_dir} ...")
             sys.path.insert(i, soma_b_dev_dir)
             pypath.append(soma_b_dev_dir)
             del soma_b_dev_dir
@@ -168,7 +163,7 @@ def main():
 
             else:
                 soma_b_dir = os.path.dirname(os.path.dirname(soma.__file__))
-                print("  . Using soma package from {} ...".format(soma_b_dir))
+                print(f"  . Using soma package from {soma_b_dir} ...")
                 del soma_b_dir
                 del soma
 
@@ -324,7 +319,7 @@ def main():
                 del sys.modules[i]
 
             print(
-                "  . Using {0} package from {1} ...".format(
+                "  . Using {} package from {} ...".format(
                     mod.__name__, mod.__path__[0]
                 )
             )
@@ -346,7 +341,7 @@ def main():
     except (ImportError, AttributeError) as e:
         pkg_error.append("capsul")
         print("\n" + "*" * 37)
-        print("MIA warning {0}: {1}".format(e.__class__, e))
+        print(f"MIA warning {e.__class__}: {e}")
         print("*" * 37 + "\n")
 
     try:
@@ -356,7 +351,7 @@ def main():
     except (ImportError, AttributeError) as e:
         pkg_error.append("nipype")
         print("\n" + "*" * 37)
-        print("MIA warning {0}: {1}".format(e.__class__, e))
+        print(f"MIA warning {e.__class__}: {e}")
         print("*" * 37 + "\n")
 
     try:
@@ -366,7 +361,7 @@ def main():
     except (ImportError, AttributeError) as e:
         pkg_error.append("mia_processes")
         print("\n" + "*" * 37)
-        print("MIA warning {0}: {1}".format(e.__class__, e))
+        print(f"MIA warning {e.__class__}: {e}")
         print("*" * 37 + "\n")
 
     if pkg_error:
@@ -376,7 +371,7 @@ def main():
 
         if len(pkg_error) == 1:
             msg.setText(
-                "An issue has been detected with the {0} package. "
+                "An issue has been detected with the {} package. "
                 "Please (re)install this package and/or fix the "
                 "problems displayed in the standard output. "
                 "Then, start again Mia ...".format(pkg_error[0])
@@ -384,7 +379,7 @@ def main():
 
         elif len(pkg_error) == 2:
             msg.setText(
-                "An issue has been detected with the {0} and {1} packages. "
+                "An issue has been detected with the {} and {} packages. "
                 "Please (re)install these package and/or fix the "
                 "problems displayed in the standard output. "
                 "Then, start again Mia ...".format(pkg_error[0], pkg_error[1])
@@ -392,7 +387,7 @@ def main():
 
         else:
             msg.setText(
-                "An issue has been detected with the {0}, {1} and {2} "
+                "An issue has been detected with the {}, {} and {} "
                 "packages. Please (re)install these package and/or fix the "
                 "problems displayed in the standard output. "
                 "Then, start again Mia ...".format(

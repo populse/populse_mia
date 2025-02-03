@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Building, distributing, and installing modules using the Distutils"""
 
 import os

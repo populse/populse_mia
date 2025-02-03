@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to define data browser tab appearance, settings and methods.
 
@@ -166,7 +165,7 @@ class DataBrowser(QWidget):
         self.main_window = main_window
         self.data_sent = False
 
-        super(DataBrowser, self).__init__()
+        super().__init__()
 
         # Define actions
         self.add_tag_action = QAction("Add tag", self, shortcut="Ctrl+A")
@@ -1882,7 +1881,7 @@ class TableDataBrowser(QTableWidget):
         collection_row = dbs.get_collection(COLLECTION_CURRENT)
         primary_key = collection_row.primary_key
         if self.scans_to_visualize:
-            req = "%s IN [%s]" % (
+            req = "{} IN [{}]".format(
                 primary_key,
                 ", ".join(
                     [
@@ -2141,7 +2140,7 @@ class TableDataBrowser(QTableWidget):
         :param event: event
         """
 
-        super(TableDataBrowser, self).mouseReleaseEvent(event)
+        super().mouseReleaseEvent(event)
         self.edit_table_data_values()
 
     def multiple_sort_infos(self, list_tags, order):
@@ -2752,7 +2751,7 @@ class TableDataBrowser(QTableWidget):
         primary_key = collection_row.primary_key
 
         if scans:
-            req = "%s IN [%s]" % (
+            req = "{} IN [{}]".format(
                 primary_key,
                 ", ".join(
                     [
@@ -2804,7 +2803,7 @@ class TableDataBrowser(QTableWidget):
                     "state...!\nTraceback:"
                 )
                 print("".join(traceback.format_tb(e.__traceback__)), end="")
-                print("{0}: {1}\n".format(e.__class__.__name__, e))
+                print(f"{e.__class__.__name__}: {e}\n")
                 break
 
             if not self.isRowHidden(row):
