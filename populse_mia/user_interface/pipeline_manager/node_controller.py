@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Module to handle the node of a pipeline and its plugs.
+"""Module to handle the node of a pipeline and its plugs.
 
 :Contains:
     :Class:

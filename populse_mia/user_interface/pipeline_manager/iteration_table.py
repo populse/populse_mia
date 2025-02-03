@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Module that handles pipeline iteration.
+"""Module that handles pipeline iteration.
 
 :Contains:
     :Class:
