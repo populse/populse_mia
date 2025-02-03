@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module to define main window appearance, functions and settings.
 
 Initialize the software appearance and defines interactions with the user.
@@ -194,7 +193,7 @@ class MainWindow(QMainWindow):
                 - :deleted_projects: projects that have been deleted
 
         """
-        super(MainWindow, self).__init__()
+        super().__init__()
 
         QApplication.restoreOverrideCursor()
 
@@ -402,7 +401,7 @@ class MainWindow(QMainWindow):
                 self.msg.setIcon(QMessageBox.Warning)
                 self.msg.setText("Controller version change")
                 self.msg.setInformativeText(
-                    "A change of controller version, from {0} to {1}, "
+                    "A change of controller version, from {} to {}, "
                     "is planned for next start-up. Do you confirm that "
                     "you would like to perform this "
                     "change?".format(
@@ -822,7 +821,7 @@ class MainWindow(QMainWindow):
             print(
                 "\nmri_conv, did not work properly. Current absolute"
                 "path to MRIManager.jar defined in File > MIA Preferences:"
-                "\n{0}\n".format(config.get_mri_conv_path())
+                "\n{}\n".format(config.get_mri_conv_path())
             )
 
             if not os.path.isfile(config.get_mri_conv_path()):
@@ -831,7 +830,7 @@ class MainWindow(QMainWindow):
                     "current absolute path to MRIManager.jar doesn't "
                     "seem to be correctly defined.\nCurrent absolute "
                     "path to MRIManager.jar defined in\nFile > MIA "
-                    "Preferences:\n{0}".format(config.get_mri_conv_path())
+                    "Preferences:\n{}".format(config.get_mri_conv_path())
                 )
 
             else:
@@ -840,7 +839,7 @@ class MainWindow(QMainWindow):
                     "check if the currently installed mri_conv Java "
                     "ARchive is not corrupted.\nCurrent absolute path "
                     "to MRIManager.jar defined in\nFile > MIA "
-                    "Preferences:\n{0}".format(config.get_mri_conv_path())
+                    "Preferences:\n{}".format(config.get_mri_conv_path())
                 )
 
             msg = QMessageBox()
@@ -1585,7 +1584,7 @@ class MainWindow(QMainWindow):
                     try:
                         temp_database = Project(file_path, False)
 
-                    except IOError:
+                    except OSError:
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
                         msg.setText("project already opened")

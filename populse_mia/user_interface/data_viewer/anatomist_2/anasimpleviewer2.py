@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """AnaSimpleViewer2"""
 
 #  This software and supporting documentation are distributed by
@@ -34,7 +33,6 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL license version 2 and that you accept its terms.
 
-from __future__ import absolute_import, print_function
 
 import os
 import sys
@@ -42,10 +40,8 @@ import time
 
 import numpy as np
 import PyQt5
-import six
 from PyQt5.QtGui import QColor, QIcon, QLabel, QWidget
 from PyQt5.QtWidgets import QMessageBox
-from six.moves import zip
 from soma import aims
 from soma.aims import colormaphints
 from soma.qt_gui import qt_backend
@@ -89,14 +85,14 @@ class LeftSimple3DControl(Simple2DControl):
 
     def __init__(self, prio=25, name="LeftSimple3DControl"):
         """blabla"""
-        super(LeftSimple3DControl, self).__init__(prio, name)
+        super().__init__(prio, name)
 
     def eventAutoSubscription(self, pool):
         """blabla"""
         key = QtCore.Qt
         NoModifier = key.NoModifier
         ControlModifier = key.ControlModifier
-        super(LeftSimple3DControl, self).eventAutoSubscription(pool)
+        super().eventAutoSubscription(pool)
         self.mouseLongEventUnsubscribe(key.LeftButton, NoModifier)
         self.mouseLongEventSubscribe(
             key.LeftButton,
@@ -124,11 +120,11 @@ class VolRenderControl(LeftSimple3DControl):
 
     def __init__(self, prio=25, name="VolRenderControl"):
         """blabla"""
-        super(VolRenderControl, self).__init__(prio, name)
+        super().__init__(prio, name)
 
     def eventAutoSubscription(self, pool):
         """blabla"""
-        super(VolRenderControl, self).eventAutoSubscription(pool)
+        super().eventAutoSubscription(pool)
         self.mouseLongEventUnsubscribe(Qt.Qt.MiddleButton, Qt.Qt.NoModifier)
         self.mouseLongEventSubscribe(
             Qt.Qt.MiddleButton,
@@ -747,7 +743,7 @@ class AnaSimpleViewer2(Qt.QObject):
         bb = object.boundingbox()
         position = (aims.Point3df(bb[1][:3]) - bb[0][:3]) / 2.0
         wrefs = [w.getReferential() for w in self.awindows]
-        srefs = set([r.uuid() for r in wrefs])
+        srefs = {r.uuid() for r in wrefs}
         if len(srefs) != 1:
             # not all windows in the same ref
             if aims.StandardReferentials.mniTemplateReferentialID() in srefs:
@@ -1119,7 +1115,7 @@ class AnaSimpleViewer2(Qt.QObject):
             (0.5, 1.0, 1.0, 1.0),
             (1, 0.5, 1.0, 1.0),
         ]
-        used_cols = set([col for obj, col in six.itervalues(self.meshes2d)])
+        used_cols = {col for obj, col in self.meshes2d.values()}
         for col in colors:
             if col not in used_cols:
                 return col
@@ -1289,8 +1285,8 @@ class AnaSimpleViewer2(Qt.QObject):
             fnames = self.fdialog.selectedFiles()
             files = []
             for fname in fnames:
-                print(six.text_type(fname))
-                files.append(six.text_type(fname))
+                print(str(fname))
+                files.append(str(fname))
             self.loadObject(files)
 
     def selectedObjects(self):
@@ -1302,7 +1298,7 @@ class AnaSimpleViewer2(Qt.QObject):
         )
         sobjs = []
         for o in olist.selectedItems():
-            sobjs.append(six.text_type(o.text()).strip("\0"))
+            sobjs.append(str(o.text()).strip("\0"))
         return [o for o in self.aobjects if o.name in sobjs]
 
     def editAdd(self):

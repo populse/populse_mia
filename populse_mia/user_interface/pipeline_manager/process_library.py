@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module that contains class and methods to process the different libraries of
 the project.
 
@@ -113,7 +112,7 @@ class DictionaryTreeModel(QAbstractItemModel):
     def __init__(self, root, parent=None):
         """Initialization of the DictionaryTreeModel class."""
 
-        super(DictionaryTreeModel, self).__init__(parent)
+        super().__init__(parent)
         self._rootNode = root
 
     def columnCount(self, parent):
@@ -313,7 +312,7 @@ class InstallProcesses(QDialog):
 
         """
 
-        super(InstallProcesses, self).__init__(parent=main_window)
+        super().__init__(parent=main_window)
         self.main_window = main_window
         self.setWindowTitle("Install processes")
 
@@ -414,9 +413,9 @@ class InstallProcesses(QDialog):
                     msg.setIcon(QMessageBox.Critical)
                     msg.setText(
                         (
-                            "During the installation of {0}, "
+                            "During the installation of {}, "
                             "the following exception was raised:"
-                            "\n{1}: {2}.\nThis exception maybe "
+                            "\n{}: {}.\nThis exception maybe "
                             "prevented the installation ..."
                         ).format(module_name, er.__class__, er)
                     )
@@ -426,7 +425,7 @@ class InstallProcesses(QDialog):
                     msg.exec()
                     self.result_add_package = False
                     raise ImportError(
-                        "The {0} brick may not been installed".format(
+                        "The {} brick may not been installed".format(
                             module_name
                         )
                     )
@@ -450,9 +449,7 @@ class InstallProcesses(QDialog):
                                 "\nInstalling %s.%s ..."
                                 % (module_name, v.__name__)
                             )
-                            get_process_instance(
-                                "%s.%s" % (module_name, v.__name__)
-                            )
+                            get_process_instance(f"{module_name}.{v.__name__}")
                             # Updating the tree's dictionary
                             path_list = module_name.split(".")
                             path_list.append(k)
@@ -472,14 +469,14 @@ class InstallProcesses(QDialog):
 
                         except Exception as e:
                             print(
-                                '\nError during installation of the "{0}" '
+                                '\nError during installation of the "{}" '
                                 "module ...!\nTraceback:".format(module_name)
                             )
                             print(
                                 "".join(traceback.format_tb(e.__traceback__)),
                                 end="",
                             )
-                            print("{0}: {1}\n".format(e.__class__.__name__, e))
+                            print(f"{e.__class__.__name__}: {e}\n")
                             self.result_add_package = False
 
                 return proc_dic
@@ -578,7 +575,6 @@ class InstallProcesses(QDialog):
                     "properties",
                     "process_config.yml",
                 ),
-                "r",
             ) as stream:
                 try:
                     if verCmp(yaml.__version__, "5.1", "sup"):
@@ -793,13 +789,13 @@ class InstallProcesses(QDialog):
 
         except Exception as e:
             print(
-                '\nError during installation of the "{0}" library '
+                '\nError during installation of the "{}" library '
                 "...!\nTraceback:".format(package_name)
             )
             print("".join(traceback.format_tb(e.__traceback__)), end="")
-            print("{0}: {1}\n".format(e.__class__.__name__, e))
+            print(f"{e.__class__.__name__}: {e}\n")
             self.result_add_package = False
-            messg = ('Installation of the "{0}" library ' "aborted!").format(
+            messg = ('Installation of the "{}" library ' "aborted!").format(
                 package_name
             )
 
@@ -813,7 +809,7 @@ class InstallProcesses(QDialog):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setText(
-                'Installation of the "{0}" library aborted ... !\nPlease see '
+                'Installation of the "{}" library aborted ... !\nPlease see '
                 "the standard output screen for more "
                 "details.".format(package_name)
             )
@@ -882,7 +878,7 @@ class InstallProcesses(QDialog):
         else:
             if self.result_add_package:
                 messg = (
-                    'The "{0}" library has been ' "correctly installed."
+                    'The "{}" library has been ' "correctly installed."
                 ).format(package_name)
 
                 try:
@@ -895,7 +891,7 @@ class InstallProcesses(QDialog):
                 msg = QMessageBox()
                 msg.setWindowTitle("Installation completed")
                 msg.setText(
-                    'The "{0}" package has been correctly '
+                    'The "{}" package has been correctly '
                     "installed.".format(package_name)
                 )
                 msg.setStandardButtons(QMessageBox.Ok)
@@ -905,7 +901,7 @@ class InstallProcesses(QDialog):
 
             else:
                 messg = (
-                    'The "{0}" library has not been ' "correctly installed."
+                    'The "{}" library has not been ' "correctly installed."
                 ).format(package_name)
 
                 try:
@@ -918,7 +914,7 @@ class InstallProcesses(QDialog):
                 msg = QMessageBox()
                 msg.setWindowTitle("Installation completed with error(s)")
                 msg.setText(
-                    'The "{0}" package has not been correctly '
+                    'The "{}" package has not been correctly '
                     "installed.".format(package_name)
                 )
                 msg.setStandardButtons(QMessageBox.Ok)
@@ -927,7 +923,7 @@ class InstallProcesses(QDialog):
                 self.close()
 
 
-class Node(object):
+class Node:
     """Class to handle a package children.
 
     .. Methods:
@@ -1239,7 +1235,7 @@ class PackageLibrary(QTreeWidget):
 
         """
 
-        super(PackageLibrary, self).__init__()
+        super().__init__()
 
         self.itemChanged.connect(self.update_checks)
         self.package_tree = package_tree
@@ -1435,7 +1431,7 @@ class PackageLibraryDialog(QDialog):
 
     def __init__(self, mia_main_window=None, parent=None):
         """Initialization of the PackageLibraryDialog widget"""
-        super(PackageLibraryDialog, self).__init__(parent)
+        super().__init__(parent)
 
         self.main_window = mia_main_window
 
@@ -1676,20 +1672,18 @@ class PackageLibraryDialog(QDialog):
                     # Checking each class of in the package
                     if inspect.isclass(v):
                         try:
-                            get_process_instance(
-                                "%s.%s" % (module_name, v.__name__)
-                            )
+                            get_process_instance(f"{module_name}.{v.__name__}")
 
                         except Exception as e:
                             print(
-                                '\nError during installation of the "{0}" '
+                                '\nError during installation of the "{}" '
                                 "module ...!\nTraceback:".format(module_name)
                             )
                             print(
                                 "".join(traceback.format_tb(e.__traceback__)),
                                 end="",
                             )
-                            print("{0}: {1}\n".format(e.__class__.__name__, e))
+                            print(f"{e.__class__.__name__}: {e}\n")
 
                         else:
                             # Updating the tree's dictionary
@@ -1749,9 +1743,7 @@ class PackageLibraryDialog(QDialog):
                 return err_msg
 
             except Exception as err:
-                err_msg.append(
-                    "in {2}: {0}: {1}.".format(err.__class__, err, module_name)
-                )
+                err_msg.append(f"in {module_name}: {err.__class__}: {err}.")
 
             if show_error and len(err_msg) != 0:
                 msg = QMessageBox()
@@ -1792,7 +1784,7 @@ class PackageLibraryDialog(QDialog):
             #       )['Packages']
             old_status = self.status_label.text()
 
-            self.status_label.setText("Adding {0}. Please wait.".format(_2add))
+            self.status_label.setText(f"Adding {_2add}. Please wait.")
             QApplication.processEvents()
 
             if os.path.splitext(_2add)[1]:
@@ -1844,7 +1836,7 @@ class PackageLibraryDialog(QDialog):
 
             if len(errors) == 0:
                 self.status_label.setText(
-                    "{0} added to the Package Library.".format(_2add)
+                    f"{_2add} added to the Package Library."
                 )
                 if update_view:
                     if _2add not in self.add_dic:
@@ -2022,7 +2014,7 @@ class PackageLibraryDialog(QDialog):
                         for root, dirs, files in os.walk(path):
                             if "__init__.py" in files:
                                 with open(
-                                    os.path.join(root, "__init__.py"), "r"
+                                    os.path.join(root, "__init__.py")
                                 ) as f:
                                     lines = f.readlines()
 
@@ -2042,14 +2034,14 @@ class PackageLibraryDialog(QDialog):
                     if del_path:
                         shutil.rmtree(path)
                         self.main_window.statusBar().showMessage(
-                            "{0} was "
-                            "deleted ({1} library) ...".format(
+                            "{} was "
+                            "deleted ({} library) ...".format(
                                 path, os.path.split(path)[-1]
                             )
                         )
                         # fmt: off
                         print(
-                            "\nDeleting {0} "
+                            "\nDeleting {} "
                             "...".format(
                                 ".".join(
                                     path.split(os.sep)[
@@ -2075,7 +2067,7 @@ class PackageLibraryDialog(QDialog):
                     )
 
                     if os.path.isfile(init):
-                        with open(init, "r") as f:
+                        with open(init) as f:
                             lines = f.readlines()
 
                         import_line = False
@@ -2141,9 +2133,9 @@ class PackageLibraryDialog(QDialog):
 
                                 if len(imports_in_init[key]) > 1:
                                     msgtext = (
-                                        "The brick (class) {0} alone "
+                                        "The brick (class) {} alone "
                                         "cannot be deleted because it "
-                                        "belongs to {1} module that "
+                                        "belongs to {} module that "
                                         "contains following brick(s)"
                                         ":".format(
                                             pkg_list[index - 1],
@@ -2202,7 +2194,7 @@ class PackageLibraryDialog(QDialog):
 
                                         for pkg in deleted_packages:
                                             print(
-                                                "\nDeleting {0} "
+                                                "\nDeleting {} "
                                                 "...".format(pkg)
                                             )
 
@@ -2210,7 +2202,7 @@ class PackageLibraryDialog(QDialog):
                                         (
                                             self.main_window.statusBar
                                         )().showMessage(
-                                            "{0} was deleted ({1} "
+                                            "{} was deleted ({} "
                                             "brick(s)) "
                                             "...".format(
                                                 file2del,
@@ -2244,7 +2236,7 @@ class PackageLibraryDialog(QDialog):
 
                                     # if all packages have been deleted,
                                     # cleaning up empty files
-                                    with open(init, "r") as f:
+                                    with open(init) as f:
                                         lines = f.readlines()
 
                                     is_import = False
@@ -2294,9 +2286,7 @@ class PackageLibraryDialog(QDialog):
 
         if _2del is False:
             _2del = self.line_edit.text()
-            self.status_label.setText(
-                "Deleting {0}. Please wait.".format(_2del)
-            )
+            self.status_label.setText(f"Deleting {_2del}. Please wait.")
             QApplication.processEvents()
 
         if _2del not in self.delete_dic:
@@ -2327,9 +2317,7 @@ class PackageLibraryDialog(QDialog):
                     if self.remove_dic[key] > index:
                         self.remove_dic[key] = self.remove_dic[key] - 1
 
-            self.status_label.setText(
-                "{0} deleted from Package Library.".format(_2del)
-            )
+            self.status_label.setText(f"{_2del} deleted from Package Library.")
 
         else:
             self.status_label.setText(old_status)
@@ -2367,7 +2355,6 @@ class PackageLibraryDialog(QDialog):
                 "properties",
                 "process_config.yml",
             ),
-            "r",
         ) as stream:
             try:
                 if verCmp(yaml.__version__, "5.1", "sup"):
@@ -2406,7 +2393,7 @@ class PackageLibraryDialog(QDialog):
                 if reply is None:
                     msgtext = (
                         "Do you really want to delete "
-                        'the "{0}" package?'.format(i)
+                        'the "{}" package?'.format(i)
                     )
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
@@ -2474,7 +2461,7 @@ class PackageLibraryDialog(QDialog):
 
                         if path_list[: path_list.index(element)]:
                             print(
-                                "\nRemoving {0}.{1} ...".format(
+                                "\nRemoving {}.{} ...".format(
                                     ".".join(
                                         path_list[: path_list.index(element)]
                                     ),
@@ -2483,7 +2470,7 @@ class PackageLibraryDialog(QDialog):
                             )
 
                         else:
-                            print("\nRemoving {0} ...".format(element))
+                            print(f"\nRemoving {element} ...")
 
                 elif check_flag is True:
                     pass
@@ -2494,7 +2481,7 @@ class PackageLibraryDialog(QDialog):
                     msg.setWindowTitle(
                         "Warning: Package not found in Package Library"
                     )
-                    msg.setText("Package {0} not found".format(package))
+                    msg.setText(f"Package {package} not found")
                     msg.setStandardButtons(QMessageBox.Ok)
                     msg.buttonClicked.connect(msg.close)
                     msg.exec()
@@ -2531,9 +2518,7 @@ class PackageLibraryDialog(QDialog):
 
         if _2rem is False:
             _2rem = self.line_edit.text()
-            self.status_label.setText(
-                "Removing {0}. Please wait.".format(_2rem)
-            )
+            self.status_label.setText(f"Removing {_2rem}. Please wait.")
             QApplication.processEvents()
 
         # package_removed = self.remove_package(_2rem, check_flag)
@@ -2560,9 +2545,7 @@ class PackageLibraryDialog(QDialog):
                 for key in self.delete_dic:
                     if self.delete_dic[key] > index:
                         self.delete_dic[key] = self.delete_dic[key] - 1
-            self.status_label.setText(
-                "{0} removed from Package Library.".format(_2rem)
-            )
+            self.status_label.setText(f"{_2rem} removed from Package Library.")
         else:
             self.status_label.setText(old_status)
 
@@ -2682,7 +2665,7 @@ class ProcessHelp(QWidget):
 
         """
 
-        super(ProcessHelp, self).__init__()
+        super().__init__()
 
         label = QLabel()
         label.setText(process.help())
@@ -2712,7 +2695,7 @@ class ProcessLibrary(QTreeView):
 
         """
 
-        super(ProcessLibrary, self).__init__()
+        super().__init__()
         self.load_dictionary(d)
         self.pkg_library = pkg_lib
 
@@ -2837,7 +2820,7 @@ class ProcessLibraryWidget(QWidget):
 
         """
 
-        super(ProcessLibraryWidget, self).__init__(parent=main_window)
+        super().__init__(parent=main_window)
         self.setWindowTitle("Process Library")
         self.main_window = main_window
 
@@ -2917,7 +2900,6 @@ class ProcessLibraryWidget(QWidget):
                 "properties",
                 "process_config.yml",
             ),
-            "r",
         ) as stream:
             try:
                 if verCmp(yaml.__version__, "5.1", "sup"):

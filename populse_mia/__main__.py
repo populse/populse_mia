@@ -1,7 +1,10 @@
-# -*- coding: utf-8 -*-
-""" Make populse_mia accessible as a module.
+"""
+Enable populse_mia to be run as a module.
 
-For example by using python3 -m populse_mia.
+This allows running populse_mia using:
+    python3 -m populse_mia
+
+This will execute the main entry point of the application.
 
 """
 
@@ -17,4 +20,9 @@ For example by using python3 -m populse_mia.
 from populse_mia.main import main
 
 if __name__ == "__main__":
-    main()
+
+    try:
+        main()
+
+    except Exception as e:
+        print(f"Error while running populse_mia: {e}")

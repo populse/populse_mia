@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to define the mini viewer.
 
@@ -6,6 +5,7 @@ Contains:
     Class:
         - MiniViewer
 """
+
 ##########################################################################
 # Populse_mia - Copyright (C) IRMaGe/CEA, 2018
 # Distributed under the terms of the CeCILL license, as published by
@@ -674,7 +674,7 @@ class MiniViewer(QWidget):
                     print(
                         "".join(traceback.format_tb(e.__traceback__)), end=""
                     )
-                    print("{0}: {1}\n".format(e.__class__.__name__, e))
+                    print(f"{e.__class__.__name__}: {e}\n")
                     self.file_paths.remove(file_path)
                     chk = False
 
@@ -701,7 +701,7 @@ class MiniViewer(QWidget):
                             "".join(traceback.format_tb(e.__traceback__)),
                             end="",
                         )
-                        print("{0}: {1}\n".format(e.__class__.__name__, e))
+                        print(f"{e.__class__.__name__}: {e}\n")
                         self.file_paths.remove(file_path)
 
                     else:

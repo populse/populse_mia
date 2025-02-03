@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module that handle the configuration of the software
 
 Load and save the parameters from the miniviewer and the MIA preferences
@@ -520,7 +519,7 @@ class Config:
                 )
             if spm_script:
                 spm_script = spm_script[0]
-                return "{0} {1} script".format(
+                return "{} {} script".format(
                     spm_script, self.config["matlab_standalone"]
                 )
             else:
@@ -597,7 +596,7 @@ class Config:
         )
 
         try:
-            with open(dot_mia_config, "r") as stream:
+            with open(dot_mia_config) as stream:
                 if verCmp(yaml.__version__, "5.1", "sup"):
                     mia_home_properties_path = yaml.load(
                         stream, Loader=yaml.FullLoader

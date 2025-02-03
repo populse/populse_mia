@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module to handle the importation from MRIFileManager and its progress
 
 :Contains:
@@ -86,7 +85,7 @@ class ImportProgress(QProgressDialog):
     """
 
     def __init__(self, project):
-        super(ImportProgress, self).__init__(
+        super().__init__(
             "Please wait while the paths are being imported...", None, 0, 3
         )
 
@@ -157,7 +156,7 @@ class ImportWorker(QThread):
         else:
             log_to_read = max(list_logs, key=os.path.getctime)
 
-            with open(log_to_read, "r", encoding="utf-8") as file:
+            with open(log_to_read, encoding="utf-8") as file:
                 list_dict_log = json.load(file)
 
         # For history
@@ -806,13 +805,13 @@ def verify_scans(project):
 
                 except Exception as e:
                     print(
-                        '\nError while reading the "{0}" file '
+                        '\nError while reading the "{}" file '
                         "...!\nTraceback:".format(os.path.abspath(file_path))
                     )
                     print(
                         "".join(traceback.format_tb(e.__traceback__)), end=""
                     )
-                    print("{0}: {1}\n".format(e.__class__.__name__, e))
+                    print(f"{e.__class__.__name__}: {e}\n")
                     actual_md5 = None
 
                 else:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Open a new window for a selected object with only one view possible."""
 
 ###############################################################################

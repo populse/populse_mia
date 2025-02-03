@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module that contains multiple functions used across Mia.
 
@@ -152,10 +151,10 @@ class PackagesInstall:
                             continue
 
                         if hasattr(v, "__module__"):
-                            vname = "%s.%s" % (v.__module__, v.__name__)
+                            vname = f"{v.__module__}.{v.__name__}"
 
                         elif hasattr(v, "__package__"):
-                            vname = "%s.%s" % (v.__package__, v.__name__)
+                            vname = f"{v.__package__}.{v.__name__}"
 
                         else:
                             print("no module nor package for", v)
@@ -169,7 +168,7 @@ class PackagesInstall:
                         try:
                             try:
                                 capsul_api.get_process_instance(
-                                    "%s.%s" % (module_name, v.__name__)
+                                    f"{module_name}.{v.__name__}"
                                 )
 
                             except Exception:
@@ -216,7 +215,7 @@ class PackagesInstall:
 
                         print(
                             "\nExploring subpackages of "
-                            "{0}: {1} ...".format(
+                            "{}: {} ...".format(
                                 module_name, str(module_name + "." + modname)
                             )
                         )
@@ -230,7 +229,7 @@ class PackagesInstall:
                     "modules to the package tree, the following exception "
                     "was caught:".format(module_name)
                 )
-                print("{0}".format(e))
+                print(f"{e}")
 
             return self.packages
 
@@ -245,7 +244,7 @@ def check_python_version():
         raise AssertionError(
             "Mia is ensured to work only with Python "
             ">= 3.9 (the version of Python used is "
-            "{}).".format(".".join((str(x) for x in sys.version_info[:2])))
+            "{}).".format(".".join(str(x) for x in sys.version_info[:2]))
         )
 
 
@@ -867,7 +866,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
     )
 
     if os.path.isfile(proc_config):
-        with open(proc_config, "r") as stream:
+        with open(proc_config) as stream:
             if version.parse(yaml.__version__) > version.parse("5.1"):
                 proc_content = yaml.load(stream, Loader=yaml.FullLoader)
             else:
@@ -948,15 +947,13 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                     # If an exception is raised, ask the user to remove the
                     # package from the pipeline library or reload it
                     except ImportError as e:
-                        print("\n{0}".format(e))
+                        print(f"\n{e}")
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
-                        msg.setWindowTitle(
-                            "populse_mia - warning: {0}".format(e)
-                        )
+                        msg.setWindowTitle(f"populse_mia - warning: {e}")
                         msg.setText(
                             (
-                                "At least, {0} has not been found in {1}."
+                                "At least, {} has not been found in {}."
                                 "\nTo prevent mia crash when using it, "
                                 "please remove (see File > Package "
                                 "library manager) or load again (see More"
@@ -984,13 +981,13 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 # package is certainly not properly installed in the processes
                 # directory
                 else:
-                    print("No module named '{0}'".format(pckg))
+                    print(f"No module named '{pckg}'")
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
-                    msg.setWindowTitle("populse_mia - warning: {0}".format(e))
+                    msg.setWindowTitle(f"populse_mia - warning: {e}")
                     msg.setText(
                         (
-                            "At least, {0} has not been found in {1}."
+                            "At least, {} has not been found in {}."
                             "\nTo prevent mia crash when using it, "
                             "please remove (see File > Package "
                             "library manager) or load again (see More"
@@ -1009,18 +1006,18 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             except SyntaxError as e:
                 print(
-                    "\nA problem is detected with the '{0}' "
+                    "\nA problem is detected with the '{}' "
                     "package...\nTraceback:".format(pckg)
                 )
                 print("".join(traceback.format_tb(e.__traceback__)), end="")
-                print("{0}: {1}\n".format(e.__class__.__name__, e))
+                print(f"{e.__class__.__name__}: {e}\n")
 
                 txt = (
-                    "A problem is detected with the '{0}' package...\n\n"
-                    "Traceback:\n{1} {2} \n{3}\n\nThis may lead to a later "
+                    "A problem is detected with the '{}' package...\n\n"
+                    "Traceback:\n{} {} \n{}\n\nThis may lead to a later "
                     "crash of Mia ...\nDo you want Mia tries to fix "
                     "this issue automatically?\nBe careful, risk of "
-                    "destruction of the '{4}' module!".format(
+                    "destruction of the '{}' module!".format(
                         pckg,
                         "".join(traceback.format_tb(e.__traceback__)),
                         e.__class__.__name__,
@@ -1031,7 +1028,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
                 lineCnt = txt.count("\n")
                 msg = QMessageBox()
-                msg.setWindowTitle("populse_mia - warning: {}".format(e))
+                msg.setWindowTitle(f"populse_mia - warning: {e}")
 
                 if lineCnt > 15:
                     scroll = QScrollArea()
@@ -1058,7 +1055,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 msg.exec()
 
                 if msg.clickedButton() == ok_button:
-                    with open(e.filename, "r") as file:
+                    with open(e.filename) as file:
                         filedata = file.read()
                         filedata = filedata.replace(
                             "<undefined>", "'<undefined>'"
@@ -1069,15 +1066,15 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             except ValueError as e:
                 print(
-                    "\nA problem is detected with the '{0}' "
+                    "\nA problem is detected with the '{}' "
                     "package...\nTraceback:".format(pckg)
                 )
                 print("".join(traceback.format_tb(e.__traceback__)), end="")
-                print("{0}: {1}\n".format(e.__class__.__name__, e))
+                print(f"{e.__class__.__name__}: {e}\n")
 
                 txt = (
-                    "A problem is detected with the '{0}' package...\n\n"
-                    "Traceback:\n{1} {2} \n{3}\n\nThis may lead to a later "
+                    "A problem is detected with the '{}' package...\n\n"
+                    "Traceback:\n{} {} \n{}\n\nThis may lead to a later "
                     "crash of Mia ...\nPlease, try to fix it !...".format(
                         pckg,
                         "".join(traceback.format_tb(e.__traceback__)),
@@ -1086,7 +1083,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                     )
                 )
                 msg = QMessageBox()
-                msg.setWindowTitle("populse_mia - warning: {0}".format(e))
+                msg.setWindowTitle(f"populse_mia - warning: {e}")
                 msg.setText(txt)
                 msg.setIcon(QMessageBox.Warning)
                 msg.setStandardButtons(QMessageBox.Ok)
@@ -1279,14 +1276,14 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             if old_nipypeVer is None:
                 print(
-                    "\n\n** Installation in mia of the {0} processes "
-                    "library, {1} version ...".format(pckg, nipypeVer)
+                    "\n\n** Installation in mia of the {} processes "
+                    "library, {} version ...".format(pckg, nipypeVer)
                 )
 
             else:
                 print(
-                    "\n\n** Upgrading of the {0} processes library, "
-                    "from {1} to {2} version ...".format(
+                    "\n\n** Upgrading of the {} processes library, "
+                    "from {} to {} version ...".format(
                         pckg, old_nipypeVer, nipypeVer
                     )
                 )
@@ -1296,14 +1293,14 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             if old_miaProcVer is None:
                 print(
-                    "\n\n** Installation in mia of the {0} processes "
-                    "library, {1} version ...".format(pckg, miaProcVer)
+                    "\n\n** Installation in mia of the {} processes "
+                    "library, {} version ...".format(pckg, miaProcVer)
                 )
 
             else:
                 print(
-                    "\n\n** Upgrading of the {0} processes library, "
-                    "from {1} to {2} version ...".format(
+                    "\n\n** Upgrading of the {} processes library, "
+                    "from {} to {} version ...".format(
                         pckg, old_miaProcVer, miaProcVer
                     )
                 )
@@ -1313,19 +1310,19 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             if old_capsulVer is None:
                 print(
-                    "\n\n** Installation in mia of the {0} processes "
-                    "library, {1} version ...".format(pckg, capsulVer)
+                    "\n\n** Installation in mia of the {} processes "
+                    "library, {} version ...".format(pckg, capsulVer)
                 )
 
             else:
                 print(
-                    "\n\n** Upgrading of the {0} processes library, "
-                    "from {1} to {2} version ...".format(
+                    "\n\n** Upgrading of the {} processes library, "
+                    "from {} to {} version ...".format(
                         pckg, old_capsulVer, capsulVer
                     )
                 )
 
-        print("\nExploring {0} ...".format(pckg))
+        print(f"\nExploring {pckg} ...")
         pckg_dic = package.add_package(pckg)
         # pckg_dic: a dic of dic representation of a package and its
         #           subpackages/modules
@@ -1339,21 +1336,21 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             if not any("nipype" in s for s in pack2install):
                 print(
                     "\n** The nipype processes library in mia is "
-                    "already using the current installed version ({0}) "
+                    "already using the current installed version ({}) "
                     "for this station\n".format(nipypeVer)
                 )
 
             elif not any("mia_processes" in s for s in pack2install):
                 print(
                     "\n** The mia_processes library in mia is "
-                    "already using the current installed version ({0}) "
+                    "already using the current installed version ({}) "
                     "for this station\n".format(miaProcVer)
                 )
 
             elif not any("capsul" in s for s in pack2install):
                 print(
                     "\n** The capsul library in mia is "
-                    "already using the current installed version ({0}) "
+                    "already using the current installed version ({}) "
                     "for this station\n".format(capsulVer)
                 )
 
@@ -1362,7 +1359,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 print(
                     "\n** The mia_processes and capsul processes "
                     "libraries are already using in mia the current "
-                    "installed version ({0} and {1} respectively) for "
+                    "installed version ({} and {} respectively) for "
                     "this station\n".format(miaProcVer, capsulVer)
                 )
 
@@ -1370,7 +1367,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 print(
                     "\n** The nipype and capsul processes "
                     "libraries are already using in mia the current "
-                    "installed version ({0} and {1} respectively) for "
+                    "installed version ({} and {} respectively) for "
                     "this station\n".format(nipypeVer, capsulVer)
                 )
 
@@ -1378,7 +1375,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 print(
                     "\n** The mia_processes and nipype processes "
                     "libraries are already using in mia the current "
-                    "installed version ({0} and {1} respectively) for "
+                    "installed version ({} and {} respectively) for "
                     "this station\n".format(miaProcVer, nipypeVer)
                 )
 
@@ -1421,8 +1418,8 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
     else:
         print(
             "\n** mia is already using the current installed version of "
-            "nipype, mia_processes and capsul for this station ({0}, {1} "
-            "and {2}, respectively)\n".format(nipypeVer, miaProcVer, capsulVer)
+            "nipype, mia_processes and capsul for this station ({}, {} "
+            "and {}, respectively)\n".format(nipypeVer, miaProcVer, capsulVer)
         )
 
 
@@ -1545,7 +1542,7 @@ def verify_setup(
 
         if not os.path.exists(properties_dir):
             os.makedirs(properties_dir, exist_ok=True)
-            print("\nThe {0} directory is created...".format(properties_dir))
+            print(f"\nThe {properties_dir} directory is created...")
 
         if not os.path.exists(
             os.path.join(properties_dir, "saved_projects.yml")
@@ -1555,7 +1552,7 @@ def verify_setup(
                 os.path.join(properties_dir, "saved_projects.yml"),
             )
             print(
-                "\nThe {0} file is created...".format(
+                "\nThe {} file is created...".format(
                     os.path.join(properties_dir, "saved_projects.yml")
                 )
             )
@@ -1575,7 +1572,7 @@ def verify_setup(
                 os.path.join(properties_dir, "config.yml"),
             )
             print(
-                "\nThe {0} file is created...".format(
+                "\nThe {} file is created...".format(
                     os.path.join(properties_dir, "config.yml")
                 )
             )
@@ -1588,7 +1585,7 @@ def verify_setup(
             if not os.path.exists(user_processes_dir):
                 os.makedirs(user_processes_dir, exist_ok=True)
                 print(
-                    "\nThe {0} directory is created...".format(
+                    "\nThe {} directory is created...".format(
                         user_processes_dir
                     )
                 )
@@ -1603,7 +1600,7 @@ def verify_setup(
                     )
                 ).touch()
                 print(
-                    "\nThe {0} file is created...".format(
+                    "\nThe {} file is created...".format(
                         os.path.join(properties_dir, "config.yml")
                     )
                 )
@@ -1665,7 +1662,7 @@ def verify_setup(
                 msg.exec()
                 return
 
-            with open(dot_mia_config, "r") as stream:
+            with open(dot_mia_config) as stream:
                 try:
                     if verCmp(yaml.__version__, "5.1", "sup"):
                         mia_home_properties_path = yaml.load(
@@ -1697,7 +1694,7 @@ def verify_setup(
 
             except Exception as e:
                 print(
-                    "\nAutomatic configuration fails: {0} ...".format(
+                    "\nAutomatic configuration fails: {} ...".format(
                         e,
                     )
                 )
@@ -1731,10 +1728,10 @@ def verify_setup(
             for k in key_to_del:
                 del mia_home_properties_path[k]
 
-            print("\nNew values in {}: ".format(dot_mia_config))
+            print(f"\nNew values in {dot_mia_config}: ")
 
             for key, value in mia_home_properties_path_new.items():
-                print("- {0}: {1}".format(key, value))
+                print(f"- {key}: {value}")
 
             print()
             _save_yml_file(mia_home_properties_path, dot_mia_config)
@@ -1759,7 +1756,7 @@ def verify_setup(
             except Exception as e:
                 print(
                     "\nCould not fetch the "
-                    "properties/config.yml file: {0} ...".format(
+                    "properties/config.yml file: {} ...".format(
                         e,
                     )
                 )
@@ -1814,7 +1811,7 @@ def verify_setup(
     if not os.path.exists(os.path.dirname(dot_mia_config)):
         os.mkdir(os.path.dirname(dot_mia_config))
         print(
-            "\nThe {0} directory is created "
+            "\nThe {} directory is created "
             "...".format(os.path.dirname(dot_mia_config))
         )
         Path(os.path.join(dot_mia_config)).touch()
@@ -1824,7 +1821,7 @@ def verify_setup(
 
     try:
         # Just to check if dot_mia_config file is well readable/writeable
-        with open(dot_mia_config, "r") as stream:
+        with open(dot_mia_config) as stream:
             if version.parse(yaml.__version__) > version.parse("5.1"):
                 mia_home_properties_path = yaml.load(
                     stream, Loader=yaml.FullLoader
@@ -1842,7 +1839,7 @@ def verify_setup(
 
         if dev_mode and "properties_dev_path" not in mia_home_properties_path:
             raise yaml.YAMLError(
-                "\nNo properties path found in {}...\n".format(dot_mia_config)
+                f"\nNo properties path found in {dot_mia_config}...\n"
             )
 
         elif (
@@ -1850,7 +1847,7 @@ def verify_setup(
             and "properties_user_path" not in mia_home_properties_path
         ):
             raise yaml.YAMLError(
-                "\nNo properties path found in {}...\n".format(dot_mia_config)
+                f"\nNo properties path found in {dot_mia_config}...\n"
             )
 
         _save_yml_file(mia_home_properties_path, dot_mia_config)
@@ -1864,8 +1861,8 @@ def verify_setup(
         # FIXME: We may be need a more precise Exception class to catch ?
         print(
             "\nAn issue has been detected when opening"
-            " the {0} file or with the parameters returned "
-            "from this file:{1}\n".format(dot_mia_config, e)
+            " the {} file or with the parameters returned "
+            "from this file:{}\n".format(dot_mia_config, e)
         )
 
         # open popup, we choose the properties path dir
@@ -1911,9 +1908,7 @@ def verify_setup(
             pypath.append(user_proc)
 
             for elt in user_proc_dir:
-                print(
-                    "  . Using {0} package from {1}...".format(elt, user_proc)
-                )
+                print(f"  . Using {elt} package from {user_proc}...")
 
         del user_proc_dir
 

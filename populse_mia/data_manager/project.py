@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module that handle the projects and their database.
 
 :Contains:
@@ -168,7 +167,7 @@ class Project:
             config.set_opened_projects(opened_projects)
 
         else:
-            raise IOError(
+            raise OSError(
                 "The project at " + str(self.folder) + " is already opened "
                 "in another instance "
                 "of the software."
@@ -1106,7 +1105,7 @@ class Project:
             filter, extension = os.path.splitext(os.path.basename(filename))
             # make sure this gets closed automatically
             # as soon as we are done reading
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 data = json.load(f)
             filter_object = Filter(
                 filter,
@@ -1126,7 +1125,7 @@ class Project:
         from populse_mia.utils import verCmp
 
         with open(
-            os.path.join(self.folder, "properties", "properties.yml"), "r"
+            os.path.join(self.folder, "properties", "properties.yml")
         ) as stream:
             try:
                 if verCmp(yaml.__version__, "5.1", "sup"):
@@ -1825,7 +1824,7 @@ class Project:
             print(
                 "\nUpdating the paths in the database when renaming the "
                 "project:\n"
-                "Changing {0} with {1} ...!\n".format(old_path, new_path)
+                "Changing {} with {} ...!\n".format(old_path, new_path)
             )
 
             for list_hist_brick in hist_brick:

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-""" Module to handle the node of a pipeline and its plugs.
+"""Module to handle the node of a pipeline and its plugs.
 
 :Contains:
     :Class:
@@ -136,7 +135,7 @@ class PlugFilter(QWidget):
         :param node_controller: parent node controller
         :param main_window: parent main window
         """
-        super(PlugFilter, self).__init__(None)
+        super().__init__(None)
 
         from populse_mia.data_manager.project import COLLECTION_CURRENT
         from populse_mia.user_interface.data_browser.rapid_search import (
@@ -730,7 +729,7 @@ class CapsulNodeController(QWidget):
             # fmt: on
 
             self.main_window.statusBar().showMessage(
-                'Node name "{0}" has been changed to "{1}".'.format(
+                'Node name "{}" has been changed to "{}".'.format(
                     old_node_name, new_node_name
                 )
             )
@@ -842,7 +841,7 @@ class FilterWidget(QWidget):
         :param main_window: parent main window
         """
 
-        super(FilterWidget, self).__init__(None)
+        super().__init__(None)
 
         self.setWindowTitle("Filter - " + node_name)
         self.project = project
@@ -1127,7 +1126,7 @@ class NodeController(QWidget):
         :param main_window: main window of the software
         """
 
-        super(NodeController, self).__init__(pipeline_manager_tab)
+        super().__init__(pipeline_manager_tab)
         self.project = project
         self.scan_list = scan_list
         self.main_window = main_window
@@ -1455,7 +1454,7 @@ class NodeController(QWidget):
             )
 
             self.main_window.statusBar().showMessage(
-                'Node name "{0}" has been changed to "{1}".'.format(
+                'Node name "{}" has been changed to "{}".'.format(
                     old_node_name, new_node_name
                 )
             )
@@ -1578,13 +1577,13 @@ class NodeController(QWidget):
                     new_value = eval(new_value)
 
                 except Exception as err:
-                    print("{0}: {1}.".format(err.__class__, err))
+                    print(f"{err.__class__}: {err}.")
 
             except NameError:
                 pass
 
             except Exception as err:
-                print("{0}: {1}.".format(err.__class__, err))
+                print(f"{err.__class__}: {err}.")
 
             # except NameError:
             #    print("NameError for value {0}".format(new_value))
@@ -1617,7 +1616,7 @@ class NodeController(QWidget):
 
         except (TraitError, OSError) as err:
             msg = QMessageBox()
-            msg.setText("{}".format(err))
+            msg.setText(f"{err}")
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowTitle(err.__class__.__name__)
             msg.exec_()
@@ -1649,7 +1648,7 @@ class NodeController(QWidget):
         )
 
         self.main_window.statusBar().showMessage(
-            'Plug "{0}" of node "{1}" has been changed to "{2}".'.format(
+            'Plug "{}" of node "{}" has been changed to "{}".'.format(
                 plug_name, node_name, new_value
             )
         )

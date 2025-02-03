@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 MIA (Multiparametric Image Analysis) is a comprehensive image processing
 environment primarily designed for the analysis and visualization of large

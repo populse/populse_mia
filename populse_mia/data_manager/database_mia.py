@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module containing a class that provides tools adapted to Mia for
 interacting with the populse_db API.

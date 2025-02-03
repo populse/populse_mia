@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to define the rapid search.
 
