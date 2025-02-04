@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Handle the data browser tab. Visualize, modify and search data.
+"""Handle the data browser tab. Visualize, modify and search data.
 
 Contains:
     Module:

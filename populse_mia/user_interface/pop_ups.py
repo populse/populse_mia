@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Module that defines all the pop-ups used across the software
+"""Module that defines all the pop-ups used across the software
 
 :Contains:
     :Class:
