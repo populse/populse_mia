@@ -31,10 +31,17 @@ import os.path
 import threading
 import traceback
 from datetime import datetime
-from time import sleep, time
+from time import sleep
+from time import time as time_time
 
-# Populse_db imports
-from populse_db.database import (
+# PyQt5 imports
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtWidgets import QProgressDialog
+
+# Populse_mia import
+from populse_mia.data_manager import (  # FIELD_TYPE_MAPPING,
+    COLLECTION_CURRENT,
+    COLLECTION_INITIAL,
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME,
@@ -49,23 +56,10 @@ from populse_db.database import (
     FIELD_TYPE_LIST_TIME,
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
-)
-
-# PyQt5 imports
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
-from PyQt5.QtWidgets import QProgressDialog
-
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_BUILTIN,
-    TAG_ORIGIN_USER,
-)
-
-# Populse_MIA imports
-from populse_mia.data_manager.project import (
-    COLLECTION_CURRENT,
-    COLLECTION_INITIAL,
     TAG_CHECKSUM,
     TAG_FILENAME,
+    TAG_ORIGIN_BUILTIN,
+    TAG_ORIGIN_USER,
     TAG_TYPE,
     TYPE_BVAL,
     TYPE_BVEC,
@@ -140,7 +134,7 @@ class ImportWorker(QThread):
         """Override the QThread run method. Executed when the worker is
         started, fills the database and updates the progress.
         """
-        begin = time()
+        begin = time_time()
 
         raw_data_folder = os.path.relpath(
             os.path.join(self.project.folder, "data", "raw_data")
@@ -725,7 +719,7 @@ class ImportWorker(QThread):
         self.project.redos.clear()
 
         print("\nData export duration in the database:")
-        print("read_log time: " + str(round(time() - begin, 2)) + " s\n")
+        print("read_log time: " + str(round(time_time() - begin, 2)) + " s\n")
         # print("read_log time: " + str(time() - begin))
 
         # pr.disable()

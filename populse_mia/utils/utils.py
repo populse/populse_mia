@@ -29,6 +29,7 @@ Module that contains multiple functions used across Mia.
 import ast
 import copy
 import inspect
+import logging
 import os
 import pkgutil
 import re
@@ -86,6 +87,8 @@ from populse_mia.data_manager.project_properties import (  # noqa E402
     SavedProjects,
 )
 from populse_mia.user_interface.main_window import MainWindow
+
+logger = logging.getLogger(__name__)
 
 
 class PackagesInstall:
@@ -1496,9 +1499,8 @@ def verify_setup(
                        main function)
         """
         dialog.close()
-        print(
-            "\nNo configuration has been detected. "
-            "Mia is shutting down...\n"
+        logger.error(
+            "No configuration has been detected. Mia is shutting down..."
         )
         sys.exit(0)
 
@@ -1542,7 +1544,7 @@ def verify_setup(
 
         if not os.path.exists(properties_dir):
             os.makedirs(properties_dir, exist_ok=True)
-            print(f"\nThe {properties_dir} directory is created...")
+            logger.info(f"The {properties_dir} directory is created...")
 
         if not os.path.exists(
             os.path.join(properties_dir, "saved_projects.yml")
@@ -1551,10 +1553,9 @@ def verify_setup(
                 {"paths": []},
                 os.path.join(properties_dir, "saved_projects.yml"),
             )
-            print(
-                "\nThe {} file is created...".format(
-                    os.path.join(properties_dir, "saved_projects.yml")
-                )
+            logger.info(
+                f"The {os.path.join(properties_dir, 'saved_projects.yml')} "
+                f"file is created..."
             )
 
         if not os.path.exists(os.path.join(properties_dir, "config.yml")):

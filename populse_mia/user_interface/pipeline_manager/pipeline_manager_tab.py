@@ -75,7 +75,7 @@ from soma.qt_gui.qtThread import QtThreadCall
 from traits.api import TraitListObject, Undefined
 
 # Populse_MIA imports
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,
     BRICK_INIT,

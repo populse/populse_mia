@@ -27,22 +27,6 @@ import traceback
 from functools import partial
 from sys import platform
 
-# Populse_db imports
-from populse_db.database import (
-    FIELD_TYPE_DATE,
-    FIELD_TYPE_DATETIME,
-    FIELD_TYPE_FLOAT,
-    FIELD_TYPE_LIST_BOOLEAN,
-    FIELD_TYPE_LIST_DATE,
-    FIELD_TYPE_LIST_DATETIME,
-    FIELD_TYPE_LIST_FLOAT,
-    FIELD_TYPE_LIST_INTEGER,
-    FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_TIME,
-    FIELD_TYPE_STRING,
-    FIELD_TYPE_TIME,
-)
-
 # PyQt5 imports
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt
@@ -72,19 +56,30 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_BUILTIN,
-    TAG_ORIGIN_USER,
-)
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (  # BRICK_INPUTS,; BRICK_OUTPUTS,
     BRICK_NAME,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     COLLECTION_INITIAL,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATETIME,
+    FIELD_TYPE_FLOAT,
+    FIELD_TYPE_LIST_BOOLEAN,
+    FIELD_TYPE_LIST_DATE,
+    FIELD_TYPE_LIST_DATETIME,
+    FIELD_TYPE_LIST_FLOAT,
+    FIELD_TYPE_LIST_INTEGER,
+    FIELD_TYPE_LIST_STRING,
+    FIELD_TYPE_LIST_TIME,
+    FIELD_TYPE_STRING,
+    FIELD_TYPE_TIME,
+    NOT_DEFINED_VALUE,
     TAG_BRICKS,
     TAG_CHECKSUM,
     TAG_FILENAME,
     TAG_HISTORY,
+    TAG_ORIGIN_BUILTIN,
+    TAG_ORIGIN_USER,
 )
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.advanced_search import (
@@ -110,15 +105,7 @@ from populse_mia.user_interface.pop_ups import (
     PopUpShowHistory,
 )
 
-# from populse_mia.utils.utils import (
-#     check_value_type,
-#     set_item_data,
-#     table_to_database,
-# )
-
-
-# Variable shown everywhere when no value for the tag
-not_defined_value = "*Not Defined*"
+# from typing import get_origin
 
 
 class DataBrowser(QWidget):
@@ -726,7 +713,7 @@ class DataBrowser(QWidget):
             return_list = self.table_data.scans_to_search
         else:
             # Scans with at least a not defined value
-            if str_search == not_defined_value:
+            if str_search == NOT_DEFINED_VALUE:
                 filter = self.search_bar.prepare_not_defined_filter(
                     self.project.session.get_shown_tags()
                 )
@@ -993,7 +980,7 @@ class TableDataBrowser(QTableWidget):
             if cur_value is not None:
                 set_item_data(item, cur_value, tag_object.field_type)
             else:
-                set_item_data(item, not_defined_value, FIELD_TYPE_STRING)
+                set_item_data(item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING)
                 font = item.font()
                 font.setItalic(True)
                 font.setBold(True)
@@ -1093,7 +1080,7 @@ class TableDataBrowser(QTableWidget):
                         set_item_data(item, cur_value, tag_object.field_type)
                     else:
                         set_item_data(
-                            item, not_defined_value, FIELD_TYPE_STRING
+                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
                         )
                         font = item.font()
                         font.setItalic(True)
@@ -1231,7 +1218,7 @@ class TableDataBrowser(QTableWidget):
                         else:
                             if tag != TAG_BRICKS:
                                 set_item_data(
-                                    item, not_defined_value, FIELD_TYPE_STRING
+                                    item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
                                 )
                                 font = item.font()
                                 font.setItalic(True)
@@ -1470,7 +1457,7 @@ class TableDataBrowser(QTableWidget):
                 COLLECTION_CURRENT, scan_name, tag_name
             )
             item = self.item(row, col)
-            set_item_data(item, not_defined_value, FIELD_TYPE_STRING)
+            set_item_data(item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING)
             font = item.font()
             font.setItalic(True)
             font.setBold(True)
@@ -1961,7 +1948,7 @@ class TableDataBrowser(QTableWidget):
                     else:
                         if current_tag != TAG_BRICKS:
                             set_item_data(
-                                item, not_defined_value, FIELD_TYPE_STRING
+                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
                             )
                             font = item.font()
                             font.setItalic(True)
@@ -2176,7 +2163,7 @@ class TableDataBrowser(QTableWidget):
                     tags_value.append(current_value)
 
                 else:
-                    tags_value.append(not_defined_value)
+                    tags_value.append(NOT_DEFINED_VALUE)
 
             list_sort.append(tags_value)
 
