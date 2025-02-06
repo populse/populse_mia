@@ -7,6 +7,7 @@ mia's GUI.
 :Contains:
     :Function:
         - main
+        - qt_message_handler
 
 """
 
@@ -18,18 +19,72 @@ mia's GUI.
 # for details.
 ###############################################################################
 
+import argparse
+import importlib
+import logging
 import os
 import sys
 import tempfile
+from pathlib import Path
 
 # PyQt5 imports
 from PyQt5.QtCore import QCoreApplication, Qt, qInstallMessageHandler
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
-# main_window = None
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 
-def main():
+def add_to_sys_path(path, name, index=0):
+    """
+    Adds the specified path to the system path if it's a valid directory.
+
+    :param path (pathlib.Path): The directory path to be added to the
+                                system path.
+    :param name (str): The name of the package being added.
+    :param index (int, optional): The index at which to insert the path
+                                  into sys.path. Defaults to 0.
+    :returns (bool): True if the path is a valid directory and was added
+                     to sys.path, False otherwise.
+    """
+
+    if path.is_dir():
+        sys.path.insert(index, str(path))
+        logger.info(f"  . Using {name} package from {path}")
+        return True
+
+    else:
+        logger.warning(f"{name} package not found!")
+        return False
+
+
+def check_package(name):
+    """
+    Attempts to import a package by its name, logs the location of the
+    package if successful, and logs an error if the package is missing.
+
+    :param name (str): The name of the package to be imported.
+
+    :returns (bool): True if the package is imported successfully;
+                     False if the package is missing.
+    """
+
+    try:
+        mod = importlib.import_module(name)
+        mod_dir = Path(mod.__file__).resolve().parent[1]
+        logger.info(f"  . Using {name} package from {mod_dir}")
+        return True
+
+    except ImportError:
+        logger.error(f"Failed to import {name} package!")
+        return None
+
+    except AttributeError:
+        logger.warning(f"{name} package has no __file__ attribute!")
+        return True
+
+
+def main(args):
     """Make basic configuration check, then actual launch of Mia.
 
     Checks if Mia is called from the site/dist packages (`user mode`) or from a
@@ -51,39 +106,34 @@ def main():
 
     pypath = []
     package_not_found = []
-
     # Disables any etelemetry check.
-    if "NO_ET" not in os.environ:
-        os.environ["NO_ET"] = "1"
-
-    if "NIPYPE_NO_ET" not in os.environ:
-        os.environ["NIPYPE_NO_ET"] = "1"
-
+    os.environ.setdefault("NO_ET", "1")
+    os.environ.setdefault("NIPYPE_NO_ET", "1")
     # Trying to fix High DPI Display issue
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-
     # General QApplication class instantiation
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
     QApplication.setOverrideCursor(Qt.WaitCursor)
 
     # Adding the populse projects path to sys.path, if in developer mode
-    if (
-        not os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        in sys.path
-    ):  # "developer" mode
+    if Path(__file__).resolve().parents[1] not in sys.path:
+        # "developer" mode
         DEV_MODE = True
         os.environ["MIA_DEV_MODE"] = "1"
-        root_dev_dir = os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        )
+        # Determine the root development directory
+        root_dev_dir = Path(__file__).resolve().parents[2]
         branch = ""
         populse_bdir = ""
         capsul_bdir = ""
         soma_bdir = ""
 
-        if not os.path.isdir(os.path.join(root_dev_dir, "populse_mia")):
+        if not (root_dev_dir / "populse_mia").is_dir():
             # Different sources layout - try casa_distro mode
+            # TODO: At the moment, my casa_distro isn't working, and I don't
+            #       understand this part. I'll check later when I've got
+            #       casa_distro back.
+            # TODO start
             root_dev_dir = os.path.dirname(
                 os.path.dirname(
                     os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -95,201 +145,87 @@ def main():
                 populse_bdir = "populse"
                 soma_bdir = "soma"
 
-            print("root_dev_dir:", root_dev_dir)
+            logger.info(f"root_dev_dir: {root_dev_dir}")
             branch = os.path.basename(
                 os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
             )
-            print("branch:", branch)
+            logger.info(f"branch: {branch}")
+            # TODO stop
 
+        # populse packages
+        packages = [
+            {
+                "populse_mia": (
+                    root_dev_dir / populse_bdir / "populse_mia" / branch
+                )
+            },
+            {"capsul": (root_dev_dir / capsul_bdir / "capsul" / branch)},
+            {
+                "soma": (
+                    root_dev_dir / soma_bdir / "soma-base" / branch / "python"
+                )
+            },
+            {
+                "soma_workflow": (
+                    root_dev_dir
+                    / soma_bdir
+                    / "soma-workflow"
+                    / branch
+                    / "python"
+                )
+            },
+            {
+                "populse_db": (
+                    root_dev_dir
+                    / populse_bdir
+                    / "populse_db"
+                    / branch
+                    / "python"
+                )
+            },
+            {
+                "mia_processes": (
+                    root_dev_dir / populse_bdir / "mia_processes" / branch
+                )
+            },
+        ]
+        # Adding populse packages in sys.path
+        logger.info("- Mia in 'developer' mode")
         i = 0
-        # Adding populse_mia
-        print('\n- Mia in "developer" mode')
-        mia_dev_dir = os.path.join(
-            root_dev_dir, populse_bdir, "populse_mia", branch
-        )
-        print(f"  . Using populse_mia package from {mia_dev_dir} ...")
-        sys.path.insert(i, mia_dev_dir)
-        pypath.append(mia_dev_dir)
-        del mia_dev_dir
-        from populse_mia import info
 
-        print(f"    populse_mia version: {info.__version__}")
+        for package in packages:
 
-        # Adding capsul
-        if os.path.isdir(os.path.join(root_dev_dir, capsul_bdir, "capsul")):
-            i += 1
-            capsul_dev_dir = os.path.join(
-                root_dev_dir, capsul_bdir, "capsul", branch
-            )
-            print(f"  . Using capsul package from {capsul_dev_dir} ...")
-            sys.path.insert(i, capsul_dev_dir)
-            pypath.append(capsul_dev_dir)
-            del capsul_dev_dir
+            for name, dev_path in package.items():
 
-        else:
+                if add_to_sys_path(dev_path, name, i):
+                    pypath.append(dev_path)
+                    i += 1
 
-            try:
-                import capsul
+                elif not check_package(name):
+                    package_not_found.append(name)
 
-            except Exception:
-                print("  . capsul package was not found!...")
-                package_not_found.append("capsul")
-
-            else:
-                capsul_dir = os.path.dirname(os.path.dirname(capsul.__file__))
-                print(f"  . Using capsul package from {capsul_dir} ...")
-                del capsul_dir
-                del capsul
-
-        # Adding soma_base:
-        if os.path.isdir(os.path.join(root_dev_dir, soma_bdir, "soma-base")):
-            i += 1
-            soma_b_dev_dir = os.path.join(
-                root_dev_dir, soma_bdir, "soma-base", branch, "python"
-            )
-            print(f"  . Using soma package from {soma_b_dev_dir} ...")
-            sys.path.insert(i, soma_b_dev_dir)
-            pypath.append(soma_b_dev_dir)
-            del soma_b_dev_dir
-
-        else:
-
-            try:
-                import soma
-
-            except Exception:
-                print("  . soma package was not found!...")
-                package_not_found.append("soma")
-
-            else:
-                soma_b_dir = os.path.dirname(os.path.dirname(soma.__file__))
-                print(f"  . Using soma package from {soma_b_dir} ...")
-                del soma_b_dir
-                del soma
-
-        # Adding soma_workflow:
-        if os.path.isdir(
-            os.path.join(root_dev_dir, soma_bdir, "soma-workflow")
-        ):
-            i += 1
-            soma_w_dev_dir = os.path.join(
-                root_dev_dir, soma_bdir, "soma-workflow", branch, "python"
-            )
-            print(
-                "  . Using soma_workflow package from {} "
-                "...".format(soma_w_dev_dir)
-            )
-            sys.path.insert(i, soma_w_dev_dir)
-            pypath.append(soma_w_dev_dir)
-            del soma_w_dev_dir
-
-        else:
-
-            try:
-                import soma_workflow
-
-            except Exception:
-                print("  . soma_workflow package was not found!...")
-                package_not_found.append("soma_workflow")
-
-            else:
-                soma_w_dir = os.path.dirname(
-                    os.path.dirname(soma_workflow.__file__)
-                )
-                print(
-                    "  . Using soma_worflow package from {} ...".format(
-                        soma_w_dir
+                try:
+                    importlib.import_module(name)
+                    logger.info(
+                        f"    {name} version: "
+                        f"{sys.modules[name].__version__}"
                     )
-                )
-                del soma_w_dir
-                del soma_workflow
 
-        # Adding populse_db:
-        if os.path.isdir(
-            os.path.join(root_dev_dir, populse_bdir, "populse_db")
-        ):
-            i += 1
-            populse_db_dev_dir = os.path.join(
-                root_dev_dir, populse_bdir, "populse_db", branch, "python"
-            )
-            print(
-                "  . Using populse_db package from {} "
-                "...".format(populse_db_dev_dir)
-            )
-            sys.path.insert(i, populse_db_dev_dir)
-            pypath.append(populse_db_dev_dir)
-            del populse_db_dev_dir
-
-        else:
-
-            try:
-                import populse_db
-
-            except Exception:
-                print("  . populse_db package was not found!...")
-                package_not_found.append("populse_db")
-
-            else:
-                populse_db_dir = os.path.dirname(
-                    os.path.dirname(populse_db.__file__)
-                )
-                print(
-                    "  . Using populse_db package from {} ...".format(
-                        populse_db_dir
-                    )
-                )
-                del populse_db_dir
-                del populse_db
-
-        # Adding mia_processes:
-        if os.path.isdir(
-            os.path.join(root_dev_dir, populse_bdir, "mia_processes")
-        ):
-            i += 1
-            mia_processes_dev_dir = os.path.join(
-                root_dev_dir, populse_bdir, "mia_processes", branch
-            )
-            print(
-                "  . Using mia_processes package from {} "
-                "...".format(mia_processes_dev_dir)
-            )
-            sys.path.insert(i, mia_processes_dev_dir)
-            pypath.append(mia_processes_dev_dir)
-            del mia_processes_dev_dir
-            from mia_processes import info
-
-            print(f"    mia_processes version: {info.__version__}")
-
-        else:
-
-            try:
-                import mia_processes
-
-            except Exception:
-                print("  . mia_processes package was not found!...")
-                package_not_found.append("mia_processes")
-
-            else:
-                mia_processes_dir = os.path.dirname(
-                    os.path.dirname(mia_processes.__file__)
-                )
-                print(
-                    "  . Using mia_processes package from {} "
-                    "...".format(mia_processes_dir)
-                )
-                del mia_processes_dir
-                del mia_processes
-
-        del root_dev_dir
+                except (ModuleNotFoundError, AttributeError):
+                    # version is not found
+                    pass
 
         if package_not_found:
-            print(
-                "\nMia cannot be started because the following packages "
-                "were not found:\n"
-                + "\n".join(f"- {package}" for package in package_not_found)
+            error_msg = "\n".join(f"- {pkg}" for pkg in package_not_found)
+            QMessageBox.warning(
+                None,
+                "populse_mia - ImportError",
+                f"Missing packages:\n{error_msg}\nPlease reinstall them.",
             )
             sys.exit(1)
 
+    # TODO: Same as the first todo above, I don't understand the lines below,
+    #       so I'll comment on them for now.
     # elif "CASA_DISTRO" in os.environ:
     #     # If the casa distro development environment is detected,
     #     # developer mode is activated.
@@ -299,8 +235,7 @@ def main():
     else:  # "user" mode
         os.environ["MIA_DEV_MODE"] = "0"
         DEV_MODE = False
-        print('\n- Mia in "user" mode')
-        # Where do we import the modules from?
+        logger.info("- Mia in 'user' mode")
         modules = (
             "populse_mia",
             "capsul",
@@ -310,91 +245,45 @@ def main():
             "mia_processes",
         )
 
-        for i in modules:
-            if i in sys.modules:
-                mod = sys.modules[i]
+        for module in modules:
+
+            if module in sys.modules:
+                mod = sys.modules[module]
 
             else:
-                mod = __import__(i)
-                del sys.modules[i]
+                mod = importlib.import_module(module)
 
-            print(
-                "  . Using {} package from {} ...".format(
-                    mod.__name__, mod.__path__[0]
-                )
+            logger.info(
+                f"  . Using { mod.__name__} package "
+                f"from {mod.__path__[0]} ..."
             )
 
-    # Check if nipype, mia_processes and capsul are available on the station.
-    # If not available ask the user to install them
-    pkg_error = []
-    # pkg_error: a list containing nipype and/or mia_processes and/or capsul,
-    #            if not currently installed
-    capsulVer = None  # capsul version currently installed
-    miaProcVer = None  # mia_processes version currently installed
-    nipypeVer = None  # nipype version currently installed
+            try:
+                logger.info(
+                    f"    { mod.__name__} version: "
+                    f"{sys.modules[module].__version__}"
+                )
 
+            except (ModuleNotFoundError, AttributeError):
+                # version is not found
+                pass
+
+    # Check if nipype is available on the station.
+    # If not available ask the user to install it.
     try:
-        from capsul import info as capsul_info
-
-        capsulVer = capsul_info.__version__
+        importlib.import_module("nipype")
 
     except (ImportError, AttributeError) as e:
-        pkg_error.append("capsul")
-        print("\n" + "*" * 37)
-        print(f"MIA warning {e.__class__}: {e}")
-        print("*" * 37 + "\n")
-
-    try:
-        __import__("nipype")
-        nipypeVer = sys.modules["nipype"].__version__
-
-    except (ImportError, AttributeError) as e:
-        pkg_error.append("nipype")
-        print("\n" + "*" * 37)
-        print(f"MIA warning {e.__class__}: {e}")
-        print("*" * 37 + "\n")
-
-    try:
-        __import__("mia_processes")
-        miaProcVer = sys.modules["mia_processes"].__version__
-
-    except (ImportError, AttributeError) as e:
-        pkg_error.append("mia_processes")
-        print("\n" + "*" * 37)
-        print(f"MIA warning {e.__class__}: {e}")
-        print("*" * 37 + "\n")
-
-    if pkg_error:
+        logger.error(f"MIA warning {e.__class__}: {e}")
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
         msg.setWindowTitle("populse_mia -  warning: ImportError!")
-
-        if len(pkg_error) == 1:
-            msg.setText(
-                "An issue has been detected with the {} package. "
-                "Please (re)install this package and/or fix the "
-                "problems displayed in the standard output. "
-                "Then, start again Mia ...".format(pkg_error[0])
-            )
-
-        elif len(pkg_error) == 2:
-            msg.setText(
-                "An issue has been detected with the {} and {} packages. "
-                "Please (re)install these package and/or fix the "
-                "problems displayed in the standard output. "
-                "Then, start again Mia ...".format(pkg_error[0], pkg_error[1])
-            )
-
-        else:
-            msg.setText(
-                "An issue has been detected with the {}, {} and {} "
-                "packages. Please (re)install these package and/or fix the "
-                "problems displayed in the standard output. "
-                "Then, start again Mia ...".format(
-                    pkg_error[0], pkg_error[1], pkg_error[2]
-                )
-            )
-
+        msg.setText(
+            "An issue has been detected with "
+            "the nipype package. Please (re)install this "
+            "package and/or fix the issues displayed in the standard "
+            "output. Then, start again Mia ..."
+        )
         msg.setStandardButtons(QMessageBox.Ok)
         msg.buttonClicked.connect(msg.close)
         msg.exec()
@@ -410,19 +299,30 @@ def main():
         verify_setup,
     )
 
-    verify_setup(dev_mode=DEV_MODE, pypath=pypath)
-    verify_processes(nipypeVer, miaProcVer, capsulVer)
+    verify_setup(dev_mode=DEV_MODE, pypath=list(map(str, pypath)))
+    verify_processes(
+        sys.modules["nipype"].__version__,
+        sys.modules["mia_processes"].__version__,
+        sys.modules["capsul"].__version__,
+    )
     check_python_version()
     cwd = os.getcwd()
 
     with tempfile.TemporaryDirectory() as temp_work_dir:
         os.chdir(temp_work_dir)
-        launch_mia(app)
+        launch_mia(app, args)
         os.chdir(cwd)
 
 
-def qt_message_handler(mode, context, message):
-    """Custom Qt message handler to filter out specific messages"""
+def qt_message_handler(message):
+    """
+    Custom Qt message handler to filter out specific unwanted messages and
+    output the remaining ones.
+
+    :param message (str): The message to be handled, potentially filtered and
+                          then output.
+    """
+
     for unwanted_message in unwanted_messages:
 
         if message.strip() == unwanted_message:
@@ -438,12 +338,23 @@ def qt_message_handler(mode, context, message):
 
 
 if __name__ == "__main__":
-    # this will only be executed when this module is run directly
+    parser = argparse.ArgumentParser(
+        description="Populse Mia Application Entry Point."
+    )
+    parser.add_argument(
+        "--multi_instance",
+        type=bool,
+        default=False,
+        help="Set the value of multi_instance.",
+    )
+    args = parser.parse_args()
+    # Print the multi_instance argument value
+    logger.info(f"--multi_instance is set to: {args.multi_instance}")
+    # This will only be executed when this module is run directly
     # list of unwanted messages to filter out in stdout
     unwanted_messages = [
         "QPixmap::scaleHeight: Pixmap is a null pixmap",
     ]
-
     # Install the custom Qt message handler
     qInstallMessageHandler(qt_message_handler)
-    main()
+    main(args)

@@ -232,7 +232,7 @@ class DatabaseMIA:
          Checks if a collection with the specified name exists in the database.
 
         :param collection_name (str): The name of the collection to check.
-         :returns (bool): `True` if the collection exists, otherwise `False`.
+        :returns (bool): `True` if the collection exists, otherwise `False`.
         """
         with self.storage.data() as dbs:
             return dbs.has_collection(collection_name)

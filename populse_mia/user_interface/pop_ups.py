@@ -63,24 +63,6 @@ from capsul.pipeline.pipeline_nodes import PipelineNode
 from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
-# Populse_db imports
-from populse_db.database import (
-    FIELD_TYPE_BOOLEAN,
-    FIELD_TYPE_DATE,
-    FIELD_TYPE_DATETIME,
-    FIELD_TYPE_FLOAT,
-    FIELD_TYPE_INTEGER,
-    FIELD_TYPE_LIST_BOOLEAN,
-    FIELD_TYPE_LIST_DATE,
-    FIELD_TYPE_LIST_DATETIME,
-    FIELD_TYPE_LIST_FLOAT,
-    FIELD_TYPE_LIST_INTEGER,
-    FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_TIME,
-    FIELD_TYPE_STRING,
-    FIELD_TYPE_TIME,
-)
-
 # PyQt5 imports
 from PyQt5 import Qt, QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication, pyqtSignal
@@ -113,15 +95,7 @@ from PyQt5.QtWidgets import (
 )
 
 # Populse_mia imports
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_USER,
-    TAG_UNIT_DEGREE,
-    TAG_UNIT_HZPIXEL,
-    TAG_UNIT_MHZ,
-    TAG_UNIT_MM,
-    TAG_UNIT_MS,
-)
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,
     BRICK_INIT,
@@ -133,20 +107,42 @@ from populse_mia.data_manager.project import (
     COLLECTION_CURRENT,
     COLLECTION_HISTORY,
     COLLECTION_INITIAL,
+    FIELD_TYPE_BOOLEAN,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATETIME,
+    FIELD_TYPE_FLOAT,
+    FIELD_TYPE_INTEGER,
+    FIELD_TYPE_LIST_BOOLEAN,
+    FIELD_TYPE_LIST_DATE,
+    FIELD_TYPE_LIST_DATETIME,
+    FIELD_TYPE_LIST_FLOAT,
+    FIELD_TYPE_LIST_INTEGER,
+    FIELD_TYPE_LIST_STRING,
+    FIELD_TYPE_LIST_TIME,
+    FIELD_TYPE_STRING,
+    FIELD_TYPE_TIME,
     HISTORY_BRICKS,
     HISTORY_PIPELINE,
     TAG_CHECKSUM,
     TAG_FILENAME,
     TAG_HISTORY,
+    TAG_ORIGIN_USER,
     TAG_TYPE,
+    TAG_UNIT_DEGREE,
+    TAG_UNIT_HZPIXEL,
+    TAG_UNIT_MHZ,
+    TAG_UNIT_MM,
+    TAG_UNIT_MS,
     TYPE_MAT,
     TYPE_NII,
     TYPE_TXT,
     TYPE_UNKNOWN,
-    Project,
 )
+from populse_mia.data_manager.project import Project
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser import data_browser
+
+# from typing import get_origin
 
 
 class ClickableLabel(QLabel):
