@@ -6,6 +6,8 @@ mia's GUI.
 
 :Contains:
     :Function:
+        - add_to_sys_path
+        - check_package
         - main
         - qt_message_handler
 
@@ -254,13 +256,13 @@ def main(args):
                 mod = importlib.import_module(module)
 
             logger.info(
-                f"  . Using { mod.__name__} package "
+                f"  . Using {mod.__name__} package "
                 f"from {mod.__path__[0]} ..."
             )
 
             try:
                 logger.info(
-                    f"    { mod.__name__} version: "
+                    f"    {mod.__name__} version: "
                     f"{sys.modules[module].__version__}"
                 )
 

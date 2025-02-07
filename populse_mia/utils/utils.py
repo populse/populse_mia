@@ -13,6 +13,7 @@ Module that contains multiple functions used across Mia.
         - set_item_data
         - set_projects_directory_as_default
         - table_to_database
+        - type_name
         - verCmp
         - verify_processes
         - verify_setup
@@ -35,33 +36,19 @@ import pkgutil
 import re
 import sys
 import traceback
-from datetime import date, datetime, time
+import types
+import typing
+from datetime import datetime
 from functools import partial
 from pathlib import Path
+from typing import get_args, get_origin
 
-# Capsul imports
-import capsul.api as capsul_api  # noqa E402
 import dateutil.parser
 import yaml
-from packaging import version
 
-# Populse_db imports
-from populse_db.database import (
-    FIELD_TYPE_BOOLEAN,
-    FIELD_TYPE_DATE,
-    FIELD_TYPE_DATETIME,
-    FIELD_TYPE_FLOAT,
-    FIELD_TYPE_INTEGER,
-    FIELD_TYPE_LIST_BOOLEAN,
-    FIELD_TYPE_LIST_DATE,
-    FIELD_TYPE_LIST_DATETIME,
-    FIELD_TYPE_LIST_FLOAT,
-    FIELD_TYPE_LIST_INTEGER,
-    FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_TIME,
-    FIELD_TYPE_STRING,
-    FIELD_TYPE_TIME,
-)
+# Capsul imports
+from capsul.api import Node, get_process_instance  # noqa E402
+from packaging import version
 
 # PyQt5 imports
 from PyQt5.QtCore import QDate, QDateTime, QDir, QLockFile, Qt, QTime, QVariant
@@ -82,6 +69,16 @@ from PyQt5.QtWidgets import (
 from soma.qt_gui.qtThread import QtThreadCall  # noqa E402
 
 # Populse_mia imports
+from populse_mia.data_manager import (
+    FIELD_TYPE_BOOLEAN,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATETIME,
+    FIELD_TYPE_FLOAT,
+    FIELD_TYPE_INTEGER,
+    FIELD_TYPE_JSON,
+    FIELD_TYPE_STRING,
+    FIELD_TYPE_TIME,
+)
 from populse_mia.data_manager.project import Project  # noqa E402
 from populse_mia.data_manager.project_properties import (  # noqa E402
     SavedProjects,
@@ -92,8 +89,9 @@ logger = logging.getLogger(__name__)
 
 
 class PackagesInstall:
-    """Help to make available a pipeline package in the Mia pipeline library,
-    in a recursive way.
+    """
+    Helps make a pipeline package available in the Mia pipeline library
+    recursively.
 
     :Contains:
         :Method:
@@ -101,8 +99,8 @@ class PackagesInstall:
             - add_package: provide recursive representation of a package
     """
 
-    _already_loaded = {  # these classes should not appear
-        # in available processes
+    # These classes should not appear in available processes
+    _already_loaded = {
         "mia_processes.process_matlab.ProcessMatlab",
         "populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA",
         "capsul.process.process.Process",
@@ -114,17 +112,20 @@ class PackagesInstall:
     }
 
     def __init__(self):
-        """Initialise the packages instance attribute."""
+        """Initializes the package registry."""
 
         self.packages = {}
 
     def add_package(self, module_name, class_name=None):
-        """Provide recursive representation of a package and its
-        subpackages/modules, to construct the Mia's pipeline library.
+        """
+        Recursively adds a package and its subpackages/modules to the Mia
+        pipeline library.
 
-        :param module_name: name of the module to add in the pipeline library
-        :param class_name: only this pipeline will be added to the pipeline
-                           library (optional)
+        :param module_name (str): Name of the module to add to the pipeline
+                                  library.
+        :param class_name (str): Specific class to add (optional). Only this
+                                 pipeline will be added to the pipeline
+                                 library.
         :return: dictionary of dictionaries containing
                  package/subpackages/pipelines status.
                  ex: {package: {subpackage: {pipeline: 'process_enabled'}}}
@@ -137,20 +138,21 @@ class PackagesInstall:
             and "tests" not in module_name.split(".")
         ):
             # reloading the package
-            if module_name in sys.modules.keys():
-                del sys.modules[module_name]
+            sys.modules.pop(module_name, None)
 
             try:
                 __import__(module_name)
                 pkg = sys.modules[module_name]
 
-                for k, v in sorted(list(pkg.__dict__.items())):
+                for k, v in sorted(pkg.__dict__.items()):
+
                     if class_name and k != class_name:
                         continue
 
                     # checking each class in the package
                     if inspect.isclass(v):
-                        if v in PackagesInstall._already_loaded:
+
+                        if v in self._already_loaded:
                             continue
 
                         if hasattr(v, "__module__"):
@@ -160,39 +162,42 @@ class PackagesInstall:
                             vname = f"{v.__package__}.{v.__name__}"
 
                         else:
-                            print("no module nor package for", v)
+                            logger.warning(f"No module nor package for {v}")
                             vname = v.__name__
 
-                        if vname in PackagesInstall._already_loaded:
+                        if vname in self._already_loaded:
                             continue
 
-                        PackagesInstall._already_loaded.add(vname)
+                        self._already_loaded.add(vname)
 
                         try:
+
                             try:
-                                capsul_api.get_process_instance(
+                                get_process_instance(
                                     f"{module_name}.{v.__name__}"
                                 )
 
                             except Exception:
-                                if v is capsul_api.Node or not issubclass(
-                                    v, capsul_api.Node
-                                ):
+
+                                if v is Node or not issubclass(v, Node):
                                     raise
 
                             # updating the tree's dictionary
-                            path_list = module_name.split(".")
-                            path_list.append(k)
+                            path_list = module_name.split(".") + [k]
                             pkg_iter = self.packages
 
                             for element in path_list:
+
                                 if element in pkg_iter.keys():
                                     pkg_iter = pkg_iter[element]
 
                                 else:
+
                                     if element is path_list[-1]:
                                         pkg_iter[element] = "process_enabled"
-                                        print("Detected brick: ", element)
+                                        logger.info(
+                                            f"Detected brick: {element}"
+                                        )
 
                                     else:
                                         pkg_iter[element] = {}
@@ -212,42 +217,42 @@ class PackagesInstall:
                     path = [os.path.dirname(pkg.__file__)]
 
                 if path:
-                    for _, modname, ispkg in pkgutil.iter_modules(path):
+
+                    for _, modname, _ in pkgutil.iter_modules(path):
+
                         if modname == "__main__":
                             continue  # skip main
 
-                        print(
-                            "\nExploring subpackages of "
-                            "{}: {} ...".format(
-                                module_name, str(module_name + "." + modname)
-                            )
+                        logger.info(
+                            f"Exploring subpackages of {module_name}: "
+                            f"{module_name}.{modname} ..."
                         )
                         self.add_package(
-                            str(module_name + "." + modname), class_name
+                            f"{module_name}.{modname}", class_name
                         )
 
             except Exception as e:
-                print(
-                    "\nWhen attempting to add a package ({}) or its "
-                    "modules to the package tree, the following exception "
-                    "was caught:".format(module_name)
+                logger.warning(
+                    f"When attempting to add a package ({module_name}) or "
+                    f"its modules to the package tree, the following "
+                    f"exception was caught:"
                 )
-                print(f"{e}")
+                logger.warning(f"{e}")
 
             return self.packages
 
 
 def check_python_version():
-    """Check Python version used.
+    """
+    Checks if the Python version is at least 3.10.
 
-    Returns an AssertionError exception if the version is lower than 3.5.
+    :raises RuntimeError: If the Python version is lower than 3.10.
     """
 
-    if sys.version_info[:2] < (3, 9):
-        raise AssertionError(
-            "Mia is ensured to work only with Python "
-            ">= 3.9 (the version of Python used is "
-            "{}).".format(".".join(str(x) for x in sys.version_info[:2]))
+    if sys.version_info[:2] < (3, 10):
+        raise RuntimeError(
+            f"Mia requires Python >= 3.10 (current version: "
+            f"{sys.version_info.major}.{sys.version_info.minor})."
         )
 
 
@@ -255,117 +260,119 @@ def check_value_type(value, value_type, is_subvalue=False):
     """
     Checks the type of new value in a table cell (QTableWidget).
 
-    :param value: Value of the cell
-    :param value_type: Type expected
-    :param is_subvalue: To know if the value is a subvalue of a list
-    :returns: True if the value is valid to replace the old
-              one, False otherwise
+    :param value (str): Value of the cell (always a str, can be a string
+                        representation of a list)
+    :param value_type (type): Expected type (can be list[str], list[int], etc.)
+    :param is_subvalue (bool): Whether the value is a subvalue of a list.
+    :returns: True if the value is valid to replace the old one,
+              False otherwise
     """
 
-    if (value_type == FIELD_TYPE_INTEGER) or (
-        value_type == FIELD_TYPE_LIST_INTEGER and is_subvalue
+    # Convert string to a list if it appears to be list-like
+    if isinstance(value, str) and (
+        value.startswith("[") and value.endswith("]")
     ):
+
+        try:
+            # safely evaluate the string as a list
+            value = ast.literal_eval(value)
+
+        except (ValueError, SyntaxError):
+            # If it's not a valid list, return False
+            return False
+
+    # Check if value_type is a list (e.g., list[int], list[str], etc.)
+    origin_type = typing.get_origin(value_type)
+
+    if origin_type is list:
+        # Extract the element type from the list (e.g., int for list[int])
+        element_type = typing.get_args(value_type)[0]
+
+        if is_subvalue:
+            # Check for a single element against the list's element
+            # type (e.g., "10" against list[int])
+            return check_value_type(value, element_type)
+
+        # Otherwise, validate if value is a list and all elements
+        # match the element type
+        return isinstance(value, list) and all(
+            check_value_type(v, element_type) for v in value
+        )
+
+    # Handle basic types
+    elif value_type == FIELD_TYPE_INTEGER:
+
         try:
             int(value)
             return True
 
-        except Exception:
+        except ValueError:
             return False
 
-    elif (value_type == FIELD_TYPE_FLOAT) or (
-        value_type == FIELD_TYPE_LIST_FLOAT and is_subvalue
-    ):
+    elif value_type == FIELD_TYPE_FLOAT:
+
         try:
             float(value)
             return True
 
-        except Exception:
+        except ValueError:
             return False
 
-    elif (value_type == FIELD_TYPE_BOOLEAN) or (
-        value_type == FIELD_TYPE_LIST_BOOLEAN and is_subvalue
-    ):
-        return (
-            value == "True"
-            or value is True
-            or value == "False"
-            or value is False
-        )
+    elif value_type == FIELD_TYPE_BOOLEAN:
+        return value in ["True", True, "False", False]
 
-    elif (value_type == FIELD_TYPE_STRING) or (
-        value_type == FIELD_TYPE_LIST_STRING and is_subvalue
-    ):
-        try:
-            str(value)
-            return True
+    elif value_type == FIELD_TYPE_STRING:
+        return isinstance(value, str)
 
-        except Exception:
-            return False
+    elif value_type == FIELD_TYPE_DATE:
 
-    elif (
-        isinstance(value_type, str)
-        and value_type.startswith("list_")
-        and not is_subvalue
-    ):
-        if isinstance(value, str):
-            value = ast.literal_eval(value)
-
-        is_valid_value = True
-
-        for subvalue in value:
-            if not check_value_type(subvalue, value_type, True):
-                is_valid_value = False
-                break
-
-        return is_valid_value
-
-    elif (value_type == FIELD_TYPE_DATE) or (
-        value_type == FIELD_TYPE_LIST_DATE and is_subvalue
-    ):
         if isinstance(value, QDate):
             return True
 
         elif isinstance(value, str):
+
             try:
                 format = "%d/%m/%Y"
                 datetime.strptime(value, format).date()
                 return True
 
-            except Exception:
+            except ValueError:
                 return False
 
-    elif (value_type == FIELD_TYPE_DATETIME) or (
-        value_type == FIELD_TYPE_LIST_DATETIME and is_subvalue
-    ):
+    elif value_type == FIELD_TYPE_DATETIME:
+
         if isinstance(value, QDateTime):
             return True
 
         elif isinstance(value, str):
+
             try:
                 format = "%d/%m/%Y %H:%M:%S.%f"
                 datetime.strptime(value, format)
                 return True
 
-            except Exception:
+            except ValueError:
                 return False
 
-    elif (value_type == FIELD_TYPE_TIME) or (
-        value_type == FIELD_TYPE_LIST_TIME and is_subvalue
-    ):
+    elif value_type == FIELD_TYPE_TIME:
+
         if isinstance(value, QTime):
             return True
 
         elif isinstance(value, str):
+
             try:
                 format = "%H:%M:%S.%f"
                 datetime.strptime(value, format).time()
                 return True
 
-            except Exception:
+            except ValueError:
                 return False
 
+    return False
 
-def launch_mia(app):
+
+def launch_mia(app, args):
     """Actual launch of the Mia software.
 
     Overload the sys.excepthook handler with the _my_excepthook private
@@ -385,6 +392,15 @@ def launch_mia(app):
     # import Config only here to prevent circular import issue
     from populse_mia.software_properties import Config
 
+    # useful for WebEngine
+    try:
+        # QtWebEngineWidgets need to be imported before QCoreApplication
+        # instance is created (used later)
+        from soma.qt_gui.qt_backend import QtWebEngineWidgets  # noqa: F401
+
+    except ImportError:
+        pass  # QtWebEngineWidgets is not installed
+
     def _my_excepthook(etype, evalue, tback):
         """Log all uncaught exceptions in non-interactive mode.
 
@@ -394,14 +410,14 @@ def launch_mia(app):
         there is an unhandled exception (so one that exits the interpreter).
         We take advantage of it to clean up mia software before closing.
 
-        :param etype: exception class
-        :param evalue: exception instance
-        :param tback: traceback object
+        :param etype (type): exception class
+        :param evalue (Exception): exception instance
+        :param tback(traceback): traceback object
 
         :Contains:
             :Private function:
                 - _clean_up(): cleans up the mia software during "normal"
-                  closing.
+                               closing.
         """
 
         def _clean_up():
@@ -423,10 +439,10 @@ def launch_mia(app):
                 opened_projects = []
                 config.set_opened_projects(opened_projects)
 
-            print("\nClean up before closing mia done ...\n")
+            logger.info("Clean up before closing mia done ...")
 
         # log the exception here
-        print("\nException hooking in progress ...")
+        logger.info("Exception hooking in progress ...")
         _clean_up()
         # then call the default handler
         sys.__excepthook__(etype, evalue, tback)
@@ -445,6 +461,7 @@ def launch_mia(app):
         deleted_projects = []
 
         for saved_project in saved_projects_list:
+
             if not os.path.isdir(saved_project):
                 deleted_projects.append(os.path.abspath(saved_project))
                 saved_projects_object.removeSavedProject(saved_project)
@@ -452,36 +469,25 @@ def launch_mia(app):
         return deleted_projects
 
     global main_window
-
-    # useful for WebEngine
-    try:
-        # QtWebEngineWidgets need to be imported before QCoreApplication
-        # instance is created (used later)
-        from soma.qt_gui.qt_backend import QtWebEngineWidgets  # noqa: F401
-
-    except ImportError:
-        pass  # QtWebEngineWidgets is not installed
-
     sys.excepthook = _my_excepthook
-
     # working from the scripts directory
     # os.chdir(os.path.dirname(os.path.realpath(__file__)))
     lock_file = QLockFile(
         QDir.temp().absoluteFilePath("lock_file_populse_mia.lock")
     )
 
-    if not lock_file.tryLock(100):
+    if not lock_file.tryLock(100) and args.multi_instance is False:
         # software already opened in another instance
-        print(
-            "\nAnother instance of Mia is already running.\n"
+        logger.error(
+            "Another instance of Mia is already running. "
             "It is currently not possible to start two instances of Mia at "
             "the same time..."
         )
         return
 
     else:
-        # no instances of the software is opened, the list of opened projects
-        # can be cleared
+        # no instances of the software is opened, or args.multi_instance
+        # is set to True, so the list of opened projects can be cleared
         config = Config()
         config.set_opened_projects([])
 
@@ -490,7 +496,6 @@ def launch_mia(app):
     main_window = MainWindow(project, deleted_projects=deleted_projects)
     main_window.setAttribute(Qt.WA_DeleteOnClose | Qt.WA_QuitOnClose)
     main_window.show()
-
     # make sure to instantiate the QtThreadCall singleton from the main thread
     QtThreadCall()
     app.exec()
@@ -540,98 +545,110 @@ def set_filters_directory_as_default(dialog):
 
 def set_item_data(item, value, value_type):
     """
-    Sets the item data in the data browser.
+    Sets the data for a given item in the data browser based on the
+    expected type.
 
-    :param item: item to set
-    :param value: new item value
-    :param value_type: new value type
+    This function prepares the input `value` according to the specified
+    `value_type`, converting it into a format suitable for PyQt's `QVariant`.
+    It supports both primitive types (e.g., `int`, `str`, `float`) and more
+    complex types like `datetime`, `date`, `time`, and lists of these types.
+
+    :param item: The item to update (expected to support `setData` method).
+    :param value: The new value to set for the item.
+    :param value_type: The expected type of the value, which can be a
+                       standard Python type (e.g., `str`, `int`, `float`,
+                       `bool`) or a `typing`-based list type (e.g.,
+                       `list[int]`, `list[datetime]`).
     """
 
-    if value_type.startswith("list_"):
-        if isinstance(value, str):
-            value = ast.literal_eval(value)
+    def prepare_value(value, expected_type):
+        """
+        Prepares the input value according to its expected type.
 
-        if value_type == FIELD_TYPE_LIST_DATE:
-            new_list = []
+        :param value: The value to prepare.
+        :param expected_type: The expected type of the value.
+        :return: The prepared value suitable for use in a PyQt item.
 
-            for subvalue in value:
-                new_list.append(subvalue.strftime("%d/%m/%Y"))
+        """
+        if expected_type is FIELD_TYPE_DATETIME:
 
-            value = new_list
+            if isinstance(value, FIELD_TYPE_DATETIME):
+                return QDateTime(value)
 
-        elif value_type == FIELD_TYPE_LIST_DATETIME:
-            new_list = []
+            elif isinstance(value, FIELD_TYPE_STRING):
+                return QDateTime(
+                    FIELD_TYPE_STRING.strptime(value, "%d/%m/%Y %H:%M:%S.%f")
+                )
 
-            for subvalue in value:
-                new_list.append(subvalue.strftime("%d/%m/%Y %H:%M:%S.%f"))
+            elif isinstance(value, QDateTime):
+                return value
 
-            value = new_list
+        elif expected_type is FIELD_TYPE_DATE:
 
-        elif value_type == FIELD_TYPE_LIST_TIME:
-            new_list = []
+            if isinstance(value, FIELD_TYPE_DATE):
+                return QDate(value)
 
-            for subvalue in value:
-                new_list.append(subvalue.strftime("%H:%M:%S.%f"))
+            elif isinstance(value, FIELD_TYPE_STRING):
+                return QDate(
+                    FIELD_TYPE_DATETIME.strptime(value, "%d/%m/%Y").date()
+                )
 
-            value = new_list
+            elif isinstance(value, QDate):
+                return value
 
-        value_prepared = str(value)
+        elif expected_type is FIELD_TYPE_TIME:
+
+            if isinstance(value, FIELD_TYPE_TIME):
+                return QTime(value)
+
+            elif isinstance(value, FIELD_TYPE_STRING):
+                return QTime(
+                    FIELD_TYPE_DATETIME.strptime(value, "%H:%M:%S.%f").time()
+                )
+
+            elif isinstance(value, QTime):
+                return value
+
+        elif expected_type is FIELD_TYPE_FLOAT:
+            return FIELD_TYPE_FLOAT(value)
+
+        elif expected_type is FIELD_TYPE_INTEGER:
+            return FIELD_TYPE_INTEGER(value)
+
+        elif expected_type is FIELD_TYPE_BOOLEAN:
+            return FIELD_TYPE_BOOLEAN(value)
+
+        elif expected_type is FIELD_TYPE_STRING:
+            return FIELD_TYPE_STRING(value)
+
+        elif expected_type is FIELD_TYPE_JSON:
+            return value  # Assume valid JSON-like dict
+
+        elif get_origin(expected_type) is list:
+            sub_value_type = get_args(expected_type)[0]
+
+            if isinstance(value, FIELD_TYPE_STRING):
+                value = ast.literal_eval(value)
+
+            return [prepare_value(v, sub_value_type) for v in value]
+
+        else:
+            raise TypeError(f"Unsupported type: {expected_type}")
+
+    try:
+        # Prepare the value according to its type
+        value_prepared = prepare_value(value, value_type)
+
+        # If the value is a list, convert it to a string for
+        # PyQt compatibility
+        if get_origin(value_type) is list:
+            value_prepared = FIELD_TYPE_STRING(value_prepared)
+
+        # Set the prepared value in the item
         item.setData(Qt.EditRole, QVariant(value_prepared))
 
-    elif value_type == FIELD_TYPE_DATETIME:
-        if isinstance(value, datetime):
-            value_prepared = QDateTime(value)
-
-        elif isinstance(value, QDateTime):
-            value_prepared = value
-
-        elif isinstance(value, str):
-            format = "%d/%m/%Y %H:%M:%S.%f"
-            value_prepared = QDateTime(datetime.strptime(value, format))
-
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_DATE:
-        if isinstance(value, date):
-            value_prepared = QDate(value)
-
-        elif isinstance(value, QDate):
-            value_prepared = value
-
-        elif isinstance(value, str):
-            format = "%d/%m/%Y"
-            value_prepared = QDate(datetime.strptime(value, format).date())
-
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_TIME:
-        if isinstance(value, time):
-            value_prepared = QTime(value)
-
-        elif isinstance(value, QTime):
-            value_prepared = value
-
-        elif isinstance(value, str):
-            format = "%H:%M:%S.%f"
-            value_prepared = QTime(datetime.strptime(value, format).time())
-
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_FLOAT:
-        value_prepared = float(value)
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_INTEGER:
-        value_prepared = int(value)
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_BOOLEAN:
-        value_prepared = value
-        item.setData(Qt.EditRole, QVariant(value_prepared))
-
-    elif value_type == FIELD_TYPE_STRING:
-        value_prepared = str(value)
-        item.setData(Qt.EditRole, QVariant(value_prepared))
+    except Exception as e:
+        raise ValueError(f"Failed to set item data: {e}")
 
 
 def set_projects_directory_as_default(dialog):
@@ -671,6 +688,7 @@ def table_to_database(value, value_type):
         return int(value)
 
     elif value_type == FIELD_TYPE_BOOLEAN:
+
         if value == "True" or value is True:
             return True
 
@@ -678,10 +696,12 @@ def table_to_database(value, value_type):
             return False
 
     elif value_type == FIELD_TYPE_DATETIME:
+
         if isinstance(value, QDateTime):
             return value.toPyDateTime()
 
         elif isinstance(value, str):
+
             try:
                 format = "%d/%m/%Y %H:%M:%S.%f"
                 date_typed = datetime.strptime(value, format)
@@ -692,6 +712,7 @@ def table_to_database(value, value_type):
             return date_typed
 
     elif value_type == FIELD_TYPE_DATE:
+
         if isinstance(value, QDate):
             return value.toPyDate()
 
@@ -700,6 +721,7 @@ def table_to_database(value, value_type):
             return datetime.strptime(value, format).date()
 
     elif value_type == FIELD_TYPE_TIME:
+
         if isinstance(value, QTime):
             return value.toPyTime()
 
@@ -707,16 +729,35 @@ def table_to_database(value, value_type):
             format = "%H:%M:%S.%f"
             return datetime.strptime(value, format).time()
 
-    elif value_type.startswith("list_"):
+    elif get_origin(value_type) is list:
         old_list = ast.literal_eval(value)
         list_to_return = []
+        element_type = get_args(value_type)[0]
 
         for old_element in old_list:
-            list_to_return.append(
-                table_to_database(old_element, value_type.replace("list_", ""))
-            )
+            list_to_return.append(table_to_database(old_element, element_type))
 
         return list_to_return
+
+
+def type_name(t):
+    """
+    Returns the name of a type or a string representation for generic
+    aliases.
+
+    Parameters:
+        t: The type to get the name or representation for.
+           This can be a regular type (e.g., `str`, `list`) or a generic
+           alias (e.g., `list[str]`).
+
+    Returns:
+    str: The name of the type (e.g., 'str') or the string representation of
+         the generic alias (e.g., 'list[str]').
+    """
+    if isinstance(t, types.GenericAlias):
+        return str(t)
+
+    return t.__name__
 
 
 def verCmp(first_ver, sec_ver, comp):
@@ -757,6 +798,7 @@ def verCmp(first_ver, sec_ver, comp):
         return [int(x) for x in re.sub(r"(\.0+)*$", "", v).split(".")]
 
     if comp == "eq":
+
         if normalise(first_ver) == normalise(sec_ver):
             return True
 
@@ -764,6 +806,7 @@ def verCmp(first_ver, sec_ver, comp):
             return False
 
     elif comp == "sup":
+
         if (normalise(first_ver) > normalise(sec_ver)) or (
             verCmp(first_ver, sec_ver, "eq")
         ):
@@ -773,6 +816,7 @@ def verCmp(first_ver, sec_ver, comp):
             return False
 
     elif comp == "inf":
+
         if (normalise(first_ver) < normalise(sec_ver)) or (
             verCmp(first_ver, sec_ver, "eq")
         ):
@@ -842,6 +886,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             return True
 
         for key in old_dic:
+
             if key not in new_dic:
                 pass
 
@@ -858,20 +903,22 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
     proc_content = None
     # proc_content: python dictionary object corresponding to the
     #               process_config.yml property file
-
     config = Config()
     proc_config = os.path.join(
         config.get_properties_path(), "properties", "process_config.yml"
     )
-    print(
-        "\nChecking the installed version for nipype, "
-        "mia_processes and capsul ..."
+    logger.info(
+        "Checking the installed version for nipype, mia_processes "
+        "and capsul ..."
     )
 
     if os.path.isfile(proc_config):
+
         with open(proc_config) as stream:
+
             if version.parse(yaml.__version__) > version.parse("5.1"):
                 proc_content = yaml.load(stream, Loader=yaml.FullLoader)
+
             else:
                 proc_content = yaml.load(stream)
 
@@ -885,11 +932,14 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
     # Checking that the packages used during the previous launch
     # of mia are still available
     if othPckg:
+
         for pckg in othPckg:
+
             try:
                 __import__(pckg)
 
             except ImportError as e:
+
                 # Try to update the sys.path for the processes/ directory
                 # currently used
                 if not (
@@ -909,6 +959,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                         if ("Paths" in proc_content) and (
                             isinstance(proc_content["Paths"], list)
                         ):
+
                             if (
                                 not os.path.join(
                                     config.get_properties_path(), "processes"
@@ -950,26 +1001,21 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                     # If an exception is raised, ask the user to remove the
                     # package from the pipeline library or reload it
                     except ImportError as e:
-                        print(f"\n{e}")
+                        logger.warning(f"{e}")
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
                         msg.setWindowTitle(f"populse_mia - warning: {e}")
+                        msg_path = os.path.join(
+                            config.get_properties_path(), "processes", pckg
+                        )
                         msg.setText(
-                            (
-                                "At least, {} has not been found in {}."
-                                "\nTo prevent mia crash when using it, "
-                                "please remove (see File > Package "
-                                "library manager) or load again (see More"
-                                " > Install processes) the corresponding "
-                                "process library."
-                            ).format(
-                                e.msg.split()[-1],
-                                os.path.join(
-                                    config.get_properties_path(),
-                                    "processes",
-                                    pckg,
-                                ),
-                            )
+                            f"At least, {e.msg.split()[-1]} has not been "
+                            f"found in {msg_path}."
+                            f"\nTo prevent mia crash when using it, "
+                            f"please remove (see File > Package "
+                            f"library manager) or load again (see More"
+                            f" > Install processes) the corresponding "
+                            f"process library."
                         )
                         msg.setStandardButtons(QMessageBox.Ok)
                         msg.buttonClicked.connect(msg.close)
@@ -984,51 +1030,42 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 # package is certainly not properly installed in the processes
                 # directory
                 else:
-                    print(f"No module named '{pckg}'")
+                    logger.warning(f"No module named '{pckg}'")
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
                     msg.setWindowTitle(f"populse_mia - warning: {e}")
+                    msg_path = os.path.join(
+                        config.get_properties_path(), "processes"
+                    )
                     msg.setText(
-                        (
-                            "At least, {} has not been found in {}."
-                            "\nTo prevent mia crash when using it, "
-                            "please remove (see File > Package "
-                            "library manager) or load again (see More"
-                            " > Install processes) the corresponding "
-                            "process library."
-                        ).format(
-                            e.msg.split()[-1],
-                            os.path.join(
-                                config.get_properties_path(), "processes"
-                            ),
-                        )
+                        f"At least, {e.msg.split()[-1]} has not been "
+                        f"found in {msg_path}."
+                        f"\nTo prevent mia crash when using it, "
+                        f"please remove (see File > Package "
+                        f"library manager) or load again (see More"
+                        f" > Install processes) the corresponding "
+                        f"process library."
                     )
                     msg.setStandardButtons(QMessageBox.Ok)
                     msg.buttonClicked.connect(msg.close)
                     msg.exec()
 
             except SyntaxError as e:
-                print(
-                    "\nA problem is detected with the '{}' "
-                    "package...\nTraceback:".format(pckg)
+                logger.warning(
+                    f"A problem is detected with the '{pckg}' "
+                    f"package...\nTraceback:"
                 )
-                print("".join(traceback.format_tb(e.__traceback__)), end="")
-                print(f"{e.__class__.__name__}: {e}\n")
-
+                logger.warning("".join(traceback.format_tb(e.__traceback__)))
+                logger.warning(f"{e.__class__.__name__}: {e}")
+                trabck = "".join(traceback.format_tb(e.__traceback__))
                 txt = (
-                    "A problem is detected with the '{}' package...\n\n"
-                    "Traceback:\n{} {} \n{}\n\nThis may lead to a later "
-                    "crash of Mia ...\nDo you want Mia tries to fix "
-                    "this issue automatically?\nBe careful, risk of "
-                    "destruction of the '{}' module!".format(
-                        pckg,
-                        "".join(traceback.format_tb(e.__traceback__)),
-                        e.__class__.__name__,
-                        e,
-                        e.filename,
-                    )
+                    f"A problem is detected with the '{pckg}' package...\n\n"
+                    f"Traceback:\n{trabck} {e.__class__.__name__} {e} \n\n"
+                    f"This may lead to a later crash of Mia ...\n"
+                    f"Do you want Mia tries to fix this issue "
+                    f"automatically?\nBe careful, risk of destruction of "
+                    f"the '{e.filename}' module!"
                 )
-
                 lineCnt = txt.count("\n")
                 msg = QMessageBox()
                 msg.setWindowTitle(f"populse_mia - warning: {e}")
@@ -1058,6 +1095,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 msg.exec()
 
                 if msg.clickedButton() == ok_button:
+
                     with open(e.filename) as file:
                         filedata = file.read()
                         filedata = filedata.replace(
@@ -1068,22 +1106,18 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                         file.write(filedata)
 
             except ValueError as e:
-                print(
-                    "\nA problem is detected with the '{}' "
-                    "package...\nTraceback:".format(pckg)
+                logger.warning(
+                    f"A problem is detected with the '{pckg}' "
+                    "package...\nTraceback:"
                 )
-                print("".join(traceback.format_tb(e.__traceback__)), end="")
-                print(f"{e.__class__.__name__}: {e}\n")
-
+                logger.warning("".join(traceback.format_tb(e.__traceback__)))
+                logger.warning(f"{e.__class__.__name__}: {e}")
+                trabck = "".join(traceback.format_tb(e.__traceback__))
                 txt = (
-                    "A problem is detected with the '{}' package...\n\n"
-                    "Traceback:\n{} {} \n{}\n\nThis may lead to a later "
-                    "crash of Mia ...\nPlease, try to fix it !...".format(
-                        pckg,
-                        "".join(traceback.format_tb(e.__traceback__)),
-                        e.__class__.__name__,
-                        e,
-                    )
+                    f"A problem is detected with the '{pckg}' package...\n\n"
+                    f"Traceback:\n{trabck} {e.__class__.__name__} \n{e}\n\n"
+                    f"This may lead to a later crash of Mia ...\nPlease, "
+                    f"try to fix it !..."
                 )
                 msg = QMessageBox()
                 msg.setWindowTitle(f"populse_mia - warning: {e}")
@@ -1117,6 +1151,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
         old_capsulVer = None
 
     else:
+
         # During the previous use of mia, nipype was not available or its
         # version was not known or its version was different from the one
         # currently available on the station
@@ -1133,13 +1168,14 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 and ("Versions" in proc_content)
                 and ("nipype" in proc_content["Versions"])
             ):
-                print(
-                    "\nThe process_config.yml file seems to be corrupted! "
+                logger.warning(
+                    "The process_config.yml file seems to be corrupted! "
                     "Let's try to fix it by installing the current nipype "
                     "processes library again in mia ..."
                 )
 
         else:
+
             if (
                 (isinstance(proc_content, dict))
                 and ("Versions" in proc_content)
@@ -1152,8 +1188,8 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             ):
                 old_nipypeVer = None
                 pack2install.append("nipype.interfaces")
-                print(
-                    "\nThe process_config.yml file seems to be corrupted! "
+                logger.warning(
+                    "The process_config.yml file seems to be corrupted! "
                     "Let's try to fix it by installing the nipype processes "
                     "library again in mia ..."
                 )
@@ -1183,13 +1219,14 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 and ("Versions" in proc_content)
                 and ("mia_processes" in proc_content["Versions"])
             ):
-                print(
-                    "\nThe process_config.yml file seems to be corrupted! "
+                logger.warning(
+                    "The process_config.yml file seems to be corrupted! "
                     "Let's try to fix it by installing the mia_processes "
                     "processes library again in mia ..."
                 )
 
         else:
+
             if (
                 (isinstance(proc_content, dict))
                 and ("Versions" in proc_content)
@@ -1202,8 +1239,8 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             ):
                 old_miaProcVer = None
                 pack2install.append("mia_processes")
-                print(
-                    "\nThe process_config.yml file seems to be corrupted! "
+                logger.warning(
+                    "The process_config.yml file seems to be corrupted! "
                     "Let's try to fix it by installing the mia_processes "
                     "processes library again in mia ..."
                 )
@@ -1233,13 +1270,14 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 and ("Versions" in proc_content)
                 and ("capsul" in proc_content["Versions"])
             ):
-                print(
-                    "\nThe process_config.yml file seems to be corrupted! "
+                logger.warning(
+                    "The process_config.yml file seems to be corrupted! "
                     "Let's try to fix it by installing the capsul "
                     "processes library again in mia ..."
                 )
 
         else:
+
             if (
                 (isinstance(proc_content, dict))
                 and ("Versions" in proc_content)
@@ -1252,10 +1290,10 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             ):
                 old_capsulVer = None
                 pack2install.append("capsul.pipeline")
-                print(
-                    "\nThe process_config.yml file seems to be corrupted! "
+                logger.warning(
+                    "The process_config.yml file seems to be corrupted! "
                     "Let's try to fix it by installing the capsul "
-                    "processes library again in mia ..."
+                    "processes library again in Mia ..."
                 )
 
             elif (
@@ -1278,54 +1316,48 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             final_pckgs["Versions"]["nipype"] = nipypeVer
 
             if old_nipypeVer is None:
-                print(
-                    "\n\n** Installation in mia of the {} processes "
-                    "library, {} version ...".format(pckg, nipypeVer)
+                logger.info(
+                    f"** Installation in Mia of the {pckg} processes "
+                    f"library, {nipypeVer} version ..."
                 )
 
             else:
-                print(
-                    "\n\n** Upgrading of the {} processes library, "
-                    "from {} to {} version ...".format(
-                        pckg, old_nipypeVer, nipypeVer
-                    )
+                logger.info(
+                    f"** Upgrading of the {pckg} processes library, "
+                    f"from {old_nipypeVer} to {nipypeVer} version ..."
                 )
 
         if "mia_processes" in pckg:
             final_pckgs["Versions"]["mia_processes"] = miaProcVer
 
             if old_miaProcVer is None:
-                print(
-                    "\n\n** Installation in mia of the {} processes "
-                    "library, {} version ...".format(pckg, miaProcVer)
+                logger.info(
+                    f"** Installation in Mia of the {pckg} processes "
+                    f"library, {miaProcVer} version ..."
                 )
 
             else:
-                print(
-                    "\n\n** Upgrading of the {} processes library, "
-                    "from {} to {} version ...".format(
-                        pckg, old_miaProcVer, miaProcVer
-                    )
+                logger.info(
+                    f"** Upgrading of the {pckg} processes library, "
+                    f"from {old_miaProcVer} to {miaProcVer} version ..."
                 )
 
         if "capsul" in pckg:
             final_pckgs["Versions"]["capsul"] = capsulVer
 
             if old_capsulVer is None:
-                print(
-                    "\n\n** Installation in mia of the {} processes "
-                    "library, {} version ...".format(pckg, capsulVer)
+                logger.info(
+                    f"** Installation in mia of the {pckg} processes "
+                    f"library, {capsulVer} version ..."
                 )
 
             else:
-                print(
-                    "\n\n** Upgrading of the {} processes library, "
-                    "from {} to {} version ...".format(
-                        pckg, old_capsulVer, capsulVer
-                    )
+                logger.info(
+                    f"** Upgrading of the {pckg} processes library, "
+                    f"from {old_capsulVer} to {capsulVer} version ..."
                 )
 
-        print(f"\nExploring {pckg} ...")
+        logger.info(f"\nExploring {pckg} ...")
         pckg_dic = package.add_package(pckg)
         # pckg_dic: a dic of dic representation of a package and its
         #           subpackages/modules
@@ -1335,51 +1367,54 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             final_pckgs["Packages"][item] = pckg_dic[item]
 
     if pack2install:
+
         if len(pack2install) == 2:
+
             if not any("nipype" in s for s in pack2install):
-                print(
-                    "\n** The nipype processes library in mia is "
-                    "already using the current installed version ({}) "
-                    "for this station\n".format(nipypeVer)
+                logger.info(
+                    f"** The nipype processes library in Mia is already "
+                    f"using the current installed version ({nipypeVer}) "
+                    f"for this station."
                 )
 
             elif not any("mia_processes" in s for s in pack2install):
-                print(
-                    "\n** The mia_processes library in mia is "
-                    "already using the current installed version ({}) "
-                    "for this station\n".format(miaProcVer)
+                logger.info(
+                    f"** The mia_processes library in Mia is already "
+                    f"using the current installed version ({miaProcVer}) "
+                    f"for this station."
                 )
 
             elif not any("capsul" in s for s in pack2install):
-                print(
-                    "\n** The capsul library in mia is "
-                    "already using the current installed version ({}) "
-                    "for this station\n".format(capsulVer)
+                logger.info(
+                    f"** The capsul library in Mia is already "
+                    f"using the current installed version ({capsulVer}) "
+                    f"for this station."
                 )
 
         elif len(pack2install) == 1:
+
             if any("nipype" in s for s in pack2install):
-                print(
-                    "\n** The mia_processes and capsul processes "
-                    "libraries are already using in mia the current "
-                    "installed version ({} and {} respectively) for "
-                    "this station\n".format(miaProcVer, capsulVer)
+                logger.info(
+                    f"** The mia_processes and capsul processes libraries "
+                    f"are already using in Mia the current installed "
+                    f"version ({miaProcVer} and {capsulVer} respectively) "
+                    f"for this station."
                 )
 
             elif any("mia_processes" in s for s in pack2install):
-                print(
-                    "\n** The nipype and capsul processes "
-                    "libraries are already using in mia the current "
-                    "installed version ({} and {} respectively) for "
-                    "this station\n".format(nipypeVer, capsulVer)
+                logger.info(
+                    f"** The nipype and capsul processes libraries are "
+                    f"already using in Mia the current installed "
+                    f"version ({nipypeVer} and {capsulVer} respectively) for "
+                    f"this station."
                 )
 
             elif any("capsul" in s for s in pack2install):
-                print(
-                    "\n** The mia_processes and nipype processes "
-                    "libraries are already using in mia the current "
-                    "installed version ({} and {} respectively) for "
-                    "this station\n".format(miaProcVer, nipypeVer)
+                logger.info(
+                    f"** The mia_processes and nipype processes libraries "
+                    f"are already using in Mia the current installed "
+                    f"version ({miaProcVer} and {nipypeVer} respectively) "
+                    f"for this station."
                 )
 
         if (isinstance(proc_content, dict)) and ("Paths" in proc_content):
@@ -1387,13 +1422,18 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             final_pckgs["Paths"] = proc_content["Paths"]
 
         if (isinstance(proc_content, dict)) and ("Versions" in proc_content):
+
             if proc_content["Versions"] is None:
+
                 for k in ("nipype", "mia_processes", "capsul"):
+
                     if k not in final_pckgs["Versions"]:
                         final_pckgs["Versions"][k] = None
 
             else:
+
                 for item in proc_content["Versions"]:
+
                     if item not in final_pckgs["Versions"]:
                         final_pckgs["Versions"][item] = proc_content[
                             "Versions"
@@ -1405,6 +1445,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             _deepCompDic(proc_content["Packages"], final_pckgs["Packages"])
 
             for item in proc_content["Packages"]:
+
                 if item not in final_pckgs["Packages"]:
                     final_pckgs["Packages"][item] = proc_content["Packages"][
                         item
@@ -1419,10 +1460,10 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             )
 
     else:
-        print(
-            "\n** mia is already using the current installed version of "
-            "nipype, mia_processes and capsul for this station ({}, {} "
-            "and {}, respectively)\n".format(nipypeVer, miaProcVer, capsulVer)
+        logger.info(
+            f"** Mia is already using the current installed version of nipype"
+            f", mia_processes and capsul for this station "
+            f"({nipypeVer}, {miaProcVer} and {capsulVer}, respectively)"
         )
 
 
@@ -1472,8 +1513,9 @@ def verify_setup(
         options |= QFileDialog.ShowDirsOnly
         options |= QFileDialog.ReadOnly
         caption = (
-            "Please select a root directory for configuration, {} mode."
-        ).format("dev" if dev_mode is True else "user")
+            f"Please select a root directory for configuration, "
+            f"{'dev' if dev_mode else 'user'} mode."
+        )
         existDir = QFileDialog(dialog, caption)
         existDir.setFileMode(QFileDialog.DirectoryOnly)
         existDir.setFilter(
@@ -1526,6 +1568,7 @@ def verify_setup(
             dialog.file_line_edit.setText(properties_path)
 
         if dev_mode is True:
+
             if not os.path.split(properties_path)[-1] == "dev":
                 properties_path = os.path.join(properties_path, "dev")
 
@@ -1533,6 +1576,7 @@ def verify_setup(
                 dialog.file_line_edit.setText(os.path.dirname(properties_path))
 
         else:
+
             if not os.path.split(properties_path)[-1] == "usr":
                 properties_path = os.path.join(properties_path, "usr")
 
@@ -1572,12 +1616,10 @@ def verify_setup(
                 "1au2v1M=",
                 os.path.join(properties_dir, "config.yml"),
             )
-            print(
-                "\nThe {} file is created...".format(
-                    os.path.join(properties_dir, "config.yml")
-                )
+            logger.info(
+                f"The {os.path.join(properties_dir, 'config.yml')} file "
+                f"is created..."
             )
-
             # processes/User_processes folder management / initialisation:
             user_processes_dir = os.path.join(
                 properties_path, "processes", "User_processes"
@@ -1585,11 +1627,7 @@ def verify_setup(
 
             if not os.path.exists(user_processes_dir):
                 os.makedirs(user_processes_dir, exist_ok=True)
-                print(
-                    "\nThe {} directory is created...".format(
-                        user_processes_dir
-                    )
-                )
+                logger.info("The {user_processes_dir} directory is created...")
 
             if not os.path.exists(
                 os.path.join(user_processes_dir, "__init__.py")
@@ -1600,13 +1638,12 @@ def verify_setup(
                         "__init__.py",
                     )
                 ).touch()
-                print(
-                    "\nThe {} file is created...".format(
-                        os.path.join(properties_dir, "config.yml")
-                    )
+                logger.info(
+                    f"The {os.path.join(properties_dir, 'config.yml')} file "
+                    f"is created..."
                 )
 
-            print("\nDefault configuration checked.\n")
+            logger.info("Default configuration checked!")
 
     def _save_yml_file(a_dic, a_file):
         """Save data in a YAML file.
@@ -1651,11 +1688,14 @@ def verify_setup(
         config = None
 
         if dialog is not None:
+
             if not dialog.file_line_edit.text():
                 # FIXME: Shouldn't we carry out a more thorough invalidity
                 #        check (we're only checking the empty
                 #        string here)?
-                print("Warning: configuration root directory is invalid...")
+                logger.warning(
+                    "Warning: configuration root directory is invalid..."
+                )
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
                 msg.setWindowTitle("Mia configuration Error")
@@ -1664,7 +1704,9 @@ def verify_setup(
                 return
 
             with open(dot_mia_config) as stream:
+
                 try:
+
                     if verCmp(yaml.__version__, "5.1", "sup"):
                         mia_home_properties_path = yaml.load(
                             stream, Loader=yaml.FullLoader
@@ -1677,14 +1719,14 @@ def verify_setup(
                         mia_home_properties_path, dict
                     ):
                         raise yaml.YAMLError(
-                            "\nThe '{}' file seems to be "
-                            "corrupted...\n".format(dot_mia_config)
+                            f"\nThe '{dot_mia_config}' file seems to be "
+                            f"corrupted...\n"
                         )
 
                 except yaml.YAMLError:
-                    print(
-                        "\n {} cannot be read, the path to the properties has "
-                        "not been found...".format(dot_mia_config)
+                    logger.warning(
+                        f"\n {dot_mia_config} cannot be read, the path "
+                        f"to the properties has not been found..."
                     )
                     mia_home_properties_path = dict()
 
@@ -1694,11 +1736,7 @@ def verify_setup(
                 _make_default_config(dialog)
 
             except Exception as e:
-                print(
-                    "\nAutomatic configuration fails: {} ...".format(
-                        e,
-                    )
-                )
+                logger.warning(f"Automatic configuration fails: {e} ...")
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
                 msg.setWindowTitle("Mia configuration Error")
@@ -1729,10 +1767,10 @@ def verify_setup(
             for k in key_to_del:
                 del mia_home_properties_path[k]
 
-            print(f"\nNew values in {dot_mia_config}: ")
+            logger.info(f"New values in {dot_mia_config}: ")
 
             for key, value in mia_home_properties_path_new.items():
-                print(f"- {key}: {value}")
+                logger.info(f"- {key}: {value}")
 
             print()
             _save_yml_file(mia_home_properties_path, dot_mia_config)
@@ -1744,8 +1782,8 @@ def verify_setup(
                 # key == 'name' / value == 'MIA':
                 if config.config["name"] != "MIA":
                     raise yaml.YAMLError(
-                        "\nThe '{}' file seems to be "
-                        "corrupted...\n".format(dot_mia_config)
+                        f"\nThe '{dot_mia_config}' file seems to be "
+                        f"corrupted...\n"
                     )
 
                 if not config.get_admin_hash():
@@ -1755,11 +1793,9 @@ def verify_setup(
                     )
 
             except Exception as e:
-                print(
-                    "\nCould not fetch the "
-                    "properties/config.yml file: {} ...".format(
-                        e,
-                    )
+                logger.warning(
+                    f"Could not fetch the "
+                    f"properties/config.yml file: {e} ..."
                 )
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
@@ -1778,8 +1814,8 @@ def verify_setup(
             # key == 'name' / value == 'MIA':
             if config.config["name"] != "MIA":
                 raise yaml.YAMLError(
-                    "\nThe '{}' file seems to be "
-                    "corrupted...\n".format(dot_mia_config)
+                    f"\nThe '{dot_mia_config}' file seems to be "
+                    f"corrupted...\n"
                 )
 
             if not config.get_admin_hash():
@@ -1789,7 +1825,9 @@ def verify_setup(
                 )
 
         if config is not None:
+
             for key, value in config.config.items():
+
                 # Patch for obsolete values
                 if value == "no":
                     save_flag = True
@@ -1811,9 +1849,9 @@ def verify_setup(
     # ~/.populse_mia/configuration_path.yml management/initialisation
     if not os.path.exists(os.path.dirname(dot_mia_config)):
         os.mkdir(os.path.dirname(dot_mia_config))
-        print(
-            "\nThe {} directory is created "
-            "...".format(os.path.dirname(dot_mia_config))
+        logger.info(
+            f"The {os.path.dirname(dot_mia_config)} directory is "
+            f"created..."
         )
         Path(os.path.join(dot_mia_config)).touch()
 
@@ -1821,8 +1859,10 @@ def verify_setup(
         Path(os.path.join(dot_mia_config)).touch()
 
     try:
+
         # Just to check if dot_mia_config file is well readable/writeable
         with open(dot_mia_config) as stream:
+
             if version.parse(yaml.__version__) > version.parse("5.1"):
                 mia_home_properties_path = yaml.load(
                     stream, Loader=yaml.FullLoader
@@ -1833,9 +1873,9 @@ def verify_setup(
 
         if mia_home_properties_path is None:
             raise yaml.YAMLError(
-                "\nThe '{}' file seems to be "
-                "corrupted or the configuration has never "
-                "been initialized...\n".format(dot_mia_config)
+                f"\nThe '{dot_mia_config}' file seems to be "
+                f"corrupted or the configuration has never "
+                f"been initialized...\n"
             )
 
         if dev_mode and "properties_dev_path" not in mia_home_properties_path:
@@ -1860,10 +1900,10 @@ def verify_setup(
         # correctly read...
 
         # FIXME: We may be need a more precise Exception class to catch ?
-        print(
-            "\nAn issue has been detected when opening"
-            " the {} file or with the parameters returned "
-            "from this file:{}\n".format(dot_mia_config, e)
+        logger.warning(
+            f"An issue has been detected when opening "
+            f"the {dot_mia_config} file or with the parameters returned "
+            f"from this file:{e}"
         )
 
         # open popup, we choose the properties path dir
@@ -1872,8 +1912,8 @@ def verify_setup(
         vbox_layout = QVBoxLayout()
         hbox_layout = QHBoxLayout()
         file_label = QLabel(
-            "No configuration parameters found. Please select a root directory"
-            " for configuration."
+            "No configuration parameters found. Please select a root "
+            "directory for configuration."
         )
         msg.file_line_edit = QLineEdit()
         msg.file_line_edit.setText(os.path.dirname(dot_mia_config))
@@ -1909,7 +1949,7 @@ def verify_setup(
             pypath.append(user_proc)
 
             for elt in user_proc_dir:
-                print(f"  . Using {elt} package from {user_proc}...")
+                logger.info(f"  . Using {elt} package from {user_proc}...")
 
         del user_proc_dir
 
@@ -1949,10 +1989,11 @@ def verify_setup(
             ]
 
             for i in pc["path"]:
+
                 if i not in pypath and not any(x in i for x in matches):
                     pypath.append(i)
 
         pc["path"] = pypath
-        print("\nChanged python conf:", pc)
+        logger.info(f"Changed python conf: {pc}")
         config.update_capsul_config()
         config.saveConfig()
