@@ -5,6 +5,7 @@ Module that contains multiple functions used across Mia.
     :Classes:
         - PackagesInstall
     :Functions:
+        - _is_valid_date(date_str, date_format)
         - check_python_version
         - check_value_type
         - launch_mia
@@ -28,7 +29,6 @@ Module that contains multiple functions used across Mia.
 ##########################################################################
 
 import ast
-import copy
 import inspect
 import logging
 import os
@@ -256,6 +256,23 @@ def check_python_version():
         )
 
 
+def _is_valid_date(date_str, date_format):
+    """
+    Checks if a string matches the given date format.
+
+    :param date_str (str): The date string to validate.
+    :param date_format (str): The expected date format.
+
+    :returns (bool): True if the string matches the format, False otherwise.
+    """
+    try:
+        datetime.strptime(date_str, date_format)
+        return True
+
+    except ValueError:
+        return False
+
+
 def check_value_type(value, value_type, is_subvalue=False):
     """
     Checks the type of new value in a table cell (QTableWidget).
@@ -296,97 +313,53 @@ def check_value_type(value, value_type, is_subvalue=False):
         # Otherwise, validate if value is a list and all elements
         # match the element type
         return isinstance(value, list) and all(
-            check_value_type(v, element_type) for v in value
+            isinstance(v, element_type) for v in value
         )
 
-    # Handle basic types
-    elif value_type == FIELD_TYPE_INTEGER:
+    # Mapping for basic types
+    type_validators = {
+        FIELD_TYPE_INTEGER: lambda v: v.lstrip("-").isdigit(),
+        FIELD_TYPE_FLOAT: lambda v: (
+            v.replace(".", "", 1).lstrip("-").isdigit()
+        ),
+        FIELD_TYPE_BOOLEAN: lambda v: str(v) in {"True", "False"},
+        FIELD_TYPE_STRING: lambda v: isinstance(v, str),
+        FIELD_TYPE_DATE: lambda v: isinstance(v, QDate)
+        or (isinstance(v, str) and _is_valid_date(v, "%d/%m/%Y")),
+        FIELD_TYPE_DATETIME: lambda v: (
+            isinstance(v, QDateTime)
+            or (
+                isinstance(v, str)
+                and _is_valid_date(v, "%d/%m/%Y %H:%M:%S.%f")
+            )
+        ),
+        FIELD_TYPE_TIME: lambda v: isinstance(v, QTime)
+        or (isinstance(v, str) and _is_valid_date(v, "%H:%M:%S.%f")),
+    }
 
-        try:
-            int(value)
-            return True
-
-        except ValueError:
-            return False
-
-    elif value_type == FIELD_TYPE_FLOAT:
-
-        try:
-            float(value)
-            return True
-
-        except ValueError:
-            return False
-
-    elif value_type == FIELD_TYPE_BOOLEAN:
-        return value in ["True", True, "False", False]
-
-    elif value_type == FIELD_TYPE_STRING:
-        return isinstance(value, str)
-
-    elif value_type == FIELD_TYPE_DATE:
-
-        if isinstance(value, QDate):
-            return True
-
-        elif isinstance(value, str):
-
-            try:
-                format = "%d/%m/%Y"
-                datetime.strptime(value, format).date()
-                return True
-
-            except ValueError:
-                return False
-
-    elif value_type == FIELD_TYPE_DATETIME:
-
-        if isinstance(value, QDateTime):
-            return True
-
-        elif isinstance(value, str):
-
-            try:
-                format = "%d/%m/%Y %H:%M:%S.%f"
-                datetime.strptime(value, format)
-                return True
-
-            except ValueError:
-                return False
-
-    elif value_type == FIELD_TYPE_TIME:
-
-        if isinstance(value, QTime):
-            return True
-
-        elif isinstance(value, str):
-
-            try:
-                format = "%H:%M:%S.%f"
-                datetime.strptime(value, format).time()
-                return True
-
-            except ValueError:
-                return False
-
-    return False
+    return type_validators.get(value_type, lambda _: False)(value)
 
 
 def launch_mia(app, args):
-    """Actual launch of the Mia software.
+    """
+    Launches the Mia software application.
 
-    Overload the sys.excepthook handler with the _my_excepthook private
-    function. Check if the software is already opened in another instance.
-    If not, the list of opened projects is cleared. Checks if saved projects
-    known in the Mia software still exist, and updates if necessary.
-    Instantiates a 'project' object that handles projects and their
-    associated database and finally launch of the Mia's GUI.
+    This function:
+    - Overloads the sys.excepthook handler with the _my_excepthook function
+      to log uncaught exceptions in non-interactive mode.
+    - Checks if Mia is already running in another instance, and prevents
+      multiple instances from opening.
+    - Verifies if saved projects still exist, updating the list of opened
+      projects if necessary.
+    - Instantiates the 'project' object and launches Mia's GUI.
 
-    :Contains:
-        :Private function:
-            - _my_excepthook: log all uncaught exceptions in non-interactive
-              mode
-            - _verify_saved_projects: checks if the projects are still existing
+    :param app (QApplication): The Qt application instance.
+    :param args (Namespace): Command line arguments.
+
+    :Private functions:
+        - _my_excepthook: Logs uncaught exceptions in non-interactive mode.
+        - _verify_saved_projects: Checks if saved projects still exist and
+           updates the list.
     """
 
     # import Config only here to prevent circular import issue
@@ -402,7 +375,9 @@ def launch_mia(app, args):
         pass  # QtWebEngineWidgets is not installed
 
     def _my_excepthook(etype, evalue, tback):
-        """Log all uncaught exceptions in non-interactive mode.
+        """
+        Log all uncaught exceptions in non-interactive mode and cleans
+        up before exiting.
 
         All python exceptions are handled by function, stored in
         sys.excepthook. By overloading the sys.excepthook handler with
@@ -425,7 +400,6 @@ def launch_mia(app, args):
 
             Make a cleanup of the opened projects just before exiting mia.
             """
-
             global main_window
             config = Config()
             opened_projects = config.get_opened_projects()
@@ -436,10 +410,9 @@ def launch_mia(app, args):
                 main_window.remove_raw_files_useless()
 
             except AttributeError:
-                opened_projects = []
-                config.set_opened_projects(opened_projects)
+                config.set_opened_projects([])
 
-            logger.info("Clean up before closing mia done ...")
+            logger.info("Clean up before closing mia completed.")
 
         # log the exception here
         logger.info("Exception hooking in progress ...")
@@ -450,21 +423,21 @@ def launch_mia(app, args):
         sys.exit(1)
 
     def _verify_saved_projects():
-        """Verify if the projects saved in saved_projects.yml file are still
-        on the disk.
-
-        :return: the list of the deleted projects
         """
+        Verifies if saved projects still exist and updates the
+        list accordingly.
 
-        saved_projects_object = SavedProjects()
-        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
-        deleted_projects = []
+        :return: List of deleted projects
+        """
+        saved_projects = SavedProjects()
+        deleted_projects = [
+            os.path.abspath(proj)
+            for proj in saved_projects.pathsList
+            if not os.path.isdir(proj)
+        ]
 
-        for saved_project in saved_projects_list:
-
-            if not os.path.isdir(saved_project):
-                deleted_projects.append(os.path.abspath(saved_project))
-                saved_projects_object.removeSavedProject(saved_project)
+        for proj in deleted_projects:
+            saved_projects.removeSavedProject(proj)
 
         return deleted_projects
 
@@ -478,19 +451,13 @@ def launch_mia(app, args):
 
     if not lock_file.tryLock(100) and args.multi_instance is False:
         # software already opened in another instance
-        logger.error(
-            "Another instance of Mia is already running. "
-            "It is currently not possible to start two instances of Mia at "
-            "the same time..."
-        )
+        logger.error("Another instance of Mia is already running. Exiting...")
         return
 
-    else:
-        # no instances of the software is opened, or args.multi_instance
-        # is set to True, so the list of opened projects can be cleared
-        config = Config()
-        config.set_opened_projects([])
-
+    # no instances of the software is opened, or args.multi_instance
+    # is set to True, so the list of opened projects can be cleared
+    config = Config()
+    config.set_opened_projects([])
     deleted_projects = _verify_saved_projects()
     project = Project(None, True)
     main_window = MainWindow(project, deleted_projects=deleted_projects)
@@ -519,28 +486,13 @@ def set_filters_directory_as_default(dialog):
     """
     Sets the filters directory as default (Json files)
 
-    :param dialog: current file dialog
+    :param dialog (QFileDialog): current file dialog
     """
-
-    if not (
-        os.path.exists(
-            os.path.join(
-                os.path.join(os.path.relpath(os.curdir), "..", ".."), "filters"
-            )
-        )
-    ):
-        os.makedirs(
-            os.path.join(
-                os.path.join(os.path.relpath(os.curdir), "..", ".."), "filters"
-            )
-        )
-    dialog.setDirectory(
-        os.path.expanduser(
-            os.path.join(
-                os.path.join(os.path.relpath(os.curdir), "..", ".."), "filters"
-            )
-        )
+    filters_dir = os.path.abspath(
+        os.path.join(os.curdir, "..", "..", "filters")
     )
+    os.makedirs(filters_dir, exist_ok=True)
+    dialog.setDirectory(filters_dir)
 
 
 def set_item_data(item, value, value_type):
@@ -553,78 +505,82 @@ def set_item_data(item, value, value_type):
     It supports both primitive types (e.g., `int`, `str`, `float`) and more
     complex types like `datetime`, `date`, `time`, and lists of these types.
 
-    :param item: The item to update (expected to support `setData` method).
-    :param value: The new value to set for the item.
-    :param value_type: The expected type of the value, which can be a
-                       standard Python type (e.g., `str`, `int`, `float`,
-                       `bool`) or a `typing`-based list type (e.g.,
-                       `list[int]`, `list[datetime]`).
+    :param item (QStandardItem): The item to update (expected to
+                                 support `setData` method).
+    :param value (Any): The new value to set for the item.
+    :param value_type (Type): The expected type of the value, which can be a
+                              standard Python type (e.g., `str`, `int`,
+                              `float`, `bool`) or a `typing`-based list
+                              type (e.g., `list[int]`, `list[datetime]`).
     """
+
+    conversion_map = {
+        FIELD_TYPE_DATETIME: lambda v: (
+            v
+            if isinstance(v, QDateTime)
+            else (
+                QDateTime(v)
+                if isinstance(v, FIELD_TYPE_DATETIME)
+                else (
+                    QDateTime(
+                        FIELD_TYPE_STRING.strptime(v, "%d/%m/%Y %H:%M:%S.%f")
+                    )
+                    if isinstance(v, FIELD_TYPE_STRING)
+                    else None
+                )
+            )
+        ),
+        FIELD_TYPE_DATE: lambda v: (
+            v
+            if isinstance(v, QDate)
+            else (
+                QDate(v)
+                if isinstance(v, FIELD_TYPE_DATE)
+                else (
+                    QDate(FIELD_TYPE_DATETIME.strptime(v, "%d/%m/%Y").date())
+                    if isinstance(v, FIELD_TYPE_STRING)
+                    else None
+                )
+            )
+        ),
+        FIELD_TYPE_TIME: lambda v: (
+            v
+            if isinstance(v, QTime)
+            else (
+                QTime(v)
+                if isinstance(v, FIELD_TYPE_TIME)
+                else (
+                    QTime(
+                        FIELD_TYPE_DATETIME.strptime(v, "%H:%M:%S.%f").time()
+                    )
+                    if isinstance(v, FIELD_TYPE_STRING)
+                    else None
+                )
+            )
+        ),
+        FIELD_TYPE_FLOAT: lambda v: FIELD_TYPE_FLOAT(v),
+        FIELD_TYPE_INTEGER: lambda v: FIELD_TYPE_INTEGER(v),
+        FIELD_TYPE_BOOLEAN: lambda v: FIELD_TYPE_BOOLEAN(v),
+        FIELD_TYPE_STRING: lambda v: FIELD_TYPE_STRING(v),
+        FIELD_TYPE_JSON: lambda v: v,  # Assume valid JSON-like dict
+    }
 
     def prepare_value(value, expected_type):
         """
         Prepares the input value according to its expected type.
 
-        :param value: The value to prepare.
-        :param expected_type: The expected type of the value.
-        :return: The prepared value suitable for use in a PyQt item.
+        :param value (Any): The value to prepare.
+        :param expected_type (Type): The expected type of the value.
+        :return (Any): The prepared value suitable for use in a PyQt item.
 
         """
-        if expected_type is FIELD_TYPE_DATETIME:
+        if expected_type in conversion_map:
+            converted_value = conversion_map[expected_type](value)
 
-            if isinstance(value, FIELD_TYPE_DATETIME):
-                return QDateTime(value)
+            if converted_value is not None:
+                return converted_value
 
-            elif isinstance(value, FIELD_TYPE_STRING):
-                return QDateTime(
-                    FIELD_TYPE_STRING.strptime(value, "%d/%m/%Y %H:%M:%S.%f")
-                )
-
-            elif isinstance(value, QDateTime):
-                return value
-
-        elif expected_type is FIELD_TYPE_DATE:
-
-            if isinstance(value, FIELD_TYPE_DATE):
-                return QDate(value)
-
-            elif isinstance(value, FIELD_TYPE_STRING):
-                return QDate(
-                    FIELD_TYPE_DATETIME.strptime(value, "%d/%m/%Y").date()
-                )
-
-            elif isinstance(value, QDate):
-                return value
-
-        elif expected_type is FIELD_TYPE_TIME:
-
-            if isinstance(value, FIELD_TYPE_TIME):
-                return QTime(value)
-
-            elif isinstance(value, FIELD_TYPE_STRING):
-                return QTime(
-                    FIELD_TYPE_DATETIME.strptime(value, "%H:%M:%S.%f").time()
-                )
-
-            elif isinstance(value, QTime):
-                return value
-
-        elif expected_type is FIELD_TYPE_FLOAT:
-            return FIELD_TYPE_FLOAT(value)
-
-        elif expected_type is FIELD_TYPE_INTEGER:
-            return FIELD_TYPE_INTEGER(value)
-
-        elif expected_type is FIELD_TYPE_BOOLEAN:
-            return FIELD_TYPE_BOOLEAN(value)
-
-        elif expected_type is FIELD_TYPE_STRING:
-            return FIELD_TYPE_STRING(value)
-
-        elif expected_type is FIELD_TYPE_JSON:
-            return value  # Assume valid JSON-like dict
-
-        elif get_origin(expected_type) is list:
+        if get_origin(expected_type) is list:
             sub_value_type = get_args(expected_type)[0]
 
             if isinstance(value, FIELD_TYPE_STRING):
@@ -632,8 +588,7 @@ def set_item_data(item, value, value_type):
 
             return [prepare_value(v, sub_value_type) for v in value]
 
-        else:
-            raise TypeError(f"Unsupported type: {expected_type}")
+        raise TypeError(f"Unsupported type: {expected_type}")
 
     try:
         # Prepare the value according to its type
@@ -655,27 +610,24 @@ def set_projects_directory_as_default(dialog):
     """
     Sets the projects directory as default.
 
-    :param dialog: current file dialog
+    :param dialog (QFileDialog): current file dialog.
     """
     # import Config only here to prevent circular import issue
     from populse_mia.software_properties import Config
 
     config = Config()
-    projects_directory = config.get_projects_save_path()
-
-    if not os.path.exists(projects_directory):
-        os.makedirs(projects_directory)
-
-    dialog.setDirectory(projects_directory)
+    projects_directory = Path(config.get_projects_save_path())
+    projects_directory.mkdir(parents=True, exist_ok=True)
+    dialog.setDirectory(str(projects_directory))
 
 
 def table_to_database(value, value_type):
     """
-    Prepares the value to the database.
+    Prepares the value to the database based on its type.
 
-    :param value: Value to convert
-    :param value_type: Value type
-    :return: The value converted for the database
+    :param value (Any): Value to convert.
+    :param value_type (Type): Value type.
+    :return (Any): The value converted for the database.
     """
 
     if value_type == FIELD_TYPE_FLOAT:
@@ -688,56 +640,45 @@ def table_to_database(value, value_type):
         return int(value)
 
     elif value_type == FIELD_TYPE_BOOLEAN:
-
-        if value == "True" or value is True:
-            return True
-
-        elif value == "False" or value is False:
-            return False
+        return value in {"True", True} if value != "False" else False
 
     elif value_type == FIELD_TYPE_DATETIME:
 
         if isinstance(value, QDateTime):
             return value.toPyDateTime()
 
-        elif isinstance(value, str):
+        if isinstance(value, str):
 
             try:
-                format = "%d/%m/%Y %H:%M:%S.%f"
-                date_typed = datetime.strptime(value, format)
+                return datetime.strptime(value, "%d/%m/%Y %H:%M:%S.%f")
 
-            except Exception:
-                date_typed = dateutil.parser.parse(value)
-
-            return date_typed
+            except ValueError:
+                return dateutil.parser.parse(value)
 
     elif value_type == FIELD_TYPE_DATE:
 
         if isinstance(value, QDate):
             return value.toPyDate()
 
-        elif isinstance(value, str):
-            format = "%d/%m/%Y"
-            return datetime.strptime(value, format).date()
+        if isinstance(value, str):
+            return datetime.strptime(value, "%d/%m/%Y").date()
 
     elif value_type == FIELD_TYPE_TIME:
 
         if isinstance(value, QTime):
             return value.toPyTime()
 
-        elif isinstance(value, str):
-            format = "%H:%M:%S.%f"
-            return datetime.strptime(value, format).time()
+        if isinstance(value, str):
+            return datetime.strptime(value, "%H:%M:%S.%f").time()
 
     elif get_origin(value_type) is list:
-        old_list = ast.literal_eval(value)
-        list_to_return = []
-        element_type = get_args(value_type)[0]
+        list_type = get_args(value_type)[0]
+        return [
+            table_to_database(v, list_type) for v in ast.literal_eval(value)
+        ]
 
-        for old_element in old_list:
-            list_to_return.append(table_to_database(old_element, element_type))
-
-        return list_to_return
+    else:
+        raise TypeError(f"Unsupported type: {value_type}")
 
 
 def type_name(t):
@@ -745,40 +686,30 @@ def type_name(t):
     Returns the name of a type or a string representation for generic
     aliases.
 
-    Parameters:
-        t: The type to get the name or representation for.
-           This can be a regular type (e.g., `str`, `list`) or a generic
-           alias (e.g., `list[str]`).
-
-    Returns:
-    str: The name of the type (e.g., 'str') or the string representation of
-         the generic alias (e.g., 'list[str]').
+    :param t (Any): The type to get the name or representation for.
+                    This can be a regular type (e.g., `str`, `list`) or a
+                    generic alias (e.g., `list[str]`).
+    :return: The name of the type (e.g., 'str') or the string representation
+             of the generic alias (e.g., 'list[str]').
     """
-    if isinstance(t, types.GenericAlias):
-        return str(t)
-
-    return t.__name__
+    return str(t) if isinstance(t, types.GenericAlias) else t.__name__
 
 
 def verCmp(first_ver, sec_ver, comp):
     """Version comparator.
 
-    The verCmp() function returns a boolean value to indicate whether its
-    first argument (first_ver) is equal to, less or equal to, or greater or
-    equal to its second argument (sec_ver), as follows:
+    Compares two versions according to the specified comparator:
+      - 'eq': Returns True if the first version is equal to the second.
+      - 'sup': Returns True if the first version is greater than or equal
+               to the second.
+      - 'inf': Returns True if the first version is less than or equal to
+               the second.
 
-      - if third argument (comp) is 'eq': when the first argument is equal to
-        the second argument, return True (False if not).
-      - if third argument (comp) is 'sup': when the first argument is greater
-        than the second argument, return True (False if not).
-      - if third argument (comp) is 'inf': when the first argument is less than
-        the second argument, return True (False if not).
+    :param first_ver (str): The first version to compare (e.g., '0.13.0').
+    :param sec_ver (str): The second version to compare (e.g., '0.13.0').
+    :param comp (str): The comparator to use ('sup', 'inf', 'eq').
 
-    :param first_ver: the version of a package (a string; ex. '0.13.0')
-    :param sec_ver: the version of a package (a string; ex. '0.13.0')
-    :param comp: comparator argument (accepted values: 'sup', 'inf' and 'eq' )
-
-    :return: False or True
+    :return: True if the comparison condition is satisfied, False otherwise.
 
     :Contains:
         :Private function:
@@ -787,43 +718,29 @@ def verCmp(first_ver, sec_ver, comp):
     """
 
     def normalise(v):
-        """Transform a version of a package to a corresponding list of integer.
+        """Transform a version of a package to a list of integer.
 
-        :param v: version of a package (ex. 5.4.1)
+        :param v (str): version of a package (ex. 5.4.1)
 
-        :return: a list of integer (ex. [0, 13, 0])
+        :return (list[int]): a list of integer (ex. [0, 13, 0])
         """
 
         v = re.sub(r"[^0-9\.]", "", v)
         return [int(x) for x in re.sub(r"(\.0+)*$", "", v).split(".")]
 
+    first_normalised = normalise(first_ver)
+    second_normalised = normalise(sec_ver)
+
     if comp == "eq":
+        return first_normalised == second_normalised
 
-        if normalise(first_ver) == normalise(sec_ver):
-            return True
+    if comp == "sup":
+        return first_normalised >= second_normalised
 
-        else:
-            return False
+    if comp == "inf":
+        return first_normalised <= second_normalised
 
-    elif comp == "sup":
-
-        if (normalise(first_ver) > normalise(sec_ver)) or (
-            verCmp(first_ver, sec_ver, "eq")
-        ):
-            return True
-
-        else:
-            return False
-
-    elif comp == "inf":
-
-        if (normalise(first_ver) < normalise(sec_ver)) or (
-            verCmp(first_ver, sec_ver, "eq")
-        ):
-            return True
-
-        else:
-            return False
+    raise ValueError(f"Invalid comparison type: {comp}")
 
 
 def verify_processes(nipypeVer, miaProcVer, capsulVer):
@@ -865,34 +782,27 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
     from populse_mia.software_properties import Config
 
     def _deepCompDic(old_dic, new_dic):
-        """Try to keep the previous configuration existing before the
-        update of the packages.
+        """
+        Recursively compares two dictionaries and retains the previous
+        configuration where applicable.
 
-        Recursive comparison of the old_dic and new _dic dictionary. If
-        all keys are recursively identical, the final value at the end
-        of the whole tree in old_dic is kept in the new _dic. To sum
-        up, this function is used to keep up the user display preferences
-        in the processes' library of the Pipeline Manager Editor.
 
-        :param old_dic: the dic representation of the previous package
-                        configuration
-        :param new_dic: the dic representation of the new package configuration
-        :return: True if the current level is a pipeline that existed in the
-                 old configuration, False if the package/subpackage/pipeline
-                 did not exist
+        This function is used to preserve user display preferences in the
+        Pipeline Manager Editor, ensuring that configurations not updated
+        or changed remain intact.
+
+        :param old_dic (dict): The previous package configuration.
+        :param new_dic (dict): The new package configuration.
+        :return: True if all keys at the current level match, False if not.
         """
 
         if isinstance(old_dic, str):
             return True
 
-        for key in old_dic:
+        for key, value in old_dic.items():
 
-            if key not in new_dic:
-                pass
-
-            # keep the same configuration for the pipeline in new and old dic
-            elif _deepCompDic(old_dic[str(key)], new_dic[str(key)]):
-                new_dic[str(key)] = old_dic[str(key)]
+            if key in new_dic and _deepCompDic(value, new_dic[key]):
+                new_dic[key] = value
 
     othPckg = None
     # othPckg: a list containing all packages, other than nipype, mia_processes
@@ -912,6 +822,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
         "and capsul ..."
     )
 
+    # Read process configuration file if it exists
     if os.path.isfile(proc_config):
 
         with open(proc_config) as stream:
@@ -924,13 +835,12 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
     if (isinstance(proc_content, dict)) and ("Packages" in proc_content):
         othPckg = [
-            f
-            for f in proc_content["Packages"]
-            if f not in ["mia_processes", "nipype", "capsul"]
+            pkg
+            for pkg in proc_content["Packages"]
+            if pkg not in ["mia_processes", "nipype", "capsul"]
         ]
 
-    # Checking that the packages used during the previous launch
-    # of mia are still available
+    # Check if packages used during the previous launch are still available
     if othPckg:
 
         for pckg in othPckg:
@@ -940,15 +850,14 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             except ImportError as e:
 
-                # Try to update the sys.path for the processes/ directory
-                # currently used
-                if not (
-                    os.path.join(config.get_properties_path(), "processes")
-                    in sys.path
-                ):
-                    sys.path.append(
-                        os.path.join(config.get_properties_path(), "processes")
-                    )
+                # Attempt to update sys.path, for the processes/ directory
+                # currently used, and re-import
+                processes_path = os.path.join(
+                    config.get_properties_path(), "processes"
+                )
+
+                if processes_path not in sys.path:
+                    sys.path.append(processes_path)
 
                     try:
                         __import__(pckg)
@@ -960,25 +869,11 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                             isinstance(proc_content["Paths"], list)
                         ):
 
-                            if (
-                                not os.path.join(
-                                    config.get_properties_path(), "processes"
-                                )
-                                in proc_content["Paths"]
-                            ):
-                                proc_content["Paths"].append(
-                                    os.path.join(
-                                        config.get_properties_path(),
-                                        "processes",
-                                    )
-                                )
+                            if processes_path not in proc_content["Paths"]:
+                                proc_content["Paths"].append(processes_path)
 
                         else:
-                            proc_content["Paths"] = [
-                                os.path.join(
-                                    config.get_properties_path(), "processes"
-                                )
-                            ]
+                            proc_content["Paths"] = [processes_path]
 
                         with open(proc_config, "w", encoding="utf8") as stream:
                             yaml.dump(
@@ -992,11 +887,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                         # removed from the sys.path because this directory is
                         # now added to the Paths parameter in the
                         # properties_path/properties/process_config.yml file
-                        sys.path.remove(
-                            os.path.join(
-                                config.get_properties_path(), "processes"
-                            )
-                        )
+                        sys.path.remove(processes_path)
 
                     # If an exception is raised, ask the user to remove the
                     # package from the pipeline library or reload it
@@ -1005,9 +896,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
                         msg.setWindowTitle(f"populse_mia - warning: {e}")
-                        msg_path = os.path.join(
-                            config.get_properties_path(), "processes", pckg
-                        )
+                        msg_path = os.path.join(processes_path, pckg)
                         msg.setText(
                             f"At least, {e.msg.split()[-1]} has not been "
                             f"found in {msg_path}."
@@ -1127,16 +1016,8 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 msg.buttonClicked.connect(msg.close)
                 msg.exec()
 
-    if (
-        (not isinstance(proc_content, dict))
-        or (
-            (isinstance(proc_content, dict))
-            and ("Packages" not in proc_content)
-        )
-        or (
-            (isinstance(proc_content, dict))
-            and ("Versions" not in proc_content)
-        )
+    if not isinstance(proc_content, dict) or not all(
+        k in proc_content for k in ["Packages", "Versions"]
     ):
         # The process_config.yml file is corrupted or no pipeline/process
         # was available during the previous use of mia or their versions
@@ -1152,7 +1033,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
     else:
 
-        # During the previous use of mia, nipype was not available or its
+        # During the previous use of Mia, nipype was not available or its
         # version was not known or its version was different from the one
         # currently available on the station
         if (
@@ -1273,7 +1154,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
                 logger.warning(
                     "The process_config.yml file seems to be corrupted! "
                     "Let's try to fix it by installing the capsul "
-                    "processes library again in mia ..."
+                    "processes library again in Mia ..."
                 )
 
         else:
@@ -1347,7 +1228,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             if old_capsulVer is None:
                 logger.info(
-                    f"** Installation in mia of the {pckg} processes "
+                    f"** Installation in Mia of the {pckg} processes "
                     f"library, {capsulVer} version ..."
                 )
 
@@ -1474,18 +1355,17 @@ def verify_setup(
         os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
     ),
 ):
-    """check whether the configuration is valid and try to correct it
-    if it is not.
+    """Check and try to correct the configuration if necessary.
 
-    :param dev_mode: the current developer mode (bool).
-                     (if True: dev, if False: user)
-    :param pypath: a list of path for the capsul config (list)
-    :dot_mia_config: the path to the configuration_path.yml file
+    :param dev_mode (bool): the current developer mode.
+                            (True: dev, False: user)
+    :param pypath (list): List of paths for the capsul config.
+    :dot_mia_config: Path to the configuration_path.yml file.
 
     :Contains:
     :Private function:
         - _browse_properties_path: the user define the properties_path
-          parameter
+                                   parameter
         - _cancel_clicked: exit form Mia
         - _make_default_config: make default configuration
         - _save_yml_file: save data in a YAML file
@@ -1496,18 +1376,17 @@ def verify_setup(
     from populse_mia.software_properties import Config
 
     def _browse_properties_path(dialog):
-        """The user define the properties_path parameter.
+        """
+        Let the user define the properties_path parameter.
 
-        This method, used only if the mia configuration parameters are
-        not accessible, goes with the _verify_miaConfig function,
+        This method, used only if the Mia configuration parameters are
+        not accessible, goes with the _verify_miaConfig() function,
         which will use the value of the properties_path parameter,
         defined here.
 
         :param dialog: PyQt5.QtWidgets.QDialog object ('msg' in the
                        main function)
         """
-
-        dname = None
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         options |= QFileDialog.ShowDirsOnly
@@ -1530,12 +1409,11 @@ def verify_setup(
         )
 
         if existDir.exec():
-            dname = existDir.selectedFiles()[0]
-
-        dialog.file_line_edit.setText(dname)
+            dialog.file_line_edit.setText(existDir.selectedFiles()[0])
 
     def _cancel_clicked(dialog):
-        """Cancel the config check.
+        """
+        Cancel the configuration check.
 
         :param dialog: PyQt5.QtWidgets.QDialog object ('msg' in the
                        main function)
@@ -1547,7 +1425,8 @@ def verify_setup(
         sys.exit(0)
 
     def _make_default_config(dialog):
-        """Make default configuration.
+        """
+        Create default configuration files and directories.
 
         Default directories (properties_path/properties,
         properties_path/processes/User_processes), configuration files
@@ -1561,10 +1440,10 @@ def verify_setup(
                        main function)
         """
 
-        properties_path = dialog.file_line_edit.text()
+        properties_path = dialog.file_line_edit.text().rstrip(os.sep)
 
         if properties_path.endswith(os.sep):
-            properties_path = properties_path[:-1]
+            properties_path = dialog.file_line_edit.text().rstrip(os.sep)
             dialog.file_line_edit.setText(properties_path)
 
         if dev_mode is True:
@@ -1590,20 +1469,10 @@ def verify_setup(
             os.makedirs(properties_dir, exist_ok=True)
             logger.info(f"The {properties_dir} directory is created...")
 
-        if not os.path.exists(
-            os.path.join(properties_dir, "saved_projects.yml")
-        ):
-            _save_yml_file(
-                {"paths": []},
-                os.path.join(properties_dir, "saved_projects.yml"),
-            )
-            logger.info(
-                f"The {os.path.join(properties_dir, 'saved_projects.yml')} "
-                f"file is created..."
-            )
-
-        if not os.path.exists(os.path.join(properties_dir, "config.yml")):
-            _save_yml_file(
+        config_files = [
+            ("saved_projects.yml", {"paths": []}),
+            (
+                "config.yml",
                 "gAAAAABd79UO5tVZSRNqnM5zzbl0KDd7Y98KCSKCNizp9aDq"
                 "ADs9dAQHJFbmOEX2QL_jJUHOTBfFFqa3OdfwpNLbvWNU_rR0"
                 "VuT1ZdlmTYv4wwRjhlyPiir7afubLrLK4Jfk84OoOeVtR0a5"
@@ -1614,47 +1483,43 @@ def verify_setup(
                 "TSOBfgkTDcB0LVPBoQmogUVVTeCrjYH9_llFTJQ3ZtKZLdeS"
                 "tFR5Y2I2ZkQETi6m-0wmUDKf-KRzmk6sLRK_oz6GmuTAN8A5"
                 "1au2v1M=",
-                os.path.join(properties_dir, "config.yml"),
-            )
-            logger.info(
-                f"The {os.path.join(properties_dir, 'config.yml')} file "
-                f"is created..."
-            )
-            # processes/User_processes folder management / initialisation:
-            user_processes_dir = os.path.join(
-                properties_path, "processes", "User_processes"
-            )
+            ),
+        ]
 
-            if not os.path.exists(user_processes_dir):
-                os.makedirs(user_processes_dir, exist_ok=True)
-                logger.info("The {user_processes_dir} directory is created...")
+        for filename, content in config_files:
+            file_path = os.path.join(properties_dir, filename)
 
-            if not os.path.exists(
-                os.path.join(user_processes_dir, "__init__.py")
-            ):
-                Path(
-                    os.path.join(
-                        user_processes_dir,
-                        "__init__.py",
-                    )
-                ).touch()
-                logger.info(
-                    f"The {os.path.join(properties_dir, 'config.yml')} file "
-                    f"is created..."
-                )
+            if not os.path.exists(file_path):
+                _save_yml_file(content, file_path)
+                logger.info(f"The {file_path} file is created...")
 
-            logger.info("Default configuration checked!")
+        # processes/User_processes folder management / initialisation:
+        user_processes_dir = os.path.join(
+            properties_path, "processes", "User_processes"
+        )
 
-    def _save_yml_file(a_dic, a_file):
+        if not os.path.exists(user_processes_dir):
+            os.makedirs(user_processes_dir, exist_ok=True)
+            logger.info("The {user_processes_dir} directory is created...")
+
+        init_file = os.path.join(user_processes_dir, "__init__.py")
+
+        if not os.path.exists(init_file):
+            Path(init_file).touch()
+            logger.info(f"The {init_file} file is created...")
+
+        logger.info("Default configuration checked!")
+
+    def _save_yml_file(content, file_path):
         """Save data in a YAML file.
 
-        :param a_dic: a python object
-        :param a_file: a .yml file path
+        :param content (dict): The content of the file_path.
+        :param file_path: A .yml file path.
         """
 
-        with open(a_file, "w", encoding="utf8") as configfile:
+        with open(file_path, "w", encoding="utf8") as configfile:
             yaml.dump(
-                a_dic,
+                content,
                 configfile,
                 default_flow_style=False,
                 allow_unicode=True,
@@ -1687,7 +1552,7 @@ def verify_setup(
         save_flag = False
         config = None
 
-        if dialog is not None:
+        if dialog:
 
             if not dialog.file_line_edit.text():
                 # FIXME: Shouldn't we carry out a more thorough invalidity
