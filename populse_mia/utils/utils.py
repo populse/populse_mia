@@ -409,7 +409,7 @@ def launch_mia(app, args):
                 config.set_opened_projects(opened_projects)
                 main_window.remove_raw_files_useless()
 
-            except AttributeError:
+            except (AttributeError, NameError):
                 config.set_opened_projects([])
 
             logger.info("Clean up before closing mia completed.")
