@@ -18,8 +18,10 @@ pop-up in the config.yml file.
 ##########################################################################
 
 import glob
+import logging
 import os
 import platform
+from functools import lru_cache
 
 import yaml
 
@@ -27,7 +29,8 @@ import yaml
 from capsul.api import capsul_engine
 from cryptography.fernet import Fernet
 
-CONFIG = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
+ENCRYPTION_KEY = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
+logger = logging.getLogger(__name__)
 
 
 class Config:
@@ -183,14 +186,16 @@ class Config:
     capsul_engine = None
 
     def __init__(self, properties_path=None):
-        """Initialization of the Config class
+        """
+        Initialization of the Config class
 
-        :Parameters:
-            - :config_path: str (optional). If provided, the configuration file
-               will be loaded/saved from the given directory. Otherwise, the
-               regular heuristics will be used to determine the config path.
-               This option allows to use an alternative config directory (for
-               tests for instance).
+        :param properties_path (str): If provided, the configuration file
+                                      will be loaded/saved from the given
+                                      directory. Otherwise, the regular
+                                      heuristics will be used to determine the
+                                      config path. This option allows to use
+                                      an alternative config directory (for
+                                      tests for instance).
         """
 
         if properties_path is not None:
@@ -201,61 +206,187 @@ class Config:
 
         else:
             # FIXME: What can we do if "MIA_DEV_MODE" is not in os.environ?
-            print("\nMIA_DEV_MODE not found...\n")
+            logger.warning("MIA_DEV_MODE not found...")
 
         self.config = self.loadConfig()
 
     def get_admin_hash(self):
-        """Get the value of the hash of the admin password.
+        """
+        Retrieves the hashed admin password from the configuration.
 
-        :returns: string
+        :return: The hashed admin password if found in config, False if not
+                 present in config.
         """
 
         try:
             return self.config["admin_hash"]
+
         except KeyError:
             return False
 
     def get_afni_path(self):
-        """Get the AFNI path
+        """Get the AFNI path.
 
-        :returns: string of path to AFNI
+        :return (str): Path to AFNI, or "" if unknown.
         """
 
         return self.config.get("afni", "")
 
     def get_ants_path(self):
-        """Get the ANTS path
+        """Get the ANTS path.
 
-        :returns: string of path to ANTS
+        :returns (str): Path to ANTS, or "" if unknown.
         """
 
         return self.config.get("ants", "")
 
     def get_freesurfer_setup(self):
-        """Get the freesurfer path
+        """Get the freesurfer path.
 
-        :returns: string of path to freesurfer
+        :returns (str): Path to freesurfer, or "" if unknown.
         """
         return self.config.get("freesurfer_setup", "")
 
     def getBackgroundColor(self):
         """Get background color.
 
-        :returns: string of the background color
+        :returns (str): Background color, or "" if unknown.
         """
 
         return self.config.get("background_color", "")
 
     def get_capsul_config(self, sync_from_engine=True):
-        """Get CAPSUL config dictionary.
-
-        :param sync_from_engine: if True, perform a synchronisation
-                                 with CAPSUL engine (Bool)
-
-        :return: capsul_config: the CAPSUL configuration saved into
-                                Mia config (Dict)
         """
+        Retrieve and construct the Capsul configuration dictionary.
+
+        This function builds a configuration dictionary for Capsul,
+        incorporating settings for various neuroimaging tools and processing
+        engines. It manages configurations for tools like SPM, FSL,
+        FreeSurfer, MATLAB, AFNI, ANTs, and MRTrix.
+
+        The function first retrieves local settings for each tool from the Mia
+        preferences, then constructs the appropriate configuration structure.
+        If requested, it can synchronize the configuration with the current
+        Capsul engine state.
+
+        :param sync_from_engine (bool): If True, synchronizes the
+                                        configuration with the current Capsul
+                                        engine settings after building the
+                                        base configuration.
+
+        :return (dict): A nested dictionary containing the complete Capsul
+                        configuration, structured with the following main
+                        sections:
+                        - engine_modules: List of available processing modules
+                        - engine: Contains global and environment-specific
+                                  settings
+                        - tool-specific configurations (SPM, FSL, etc.)
+
+        :Private functions:
+            - _configure_spm: Configure SPM settings.
+            - _configure_tool:
+        """
+
+        def _configure_spm(spm_configs, path, standalone=False):
+            """
+            Helper function to configure SPM settings, preserving existing
+            configuration IDs if found.
+
+            This function either updates an existing SPM configuration or
+            creates a new one based on the provided parameters. It searches
+            through existing configurations to find any matching the specified
+            path and standalone settings. If found, it reuses that
+            configuration's ID; otherwise, it generates a new one.
+
+            :param spm_configs (dict): Dictionary of existing SPM
+                                       configurations where keys are
+                                       config_ids and values are configuration
+                                       dictionaries.
+            :param path (str): Directory path for the SPM configuration.
+            :param standalone (bool): Flag indicating whether this is a
+                                      standalone configuration.
+                                      Defaults to False
+
+            """
+            found_config = {}
+
+            # Look for existing matching configuration
+            for config_id, config in spm_configs.items():
+
+                if (
+                    config.get("standalone") == standalone
+                    and config.get("directory") == path
+                ):
+                    found_config = config
+                    break
+
+            # Use existing config_id if found, otherwise create new one
+            if found_config:
+                config_id = found_config["config_id"]
+
+            else:
+                config_id = f"spm{'-standalone' if standalone else ''}"
+
+            # Update or create configuration
+            spm_configs.setdefault(config_id, {}).update(
+                {
+                    "config_id": config_id,
+                    "config_environment": "global",
+                    "directory": path,
+                    "standalone": standalone,
+                }
+            )
+
+        def _configure_tool(global_config, tool_name, tool_config):
+            """
+            Helper function to configure various neuroimaging tools within
+            a global configuration.
+
+            This function updates or creates tool-specific configurations
+            within a global configuration dictionary. It handles setup for
+            neuroimaging tools by managing their paths, configurations, and
+            setup parameters.
+
+            :param global_config (dict): Global configuration dictionary where
+                                         tool configurations will be stored.
+                                         The tool's settings will be placed
+                                         under the key
+                                         'capsul.engine.module.{tool_name}'.
+            :param tool_name (str): Name of the neuroimaging tool being
+                                    configured (e.g., 'fsl', 'afni', etc.).
+            :param tool_config (dict): Tool-specific configuration dictionary
+                                       that may contain:
+                                       - 'path': Directory path for the tool
+                                                 installation
+                                       - 'config': Path to tool's
+                                                    configuration file
+                                       - 'setup': Setup-specific parameters
+                                                  for the tool
+            """
+            tool_section = global_config.setdefault(
+                f"capsul.engine.module.{tool_name}", {}
+            ).setdefault(tool_name, {})
+
+            base_config = {
+                "config_id": tool_name,
+                "config_environment": "global",
+            }
+
+            if "path" in tool_config:
+                base_config["directory"] = tool_config["path"]
+
+            if "config" in tool_config:
+                base_config["config"] = tool_config["config"]
+                base_config["directory"] = os.path.dirname(
+                    os.path.dirname(os.path.dirname(tool_config["config"]))
+                )
+
+            if "setup" in tool_config:
+                base_config["setup"] = tool_config["setup"]
+                # TODO: Change FSL subject dir
+                base_config["subjects_dir"] = ""
+
+            tool_section.update(base_config)
 
         capsul_config = self.config.setdefault("capsul_config", {})
         capsul_config.setdefault(
@@ -274,172 +405,113 @@ class Config:
                 "somaworkflow",
             ],
         )
-        econf = capsul_config.setdefault("engine", {})
-        eeconf = econf.setdefault("global", {})
+        # Set up engine configuration structure
+        engine_config = capsul_config.setdefault("engine", {})
+        global_config = engine_config.setdefault("global", {})
+        # Collect all tool configurations
+        tool_configs = {
+            "spm": {
+                "use_standard": self.get_use_spm(),
+                "path": self.get_spm_path(),
+                "use_standalone": self.get_use_spm_standalone(),
+                "standalone_path": self.get_spm_standalone_path(),
+            },
+            "matlab": {
+                "use_standard": self.get_use_matlab(),
+                "path": self.get_matlab_path(),
+                "use_standalone": self.get_use_matlab_standalone(),
+                "standalone_path": self.get_matlab_standalone_path(),
+            },
+            "fsl": {
+                "use": self.get_use_fsl(),
+                "config": self.get_fsl_config(),
+            },
+            "afni": {"use": self.get_use_afni(), "path": self.get_afni_path()},
+            "ants": {"use": self.get_use_ants(), "path": self.get_ants_path()},
+            "freesurfer": {
+                "use": self.get_use_freesurfer(),
+                "setup": self.get_freesurfer_setup(),
+            },
+            "mrtrix": {
+                "use": self.get_use_mrtrix(),
+                "path": self.get_mrtrix_path(),
+            },
+        }
 
-        # Take mia pref parameters
-        use_spm = self.get_use_spm()
-        spm_path = self.get_spm_path()
-
-        use_spm_standalone = self.get_use_spm_standalone()
-        spm_standalone_path = self.get_spm_standalone_path()
-
-        use_matlab = self.get_use_matlab()
-        matlab_path = self.get_matlab_path()
-
-        use_matlab_standalone = self.get_use_matlab_standalone()
-        matlab_standalone_path = self.get_matlab_standalone_path()
-
-        use_fsl = self.get_use_fsl()
-        fsl_config = self.get_fsl_config()
-
-        use_afni = self.get_use_afni()
-        afni_path = self.get_afni_path()
-
-        use_ants = self.get_use_ants()
-        ants_path = self.get_ants_path()
-
-        use_freesurfer = self.get_use_freesurfer()
-        freesurfer_setup = self.get_freesurfer_setup()
-
-        use_mrtrix = self.get_use_mrtrix()
-        mrtrix_path = self.get_mrtrix_path()
-
-        # Make synchronisation from Mia pref to Capsul config:
-
+        # Make synchronisation from Mia preferences to Capsul config:
         # TODO: We do not deal with the version parameter. This can produce
         #       hidden configurations (spm and spm12 and spm8 ...)!
+        # Configure SPM (both standalone and standard versions)
+        spm_configs = global_config.setdefault("capsul.engine.module.spm", {})
 
-        # SPM
-        spm_configs = eeconf.setdefault("capsul.engine.module.spm", {})
-        if use_spm_standalone:
-            m = {}
-            for config_id, m in spm_configs.items():
-                if (
-                    m.get("standalone")
-                    and m.get("directory") == spm_standalone_path
-                ):
-                    break
-            if m:
-                config_id = m["config_id"]
-            else:
-                config_id = "spm-standalone"
-            m = spm_configs.setdefault(config_id, {})
-            m.update(
+        if tool_configs["spm"]["use_standalone"]:
+
+            _configure_spm(
+                spm_configs,
+                tool_configs["spm"]["standalone_path"],
+                standalone=True,
+            )
+
+        if tool_configs["spm"]["use_standard"]:
+            _configure_spm(
+                spm_configs, tool_configs["spm"]["path"], standalone=False
+            )
+
+        # Configure MATLAB
+        matlab_config = global_config.setdefault(
+            "capsul.engine.module.matlab", {}
+        ).setdefault("matlab", {})
+
+        if tool_configs["matlab"]["use_standalone"]:
+            matlab_config.update(
                 {
-                    "config_id": config_id,
+                    "mcr_directory": tool_configs["matlab"]["standalone_path"],
+                    "config_id": "matlab",
                     "config_environment": "global",
-                    "directory": spm_standalone_path,
-                    "standalone": True,
                 }
             )
 
-        if use_spm:
-            m = {}
-            for config_id, m in spm_configs.items():
-                if not m.get("standalone") and m.get("directory") == spm_path:
-                    break
-            if m:
-                config_id = m["config_id"]
-            else:
-                config_id = "spm"
-            m = spm_configs.setdefault(config_id, {})
-            m.update(
+        if tool_configs["matlab"]["use_standard"]:
+            matlab_config.update(
                 {
-                    "config_id": config_id,
+                    "executable": tool_configs["matlab"]["path"],
+                    "config_id": "matlab",
                     "config_environment": "global",
-                    "directory": spm_path,
-                    "standalone": False,
                 }
             )
 
-        # MATLAB
-        if use_matlab_standalone:
-            m = eeconf.setdefault(
-                "capsul.engine.module.matlab", {}
-            ).setdefault("matlab", {})
-            m["mcr_directory"] = matlab_standalone_path
-            m["config_id"] = "matlab"
-            m["config_environment"] = "global"
+        # Configure other tools
+        for tool in ["fsl", "afni", "ants", "freesurfer", "mrtrix"]:
 
-        if use_matlab:
-            m = eeconf.setdefault(
-                "capsul.engine.module.matlab", {}
-            ).setdefault("matlab", {})
-            m["executable"] = matlab_path
-            m["config_id"] = "matlab"
-            m["config_environment"] = "global"
-
-        # FSL
-        if use_fsl:
-            m = eeconf.setdefault("capsul.engine.module.fsl", {}).setdefault(
-                "fsl", {}
-            )
-            m["config_id"] = "fsl"
-            m["config_environment"] = "global"
-            m["config"] = fsl_config
-            m["directory"] = os.path.dirname(
-                os.path.dirname(os.path.dirname(fsl_config))
-            )
-
-        # AFNI
-        if use_afni:
-            m = eeconf.setdefault("capsul.engine.module.afni", {}).setdefault(
-                "afni", {}
-            )
-            m["config_id"] = "afni"
-            m["config_environment"] = "global"
-            m["directory"] = afni_path
-
-        # ANTS
-        if use_ants:
-            m = eeconf.setdefault("capsul.engine.module.ants", {}).setdefault(
-                "ants", {}
-            )
-            m["config_id"] = "ants"
-            m["config_environment"] = "global"
-            m["directory"] = ants_path
-
-        # Freesurfer
-        if use_freesurfer:
-            m = eeconf.setdefault(
-                "capsul.engine.module.freesurfer", {}
-            ).setdefault("freesurfer", {})
-            m["config_id"] = "freesurfer"
-            m["config_environment"] = "global"
-            m["setup"] = freesurfer_setup
-            # TODO: change fs subject dir
-            m["subjects_dir"] = ""
-
-        # mrtrix
-        if use_mrtrix:
-            m = eeconf.setdefault(
-                "capsul.engine.module.mrtrix", {}
-            ).setdefault("mrtrix", {})
-            m["config_id"] = "mrtrix"
-            m["config_environment"] = "global"
-            m["directory"] = mrtrix_path
+            if tool_configs[tool]["use"]:
+                _configure_tool(global_config, tool, tool_configs[tool])
 
         # attributes completion
-        m = eeconf.setdefault(
+        attrs_config = global_config.setdefault(
             "capsul.engine.module.attributes", {}
         ).setdefault("attributes", {})
-        m["config_id"] = "attributes"
-        m["config_environment"] = "global"
-        m["attributes_schema_paths"] = [
-            "capsul.attributes.completion_engine_factory",
-            "populse_mia.user_interface.pipeline_manager.process_mia",
-        ]
-        m["process_completion"] = "mia_completion"
+
+        attrs_config.update(
+            {
+                "config_id": "attributes",
+                "config_environment": "global",
+                "attributes_schema_paths": [
+                    "capsul.attributes.completion_engine_factory",
+                    "populse_mia.user_interface.pipeline_manager.process_mia",
+                ],
+                "process_completion": "mia_completion",
+            }
+        )
 
         # Synchronise from engine, or not
         if sync_from_engine and self.capsul_engine:
+
             for environment in (
                 self.capsul_engine.settings.get_all_environments
             )():
-                eeconf = econf.setdefault(environment, {})
+                env_config = engine_config.setdefault(environment, {})
                 # would need a better merging system
-                eeconf.update(
+                env_config.update(
                     self.capsul_engine.settings.export_config_dict(
                         environment
                     )[environment]
@@ -448,18 +520,21 @@ class Config:
         return capsul_config
 
     @staticmethod
+    @lru_cache(maxsize=1)
     def get_capsul_engine():
         """
-        Get a global CapsulEngine object used for all operations in MIA
-        application. The engine is created once when needed.
+        Get or create a global CapsulEngine singleton for Mia application
+        operations.
 
-        :returns: Config.capsul_engine: capsul.engine.CapsulEngine object
+        The engine is created only once when first needed (lazy
+        initialization). Subsequent calls return the same instance.
+
+        :return: CapsulEngine: The global CapsulEngine instance
         """
 
-        config = Config()
-        config.get_capsul_config()
-
         if Config.capsul_engine is None:
+            config = Config()
+            config.get_capsul_config()
             Config.capsul_engine = capsul_engine()
             Config().update_capsul_config()
 
@@ -474,7 +549,7 @@ class Config:
         return self.config.get("chain_cursors", False)
 
     def get_fsl_config(self):
-        """Get the FSL config file  path
+        """Get the FSL config file  path.
 
         :returns: string of path to the fsl/etc/fslconf/fsl.sh file
         """
@@ -482,55 +557,57 @@ class Config:
         return self.config.get("fsl_config", "")
 
     def get_mainwindow_maximized(self):
-        """Get the maximized (fullscreen) flag
+        """Get the maximized (fullscreen) flag.
 
-        :returns:  boolean
+        :returns: boolean
         """
 
         return self.config.get("mainwindow_maximized", True)
 
     def get_mainwindow_size(self):
-        """Get the main window size
+        """Get the main window size.
 
-        :returns:  list or None
+        :returns: list or None
         """
 
         return self.config.get("mainwindow_size", None)
 
     def get_matlab_command(self):
-        """Get Matlab command.
+        """
+        Retrieves the appropriate Matlab command based on the configuration.
 
-        :returns: matlab executable path or nothing if matlab path not
-                  specified
+        :returns: The Matlab executable path or None if no path is specified.
         """
 
         if self.config.get("use_spm_standalone"):
-            archi = platform.architecture()
-            if "Windows" in archi[1]:
-                spm_script = glob.glob(
-                    os.path.join(
-                        self.config["spm_standalone"],
-                        "spm*_win" + archi[0][:2] + ".exe",
-                    )
+            arch_bits, os_name = platform.architecture()
+
+            if "Windows" in os_name:
+                pattern = os.path.join(
+                    self.config["spm_standalone"],
+                    f"spm*_win{arch_bits[:2]}.exe",
                 )
+
             else:
-                spm_script = glob.glob(
-                    os.path.join(self.config["spm_standalone"], "run_spm*.sh")
+                pattern = os.path.join(
+                    self.config["spm_standalone"], "run_spm*.sh"
                 )
-            if spm_script:
-                spm_script = spm_script[0]
-                return "{} {} script".format(
-                    spm_script, self.config["matlab_standalone"]
-                )
-            else:
-                return ""  # will not work.
-        else:
-            return self.config.get("matlab", None)
+
+            spm_script = glob.glob(pattern)
+            # An empty string indicates that the script has not been
+            # localised, which is bound to cause problems later on.
+            return (
+                f"{spm_script[0]} {self.config['matlab_standalone']} script"
+                if spm_script
+                else ""
+            )
+
+        return self.config.get("matlab")
 
     def get_matlab_path(self):
         """Get the path to the matlab executable.
 
-        :returns: String of path
+        :returns: A path (str).
         """
 
         return self.config.get("matlab", None)
@@ -538,65 +615,67 @@ class Config:
     def get_matlab_standalone_path(self):
         """Get the path to matlab compiler runtime.
 
-        :returns: string of path
+        :returns: A path (str).
         """
 
         return self.config.get("matlab_standalone", "")
 
     def get_max_projects(self):
-        """Get the maximum number of projects displayed in the "Saved
-        projects" menu.
+        """
+        Retrieves the maximum number of projects displayed in the
+        "Saved projects" menu.
 
-        :returns: Integer
+        :returns (int): The maximum number of projects. Defaults to 5 if not
+                        specified.
         """
 
-        try:
-            return int(self.config["max_projects"])
-
-        except KeyError:
-            return 5
+        return int(self.config.get("max_projects", 5))
 
     def get_max_thumbnails(self):
-        """Get the max thumbnails number at the data browser bottom.
-
-        :returns: Integer
         """
+        Retrieves the maximum number of thumbnails displayed in the
+        mini-viewer at the bottom of the data browser.
 
-        try:
-            return int(self.config["max_thumbnails"])
-
-        except KeyError:
-            return 5
+        :returns (int): The maximum number of thumbnails. Defaults to 5 if
+                        not specified.
+        """
+        return int(self.config.get("max_thumbnails", 5))
 
     def get_properties_path(self):
-        """Get the path to the folder containing the processes and properties
-        folders of mia (properties_path).
+        """
+        Retrieves the path to the folder containing the "processes" and
+        "properties" directories of Mia.
 
-        The properties_path is defined and stored in the
-        configuration_path.yml file, located in the ~/.populse_mia folder.
+        The properties path is defined in the `configuration_path.yml` file,
+        located in `~/.populse_mia`.
 
-        If Mia is launched in user mode, properties path must compulsorily be
-        returned from the "properties_user_path" parameter of the
-        configuration_path.yml file.
+        - In **user mode**, the path is retrieved from the
+          `properties_user_path` parameter.
+        - In **developer mode**, the path is retrieved from the
+          `properties_dev_path` parameter.
 
-        If mia is launched in developer mode, mia path must compulsorily be
-        returned from the "properties_dev_path" parameter of the
-        configuration_path.yml file.
+        If outdated parameters (`mia_path`, `mia_user_path`) are found,
+        they are automatically updated in the configuration file.
 
-        :returns: string of path to properties folder
+        :returns (str): The absolute path to the properties folder.
         """
         # import verCmp only here to prevent circular import issue
         from populse_mia.utils import verCmp
 
-        if getattr(self, "properties_path", None) is not None:
+        if (
+            hasattr(self, "properties_path")
+            and self.properties_path is not None
+        ):
             return self.properties_path
 
-        dot_mia_config = os.path.join(
-            os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
+        dot_mia_config = os.path.expanduser(
+            "~/.populse_mia/configuration_path.yml"
         )
 
         try:
+
             with open(dot_mia_config) as stream:
+
                 if verCmp(yaml.__version__, "5.1", "sup"):
                     mia_home_properties_path = yaml.load(
                         stream, Loader=yaml.FullLoader
@@ -606,63 +685,55 @@ class Config:
                     mia_home_properties_path = yaml.load(stream)
 
         except yaml.YAMLError as e:
-            print(
-                "\n ",
-                e,
-                "\n ~/.populse_mia/configuration_path.yml cannot be read, the "
-                "path to the properties folder has not been found...",
+            logger.warning(f"{e}")
+            logger.warning(
+                "~/.populse_mia/configuration_path.yml cannot be read, the "
+                "path to the properties folder has not been found.."
             )
             raise
 
-        else:
-            # Patch for obsolete parameters.
-            if "mia_path" in mia_home_properties_path:
-                mia_home_properties_path["properties_user_path"] = (
-                    mia_home_properties_path["mia_path"]
+        # Patch for obsolete parameters.
+        updated = False
+
+        for old_key, new_key in [
+            ("mia_path", "properties_user_path"),
+            ("mia_user_path", "properties_user_path"),
+        ]:
+
+            if old_key in mia_home_properties_path:
+                mia_home_properties_path[new_key] = (
+                    mia_home_properties_path.pop(old_key)
                 )
-                del mia_home_properties_path["mia_path"]
+                updated = True
 
-                with open(dot_mia_config, "w", encoding="utf8") as configfile:
-                    yaml.dump(
-                        mia_home_properties_path,
-                        configfile,
-                        default_flow_style=False,
-                        allow_unicode=True,
-                    )
+        if updated:
 
-            if "mia_user_path" in mia_home_properties_path:
-                mia_home_properties_path["properties_user_path"] = (
-                    mia_home_properties_path["mia_user_path"]
+            with open(dot_mia_config, "w", encoding="utf-8") as configfile:
+                yaml.dump(
+                    mia_home_properties_path,
+                    configfile,
+                    default_flow_style=False,
+                    allow_unicode=True,
                 )
-                del mia_home_properties_path["mia_user_path"]
 
-                with open(dot_mia_config, "w", encoding="utf8") as configfile:
-                    yaml.dump(
-                        mia_home_properties_path,
-                        configfile,
-                        default_flow_style=False,
-                        allow_unicode=True,
-                    )
+        try:
+            key = (
+                "properties_dev_path"
+                if self.dev_mode
+                else "properties_user_path"
+            )
+            self.properties_path = os.path.join(
+                mia_home_properties_path[key],
+                "dev" if self.dev_mode else "usr",
+            )
+            return self.properties_path
 
-            try:
-                if self.dev_mode is True:
-                    self.properties_path = os.path.join(
-                        mia_home_properties_path["properties_dev_path"], "dev"
-                    )
-
-                elif self.dev_mode is False:
-                    self.properties_path = os.path.join(
-                        mia_home_properties_path["properties_user_path"], "usr"
-                    )
-
-                return self.properties_path
-
-            except KeyError as e:
-                print(
-                    "\n{} key not found in ~/.populse_mia/"
-                    "configuration_path.yml!\n".format(e)
-                )
-                raise
+        except KeyError as e:
+            logger.warning(f"{e}")
+            logger.warning(
+                "Key not found in ~/.populse_mia/configuration_path.yml!"
+            )
+            raise
 
     def get_mri_conv_path(self):
         """Get the MRIManager.jar path.
@@ -944,15 +1015,15 @@ class Config:
         # import verCmp only here to prevent circular import issue
         from populse_mia.utils import verCmp
 
-        f = Fernet(CONFIG)
+        f = Fernet(ENCRYPTION_KEY)
         config_file = os.path.join(
             self.get_properties_path(), "properties", "config.yml"
         )
 
         if not os.path.exists(config_file):
             raise yaml.YAMLError(
-                "\nThe '{}' file doesn't exist or is "
-                "corrupted...\n".format(config_file)
+                f"\nThe '{config_file}' file doesn't exist or is "
+                f"corrupted...\n"
             )
 
         with open(config_file, "rb") as stream:
@@ -967,8 +1038,8 @@ class Config:
                     return yaml.load(decrypted)
 
             except yaml.YAMLError as exc:
-                print("error loading YAML file: %s" % config_file)
-                print(exc)
+                logger.warning(f"Error loading '{config_file}' file.")
+                logger.warning(f"{exc}")
 
         # in case of problem, return an empty config
         return {}
@@ -976,7 +1047,7 @@ class Config:
     def saveConfig(self):
         """Save the current parameters in the config.yml file."""
 
-        f = Fernet(CONFIG)
+        f = Fernet(ENCRYPTION_KEY)
         config_file = os.path.join(
             self.get_properties_path(), "properties", "config.yml"
         )
@@ -1155,12 +1226,12 @@ class Config:
                     self.set_use_fsl(True)
 
                 else:
-                    print(
-                        "\nThe automatic determination of the configuration "
-                        "file from the directory known for fsl ({}) did not "
-                        "work. FSL is not correctly defined in the "
-                        "preferences (see File > Mia Preferences) "
-                        "...".format(fsl_dir_path)
+                    logger.warning(
+                        f"The automatic determination of the configuration "
+                        f"file from the directory known for fsl ("
+                        f"{fsl_dir_path}) did not work. FSL is not correctly "
+                        f"fdefined in the preferences (see File > "
+                        f"Mia Preferences) ..."
                     )
 
         if use_fsl is False:
@@ -1278,8 +1349,8 @@ class Config:
             and use_spm is False
             and use_spm_standalone is False
         ):
-            print(
-                "\n The Matlab executable and the mcr_directory parameters "
+            logger.info(
+                "The Matlab executable and the mcr_directory parameters "
                 "have been set concomitantly in the Capsul configuration. "
                 "This leads to an indeterminacy. By default, Matlab is "
                 "retained at the expense of MCR."
@@ -1707,11 +1778,13 @@ class Config:
                     engine.import_configs(environment, c, cont_on_error=True)
 
                 except Exception as exc:
-                    print(
-                        "\nAn issue is detected in the Mia's "
-                        "configuration:\n{}\nPlease check the settings "
-                        "in File > Mia Preferences > Pipeline "
-                        "...".format(exc)
+                    logger.warning(
+                        "An issue is detected in the Mia's configuration:"
+                    )
+                    logger.warning(f"{exc}")
+                    logger.warning(
+                        "Please check the settings "
+                        "in File > Mia Preferences > Pipeline ..."
                     )
 
         return engine
