@@ -917,7 +917,7 @@ class MainWindow(QMainWindow):
                         os.path.abspath(os.path.normpath(project_name))
                     )
                     projectsPath = os.path.abspath(
-                        self.config.getPathToProjectsFolder()
+                        self.config.get_projects_save_path()
                     )
 
                     if path_name != projectsPath:
