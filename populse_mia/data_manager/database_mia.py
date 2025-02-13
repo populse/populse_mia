@@ -15,6 +15,8 @@ interacting with the populse_db API.
 # for details.
 ##########################################################################
 
+from contextlib import contextmanager
+
 from populse_db.database import str_to_type, type_to_str
 
 # Populse_db imports
@@ -182,6 +184,26 @@ class DatabaseMIA:
         """
         self.storage = None
 
+    @contextmanager
+    def schema(self):
+        with self.storage.schema() as schema:
+            yield DatabaseMIASchema(schema)
+    
+    @contextmanager
+    def data(self, write=None, create=None):
+        with self.storage.data(write=write, create=create) as data:
+            yield DatabaseMIAData(data)
+
+
+class DatabaseMIASchema:
+    def __init__(self, storage_schema):
+        self.storage_schema = storage_schema
+    
+    @contextmanager
+    def data(self):
+        with self.storage_schema.data() as storage_data:
+            yield DatabaseMIAData(storage_data)
+    
     # -- Collections management --
 
     def add_collection(
@@ -209,11 +231,11 @@ class DatabaseMIA:
         """
         self.add_field_attributes_collection()
 
-        if self.has_collection(collection_name):
-            return
+        with self.storage_schema.data() as storage_data:
+            if storage_data.has_collection(collection_name):
+                return
 
-        with self.storage.schema() as schema:
-            schema.add_collection(collection_name, primary_key)
+        self.storage_schema.add_collection(collection_name, primary_key)
 
         self.update_field_attributes(
             collection_name=collection_name,
@@ -226,33 +248,6 @@ class DatabaseMIA:
             f"collection {collection_name}",
             field_type=FIELD_TYPE_STRING,
         )
-
-    def has_collection(self, collection_name):
-        """
-         Checks if a collection with the specified name exists in the database.
-
-        :param collection_name (str): The name of the collection to check.
-        :returns (bool): `True` if the collection exists, otherwise `False`.
-        """
-        with self.storage.data() as dbs:
-            return dbs.has_collection(collection_name)
-
-    # -- Fields / tags management --
-
-    def get_field_names(self, collection_name):
-        """
-        Retrieve the list of all field names in the specified collection.
-
-        :param collection_name (str): The name of the collection to retrieve
-                                      field names from. The collection must
-                                      exist in the database.
-        :returns (list | None): A list of all field names in the collection
-                                if it exists, or `None` if the collection has
-                                no fields or does not exist.
-        """
-        with self.storage.data() as dbs:
-            field_names = list(dbs[collection_name].keys())
-            return field_names if field_names else None
 
     def add_field(self, fields):
         """
@@ -282,12 +277,11 @@ class DatabaseMIA:
 
         for field in fields:
 
-            with self.storage.schema() as schema:
-                schema.add_field(
-                    collection_name=field["collection_name"],
-                    field_name=field["field_name"],
-                    field_type=field["field_type"],
-                )
+            self.storage_schema.add_field(
+                collection_name=field["collection_name"],
+                field_name=field["field_name"],
+                field_type=field["field_type"],
+            )
 
             self.update_field_attributes(
                 collection_name=field["collection_name"],
@@ -314,8 +308,7 @@ class DatabaseMIA:
                             the `field_name` does not exist.
         """
         try:
-            with self.storage.schema() as schema:
-                schema.remove_field(collection_name, field_name)
+            self.storage_schema.remove_field(collection_name, field_name)
 
         except KeyError as e:
             raise ValueError(
@@ -326,7 +319,6 @@ class DatabaseMIA:
         self.remove_field_attributes(collection_name, field_name)
 
     # -- field attributes management --
-
     def add_field_attributes_collection(self):
         """Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in
         the database.
@@ -335,58 +327,58 @@ class DatabaseMIA:
         fields to it such as 'visibility', 'origin', 'unit', and
         'default_value'.
         """
-        has_collection = self.has_collection(FIELD_ATTRIBUTES_COLLECTION)
+        with self.storage_schema.data() as storage_data:
+            has_collection = storage_data.has_collection(FIELD_ATTRIBUTES_COLLECTION)
 
         if not has_collection:
 
-            with self.storage.schema() as schema:
-                schema.add_collection(
-                    name=FIELD_ATTRIBUTES_COLLECTION,
-                    primary_key="index",
-                    # description="The primary key name of the "
-                    #             "collection as: "
-                    #             "collection name|collection primary_key "
-                    #             "column name"
-                )
-                schema.add_field(
-                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
-                    field_name="visibility",
-                    field_type=bool,
-                    description="Visibility of the index field in "
-                    "the DataBrowser",
-                )
-                schema.add_field(
-                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
-                    field_name="origin",
-                    field_type=str,
-                    description="Define the origin of the index "
-                    "field, TAG_ORIGIN_BUILTIN or "
-                    "TAG_ORIGIN_USER",
-                )
-                schema.add_field(
-                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
-                    field_name="unit",
-                    field_type=str,
-                    description="Unit of the index field",
-                )
-                schema.add_field(
-                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
-                    field_name="default_value",
-                    field_type=str,
-                    description="Default value of the index field",
-                )
-                schema.add_field(
-                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
-                    field_name="description",
-                    field_type=str,
-                    description="Description of the index field",
-                )
-                schema.add_field(
-                    collection_name=FIELD_ATTRIBUTES_COLLECTION,
-                    field_name="field_type",
-                    field_type=str,
-                    description="Type of the index field",
-                )
+            self.storage_schema.add_collection(
+                name=FIELD_ATTRIBUTES_COLLECTION,
+                primary_key="index",
+                # description="The primary key name of the "
+                #             "collection as: "
+                #             "collection name|collection primary_key "
+                #             "column name"
+            )
+            self.storage_schema.add_field(
+                collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                field_name="visibility",
+                field_type=bool,
+                description="Visibility of the index field in "
+                "the DataBrowser",
+            )
+            self.storage_schema.add_field(
+                collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                field_name="origin",
+                field_type=str,
+                description="Define the origin of the index "
+                "field, TAG_ORIGIN_BUILTIN or "
+                "TAG_ORIGIN_USER",
+            )
+            self.storage_schema.add_field(
+                collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                field_name="unit",
+                field_type=str,
+                description="Unit of the index field",
+            )
+            self.storage_schema.add_field(
+                collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                field_name="default_value",
+                field_type=str,
+                description="Default value of the index field",
+            )
+            self.storage_schema.add_field(
+                collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                field_name="description",
+                field_type=str,
+                description="Description of the index field",
+            )
+            self.storage_schema.add_field(
+                collection_name=FIELD_ATTRIBUTES_COLLECTION,
+                field_name="field_type",
+                field_type=str,
+                description="Type of the index field",
+            )
 
     def remove_field_attributes(self, collection_name, field_name):
         """
@@ -405,7 +397,8 @@ class DatabaseMIA:
         index = f"{collection_name}|{field_name}"
 
         try:
-            self.remove_document(FIELD_ATTRIBUTES_COLLECTION, index)
+            with self.data() as mia_data:
+                mia_data.remove_document(FIELD_ATTRIBUTES_COLLECTION, index)
 
         except KeyError as e:
             raise ValueError(
@@ -444,18 +437,50 @@ class DatabaseMIA:
         """
 
         index = f"{collection_name}|{field_name}"
-        self.set_value(
-            FIELD_ATTRIBUTES_COLLECTION,
-            index,
-            {
-                "visibility": visibility,
-                "origin": origin,
-                "unit": unit,
-                "default_value": default_value,
-                "description": description,
-                "field_type": type_to_str(field_type),
-            },
-        )
+        with self.data() as mia_data:
+            mia_data.set_value(
+                FIELD_ATTRIBUTES_COLLECTION,
+                index,
+                {
+                    "visibility": visibility,
+                    "origin": origin,
+                    "unit": unit,
+                    "default_value": default_value,
+                    "description": description,
+                    "field_type": type_to_str(field_type),
+                },
+            )
+
+class DatabaseMIAData:
+    def __init__(self, storage_data):
+        self.storage_data = storage_data
+
+    def has_collection(self, collection_name):
+        """
+         Checks if a collection with the specified name exists in the database.
+
+        :param collection_name (str): The name of the collection to check.
+        :returns (bool): `True` if the collection exists, otherwise `False`.
+        """
+        return self.storage_data.has_collection(collection_name)
+
+    # -- Fields / tags management --
+
+    def get_field_names(self, collection_name):
+        """
+        Retrieve the list of all field names in the specified collection.
+
+        :param collection_name (str): The name of the collection to retrieve
+                                      field names from. The collection must
+                                      exist in the database.
+        :returns (list | None): A list of all field names in the collection
+                                if it exists, or `None` if the collection has
+                                no fields or does not exist.
+        """
+        field_names = list(self.storage_data[collection_name].keys())
+        return field_names if field_names else None
+
+
 
     def get_field_attributes(self, collection_name, field_name=None):
         """
@@ -472,10 +497,23 @@ class DatabaseMIA:
                                       with attributes for all fields if
                                       `field_name` is not provided.
         """
-        with self.storage.data() as dbs:
+        if field_name:
+            attributes = self.storage_data[FIELD_ATTRIBUTES_COLLECTION][
+                f"{collection_name}|{field_name}"
+            ].get()
 
-            if field_name:
-                attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
+            if attributes is not None:
+                attributes["field_type"] = str_to_type(
+                    attributes["field_type"]
+                )
+
+            return attributes
+
+        elif field_name is None:
+            attributes_list = []
+
+            for field_name in self.get_field_names(collection_name):
+                attributes = self.storage_data[FIELD_ATTRIBUTES_COLLECTION][
                     f"{collection_name}|{field_name}"
                 ].get()
 
@@ -483,27 +521,12 @@ class DatabaseMIA:
                     attributes["field_type"] = str_to_type(
                         attributes["field_type"]
                     )
+                    attributes_list.append(attributes)
 
-                return attributes
+            return attributes_list
 
-            elif field_name is None:
-                attributes_list = []
-
-                for field_name in self.get_field_names(collection_name):
-                    attributes = dbs[FIELD_ATTRIBUTES_COLLECTION][
-                        f"{collection_name}|{field_name}"
-                    ].get()
-
-                    if attributes is not None:
-                        attributes["field_type"] = str_to_type(
-                            attributes["field_type"]
-                        )
-                        attributes_list.append(attributes)
-
-                return attributes_list
-
-            else:
-                return None
+        else:
+            return None
 
     # -- Values management --
 
@@ -525,8 +548,7 @@ class DatabaseMIA:
                                    corresponding data.
         """
 
-        with self.storage.data() as dbs:
-            existing_record = dbs[collection_name][primary_key].get() or {}
+        existing_record = self.storage_data[collection_name][primary_key].get() or {}
 
         # Preserve non-null values from the existing record and update with
         # new values
@@ -535,8 +557,7 @@ class DatabaseMIA:
         }
         updated_record = {**filtered_record, **values_dict}
 
-        with self.storage.data(write=True) as dbs:
-            dbs[collection_name][primary_key] = updated_record
+        self.storage_data[collection_name][primary_key] = updated_record
 
     def get_value(self, collection_name, primary_key, field):
         """
@@ -555,8 +576,7 @@ class DatabaseMIA:
                             retrieve.
         :returns (Any): The current value of the specified field.
         """
-        with self.storage.data() as dbs:
-            return dbs[collection_name][primary_key][field].get()
+        return self.storage_data[collection_name][primary_key][field].get()
 
     def remove_value(self, collection_name, primary_key, field):
         """
@@ -574,8 +594,7 @@ class DatabaseMIA:
 
         try:
 
-            with self.storage.data(write=True) as dbs:
-                del dbs[collection_name][primary_key][field]
+            del self.storage_data[collection_name][primary_key][field]
 
         except Exception as e:
             raise KeyError(
@@ -603,8 +622,7 @@ class DatabaseMIA:
         if self.has_collection(collection_name):
             primary_key = self.get_primary_key_name(collection_name)
 
-            with self.storage.data(write=True) as dbs:
-                dbs[collection_name][document] = {primary_key: document}
+            self.storage_data[collection_name][document] = {primary_key: document}
 
     def has_document(self, collection_name, primary_key):
         """
@@ -619,8 +637,7 @@ class DatabaseMIA:
         if not self.has_collection(collection_name):
             return False
 
-        with self.storage.data() as dbs:
-            return primary_key in dbs[collection_name].get()
+        return primary_key in self.storage_data[collection_name].get()
 
     def filter_documents(self, collection_name, filter_query):
         """
@@ -672,8 +689,7 @@ class DatabaseMIA:
         #       we are not exploring the use of yield. However, it will
         #       likely need to be implemented later for memory
         #       management reasons.
-        with self.storage.data() as dbs:
-            return dbs[collection_name].search(filter_query)
+        return self.storage_data[collection_name].search(filter_query)
 
     def get_document(self, collection_name, primary_keys=None, fields=None):
         """
@@ -706,8 +722,7 @@ class DatabaseMIA:
         if not self.has_collection(collection_name):
             return []
 
-        with self.storage.data() as dbs:
-            documents = dbs[collection_name].get()
+        documents = self.storage_data[collection_name].get()
 
         # Filter by primary keys if provided
         if primary_keys:
@@ -746,10 +761,9 @@ class DatabaseMIA:
         if self.has_collection(collection_name):
             primary_key = self.get_primary_key_name(collection_name)
 
-            with self.storage.data() as dbs:
-                return [
-                    item[primary_key] for item in dbs[collection_name].get()
-                ]
+            return [
+                item[primary_key] for item in self.storage_data[collection_name].get()
+            ]
 
         return []
 
@@ -768,8 +782,7 @@ class DatabaseMIA:
         """
         try:
 
-            with self.storage.data(write=True) as dbs:
-                del dbs[collection_name][primary_key]
+            del self.storage_data[collection_name][primary_key]
 
         except Exception as e:
             raise KeyError(
@@ -792,10 +805,7 @@ class DatabaseMIA:
         :returns (str): The first key in the collection, representing the
                         primary key.
         """
-        with self.storage.data() as dbs:
-            # TODO: Are we sure that the primary key is ALWAYS the first
-            #       element in the dbs[collection].keys() dict_keys list?
-            return next(iter(dbs[collection_name].keys()))
+        return self.storage_data[collection_name].primary_key()[0]
 
     def get_shown_tags(self):
         """
@@ -833,15 +843,13 @@ class DatabaseMIA:
 
         doc_names = self.get_document_names(FIELD_ATTRIBUTES_COLLECTION)
 
-        with self.storage.data(write=True) as dbs:
+        for doc_name in doc_names:
+            collection, field = doc_name.split("|")
 
-            for doc_name in doc_names:
-                collection, field = doc_name.split("|")
-
-                if collection == "current":
-                    dbs[FIELD_ATTRIBUTES_COLLECTION][doc_name][
-                        "visibility"
-                    ] = (field in fields_shown)
+            if collection == "current":
+                self.storage_data[FIELD_ATTRIBUTES_COLLECTION][doc_name][
+                    "visibility"
+                ] = (field in fields_shown)
 
     # -- Currently obsoletes --
 
