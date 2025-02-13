@@ -17,9 +17,8 @@ interacting with the populse_db API.
 
 from contextlib import contextmanager
 
-from populse_db.database import str_to_type, type_to_str
-
 # Populse_db imports
+from populse_db.database import str_to_type, type_to_str
 from populse_db.storage import Storage
 
 # Special attributes for the database
@@ -116,43 +115,11 @@ class DatabaseMIA:
     under the supervision of populse_db.
 
     .. Methods:
-        - add_collection: add a new collection to the database.
-        - get_collection_names: retrieve the names of all collections
-                                in the database.
-        - has_collection: checks if a collection exists in the database.
-        - get_field_names: retrieve the list of all field names in the
-                           specified collection.
-        - add_field: adds one or more fields to a collection.
-        - remove_field:  removes a field in a collection.
-        - add_field_attributes_collection: ensures that the
-                                           `FIELD_ATTRIBUTES_COLLECTION`
-                                           collection is available in the
-                                           database (for internal
-                                           operation of populse_mia
-                                           and associated fields).
-        - remove_field_attributes: remove attributes associated with a
-                                   specific field in a collection.
-        - update_field_attributes: updates the attributes of a field in
-                                   the database.
-        - get_field_attributes: retrieve attributes of a specific field or
-                                all fields in a collection.
-        - set_value: store or update a record in the specified collection.
-        - get_value: retrieves the current value of a specific field.
-        - remove_value: removes the value for a field.
-        - add_document: adds a document in a collection.
-        - has_document: checks if a document exists in a collection.
-        - filter_documents: retrieve documents from a specified collection
-                            that match a given filter.
-        - get_document: Retrieve documents from a specified collection with
-                         optional filtering.
-        - get_document_names: retrieve a list of all document names in the
-                              specified collection.
-        - remove_document: remove a document from a specified collection.
-        - get_primary_key_name: retrieve the primary key of the specified
-                                collection.
-        - get_shown_tags: give the list of visible tags.
-        - set_shown_tags: set the list of visible tags.
-
+        __enter__: Make a database connection and return it.
+        __exit__: Make sure the database connection gets closed.
+        - close: Releases database resources.
+        - data: Context manager for accessing the database data
+        - schema: Context manager for accessing the database schema.
     """
 
     def __init__(
@@ -160,19 +127,41 @@ class DatabaseMIA:
         database_engine,
         # schema_name="populse_mia.data_manager.database_mia",
     ):
-        """ "Constructor"""
+        """
+        Initializes a DatabaseMIA instance with the given database file.
+
+        :param database_engine (str): Path to the database file (e.g.,
+                                      '/a/folder/path/file.db').
+        """
         # Initialize the storage with the provided database engine
         self.storage = Storage(database_engine)
 
         # with self.storage.schema() as schema:
         #     schema.add_schema(schema_name)
 
-    def __del__(self):
-        """ "Destructor for the class.
+    def __enter__(self):
+        """
+        Make a database connection and return it.
 
-        This method is automatically called when an object is being
-        destroyed. It performs cleanup actions such as closing any
-        open resources or connections.
+        Enables the use of `with DatabaseMIA(...) as foo:` for automatic
+        resource management.
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        """
+        Make sure the database connection gets closed.
+
+        Ensures the database is properly closed when exiting a `with`
+        statement.
+
+        :param exc_type (Type[BaseException]): The exception type if an
+                                               exception occurred, otherwise
+                                               None.
+        :param exc_value (BaseException): The exception instance if an
+                                          exception occurred, otherwise None.
+        :param traceback (TracebackType: The traceback object if an exception
+                                         occurred, otherwise None.
         """
         self.close()
 
@@ -185,26 +174,70 @@ class DatabaseMIA:
         self.storage = None
 
     @contextmanager
-    def schema(self):
-        with self.storage.schema() as schema:
-            yield DatabaseMIASchema(schema)
-    
-    @contextmanager
     def data(self, write=None, create=None):
+        """
+        Provides a context manager for accessing the database data layer.
+
+        This method allows safe read and write access to the database data,
+        ensuring proper resource management.
+
+        :param write (bool): If True, enables write mode.
+        :param create (bool): If True, allows creating new records.
+
+        :yields (DatabaseMiaData): The data interface for the database.
+        """
+
         with self.storage.data(write=write, create=create) as data:
-            yield DatabaseMIAData(data)
+            yield DatabaseMiaData(data)
 
-
-class DatabaseMIASchema:
-    def __init__(self, storage_schema):
-        self.storage_schema = storage_schema
-    
     @contextmanager
-    def data(self):
-        with self.storage_schema.data() as storage_data:
-            yield DatabaseMIAData(storage_data)
-    
-    # -- Collections management --
+    def schema(self):
+        """
+        Provides a context manager for accessing the database schema.
+
+        This method allows safe access to the database schema,
+        ensuring proper resource management.
+
+        :yields (DatabaseMiaSchema): The schema interface for the database.
+        """
+
+        with self.storage.schema() as schema:
+            yield DatabaseMiaSchema(schema)
+
+
+class DatabaseMiaSchema:
+    """
+    Provides tools for managing the schema of a MIA database.
+
+    This class allows users to manipulate database collections, fields, and
+    field attributes under the supervision of populse_db.
+
+    .. Methods:
+        - __init__: Initializes the schema interface.
+        - add_collection: Adds a new collection to the database.
+        - add_field: Adds one or more fields to a collection.
+        - add_field_attributes_collection: Ensures that the
+                                           `FIELD_ATTRIBUTES_COLLECTION`
+                                           collection is available in the
+                                           database (for internal
+                                           operations).
+        - data: Provides a context manager for accessing database data.
+        - remove_field: Removes a field from a collection.
+        - remove_field_attributes: Removes attributes associated with a
+                                   specific field in a collection.
+        - update_field_attributes: Updates the attributes of a field in
+                                   the database.
+    """
+
+    def __init__(self, storage_schema):
+        """
+        Initializes the DatabaseMiaSchema instance.
+
+        :param storage_schema (populse_db.storage.Storage): The schema storage
+                                                            interface for the
+                                                            database.
+        """
+        self.storage_schema = storage_schema
 
     def add_collection(
         self,
@@ -232,11 +265,11 @@ class DatabaseMIASchema:
         self.add_field_attributes_collection()
 
         with self.storage_schema.data() as storage_data:
+
             if storage_data.has_collection(collection_name):
                 return
 
         self.storage_schema.add_collection(collection_name, primary_key)
-
         self.update_field_attributes(
             collection_name=collection_name,
             field_name=primary_key,
@@ -294,31 +327,6 @@ class DatabaseMIASchema:
                 field_type=field["field_type"],
             )
 
-    def remove_field(self, collection_name, field_name):
-        """
-        Removes a specified field in the collection_name
-
-        This method updates the schema to remove the specified field from the
-        collection and handles associated attributes cleanup.
-
-        :param collection_name (str): The name of the collection from which
-                                      the field will be removed (must exist).
-        :param field_name (str): The name of the field to remove (must exist).
-        :raises ValueError: If the `collection_name` does not exist or if
-                            the `field_name` does not exist.
-        """
-        try:
-            self.storage_schema.remove_field(collection_name, field_name)
-
-        except KeyError as e:
-            raise ValueError(
-                f"Error removing field '{field_name}' from "
-                f"collection '{collection_name}': {e}"
-            )
-
-        self.remove_field_attributes(collection_name, field_name)
-
-    # -- field attributes management --
     def add_field_attributes_collection(self):
         """Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in
         the database.
@@ -328,7 +336,9 @@ class DatabaseMIASchema:
         'default_value'.
         """
         with self.storage_schema.data() as storage_data:
-            has_collection = storage_data.has_collection(FIELD_ATTRIBUTES_COLLECTION)
+            has_collection = storage_data.has_collection(
+                FIELD_ATTRIBUTES_COLLECTION
+            )
 
         if not has_collection:
 
@@ -380,6 +390,44 @@ class DatabaseMIASchema:
                 description="Type of the index field",
             )
 
+    @contextmanager
+    def data(self):
+        """
+        Provides a context manager for accessing the database data.
+
+        This method ensures safe access to the database data layer,
+        managing resources properly.
+
+        :yields (DatabaseMiaData): The data interface for the database.
+        """
+
+        with self.storage_schema.data() as storage_data:
+            yield DatabaseMiaData(storage_data)
+
+    def remove_field(self, collection_name, field_name):
+        """
+        Removes a specified field in the collection_name
+
+        This method updates the schema to remove the specified field from the
+        collection and handles associated attributes cleanup.
+
+        :param collection_name (str): The name of the collection from which
+                                      the field will be removed (must exist).
+        :param field_name (str): The name of the field to remove (must exist).
+        :raises ValueError: If the `collection_name` does not exist or if
+                            the `field_name` does not exist.
+        """
+        try:
+            self.storage_schema.remove_field(collection_name, field_name)
+
+        except KeyError as e:
+            raise ValueError(
+                f"Error removing field '{field_name}' from "
+                f"collection '{collection_name}': {e}"
+            )
+
+        self.remove_field_attributes(collection_name, field_name)
+
     def remove_field_attributes(self, collection_name, field_name):
         """
         Remove attributes associated with a specific field in a collection.
@@ -397,6 +445,7 @@ class DatabaseMIASchema:
         index = f"{collection_name}|{field_name}"
 
         try:
+
             with self.data() as mia_data:
                 mia_data.remove_document(FIELD_ATTRIBUTES_COLLECTION, index)
 
@@ -435,8 +484,8 @@ class DatabaseMIASchema:
         :param description (str): The description of the field.
         :param field_type (Any): The type of the field.
         """
-
         index = f"{collection_name}|{field_name}"
+
         with self.data() as mia_data:
             mia_data.set_value(
                 FIELD_ATTRIBUTES_COLLECTION,
@@ -451,159 +500,49 @@ class DatabaseMIASchema:
                 },
             )
 
-class DatabaseMIAData:
+
+class DatabaseMiaData:
+    """
+    Managing database interactions within the MIA framework.
+
+    This class provides methods to handle collections and documents within the
+    database, allowing operations such as retrieving, adding, updating, and
+    removing records.
+
+    .. Methods:
+        - add_document: Adds a document to a collection.
+        - filter_documents: Retrieves documents from a specified collection
+                            that match a given filter.
+        - get_document: Retrieves documents from a specified collection with
+                        optional filtering.
+        - get_document_names: Retrieves a list of all document names in the
+                              specified collection.
+        - get_field_attributes: Retrieves attributes of a specific field or
+                                all fields in a collection.
+        - get_field_names: Retrieves the list of all field names in the
+                           specified collection.
+        - get_primary_key_name: Retrieves the primary key of the specified
+                                collection.
+        - get_shown_tags: Returns the list of visible tags.
+
+        - get_value: Retrieves the current value of a specific field.
+        - has_collection: Checks if a collection exists in the database.
+        - has_document: checks if a document exists in a collection.
+        - remove_document: Removes a document from a specified collection.
+        - remove_value: Removes the value for a field.
+        - set_shown_tags: Sets the list of visible tags.
+        - set_value: Stores or updates a record in the specified collection.
+    """
+
     def __init__(self, storage_data):
+        """
+        Initializes a new instance of the DatabaseMiaData class.
+
+        :param storage_data (populse_db.storage.Storage): The data storage
+                                                          interface for the
+                                                          database.
+        """
         self.storage_data = storage_data
-
-    def has_collection(self, collection_name):
-        """
-         Checks if a collection with the specified name exists in the database.
-
-        :param collection_name (str): The name of the collection to check.
-        :returns (bool): `True` if the collection exists, otherwise `False`.
-        """
-        return self.storage_data.has_collection(collection_name)
-
-    # -- Fields / tags management --
-
-    def get_field_names(self, collection_name):
-        """
-        Retrieve the list of all field names in the specified collection.
-
-        :param collection_name (str): The name of the collection to retrieve
-                                      field names from. The collection must
-                                      exist in the database.
-        :returns (list | None): A list of all field names in the collection
-                                if it exists, or `None` if the collection has
-                                no fields or does not exist.
-        """
-        field_names = list(self.storage_data[collection_name].keys())
-        return field_names if field_names else None
-
-
-
-    def get_field_attributes(self, collection_name, field_name=None):
-        """
-        Retrieve attributes of a specific field or all fields in a collection
-        from the storage.
-
-        :param collection_name (str): The name of the collection.
-        :param field_name (str, optional): The name of a specific field within
-                                           the collection. If not provided,
-                                           attributes for all fields in the
-                                           collection will be retrieved.
-        :returns (dict | list[dict]): Attributes of the specified field as a
-                                      dictionary, or a list of dictionaries
-                                      with attributes for all fields if
-                                      `field_name` is not provided.
-        """
-        if field_name:
-            attributes = self.storage_data[FIELD_ATTRIBUTES_COLLECTION][
-                f"{collection_name}|{field_name}"
-            ].get()
-
-            if attributes is not None:
-                attributes["field_type"] = str_to_type(
-                    attributes["field_type"]
-                )
-
-            return attributes
-
-        elif field_name is None:
-            attributes_list = []
-
-            for field_name in self.get_field_names(collection_name):
-                attributes = self.storage_data[FIELD_ATTRIBUTES_COLLECTION][
-                    f"{collection_name}|{field_name}"
-                ].get()
-
-                if attributes is not None:
-                    attributes["field_type"] = str_to_type(
-                        attributes["field_type"]
-                    )
-                    attributes_list.append(attributes)
-
-            return attributes_list
-
-        else:
-            return None
-
-    # -- Values management --
-
-    def set_value(self, collection_name, primary_key, values_dict):
-        """
-        Store or update a record in the specified collection.
-
-        This method either stores a new record or updates an existing record
-        in the specified collection, using the provided primary key. The
-        fields of the record are set according to the data in the provided
-        dictionary.
-
-        :param collection_name (str): The name of the collection where the
-                                      record will be stored or updated.
-        :param primary_key (str): The unique key used to identify the record.
-        :param values_dict (dict): A dictionary containing the data to store
-                                   or update in the record. Keys represent
-                                   field names, and values represent the
-                                   corresponding data.
-        """
-
-        existing_record = self.storage_data[collection_name][primary_key].get() or {}
-
-        # Preserve non-null values from the existing record and update with
-        # new values
-        filtered_record = {
-            k: v for k, v in existing_record.items() if v is not None
-        }
-        updated_record = {**filtered_record, **values_dict}
-
-        self.storage_data[collection_name][primary_key] = updated_record
-
-    def get_value(self, collection_name, primary_key, field):
-        """
-        Retrieves the current value of a specific field in a document from
-        the specified collection.
-
-        This method accesses the underlying storage to fetch the value of a
-        given field within a document, identified by its primary key, in the
-        specified collection.
-
-        :param collection_name (str): The name of the collection containing
-                                      the document.
-        :param primary_key (str): The unique identifier (primary key) of the
-                                  document.
-        :param field (str): The name of the field within the document to
-                            retrieve.
-        :returns (Any): The current value of the specified field.
-        """
-        return self.storage_data[collection_name][primary_key][field].get()
-
-    def remove_value(self, collection_name, primary_key, field):
-        """
-        Removes the specified field from a document in the given collection,
-        if it exists. Raises a KeyError if the field, collection, or document
-        is not found.
-
-        :param collection_name (str): The name of the collection containing
-                                      the document.
-        :param primary_key (str): The primary key of the document in the
-                                  collection.
-        :param field (str): The field to be removed from the document.
-        :raises KeyError: If the collection or document cannot be found.
-        """
-
-        try:
-
-            del self.storage_data[collection_name][primary_key][field]
-
-        except Exception as e:
-            raise KeyError(
-                f"Failed to remove the '{field}' for "
-                f"document ID '{primary_key}' in "
-                f"collection '{collection_name}': {e}"
-            ) from e
-
-    # -- Documents management --
 
     def add_document(self, collection_name, document):
         """
@@ -621,23 +560,9 @@ class DatabaseMIAData:
 
         if self.has_collection(collection_name):
             primary_key = self.get_primary_key_name(collection_name)
-
-            self.storage_data[collection_name][document] = {primary_key: document}
-
-    def has_document(self, collection_name, primary_key):
-        """
-        Checks if a document with the specified primary key exists in the
-        given collection.
-
-        :param collection_name (str): The name of the collection.
-        :param primary_key (str): The primary key of the document to check.
-        :returns (bool): `True` if the document exists, `False` otherwise.
-        """
-
-        if not self.has_collection(collection_name):
-            return False
-
-        return primary_key in self.storage_data[collection_name].get()
+            self.storage_data[collection_name][document] = {
+                primary_key: document
+            }
 
     def filter_documents(self, collection_name, filter_query):
         """
@@ -762,36 +687,71 @@ class DatabaseMIAData:
             primary_key = self.get_primary_key_name(collection_name)
 
             return [
-                item[primary_key] for item in self.storage_data[collection_name].get()
+                item[primary_key]
+                for item in self.storage_data[collection_name].get()
             ]
 
         return []
 
-    def remove_document(self, collection_name, primary_key):
+    def get_field_attributes(self, collection_name, field_name=None):
         """
-        Remove a document from a specified collection.
+        Retrieve attributes of a specific field or all fields in a collection
+        from the storage.
 
-        This method deletes the document identified by `primary_key` from
-        the given collection in the storage.
-
-        :param collection_name (str): The name of the collection containing
-                                      the document.
-        :param primary_key (str): The unique identifier of the document to be
-                                  removed.
-        :raises KeyError: If the collection or the document does not exist.
+        :param collection_name (str): The name of the collection.
+        :param field_name (str, optional): The name of a specific field within
+                                           the collection. If not provided,
+                                           attributes for all fields in the
+                                           collection will be retrieved.
+        :returns (dict | list[dict]): Attributes of the specified field as a
+                                      dictionary, or a list of dictionaries
+                                      with attributes for all fields if
+                                      `field_name` is not provided.
         """
-        try:
+        if field_name:
+            attributes = self.storage_data[FIELD_ATTRIBUTES_COLLECTION][
+                f"{collection_name}|{field_name}"
+            ].get()
 
-            del self.storage_data[collection_name][primary_key]
+            if attributes is not None:
+                attributes["field_type"] = str_to_type(
+                    attributes["field_type"]
+                )
 
-        except Exception as e:
-            raise KeyError(
-                f"Failed to remove document with "
-                f"ID '{primary_key}' from "
-                f"collection '{collection_name}': {e}"
-            )
+            return attributes
 
-    # -- Utility --
+        elif field_name is None:
+            attributes_list = []
+
+            for field_name in self.get_field_names(collection_name):
+                attributes = self.storage_data[FIELD_ATTRIBUTES_COLLECTION][
+                    f"{collection_name}|{field_name}"
+                ].get()
+
+                if attributes is not None:
+                    attributes["field_type"] = str_to_type(
+                        attributes["field_type"]
+                    )
+                    attributes_list.append(attributes)
+
+            return attributes_list
+
+        else:
+            return None
+
+    def get_field_names(self, collection_name):
+        """
+        Retrieve the list of all field names in the specified collection.
+
+        :param collection_name (str): The name of the collection to retrieve
+                                      field names from. The collection must
+                                      exist in the database.
+        :returns (list | None): A list of all field names in the collection
+                                if it exists, or `None` if the collection has
+                                no fields or does not exist.
+        """
+        field_names = list(self.storage_data[collection_name].keys())
+        return field_names if field_names else None
 
     def get_primary_key_name(self, collection_name):
         """
@@ -834,13 +794,103 @@ class DatabaseMIAData:
 
         return visible_names
 
+    def get_value(self, collection_name, primary_key, field):
+        """
+        Retrieves the current value of a specific field in a document from
+        the specified collection.
+
+        This method accesses the underlying storage to fetch the value of a
+        given field within a document, identified by its primary key, in the
+        specified collection.
+
+        :param collection_name (str): The name of the collection containing
+                                      the document.
+        :param primary_key (str): The unique identifier (primary key) of the
+                                  document.
+        :param field (str): The name of the field within the document to
+                            retrieve.
+        :returns (Any): The current value of the specified field.
+        """
+        return self.storage_data[collection_name][primary_key][field].get()
+
+    def has_collection(self, collection_name):
+        """
+         Checks if a collection with the specified name exists in the database.
+
+        :param collection_name (str): The name of the collection to check.
+        :returns (bool): `True` if the collection exists, otherwise `False`.
+        """
+        return self.storage_data.has_collection(collection_name)
+
+    def has_document(self, collection_name, primary_key):
+        """
+        Checks if a document with the specified primary key exists in the
+        given collection.
+
+        :param collection_name (str): The name of the collection.
+        :param primary_key (str): The primary key of the document to check.
+        :returns (bool): `True` if the document exists, `False` otherwise.
+        """
+
+        if not self.has_collection(collection_name):
+            return False
+
+        return primary_key in self.storage_data[collection_name].get()
+
+    def remove_document(self, collection_name, primary_key):
+        """
+        Remove a document from a specified collection.
+
+        This method deletes the document identified by `primary_key` from
+        the given collection in the storage.
+
+        :param collection_name (str): The name of the collection containing
+                                      the document.
+        :param primary_key (str): The unique identifier of the document to be
+                                  removed.
+        :raises KeyError: If the collection or the document does not exist.
+        """
+        try:
+            del self.storage_data[collection_name][primary_key]
+
+        except Exception as e:
+            raise KeyError(
+                f"Failed to remove document with "
+                f"ID '{primary_key}' from "
+                f"collection '{collection_name}': {e}"
+            )
+
+    def remove_value(self, collection_name, primary_key, field):
+        """
+        Removes the specified field from a document in the given collection,
+        if it exists. Raises a KeyError if the field, collection, or document
+        is not found.
+
+        :param collection_name (str): The name of the collection containing
+                                      the document.
+        :param primary_key (str): The primary key of the document in the
+                                  collection.
+        :param field (str): The field to be removed from the document.
+        :raises KeyError: If the collection or document cannot be found.
+        """
+
+        try:
+
+            del self.storage_data[collection_name][primary_key][field]
+
+        except Exception as e:
+            raise KeyError(
+                f"Failed to remove the '{field}' for "
+                f"document ID '{primary_key}' in "
+                f"collection '{collection_name}': {e}"
+            ) from e
+
     def set_shown_tags(self, fields_shown):
         """
         Set the list of visible tags.
 
         :param fields_shown (list): A list of visible tags.
         """
-
         doc_names = self.get_document_names(FIELD_ATTRIBUTES_COLLECTION)
 
         for doc_name in doc_names:
@@ -851,34 +901,30 @@ class DatabaseMIAData:
                     "visibility"
                 ] = (field in fields_shown)
 
-    # -- Currently obsoletes --
+    def set_value(self, collection_name, primary_key, values_dict):
+        """
+        Store or update a record in the specified collection.
 
-    def get_collection(self, name):
-        """Returns the collection row of the collection"""
-        raise NotImplementedError(
-            "This method (get_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
+        This method either stores a new record or updates an existing record
+        in the specified collection, using the provided primary key. The
+        fields of the record are set according to the data in the provided
+        dictionary.
 
-    def get_collections(self):
-        """Gives the list of all collection rows."""
-        raise NotImplementedError(
-            "This method (get_collections) is not yet available in "
-            "DatabaseMIA class."
+        :param collection_name (str): The name of the collection where the
+                                      record will be stored or updated.
+        :param primary_key (str): The unique key used to identify the record.
+        :param values_dict (dict): A dictionary containing the data to store
+                                   or update in the record. Keys represent
+                                   field names, and values represent the
+                                   corresponding data.
+        """
+        existing_record = (
+            self.storage_data[collection_name][primary_key].get() or {}
         )
-
-    def remove_collection(self, name):
-        """Removes a collection."""
-        raise NotImplementedError(
-            "This method (remove_collection) is not yet available in "
-            "DatabaseMIA class."
-        )
-
-    def get_collection_names(self):
-        """Retrieve the names of all collections in the storage database."""
-        # with self.storage.data() as dbs:
-        #     return dbs.collection_names()
-        raise NotImplementedError(
-            "This method (get_collection_names) is not yet available in "
-            "DatabaseMIA class."
-        )
+        # Preserve non-null values from the existing record and update with
+        # new values
+        filtered_record = {
+            k: v for k, v in existing_record.items() if v is not None
+        }
+        updated_record = {**filtered_record, **values_dict}
+        self.storage_data[collection_name][primary_key] = updated_record
