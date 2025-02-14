@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Populse-MIA data viewer GUI interface, in the "Data Viewer" tab.
 
@@ -31,7 +30,7 @@ class DataViewerTab(Qt.QWidget):
 
         :param main_window: an instance of the MainWindow class
         """
-        super(DataViewerTab, self).__init__()
+        super().__init__()
         self.docs = []
         self.lay = []
         self.project = []
@@ -135,7 +134,7 @@ class DataViewerTab(Qt.QWidget):
             if viewer_name not in self.viewers_loaded:
                 try:
                     viewer_module = importlib.import_module(
-                        "%s.%s" % (__name__.rsplit(".", 1)[0], viewer_name)
+                        "{}.{}".format(__name__.rsplit(".", 1)[0], viewer_name)
                     )
                     self.viewers_loaded[viewer_name] = viewer_module.MiaViewer(
                         init_global_handlers
@@ -150,13 +149,13 @@ class DataViewerTab(Qt.QWidget):
 
                 except Exception as e:
                     print(
-                        "\n{0} viewer is not available or not working "
+                        "\n{} viewer is not available or not working "
                         "...!\nTraceback:".format(viewer_name)
                     )
                     print(
                         "".join(traceback.format_tb(e.__traceback__)), end=""
                     )
-                    print("{0}: {1}\n".format(e.__class__.__name__, e))
+                    print(f"{e.__class__.__name__}: {e}\n")
 
     def set_documents(self, project, documents):
         """Shares project with documents to all viewers.

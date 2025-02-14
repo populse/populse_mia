@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """This module is dedicated to populse_mia unit tests.
 
 :Contains:
@@ -148,7 +147,7 @@ if (
     # Adding capsul:
     if os.path.isdir(os.path.join(root_dev_dir, "capsul")):
         capsul_dev_dir = os.path.join(root_dev_dir, "capsul")
-        print("- Using capsul package from {} ...".format(capsul_dev_dir))
+        print(f"- Using capsul package from {capsul_dev_dir} ...")
         sys.path.insert(1, capsul_dev_dir)
         del capsul_dev_dir
 
@@ -1748,7 +1747,7 @@ class TestMIADataBrowser(TestMIACase):
         mod = ModifyTable(
             self.main_window.project,
             value,
-            [type("string")],
+            [str],
             scans_displayed,
             tag_name,
         )
@@ -5201,9 +5200,7 @@ class TestMIAMainWindow(TestMIACase):
                 os.path.join(mock_proc_fldr, "unit_test_2.py"),
             )
 
-            with open(
-                os.path.join(mock_proc_fldr, "unit_test_2.py"), "r"
-            ) as file:
+            with open(os.path.join(mock_proc_fldr, "unit_test_2.py")) as file:
                 filedata = file.read()
                 filedata = filedata.replace(
                     "Unit_test_pipeline", "Unit_test_2"
@@ -5963,9 +5960,9 @@ class TestMIAMainWindow(TestMIACase):
             system = platform.system()
 
             if system == "Linux":
-                exc_content = '#!/bin/bash\necho "{}"'.format(output)
+                exc_content = f'#!/bin/bash\necho "{output}"'
                 if failing:
-                    exc_content += '\necho "{}" 1>&2\nexit 1'.format(err_msg)
+                    exc_content += f'\necho "{err_msg}" 1>&2\nexit 1'
                 exc_path = os.path.join(exc_dir, exc_name)
                 exc = open(exc_path, "w")
                 exc.write(exc_content)
@@ -5975,7 +5972,7 @@ class TestMIAMainWindow(TestMIACase):
             elif system == "Darwin":
                 exc_content = '#!/usr/bin/env bash\necho "mock executable"'
                 if failing:
-                    exc_content += '\necho "{}" 1>&2\nexit 1'.format(err_msg)
+                    exc_content += f'\necho "{err_msg}" 1>&2\nexit 1'
                 exc_path = os.path.join(exc_dir, exc_name)
                 exc = open(exc_path, "w")
                 exc.write(exc_content)
@@ -10318,7 +10315,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         req = {"capsul_engine": {"uses": Mock()}}
 
         for pkg in pkgs:
-            req["capsul.engine.module.{}".format(pkg)] = {"directory": False}
+            req[f"capsul.engine.module.{pkg}"] = {"directory": False}
 
         req["capsul_engine"]["uses"].get = Mock(return_value=1)
         proc = Mock()
@@ -10350,7 +10347,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Deletes an attribute of each package requirement
         for pkg in pkgs:
-            del req[proc]["capsul.engine.module.{}".format(pkg)]
+            del req[proc][f"capsul.engine.module.{pkg}"]
 
         # QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()

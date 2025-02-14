@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module to handle the importation from MRIFileManager and its progress
 
 :Contains:
@@ -32,10 +31,17 @@ import os.path
 import threading
 import traceback
 from datetime import datetime
-from time import sleep, time
+from time import sleep
+from time import time as time_time
 
-# Populse_db imports
-from populse_db.database import (
+# PyQt5 imports
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtWidgets import QProgressDialog
+
+# Populse_mia import
+from populse_mia.data_manager import (  # FIELD_TYPE_MAPPING,
+    COLLECTION_CURRENT,
+    COLLECTION_INITIAL,
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME,
@@ -50,23 +56,10 @@ from populse_db.database import (
     FIELD_TYPE_LIST_TIME,
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
-)
-
-# PyQt5 imports
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
-from PyQt5.QtWidgets import QProgressDialog
-
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_BUILTIN,
-    TAG_ORIGIN_USER,
-)
-
-# Populse_MIA imports
-from populse_mia.data_manager.project import (
-    COLLECTION_CURRENT,
-    COLLECTION_INITIAL,
     TAG_CHECKSUM,
     TAG_FILENAME,
+    TAG_ORIGIN_BUILTIN,
+    TAG_ORIGIN_USER,
     TAG_TYPE,
     TYPE_BVAL,
     TYPE_BVEC,
@@ -86,7 +79,7 @@ class ImportProgress(QProgressDialog):
     """
 
     def __init__(self, project):
-        super(ImportProgress, self).__init__(
+        super().__init__(
             "Please wait while the paths are being imported...", None, 0, 3
         )
 
@@ -141,7 +134,7 @@ class ImportWorker(QThread):
         """Override the QThread run method. Executed when the worker is
         started, fills the database and updates the progress.
         """
-        begin = time()
+        begin = time_time()
 
         raw_data_folder = os.path.relpath(
             os.path.join(self.project.folder, "data", "raw_data")
@@ -157,7 +150,7 @@ class ImportWorker(QThread):
         else:
             log_to_read = max(list_logs, key=os.path.getctime)
 
-            with open(log_to_read, "r", encoding="utf-8") as file:
+            with open(log_to_read, encoding="utf-8") as file:
                 list_dict_log = json.load(file)
 
         # For history
@@ -726,7 +719,7 @@ class ImportWorker(QThread):
         self.project.redos.clear()
 
         print("\nData export duration in the database:")
-        print("read_log time: " + str(round(time() - begin, 2)) + " s\n")
+        print("read_log time: " + str(round(time_time() - begin, 2)) + " s\n")
         # print("read_log time: " + str(time() - begin))
 
         # pr.disable()
@@ -806,13 +799,13 @@ def verify_scans(project):
 
                 except Exception as e:
                     print(
-                        '\nError while reading the "{0}" file '
+                        '\nError while reading the "{}" file '
                         "...!\nTraceback:".format(os.path.abspath(file_path))
                     )
                     print(
                         "".join(traceback.format_tb(e.__traceback__)), end=""
                     )
-                    print("{0}: {1}\n".format(e.__class__.__name__, e))
+                    print(f"{e.__class__.__name__}: {e}\n")
                     actual_md5 = None
 
                 else:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to define the advanced search.
 
@@ -6,7 +5,6 @@ Contains:
     Class:
         - AdvancedSearch
 """
-
 
 ##########################################################################
 # Populse_mia - Copyright (C) IRMaGe/CEA, 2018

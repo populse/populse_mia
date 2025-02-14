@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module that contains the class to handle the projects saved in the software.
 
 Contains:
@@ -106,7 +105,6 @@ class SavedProjects:
                     "properties",
                     "saved_projects.yml",
                 ),
-                "r",
             ) as stream:
                 try:
                     if version.parse(yaml.__version__) > version.parse("5.1"):

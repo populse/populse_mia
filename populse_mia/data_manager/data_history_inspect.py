@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """This module is dedicated to pipeline history."""
 
 import os.path as osp
@@ -19,7 +18,7 @@ from populse_mia.data_manager.project import (
 )
 
 
-class ProtoProcess(object):
+class ProtoProcess:
     """
     Lightweight convenience class, stores a brick database entry, plus
     additional info (used)
@@ -57,7 +56,7 @@ def data_history_pipeline(filename, project):
                 proc.process = pproc
                 name = pproc.name
                 if name in pipeline.nodes:
-                    name = "%s_%s" % (name, pproc.uuid.replace("-", "_"))
+                    name = "{}_{}".format(name, pproc.uuid.replace("-", "_"))
                 pproc.node_name = name
                 pipeline.add_process(name, pproc)
 
@@ -86,7 +85,7 @@ def data_history_pipeline(filename, project):
                             done = True
                         n += 1
             else:
-                src = "%s.%s" % (link[0].process.node_name, link[1])
+                src = f"{link[0].process.node_name}.{link[1]}"
             if link[2] is None:
                 dst = link[3]
                 if dst not in pipeline.traits():
@@ -111,10 +110,10 @@ def data_history_pipeline(filename, project):
                             done = True
                         n += 1
             else:
-                dst = "%s.%s" % (link[2].process.node_name, link[3])
+                dst = f"{link[2].process.node_name}.{link[3]}"
             if src is not None and dst is not None:
                 try:
-                    pipeline.add_link("%s->%s" % (src, dst))
+                    pipeline.add_link(f"{src}->{dst}")
                 except ValueError as e:
                     print(e)
 

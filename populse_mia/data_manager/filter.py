@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module that handle the filter class which contains the results of both
 rapid and advanced search
 
