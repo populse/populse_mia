@@ -16,9 +16,11 @@
 
 import glob
 import json
+import logging
 import os
 import tempfile
 from datetime import datetime
+from pathlib import Path
 
 import yaml
 from capsul.api import Pipeline
@@ -64,6 +66,8 @@ from populse_mia.data_manager.filter import Filter
 # Populse_MIA imports
 from populse_mia.software_properties import Config
 
+logger = logging.getLogger(__name__)
+
 
 class Project:
     """Class that handles projects and their associated database.
@@ -94,7 +98,7 @@ class Project:
         - get_orphan_bricks: identifies orphan bricks and their associated
                              weak files
         - get_orphan_history: identifies orphan history entries
-        - get_orphan_nonexsiting_files: get orphan files which do not exist
+        - get_orphan_nonexisting_files: get orphan files which do not exist
                                         from the database
         - getSortedTag: return the sorted tag of the project
         - getSortOrder: return the sort order of the project
@@ -520,259 +524,382 @@ class Project:
     def add_clinical_tags(self):
         """Add new clinical tags to the project.
 
-        :returns: list of clinical tags that were added
+        :returns: list of clinical tags that were added.
         """
         return_tags = []
 
-        for clinical_tag in CLINICAL_TAGS:
+        with self.database.schema() as database_schema:
 
-            if clinical_tag not in self.database.get_field_names(
-                COLLECTION_CURRENT
-            ):
+            with database_schema.data() as database_data:
 
-                if clinical_tag == "Age":
-                    field_type = FIELD_TYPE_INTEGER
+                for clinical_tag in CLINICAL_TAGS:
 
-                else:
-                    field_type = FIELD_TYPE_STRING
+                    if clinical_tag not in database_data.get_field_names(
+                        COLLECTION_CURRENT
+                    ):
 
-                self.database.add_field(
-                    {
-                        "collection_name": COLLECTION_CURRENT,
-                        "field_name": clinical_tag,
-                        "field_type": field_type,
-                        "description": CLINICAL_TAGS[clinical_tag],
-                        "visibility": True,
-                        "origin": TAG_ORIGIN_BUILTIN,
-                        "unit": None,
-                        "default_value": None,
-                    }
-                )
-                self.database.add_field(
-                    {
-                        "collection_name": COLLECTION_INITIAL,
-                        "field_name": clinical_tag,
-                        "field_type": field_type,
-                        "description": CLINICAL_TAGS[clinical_tag],
-                        "visibility": True,
-                        "origin": TAG_ORIGIN_BUILTIN,
-                        "unit": None,
-                        "default_value": None,
-                    }
-                )
+                        if clinical_tag == "Age":
+                            field_type = FIELD_TYPE_INTEGER
 
-                for scan in self.database.get_document(
-                    collection_name=COLLECTION_CURRENT
-                ):
-                    self.database.set_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=scan[TAG_FILENAME],
-                        values_dict={clinical_tag: None},
-                        # field=clinical_tag,
-                        # value=None,
-                    )
-                    self.database.set_value(
-                        collection_name=COLLECTION_INITIAL,
-                        primary_key=scan[TAG_FILENAME],
-                        values_dict={clinical_tag: None},
-                        # field=clinical_tag,
-                        # value=None,
-                    )
+                        else:
+                            field_type = FIELD_TYPE_STRING
 
-                return_tags.append(clinical_tag)
+                        database_schema.add_field(
+                            {
+                                "collection_name": COLLECTION_CURRENT,
+                                "field_name": clinical_tag,
+                                "field_type": field_type,
+                                "description": CLINICAL_TAGS[clinical_tag],
+                                "visibility": True,
+                                "origin": TAG_ORIGIN_BUILTIN,
+                                "unit": None,
+                                "default_value": None,
+                            }
+                        )
+                        database_schema.add_field(
+                            {
+                                "collection_name": COLLECTION_INITIAL,
+                                "field_name": clinical_tag,
+                                "field_type": field_type,
+                                "description": CLINICAL_TAGS[clinical_tag],
+                                "visibility": True,
+                                "origin": TAG_ORIGIN_BUILTIN,
+                                "unit": None,
+                                "default_value": None,
+                            }
+                        )
+
+                        for scan in database_data.get_document(
+                            collection_name=COLLECTION_CURRENT
+                        ):
+                            database_data.set_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan[TAG_FILENAME],
+                                values_dict={clinical_tag: None},
+                            )
+                            database_data.set_value(
+                                collection_name=COLLECTION_INITIAL,
+                                primary_key=scan[TAG_FILENAME],
+                                values_dict={clinical_tag: None},
+                            )
+
+                        return_tags.append(clinical_tag)
 
         return return_tags
 
     def cleanup_orphan_bricks(self, bricks=None):
         """
-        Remove orphan bricks from the database
+        Remove orphan bricks and their associated files from the database.
+
+        This method performs the following cleanup operations:
+        1. Removes obsolete brick documents from the brick collection
+        2. Removes orphaned file documents from both current and initial
+           collections
+        3. Deletes the corresponding physical files from the filesystem
+
+        :param bricks (str): list of brick IDs to check for orphans.
+                             If None, checks all bricks in the database.
         """
-        obsolete, orphan_files = self.get_orphan_bricks(bricks)
-        print("really orphan:", obsolete)
+        obsolete_bricks, orphan_files = self.get_orphan_bricks(bricks)
+        logger.info(f"Identified obsolete bricks: {obsolete_bricks}")
 
-        for brick in obsolete:
-            print("remove obsolete brick:", brick)
+        with self.database.data() as database_data:
 
-            try:
-                self.database.remove_document(COLLECTION_BRICK, brick)
+            for brick in obsolete_bricks:
+                logger.info(f"Removing obsolete brick: {brick}")
 
-            except KeyError:
-                pass  # malformed database, the brick doesn't exist
+                try:
+                    database_data.remove_document(COLLECTION_BRICK, brick)
 
-        for doc in orphan_files:
-            print("remove orphan file:", doc)
+                except KeyError:
+                    pass  # malformed database, the brick doesn't exist
 
-            try:
-                self.database.remove_document(COLLECTION_CURRENT, doc)
-                self.database.remove_document(COLLECTION_INITIAL, doc)
+            for file_path in orphan_files:
+                logger.info(f"Removing orphan file: {file_path}")
 
-            except KeyError:
-                pass  # malformed database, the file doesn't exist
+                try:
+                    database_data.remove_document(
+                        COLLECTION_CURRENT, file_path
+                    )
+                    database_data.remove_document(
+                        COLLECTION_INITIAL, file_path
+                    )
 
-            if os.path.exists(os.path.join(self.folder, doc)):
-                os.unlink(os.path.join(self.folder, doc))
+                except KeyError:
+                    pass  # malformed database, the file doesn't exist
+
+                # Remove physical file if it exists
+                full_path = os.path.join(self.folder, file_path)
+
+                if os.path.exists(full_path):
+                    os.unlink(full_path)
 
     def cleanup_orphan_history(self):
         """
-        Remove orphan bricks from the database
+        Remove orphan histories, their associated bricks, and files from
+        the database.
+
+        This method performs three cleanup operations:
+        1. Removes obsolete history documents from the history collection
+        2. Removes orphaned brick documents from the brick collection
+        3. Removes orphaned file documents from both current and initial
+           collections, along with their corresponding physical files
         """
-        obs_hist, obs_bricks, orphan_files = self.get_orphan_history()
-        print("orphan histories:", obs_hist)
-        print("orphan bricks:", obs_bricks)
+        (obsolete_histories, obsolete_bricks, orphan_files) = (
+            self.get_orphan_history()
+        )
+        logger.info(f"Orphan histories: {obsolete_histories}")
+        logger.info(f"Orphan bricks: {obsolete_bricks}")
 
-        for hist in obs_hist:
-            print("remove obsolete history:", hist)
+        with self.database.data() as database_data:
 
-            try:
-                self.database.remove_document(
-                    collection_name=COLLECTION_HISTORY, primary_key=hist
-                )
+            for hist in obsolete_histories:
+                logger.info(f"Removing obsolete history: {hist}")
 
-            except KeyError:
-                pass  # malformed database, the brick doesn't exist
+                try:
+                    database_data.remove_document(
+                        collection_name=COLLECTION_HISTORY, primary_key=hist
+                    )
 
-        for brick in obs_bricks:
-            print("remove obsolete brick:", brick)
+                except KeyError:
+                    pass  # malformed database, the brick doesn't exist
 
-            try:
-                self.database.remove_document(
-                    collection_name=COLLECTION_BRICK, primary_key=brick
-                )
+            for brick in obsolete_bricks:
+                logger.info(f"Removing obsolete brick: {brick}")
 
-            except KeyError:
-                pass  # malformed database, the brick doesn't exist
+                try:
+                    database_data.remove_document(
+                        collection_name=COLLECTION_BRICK, primary_key=brick
+                    )
 
-        for doc in orphan_files:
-            print("remove orphan file:", doc)
+                except KeyError:
+                    pass  # malformed database, the brick doesn't exist
 
-            try:
-                self.database.remove_document(
-                    collection_name=COLLECTION_CURRENT, primary_key=doc
-                )
-                self.database.remove_document(
-                    collection_name=COLLECTION_INITIAL, primary_key=doc
-                )
+            for file_path in orphan_files:
+                logger.info(f"Removing orphan file: {file_path}")
 
-            except KeyError:
-                pass  # malformed database, the file doesn't exist
+                for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
 
-            if os.path.exists(os.path.join(self.folder, doc)):
-                os.unlink(os.path.join(self.folder, doc))
+                    try:
+                        database_data.remove_document(
+                            collection_name=collection, primary_key=file_path
+                        )
+
+                    except KeyError:
+                        pass  # malformed database, the file doesn't exist
+
+                full_path = os.path.join(self.folder, file_path)
+
+                if os.path.exists(full_path):
+                    os.unlink(full_path)
 
     def cleanup_orphan_nonexisting_files(self):
         """
-        Remove orphan files which do not exist from the database
+        Remove database entries for files that no longer exist in the
+        filesystem.
+
+        This method:
+        1. Identifies files referenced in the database that are missing
+           from disk
+        2. Removes their entries from both current and initial collections
+        3. Ensures any remaining physical files are deleted (defensive
+           cleanup)
         """
-        orphan_files = self.get_orphan_nonexsiting_files()
+        orphan_files = self.get_orphan_nonexisting_files()
 
-        for doc in orphan_files:
-            print("remove orphan file:", doc)
+        with self.database.data() as database_data:
 
-            try:
-                self.database.remove_document(COLLECTION_CURRENT, doc)
-                self.database.remove_document(COLLECTION_INITIAL, doc)
+            for file_path in orphan_files:
+                logger.info(f"Removing orphan file: {file_path}")
 
-            except KeyError:
-                pass  # malformed database, the file doesn't exist
+                for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
 
-            if os.path.exists(os.path.join(self.folder, doc)):
-                os.unlink(os.path.join(self.folder, doc))
+                    try:
+                        database_data.remove_document(collection, file_path)
+
+                    except KeyError:
+                        pass  # malformed database, the file doesn't exist
+
+                full_path = os.path.join(self.folder, file_path)
+
+                if os.path.exists(full_path):
+                    os.unlink(full_path)
 
     def del_clinical_tags(self):
-        """Remove clinical tags to the project.
-
-        :returns: list of clinical tags that were removed
         """
-        return_tags = []
+        Remove clinical tags from the project's current and initial
+        collections.
 
-        for clinical_tag in CLINICAL_TAGS:
+        Iterates through predefined clinical tags and removes them from both
+        collections if they exist in the current collection's field names.
 
-            if clinical_tag in self.database.get_field_names(
-                COLLECTION_CURRENT
-            ):
-                self.database.remove_field(COLLECTION_CURRENT, clinical_tag)
-                self.database.remove_field(COLLECTION_INITIAL, clinical_tag)
-                return_tags.append(clinical_tag)
+        :returns: List of clinical tags that were successfully removed.
+        """
+        removed_tags = []
 
-        return return_tags
+        with self.database.data() as database_data:
+            field_names = database_data.get_field_names(COLLECTION_CURRENT)
+
+        with self.database.schema() as database_schema:
+
+            for clinical_tag in CLINICAL_TAGS:
+
+                if clinical_tag in field_names:
+
+                    for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
+                        database_schema.remove_field(collection, clinical_tag)
+
+                    removed_tags.append(clinical_tag)
+
+        return removed_tags
 
     def files_in_project(self, files):
         """
-        Return values in files that are file / directory names within the
-        project folder.
+        Extract file/directory names from input that are within the project
+        folder.
 
-        `files` are walked recursively and can be, or contain, lists, tuples,
-        sets, dicts (only dict `values()` are considered). Dict keys are
-        dropped and all filenames are merged into a single set.
+        Recursively processes the input to find all file paths, handling
+        nested data structures. Only paths within the project directory are
+        included.
 
-        The returned value is a set of filenames (str).
+        :param files: Input that may contain file paths. Can be:
+                      - str: A single file path
+                      - list/tuple/set: Collection of file paths or
+                        nested structures
+                      - dict: Only values are processed, keys are ignored
+
+        :returns: Set of relative file paths that exist within the project
+                  folder, with paths normalized and made relative to the
+                  project directory
         """
-        proj_dir = os.path.join(
-            os.path.abspath(os.path.normpath(self.folder)), ""
+        project_dir = os.path.join(
+            os.path.abspath(os.path.normpath(self.folder)),
+            "",  # Ensures trailing slash
         )
-        pl = len(proj_dir)
-        values = set()
-        tval = [files]
+        dir_length = len(project_dir)
+        found_paths = set()
+        to_process = [files]
 
-        while tval:
-            value = tval.pop(0)
+        while to_process:
+            current = to_process.pop(0)
 
-            if isinstance(value, (list, tuple, set)):
-                tval += value
+            # Handle collections
+            if isinstance(current, (list, tuple, set)):
+                to_process.extend(current)
                 continue
 
-            if isinstance(value, dict):
-                tval += value.values()
+            # Handle dictionaries
+            if isinstance(current, dict):
+                to_process.extend(current.values())
                 continue
 
-            if not isinstance(value, str):
+            # Skip non-string values
+            if not isinstance(current, str):
                 continue
 
-            aval = os.path.abspath(os.path.normpath(value))
+            # Normalize path and check if it's within project directory
+            abs_path = os.path.abspath(os.path.normpath(current))
 
-            if not aval.startswith(proj_dir):
-                continue
+            if abs_path.startswith(project_dir):
+                found_paths.add(abs_path[dir_length:])
 
-            values.add(aval[pl:])
-
-        return values
+        return found_paths
 
     def finished_bricks(self, engine, pipeline=None, include_done=False):
         """
-        Retrieves a dictionary of finished bricks from workflows and/or
-        pipelines, filters them based on their execution status, and updates
-        their metadata with additional information from the Mia database.
+        Retrieve and process finished bricks from workflows and pipelines.
 
-        Args:
-            engine (object): The engine instance used to retrieve finished
-                             bricks.
-            pipeline (object, optional): The pipeline object to filter bricks
-                                         specific to a pipeline.
-            include_done (bool, optional): If True, includes all bricks
-                                           regardless of their execution
-                                           status. If False, only includes
-                                           bricks with execution status
-                                           "Not Done".
+        This method:
+        1. Gets finished bricks from workflows and optionally a specific
+           pipeline
+        2. Filters them based on their presence in the MIA database
+        3. Updates brick metadata with execution status and outputs
+        4. Collects all output files that are within the project directory
 
-        Returns:
-            dict: A dictionary containing the filtered and updated bricks.
-            Each key represents a brick ID, and the value is a dictionary with
-            metadata about the brick, including its execution status
-            and outputs.
+        :param engine: Engine instance for retrieving finished bricks
+        :param pipeline: Optional pipeline object to filter specific bricks
+        :param include_done: If True, includes all bricks regardless of
+                             execution status. If False, only includes
+                             "Not Done" bricks.
+
+        :returns: Dict containing:
+                  - 'bricks': Dict mapping brick IDs to their metadata
+                  - 'outputs': Set of output file paths relative to project
+                               directory
+
+        :Contains:
+            :Private function:
+                - _update_dict: Merge two dictionaries by updating the first
+                                with the second
+                - _collect_outputs: Recursively collects file paths from
+                                    output values that are within the project
+                                    directory.
         """
+
+        def _update_dict(d1, d2):
+            """
+            Merge two dictionaries by updating the first with the second.
+
+            :param d1 (dict): The dictionary to be updated.
+            :param d2 (dict): The dictionary containing new key-value pairs
+                              to merge into `d1`.
+
+            :returns: The updated dictionary (`d1`) after merging with `d2`.
+
+            """
+            d1.update(d2)
+            return d1
+
+        def _collect_outputs(value, base_path, base_len):
+            """
+            Recursively collects file paths from output values that are
+            within the project directory.
+
+            :param value: Output value to process (can be str, list,
+                          set, tuple)
+            :param base_path (str): Base project directory path
+            :param base_len (int): Length of base path string for relative
+                                   path calculation
+
+            :returns (set[str]): A set of collected file paths, relative to
+                                 the project directory.
+            """
+            outputs = set()
+            to_process = [value]
+
+            while to_process:
+                current = to_process.pop(0)
+
+                if isinstance(current, (list, set, tuple)):
+                    to_process.extend(current)
+                    continue
+
+                if not isinstance(current, str):
+                    continue
+
+                path = Path(current).absolute().as_posix()
+
+                if path.startswith(base_path):  # and Path(path).exists():
+                    outputs.add(path[base_len:])
+
+            return outputs
+
+        # Get bricks from workflows and pipeline
         bricks = self.get_finished_bricks_in_workflows(engine)
 
         if pipeline:
-            pbricks = self.get_finished_bricks_in_pipeline(pipeline)
-            pbricks.update(bricks)
-            bricks = pbricks
+            pipeline_bricks = self.get_finished_bricks_in_pipeline(pipeline)
+            pipeline_bricks.update(bricks)
+            bricks = pipeline_bricks
 
-        # filter jobs actually in MIA database
-        docs = self.database.get_document(
-            collection_name=COLLECTION_BRICK,
-            primary_keys=list(bricks),
-            fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS],
-        )
+        # Filter and update bricks from database
+        with self.database.data() as database_data:
+            docs = database_data.get_document(
+                collection_name=COLLECTION_BRICK,
+                rimary_keys=list(bricks),
+                fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS],
+            )
+
         docs = {
             doc[BRICK_ID]: {
                 "brick_exec": doc[BRICK_EXEC],
@@ -781,67 +908,29 @@ class Project:
             for doc in docs
             if include_done or doc[BRICK_EXEC] == "Not Done"
         }
-
-        def updated(d1, d2):
-            """
-            Updates the contents of the first dictionary (`d1`) with the
-            key-value pairs from the second dictionary (`d2`).
-
-            Args:
-                d1 (dict): The dictionary to be updated.
-                d2 (dict): The dictionary containing new key-value pairs to
-                           merge into `d1`.
-
-            Returns:
-                dict: The updated dictionary (`d1`) after merging with `d2`.
-            """
-
-            d1.update(d2)
-            return d1
-
+        # Merge brick metadata
         bricks = {
-            brid: updated(value, docs[brid])
-            for brid, value in bricks.items()
-            if brid in docs
+            brick_id: _update_dict(value, docs[brick_id])
+            for brick_id, value in bricks.items()
+            if brick_id in docs
         }
+        # Collect all output files
+        project_dir = Path(self.folder).absolute().as_posix() + os.sep
+        dir_len = len(project_dir)
+        all_outputs = set()
 
-        # get complete list of outputs to be updated in the database
-        outputs = set()
-        proj_dir = os.path.join(
-            os.path.abspath(os.path.normpath(self.folder)), ""
-        )
-        lp = len(proj_dir)
-
-        def _update_set(outputs, output):
-            """update the outputs set with file/dir names in output, relative
-            to the project directory"""
-            todo = [output]
-
-            while todo:
-                output = todo.pop(0)
-
-                if isinstance(output, (list, set, tuple)):
-                    todo += output
-
-                elif isinstance(output, str):
-                    path = os.path.abspath(os.path.normpath(output))
-
-                    if path.startswith(proj_dir):  # and os.path.exists(path):
-                        # record only existing files
-                        output = path[lp:]
-                        outputs.add(output)
-
-        # procs = {}
-
-        for brid, brdesc in bricks.items():
-            out_data = brdesc["outputs"]
+        # Process outputs from all bricks
+        for brick_desc in bricks.values():
+            out_data = brick_desc["outputs"]
 
             if out_data:
 
-                for param, output in out_data.items():
-                    _update_set(outputs, output)
+                for output in out_data.values():
+                    all_outputs.update(
+                        _collect_outputs(output, project_dir, dir_len)
+                    )
 
-        return {"bricks": bricks, "outputs": outputs}
+        return {"bricks": bricks, "outputs": all_outputs}
 
     def get_data_history(self, path):
         """
@@ -1242,7 +1331,7 @@ class Project:
 
         return orphan_hist, orphan_bricks, orphan_weak_files
 
-    def get_orphan_nonexsiting_files(self):
+    def get_orphan_nonexisting_files(self):
         """
         Get orphan files which do not exist from the database
         """
