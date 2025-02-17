@@ -118,11 +118,10 @@ class Project:
         - setSortedTag: set the sorted tag of the project
         - setSortOrder: set the sort order of the project
         - undo: undo the last action made by the user on the project
-        - unsavedModifications(self, value): Modify the window title depending
-                                             of whether the project has unsaved
-                                             modifications or not.
+        - unsavedModifications: Modify the window title depending
+                                of whether the project has unsaved
+                                modifications or not.
         - unsaveModifications: unsaves the pending operations of the project
-        - update_data_history: cleanup earlier history of given data
         - update_db_for_paths: update the history and brick tables with a new
                                project file
     """
@@ -136,7 +135,6 @@ class Project:
 
         if project_root_folder is None:
             self.isTempProject = True
-            # self.folder = os.path.relpath(tempfile.mkdtemp())
             self.folder = tempfile.mkdtemp(prefix="temp_mia_project")
 
         else:
@@ -153,9 +151,8 @@ class Project:
 
         else:
             raise OSError(
-                "The project at " + str(self.folder) + " is already opened "
-                "in another instance "
-                "of the software."
+                f"The project at {self.folder} is already opened "
+                f"in another instance of the software."
             )
 
         db_folder = os.path.join(self.folder, "database")
@@ -937,12 +934,13 @@ class Project:
         Get the processing history for the given data file.
 
         The history dict contains several elements:
-
         - `parent_files`: set of other data used (directly or indirectly) to
-          produce the data.
+                          produce the data.
         - `processes`: processing bricks set from each ancestor data which
-          lead to the given one. Elements are process (brick) UUIDs.
+                       lead to the given one. Elements are process
+                       (brick) UUIDs.
 
+        :param path: Path to the data file
         :return: history (dict)
         """
 
@@ -964,16 +962,15 @@ class Project:
         Retrieves a dictionary of finished processes (bricks) from a given
         pipeline, including nested pipelines, if any.
 
-        Args:
-            pipeline (Pipeline or Process): The pipeline or single process to
-                                            analyze. If a single process is
-                                            provided, it will be treated as a
-                                            minimal pipeline.
+        :param pipeline (Pipeline or Process): The pipeline or single process
+                                               to analyze. If a single
+                                               process is provided, it will
+                                               be treated as a minimal
+                                               pipeline.
 
-        Returns:
-            dict: A dictionary where keys are process UUIDs (brick IDs) and
-                  values are dictionaries containing the associated process
-                  instances.
+        Returns (dict): A dictionary where keys are process UUIDs (brick IDs)
+                        and values are dictionaries containing the associated
+                        process instances.
 
         """
 
@@ -987,6 +984,7 @@ class Project:
 
             return procs
 
+        # Get initial enabled nodes
         nodes_list = [
             n
             for n in pipeline.nodes.items()
@@ -999,19 +997,18 @@ class Project:
         while nodes_list:
             node_name, node = nodes_list.pop(0)
 
-            if hasattr(node, "process"):
+            if hasattr(node, "process") and isinstance(node, PipelineNode):
                 process = node.process
+                new_nodes = [
+                    n
+                    for n in process.nodes.items()
+                    if n[0] != ""
+                    and pipeline_tools.is_node_enabled(process, n[0], n[1])
+                ]
+                nodes_list.extend(new_nodes)
+                all_nodes.extend(new_nodes)
 
-                if isinstance(node, PipelineNode):
-                    new_nodes = [
-                        n
-                        for n in process.nodes.items()
-                        if n[0] != ""
-                        and pipeline_tools.is_node_enabled(process, n[0], n[1])
-                    ]
-                    nodes_list += new_nodes
-                    all_nodes += new_nodes
-
+        # Collect process UUIDs into result dictionary
         procs = {}
 
         for node_name, node in all_nodes:
@@ -1030,20 +1027,18 @@ class Project:
         Retrieves a dictionary of finished bricks (jobs) from Soma-Workflow
         workflows.
 
-        Args:
-            engine (object): The engine instance used to interact with the
-            study configuration and Soma-Workflow module.
+        :param engine (object): The engine instance used to interact with the
+                                study configuration and Soma-Workflow module.
 
-        Returns:
-            dict: A dictionary where keys are brick IDs (UUIDs) and values are
-                  dictionaries containing metadata about each finished job,
-                  including:
-                    - `workflow`: The workflow ID in which the job is
-                                  contained.
-                    - `job`: The Soma-Workflow job instance.
-                    - `job_id`: The ID of the job in Soma-Workflow.
-                    - `swf_status`: The status information for the job in
-                                    Soma-Workflow.
+        Returns (dict): A dictionary where keys are brick IDs (UUIDs) and
+                        values are dictionaries containing metadata about
+                        each finished job, including:
+                        - `workflow`: The workflow ID in which the job is
+                                      contained.
+                        - `job`: The Soma-Workflow job instance.
+                        - `job_id`: The ID of the job in Soma-Workflow.
+                        - `swf_status`: The status information for the job in
+                                        Soma-Workflow.
         """
         # import soma_workflow.client as swclient
         # from soma_workflow import constants
@@ -1096,18 +1091,18 @@ class Project:
     def getFilter(self, filter):
         """Return a Filter object from its name.
 
-        :param filter: Filter name
-        :returns: Filter object
+        :param filter (str): Filter name
+        :returns (Filter): Filter object corresponding to the given name or
+                           None if not found
         """
-        for filterObject in self.filters:
-
-            if filterObject.name == filter:
-                return filterObject
+        next((obj for obj in self.filters if obj.name == filter), None)
 
     def getFilterName(self):
-        """Input box to type the name of the filter to save.
+        """
+        Input box to type the name of the filter to save.
 
-        :returns: Return the name typed
+        :returns (str): Return the name typed by the user or None if
+                        cancelled
         """
 
         from PyQt5.QtWidgets import QInputDialog, QLineEdit
@@ -1118,6 +1113,9 @@ class Project:
 
         if ok_pressed and text != "":
             return text
+
+        # Explicitly return None if dialog was cancelled or empty text
+        return None
 
     def getName(self):
         """Return the name of the project.
@@ -1132,21 +1130,18 @@ class Project:
         """
         Identifies orphan bricks and their associated weak files.
 
-        Args:
-            bricks (list or set, optional): A list or set of brick IDs to
-                                            filter the search. If None, all
-                                            bricks in the database are
-                                            considered. Defaults to None.
+        :param bricks (list or set): A list or set of brick IDs to filter the
+                                     search. If None, all bricks in the
+                                     database are considered. Defaults to None.
 
-        Returns:
-            tuple: A tuple containing two sets:
-                - `orphan` (set): Brick IDs considered orphaned, meaning they
-                                  have no valid or existing outputs linked to
-                                  the current database.
-                - `orphan_weak_files` (set): Paths to weak files associated
-                                             with orphaned bricks, such as
-                                             script files or files that no
-                                             longer exist.
+        :returns (tuple): A tuple containing two sets:
+                    - `orphan` (set): Brick IDs considered orphaned, meaning
+                                      they have no valid or existing outputs
+                                      linked to the current database.
+                    - `orphan_weak_files` (set): Paths to weak files associated
+                                                 with orphaned bricks, such as
+                                                 script files or files that no
+                                                 longer exist.
         """
         orphan = set()
         orphan_weak_files = set()
@@ -1155,11 +1150,13 @@ class Project:
         if bricks is not None and not isinstance(bricks, list):
             bricks = list(bricks)
 
-        brick_docs = self.database.get_document(
-            collection_name=COLLECTION_BRICK,
-            primary_keys=bricks,
-            fields=[BRICK_ID, BRICK_OUTPUTS],
-        )
+        with self.database.data() as database_data:
+            brick_docs = database_data.get_document(
+                collection_name=COLLECTION_BRICK,
+                primary_keys=bricks,
+                fields=[BRICK_ID, BRICK_OUTPUTS],
+            )
+
         proj_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.folder)), ""
         )
@@ -1189,13 +1186,16 @@ class Project:
 
                     if path.startswith(proj_dir):
                         value = path[lp:]
-                        values.add(value)
 
-            docs = self.database.get_document(
-                collection_name=COLLECTION_CURRENT,
-                primary_keys=list(values),
-                fields=[TAG_FILENAME, TAG_BRICKS],
-            )
+                    values.add(value)
+
+            with self.database.data() as database_data:
+                docs = database_data.get_document(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_keys=list(values),
+                    fields=[TAG_FILENAME, TAG_BRICKS],
+                )
+
             used = False
             orphan_files = set()
 
@@ -1209,8 +1209,8 @@ class Project:
                         os.path.join(self.folder, doc[TAG_FILENAME])
                     ):
                         # script files are "weak" and should not prevent
-                        # brick deletion.
-                        # non-existing files can be cleared too.
+                        # brick deletion. Non-existing files can be
+                        # cleared too.
                         orphan_files.add(doc[TAG_FILENAME])
                         continue
 
@@ -1229,145 +1229,141 @@ class Project:
 
     def get_orphan_history(self):
         """
-        Identifies orphan history entries, their associated orphan bricks,
+        Identifies orphaned history entries, their associated orphan bricks,
         and weak files.
 
-        Returns:
-            tuple: A tuple containing three sets:
-                - `orphan_hist` (set): History IDs that are considered
-                                       orphaned, meaning they are no longer
-                                       associated with any current document
-                                       in the database.
-                - `orphan_bricks` (set): Brick IDs associated with orphan
-                                         history entries.
-                - `orphan_weak_files` (set): Paths to weak files (e.g., script
-                                             files or non-existent files)
-                                             associated with orphan history
-                                             entries.
-
+        :returns (tuple): A tuple containing three sets:
+        - `orphan_hist` (set): IDs of history entries that are no longer
+                               linked to any current document in the
+                               database.
+        - `orphan_bricks` (set): IDs of bricks associated with orphaned
+                                 history entries.
+        - `orphan_weak_files` (set): Paths to weak files (e.g., script files
+                                     or non-existent files) linked to
+                                     orphaned history entries.
         """
         orphan_hist = set()
         orphan_bricks = set()
         orphan_weak_files = set()
         used_hist = set()
-        hist_docs = self.database.get_document(
-            collection_name=COLLECTION_HISTORY,
-            fields=[HISTORY_ID, HISTORY_BRICKS],
-        )
-        proj_dir = os.path.join(
-            os.path.abspath(os.path.normpath(self.folder)), ""
-        )
-        lp = len(proj_dir)
 
-        for hist in hist_docs:
-            hist_id = hist[HISTORY_ID]
-
-            if hist_id is None:
-                continue
-
-            if hist[HISTORY_BRICKS] is None:
-                orphan_hist.add(hist_id)
-                continue
-
-            values = set()
-
-            for brid in hist[HISTORY_BRICKS]:
-                brick_doc = self.database.get_value(
-                    collection_name=COLLECTION_BRICK,
-                    primary_key=brid,
-                    field=BRICK_OUTPUTS,
-                )
-
-                if brick_doc is None:
-                    todo = []
-
-                else:
-                    todo = list(brick_doc.values())
-
-                while todo:
-                    value = todo.pop(0)
-
-                    if isinstance(value, (list, set, tuple)):
-                        todo += value
-
-                    elif isinstance(value, str):
-                        path = os.path.abspath(os.path.normpath(value))
-
-                        if path.startswith(proj_dir):
-                            value = path[lp:]
-                            values.add(value)
-
-            docs = self.database.get_document(
-                collection_name=COLLECTION_CURRENT,
-                primary_keys=list(values),
-                fields=[TAG_FILENAME, TAG_HISTORY],
+        with self.database.data() as database_data:
+            hist_docs = database_data.get_document(
+                collection_name=COLLECTION_HISTORY,
+                fields=[HISTORY_ID, HISTORY_BRICKS],
             )
-            used = False
-            orphan_files = set()
 
-            for doc in docs:
+            proj_dir = os.path.join(
+                os.path.abspath(os.path.normpath(self.folder)), ""
+            )
+            lp = len(proj_dir)
 
-                if doc[TAG_HISTORY] and hist_id == doc[TAG_HISTORY]:
+            for hist in hist_docs:
+                hist_id = hist[HISTORY_ID]
 
-                    if doc[TAG_FILENAME].startswith(
-                        "scripts/"
-                    ) or not os.path.exists(
-                        os.path.join(self.folder, doc[TAG_FILENAME])
-                    ):
-                        # script files are "weak" and should not prevent
-                        # brick deletion.
-                        # non-existing files can be cleared too.
-                        orphan_files.add(doc[TAG_FILENAME])
-                        continue
+                if hist_id is None:
+                    continue
 
-                    used = True
-                    used_hist.add(hist_id)
-                    break
+                if hist[HISTORY_BRICKS]:
+                    orphan_hist.add(hist_id)
+                    continue
 
-            if not used:
-                orphan_hist.add(hist_id)
-                orphan_bricks.update(hist[HISTORY_BRICKS])
-                orphan_weak_files.update(orphan_files)
+                values = set()
+
+                for brid in hist[HISTORY_BRICKS]:
+                    brick_doc = database_data.get_value(
+                        collection_name=COLLECTION_BRICK,
+                        primary_key=brid,
+                        field=BRICK_OUTPUTS,
+                    )
+                    todo = list(brick_doc.values()) if brick_doc else []
+
+                    while todo:
+                        value = todo.pop(0)
+
+                        if isinstance(value, (list, set, tuple)):
+                            todo.extend(value)
+
+                        elif isinstance(value, str):
+                            path = os.path.abspath(os.path.normpath(value))
+
+                            if path.startswith(proj_dir):
+                                values.add(path[lp:])
+
+                docs = database_data.get_document(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_keys=list(values),
+                    fields=[TAG_FILENAME, TAG_HISTORY],
+                )
+                used = False
+                orphan_files = set()
+
+                for doc in docs:
+
+                    if doc[TAG_HISTORY] and hist_id == doc[TAG_HISTORY]:
+
+                        if doc[TAG_FILENAME].startswith(
+                            "scripts/"
+                        ) or not os.path.exists(
+                            os.path.join(self.folder, doc[TAG_FILENAME])
+                        ):
+                            # script files are "weak" and should not prevent
+                            # brick deletion. Non-existing files can be
+                            # cleared too.
+                            orphan_files.add(doc[TAG_FILENAME])
+                            continue
+
+                        used = True
+                        used_hist.add(hist_id)
+                        break
+
+                if not used:
+                    orphan_hist.add(hist_id)
+                    orphan_bricks.update(hist[HISTORY_BRICKS])
+                    orphan_weak_files.update(orphan_files)
 
         return orphan_hist, orphan_bricks, orphan_weak_files
 
     def get_orphan_nonexisting_files(self):
         """
-        Get orphan files which do not exist from the database
+        Retrieves orphaned files listed in the database that no longer exist
+        on the filesystem.
+
+        :returns (set): A set of filenames from the database that are not
+                        found on the filesystem and are not associated with
+                        existing bricks.
         """
-        # filter_query = '{Bricks} == None'
-        # docs = self.session.filter_documents(
-        # COLLECTION_CURRENT, filter_query, fields=[TAG_FILENAME],
-        # as_list=True)
-        docs = self.database.get_document(
-            collection_name=COLLECTION_CURRENT,
-            fields=[TAG_FILENAME, TAG_BRICKS],
-        )
-        orphan = set()
 
-        for doc in docs:
+        with self.database.data() as database_data:
+            docs = database_data.get_document(
+                collection_name=COLLECTION_CURRENT,
+                fields=[TAG_FILENAME, TAG_BRICKS],
+            )
+            orphan = set()
 
-            if doc[TAG_BRICKS] is not None:
-                bricks = self.database.get_document(
-                    collection_name=COLLECTION_BRICK,
-                    primary_keys=doc[TAG_BRICKS],
-                    fields=[BRICK_ID],
-                )
+            for doc in docs:
 
-                if bricks:
-                    continue
+                if doc[TAG_BRICKS]:
+                    bricks = database_data.get_document(
+                        collection_name=COLLECTION_BRICK,
+                        primary_keys=doc[TAG_BRICKS],
+                        fields=[BRICK_ID],
+                    )
 
-            if not os.path.exists(
-                os.path.join(self.folder, doc[TAG_FILENAME])
-            ):
-                orphan.add(doc[TAG_FILENAME])
+                    if bricks:
+                        continue
+
+                file_path = os.path.join(self.folder, doc[TAG_FILENAME])
+
+                if not os.path.exists(file_path):
+                    orphan.add(doc[TAG_FILENAME])
 
         return orphan
 
     def getSortedTag(self):
         """Return the sorted tag of the project.
 
-        :returns: string of the sorted tag of the project if it's not Unnamed
+        :returns (str): Sorted tag of the project if it's not Unnamed
                   project, otherwise empty string
         """
 
@@ -1376,8 +1372,8 @@ class Project:
     def getSortOrder(self):
         """Return the sort order of the project.
 
-        :returns: string of the sort order of the project if it's not Unnamed
-                  project, otherwise empty string
+        :returns (str): Sort order of the project if it's not Unnamed
+                        project, otherwise empty string
         """
 
         return self.properties["sort_order"]
@@ -1385,47 +1381,65 @@ class Project:
     def hasUnsavedModifications(self):
         """Return if the project has unsaved modifications or not.
 
-        :returns: boolean, True if the project has pending modifications,
-                  False otherwise
+        :returns (bool): True if the project has pending modifications,
+                         False otherwise
         """
 
         return self.unsavedModifications
 
     def init_filters(self):
-        """Initialize the filters at project opening."""
+        """
+         Initializes project filters by loading them from stored JSON files.
+
+        This method sets the `currentFilter` to a default empty filter and
+        populates the `filters` list with `Filter` objects created
+        """
 
         self.currentFilter = Filter(None, [], [], [], [], [], "")
         self.filters = []
         filters_folder = os.path.join(self.folder, "filters")
 
         for filename in glob.glob(os.path.join(filters_folder, "*")):
-            filter, extension = os.path.splitext(os.path.basename(filename))
+            filter_name, extension = os.path.splitext(
+                os.path.basename(filename)
+            )
 
-            # make sure this gets closed automatically
+            # Make sure this gets closed automatically
             # as soon as we are done reading
             with open(filename) as f:
                 data = json.load(f)
 
-            filter_object = Filter(
-                filter,
-                data["nots"],
-                data["values"],
-                data["fields"],
-                data["links"],
-                data["conditions"],
-                data["search_bar_text"],
+            self.filters.append(
+                Filter(
+                    filter_name,
+                    data.get("nots", []),
+                    data.get("values", []),
+                    data.get("fields", []),
+                    data.get("links", []),
+                    data.get("conditions", []),
+                    data.get("search_bar_text", ""),
+                )
             )
-            self.filters.append(filter_object)
 
     def loadProperties(self):
-        """Load the properties file."""
+        """
+        Loads the project properties from the 'properties.yml' file.
+
+        This method reads the project's YAML properties file and returns
+        its contents as a Python dictionary.
+
+        :returns (dict): A dictionary containing the project properties if
+                         successfully loaded, or None if an error occurs.
+        """
 
         # import verCmp only here to prevent circular import issue
         from populse_mia.utils import verCmp
 
-        with open(
-            os.path.join(self.folder, "properties", "properties.yml")
-        ) as stream:
+        properties_path = os.path.join(
+            self.folder, "properties", "properties.yml"
+        )
+
+        with open(properties_path) as stream:
 
             try:
 
@@ -1436,264 +1450,246 @@ class Project:
                     return yaml.load(stream)
 
             except yaml.YAMLError as exc:
-                print(exc)
+                logger.warning(
+                    f"Error loading YAML properties "
+                    f"from {properties_path}: {exc}"
+                )
+                return None
 
     def redo(self, table):
-        """Redo the last action made by the user on the project.
+        """
+        Redo the last action made by the user on the project.
 
-        :param table: table on which to apply the modifications
+        :param table (QTableWidget): The table on which to apply the
+                                     modifications.
 
-        Actions that can be undone:
+        Actions that can be redone:
             - add_tag
             - remove_tags
             - add_scans
             - modified_values
             - modified_visibilities
+
+        :raises (ValueError): If an unknown action type is encountered.
         """
         # To avoid circular imports
         from populse_mia.utils import set_item_data
 
-        # We can redo if we have an action to make again
-        if len(self.redos) > 0:
-            to_redo = self.redos.pop()
-            self.undos.append(to_redo)
-            self.unsavedModifications = True
-            # We pop the redo action in the undo stack
-            # The first element of the list is the type of action made by
-            # the user (add_tag, remove_tags, add_scans, remove_scans,
-            # or modified_values)
-            action = to_redo[0]
+        if not self.redos:
+            return  # No action to redo
 
-            if action == "add_tag":
-                # For adding the tag, we need the tag name,
-                # and all its attributes
-                tag_to_add = to_redo[1]
-                tag_type = to_redo[2]
-                tag_unit = to_redo[3]
-                tag_default_value = to_redo[4]
-                tag_description = to_redo[5]
-                values = to_redo[6]  # List of values stored
-                # Adding the tag
-                self.database.add_field(
-                    {
-                        "collection_name": COLLECTION_CURRENT,
-                        "field_name": tag_to_add,
-                        "field_type": tag_type,
-                        "description": tag_description,
-                        "visibility": True,
-                        "origin": TAG_ORIGIN_USER,
-                        "unit": tag_unit,
-                        "default_value": tag_default_value,
-                    }
-                )
-                self.database.add_field(
-                    {
-                        "collection_name": COLLECTION_INITIAL,
-                        "field_name": tag_to_add,
-                        "field_type": tag_type,
-                        "description": tag_description,
-                        "visibility": True,
-                        "origin": TAG_ORIGIN_USER,
-                        "unit": tag_unit,
-                        "default_value": tag_default_value,
-                    }
-                )
+        to_redo = self.redos.pop()
+        self.undos.append(to_redo)
+        self.unsavedModifications = True
+        # We pop the redo action in the undo stack
+        # The first element of the list is the type of action made by
+        # the user (add_tag, remove_tags, add_scans, remove_scans,
+        # or modified_values)
+        action = to_redo[0]
 
-                # Adding all the values associated
-                for value in values:
-                    self.database.set_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=value[0],
-                        values_dict={value[1]: value[2]},
-                        # COLLECTION_CURRENT, value[0], value[1], value[2]
-                    )
-                    self.database.set_value(
-                        collection_name=COLLECTION_INITIAL,
-                        primary_key=value[0],
-                        values_dict={value[1]: value[3]},
-                        # COLLECTION_INITIAL, value[0], value[1], value[3]
-                    )
+        with self.database.schema() as database_schema:
 
-                column = table.get_index_insertion(tag_to_add)
-                table.add_column(column, tag_to_add)
+            with database_schema.data() as database_data:
 
-            if action == "remove_tags":
-                # To remove the tags, we need the names
-                # The second element is a list of the removed tags (Tag class)
-                tags_removed = to_redo[1]
+                if action == "add_tag":
+                    # For adding the tag, we need the tag name,
+                    # and all its attributes
+                    (
+                        tag_name,
+                        tag_type,
+                        tag_unit,
+                        tag_default_value,
+                        tag_description,
+                        values,
+                    ) = to_redo[1:]
 
-                for i in range(0, len(tags_removed)):
-                    # We reput each tag in the tag list, keeping
-                    # all the tags params
-                    tag_to_remove = tags_removed[i][0].field_name
-                    self.database.remove_field(
-                        COLLECTION_CURRENT, tag_to_remove
-                    )
-                    self.database.remove_field(
-                        COLLECTION_INITIAL, tag_to_remove
-                    )
-                    column_to_remove = table.get_tag_column(tag_to_remove)
-                    table.removeColumn(column_to_remove)
-
-            if action == "add_scans":
-                # To add the scans, we need the FileNames and the values
-                # associated to the scans
-                # The second element is a list of the scans to add
-                scans_added = to_redo[1]
-
-                # We add all the scans
-                for i in range(0, len(scans_added)):
-                    # We remove each scan added
-                    scan_to_add = scans_added[i]
-                    self.database.add_document(COLLECTION_CURRENT, scan_to_add)
-                    self.database.add_document(COLLECTION_INITIAL, scan_to_add)
-                    table.scans_to_visualize.append(scan_to_add)
-
-                # We add all the values
-                # The third element is a list of the values to add
-                values_added = to_redo[2]
-
-                for i in range(0, len(values_added)):
-                    value_to_add = values_added[i]
-                    self.database.set_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=value_to_add[0],
-                        values_dict={value_to_add[1]: value_to_add[2]},
-                        # COLLECTION_CURRENT,
-                        # value_to_add[0],
-                        # value_to_add[1],
-                        # value_to_add[2],
-                    )
-                    self.database.set_value(
-                        collection_name=COLLECTION_INITIAL,
-                        primary_key=value_to_add[0],
-                        values_dict={value_to_add[1]: value_to_add[3]},
-                        # COLLECTION_INITIAL,
-                        # value_to_add[0],
-                        # value_to_add[1],
-                        # value_to_add[3],
-                    )
-
-                table.add_rows(
-                    self.database.get_document_names(COLLECTION_CURRENT)
-                )
-
-            # if action == "remove_scans":
-            #     To remove a scan, we only need the FileName of the scan
-            #     The second element is the list of removed scans (Path class)
-            #     scans_removed = to_redo[1]
-            #     for i in range(0, len(scans_removed)):
-            #         # We reput each scan, keeping the same values
-            #         scan_to_remove = getattr(
-            #             scans_removed[i], TAG_FILENAME)
-            #         self.session.remove_document(
-            #             COLLECTION_CURRENT, scan_to_remove)
-            #         self.session.remove_document(
-            #             COLLECTION_INITIAL, scan_to_remove)
-            #         table.scans_to_visualize.remove(scan_to_remove)
-            #         table.removeRow(table.get_scan_row(scan_to_remove))
-            #         table.itemChanged.disconnect()
-            #         table.update_colors()
-            #         table.itemChanged.connect(table.change_cell_color)
-
-            if action == "modified_values":  # Not working
-                # To modify the values, we need the cells,
-                # and the updated values
-
-                # The second element is a list of modified values
-                # (reset or value changed)
-                modified_values = to_redo[1]
-                table.itemChanged.disconnect()
-
-                for i in range(0, len(modified_values)):
-                    # Each modified value is a list of 3 elements:
-                    # scan, tag, and old_value
-                    value_to_restore = modified_values[i]
-                    scan = value_to_restore[0]
-                    tag = value_to_restore[1]
-                    old_value = value_to_restore[2]
-                    new_value = value_to_restore[3]
-                    item = table.item(
-                        table.get_scan_row(scan), table.get_tag_column(tag)
-                    )
-
-                    if old_value is None:
-                        # Font reput to normal in case it was a not
-                        # defined cell
-                        font = item.font()
-                        font.setItalic(False)
-                        font.setBold(False)
-                        item.setFont(font)
-
-                    # self.session.set_value(
-                    self.database.set_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=scan,
-                        values_dict={tag: new_value},
-                        # COLLECTION_CURRENT, scan, tag, new_value
-                    )
-
-                    if new_value is None:
-                        font = item.font()
-                        font.setItalic(True)
-                        font.setBold(True)
-                        item.setFont(font)
-                        set_item_data(
-                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                    # Adding the tag
+                    for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
+                        database_schema.add_field(
+                            {
+                                "collection_name": collection,
+                                "field_name": tag_name,
+                                "field_type": tag_type,
+                                "description": tag_description,
+                                "visibility": True,
+                                "origin": TAG_ORIGIN_USER,
+                                "unit": tag_unit,
+                                "default_value": tag_default_value,
+                            }
                         )
 
-                    else:
-                        set_item_data(
-                            item,
-                            new_value,
-                            self.database.get_field_attributes(
-                                COLLECTION_CURRENT, tag
-                            )["field_type"],
+                    # Adding all the values associated
+                    for value in values:
+                        (
+                            primary_key,
+                            field_name,
+                            current_value,
+                            initial_value,
+                        ) = value
+                        database_data.set_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=primary_key,
+                            values_dict={field_name: current_value},
+                        )
+                        database_data.set_value(
+                            collection_name=COLLECTION_INITIAL,
+                            primary_key=primary_key,
+                            values_dict={field_name: initial_value},
                         )
 
-                table.update_colors()
-                table.itemChanged.connect(table.change_cell_color)
+                    column = table.get_index_insertion(tag_name)
+                    table.add_column(column, tag_name)
 
-            if action == "modified_visibilities":
-                # To revert the modifications of the visualized tags
-                # Old list of columns
-                old_tags = self.database.get_shown_tags()
-                # List of the tags shown before the modification (Tag objects)
-                showed_tags = to_redo[2]
-                self.database.set_shown_tags(showed_tags)
-                # Columns updated
-                table.update_visualized_columns(
-                    old_tags, self.database.get_shown_tags()
-                )
+                elif action == "remove_tags":
+                    # To remove the tags, we need the names
+                    # The second element is a list of the removed
+                    # tags (Tag class)
+                    tags_removed = to_redo[1]
+
+                    for tag in tags_removed:
+                        # We reput each tag in the tag list, keeping
+                        # all the tags params
+                        tag_name = tag[0].field_name
+                        database_schema.remove_field(
+                            COLLECTION_CURRENT, tag_name
+                        )
+                        database_schema.remove_field(
+                            COLLECTION_INITIAL, tag_name
+                        )
+                        column_to_remove = table.get_tag_column(tag_name)
+                        table.removeColumn(column_to_remove)
+
+                elif action == "add_scans":
+                    # To add the scans, we need the FileNames and the values
+                    # associated to the scans
+                    # The second element is a list of the scans to add
+                    scans_added, values_added = to_redo[1], to_redo[2]
+
+                    # We add all the scans
+                    for scan in scans_added:
+                        # We remove each scan added
+                        database_data.add_document(COLLECTION_CURRENT, scan)
+                        database_data.add_document(COLLECTION_INITIAL, scan)
+                        table.scans_to_visualize.append(scan)
+
+                    # We add all the values.
+                    # The third element is a list of the values to add
+                    for value in values_added:
+                        (
+                            primary_key,
+                            field_name,
+                            current_value,
+                            initial_value,
+                        ) = value
+                        database_data.set_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=primary_key,
+                            values_dict={field_name: current_value},
+                        )
+                        database_data.set_value(
+                            collection_name=COLLECTION_INITIAL,
+                            primary_key=primary_key,
+                            values_dict={field_name: initial_value},
+                        )
+
+                    table.add_rows(
+                        database_data.get_document_names(COLLECTION_CURRENT)
+                    )
+
+                elif action == "modified_values":
+                    # Not working?
+                    # To modify the values, we need the cells,
+                    # and the updated values
+
+                    # The second element is a list of modified values
+                    # (reset or value changed)
+                    modified_values = to_redo[1]
+                    table.itemChanged.disconnect()
+
+                    for scan, tag, old_value, new_value in modified_values:
+                        # Each modified value is a list of 3 elements:
+                        # scan, tag, old_value and new_value
+                        item = table.item(
+                            table.get_scan_row(scan), table.get_tag_column(tag)
+                        )
+
+                        if old_value is None:
+                            # Font reput to normal in case it was a not
+                            # defined cell
+                            font = item.font()
+                            font.setItalic(False)
+                            font.setBold(False)
+                            item.setFont(font)
+
+                        database_data.set_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan,
+                            values_dict={tag: new_value},
+                        )
+
+                        if new_value is None:
+                            font = item.font()
+                            font.setItalic(True)
+                            font.setBold(True)
+                            item.setFont(font)
+                            set_item_data(
+                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                            )
+
+                        else:
+                            set_item_data(
+                                item,
+                                new_value,
+                                database_data.get_field_attributes(
+                                    COLLECTION_CURRENT, tag
+                                )["field_type"],
+                            )
+
+                    table.update_colors()
+                    table.itemChanged.connect(table.change_cell_color)
+
+                elif action == "modified_visibilities":
+                    # To revert the modifications of the visualized tags
+                    # Old list of columns
+                    old_tags = database_data.get_shown_tags()
+                    # List of the tags shown before the modification
+                    # (Tag objects)
+                    showed_tags = to_redo[2]
+                    database_data.set_shown_tags(showed_tags)
+                    # Columns updated
+                    table.update_visualized_columns(old_tags, showed_tags)
 
     def reput_values(self, values):
-        """Re-put the value objects in the database.
+        """
+        Re-put the value objects in the database.
 
-        :param values: List of Value objects
+        :param values (list): List of Value objects
         """
 
-        for i in range(0, len(values)):
-            # We reput each value, exactly the same as it was before
-            valueToReput = values[i]
-            self.database.set_value(
-                collection_name=COLLECTION_CURRENT,
-                primary_key=valueToReput[0],
-                values_dict={valueToReput[1]: valueToReput[2]},
-            )
-            self.database.set_value(
-                collection_name=COLLECTION_INITIAL,
-                primary_key=valueToReput[0],
-                values_dict={valueToReput[1]: valueToReput[3]},
-            )
+        with self.database.data() as database_data:
+
+            for valueToReput in values:
+                primary_key, tag, current_value, initial_value = valueToReput
+                # We reput each value, exactly the same as it was before
+                database_data.set_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=primary_key,
+                    values_dict={tag: current_value},
+                )
+                database_data.set_value(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=primary_key,
+                    values_dict={tag: initial_value},
+                )
 
     def saveConfig(self):
         """Save the changes in the properties file."""
 
-        with open(
-            os.path.join(self.folder, "properties", "properties.yml"),
-            "w",
-            encoding="utf8",
-        ) as configfile:
+        properties_path = os.path.join(
+            self.folder, "properties", "properties.yml"
+        )
+
+        with open(properties_path, "w", encoding="utf8") as configfile:
             yaml.dump(
                 self.properties,
                 configfile,
@@ -1727,7 +1723,7 @@ class Project:
         # We save the filter only if we have a filter name from
         # populse_mia.e popup
         if filter_name is not None:
-            file_path = os.path.join(filters_path, filter_name + ".json")
+            file_path = os.path.join(filters_path, f"{filter_name}.json")
 
             if os.path.exists(file_path):
                 # Filter already exists
@@ -1735,7 +1731,7 @@ class Project:
                 msg.setIcon(QMessageBox.Warning)
                 msg.setText("The filter already exists in the project")
                 msg.setInformativeText(
-                    "The project already has a filter named " + filter_name
+                    f"The project already has a filter named {filter_name}"
                 )
                 msg.setWindowTitle("Warning")
                 msg.setStandardButtons(QMessageBox.Ok)
@@ -1760,55 +1756,51 @@ class Project:
                     self.filters.append(new_filter)
 
     def saveModifications(self):
-        """Save the pending operations of the project (actions
-        still not saved).
         """
-
+        Save the pending operations of the project (actions still not saved).
+        """
         self.saveConfig()
         self.unsavedModifications = False
 
     def setCurrentFilter(self, filter):
         """Set the current filter of the project.
 
-        :param filter: new Filter object
+        :param filter: New Filter object
         """
-
         self.currentFilter = filter
 
     def setDate(self, date):
         """Set the date of the project.
 
-        :param date: new date of the project
+        :param date: New date of the project
         """
-
         self.properties["date"] = date
 
     def setName(self, name):
-        """Set the name of the project if it's not Unnamed project,
-        otherwise does nothing.
-
-        :param name: new name of the project
         """
+        Set the name of the project if it's not Unnamed project, otherwise
+        does nothing.
 
+        :param name (str): New name of the project
+        """
         self.properties["name"] = name
 
     def setSortedTag(self, tag):
         """Set the sorted tag of the project.
 
-        :param tag: new sorted tag of the project
+        :param tag: New sorted tag of the project
         """
-
         old_tag = self.properties["sorted_tag"]
-        self.properties["sorted_tag"] = tag
+
         if old_tag != tag:
+            self.properties["sorted_tag"] = tag
             self.unsavedModifications = True
 
     def setSortOrder(self, order):
         """Set the sort order of the project.
 
-        :param order: new sort order of the project (ascending or descending)
+        :param order: New sort order of the project (ascending or descending)
         """
-
         old_order = self.properties["sort_order"]
         self.properties["sort_order"] = order
 
@@ -1818,7 +1810,7 @@ class Project:
     def undo(self, table):
         """Undo the last action made by the user on the project.
 
-        :param table: table on which to apply the modifications
+        :param table: Table on which to apply the modifications
 
         Actions that can be undone:
             - add_tag
@@ -1831,198 +1823,161 @@ class Project:
         # To avoid circular imports
         from populse_mia.utils import set_item_data
 
-        # We can undo if we have an action to revert
-        if len(self.undos) > 0:
-            to_undo = self.undos.pop()
-            # We pop the undo action in the redo stack
-            self.redos.append(to_undo)
-            # The first element of the list is the type of action
-            # made by the user (add_tag,
-            # remove_tags, add_scans, remove_scans, or modified_values)
-            action = to_undo[0]
-            self.unsavedModifications = True
+        # Ensure there is an action to undo
+        if not self.undos:
+            return
 
-            if action == "add_tag":
-                # For removing the tag added, we just have to memorize
-                # the tag name, and remove it
-                tag_to_remove = to_undo[1]
-                self.database.remove_field(COLLECTION_CURRENT, tag_to_remove)
-                self.database.remove_field(COLLECTION_INITIAL, tag_to_remove)
-                column_to_remove = table.get_tag_column(tag_to_remove)
-                table.removeColumn(column_to_remove)
+        to_undo = self.undos.pop()
+        # We pop the undo action in the redo stack
+        self.redos.append(to_undo)
+        # The first element of the list is the type of action made by the
+        # user (add_tag, remove_tags, add_scans, remove_scans, or
+        # modified_values)
+        action = to_undo[0]
+        self.unsavedModifications = True
 
-            if action == "remove_tags":
-                # To reput the removed tags, we need to reput the
-                # tag in the tag list,
-                # and all the tags values associated to this tag
-                # The second element is a list of the removed tags
-                # ([Tag row, origin, unit, default_value])
-                tags_removed = to_undo[1]
+        with self.database.schema() as database_schema:
 
-                for i in range(0, len(tags_removed)):
-                    # We reput each tag in the tag list, keeping
-                    # all the tags params
-                    tag_to_reput = tags_removed[i][0]
-                    self.database.add_field(
-                        {
-                            "collection_name": COLLECTION_CURRENT,
-                            "field_name": tag_to_reput.field_name,
-                            "field_type": tag_to_reput.field_type,
-                            "description": tag_to_reput.description,
-                            "visibility": tag_to_reput.visibility,
-                            "origin": tag_to_reput.origin,
-                            "unit": tag_to_reput.unit,
-                            "default_value": tag_to_reput.default_value,
-                        }
+            with database_schema.data() as database_data:
+
+                if action == "add_tag":
+                    # For removing the tag added, we just have to memorize
+                    # the tag name, and remove it
+                    tag_to_remove = to_undo[1]
+                    database_schema.remove_field(
+                        COLLECTION_CURRENT, tag_to_remove
                     )
-                    self.database.add_field(
-                        {
-                            "collection_name": COLLECTION_INITIAL,
-                            "field_name": tag_to_reput.field_name,
-                            "field_type": tag_to_reput.field_type,
-                            "description": tag_to_reput.description,
-                            "visibility": tag_to_reput.visibility,
-                            "origin": tag_to_reput.origin,
-                            "unit": tag_to_reput.unit,
-                            "default_value": tag_to_reput.default_value,
-                        }
+                    database_schema.remove_field(
+                        COLLECTION_INITIAL, tag_to_remove
                     )
+                    column_to_remove = table.get_tag_column(tag_to_remove)
+                    table.removeColumn(column_to_remove)
 
-                # The third element is a list of tags values (Value class)
-                values_removed = to_undo[2]
-                self.reput_values(values_removed)
+                elif action == "remove_tags":
+                    # To reput the removed tags, we need to reput the
+                    # tag in the tag list, and all the tags values associated
+                    # to this tag. The second element is a list of the
+                    # removed tags([Tag row, origin, unit, default_value]).
+                    # The third element is a list of tags values (Value class)
+                    tags_removed = to_undo[1]
+                    values_removed = to_undo[2]
 
-                for i in range(0, len(tags_removed)):
-                    # We reput each tag in the tag list,
-                    # keeping all the tags params
-                    tag_to_reput = tags_removed[i][0]
-                    column = table.get_index_insertion(tag_to_reput.field_name)
-                    table.add_column(column, tag_to_reput.field_name)
+                    for tag in tags_removed:
+                        tag_to_reput = tag[0]
 
-            if action == "add_scans":
-                # To remove added scans, we just need their file name
-                # The second element is a list of added scans to remove
-                scans_added = to_undo[1]
+                        for collection in (
+                            COLLECTION_CURRENT,
+                            COLLECTION_INITIAL,
+                        ):
+                            database_schema.add_field(
+                                {
+                                    "collection_name": collection,
+                                    "field_name": tag_to_reput["field_name"],
+                                    "field_type": tag_to_reput["field_type"],
+                                    "description": tag_to_reput["description"],
+                                    "visibility": tag_to_reput["visibility"],
+                                    "origin": tag_to_reput["origin"],
+                                    "unit": tag_to_reput["unit"],
+                                    "default_value": tag_to_reput[
+                                        "default_value"
+                                    ],
+                                }
+                            )
 
-                for i in range(0, len(scans_added)):
-                    # We remove each scan added
-                    scan_to_remove = scans_added[i]
-                    self.database.remove_document(
-                        COLLECTION_CURRENT, scan_to_remove
-                    )
-                    self.database.remove_document(
-                        COLLECTION_INITIAL, scan_to_remove
-                    )
-                    table.removeRow(table.get_scan_row(scan_to_remove))
-                    table.scans_to_visualize.remove(scan_to_remove)
-
-                table.itemChanged.disconnect()
-                table.update_colors()
-                table.itemChanged.connect(table.change_cell_color)
-            # if action == "remove_scans":
-            #     To reput a removed scan, we need the scans names,
-            #     and all the values associated
-            #     The second element is the list of removed scans (Scan class)
-            #     scans_removed = to_undo[1]
-            #     for i in range(0, len(scans_removed)):
-            #         # We reput each scan, keeping the same values
-            #         scan_to_reput = scans_removed[i]
-            #         self.session.add_document(
-            #             COLLECTION_CURRENT, getattr(
-            #                 scan_to_reput, TAG_FILENAME))
-            #         self.session.add_document(
-            #             COLLECTION_INITIAL, getattr(
-            #                 scan_to_reput, TAG_FILENAME))
-            #         table.scans_to_visualize.append(getattr(
-            #             scan_to_reput, TAG_FILENAME))
-            #
-            #     # The third element is the list of removed values
-            #     values_removed = to_undo[2]
-            #     self.reput_values(values_removed)
-            #     table.add_rows(self.session.get_document_names(
-            #         COLLECTION_CURRENT))
-
-            if action == "modified_values":
-                # To revert a value changed in the databrowser,
-                # we need two things:
-                # the cell (scan and tag, and the old value)
-                # The second element is a list of modified values (reset,
-                modified_values = to_undo[1]
-                # or value changed)
-                table.itemChanged.disconnect()
-
-                for i in range(0, len(modified_values)):
-                    # Each modified value is a list of 3 elements:
-                    # scan, tag, and old_value
-                    value_to_restore = modified_values[i]
-                    scan = value_to_restore[0]
-                    tag = value_to_restore[1]
-                    old_value = value_to_restore[2]
-                    new_value = value_to_restore[3]
-                    item = table.item(
-                        table.get_scan_row(scan), table.get_tag_column(tag)
-                    )
-
-                    if old_value is None:
-                        # If the cell was not defined before, we reput it
-                        self.database.remove_value(
-                            COLLECTION_CURRENT, scan, tag
+                        column = table.get_index_insertion(
+                            tag_to_reput["field_name"]
                         )
-                        self.database.remove_value(
-                            COLLECTION_INITIAL, scan, tag
-                        )
-                        set_item_data(
-                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
-                        )
-                        font = item.font()
-                        font.setItalic(True)
-                        font.setBold(True)
-                        item.setFont(font)
+                        table.add_column(column, tag_to_reput["field_name"])
 
-                    else:
-                        # If the cell was there before,
-                        # we just set it to the old value
-                        self.database.set_value(
-                            collection_name=COLLECTION_CURRENT,
-                            primary_key=scan,
-                            values_dict={tag: old_value},
-                            # COLLECTION_CURRENT, scan, tag, old_value
-                        )
-                        set_item_data(
-                            item,
-                            old_value,
-                            self.database.get_field_attributes(
-                                COLLECTION_CURRENT, tag
-                            )["field_type"],
+                    self.reput_values(values_removed)
+
+                elif action == "add_scans":
+                    # To remove added scans, we just need their file name
+                    # The second element is a list of added scans to remove
+                    scans_added = to_undo[1]
+
+                    for scan in scans_added:
+                        # We remove each scan added
+                        database_data.remove_document(COLLECTION_CURRENT, scan)
+                        database_data.remove_document(COLLECTION_INITIAL, scan)
+                        table.removeRow(table.get_scan_row(scan))
+                        table.scans_to_visualize.remove(scan)
+
+                    table.itemChanged.disconnect()
+                    table.update_colors()
+                    table.itemChanged.connect(table.change_cell_color)
+
+                elif action == "modified_values":
+                    # To revert a value changed in the databrowser,
+                    # we need two things:
+                    # the cell (scan and tag, and the old value)
+                    # The second element is a list of modified values (reset,
+                    # or value changed)
+                    modified_values = to_undo[1]
+                    table.itemChanged.disconnect()
+
+                    for scan, tag, old_value, new_value in modified_values:
+                        item = table.item(
+                            table.get_scan_row(scan), table.get_tag_column(tag)
                         )
 
-                        # If the new value is None,
-                        # the not defined font must be removed
-                        if new_value is None:
+                        if old_value is None:
+                            # If the cell was not defined before, we reput it
+                            database_data.remove_value(
+                                COLLECTION_CURRENT, scan, tag
+                            )
+                            database_data.remove_value(
+                                COLLECTION_INITIAL, scan, tag
+                            )
+                            set_item_data(
+                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                            )
                             font = item.font()
-                            font.setItalic(False)
-                            font.setBold(False)
+                            font.setItalic(True)
+                            font.setBold(True)
                             item.setFont(font)
 
-                table.update_colors()
-                table.itemChanged.connect(table.change_cell_color)
+                        else:
+                            # If the cell was there before,
+                            # we just set it to the old value
+                            database_data.set_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan,
+                                values_dict={tag: old_value},
+                            )
+                            set_item_data(
+                                item,
+                                old_value,
+                                database_data.get_field_attributes(
+                                    COLLECTION_CURRENT, tag
+                                )["field_type"],
+                            )
 
-            if action == "modified_visibilities":
-                # To revert the modifications of the visualized tags
-                # Old list of columns
-                old_tags = self.database.get_shown_tags()
-                # List of the tags visible before the modification
-                # (Tag objects)
-                visible = to_undo[1]
-                self.database.set_shown_tags(visible)
-                # Columns updated
-                table.update_visualized_columns(
-                    old_tags, self.database.get_shown_tags()
-                )
+                            # If the new value is None,
+                            # the not defined font must be removed
+                            if new_value is None:
+                                font = item.font()
+                                font.setItalic(False)
+                                font.setBold(False)
+                                item.setFont(font)
+
+                    table.update_colors()
+                    table.itemChanged.connect(table.change_cell_color)
+
+                elif action == "modified_visibilities":
+                    # To revert the modifications of the visualized tags
+                    # Old list of columns
+                    old_tags = database_data.get_shown_tags()
+                    # List of the tags visible before the modification
+                    # (Tag objects)
+                    visible_tags = to_undo[1]
+                    database_data.set_shown_tags(visible_tags)
+                    # Columns updated
+                    table.update_visualized_columns(old_tags, visible_tags)
 
     @property
     def unsavedModifications(self):
-        """Setter for _unsavedModifications."""
+        """Getter for _unsavedModifications."""
         return self._unsavedModifications
 
     @unsavedModifications.setter
@@ -2038,326 +1993,194 @@ class Project:
             from PyQt5.QtCore import QCoreApplication
 
             app = QCoreApplication.instance()
+
             if self._unsavedModifications:
+
                 if app.title()[-1] != "*":
                     app.set_title(app.title() + "*")
+
             else:
+
                 if app.title()[-1] == "*":
                     app.set_title(app.title()[:-1])
+
         except ImportError:
             # PyQt is not here ? never mind for what we are doing here.
             pass
 
     def unsaveModifications(self):
-        """Unsave the pending operations of the project."""
-
+        """
+        Unsave the pending operations of the project.
+        """
         self.unsavedModifications = False
-
-    # def update_data_history(self, data):
-    #     """
-    #     Cleanup earlier history of given data by removing from their bricks
-    #     list those which correspond to obsolete runs (data has been
-    #     re-written by more recent runs). This function only updates data
-    #     status (bricks list), it does not remove obsolete bricks from the
-    #     database. This method seems to be obsolete and is no longer used in
-    #     Mia (see populse_mia.user_interface.pipeline_manager.
-    #     pipeline_manager_tab.PipelineManagerTab.garbage_collect()). This is
-    #     why this method is currently commented on.
-    #     Returns
-    #     -------
-    #     a set of obsolete bricks that might become orphan: they are not used
-    #     any longer in input data history, and were in the previous ones. But
-    #     they still can be used in other data.
-    #     """
-    #     #
-    #     scan_bricks = self.database.get_document(
-    #         collection_name=COLLECTION_CURRENT,
-    #         primary_keys=list(data),
-    #         fields=[TAG_FILENAME, TAG_BRICKS],
-    #     )
-    #     scan_bricks = {
-    #         brick[TAG_FILENAME]: brick[TAG_BRICKS]
-    #         for brick in scan_bricks
-    #         if brick and brick[TAG_FILENAME] is not None
-    #     }
-    #
-    #     obsolete = set()
-    #     used = set()
-    #
-    #     for output in data:
-    #         o_hist = self.get_data_history(output)
-    #         p_hist = o_hist["processes"]
-    #         used.update(p_hist)
-    #         old_bricks = scan_bricks.get(output)
-    #
-    #         if old_bricks:
-    #             new_bricks = [brid for brid in old_bricks if brid in p_hist]
-    #
-    #             if len(new_bricks) != len(old_bricks):
-    #                 print(
-    #                     f"update file history for"
-    #                     f": {output}: {old_bricks} -> {new_bricks}"
-    #                 )
-    #                 # self.session.set_value(
-    #                 self.database.set_value(
-    #                     collection_name=COLLECTION_CURRENT,
-    #                     primary_key=output,
-    #                     values_dict={TAG_BRICKS: new_bricks},
-    #                     # COLLECTION_CURRENT, output, TAG_BRICKS, new_bricks
-    #                 )
-    #
-    #     for bricks in scan_bricks.values():
-    #
-    #         if bricks:
-    #             obsolete.update(brick for brick in bricks
-    #                             if brick not in used)
-    #
-    #     return obsolete
 
     def update_db_for_paths(self, new_path=None):
         """Update database paths when renaming or loading a project.
 
-        This method updates the `HISTORY` and `BRICK` collections in the
-        database to reflect a new project file path. It is useful when a
-        project is renamed or a new project is loaded from outside. The
-        method identifies the old output directory path and replaces it
-        with the new path in relevant database entries.
+        This method updates path references in the database when a project is
+        renamed or loaded from a different location. It scans the `HISTORY`
+        and `BRICK` collections to identify the old project path, then
+        systematically replaces it with the new path.
 
-        If no output directory is found in the history, the method prints a
-        warning, and no changes are made.
+        The method looks for the old path in brick input/output fields and
+        history pipeline XML data. If the old path contains
+        'data/derived_data', the method uses the portion before this segment
+        as the base path.
 
-        Parameters:
-            new_path (str, optional): The new project path. If not provided,
-                                      the current project folder path is used.
+        :param new_path (str): The new project path. If not provided,
+                               the current project folder path is used.
+
+        :Contains:
+            :Private method:
+                - _update_json_data: Helper method to update paths in JSON
+                                     data structures
         """
-        hist_brick = self.database.get_document(
-            collection_name=COLLECTION_HISTORY
-        )
-        old_path = None
 
-        # Check if hist_brick is empty
-        if not hist_brick:
-            old_path = False
+        def _update_json_data(
+            self, collection, doc_id, field, data, old_path, new_path
+        ):
+            """
+            Helper method to update paths in JSON data structures.
 
-        for list_hist_brick in hist_brick:
+            Serializes the data to JSON, performs string replacement, then
+            deserializes and updates the database.
 
-            if not list_hist_brick or list_hist_brick[HISTORY_ID] is None:
-                continue
+            :param collection (str): Database collection name
+            :param doc_id (str): Document ID
+            :param field (str): Field name to update
+            :param data (dict): The data structure to process
+            :param old_path (str): Old path to replace
+            :param new_path (str): New path to use
+            """
 
-            hist_id = list_hist_brick[HISTORY_ID]
-            brick_ids = list_hist_brick[HISTORY_BRICKS]
+            try:
+                data_string = json.dumps(data)
+                new_data_string = data_string.replace(old_path, new_path)
+                new_data = json.loads(new_data_string)
 
-            for brick_id in brick_ids or []:
-
-                if not brick_id:
-                    continue
-
-                inputs = self.database.get_value(
-                    collection_name=COLLECTION_BRICK,
-                    primary_key=brick_id,
-                    field=BRICK_INPUTS,
+                database_data.set_value(
+                    collection_name=collection,
+                    primary_key=doc_id,
+                    values_dict={field: new_data},
                 )
 
-                if not inputs:
+            except (TypeError, json.JSONDecodeError) as e:
+                logger.warning(f"Failed to update {field} for {doc_id}: {e}")
+
+        with self.database.data() as database_data:
+            history_docs = database_data.get_document(
+                collection_name=COLLECTION_HISTORY
+            )
+
+            if not history_docs:
+                # The project has no calculation history: There is nothing
+                #  to do and no message to print.
+                return
+
+            old_path = None
+            current_project_path = (
+                os.path.abspath(self.folder) if new_path is None else new_path
+            )
+
+            # Process each history document
+            for hist_doc in history_docs:
+
+                if not hist_doc or not hist_doc.get(HISTORY_ID):
                     continue
 
-                if old_path is None:
-                    old_path = inputs.get("output_directory")
+                hist_id = hist_doc[HISTORY_ID]
+                brick_ids = hist_doc.get(HISTORY_BRICKS, []) or []
 
+                # Process each brick ID in this history
+                for brick_id in brick_ids:
+
+                    if not brick_id:
+                        continue
+
+                    # Get brick inputs
+                    inputs = database_data.get_value(
+                        collection_name=COLLECTION_BRICK,
+                        primary_key=brick_id,
+                        field=BRICK_INPUTS,
+                    )
+
+                    if not inputs:
+                        continue
+
+                    # Determine old path from first valid brick input
+                    if old_path is None and "output_directory" in inputs:
+                        old_path = inputs["output_directory"]
+
+                        # If path contains data/derived_data, use portion
+                        # before it
+                        if old_path:
+                            base_path, _, _ = old_path.partition(
+                                os.path.join("data", "derived_data")
+                            )
+                            old_path = (
+                                base_path
+                                if base_path != old_path
+                                else old_path
+                            )
+
+                    # If we've found the old_path, update this brick's data
                     if old_path:
-                        tmp = old_path.partition(
-                            os.path.join("data", "derived_data")
+                        # Update inputs
+                        self._update_json_data(
+                            collection=COLLECTION_BRICK,
+                            doc_id=brick_id,
+                            field=BRICK_INPUTS,
+                            data=inputs,
+                            old_path=old_path,
+                            new_path=current_project_path,
                         )
-                        old_path = tmp[0] if tmp[0] != old_path else old_path
-
-                # If the old_path is determined, update entries
-                if old_path:
-                    inputs_string = json.dumps(inputs)
-                    new_inputs_string = inputs_string.replace(
-                        old_path, new_path or ""
-                    )
-                    new_inputs = json.loads(new_inputs_string)
-                    # self.database.set_value(
-                    self.database.set_value(
-                        collection_name=COLLECTION_BRICK,
-                        primary_key=brick_id,
-                        values_dict={BRICK_INPUTS: new_inputs},
-                        # COLLECTION_BRICK, brick_id, BRICK_INPUTS, new_inputs
-                    )
-                    outputs = self.database.get_value(
-                        collection_name=COLLECTION_BRICK,
-                        primary_key=brick_id,
-                        field=BRICK_OUTPUTS,
-                    )
-
-                    if outputs:
-                        outputs_string = json.dumps(outputs)
-                        new_outputs_string = outputs_string.replace(
-                            old_path, new_path or ""
-                        )
-                        new_outputs = json.loads(new_outputs_string)
-                        # self.database.set_value(
-                        self.database.set_value(
+                        # Update outputs
+                        outputs = database_data.get_value(
                             collection_name=COLLECTION_BRICK,
                             primary_key=brick_id,
-                            values_dict={BRICK_OUTPUTS: new_outputs},
-                            #     COLLECTION_BRICK,
-                            #     brick_id,
-                            #     BRICK_OUTPUTS,
-                            #     new_outputs,
+                            field=BRICK_OUTPUTS,
                         )
 
-            # Update the history pipeline if hist_id is valid
-            if old_path and hist_id:
-                old_pipeline_xml = self.database.get_value(
-                    collection_name=COLLECTION_HISTORY,
-                    primary_key=hist_id,
-                    field=HISTORY_PIPELINE,
-                )
+                        if outputs:
+                            self._update_json_data(
+                                collection=COLLECTION_BRICK,
+                                doc_id=brick_id,
+                                field=BRICK_OUTPUTS,
+                                data=outputs,
+                                old_path=old_path,
+                                new_path=current_project_path,
+                            )
 
-                if old_pipeline_xml:
-                    new_pipeline_xml = old_pipeline_xml.replace(
-                        old_path, new_path or ""
-                    )
-                    # self.database.set_value(
-                    self.database.set_value(
+                # Update history pipeline XML if needed
+                if old_path and hist_id:
+                    old_pipeline_xml = database_data.get_value(
                         collection_name=COLLECTION_HISTORY,
                         primary_key=hist_id,
-                        values_dict={HISTORY_PIPELINE: new_pipeline_xml},
-                        # COLLECTION_HISTORY,
-                        # hist_id,
-                        # HISTORY_PIPELINE,
-                        # new_pipeline_xml,
+                        field=HISTORY_PIPELINE,
                     )
 
-        # Handle cases where no valid old_path was found
-        if old_path is None:
-            print(
-                "\nUpdating the paths in the database when renaming the "
-                "project:\nNo changes in the HISTORY and BRICK collections "
-                "are made because the output_directory has not been found. "
-                "The renamed project may be corrupted ...!\n"
-            )
+                    if old_pipeline_xml:
+                        new_pipeline_xml = old_pipeline_xml.replace(
+                            old_path, current_project_path
+                        )
+                        database_data.set_value(
+                            collection_name=COLLECTION_HISTORY,
+                            primary_key=hist_id,
+                            values_dict={HISTORY_PIPELINE: new_pipeline_xml},
+                        )
 
-        elif old_path is False:
-            # The project has no calculation history: There is nothing to do
-            # and no message to print.
-            return
+            # Handle results
+            if old_path is None:
+                logger.warning(
+                    "Updating the paths in the database when renaming the "
+                    "project: No changes in the HISTORY and BRICK "
+                    "collections are made because the output_directory has "
+                    "not been found. The renamed project may be corrupted...!"
+                )
 
-        else:
-            print(
-                f"\nUpdating the paths in the database when renaming the "
-                f"project:\nChanging {old_path} with "
-                f"{new_path or os.path.abspath(self.folder)} ...!\n"
-            )
-
-        # hist_brick = self.database.get_documents(
-        #     COLLECTION_HISTORY,
-        #     #fields=[HISTORY_ID, HISTORY_BRICKS],
-        #     #as_list=True,
-        # )
-
-        # if hist_brick is not None and hist_brick != []:
-        #     old_path = None
-        #     force_break_loop = False
-
-        #     for list_hist_brick in hist_brick:
-        #         if list_hist_brick[0] is not None:
-        #             for brick_id in list_hist_brick[1]:
-        #                 if brick_id is not None:
-        #                     inputs = self.session.get_value(
-        #                         COLLECTION_BRICK, brick_id, BRICK_INPUTS
-        #                     )
-        #                     old_path = inputs.get("output_directory")
-
-        #                     if old_path is not None:
-        #                         tmp = old_path.partition(
-        #                             os.path.join("data", "derived_data")
-        #                         )
-
-        #                         if tmp[0] != old_path:
-        #                             old_path = tmp[0]
-        #                             force_break_loop = True
-        #                             break
-
-        #         if force_break_loop:
-        #             break
-
-        # elif hist_brick == []:
-        #     old_path = False
-
-        # if old_path is None:
-        #     print(
-        #         "\nUpdating the paths in the database when renaming the "
-        #         "project:\n"
-        #         "No changes in the HISTORY and BRICK collections are made "
-        #         "because the output_directory has not been found. The "
-        #         "renamed project may be corrupted ...!\n"
-        #     )
-
-        # if old_path is False:
-        #     # The project has no calculation history: There is nothing to do
-        #     # and no message to print.
-        #     pass
-
-        # else:
-        #     if new_path is None:
-        #         new_path = os.path.join(
-        #             os.path.abspath(os.path.normpath(self.folder)), ""
-        #         )
-
-        #     print(
-        #         "\nUpdating the paths in the database when renaming the "
-        #         "project:\n"
-        #         "Changing {0} with {1} ...!\n".format(old_path, new_path)
-        #     )
-
-        #     for list_hist_brick in hist_brick:
-        #         if list_hist_brick[0] is not None:
-        #             hist_id = list_hist_brick[0]
-        #             old_pipeline_xml = self.session.get_value(
-        #                 COLLECTION_HISTORY, hist_id, HISTORY_PIPELINE
-        #             )
-        #             new_pipeline_xml = old_pipeline_xml.replace(
-        #                 old_path, new_path
-        #             )
-        #             self.session.set_value(
-        #                 COLLECTION_HISTORY,
-        #                 hist_id,
-        #                 HISTORY_PIPELINE,
-        #                 new_pipeline_xml,
-        #             )
-
-        #             if list_hist_brick[1] is not None:
-        #                 for brick_id in list_hist_brick[1]:
-        #                     if brick_id is not None:
-        #                         inputs = self.session.get_value(
-        #                             COLLECTION_BRICK, brick_id, BRICK_INPUTS
-        #                         )
-
-        #                         inputs_string = json.dumps(inputs)
-        #                         new_inputs_string = inputs_string.replace(
-        #                             old_path, new_path
-        #                         )
-        #                         new_inputs = json.loads(new_inputs_string)
-        #                         self.session.set_value(
-        #                             COLLECTION_BRICK,
-        #                             brick_id,
-        #                             BRICK_INPUTS,
-        #                             new_inputs,
-        #                         )
-        #                         outputs = self.session.get_value(
-        #                             COLLECTION_BRICK, brick_id, BRICK_OUTPUTS
-        #                         )
-
-        #                         ouputs_string = json.dumps(outputs)
-        #                         new_outputs_string = ouputs_string.replace(
-        #                             old_path, new_path
-        #                         )
-        #                         new_ouputs = json.loads(new_outputs_string)
-        #                         self.session.set_value(
-        #                             COLLECTION_BRICK,
-        #                             brick_id,
-        #                             BRICK_OUTPUTS,
-        #                             new_ouputs,
-        #                         )
+            else:
+                logger.info(
+                    f"Updating the paths in the database when renaming "
+                    f"the project: Changing {old_path} with "
+                    f"{current_project_path}...!"
+                )
