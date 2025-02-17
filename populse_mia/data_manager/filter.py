@@ -15,11 +15,10 @@ rapid and advanced search
 # for details.
 ##########################################################################
 
+from populse_mia.data_manager import COLLECTION_CURRENT, TAG_FILENAME
+
 # Populse_MIA imports
 from populse_mia.user_interface import data_browser
-
-# don't import project here to avoid cyclic import
-# from populse_mia.data_manager import project
 
 
 class Filter:
@@ -65,13 +64,13 @@ class Filter:
          BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)
         :param search_bar: value in the rapid search bar
         """
+        self.name = name
         self.nots = nots
         self.values = values
         self.fields = fields
         self.links = links
         self.conditions = conditions
         self.search_bar = search_bar
-        self.name = name
 
     def generate_filter(self, current_project, scans, tags):
         """Apply the filter to the given list of scans.
@@ -81,34 +80,31 @@ class Filter:
         :param tags: List of tags to search in
         :returns: The list of scans matching the filter
         """
-        from populse_mia.data_manager import project
 
         rapid_filter = data_browser.rapid_search.RapidSearch.prepare_filter(
             self.search_bar, tags, scans
         )
-        rapid_result = current_project.session.filter_documents(
-            project.COLLECTION_CURRENT, rapid_filter
-        )
-        rapid_list = [
-            getattr(scan, project.TAG_FILENAME) for scan in rapid_result
-        ]
-        advanced_filter = (
-            data_browser.advanced_search.AdvancedSearch.prepare_filters(
-                self.links,
-                self.fields,
-                self.conditions,
-                self.values,
-                self.nots,
-                rapid_list,
-            )
-        )
-        advanced_result = current_project.session.filter_documents(
-            project.COLLECTION_CURRENT, advanced_filter
-        )
 
-        final_result = [
-            getattr(scan, project.TAG_FILENAME) for scan in advanced_result
-        ]
+        with current_project.database.data() as database_data:
+            rapid_result = database_data.filter_documents(
+                COLLECTION_CURRENT, rapid_filter
+            )
+            rapid_list = [scan[TAG_FILENAME] for scan in rapid_result]
+            advanced_filter = (
+                data_browser.advanced_search.AdvancedSearch.prepare_filters(
+                    self.links,
+                    self.fields,
+                    self.conditions,
+                    self.values,
+                    self.nots,
+                    rapid_list,
+                )
+            )
+            advanced_result = database_data.filter_documents(
+                COLLECTION_CURRENT, advanced_filter
+            )
+
+        final_result = [scan[TAG_FILENAME] for scan in advanced_result]
         return final_result
 
     def json_format(self):
