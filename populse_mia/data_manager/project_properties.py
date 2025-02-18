@@ -24,27 +24,23 @@ from populse_mia.software_properties import Config
 
 
 class SavedProjects:
-    """Class that handles all the projects that have been saved in the
-    software.
+    """
+    Handles all saved projects in the software.
 
-    .. Methods:
-        - addSavedProject: adds a new saved project
-        - loadSavedProjects: loads the dictionary from the saved_projects.yml
-        file
-        - removeSavedProject: removes a saved project from the config file
-        - saveSavedProjects: saves the dictionary to the saved_projects.yml
-        file
-
-
+    Methods:
+        - addSavedProject: Adds a new saved project.
+        - loadSavedProjects: Loads saved projects from 'saved_projects.yml'.
+        - removeSavedProject: Removes a project from the config file.
+        - saveSavedProjects: Saves projects to 'saved_projects.yml'.
     """
 
     def __init__(self):
-        """Initialise the savedProjects attribute from the saved_projects.yml
-           file.
+        """
+        Initializes the saved projects from 'saved_projects.yml'.
 
-        The pathsList attribute is initialised as the value corresponding to
-        the "paths" key in the savedProjects dictionary.
-
+        Attributes:
+            savedProjects (dict): Dictionary containing saved project paths.
+            pathsList (list): List of saved project paths.
         """
         self.savedProjects = self.loadSavedProjects()
 
@@ -55,45 +51,33 @@ class SavedProjects:
 
             if self.pathsList is None:
                 self.pathsList = []
-
+                self.savedProjects["paths"] = []
         else:
             self.savedProjects = {"paths": []}
             self.pathsList = []
 
     def addSavedProject(self, newPath):
-        """Add a new project to save in the savedProjects and pathsList
-        attributes.
+        """
+        Adds a project path or moves it to the front if it exists.
 
-        Finally, save the savedProjects attribute in the saved_projects.yml
-        file.
-
-        :param newPath: new project's path to add
-
-        :returns: the new path's list (pathsList attribute)
+        :param newPath (str): Path of the new project.
+        :returns (list): Updated project paths list.
 
         """
-        if self.pathsList:
-            if newPath not in self.pathsList:
-                self.pathsList.insert(0, newPath)
+        if newPath in self.pathsList:
+            self.pathsList.remove(newPath)
 
-            elif newPath != self.pathsList[0]:
-                self.pathsList.remove(newPath)
-                self.pathsList.insert(0, newPath)
-
-        else:
-            self.pathsList.insert(0, newPath)
-
+        self.pathsList.insert(0, newPath)
         self.savedProjects["paths"] = self.pathsList
         self.saveSavedProjects()
         return self.pathsList
 
     def loadSavedProjects(self):
-        """Load the savedProjects dictionary from the saved_projects.yml file.
+        """
+        Loads saved projects from 'saved_projects.yml', or creates a default
+        file if missing.
 
-        If the saved_projects.yml file is not existing, it is created with the
-        "{paths: []}" value and the returned dictionary is {paths: []}.
-
-        :returns: the dictionary
+        :returns (dict): Loaded project paths.
 
         """
         config = Config()
@@ -106,42 +90,39 @@ class SavedProjects:
                     "saved_projects.yml",
                 ),
             ) as stream:
-                try:
-                    if version.parse(yaml.__version__) > version.parse("5.1"):
-                        return yaml.load(stream, Loader=yaml.FullLoader)
-                    else:
-                        return yaml.load(stream)
 
-                except yaml.YAMLError as exc:
-                    print(exc)
+                if version.parse(yaml.__version__) > version.parse("5.1"):
+                    return yaml.load(stream, Loader=yaml.FullLoader)
+
+                else:
+                    return yaml.load(stream)
 
         except FileNotFoundError:
-            with open(
-                os.path.join(
-                    config.get_properties_path(),
-                    "properties",
-                    "saved_projects.yml",
-                ),
-                "w",
-            ) as stream:
-                yaml.dump({"paths": []}, stream, default_flow_style=False)
-                return {"paths": []}
+            self.savedProjects = {"paths": []}
+            self.pathsList = []
+            self.saveSavedProjects()
+            return {"paths": []}
+
+        except yaml.YAMLError as exc:
+            print(f"Error loading YAML: {exc}")
+            return {"paths": []}
 
     def removeSavedProject(self, path):
-        """Removes a saved project from the saved_projects.yml file.
+        """
+        Removes a project path from pathsList and updates the file.
 
-        :param path: path of the saved project to remove
-
+        :param path (str): Path to remove.
         """
 
-        if path in self.savedProjects["paths"]:
-            self.savedProjects["paths"].remove(path)
-
-        self.saveSavedProjects()
+        if path in self.pathsList:
+            self.pathsList.remove(path)
+            self.savedProjects["paths"] = self.pathsList
+            self.saveSavedProjects()
 
     def saveSavedProjects(self):
-        """Saves the savedProjects dictionary to the saved_projects.yml
-        file."""
+        """
+        Writes savedProjects to 'saved_projects.yml'.
+        """
 
         config = Config()
 
