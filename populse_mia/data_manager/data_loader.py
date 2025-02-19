@@ -241,38 +241,39 @@ class ImportWorker(QThread):
         :param documents (dict): Dictionary containing document information
         :param values_added (list): List to track added values
         """
-        for tag in self.project.database.get_field_attributes(
-            COLLECTION_CURRENT
-        ):
 
-            if tag["origin"] != TAG_ORIGIN_USER:
-                continue
+        with self.database.data() as database_data:
 
-            for scan in self.scans_added:
+            for tag in database_data.get_field_attributes(COLLECTION_CURRENT):
 
-                # Skip if tag has no default value
-                # or document already has a value
-                if (
-                    tag["default_value"] is None
-                    or self.project.database.get_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=scan,
-                        field=tag["index"].split("|")[-1],
-                    )
-                    is not None
-                ):
+                if tag["origin"] != TAG_ORIGIN_USER:
                     continue
 
-                # Add default value to document and history
-                values_added.append(
-                    [
-                        scan,
-                        tag["field_name"],
-                        tag["default_value"],
-                        tag["default_value"],
-                    ]
-                )
-                documents[scan][tag["field_name"]] = tag["default_value"]
+                for scan in self.scans_added:
+
+                    # Skip if tag has no default value
+                    # or document already has a value
+                    if (
+                        tag["default_value"] is None
+                        or database_data.get_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan,
+                            field=tag["index"].split("|")[-1],
+                        )
+                        is not None
+                    ):
+                        continue
+
+                    # Add default value to document and history
+                    values_added.append(
+                        [
+                            scan,
+                            tag["field_name"],
+                            tag["default_value"],
+                            tag["default_value"],
+                        ]
+                    )
+                    documents[scan][tag["field_name"]] = tag["default_value"]
 
     def _convert_datetime_values(self, tag_info):
         """
@@ -305,19 +306,18 @@ class ImportWorker(QThread):
         return tag_info
 
     def _ensure_associated_file_tag_exists(
-        self, tag_name, tags_added, tags_names_added
+        self, database_data, tag_name, tags_added, tags_names_added
     ):
         """
         Ensure the associated file tag exists in the database.
 
+        :param database_data: Context-Managed database
         :param tag_name (str): Name of the tag
         :param tags_added (list): List to track added tags
         :param tags_names_added (list): List to track added tag names
         """
         if (
-            self.project.database.get_field_attributes(
-                COLLECTION_CURRENT, tag_name
-            )
+            database_data.get_field_attributes(COLLECTION_CURRENT, tag_name)
             is None
             and tag_name not in tags_names_added
         ):
@@ -411,6 +411,7 @@ class ImportWorker(QThread):
 
     def _process_associated_file(
         self,
+        database_data,
         file_database_path,
         checksum,
         file_type,
@@ -422,6 +423,7 @@ class ImportWorker(QThread):
         """
         Process an associated file.
 
+        :param database_data: Context-Managed database
         :param file_database_path (str): Relative path of the file
         :param checksum (str): MD5 checksum of the file
         :param file_type (Type): Type of the file
@@ -430,7 +432,7 @@ class ImportWorker(QThread):
         :param documents (dict): Dictionary to store document information
         :param values_added (list): List to track added values
         """
-        document_not_existing = not self.project.database.has_document(
+        document_not_existing = not database_data.has_document(
             collection_name=COLLECTION_CURRENT,
             primary_key=file_database_path,
         )
@@ -467,6 +469,7 @@ class ImportWorker(QThread):
 
     def _process_associated_files(
         self,
+        database_data,
         file_name,
         raw_data_folder,
         file_database_path,
@@ -478,6 +481,7 @@ class ImportWorker(QThread):
         """
         Process associated bvec/bval files.
 
+        :param database_data: Context-Managed database
         :param file_name (str): Base name of the file
         :param raw_data_folder (str): Path to the raw data folder
         :param file_database_path (str): Relative path of the main file
@@ -495,12 +499,13 @@ class ImportWorker(QThread):
         # Ensure associated file tag exists
         tag_name = "AssociatedNIfTIFile"
         self._ensure_associated_file_tag_exists(
-            tag_name, tags_added, tags_names_added
+            database_data, tag_name, tags_added, tags_names_added
         )
 
         # Process FSL format files
         if os.path.exists(bvec_path) and os.path.exists(bval_path):
             self._process_fsl_format_files(
+                database_data,
                 bvec_path,
                 bval_path,
                 file_database_path,
@@ -512,6 +517,7 @@ class ImportWorker(QThread):
         # Process MRtrix format file
         if os.path.exists(bvec_bval_mrtrix_path):
             self._process_mrtrix_format_file(
+                database_data,
                 bvec_bval_mrtrix_path,
                 file_database_path,
                 tag_name,
@@ -558,6 +564,7 @@ class ImportWorker(QThread):
 
     def _process_file_tags(
         self,
+        database_data,
         file_name,
         path_name,
         file_database_path,
@@ -571,6 +578,7 @@ class ImportWorker(QThread):
         """
         Process tags from a file.
 
+        :param database_data: Context-Managed database
         :param file_name (str): Base name of the file
         :param path_name (str): Path to the file directory
         :param file_database_path (str): Relative path in the database
@@ -597,7 +605,7 @@ class ImportWorker(QThread):
 
             # Add tag to database if it doesn't exist
             if (
-                self.project.database.get_field_attributes(
+                database_data.get_field_attributes(
                     COLLECTION_CURRENT, tag_name
                 )
                 is None
@@ -622,6 +630,7 @@ class ImportWorker(QThread):
 
     def _process_fsl_format_files(
         self,
+        database_data,
         bvec_path,
         bval_path,
         file_database_path,
@@ -632,6 +641,7 @@ class ImportWorker(QThread):
         """
         Process FSL format bvec/bval files.
 
+        :param database_data: Context-Managed database
         :param bvec_path (str): Path to the bvec file
         :param bval_path (str): Path to the bval file
         :param file_database_path (str): Relative path of the main file
@@ -645,6 +655,7 @@ class ImportWorker(QThread):
 
         bvec_database_path = os.path.relpath(bvec_path, self.project.folder)
         self._process_associated_file(
+            database_data,
             bvec_database_path,
             original_md5_bvec,
             TYPE_BVEC,
@@ -660,6 +671,7 @@ class ImportWorker(QThread):
 
         bval_database_path = os.path.relpath(bval_path, self.project.folder)
         self._process_associated_file(
+            database_data,
             bval_database_path,
             original_md5_bval,
             TYPE_BVAL,
@@ -734,26 +746,30 @@ class ImportWorker(QThread):
         # List of tags to exclude
         tags_to_exclude = ["Dataset data file", "Dataset header file"]
 
-        for dict_log in list_dict_log:
+        with self.database.data() as database_data:
 
-            if dict_log["StatusExport"] != "Export ok":
-                continue
+            for dict_log in list_dict_log:
 
-            # Process the main scan file
-            file_name = dict_log["NameFile"]
-            self._process_scan_file(
-                file_name,
-                raw_data_folder,
-                dict_log,
-                documents,
-                values_added,
-                tags_added,
-                tags_names_added,
-                tags_to_exclude,
-            )
+                if dict_log["StatusExport"] != "Export ok":
+                    continue
+
+                # Process the main scan file
+                file_name = dict_log["NameFile"]
+                self._process_scan_file(
+                    database_data,
+                    file_name,
+                    raw_data_folder,
+                    dict_log,
+                    documents,
+                    values_added,
+                    tags_added,
+                    tags_names_added,
+                    tags_to_exclude,
+                )
 
     def _process_mrtrix_format_file(
         self,
+        database_data,
         bvec_bval_path,
         file_database_path,
         tag_name,
@@ -763,6 +779,7 @@ class ImportWorker(QThread):
         """
         Process MRtrix format bvec/bval file.
 
+        :param database_data: Context-Managed database
         :param bvec_bval_path (str): Path to the MRtrix format file
         :param file_database_path (str): Relative path of the main file
         :param tag_name (str): Name of the association tag
@@ -778,6 +795,7 @@ class ImportWorker(QThread):
             bvec_bval_path, self.project.folder
         )
         self._process_associated_file(
+            database_data,
             bvec_bval_database_path,
             original_md5_bvec_bval,
             TYPE_BVEC_BVAL,
@@ -789,6 +807,7 @@ class ImportWorker(QThread):
 
     def _process_scan_file(
         self,
+        database_data,
         file_name,
         raw_data_folder,
         dict_log,
@@ -799,8 +818,9 @@ class ImportWorker(QThread):
         tags_to_exclude,
     ):
         """
-        Process a single scan file and its associated files.
+        Process a single scan file and its associated files.:
 
+        :param database_data: Context-Managed database
         :param file_name (str): Base name of the scan file
         :param raw_data_folder (str): Path to the raw data folder
         :param dict_log (dict): Log entry for this scan
@@ -819,7 +839,7 @@ class ImportWorker(QThread):
             original_md5 = hashlib.md5(scan_file.read()).hexdigest()
 
         # Check if document already exists
-        document_not_existing = not self.project.database.has_document(
+        document_not_existing = not database_data.has_document(
             collection_name=COLLECTION_CURRENT,
             primary_key=file_database_path,
         )
@@ -836,6 +856,7 @@ class ImportWorker(QThread):
         }
         # Process tags from file
         self._process_file_tags(
+            database_data,
             file_name,
             raw_data_folder,
             file_database_path,
@@ -859,6 +880,7 @@ class ImportWorker(QThread):
         # Process associated bvec/bval files if they exist
         if dict_log.get("Bvec_bval") == "yes":
             self._process_associated_files(
+                database_data,
                 file_name,
                 raw_data_folder,
                 file_database_path,
@@ -882,36 +904,37 @@ class ImportWorker(QThread):
         # Emit progress updates
         self.notifyProgress.emit(1)
         sleep(0.1)
-        # Add fields
-        self.project.database.add_field(tags_added)
-        self.notifyProgress.emit(2)
-        sleep(0.1)
-        # Remove existing documents to avoid conflicts
-        current_paths = self.project.database.get_document_names(
-            COLLECTION_CURRENT
-        )
 
-        for document in documents:
+        with self.database.schema() as database_schema:
 
-            if document in current_paths:
-                self.project.database.remove_document(
-                    COLLECTION_CURRENT, document
-                )
-                self.project.database.remove_document(
-                    COLLECTION_INITIAL, document
+            with database_schema.data() as database_data:
+
+                # Add fields
+                database_schema.add_field(tags_added)
+                self.notifyProgress.emit(2)
+                sleep(0.1)
+                # Remove existing documents to avoid conflicts
+                current_paths = database_data.get_document_names(
+                    COLLECTION_CURRENT
                 )
 
-            # Add document to current and initial collections
-            self.project.database.set_value(
-                collection_name=COLLECTION_CURRENT,
-                primary_key=document,
-                values_dict=documents[document],
-            )
-            self.project.database.set_value(
-                collection_name=COLLECTION_INITIAL,
-                primary_key=document,
-                values_dict=documents[document],
-            )
+            for document in documents:
+
+                if document in current_paths:
+                    database_data.remove_document(COLLECTION_CURRENT, document)
+                    database_data.remove_document(COLLECTION_INITIAL, document)
+
+                # Add document to current and initial collections
+                database_data.set_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=document,
+                    values_dict=documents[document],
+                )
+                database_data.set_value(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=document,
+                    values_dict=documents[document],
+                )
 
         self.notifyProgress.emit(3)
         sleep(0.1)
@@ -991,34 +1014,36 @@ def verify_scans(project):
     # Returning the files that are problematic
     modified_scans = []
 
-    for scan in project.database.get_document_names(COLLECTION_CURRENT):
-        file_path = os.path.relpath(os.path.join(project.folder, scan))
+    with project.database.data() as database_data:
 
-        if os.path.exists(file_path):
+        for scan in database_data.get_document_names(COLLECTION_CURRENT):
+            file_path = os.path.relpath(os.path.join(project.folder, scan))
 
-            # If the file exists, we do the checksum
-            try:
+            if os.path.exists(file_path):
 
-                with open(file_path, "rb") as scan_file:
-                    actual_md5 = hashlib.md5(scan_file.read()).hexdigest()
+                # If the file exists, we do the checksum
+                try:
 
-            except Exception:
-                logger.warning(
-                    f"Error reading file: '{os.path.abspath(file_path)}'",
-                    exc_info=True,
+                    with open(file_path, "rb") as scan_file:
+                        actual_md5 = hashlib.md5(scan_file.read()).hexdigest()
+
+                except Exception:
+                    logger.warning(
+                        f"Error reading file: '{os.path.abspath(file_path)}'",
+                        exc_info=True,
+                    )
+                    actual_md5 = None
+
+                initial_checksum = database_data.get_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan,
+                    field=TAG_CHECKSUM,
                 )
-                actual_md5 = None
 
-            initial_checksum = project.database.get_value(
-                collection_name=COLLECTION_CURRENT,
-                primary_key=scan,
-                field=TAG_CHECKSUM,
-            )
-
-            if initial_checksum and actual_md5 != initial_checksum:
+                if initial_checksum and actual_md5 != initial_checksum:
+                    modified_scans.append(scan)
+            else:
+                # Add missing file directly to the list
                 modified_scans.append(scan)
-        else:
-            # Add missing file directly to the list
-            modified_scans.append(scan)
 
-    return modified_scans
+        return modified_scans
