@@ -2,16 +2,16 @@
 
 :Contains:
     :Class:
-        - ImportProgress : Inherit from QProgressDialog and handle the
-                           progress bar
-        - ImportWorker : Inherit from QThread and manage the threads
+        - ImportProgress: Inherit from QProgressDialog and handle the
+                          progress bar
+        - ImportWorker: Inherit from QThread and manage the threads
 
-    :Methods:
-        - read_log : Show the evolution of the progress bar and returns its
-          feedback
-        - tags_from_file : Returns a list of [tag, value] contained in a Json
-          file
-        - verify_scans : Check if the project's scans have been modified
+    :Functions:
+        - read_log: Show the evolution of the progress bar and returns its
+                    feedback
+        - tags_from_file: Returns a list of [tag, value] contained in a Json
+                          file
+        - verify_scans: Check if the project's scans have been modified
 
 """
 

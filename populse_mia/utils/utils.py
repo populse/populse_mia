@@ -1363,13 +1363,13 @@ def verify_setup(
     :dot_mia_config: Path to the configuration_path.yml file.
 
     :Contains:
-    :Private function:
-        - _browse_properties_path: the user define the properties_path
-                                   parameter
-        - _cancel_clicked: exit form Mia
-        - _make_default_config: make default configuration
-        - _save_yml_file: save data in a YAML file
-        - _verify_miaConfig: check the config and try to fix if necessary
+        :Private function:
+            - _browse_properties_path: the user define the properties_path
+                                       parameter
+            - _cancel_clicked: exit form Mia
+            - _make_default_config: make default configuration
+            - _save_yml_file: save data in a YAML file
+            - _verify_miaConfig: check the config and try to fix if necessary
     """
 
     # import Config only here to prevent circular import issue
