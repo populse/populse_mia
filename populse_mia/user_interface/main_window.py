@@ -174,54 +174,60 @@ class MainWindow(QMainWindow):
     """Initialize software appearance and define interactions with the user.
 
     .. Methods:
-        - __init__ : initialise the object MainWindow
-        - add_clinical_tags: add the clinical tags to the database and the
+        - __init__ : Initialise the object MainWindow
+        - add_clinical_tags: Add the clinical tags to the database and the
                              data browser
-        - check_unsaved_modifications: check if there are differences between
-                                       the current project and the database
-        - check_database: check if files in database have been modified or
+        - check_database: Check if files in database have been modified or
                           removed since they have been converted for the
                           first time
-        - closeEvent: override the closing event to check if there are
+        - check_unsaved_modifications: Check if there are differences between
+                                       the current project and the database
+
+        - closeEvent: Override the closing event to check if there are
                       unsaved modifications
-        - create_view_actions: create the actions in each menu
-        - create_view_menus: create the menu-bar
-        - create_view_window: create the main window view
-        - create_project_pop_up: create a new project
-        - create_tabs: create the tabs
-        - credits: open the credits in a web browser
+        - create_project_pop_up: Create a new project
+        - create_view_actions: Create the actions in each menu
+        - create_view_menus: Create the menu-bar
+        - create_view_window: Create the main window view
+        - create_tabs: Create the tabs
+        - credits: Open the credits in a web browser
         - del_clinical_tags: Remove the clinical tags to the database and the
                              data browser
-        - documentation: open the documentation in a web browser
-        - get_controller_version: returns controller_version_changed attribute
-        - import_data: call the import software (MRI File Manager)
-        - install_processes_pop_up: open the install processes pop-up
-        - open_project_pop_up: open a pop-up to open a project and updates
+        - delete_project: Open a project and updates the recent projects list
+        - documentation: Open the documentation in a web browser
+        - get_controller_version: Returns controller_version_changed attribute
+        - import_data: Call the import software (MRI File Manager)
+        - install_processes_pop_up: Open the install processes pop-up
+        - last_window_closed: Force exit the event loop after ipython console
+                              is closed
+        - open_project_pop_up: Open a pop-up to open a project and updates
                                the recent projects
-        - open_recent_project: open a recent project
-        - package_library_pop_up: open the package library pop-up
-        - project_properties_pop_up: open the project properties pop-up
-        - redo: redo the last action made by the user
-        - remove_raw_files_useless: remove the useless raw files of the
+        - open_recent_project: Open a recent project
+        - open_shell: Open a Qt console shell with an IPython kernel seeing
+                      the program internals.
+        - package_library_pop_up: Open the package library pop-up
+        - project_properties_pop_up: Open the project properties pop-up
+        - redo: Redo the last action made by the user
+        - remove_raw_files_useless: Remove the useless raw files of the
                                     current project
-        - save: save either the current project or the current pipeline
-        - save_as: save either the current project or the current pipeline
+        - run_ipconsole_kernel: Starts and initializes an IPython kernel with
+                                support for a Qt-based GUI.
+        - save: Save either the current project or the current pipeline
+        - save_as: Save either the current project or the current pipeline
                    under a new name
-        - save_project_as: open a pop-up to save the current project as
-        - saveChoice: checks if the project needs to be saved as or just saved
-        - see_all_projects: open a pop-up to show the recent projects
+        - save_project_as: Open a pop-up to save the current project as
+        - saveChoice: Checks if the project needs to be saved as or just saved
+        - see_all_projects: Open a pop-up to show the recent projects
         - set_controller_version: Reverses controller_version_changed attribute
-        - setup_menu_actions:
-        - setup_window_size:
-        - software_preferences_pop_up: open the Mia preferences pop-up
-        - switch_project: switches project if it's possible
-        - tab_changed: method called when the tab is changed
-        - undo: undoes the last action made by the user
-        - update_package_library_action: update the package library action
-                                         depending on the mode
-        - update_project: update the project once the database has been
+        - setup_menu_actions: Initialize menu actions
+        - setup_window_size: Set the window size and maximize if needed
+        - software_preferences_pop_up: Open the Mia preferences pop-up
+        - switch_project: Switches project if it's possible
+        - tab_changed: Method called when the tab is changed
+        - undo: Undoes the last action made by the user
+        - update_project: Update the project once the database has been
                           updated
-        - update_recent_projects_actions: update the list of recent projects
+        - update_recent_projects_actions: Update the list of recent projects
 
     """
 
@@ -288,66 +294,6 @@ class MainWindow(QMainWindow):
         # Set window size and maximize if needed
         self.setup_window_size()
 
-    def setup_menu_actions(self, sources_images_dir):
-        """
-        Initialize menu actions with icons and descriptions.
-
-        :param sources_images_dir: Directory containing source images
-                                   for icons.
-        """
-        self.action_save_project = self.menu_file.addAction("Save project")
-        self.action_save_project_as = self.menu_file.addAction(
-            "Save project as"
-        )
-        self.action_delete_project = self.menu_file.addAction("Delete project")
-        self.action_create = QAction("New project", self)
-        self.action_open = QAction("Open project", self)
-        self.action_save = QAction("Save", self)
-        self.action_save_as = QAction("Save as", self)
-        self.action_delete = QAction("Delete project", self)
-        self.action_import = QAction(
-            QIcon(os.path.join(sources_images_dir, "Blue.png")), "Import", self
-        )
-        self.action_check_database = QAction("Check the whole database", self)
-        self.action_see_all_projects = QAction("See all projects", self)
-        self.action_project_properties = QAction("Project properties", self)
-        self.action_software_preferences = QAction("MIA preferences", self)
-        self.action_package_library = QAction("Package library manager", self)
-        self.action_open_shell = QAction("Open python shell", self)
-        self.action_exit = QAction(
-            QIcon(os.path.join(sources_images_dir, "exit.png")), "Exit", self
-        )
-        self.action_undo = QAction("Undo", self)
-        self.action_redo = QAction("Redo", self)
-        self.action_documentation = QAction("Documentation", self)
-        self.action_credits = QAction("Credits", self)
-        self.action_install_processes_folder = QAction("From folder", self)
-        self.action_install_processes_zip = QAction("From zip file", self)
-
-    def setup_window_size(self):
-        """
-        Set the window size and maximize if needed.
-        """
-        if self.config.get_mainwindow_maximized():
-            self.showMaximized()
-        else:
-            size = self.config.get_mainwindow_size()
-            if size:
-                self.resize(size[0], size[1])
-
-    @staticmethod
-    def last_window_closed():
-        """Force exit the event loop after ipython console is closed.
-
-        If the ipython console has been run, something prevents Qt from
-        quitting after the window is closed. The cause is not known yet.
-        So: force exit the event loop.
-        """
-
-        from soma.qt_gui.qt_backend import Qt
-
-        Qt.QTimer.singleShot(10, Qt.qApp.exit)
-
     def add_clinical_tags(self):
         """Add the clinical tags to the database and the data browser."""
 
@@ -356,24 +302,6 @@ class MainWindow(QMainWindow):
         for tag in added_tags:
             column = self.data_browser.table_data.get_index_insertion(tag)
             self.data_browser.table_data.add_column(column, tag)
-
-    def check_unsaved_modifications(self):
-        """
-        Check if there are differences between the current project and the
-        database.
-
-        :returns (bool): True if there are unsaved modifications,
-                         False otherwise
-        """
-
-        if self.project.isTempProject:
-
-            with self.project.database.data() as database_data:
-                return bool(
-                    database_data.get_document_names(COLLECTION_CURRENT)
-                )
-
-        return self.project.hasUnsavedModifications()
 
     def check_database(self):
         """
@@ -404,6 +332,24 @@ class MainWindow(QMainWindow):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.buttonClicked.connect(msg.close)
             msg.exec()
+
+    def check_unsaved_modifications(self):
+        """
+        Check if there are differences between the current project and the
+        database.
+
+        :returns (bool): True if there are unsaved modifications,
+                         False otherwise
+        """
+
+        if self.project.isTempProject:
+
+            with self.project.database.data() as database_data:
+                return bool(
+                    database_data.get_document_names(COLLECTION_CURRENT)
+                )
+
+        return self.project.hasUnsavedModifications()
 
     def closeEvent(self, event):
         """
@@ -472,6 +418,64 @@ class MainWindow(QMainWindow):
 
         if self.data_viewer:
             self.data_viewer.clear()
+
+    def create_project_pop_up(self):
+        """Create a new project."""
+
+        if self.check_unsaved_modifications():
+            self.pop_up_close = PopUpQuit(self.project)
+            self.pop_up_close.save_as_signal.connect(self.saveChoice)
+            self.pop_up_close.exec()
+            can_switch = self.pop_up_close.can_exit()
+
+        else:
+            can_switch = True
+
+        if can_switch:
+            # Opens a pop-up when the 'New project' action is clicked and
+            # updates the recent projects
+
+            try:
+                self.exPopup = PopUpNewProject()
+
+            except Exception as e:
+                logger.warning(f"Create_project_pop_up: {e}")
+                self.msg = QMessageBox()
+                self.msg.setIcon(QMessageBox.Critical)
+                self.msg.setText("Invalid projects folder path")
+                self.msg.setInformativeText(
+                    "The projects folder path in Mia preferences is invalid!"
+                )
+                self.msg.setWindowTitle("Error")
+                yes_button = self.msg.addButton(
+                    "Open Mia preferences", QMessageBox.YesRole
+                )
+                self.msg.addButton(QMessageBox.Ok)
+                self.msg.exec()
+
+                if self.msg.clickedButton() == yes_button:
+                    self.software_preferences_pop_up()
+
+                self.msg.close()
+
+            else:
+
+                if self.exPopup.exec():
+                    self.exPopup.get_filename(self.exPopup.selectedFiles())
+                    file_name = self.exPopup.relative_path
+                    # Removing the old project from the list of
+                    # currently opened projects
+                    config = Config()
+                    opened_projects = config.get_opened_projects()
+                    opened_projects.remove(self.project.folder)
+                    config.set_opened_projects(opened_projects)
+                    config.saveConfig()
+                    # We remove the useless files from the old project
+                    self.remove_raw_files_useless()
+                    self.project = Project(self.exPopup.relative_path, True)
+                    self.update_project(
+                        file_name
+                    )  # project updated everywhere
 
     def create_view_actions(self):
         """Create the actions and their shortcuts in each menu"""
@@ -598,64 +602,6 @@ class MainWindow(QMainWindow):
         )
         self.setWindowTitle(f"{self.windowName}{self.projectName}")
 
-    def create_project_pop_up(self):
-        """Create a new project."""
-
-        if self.check_unsaved_modifications():
-            self.pop_up_close = PopUpQuit(self.project)
-            self.pop_up_close.save_as_signal.connect(self.saveChoice)
-            self.pop_up_close.exec()
-            can_switch = self.pop_up_close.can_exit()
-
-        else:
-            can_switch = True
-
-        if can_switch:
-            # Opens a pop-up when the 'New project' action is clicked and
-            # updates the recent projects
-
-            try:
-                self.exPopup = PopUpNewProject()
-
-            except Exception as e:
-                logger.warning(f"Create_project_pop_up: {e}")
-                self.msg = QMessageBox()
-                self.msg.setIcon(QMessageBox.Critical)
-                self.msg.setText("Invalid projects folder path")
-                self.msg.setInformativeText(
-                    "The projects folder path in Mia preferences is invalid!"
-                )
-                self.msg.setWindowTitle("Error")
-                yes_button = self.msg.addButton(
-                    "Open Mia preferences", QMessageBox.YesRole
-                )
-                self.msg.addButton(QMessageBox.Ok)
-                self.msg.exec()
-
-                if self.msg.clickedButton() == yes_button:
-                    self.software_preferences_pop_up()
-
-                self.msg.close()
-
-            else:
-
-                if self.exPopup.exec():
-                    self.exPopup.get_filename(self.exPopup.selectedFiles())
-                    file_name = self.exPopup.relative_path
-                    # Removing the old project from the list of
-                    # currently opened projects
-                    config = Config()
-                    opened_projects = config.get_opened_projects()
-                    opened_projects.remove(self.project.folder)
-                    config.set_opened_projects(opened_projects)
-                    config.saveConfig()
-                    # We remove the useless files from the old project
-                    self.remove_raw_files_useless()
-                    self.project = Project(self.exPopup.relative_path, True)
-                    self.update_project(
-                        file_name
-                    )  # project updated everywhere
-
     def create_tabs(self):
         """
         Create the tabs and initializes the DataBrowser and PipelineManager
@@ -733,21 +679,6 @@ class MainWindow(QMainWindow):
         :return: Boolean
         """
         return self.controller_version_changed
-
-    def install_processes_pop_up(self, folder=False):
-        """Open the install processes pop-up.
-
-        :param folder: boolean, True if installing from a folder
-
-        """
-        self.pop_up_install_processes = InstallProcesses(self, folder=folder)
-        self.pop_up_install_processes.show()
-        self.pop_up_install_processes.process_installed.connect(
-            self.pipeline_manager.processLibrary.update_process_library
-        )
-        self.pop_up_install_processes.process_installed.connect(
-            self.pipeline_manager.processLibrary.pkg_library.update_config
-        )
 
     def import_data(self):
         """
@@ -872,6 +803,34 @@ class MainWindow(QMainWindow):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.buttonClicked.connect(msg.close)
             msg.exec()
+
+    def install_processes_pop_up(self, folder=False):
+        """Open the install processes pop-up.
+
+        :param folder: boolean, True if installing from a folder
+
+        """
+        self.pop_up_install_processes = InstallProcesses(self, folder=folder)
+        self.pop_up_install_processes.show()
+        self.pop_up_install_processes.process_installed.connect(
+            self.pipeline_manager.processLibrary.update_process_library
+        )
+        self.pop_up_install_processes.process_installed.connect(
+            self.pipeline_manager.processLibrary.pkg_library.update_config
+        )
+
+    @staticmethod
+    def last_window_closed():
+        """Force exit the event loop after ipython console is closed.
+
+        If the ipython console has been run, something prevents Qt from
+        quitting after the window is closed. The cause is not known yet.
+        So: force exit the event loop.
+        """
+
+        from soma.qt_gui.qt_backend import Qt
+
+        Qt.QTimer.singleShot(10, Qt.qApp.exit)
 
     def open_project_pop_up(self):
         """
@@ -1003,6 +962,71 @@ class MainWindow(QMainWindow):
                 else:
                     Config().set_clinical_mode(False)
 
+    def open_shell(self):
+        """
+        Open a Qt console shell with an IPython kernel seeing the program
+        internals.
+        """
+
+        from soma.qt_gui import qt_backend
+
+        ipfunc = None
+        mode = "qtconsole"
+        logger.info("StartShell...")
+
+        try:
+            # to check it is installed
+            import jupyter_core.application  # noqa: F401
+            import qtconsole  # noqa: F401
+
+            ipfunc = (
+                "from jupyter_core import application; "
+                "app = application.JupyterApp(); app.initialize(); app.start()"
+            )
+
+        except ImportError:
+            logger.warning("Failed to run Qt console...")
+            return
+
+        if ipfunc:
+            import soma.subprocess
+
+            ipConsole = self.run_ipconsole_kernel(mode)
+
+            if ipConsole:
+                global _ipsubprocs
+                qt_api = qt_backend.get_qt_backend()
+                qt_apis = {
+                    "PyQt4": "pyqt",
+                    "PyQt5": "pyqt5",
+                    "PySide": "pyside",
+                }
+                qt_api_code = qt_apis.get(qt_api, "pyq5t")
+                cmd = [
+                    sys.executable,
+                    "-c",
+                    f'import os; os.environ["QT_API"] = '
+                    f'"{qt_api_code}"; {ipfunc}',
+                    mode,
+                    "--existing",
+                    f"--shell={ipConsole.shell_port}",
+                    f"--iopub={ipConsole.iopub_port}",
+                    f"--stdin={ipConsole.stdin_port}",
+                    f"--hb={ipConsole.hb_port}",
+                ]
+                sp = soma.subprocess.Popen(cmd)
+                pd = _ProcDeleter(sp)
+
+                with _ipsubprocs_lock:
+                    _ipsubprocs.append(pd)
+
+                pd.start()
+                # hack the lastWindowClosed event because it becomes inactive
+                # otherwise
+                QApplication.instance().lastWindowClosed.connect(
+                    self.last_window_closed
+                )
+
     def package_library_pop_up(self):
         """Open the package library pop-up"""
 
@@ -1066,6 +1090,139 @@ class MainWindow(QMainWindow):
             shutil.rmtree(folder)
 
         self.project = None
+
+    @staticmethod
+    def run_ipconsole_kernel(mode="qtconsole"):
+        """
+        Starts and initializes an IPython kernel with support for
+        a Qt-based GUI.
+
+        This method is designed to set up and run an IPython kernel
+        for interactive computing, with the specified mode (defaulting
+        to `qtconsole`). It handles initialization of the kernel and
+        associated event loops, ensuring proper integration with Qt-based
+        applications.
+
+        :param mode (str): The mode for running the IPython kernel. Default
+                           is "qtconsole". It determines the GUI integration
+                           mode of the kernel.
+
+        :returns (IPKernelApp): The instance of the IPython kernel
+                                application.
+
+        Notes:
+            - The method ensures that the kernel is properly initialized if
+              it hasn't been set up already.
+            - To support Qt-based GUIs, the Qt event loop is properly
+              integrated with the IPython kernel.
+            - Special handling for Tornado versions >= 4.5 ensures
+              compatibility with its callback mechanism.
+        """
+
+        logger.info(f"Run_ipconsole_kernel: {mode}")
+        import IPython  # noqa: F401
+        from IPython.lib import guisupport
+        from soma.qt_gui.qt_backend import Qt
+
+        qtapp = Qt.QApplication.instance()
+        qtapp._in_event_loop = True
+        guisupport.in_event_loop = True
+
+        from ipykernel.kernelapp import IPKernelApp
+
+        app = IPKernelApp.instance()
+
+        if not app.initialized() or not app.kernel:
+            logger.info("Running IP console kernel")
+            # don't know why this is not set automatically
+            app.hb_port = 50042
+            app.initialize(
+                [
+                    mode,
+                    "--gui=qt",  # '--pylab=qt',
+                    "--KernelApp.parent_appname='ipython-{mode}'",
+                ]
+            )
+            # in ipython >= 1.2, app.start() blocks until a ctrl-c is issued
+            # in the terminal. Seems to block in
+            # tornado.ioloop.PollIOLoop.start()
+            # So, don't call app.start because it would begin a zmq/tornado
+            # loop instead we must just initialize its callback.
+            # if app.poller is not None:
+            # app.poller.start()
+            app.kernel.start()
+
+            # IP 2 allows just calling the current callbacks.
+            # For IP 1 it is not sufficient.
+            import tornado
+            from zmq.eventloop import ioloop
+
+            if tornado.version_info >= (4, 5):
+                # tornado 5 is using a decque for _callbacks, not a
+                # list + explicit locking
+
+                def my_start_ioloop_callbacks(self):
+                    """
+                    Executes pending callbacks in the Tornado
+                    IOLoop (Tornado >= 4.5).
+
+                    This method processes the `_callbacks` deque in the
+                    Tornado IOLoop, executing each callback in the order
+                    they were added. The use of `popleft` ensures efficient
+                    removal of executed callbacks.
+
+                    Notes:
+                        - Tornado 4.5 and later versions use a `deque`
+                          for `_callbacks`, allowing lock-free access to
+                          pending callbacks.
+
+                    Raises:
+                        AttributeError: If `_callbacks` is not defined for
+                                        the IOLoop instance.
+                    """
+
+                    if hasattr(self, "_callbacks"):
+                        ncallbacks = len(self._callbacks)
+
+                        for i in range(ncallbacks):
+                            self._run_callback(self._callbacks.popleft())
+
+            else:
+
+                def my_start_ioloop_callbacks(self):
+                    """
+                    Executes pending callbacks in the Tornado IOLoop
+                    (Tornado < 4.5).
+
+                    This method processes the `_callbacks` list in the
+                    Tornado IOLoop, executing each callback in the order
+                    they were added. The method ensures thread safety by
+                    using a lock (`_callback_lock`) to protect access to
+                    the `_callbacks` list during execution.
+
+                    Notes:
+                        - Tornado versions before 4.5 use a list
+                          (`_callbacks`) for pending callbacks, requiring
+                          explicit locking to avoid race conditions.
+                        - After processing all callbacks, the `_callbacks`
+                          list is reset to an empty list.
+
+                    Raises:
+                        AttributeError: If `_callbacks` or `_callback_lock`
+                                        is not defined for the IOLoop
+                                        instance.
+                    """
+
+                    with self._callback_lock:
+                        callbacks = self._callbacks
+                        self._callbacks = []
+
+                    for callback in callbacks:
+                        self._run_callback(callback)
+
+            my_start_ioloop_callbacks(ioloop.IOLoop.instance())
+
+        return app
 
     def save(self):
         """Save either the current project or the current pipeline"""
@@ -1325,6 +1482,56 @@ class MainWindow(QMainWindow):
         """
         self.controller_version_changed = not self.controller_version_changed
 
+    def setup_menu_actions(self, sources_images_dir):
+        """
+        Initialize menu actions with icons and descriptions.
+
+        :param sources_images_dir: Directory containing source images
+                                   for icons.
+        """
+        self.action_save_project = self.menu_file.addAction("Save project")
+        self.action_save_project_as = self.menu_file.addAction(
+            "Save project as"
+        )
+        self.action_delete_project = self.menu_file.addAction("Delete project")
+        self.action_create = QAction("New project", self)
+        self.action_open = QAction("Open project", self)
+        self.action_save = QAction("Save", self)
+        self.action_save_as = QAction("Save as", self)
+        self.action_delete = QAction("Delete project", self)
+        self.action_import = QAction(
+            QIcon(os.path.join(sources_images_dir, "Blue.png")), "Import", self
+        )
+        self.action_check_database = QAction("Check the whole database", self)
+        self.action_see_all_projects = QAction("See all projects", self)
+        self.action_project_properties = QAction("Project properties", self)
+        self.action_software_preferences = QAction("MIA preferences", self)
+        self.action_package_library = QAction("Package library manager", self)
+        self.action_open_shell = QAction("Open python shell", self)
+        self.action_exit = QAction(
+            QIcon(os.path.join(sources_images_dir, "exit.png")), "Exit", self
+        )
+        self.action_undo = QAction("Undo", self)
+        self.action_redo = QAction("Redo", self)
+        self.action_documentation = QAction("Documentation", self)
+        self.action_credits = QAction("Credits", self)
+        self.action_install_processes_folder = QAction("From folder", self)
+        self.action_install_processes_zip = QAction("From zip file", self)
+
+    def setup_window_size(self):
+        """
+        Set the window size and maximize if needed.
+        """
+
+        if self.config.get_mainwindow_maximized():
+            self.showMaximized()
+
+        else:
+            size = self.config.get_mainwindow_size()
+
+            if size:
+                self.resize(size[0], size[1])
+
     def software_preferences_pop_up(self):
         """Open the Mia preferences pop-up."""
         self.pop_up_preferences = PopUpPreferences(self)
@@ -1340,204 +1547,6 @@ class MainWindow(QMainWindow):
         self.pop_up_preferences.signal_preferences_change.connect(
             self.pipeline_manager.update_user_mode
         )
-
-    def open_shell(self):
-        """
-        Open a Qt console shell with an IPython kernel seeing the program
-        internals.
-        """
-
-        from soma.qt_gui import qt_backend
-
-        ipfunc = None
-        mode = "qtconsole"
-        logger.info("StartShell...")
-
-        try:
-            # to check it is installed
-            import jupyter_core.application  # noqa: F401
-            import qtconsole  # noqa: F401
-
-            ipfunc = (
-                "from jupyter_core import application; "
-                "app = application.JupyterApp(); app.initialize(); app.start()"
-            )
-
-        except ImportError:
-            logger.warning("Failed to run Qt console...")
-            return
-
-        if ipfunc:
-            import soma.subprocess
-
-            ipConsole = self.run_ipconsole_kernel(mode)
-
-            if ipConsole:
-                global _ipsubprocs
-                qt_api = qt_backend.get_qt_backend()
-                qt_apis = {
-                    "PyQt4": "pyqt",
-                    "PyQt5": "pyqt5",
-                    "PySide": "pyside",
-                }
-                qt_api_code = qt_apis.get(qt_api, "pyq5t")
-                cmd = [
-                    sys.executable,
-                    "-c",
-                    f'import os; os.environ["QT_API"] = '
-                    f'"{qt_api_code}"; {ipfunc}',
-                    mode,
-                    "--existing",
-                    f"--shell={ipConsole.shell_port}",
-                    f"--iopub={ipConsole.iopub_port}",
-                    f"--stdin={ipConsole.stdin_port}",
-                    f"--hb={ipConsole.hb_port}",
-                ]
-                sp = soma.subprocess.Popen(cmd)
-                pd = _ProcDeleter(sp)
-
-                with _ipsubprocs_lock:
-                    _ipsubprocs.append(pd)
-
-                pd.start()
-                # hack the lastWindowClosed event because it becomes inactive
-                # otherwise
-                QApplication.instance().lastWindowClosed.connect(
-                    self.last_window_closed
-                )
-
-    @staticmethod
-    def run_ipconsole_kernel(mode="qtconsole"):
-        """
-        Starts and initializes an IPython kernel with support for
-        a Qt-based GUI.
-
-        This method is designed to set up and run an IPython kernel
-        for interactive computing, with the specified mode (defaulting
-        to `qtconsole`). It handles initialization of the kernel and
-        associated event loops, ensuring proper integration with Qt-based
-        applications.
-
-        :param mode (str): The mode for running the IPython kernel. Default
-                           is "qtconsole". It determines the GUI integration
-                           mode of the kernel.
-
-        :returns (IPKernelApp): The instance of the IPython kernel
-                                application.
-
-        Notes:
-            - The method ensures that the kernel is properly initialized if
-              it hasn't been set up already.
-            - To support Qt-based GUIs, the Qt event loop is properly
-              integrated with the IPython kernel.
-            - Special handling for Tornado versions >= 4.5 ensures
-              compatibility with its callback mechanism.
-        """
-
-        logger.info(f"Run_ipconsole_kernel: {mode}")
-        import IPython  # noqa: F401
-        from IPython.lib import guisupport
-        from soma.qt_gui.qt_backend import Qt
-
-        qtapp = Qt.QApplication.instance()
-        qtapp._in_event_loop = True
-        guisupport.in_event_loop = True
-
-        from ipykernel.kernelapp import IPKernelApp
-
-        app = IPKernelApp.instance()
-
-        if not app.initialized() or not app.kernel:
-            logger.info("Running IP console kernel")
-            # don't know why this is not set automatically
-            app.hb_port = 50042
-            app.initialize(
-                [
-                    mode,
-                    "--gui=qt",  # '--pylab=qt',
-                    "--KernelApp.parent_appname='ipython-{mode}'",
-                ]
-            )
-            # in ipython >= 1.2, app.start() blocks until a ctrl-c is issued
-            # in the terminal. Seems to block in
-            # tornado.ioloop.PollIOLoop.start()
-            # So, don't call app.start because it would begin a zmq/tornado
-            # loop instead we must just initialize its callback.
-            # if app.poller is not None:
-            # app.poller.start()
-            app.kernel.start()
-
-            # IP 2 allows just calling the current callbacks.
-            # For IP 1 it is not sufficient.
-            import tornado
-            from zmq.eventloop import ioloop
-
-            if tornado.version_info >= (4, 5):
-                # tornado 5 is using a decque for _callbacks, not a
-                # list + explicit locking
-
-                def my_start_ioloop_callbacks(self):
-                    """
-                    Executes pending callbacks in the Tornado
-                    IOLoop (Tornado >= 4.5).
-
-                    This method processes the `_callbacks` deque in the
-                    Tornado IOLoop, executing each callback in the order
-                    they were added. The use of `popleft` ensures efficient
-                    removal of executed callbacks.
-
-                    Notes:
-                        - Tornado 4.5 and later versions use a `deque`
-                          for `_callbacks`, allowing lock-free access to
-                          pending callbacks.
-
-                    Raises:
-                        AttributeError: If `_callbacks` is not defined for
-                                        the IOLoop instance.
-                    """
-
-                    if hasattr(self, "_callbacks"):
-                        ncallbacks = len(self._callbacks)
-
-                        for i in range(ncallbacks):
-                            self._run_callback(self._callbacks.popleft())
-
-            else:
-
-                def my_start_ioloop_callbacks(self):
-                    """
-                    Executes pending callbacks in the Tornado IOLoop
-                    (Tornado < 4.5).
-
-                    This method processes the `_callbacks` list in the
-                    Tornado IOLoop, executing each callback in the order
-                    they were added. The method ensures thread safety by
-                    using a lock (`_callback_lock`) to protect access to
-                    the `_callbacks` list during execution.
-
-                    Notes:
-                        - Tornado versions before 4.5 use a list
-                          (`_callbacks`) for pending callbacks, requiring
-                          explicit locking to avoid race conditions.
-                        - After processing all callbacks, the `_callbacks`
-                          list is reset to an empty list.
-
-                    Raises:
-                        AttributeError: If `_callbacks` or `_callback_lock`
-                                        is not defined for the IOLoop
-                                        instance.
-                    """
-
-                    with self._callback_lock:
-                        callbacks = self._callbacks
-                        self._callbacks = []
-
-                    for callback in callbacks:
-                        self._run_callback(callback)
-
-            my_start_ioloop_callbacks(ioloop.IOLoop.instance())
-
-        return app
 
     def switch_project(self, file_path, name):
         """
