@@ -242,7 +242,7 @@ class ImportWorker(QThread):
         :param values_added (list): List to track added values
         """
 
-        with self.database.data() as database_data:
+        with self.project.database.data() as database_data:
 
             for tag in database_data.get_field_attributes(COLLECTION_CURRENT):
 
@@ -746,7 +746,7 @@ class ImportWorker(QThread):
         # List of tags to exclude
         tags_to_exclude = ["Dataset data file", "Dataset header file"]
 
-        with self.database.data() as database_data:
+        with self.project.database.data() as database_data:
 
             for dict_log in list_dict_log:
 
@@ -905,7 +905,7 @@ class ImportWorker(QThread):
         self.notifyProgress.emit(1)
         sleep(0.1)
 
-        with self.database.schema() as database_schema:
+        with self.project.database.schema() as database_schema:
 
             with database_schema.data() as database_data:
 
