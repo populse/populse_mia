@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-"""Module that defines all the pop-ups used across the software
+"""
+Module that defines all the pop-ups used across the Mia software.
 
 :Contains:
     :Class:
@@ -48,6 +48,7 @@
 import ast
 import glob
 import hashlib
+import logging
 import os
 import platform
 import re
@@ -55,6 +56,7 @@ import shutil
 import subprocess
 from datetime import datetime
 from functools import partial
+from typing import get_origin
 
 import yaml
 
@@ -63,24 +65,6 @@ from capsul.api import capsul_engine
 from capsul.pipeline.pipeline_nodes import PipelineNode
 from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
-
-# Populse_db imports
-from populse_db.database import (
-    FIELD_TYPE_BOOLEAN,
-    FIELD_TYPE_DATE,
-    FIELD_TYPE_DATETIME,
-    FIELD_TYPE_FLOAT,
-    FIELD_TYPE_INTEGER,
-    FIELD_TYPE_LIST_BOOLEAN,
-    FIELD_TYPE_LIST_DATE,
-    FIELD_TYPE_LIST_DATETIME,
-    FIELD_TYPE_LIST_FLOAT,
-    FIELD_TYPE_LIST_INTEGER,
-    FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_TIME,
-    FIELD_TYPE_STRING,
-    FIELD_TYPE_TIME,
-)
 
 # PyQt5 imports
 from PyQt5 import Qt, QtCore, QtGui, QtWidgets
@@ -114,15 +98,7 @@ from PyQt5.QtWidgets import (
 )
 
 # Populse_mia imports
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_USER,
-    TAG_UNIT_DEGREE,
-    TAG_UNIT_HZPIXEL,
-    TAG_UNIT_MHZ,
-    TAG_UNIT_MM,
-    TAG_UNIT_MS,
-)
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,
     BRICK_INIT,
@@ -134,84 +110,113 @@ from populse_mia.data_manager.project import (
     COLLECTION_CURRENT,
     COLLECTION_HISTORY,
     COLLECTION_INITIAL,
+    FIELD_TYPE_BOOLEAN,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATETIME,
+    FIELD_TYPE_FLOAT,
+    FIELD_TYPE_INTEGER,
+    FIELD_TYPE_LIST_BOOLEAN,
+    FIELD_TYPE_LIST_DATE,
+    FIELD_TYPE_LIST_DATETIME,
+    FIELD_TYPE_LIST_FLOAT,
+    FIELD_TYPE_LIST_INTEGER,
+    FIELD_TYPE_LIST_STRING,
+    FIELD_TYPE_LIST_TIME,
+    FIELD_TYPE_STRING,
+    FIELD_TYPE_TIME,
     HISTORY_BRICKS,
     HISTORY_PIPELINE,
     TAG_CHECKSUM,
     TAG_FILENAME,
     TAG_HISTORY,
+    TAG_ORIGIN_USER,
     TAG_TYPE,
+    TAG_UNIT_DEGREE,
+    TAG_UNIT_HZPIXEL,
+    TAG_UNIT_MHZ,
+    TAG_UNIT_MM,
+    TAG_UNIT_MS,
     TYPE_MAT,
     TYPE_NII,
     TYPE_TXT,
     TYPE_UNKNOWN,
-    Project,
 )
+from populse_mia.data_manager.project import Project
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser import data_browser
+
+logger = logging.getLogger(__name__)
 
 
 class ClickableLabel(QLabel):
     """
-    QLabel with a clicked signal
+    A QLabel subclass that emits a signal when clicked.
 
     .. Methods:
         - mousePressEvent: overrides the mousePressEvent method by emitting
           the clicked signal
+
+    .. Signals:
+        - clicked(): Emitted when the label is clicked.
     """
 
-    # Signal that will be emitted when the widget is clicked
     clicked = pyqtSignal()
 
     def __init__(self):
+        """Initializes the ClickableLabel."""
         super().__init__()
 
     def mousePressEvent(self, event):
         """
-        Overrides the mousePressEvent method by emitting the clicked signal
+        Handles the mouse press event by emitting the `clicked` signal.
 
-        :param event: clicked event
+        :param event (QMouseEvent): The mouse event triggering the signal.
         """
         self.clicked.emit()
 
 
 class DefaultValueListCreation(QDialog):
-    """Widget that is called when to create a list's default value.
+    """
+    A dialog for creating or editing a list's default value.
+
+    This widget allows users to input and manage a list of values
+    based on a specified type (e.g., integers, floats, booleans, etc.).
 
     .. Methods:
-        - add_element: one more element added to the list
-        - default_init_table: default init table when no previous value
-        - remove_element: removes the last element of the list
-        - resize_table: to resize the pop up depending on the table
-        - update_default_value: checks if the values are correct and updates
-           the parent value
+        - add_element(): Adds one more element to the list.
+        - default_init_table(): Initializes the table with a default value
+                                when no previous value exists.
+        - remove_element(): Removes the last element from the list.
+        - resize_table(): Adjusts the popup size based on the table content.
+        - update_default_value(): Validates user input and updates the
+                                  parent's default value.
 
     """
 
     def __init__(self, parent, type):
-        """Initialization.
+        """
+        Initializes the DefaultValueListCreation dialog.
 
-        :param parent: the DefaultValueQLineEdit parent object
-        :param type: type of the list (e.g. list of int, list of float, etc.)
+        :param parent (DefaultValueQLineEdit): The parent object.
+        :param type (Type): The type of the list elements (e.g., int,
+                            float, str).
 
         """
-
         super().__init__()
-
         self.setModal(True)
-
         # Current type chosen
         self.type = type
-
         self.parent = parent
-        self.setWindowTitle("Adding a " + self.type.replace("_", " of "))
-
+        self.setWindowTitle(
+            f"Adding a list of {self.type.__args__[0].__name__}"
+        )
         # The table that will be filled
         self.table = QtWidgets.QTableWidget()
         self.table.setRowCount(1)
-
         value = self.parent.text()
 
-        if value != "":
+        if value:
+
             try:
                 list_value = ast.literal_eval(value)
 
@@ -219,10 +224,10 @@ class DefaultValueListCreation(QDialog):
                     # If the previous value was already a list, we fill it
                     self.table.setColumnCount(len(list_value))
 
-                    for i in range(0, self.table.columnCount()):
-                        item = QtWidgets.QTableWidgetItem()
-                        item.setText(str(list_value[i]))
-                        self.table.setItem(0, i, item)
+                    for i, val in enumerate(list_value):
+                        self.table.setItem(
+                            0, i, QtWidgets.QTableWidgetItem(str(val))
+                        )
 
                 else:
                     self.default_init_table()
@@ -234,180 +239,184 @@ class DefaultValueListCreation(QDialog):
             self.default_init_table()
 
         self.resize_table()
-
         # Ok button
         self.ok_button = QtWidgets.QPushButton("Ok")
         self.ok_button.clicked.connect(self.update_default_value)
-
         # Cancel button
         cancel_button = QtWidgets.QPushButton("Cancel")
         cancel_button.clicked.connect(self.close)
-
         # Button to add an element to the list
         sources_images_dir = Config().getSourceImageDir()
         self.add_element_label = ClickableLabel()
         self.add_element_label.setObjectName("plus")
-        add_element_picture = QtGui.QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, "green_plus.png"))
+        self.add_element_label.setPixmap(
+            QtGui.QPixmap(
+                os.path.join(sources_images_dir, "green_plus.png")
+            ).scaledToHeight(15)
         )
-        add_element_picture = add_element_picture.scaledToHeight(15)
-        self.add_element_label.setPixmap(add_element_picture)
         self.add_element_label.clicked.connect(self.add_element)
-
         # Button to remove the last element of the list
         self.remove_element_label = ClickableLabel()
         self.remove_element_label.setObjectName("minus")
-        remove_element_picture = QtGui.QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, "red_minus.png"))
+        self.remove_element_label.setPixmap(
+            QtGui.QPixmap(
+                os.path.join(sources_images_dir, "red_minus.png")
+            ).scaledToHeight(20)
         )
-        remove_element_picture = remove_element_picture.scaledToHeight(20)
-        self.remove_element_label.setPixmap(remove_element_picture)
         self.remove_element_label.clicked.connect(self.remove_element)
-
         # Layouts
-        self.v_box_final = QVBoxLayout()
-        self.h_box_final = QHBoxLayout()
         self.list_layout = QHBoxLayout()
-
-        self.h_box_final.addWidget(self.ok_button)
-        self.h_box_final.addWidget(cancel_button)
-
         self.list_layout.addWidget(self.table)
         self.list_layout.addWidget(self.remove_element_label)
         self.list_layout.addWidget(self.add_element_label)
-
+        self.h_box_final = QHBoxLayout()
+        self.h_box_final.addWidget(self.ok_button)
+        self.h_box_final.addWidget(cancel_button)
+        self.v_box_final = QVBoxLayout()
         self.v_box_final.addLayout(self.list_layout)
         self.v_box_final.addLayout(self.h_box_final)
-
         self.setLayout(self.v_box_final)
 
     def add_element(self):
-        """One more element added to the list."""
+        """
+        Adds a new empty element to the list.
 
+        Increases the number of columns in the table by one and adds
+        an empty `QTableWidgetItem` for user input.
+        """
         self.table.setColumnCount(self.table.columnCount() + 1)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setItem(0, self.table.columnCount() - 1, item)
+        self.table.setItem(
+            0, self.table.columnCount() - 1, QtWidgets.QTableWidgetItem()
+        )
         self.resize_table()
 
     def default_init_table(self):
         """
-        Default init table when no previous value
-        """
+        Initializes the table with a default value.
 
+        If no previous value exists, the table is set up with a single empty
+        column to allow user input.
+        """
         # Table filled with a single element at the beginning if no value
         self.table.setColumnCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setItem(0, 0, item)
+        self.table.setItem(0, 0, QtWidgets.QTableWidgetItem())
 
     def remove_element(self):
-        """Removes the last element of the list."""
+        """
+        Removes the last element from the list.
 
-        if self.table.columnCount() > 1:
-            self.table.setColumnCount(self.table.columnCount() - 1)
-            self.resize_table()
-            self.adjustSize()
+        Ensures that at least one column remains to prevent an empty table.
+        Adjusts the table size accordingly.
+        """
+
+        if self.table.columnCount() <= 1:
+            return
+
+        self.table.setColumnCount(self.table.columnCount() - 1)
+        self.resize_table()
+        self.adjustSize()
 
     def resize_table(self):
-        """To resize the pop up depending on the table."""
+        """
+        Adjusts the size of the popup window based on the table content.
 
+        Dynamically resizes the table width and height based on the number
+        of columns and rows, with a maximum width limit of 900 pixels.
+        """
         self.table.resizeColumnsToContents()
-        total_width = 0
-        total_height = 0
-        i = 0
-        while i < self.table.columnCount():
-            total_width += self.table.columnWidth(i)
-            total_height += self.table.rowHeight(i)
-            i += 1
-        if total_width + 20 < 900:
-            self.table.setFixedWidth(total_width + 20)
-            self.table.setFixedHeight(total_height + 25)
-        else:
-            self.table.setFixedWidth(900)
-            self.table.setFixedHeight(total_height + 40)
+        total_width = sum(
+            self.table.columnWidth(i) for i in range(self.table.columnCount())
+        )
+        total_height = sum(
+            self.table.rowHeight(i) for i in range(self.table.rowCount())
+        )
+        max_width = 900
+        padding = 20 if total_width + 20 < max_width else 40
+        self.table.setFixedWidth(min(total_width + 20, max_width))
+        self.table.setFixedHeight(total_height + padding)
 
     def update_default_value(self):
-        """Checks if the values are correct and updates the parent value."""
+        """
+        Validates user input and updates the parent's default value.
 
+        Converts table values to the specified list type, ensuring that
+        each entry is valid. If any value is invalid, a warning message
+        is displayed, and the update is aborted.
+
+        If all values are valid, they are stored in the parent widget,
+        and the dialog is closed.
+        """
+        type_parsers = {
+            FIELD_TYPE_LIST_INTEGER: int,
+            FIELD_TYPE_LIST_FLOAT: float,
+            FIELD_TYPE_LIST_BOOLEAN: lambda x: {"True": True, "False": False}[
+                x
+            ],
+            FIELD_TYPE_LIST_STRING: str,
+            FIELD_TYPE_LIST_DATE: lambda x: datetime.strptime(
+                x, "%d/%m/%Y"
+            ).date(),
+            FIELD_TYPE_LIST_DATETIME: lambda x: datetime.strptime(
+                x, "%d/%m/%Y %H:%M:%S.%f"
+            ),
+            FIELD_TYPE_LIST_TIME: lambda x: datetime.strptime(
+                x, "%H:%M:%S.%f"
+            ).time(),
+        }
         database_value = []
-        valid_values = True
 
-        # For each value
-        for i in range(0, self.table.columnCount()):
+        for i in range(self.table.columnCount()):
             item = self.table.item(0, i)
-            text = item.text()
+            text = item.text() if item else ""
 
             try:
-                if self.type == FIELD_TYPE_LIST_INTEGER:
-                    database_value.append(int(text))
-                elif self.type == FIELD_TYPE_LIST_FLOAT:
-                    database_value.append(float(text))
-                elif self.type == FIELD_TYPE_LIST_BOOLEAN:
-                    if text == "True":
-                        database_value.append(True)
-                    elif text == "False":
-                        database_value.append(False)
-                    else:
-                        raise ValueError("Not a boolean value")
-                elif self.type == FIELD_TYPE_LIST_STRING:
-                    database_value.append(str(text))
-                elif self.type == FIELD_TYPE_LIST_DATE:
-                    format = "%d/%m/%Y"
-                    datetime.strptime(text, format).date()
-                    database_value.append(text)
-                elif self.type == FIELD_TYPE_LIST_DATETIME:
-                    format = "%d/%m/%Y %H:%M:%S.%f"
-                    datetime.strptime(text, format)
-                    database_value.append(text)
-                elif self.type == FIELD_TYPE_LIST_TIME:
-                    format = "%H:%M:%S.%f"
-                    datetime.strptime(text, format).time()
-                    database_value.append(text)
+                database_value.append(type_parsers[self.type](text))
 
-            except Exception:
-                # Error if invalid value
-                valid_values = False
-                msg = QMessageBox()
+            except (ValueError, KeyError):
+                msg = QMessageBox(self)
                 msg.setIcon(QMessageBox.Warning)
+                msg.setWindowTitle("Warning")
                 msg.setText("Invalid value")
                 msg.setInformativeText(
-                    "The value "
-                    + text
-                    + " is invalid with the type "
-                    + self.type
+                    f"The value '{text}' is invalid for type {self.type}."
                 )
-                msg.setWindowTitle("Warning")
                 msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
                 msg.exec()
-                break
+                return
 
-        if valid_values:
-            self.parent.setText(str(database_value))
-            self.close()
+        self.parent.setText(str(database_value))
+        self.close()
 
 
 class DefaultValueQLineEdit(QtWidgets.QLineEdit):
-    """Overrides the QLineEdit for the default value.
+    """
+    A QLineEdit override for handling default values.
 
-    We need to override the mousePressEvent.
+    This class customizes QLineEdit to handle list-type default values by
+    displaying a popup when clicked.
 
     .. Methods:
-        - mousePressEvent: mouse pressed on the QLineEdit
+        - mousePressEvent: Mouse pressed on the QLineEdit
 
     """
 
     def __init__(self, parent):
+        """
+        :param parent: The parent widget, expected to have a `type` attribute.
+        """
         super().__init__()
         self.parent = parent
 
     def mousePressEvent(self, event):
-        """Mouse pressed on the QLineEdit.
+        """
+        Handles mouse press events.
 
-        :param event: used ?
+        If the parent's type is a list, displays a popup for list creation.
+
+        :param event (QMouseEvent): The mouse press event (unused).
 
         """
-
-        if self.parent.type.startswith("list_"):
+        if get_origin(self.parent.type) is list:
             # We display the pop up to create the list if the checkbox is
             # checked, otherwise we do nothing
             self.list_creation = DefaultValueListCreation(
@@ -417,197 +426,154 @@ class DefaultValueQLineEdit(QtWidgets.QLineEdit):
 
 
 class PopUpAddPath(QDialog):
-    """Is called when the user wants to add a document to the project
-       without importing from MRI Files Manager (File > Import).
+    """
+    Dialog for adding a document to the project without using the MRI Files
+    Manager (File > Import).
 
     .. Methods:
-        - file_to_choose: lets the user choose a file to import
-        - find_type: tries to find the document type when the document is
-           changed
-        - save_path: adds the path to the database and the data browser
-
+        - file_to_choose: Opens a file dialog to choose a document.
+        - find_type: Determines the document type when the file path changes.
+        - save_path: Adds the file path to the database and updates the UI.
     """
 
     def __init__(self, project, databrowser):
-        """Initialization of the PopUp AddPath.
-
-        :param project: current project in the software
-        :param databrowser: data browser instance of the software
-
         """
+        Initializes the pop-up for adding a document.
 
+        :param project (Project): The current project instance.
+        :param databrowser (DataBrowser): The application's data browser.
+        """
         super().__init__()
         self.project = project
         self.databrowser = databrowser
         self.setWindowTitle("Add a document")
         self.setModal(True)
-
         vbox_layout = QVBoxLayout()
-
-        hbox_layout = QHBoxLayout()
+        # File selection layout
+        file_layout = QHBoxLayout()
         file_label = QLabel("File: ")
         self.file_line_edit = QLineEdit()
         self.file_line_edit.setFixedWidth(300)
         self.file_line_edit.textChanged.connect(self.find_type)
         file_button = QPushButton("Choose a document")
         file_button.clicked.connect(self.file_to_choose)
-        hbox_layout.addWidget(file_label)
-        hbox_layout.addWidget(self.file_line_edit)
-        hbox_layout.addWidget(file_button)
-        vbox_layout.addLayout(hbox_layout)
-
-        hbox_layout = QHBoxLayout()
+        file_layout.addWidget(file_label)
+        file_layout.addWidget(self.file_line_edit)
+        file_layout.addWidget(file_button)
+        vbox_layout.addLayout(file_layout)
+        # File type layout
+        type_layout = QHBoxLayout()
         type_label = QLabel("Type: ")
         self.type_line_edit = QLineEdit()
-        hbox_layout.addWidget(type_label)
-        hbox_layout.addWidget(self.type_line_edit)
-        vbox_layout.addLayout(hbox_layout)
-
-        hbox_layout = QHBoxLayout()
+        type_layout.addWidget(type_label)
+        type_layout.addWidget(self.type_line_edit)
+        vbox_layout.addLayout(type_layout)
+        # Action buttons layout
+        button_layout = QHBoxLayout()
         self.ok_button = QPushButton("Ok")
         self.ok_button.clicked.connect(self.save_path)
         cancel_button = QPushButton("Cancel")
         cancel_button.clicked.connect(self.close)
-        hbox_layout.addWidget(self.ok_button)
-        hbox_layout.addWidget(cancel_button)
-        vbox_layout.addLayout(hbox_layout)
+        button_layout.addWidget(self.ok_button)
+        button_layout.addWidget(cancel_button)
+        vbox_layout.addLayout(button_layout)
         self.setLayout(vbox_layout)
 
     def file_to_choose(self):
-        """Lets the user choose a file to import."""
-
+        """
+        Opens a file dialog for selecting documents.
+        """
         fname, _ = QFileDialog.getOpenFileNames(
             self, "Choose a document to import", os.path.expanduser("~")
         )
 
-        if fname != []:
+        if fname:
             self.file_line_edit.setText(str(fname))
 
     def find_type(self):
-        """Tries to find the document type when the document is changed."""
+        """
+        Determines the document type when the file path changes.
+        """
+        file_paths = self.file_line_edit.text()
 
-        new_file = self.file_line_edit.text()
-        new_file = ast.literal_eval(new_file)
-        new_type = []
+        # If the input is empty, clear the type field
+        if not file_paths:
+            self.type_line_edit.clear()
+            return
 
-        for elmt in new_file:
-            filename, file_extension = os.path.splitext(elmt)
+        try:
+            file_list = ast.literal_eval(file_paths)
 
-            if file_extension == ".nii":
-                new_type.append(TYPE_NII)
+        except (SyntaxError, ValueError):
+            self.type_line_edit.setText(str([TYPE_UNKNOWN] * len(file_paths)))
+            return
 
-            elif file_extension == ".mat":
-                new_type.append(TYPE_MAT)
-
-            elif file_extension == ".txt":
-                new_type.append(TYPE_TXT)
-
-            else:
-                new_type.append(TYPE_UNKNOWN)
-
-        self.type_line_edit.setText(str(new_type))
+        type_mapping = {".nii": TYPE_NII, ".mat": TYPE_MAT, ".txt": TYPE_TXT}
+        file_types = [
+            type_mapping.get(os.path.splitext(f)[1], TYPE_UNKNOWN)
+            for f in file_list
+        ]
+        self.type_line_edit.setText(str(file_types))
 
     def save_path(self):
-        """Adds the path to the database and the data browser."""
+        """
+        Adds the selected document paths to the database and updates the UI.
+        """
 
-        path_list = self.file_line_edit.text()
+        try:
+            path_list = (
+                ast.literal_eval(self.file_line_edit.text())
+                if self.file_line_edit.text()
+                else []
+            )
+            path_type_list = (
+                ast.literal_eval(self.type_line_edit.text())
+                if self.type_line_edit.text()
+                else []
+            )
 
-        if path_list != "":
-            path_list = ast.literal_eval(path_list)
+        except (SyntaxError, ValueError):
+            self.msg = QMessageBox()
+            self.msg.setIcon(QMessageBox.Warning)
+            self.msg.setText("- Invalid Data! -")
+            self.msg.setInformativeText(
+                f"Invalid file(s) in:\n"
+                f"{path_list}\n"
+                f" or type format(s) in:\n"
+                f"{path_type_list}"
+            )
+            self.msg.setWindowTitle("Warning: Invalid data!")
+            self.msg.setStandardButtons(QMessageBox.Ok)
+            self.msg.buttonClicked.connect(self.msg.close)
+            self.msg.show()
+            return
 
-        else:
-            path_list = [path_list]
+        with self.project.database.data() as database_data:
+            doc_in_db = {
+                os.path.basename(doc)
+                for doc in database_data.get_document_names(COLLECTION_CURRENT)
+            }
 
-        path_type_list = self.type_line_edit.text()
-
-        if path_type_list != "":
-            path_type_list = ast.literal_eval(path_type_list)
-
-        else:
-            path_type_list = [path_type_list]
+        self.project.unsavedModifications = True
 
         for path, path_type in zip(path_list, path_type_list):
-            docInDb = [
-                os.path.basename(i)
-                for i in self.project.session.get_documents_names(
-                    COLLECTION_CURRENT
-                )
-            ]
-            self.project.unsavedModifications = True
+            filename = os.path.basename(path)
 
-            if os.path.basename(path) in docInDb:
+            if filename in doc_in_db:
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Warning)
-                self.msg.setText("- {0} -".format(os.path.basename(path)))
+                self.msg.setText(f"- {os.path.basename(path)} -")
                 self.msg.setInformativeText(
-                    "The document '{0}' \n "
-                    "already exists in the Data Browser!".format(path)
+                    f"The document '{path}' \n "
+                    f"already exists in the Data Browser!"
                 )
                 self.msg.setWindowTitle("Warning: existing data!")
                 self.msg.setStandardButtons(QMessageBox.Ok)
                 self.msg.buttonClicked.connect(self.msg.close)
                 self.msg.show()
+                continue
 
-            elif path != "" and os.path.exists(path) and path_type != "":
-                # For history
-                history_maker = []
-                history_maker.append("add_scans")
-
-                path = os.path.relpath(path)
-                filename = os.path.basename(path)
-                copy_path = os.path.join(
-                    self.project.folder, "data", "downloaded_data", filename
-                )
-                shutil.copy(path, copy_path)
-                with open(path, "rb") as scan_file:
-                    data = scan_file.read()
-                    checksum = hashlib.md5(data).hexdigest()
-                path = os.path.join("data", "downloaded_data", filename)
-                self.project.session.add_document(COLLECTION_CURRENT, path)
-                self.project.session.add_document(COLLECTION_INITIAL, path)
-                values_added = []
-                self.project.session.add_value(
-                    COLLECTION_INITIAL, path, TAG_TYPE, path_type
-                )
-                self.project.session.add_value(
-                    COLLECTION_CURRENT, path, TAG_TYPE, path_type
-                )
-                values_added.append([path, TAG_TYPE, path_type, path_type])
-                self.project.session.add_value(
-                    COLLECTION_INITIAL, path, TAG_CHECKSUM, checksum
-                )
-                self.project.session.add_value(
-                    COLLECTION_CURRENT, path, TAG_CHECKSUM, checksum
-                )
-                values_added.append([path, TAG_CHECKSUM, checksum, checksum])
-
-                # For history
-                history_maker.append([path])
-                history_maker.append(values_added)
-                self.project.undos.append(history_maker)
-                self.project.redos.clear()
-
-                # Databrowser updated
-
-                (self.databrowser.table_data.scans_to_visualize) = (
-                    self.project.session.get_documents_names(
-                        COLLECTION_CURRENT
-                    )
-                )
-
-                (self.databrowser.table_data.scans_to_search) = (
-                    self.project.session.get_documents_names(
-                        COLLECTION_CURRENT
-                    )
-                )
-                self.databrowser.table_data.add_columns()
-                self.databrowser.table_data.fill_headers()
-                self.databrowser.table_data.add_rows([path])
-                self.databrowser.reset_search_bar()
-                self.databrowser.frame_advanced_search.setHidden(True)
-                self.databrowser.advanced_search.rows = []
-                self.close()
-            else:
+            if not path or not os.path.exists(path) or not path_type:
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Warning)
                 self.msg.setText("Invalid arguments")
@@ -618,120 +584,120 @@ class PopUpAddPath(QDialog):
                 self.msg.setStandardButtons(QMessageBox.Ok)
                 self.msg.buttonClicked.connect(self.msg.close)
                 self.msg.show()
+                continue
+
+            # Prepare history tracking
+            history_maker = ["add_scans"]
+            values_added = []
+            # Copy file to project directory
+            rel_path = os.path.join("data", "downloaded_data", filename)
+            copy_path = os.path.join(self.project.folder, rel_path)
+            shutil.copy(path, copy_path)
+
+            # Compute file checksum
+            with open(path, "rb") as scan_file:
+                checksum = hashlib.md5(scan_file.read()).hexdigest()
+
+            # Add document to database
+            with self.project.database.data() as database_data:
+
+                for collection in (COLLECTION_INITIAL, COLLECTION_CURRENT):
+                    database_data.add_document(collection, rel_path)
+                    database_data.set_value(
+                        collection_name=collection,
+                        primary_key=rel_path,
+                        values_dict={TAG_TYPE: path_type},
+                    )
+                    database_data.set_value(
+                        collection_name=collection,
+                        primary_key=rel_path,
+                        values_dict={TAG_CHECKSUM: checksum},
+                    )
+
+            values_added.extend(
+                [
+                    [rel_path, TAG_TYPE, path_type, path_type],
+                    [rel_path, TAG_CHECKSUM, checksum, checksum],
+                ]
+            )
+            # Update history
+            history_maker.extend([[rel_path], values_added])
+            self.project.undos.append(history_maker)
+            self.project.redos.clear()
+
+            # Update data browser
+            with self.project.database.data() as database_data:
+                scans = database_data.get_document_names(COLLECTION_CURRENT)
+
+            table_data = self.databrowser.table_data
+            table_data.scans_to_visualize = scans
+            table_data.scans_to_search = scans
+            table_data.add_columns()
+            table_data.fill_headers()
+            table_data.add_rows([rel_path])
+
+        self.databrowser.reset_search_bar()
+        self.databrowser.frame_advanced_search.setHidden(True)
+        self.databrowser.advanced_search.rows = []
+        self.close()
 
 
 class PopUpAddTag(QDialog):
-    """Is called when the user wants to add a tag to the project.
+    """
+    Dialog for adding a new tag to the project.
 
-    .. Methods:
-        - ok_action: verifies that each field is correct and send the new tag
-           to the data browser
-        - on_activated: type updated
+    This dialog allows users to create a new tag by specifying its name,
+    default value, description, unit, and type.
 
+    Attributes:
+        signal_add_tag: Signal emitted when a new tag is successfully added
+
+    Methods:
+        - _connect_signals: Connect signals to slots
+        - _setup_layouts: Set up the layout of UI elements
+        - _setup_ui: Set up the dialog UI elements
+        - _show_error: Display an error message box
+        - ok_action: Validates input fields and adds the new tag if valid
+        - on_activated: Updates form fields when tag type is changed
     """
 
-    # Signal that will be emitted at the end to tell that the project
-    # has been created
+    # Signal emitted when tag is successfully added
     signal_add_tag = pyqtSignal()
 
     def __init__(self, databrowser, project):
-        """Initialization.
-
-        :param project: current project in the software
-        :param databrowser: data browser instance of the software
-        :param type: type of the tag to add
-
         """
+        Initialize the dialog for adding a new tag.
 
+        :param databrowser: The data browser instance
+        :param project: The current project in the software
+        """
         super().__init__()
         self.project = project
         self.databrowser = databrowser
-        self.type = FIELD_TYPE_STRING  # Type is string by default
-
+        # Default tag type is string
+        self.type = FIELD_TYPE_STRING
         self.setObjectName("Add a tag")
+        self.setWindowTitle("Add a tag")
+        self.setMinimumWidth(700)
+        self.setModal(True)
+        self._setup_ui()
+        self._connect_signals()
 
-        # The 'OK' push button
-        self.push_button_ok = QtWidgets.QPushButton(self)
-        self.push_button_ok.setObjectName("push_button_ok")
-
-        # The 'Tag name' label
-        self.label_tag_name = QtWidgets.QLabel(self)
-        self.label_tag_name.setTextFormat(QtCore.Qt.AutoText)
-        self.label_tag_name.setObjectName("tag_name")
-
-        # The 'Tag name' text edit
-        self.text_edit_tag_name = QtWidgets.QLineEdit(self)
-        self.text_edit_tag_name.setObjectName("textEdit_tag_name")
-
-        # The 'Default value' label
-        self.label_default_value = QtWidgets.QLabel(self)
-        self.label_default_value.setTextFormat(QtCore.Qt.AutoText)
-        self.label_default_value.setObjectName("default_value")
-
-        # The 'Default value' text edit
-        self.text_edit_default_value = DefaultValueQLineEdit(self)
-        self.text_edit_default_value.setObjectName("textEdit_default_value")
-        # By default the tag is a string
-        self.text_edit_default_value.setText("Undefined")
-
-        # The 'Description value' label
-        self.label_description_value = QtWidgets.QLabel(self)
-        self.label_description_value.setTextFormat(QtCore.Qt.AutoText)
-        self.label_description_value.setObjectName("description_value")
-
-        # The 'Description value' text edit
-        self.text_edit_description_value = QtWidgets.QLineEdit(self)
-        self.text_edit_description_value.setObjectName(
-            "textEdit_description_value"
-        )
-
-        # The 'Unit value' label
-        self.label_unit_value = QtWidgets.QLabel(self)
-        self.label_unit_value.setTextFormat(QtCore.Qt.AutoText)
-        self.label_unit_value.setObjectName("unit_value")
-
-        # The 'Unit value' text edit
-        self.combo_box_unit = QtWidgets.QComboBox(self)
-        self.combo_box_unit.setObjectName("combo_box_unit")
-        self.combo_box_unit.addItem(None)
-        self.combo_box_unit.addItem(TAG_UNIT_MS)
-        self.combo_box_unit.addItem(TAG_UNIT_MM)
-        self.combo_box_unit.addItem(TAG_UNIT_MHZ)
-        self.combo_box_unit.addItem(TAG_UNIT_HZPIXEL)
-        self.combo_box_unit.addItem(TAG_UNIT_DEGREE)
-
-        # The 'Type' label
-        self.label_type = QtWidgets.QLabel(self)
-        self.label_type.setTextFormat(QtCore.Qt.AutoText)
-        self.label_type.setObjectName("type")
-
-        # The 'Type' text edit
-        self.combo_box_type = QtWidgets.QComboBox(self)
-        self.combo_box_type.setObjectName("combo_box_type")
-        self.combo_box_type.addItem("String")
-        self.combo_box_type.addItem("Integer")
-        self.combo_box_type.addItem("Float")
-        self.combo_box_type.addItem("Boolean")
-        self.combo_box_type.addItem("Date")
-        self.combo_box_type.addItem("Datetime")
-        self.combo_box_type.addItem("Time")
-        self.combo_box_type.addItem("String List")
-        self.combo_box_type.addItem("Integer List")
-        self.combo_box_type.addItem("Float List")
-        self.combo_box_type.addItem("Boolean List")
-        self.combo_box_type.addItem("Date List")
-        self.combo_box_type.addItem("Datetime List")
-        self.combo_box_type.addItem("Time List")
+    def _connect_signals(self):
+        """Connect signals to slots."""
+        self.push_button_ok.clicked.connect(self.ok_action)
         self.combo_box_type.currentTextChanged.connect(self.on_activated)
 
-        # Layouts
+    def _setup_layouts(self):
+        """Set up the layout of UI elements."""
+        # Labels column
         v_box_labels = QVBoxLayout()
         v_box_labels.addWidget(self.label_tag_name)
         v_box_labels.addWidget(self.label_default_value)
         v_box_labels.addWidget(self.label_description_value)
         v_box_labels.addWidget(self.label_unit_value)
         v_box_labels.addWidget(self.label_type)
-
+        # Edit fields column
         v_box_edits = QVBoxLayout()
         v_box_edits.addWidget(self.text_edit_tag_name)
         default_layout = QHBoxLayout()
@@ -740,133 +706,184 @@ class PopUpAddTag(QDialog):
         v_box_edits.addWidget(self.text_edit_description_value)
         v_box_edits.addWidget(self.combo_box_unit)
         v_box_edits.addWidget(self.combo_box_type)
-
+        # Main content layout
         h_box_top = QHBoxLayout()
         h_box_top.addLayout(v_box_labels)
         h_box_top.addSpacing(50)
         h_box_top.addLayout(v_box_edits)
-
+        # OK button layout
         h_box_ok = QHBoxLayout()
         h_box_ok.addStretch(1)
         h_box_ok.addWidget(self.push_button_ok)
-
+        # Main dialog layout
         v_box_total = QVBoxLayout()
         v_box_total.addLayout(h_box_top)
         v_box_total.addLayout(h_box_ok)
-
         self.setLayout(v_box_total)
 
-        # Filling the title of the labels and push buttons
+    def _setup_ui(self):
+        """Set up the dialog UI elements."""
         _translate = QtCore.QCoreApplication.translate
+        # Create UI components
+        self.push_button_ok = QtWidgets.QPushButton(self)
+        self.push_button_ok.setObjectName("push_button_ok")
         self.push_button_ok.setText(_translate("Add a tag", "OK"))
-        self.label_tag_name.setText(_translate("Add a tag", "Tag name:"))
-        self.label_default_value.setText(
-            _translate("Add a tag", "Default value:")
+        # Tag name components
+        self.label_tag_name = QtWidgets.QLabel(
+            _translate("Add a tag", "Tag name:"), self
         )
-        self.label_description_value.setText(
-            _translate("Add a tag", "Description:")
+        self.label_tag_name.setTextFormat(QtCore.Qt.AutoText)
+        self.label_tag_name.setObjectName("tag_name")
+        self.text_edit_tag_name = QtWidgets.QLineEdit(self)
+        self.text_edit_tag_name.setObjectName("textEdit_tag_name")
+        # Default value components
+        self.label_default_value = QtWidgets.QLabel(
+            _translate("Add a tag", "Default value:"), self
         )
-        self.label_unit_value.setText(_translate("Add a tag", "Unit:"))
-        self.label_type.setText(_translate("Add a tag", "Tag type:"))
+        self.label_default_value.setTextFormat(QtCore.Qt.AutoText)
+        self.label_default_value.setObjectName("default_value")
+        self.text_edit_default_value = DefaultValueQLineEdit(self)
+        self.text_edit_default_value.setObjectName("textEdit_default_value")
+        # Default value for string type
+        self.text_edit_default_value.setText("Undefined")
+        # Description components
+        self.label_description_value = QtWidgets.QLabel(
+            _translate("Add a tag", "Description:"), self
+        )
+        self.label_description_value.setTextFormat(QtCore.Qt.AutoText)
+        self.label_description_value.setObjectName("description_value")
+        self.text_edit_description_value = QtWidgets.QLineEdit(self)
+        self.text_edit_description_value.setObjectName(
+            "textEdit_description_value"
+        )
+        # Unit components
+        self.label_unit_value = QtWidgets.QLabel(
+            _translate("Add a tag", "Unit:"), self
+        )
+        self.label_unit_value.setTextFormat(QtCore.Qt.AutoText)
+        self.label_unit_value.setObjectName("unit_value")
+        self.combo_box_unit = QtWidgets.QComboBox(self)
+        self.combo_box_unit.setObjectName("combo_box_unit")
+        self.combo_box_unit.addItems(
+            [
+                None,
+                TAG_UNIT_MS,
+                TAG_UNIT_MM,
+                TAG_UNIT_MHZ,
+                TAG_UNIT_HZPIXEL,
+                TAG_UNIT_DEGREE,
+            ]
+        )
+        # Type components
+        self.label_type = QtWidgets.QLabel(
+            _translate("Add a tag", "Tag type:"), self
+        )
+        self.label_type.setTextFormat(QtCore.Qt.AutoText)
+        self.label_type.setObjectName("type")
+        self.combo_box_type = QtWidgets.QComboBox(self)
+        self.combo_box_type.setObjectName("combo_box_type")
+        self.combo_box_type.addItems(
+            [
+                "String",
+                "Integer",
+                "Float",
+                "Boolean",
+                "Date",
+                "Datetime",
+                "Time",
+                "String List",
+                "Integer List",
+                "Float List",
+                "Boolean List",
+                "Date List",
+                "Datetime List",
+                "Time List",
+            ]
+        )
+        # Set up layouts
+        self._setup_layouts()
 
-        # Connecting the OK push button
-        self.push_button_ok.clicked.connect(self.ok_action)
+    def _show_error(self, text, informative_text):
+        """
+        Display an error message box.
 
-        self.setMinimumWidth(700)
-        self.setWindowTitle("Add a tag")
-        self.setModal(True)
+        :param text: The main error message text
+        :param informative_text: The additional informative text
+        """
+        self.msg = QMessageBox()
+        self.msg.setIcon(QMessageBox.Critical)
+        self.msg.setText(text)
+        self.msg.setInformativeText(informative_text)
+        self.msg.setWindowTitle("Error")
+        self.msg.setStandardButtons(QMessageBox.Close)
+        self.msg.exec()
 
     def ok_action(self):
-        """Verifies that each field is correct and send the new tag
-        to the data browser.
+        """Validate inputs and add the new tag if all fields are correct.
 
+        Performs validation on the tag name, type and default value to ensure
+        they are valid before adding the tag to the project.
         """
-        # import check_value_type only here to prevent circular import issue
+        # Import check_value_type here to prevent circular import issues
         from populse_mia.utils import check_value_type
 
-        name_already_exists = False
+        # Get existing tag names
+        with self.project.database.data() as database_data:
+            existing_tags = database_data.get_field_names(COLLECTION_CURRENT)
 
-        # Tag name checked
-        if (
-            self.text_edit_tag_name.text()
-            in self.project.session.get_fields_names(COLLECTION_CURRENT)
-        ):
-            name_already_exists = True
+        tag_name = self.text_edit_tag_name.text()
+        default_value = self.text_edit_default_value.text()
 
+        # Validation checks
         # Tag name can't be empty
-        if self.text_edit_tag_name.text() == "":
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("The tag name cannot be empty")
-            self.msg.setInformativeText("Please enter a tag name")
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Close)
-            self.msg.exec()
+        if not tag_name:
+            self._show_error(
+                "The tag name cannot be empty", "Please enter a tag name"
+            )
             return
 
         # Tag name can't exist already
-        elif name_already_exists:
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("This tag name already exists")
-            self.msg.setInformativeText("Please select another tag name")
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Close)
-            self.msg.exec()
+        if tag_name in existing_tags:
+            self._show_error(
+                "This tag name already exists",
+                "Please select another tag name",
+            )
             return
 
-        # If the tag name is PatientName, the default value cannot contain
-        # spaces and the type must be string
-        if self.text_edit_tag_name.text() == "PatientName":
+        # Special validation for PatientName tag
+        if tag_name == "PatientName":
 
             if self.type != "string":
-                self.msg = QMessageBox()
-                self.msg.setIcon(QMessageBox.Critical)
-                self.msg.setText(
-                    "PatientName is a special tag that must be "
-                    "a character string containing no spaces!"
+                self._show_error(
+                    "PatientName is a special tag that must be a character "
+                    "string containing no spaces!",
+                    "Please select string type.",
                 )
-                self.msg.setInformativeText("Please select string type.")
-                self.msg.setWindowTitle("Error")
-                self.msg.setStandardButtons(QMessageBox.Close)
-                self.msg.exec()
                 return
 
+            # Remove spaces from PatientName default value
             self.text_edit_default_value.setText(
-                self.text_edit_default_value.text().replace(" ", "")
+                default_value.replace(" ", "")
             )
+            default_value = self.text_edit_default_value.text()
 
-        # Default value checked
-        wrong_default_value_type = not check_value_type(
-            self.text_edit_default_value.text(), self.type, False
-        )
-
-        # The default value must be valid
-        if wrong_default_value_type:
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("Invalid default value")
-            self.msg.setInformativeText(
-                "The default value '{0}' is invalid "
-                "with the '{1}' type!".format(
-                    self.text_edit_default_value.text(), self.type
-                )
+        # Validate default value type
+        if not check_value_type(default_value, self.type, False):
+            self._show_error(
+                "Invalid default value",
+                f"The default value '{default_value}' is invalid "
+                f"with the '{self.type}' type!",
             )
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Close)
-            self.msg.exec()
             return
 
-        # Everything is Ok
+        # All validations passed, add the tag
         self.accept()
-        self.new_tag_name = self.text_edit_tag_name.text()
-        self.new_default_value = self.text_edit_default_value.text()
+        # Store values for databrowser
+        self.new_tag_name = tag_name
+        self.new_default_value = default_value
         self.new_tag_description = self.text_edit_description_value.text()
-        self.new_tag_unit = self.combo_box_unit.currentText()
-
-        if self.new_tag_unit == "":
-            self.new_tag_unit = None
-
+        self.new_tag_unit = self.combo_box_unit.currentText() or None
+        # Add tag to project
         self.databrowser.add_tag_infos(
             self.new_tag_name,
             self.new_default_value,
@@ -877,270 +894,302 @@ class PopUpAddTag(QDialog):
         self.close()
 
     def on_activated(self, text):
-        """Type updated.
-
-        :param text: New type
-
         """
+        Update the default value when the tag type changes.
 
-        if text == "String":
-            self.type = FIELD_TYPE_STRING
-            self.text_edit_default_value.setText("Undefined")
-        elif text == "Integer":
-            self.type = FIELD_TYPE_INTEGER
-            self.text_edit_default_value.setText("0")
-        elif text == "Float":
-            self.type = FIELD_TYPE_FLOAT
-            self.text_edit_default_value.setText("0.0")
-        elif text == "Boolean":
-            self.type = FIELD_TYPE_BOOLEAN
-            self.text_edit_default_value.setText("True")
-        elif text == "Date":
-            self.type = FIELD_TYPE_DATE
-            date_value = datetime.now()
-            date_format = date_value.strftime("%d/%m/%Y")
-            self.text_edit_default_value.setText(date_format)
-        elif text == "Datetime":
-            self.type = FIELD_TYPE_DATETIME
-            datetime_value = datetime.now()
-            datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
-            self.text_edit_default_value.setText(datetime_format)
-        elif text == "Time":
-            self.type = FIELD_TYPE_TIME
-            time_value = datetime.now()
-            time_format = time_value.strftime("%H:%M:%S.%f")
-            self.text_edit_default_value.setText(time_format)
-        elif text == "String List":
-            self.type = FIELD_TYPE_LIST_STRING
-            self.text_edit_default_value.setText("['Undefined', 'Undefined']")
-        elif text == "Integer List":
-            self.type = FIELD_TYPE_LIST_INTEGER
-            self.text_edit_default_value.setText("[0, 0]")
-        elif text == "Float List":
-            self.type = FIELD_TYPE_LIST_FLOAT
-            self.text_edit_default_value.setText("[0.0, 0.0]")
-        elif text == "Boolean List":
-            self.type = FIELD_TYPE_LIST_BOOLEAN
-            self.text_edit_default_value.setText("[True, True]")
-        elif text == "Date List":
-            self.type = FIELD_TYPE_LIST_DATE
-            date_value = datetime.now()
-            date_format = date_value.strftime("%d/%m/%Y")
-            self.text_edit_default_value.setText(
-                "{}".format([date_format, date_format])
-            )
-        elif text == "Datetime List":
-            self.type = FIELD_TYPE_LIST_DATETIME
-            datetime_value = datetime.now()
-            datetime_format = datetime_value.strftime("%d/%m/%Y %H:%M:%S.%f")
-            self.text_edit_default_value.setText(
-                "{}".format([datetime_format, datetime_format])
-            )
-        elif text == "Time List":
-            self.type = FIELD_TYPE_LIST_TIME
-            time_value = datetime.now()
-            time_format = time_value.strftime("%H:%M:%S.%f")
-            self.text_edit_default_value.setText(
-                "{}".format([time_format, time_format])
-            )
+        :param text: The new type selected from combo box
+        """
+        type_mapping = {
+            "String": (FIELD_TYPE_STRING, "Undefined"),
+            "Integer": (FIELD_TYPE_INTEGER, "0"),
+            "Float": (FIELD_TYPE_FLOAT, "0.0"),
+            "Boolean": (FIELD_TYPE_BOOLEAN, "True"),
+            "Date": (FIELD_TYPE_DATE, datetime.now().strftime("%d/%m/%Y")),
+            "Datetime": (
+                FIELD_TYPE_DATETIME,
+                datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f"),
+            ),
+            "Time": (FIELD_TYPE_TIME, datetime.now().strftime("%H:%M:%S.%f")),
+        }
+
+        # Handle list types separately to avoid repetition
+        list_types = {
+            "String List": (
+                FIELD_TYPE_LIST_STRING,
+                "['Undefined', 'Undefined']",
+            ),
+            "Integer List": (FIELD_TYPE_LIST_INTEGER, "[0, 0]"),
+            "Float List": (FIELD_TYPE_LIST_FLOAT, "[0.0, 0.0]"),
+            "Boolean List": (FIELD_TYPE_LIST_BOOLEAN, "[True, True]"),
+        }
+
+        # Handle date-based list types which need current time formatting
+        now = datetime.now()
+        date_list_types = {
+            "Date List": (
+                FIELD_TYPE_LIST_DATE,
+                f"['{now.strftime('%d/%m/%Y')}',"
+                f" '{now.strftime('%d/%m/%Y')}']",
+            ),
+            "Datetime List": (
+                FIELD_TYPE_LIST_DATETIME,
+                f"['{now.strftime('%d/%m/%Y %H:%M:%S.%f')}',"
+                f" '{now.strftime('%d/%m/%Y %H:%M:%S.%f')}']",
+            ),
+            "Time List": (
+                FIELD_TYPE_LIST_TIME,
+                f"['{now.strftime('%H:%M:%S.%f')}',"
+                f" '{now.strftime('%H:%M:%S.%f')}']",
+            ),
+        }
+        # Combine all type mappings
+        all_types = {**type_mapping, **list_types, **date_list_types}
+
+        if text in all_types:
+            self.type, default_value = all_types[text]
+            self.text_edit_default_value.setText(default_value)
 
 
 class PopUpCloneTag(QDialog):
-    """Is called when the user wants to clone a tag to the project.
+    """
+    Dialog for cloning an existing tag with a new name.
 
-    .. Methods:
-        - ok_action: verifies the specified name is correct and send the
-           information to the data browser
-        - search_str: matches the searched pattern with the tags of the project
+    This dialog allows users to select an existing tag from the project and
+    clone it with a new name.
 
+    Attributes:
+        signal_clone_tag: Signal emitted when a tag is successfully cloned
+
+    Methods:
+        - _connect_signals: Connect signals to slots
+        - _populate_tag_list: Populate the tag list with available tags
+        - _setup_ui: Set up the dialog UI elements
+        - _show_error: Display an error message box
+        - ok_action: Validates the new tag name and clones the selected tag
+        - search_str: Filters the tag list based on a search string
     """
 
-    # Signal that will be emitted at the end to tell that the project
-    # has been created
+    # Signal emitted when tag is successfully cloned
     signal_clone_tag = pyqtSignal()
 
     def __init__(self, databrowser, project):
-        """Initialization.
-
-        :param project: current project in the software
-        :param databrowser: data browser instance of the software
-
         """
+        Initialize the dialog for cloning a tag.
 
+        :param databrowser: The data browser instance
+        :param project: The current project in the software
+        """
         super().__init__()
-        self.setWindowTitle("Clone a tag")
-
         self.databrowser = databrowser
         self.project = project
-        self.setModal(True)
-
-        _translate = QtCore.QCoreApplication.translate
+        self.setWindowTitle("Clone a tag")
         self.setObjectName("Clone a tag")
+        self.setModal(True)
+        self._setup_ui()
+        self._populate_tag_list(project)
+        self._connect_signals(project)
 
-        # The 'OK' push button
-        self.push_button_ok = QtWidgets.QPushButton(self)
-        self.push_button_ok.setObjectName("push_button_ok")
-        self.push_button_ok.setText(_translate("Clone a tag", "OK"))
+    def _connect_signals(self, project):
+        """Connect signals to slots.
 
-        # The 'New tag name' text edit
-        self.line_edit_new_tag_name = QtWidgets.QLineEdit(self)
-        self.line_edit_new_tag_name.setObjectName("lineEdit_new_tag_name")
+        :param project: The current project
+        """
+        self.push_button_ok.clicked.connect(lambda: self.ok_action(project))
+        self.search_bar.textChanged.connect(partial(self.search_str, project))
 
-        # The 'New tag name' label
-        self.label_new_tag_name = QtWidgets.QLabel(self)
+    def _populate_tag_list(self, project):
+        """
+        Populate the tag list with available tags from the project.
+
+        :param project: The current project
+        """
+        _translate = QtCore.QCoreApplication.translate
+
+        # Get all tags except system tags
+        with project.database.data() as database_data:
+            tags_list = database_data.get_field_names(COLLECTION_CURRENT)
+
+        tags_list.remove(TAG_CHECKSUM)
+        tags_list.remove(TAG_HISTORY)
+
+        # Add tags to list widget
+        for tag in tags_list:
+            item = QtWidgets.QListWidgetItem(_translate("Dialog", tag))
+            self.list_widget_tags.addItem(item)
+
+        self.list_widget_tags.sortItems()
+
+    def _setup_ui(self):
+        """Set up the dialog UI elements."""
+        _translate = QtCore.QCoreApplication.translate
+        # New tag name components
+        self.label_new_tag_name = QtWidgets.QLabel(
+            _translate("Clone a tag", "New tag name:"), self
+        )
         self.label_new_tag_name.setTextFormat(QtCore.Qt.AutoText)
         self.label_new_tag_name.setObjectName("label_new_tag_name")
-        self.label_new_tag_name.setText(
-            _translate("Clone a tag", "New tag name:")
+        self.line_edit_new_tag_name = QtWidgets.QLineEdit(self)
+        self.line_edit_new_tag_name.setObjectName("lineEdit_new_tag_name")
+        # OK button
+        self.push_button_ok = QtWidgets.QPushButton(
+            _translate("Clone a tag", "OK"), self
         )
-
+        self.push_button_ok.setObjectName("push_button_ok")
+        # Bottom row layout
         hbox_buttons = QHBoxLayout()
         hbox_buttons.addWidget(self.label_new_tag_name)
         hbox_buttons.addWidget(self.line_edit_new_tag_name)
         hbox_buttons.addStretch(1)
         hbox_buttons.addWidget(self.push_button_ok)
-
-        # The "Tag list" label
-        self.label_tag_list = QtWidgets.QLabel(self)
+        # Tag list components
+        self.label_tag_list = QtWidgets.QLabel(
+            _translate("Clone a tag", "Available tags:"), self
+        )
         self.label_tag_list.setTextFormat(QtCore.Qt.AutoText)
         self.label_tag_list.setObjectName("label_tag_list")
-        self.label_tag_list.setText(
-            _translate("Clone a tag", "Available tags:")
-        )
-
         self.search_bar = QtWidgets.QLineEdit(self)
         self.search_bar.setObjectName("lineEdit_search_bar")
         self.search_bar.setPlaceholderText("Search")
-        self.search_bar.textChanged.connect(partial(self.search_str, project))
-
+        # Top row layout
         hbox_top = QHBoxLayout()
         hbox_top.addWidget(self.label_tag_list)
         hbox_top.addStretch(1)
         hbox_top.addWidget(self.search_bar)
-
-        # The list of tags
+        # Tag list widget
         self.list_widget_tags = QtWidgets.QListWidget(self)
         self.list_widget_tags.setObjectName("listWidget_tags")
         self.list_widget_tags.setSelectionMode(
             QtWidgets.QAbstractItemView.SingleSelection
         )
-
+        # Main dialog layout
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_top)
         vbox.addWidget(self.list_widget_tags)
         vbox.addLayout(hbox_buttons)
-
         self.setLayout(vbox)
 
-        tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
-        tags_lists.remove(TAG_CHECKSUM)
-        tags_lists.remove(TAG_HISTORY)
-        for tag in tags_lists:
-            item = QtWidgets.QListWidgetItem()
-            self.list_widget_tags.addItem(item)
-            item.setText(_translate("Dialog", tag))
-        self.list_widget_tags.sortItems()
+    def _show_error(self, text, informative_text):
+        """Display an error message box.
 
-        self.setLayout(vbox)
-
-        # Connecting the OK push button
-        self.push_button_ok.clicked.connect(lambda: self.ok_action(project))
+        :param text: The main error message text
+        :param informative_text: The additional informative text
+        """
+        self.msg = QMessageBox()
+        self.msg.setIcon(QMessageBox.Critical)
+        self.msg.setText(text)
+        self.msg.setInformativeText(informative_text)
+        self.msg.setWindowTitle("Error")
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.buttonClicked.connect(self.msg.close)
+        self.msg.show()
 
     def ok_action(self, project):
-        """Verifies the specified name is correct and send the
-          information to the data browser.
-
-        :param project: current project
-
         """
+        Validate new tag name and clone the selected tag if valid.
 
-        name_already_exists = False
-        for tag in project.session.get_fields(COLLECTION_CURRENT):
-            if tag.field_name == self.line_edit_new_tag_name.text():
-                name_already_exists = True
-        if name_already_exists:
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("This tag name already exists")
-            self.msg.setInformativeText("Please select another tag name")
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
-        elif self.line_edit_new_tag_name.text() == "":
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("The tag name can't be empty")
-            self.msg.setInformativeText("Please select a tag name")
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
-        elif len(self.list_widget_tags.selectedItems()) == 0:
-            self.msg = QMessageBox()
-            self.msg.setIcon(QMessageBox.Critical)
-            self.msg.setText("The tag to clone must be selected")
-            self.msg.setInformativeText("Please select a tag to clone")
-            self.msg.setWindowTitle("Error")
-            self.msg.setStandardButtons(QMessageBox.Ok)
-            self.msg.buttonClicked.connect(self.msg.close)
-            self.msg.show()
+        :param project: The current project
+        """
+        new_tag_name = self.line_edit_new_tag_name.text()
+        selected_items = self.list_widget_tags.selectedItems()
+
+        # Check if tag name already exists
+        with project.database.data() as database_data:
+            existing_tags = [
+                tag["index"].split("|")[1]
+                for tag in database_data.get_field_attributes(
+                    COLLECTION_CURRENT
+                )
+            ]
+
+        if new_tag_name in existing_tags:
+            self._show_error(
+                "This tag name already exists",
+                "Please select another tag name",
+            )
+
+        elif not new_tag_name:
+            self._show_error(
+                "The tag name can't be empty", "Please select a tag name"
+            )
+
+        elif not selected_items:
+            self._show_error(
+                "The tag to clone must be selected",
+                "Please select a tag to clone",
+            )
+
         else:
             self.accept()
-            self.tag_to_replace = self.list_widget_tags.selectedItems()[
-                0
-            ].text()
-            self.new_tag_name = self.line_edit_new_tag_name.text()
+            self.tag_to_replace = selected_items[0].text()
+            self.new_tag_name = new_tag_name
             self.databrowser.clone_tag_infos(
                 self.tag_to_replace, self.new_tag_name
             )
             self.close()
 
-    def search_str(self, project, str_search):
-        """Matches the searched pattern with the tags of the project.
+    def search_str(self, project, search_text):
+        """Filter the tag list based on the search string.
 
-        :param project: current project
-        :param str_search: string pattern to search
-
+        :param project: The current project
+        :param search_text: The search string to filter by
         """
-
         _translate = QtCore.QCoreApplication.translate
-        return_list = []
-        tags_lists = project.session.get_fields_names(COLLECTION_CURRENT)
-        tags_lists.remove(TAG_CHECKSUM)
-        tags_lists.remove(TAG_HISTORY)
-        if str_search != "":
-            for tag in tags_lists:
-                if str_search.upper() in tag.upper():
-                    return_list.append(tag)
-        else:
-            for tag in tags_lists:
-                return_list.append(tag)
 
+        # Get all tags except system tags
+        with project.database.data() as database_data:
+            all_tags = database_data.get_field_names(COLLECTION_CURRENT)
+
+        all_tags.remove(TAG_CHECKSUM)
+        all_tags.remove(TAG_HISTORY)
+
+        # Filter tags by search text (case-insensitive)
+        if search_text:
+            search_text = search_text.upper()
+            filtered_tags = [
+                tag for tag in all_tags if search_text in tag.upper()
+            ]
+
+        else:
+            filtered_tags = all_tags
+
+        # Update the list widget
         self.list_widget_tags.clear()
-        for tag_name in return_list:
-            item = QtWidgets.QListWidgetItem()
-            self.list_widget_tags.addItem(item)
-            item.setText(_translate("Dialog", tag_name))
+
+        for tag_name in filtered_tags:
+            self.list_widget_tags.addItem(
+                QtWidgets.QListWidgetItem(_translate("Dialog", tag_name))
+            )
+
         self.list_widget_tags.sortItems()
 
 
 class PopUpClosePipeline(QDialog):
-    """Is called when the user closes a pipeline editor that has been modified.
+    """
+    Dialog displayed when closing a modified pipeline editor.
 
-    :param bool_save_as: boolean to True if the pipeline needs to be saved
-    :param bool_exit: boolean to True if we can exit the editor
-    :param save_as_signal: signal emitted to save the pipeline under
-                           another name
-    :param do_not_save_signal: signal emitted to close the editor
-    :param cancel_signal: signal emitted to cancel the action
+    This dialog asks the user whether they want to save changes before
+    closing the pipeline editor. It provides three options: save, don't
+    save, or cancel.
+
+    Signals:
+        save_as_signal: Emitted when the user chooses to save the pipeline.
+        do_not_save_signal: Emitted when the user chooses not to save
+                            the pipeline.
+        cancel_signal: Emitted when the user cancels the closing action.
+
+    Attributes:
+        bool_save_as (bool): Indicates if the pipeline should be saved
+                             under a new name.
+        bool_exit (bool): Indicates if the editor can be closed.
+        pipeline_name (str): Name of the pipeline being edited.
 
     .. Methods:
+        - _connect_signals: Connect button signals to their respective slots
+        - _setup_ui: Set up the dialog's user interface
         - can_exit: returns the value of bool_exit
         - cancel_clicked: makes the actions to cancel the action
         - do_not_save_clicked: makes the actions not to save the pipeline
         - save_as_clicked: makes the actions to save the pipeline
-
     """
 
     save_as_signal = pyqtSignal()
@@ -1148,275 +1197,375 @@ class PopUpClosePipeline(QDialog):
     cancel_signal = pyqtSignal()
 
     def __init__(self, pipeline_name):
-        """Initialization.
+        """
+        Initialize the dialog with the pipeline name.
 
-        :param pipeline_name: name of the pipeline (basename)
+        :param pipeline_name (str):  Name of the pipeline (basename).
 
         """
-
         super().__init__()
-
         self.pipeline_name = pipeline_name
-
         self.bool_exit = False
         self.bool_save_as = False
+        self._setup_ui()
+        self._connect_signals()
 
-        self.setWindowTitle("Confirm pipeline closing")
-
-        label = QLabel(self)
-        label.setText(
-            "Do you want to close the pipeline without saving "
-            + self.pipeline_name
-            + "?"
-        )
-
-        self.push_button_save_as = QPushButton("Save", self)
-        self.push_button_do_not_save = QPushButton("Do not save", self)
-        self.push_button_cancel = QPushButton("Cancel", self)
-
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        hbox.addWidget(self.push_button_save_as)
-        hbox.addWidget(self.push_button_do_not_save)
-        hbox.addWidget(self.push_button_cancel)
-        hbox.addStretch(1)
-
-        vbox = QVBoxLayout()
-        vbox.addWidget(label)
-        vbox.addLayout(hbox)
-        self.setLayout(vbox)
-
+    def _connect_signals(self):
+        """
+        Connect button signals to their respective slots.
+        """
         self.push_button_save_as.clicked.connect(self.save_as_clicked)
         self.push_button_do_not_save.clicked.connect(self.do_not_save_clicked)
         self.push_button_cancel.clicked.connect(self.cancel_clicked)
 
-    def can_exit(self):
-        """Returns the value of bool_exit.
-
-        :return: bool_exit value
-
+    def _setup_ui(self):
         """
+        Set up the dialog's user interface.
+        """
+        self.setWindowTitle("Confirm pipeline closing")
+        label = QLabel(
+            f"Do you want to close the pipeline without "
+            f"saving {self.pipeline_name}?",
+            self,
+        )
+        self.push_button_save_as = QPushButton("Save", self)
+        self.push_button_do_not_save = QPushButton("Do not save", self)
+        self.push_button_cancel = QPushButton("Cancel", self)
+        # Create button layout
+        button_layout = QHBoxLayout()
+        button_layout.addStretch(1)
+        button_layout.addWidget(self.push_button_save_as)
+        button_layout.addWidget(self.push_button_do_not_save)
+        button_layout.addWidget(self.push_button_cancel)
+        button_layout.addStretch(1)
+        # Create main layout
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(label)
+        main_layout.addLayout(button_layout)
+        self.setLayout(main_layout)
 
+    def can_exit(self):
+        """Check if the editor can be closed.
+
+        Returns (bool): True if the editor can be closed, False otherwise.
+        """
         return self.bool_exit
 
     def cancel_clicked(self):
-        """Makes the actions to cancel the action."""
+        """Handle the cancel button click.
 
+        Sets bool_exit to False, emits cancel_signal, and closes the dialog.
+        """
         self.bool_exit = False
+        self.cancel_signal.emit()
         self.close()
 
     def do_not_save_clicked(self):
-        """Makes the actions not to save the pipeline."""
+        """Handle the 'Do not save' button click.
 
+        Sets bool_exit to True, emits do_not_save_signal,
+        and closes the dialog.
+        """
         self.bool_exit = True
+        self.do_not_save_signal.emit()
         self.close()
 
     def save_as_clicked(self):
-        """Makes the actions to save the pipeline."""
+        """Handle the 'Save' button click.
 
-        self.save_as_signal.emit()
+        Sets bool_save_as and bool_exit to True, emits save_as_signal,
+        and closes the dialog.
+        """
         self.bool_save_as = True
         self.bool_exit = True
+        self.save_as_signal.emit()
         self.close()
 
 
 class PopUpDataBrowserCurrentSelection(QDialog):
-    """Is called to display the current data_browser selection.
+    """
+    Dialog to display and confirm the current data browser selection.
+
+    This dialog shows a table of the currently selected document
+    from the data browser and allows the user to confirm or cancel the
+    selection. When confirmed, it updates the scan_list attribute of
+    relevant components in the main window.
+
+    Attributes:
+        project: Current project in the software.
+        databrowser: Data browser instance of the software.
+        filter: List of the current documents in the data browser.
+        main_window: Main window of the software.
 
     .. Methods:
+        - _set_dialog_size: Set the dialog size based on screen resolution
+        - _setup_ui: Set up the dialog's user interface
         - ok_clicked: updates the "scan_list" attribute of several widgets
 
     """
 
     def __init__(self, project, databrowser, filter, main_window):
-        """Initialization.
+        """
+        Initialize the dialog with the current project and selection data.
 
-        :param project: current project in the software
-        :param databrowser: data browser instance of the software
-        :param filter: list of the current documents in the data browser
-        :param main_window: main window of the software
+        :param project: Current project in the software
+        :param databrowser: Data browser instance of the software
+        :param filter (list): List of the current documents in the data
+                              browser
+        :param main_window: Main window of the software
 
         """
-
         super().__init__()
         self.project = project
         self.databrowser = databrowser
         self.filter = filter
         self.main_window = main_window
+        self._setup_ui()
+
+    def _set_dialog_size(self):
+        """Set the dialog size based on screen resolution."""
+        screen_resolution = QApplication.instance().desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        self.setMinimumWidth(round(0.5 * width))
+        self.setMinimumHeight(round(0.8 * height))
+
+    def _setup_ui(self):
+        """Set up the dialog's user interface."""
         self.setWindowTitle("Confirm the selection")
         self.setModal(True)
-
-        vbox_layout = QVBoxLayout()
-
-        # Adding databrowser table
+        # Create layout
+        layout = QVBoxLayout()
+        # Create and configure data browser table
         databrowser_table = data_browser.TableDataBrowser(
             self.project, self.databrowser, [TAG_FILENAME], False, False
         )
         old_scan_list = databrowser_table.scans_to_visualize
         databrowser_table.scans_to_visualize = self.filter
         databrowser_table.update_visualized_rows(old_scan_list)
+        # Create buttons
         buttons = QDialogButtonBox(
             QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         )
-        vbox_layout.addWidget(databrowser_table)
-        vbox_layout.addWidget(buttons)
         buttons.accepted.connect(self.ok_clicked)
         buttons.rejected.connect(self.close)
-        self.setLayout(vbox_layout)
-        screen_resolution = QApplication.instance().desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
-        self.setMinimumWidth(round(0.5 * width))
-        self.setMinimumHeight(round(0.8 * height))
+        # Add widgets to layout
+        layout.addWidget(databrowser_table)
+        layout.addWidget(buttons)
+        self.setLayout(layout)
+        # Set dialog size based on screen resolution
+        self._set_dialog_size()
 
     def ok_clicked(self):
-        """Updates the "scan_list" attribute of several widgets."""
+        """
+        Update the scan_list attribute of components when OK is clicked.
 
-        self.main_window.pipeline_manager.scan_list = self.filter
-        self.main_window.pipeline_manager.nodeController.scan_list = (
-            self.filter
-        )
-        self.main_window.pipeline_manager.pipelineEditorTabs.scan_list = (
-            self.filter
-        )
-        self.main_window.pipeline_manager.iterationTable.scan_list = (
-            self.filter
-        )
+        This method propagates the current filter (selected documents)
+        to various components in the main window's pipeline manager, and
+        marks the data as sent in the data browser before closing the dialog.
+        """
+        # Update scan_list in all required components
+        pipeline_manager = self.main_window.pipeline_manager
+        components = [
+            pipeline_manager,
+            pipeline_manager.nodeController,
+            pipeline_manager.pipelineEditorTabs,
+            pipeline_manager.iterationTable,
+        ]
+
+        for component in components:
+            component.scan_list = self.filter
+
         self.databrowser.data_sent = True
         self.close()
 
 
 class PopUpDeletedProject(QMessageBox):
-    """Indicate the names of deleted project when the software starts."""
+    """
+    Message box that displays a list of deleted, renamed, or moved projects.
+
+    This dialog appears when the software starts and detects that previously
+    available projects are no longer accessible at their expected locations.
+
+    Attributes:
+        deleted_projects (list): List of project names that are no longer
+                                 accessible.
+
+    .. Methods:
+        - _connect_signals: Connect button signals to their respective slots
+        - _setup_message_box: Configure the message box appearance and
+                              content
+    """
 
     def __init__(self, deleted_projects):
+        """
+        Initialize the message box with a list of inaccessible projects.
+
+        :param deleted_projects (list): List of project names that are no
+                                        longer accessible (deleted, renamed,
+                                        or moved).
+        """
         super().__init__()
+        self.deleted_projects = deleted_projects
+        self._setup_message_box()
+        self._connect_signals()
+        self.exec()
 
-        message = "These projects have been renamed, moved or deleted:\n"
-        for deleted_project in deleted_projects:
-            message += "- {0}\n".format(deleted_project)
+    def _connect_signals(self):
+        """Connect button signals to their respective slots."""
+        self.buttonClicked.connect(self.close)
 
+    def _setup_message_box(self):
+        """Configure the message box appearance and content."""
+        # Create the message with the list of deleted projects
+        project_list = "\n".join(
+            f"- {project}" for project in self.deleted_projects
+        )
+        message = (
+            f"These projects have been renamed, "
+            f"moved or deleted:\n{project_list}"
+        )
+        # Set message box properties
         self.setIcon(QMessageBox.Warning)
         self.setText("Deleted projects")
         self.setInformativeText(message)
         self.setWindowTitle("Warning")
         self.setStandardButtons(QMessageBox.Ok)
-        self.buttonClicked.connect(self.close)
-        self.exec()
 
 
 class PopUpDeleteProject(QDialog):
-    """Is called when the user wants to delete a project.
+    """
+    Dialog for deleting selected projects.
+
+    Allows the user to select and delete one or more projects
+    from the projects directory after confirmation.
 
     .. Methods:
+        - _delete_project: Handles project deletion
+        - _setup_buttons: Creates and configures the dialog buttons
+        - _setup_layout: Configures the main layout of the dialog
+        - _setup_ui: Sets up the user interface components
         - ok_clicked: delete the selected projects after confirmation
 
     """
 
     def __init__(self, main_window):
-        """Initialization."""
+        """
+        Initializes the delete project dialog.
 
+        :param main_window (QMainWindow): The main application window
+        """
         super().__init__()
-
         self.setWindowTitle("Delete project")
-
         config = Config()
         self.project_path = config.getPathToProjectsFolder()
         self.main_window = main_window
+        self._setup_ui()
 
-        project_list = os.listdir(self.project_path)
+    def _delete_project(self, project_path, opened_projects):
+        """
+        Handles project deletion, updating application state accordingly.
 
-        self.v_box = QVBoxLayout()
+        :param project_path (str): The path of the project to delete
+        :param opened_projects (list): The list of currently opened projects
+        """
 
-        # Label
-        self.label = QLabel("Select projects to delete:")
-        self.v_box.addWidget(self.label)
+        if os.path.abspath(self.main_window.project.folder) == os.path.abspath(
+            project_path
+        ):
+            self.main_window.project = Project(None, True)
+            self.main_window.update_project("")
 
-        self.check_boxes = []
-        for project in project_list:
-            if os.path.isdir(os.path.join(self.project_path, project)):
-                check_box = QCheckBox(project)
-                self.check_boxes.append(check_box)
-                self.v_box.addWidget(check_box)
+        project_rel_path = os.path.relpath(project_path)
 
+        if project_rel_path in self.main_window.saved_projects.pathsList:
+            self.main_window.saved_projects.removeSavedProject(
+                project_rel_path
+            )
+            self.main_window.update_recent_projects_actions()
+
+        if project_rel_path in opened_projects:
+            opened_projects.remove(project_rel_path)
+
+        shutil.rmtree(project_path)
+
+    def _setup_buttons(self):
+        """Creates and configures the dialog buttons."""
         self.h_box_bottom = QHBoxLayout()
         self.h_box_bottom.addStretch(1)
-
-        # The 'OK' push button
-        self.push_button_ok = QtWidgets.QPushButton("OK")
+        self.push_button_ok = QPushButton("OK")
         self.push_button_ok.setObjectName("pushButton_ok")
         self.push_button_ok.clicked.connect(self.ok_clicked)
         self.h_box_bottom.addWidget(self.push_button_ok)
-
-        # The 'Cancel' push button
-        self.push_button_cancel = QtWidgets.QPushButton("Cancel")
+        self.push_button_cancel = QPushButton("Cancel")
         self.push_button_cancel.setObjectName("pushButton_cancel")
         self.push_button_cancel.clicked.connect(self.close)
         self.h_box_bottom.addWidget(self.push_button_cancel)
 
+    def _setup_layout(self):
+        """Configures the main layout of the dialog."""
         self.scroll = QScrollArea()
         self.widget = QWidget()
         self.widget.setLayout(self.v_box)
         self.scroll.setWidget(self.widget)
-
         self.final = QVBoxLayout()
         self.final.addWidget(self.scroll)
-
         self.final_layout = QVBoxLayout()
         self.final_layout.addLayout(self.final)
         self.final_layout.addLayout(self.h_box_bottom)
-
         self.setLayout(self.final_layout)
 
-    def ok_clicked(self):
-        """Delete the selected projects after confirmation."""
+    def _setup_ui(self):
+        """Sets up the user interface components."""
+        self.v_box = QVBoxLayout()
+        self.v_box.addWidget(QLabel("Select projects to delete:"))
+        self.check_boxes = [
+            QCheckBox(project)
+            for project in os.listdir(self.project_path)
+            if os.path.isdir(os.path.join(self.project_path, project))
+        ]
 
-        final_values = []
         for check_box in self.check_boxes:
-            if check_box.isChecked():
-                final_values.append(check_box.text())
+            self.v_box.addWidget(check_box)
 
-        reply = None
+        self._setup_buttons()
+        self._setup_layout()
+
+    def ok_clicked(self):
+        """
+        Deletes the selected projects after user confirmation.
+        """
+        selected_projects = [
+            cb.text() for cb in self.check_boxes if cb.isChecked()
+        ]
+
+        if not selected_projects:
+            self.accept()
+            self.close()
+            return
+
         config = Config()
         opened_projects = config.get_opened_projects()
-        for name in final_values:
-            project = os.path.join(self.project_path, name)
-            if reply != QMessageBox.YesToAll and reply != QMessageBox.NoToAll:
-                msgtext = (
-                    "Do you really want to delete the " + name + " project ?"
-                )
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                title = "populse_mia - Warning: Delete project"
-                reply = msg.question(
+        reply = None
+
+        for name in selected_projects:
+            project_path = os.path.join(self.project_path, name)
+
+            if reply not in (QMessageBox.YesToAll, QMessageBox.NoToAll):
+                reply = QMessageBox.warning(
                     self,
-                    title,
-                    msgtext,
+                    "populse_mia - Warning: Delete project",
+                    f"Do you really want to delete the {name} project?",
                     QMessageBox.Yes
                     | QMessageBox.No
                     | QMessageBox.YesToAll
                     | QMessageBox.NoToAll,
                 )
-            if reply == QMessageBox.Yes or reply == QMessageBox.YesToAll:
-                if os.path.abspath(
-                    self.main_window.project.folder
-                ) == os.path.abspath(project):
-                    self.main_window.project = Project(None, True)
-                    self.main_window.update_project("")
-                if (
-                    os.path.relpath(project)
-                    in self.main_window.saved_projects.pathsList
-                ):
-                    self.main_window.saved_projects.removeSavedProject(
-                        os.path.relpath(project)
-                    )
-                    self.main_window.update_recent_projects_actions()
-                if os.path.relpath(project) in opened_projects:
-                    opened_projects.remove(os.path.relpath(project))
 
-                config.set_opened_projects(opened_projects)
-                config.saveConfig()
-                shutil.rmtree(project)
+            if reply in (QMessageBox.Yes, QMessageBox.YesToAll):
+                self._delete_project(project_path, opened_projects)
 
+        config.set_opened_projects(opened_projects)
+        config.saveConfig()
         self.accept()
         self.close()
 
@@ -1544,13 +1693,11 @@ class PopUpInformation(QWidget):
         :param project: current project in the software
 
         """
-
         super().__init__()
         name_label = QLabel("Name: ")
         self.name_value = QLineEdit(project.getName())
-        folder_label = QLabel("Root folder: " + project.folder)
-        date_label = QLabel("Date of creation: " + project.getDate())
-
+        folder_label = QLabel(f"Root folder: {project.folder}")
+        date_label = QLabel(f"Date of creation: {project.getDate()}")
         box = QVBoxLayout()
         row = QHBoxLayout()
         row.addWidget(name_label)
@@ -1559,7 +1706,6 @@ class PopUpInformation(QWidget):
         box.addWidget(folder_label)
         box.addWidget(date_label)
         box.addStretch(1)
-
         self.setLayout(box)
 
 
@@ -1586,29 +1732,27 @@ class PopUpInheritanceDict(QDialog):
         :param iterate: boolean, iteration or not
         """
         super().__init__()
-
         self.setModal(True)
         self.setObjectName("Dialog")
-        self.setWindowTitle("Plug inherited in " + node_name)
+        self.setWindowTitle(f"Plug inherited in {node_name}")
         self.ignore = False
         self.all = False
         self.everything = False
-
         label = (
-            "In the node <b><i>" + node_name + "</i></b>, from which "
-            "input plug, the output plug <b><i>" + plug_name + "</i></b>"
-            " should inherit the tags:"
+            f"In the node <b><i>{node_name}</i></b>, from which input plug, "
+            f"the output plug <b><i>{plug_name}</i></b> should inherit "
+            f"the tags?:"
         )
-
         v_box_values = QtWidgets.QVBoxLayout()
-
         v_box_values.addWidget(QLabel(label))
         checked = True
+
         for key in values:
             radiobutton = QRadioButton(key, self)
             radiobutton.value = values[key]
             radiobutton.key = key
             radiobutton.setChecked(checked)
+
             if checked:
                 self.value = radiobutton.value
                 self.key = radiobutton.key
@@ -1623,7 +1767,7 @@ class PopUpInheritanceDict(QDialog):
         self.push_button_ok.setText("OK")
         self.push_button_ok.clicked.connect(self.ok_clicked)
         self.push_button_ok.setToolTip(
-            "<i>" + plug_name + "</i> will inherit tags from " + self.key
+            f"<i>{plug_name}</i> will inherit tags from {self.key}."
         )
         h_box_buttons.addWidget(self.push_button_ok)
 
@@ -1631,7 +1775,7 @@ class PopUpInheritanceDict(QDialog):
         self.push_button_ignore.setText("Ignore")
         self.push_button_ignore.clicked.connect(self.ignore_clicked)
         self.push_button_ignore.setToolTip(
-            "<i>" + plug_name + "</i> will not inherit any tags."
+            f"<i>{plug_name}</i> will not inherit any tags."
         )
         h_box_buttons.addWidget(self.push_button_ignore)
 
@@ -1639,10 +1783,8 @@ class PopUpInheritanceDict(QDialog):
         self.push_button_okall.setText("OK for all output plugs")
         self.push_button_okall.clicked.connect(self.okall_clicked)
         self.push_button_okall.setToolTip(
-            "All the output plugs from <i>"
-            + node_name
-            + "</i> will inherit tags"
-            " from " + self.key
+            f"All the output plugs from <i>{node_name}</i> will inherit tags"
+            f" from {self.key}."
         )
         h_box_buttons.addWidget(self.push_button_okall)
 
@@ -1650,8 +1792,8 @@ class PopUpInheritanceDict(QDialog):
         self.push_button_ignoreall.setText("Ignore for all output plugs")
         self.push_button_ignoreall.clicked.connect(self.ignoreall_clicked)
         self.push_button_ignoreall.setToolTip(
-            "All the output plugs from <i>" + node_name + "</i> will not "
-            "inherit any tags."
+            f"All the output plugs from <i>{node_name}</i> will not "
+            f"inherit any tags."
         )
         h_box_buttons.addWidget(self.push_button_ignoreall)
 
@@ -1801,7 +1943,7 @@ class PopUpMultipleSort(QDialog):
         """Adds a push button."""
 
         push_button = QPushButton()
-        push_button.setText("Tag n°" + str(len(self.push_buttons) + 1))
+        push_button.setText(f"Tag n°{len(self.push_buttons) + 1}")
         push_button.clicked.connect(
             lambda: self.select_tag(len(self.push_buttons) - 1)
         )
@@ -1814,18 +1956,25 @@ class PopUpMultipleSort(QDialog):
         :param idx: index of the pressed push button
 
         """
-
         tag_name = self.push_buttons[idx].text()
+
         if len(self.values_list) <= idx:
             self.values_list.insert(idx, [])
+
         if self.values_list[idx] is not None:
             self.values_list[idx] = []
-        for scan in self.project.session.get_fields_names(COLLECTION_CURRENT):
-            current_value = self.project.session.get_value(
-                COLLECTION_CURRENT, scan, tag_name
-            )
-            if current_value not in self.values_list[idx]:
-                self.values_list[idx].append(current_value)
+
+        with self.project.database.data() as database_data:
+
+            for scan in database_data.get_field_names(COLLECTION_CURRENT):
+                current_value = database_data.get_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan,
+                    field=tag_name,
+                )
+
+                if current_value not in self.values_list[idx]:
+                    self.values_list[idx].append(current_value)
 
     def refresh_layout(self):
         """Updates the layouts (especially when a tag push button is added or
@@ -1868,11 +2017,12 @@ class PopUpMultipleSort(QDialog):
 
         """
 
-        pop_up = PopUpSelectTagCountTable(
-            self.project,
-            self.project.session.get_shown_tags(),
-            self.push_buttons[idx].text(),
-        )
+        with self.project.database.data() as database_data:
+            pop_up = PopUpSelectTagCountTable(
+                self.project,
+                database_data.get_shown_tags(),
+                self.push_buttons[idx].text(),
+            )
 
         if pop_up.exec_():
             self.push_buttons[idx].setText(pop_up.selected_tag)
@@ -1880,14 +2030,16 @@ class PopUpMultipleSort(QDialog):
 
     def sort_scans(self):
         """Collects the information and send them to the data browser."""
-
         self.order = self.combo_box.itemText(self.combo_box.currentIndex())
 
-        for push_button in self.push_buttons:
-            if push_button.text() in self.project.session.get_fields_names(
-                COLLECTION_CURRENT
-            ):
-                self.list_tags.append(push_button.text())
+        with self.project.database.data() as database_data:
+
+            for push_button in self.push_buttons:
+
+                if push_button.text() in database_data.get_field_names(
+                    COLLECTION_CURRENT
+                ):
+                    self.list_tags.append(push_button.text())
 
         self.accept()
         self.table_data_browser.multiple_sort_infos(self.list_tags, self.order)
@@ -2950,7 +3102,7 @@ class PopUpPreferences(QDialog):
         change.old_psswd = QLineEdit()
         change.new_psswd = QLineEdit()
         change.new_psswd_conf = QLineEdit()
-        status = "<i>" + status + "</i>"
+        status = f"<i>{status}</i>"
         change.status = QLabel(status)
         change.status.setStyleSheet("color:red")
 
@@ -2978,14 +3130,14 @@ class PopUpPreferences(QDialog):
             change.close()
         else:
             config = Config()
-            old_psswd = self.salt + change.old_psswd.text()
+            old_psswd = f"{self.salt}{change.old_psswd.text()}"
             hash_psswd = hashlib.sha256(old_psswd.encode()).hexdigest()
             if (
                 hash_psswd == config.get_admin_hash()
                 and change.new_psswd.text() == change.new_psswd_conf.text()
                 and len(change.new_psswd.text()) > 6
             ):
-                new_psswd = self.salt + change.new_psswd.text()
+                new_psswd = f"{self.salt}{change.new_psswd.text()}"
                 config.set_admin_hash(
                     hashlib.sha256(new_psswd.encode()).hexdigest()
                 )
@@ -3013,24 +3165,19 @@ class PopUpPreferences(QDialog):
 
         if not self.control_checkbox_changed:
             self.msg.setInformativeText(
-                "To change the controller from {0} to {1}, "
-                "MIA must be restarted. Would you like to plan "
-                "this change for next "
-                "start-up?".format(
-                    "V1" if config.isControlV1() else "V2",
-                    "V2" if config.isControlV1() else "V1",
-                )
+                f"To change the controller from "
+                f"{'V1' if config.isControlV1() else 'V2'} to "
+                f"{'V2' if config.isControlV1() else 'V1'}, MIA must be "
+                f"restarted. Would you like to plan this change for next "
+                f"start-up?"
             )
 
         else:
             self.msg.setInformativeText(
-                "Change of controller from {0} to {1} is already "
-                "planned for next start-up. Would you like to "
-                "cancel this "
-                "change?".format(
-                    "V1" if config.isControlV1() else "V2",
-                    "V2" if config.isControlV1() else "V1",
-                )
+                f"Change of controller from "
+                f"{'V1' if config.isControlV1() else 'V2'} to "
+                f"{'V2' if config.isControlV1() else 'V1'} is already planned "
+                f"for next start-up. Would you like to cancel this change?"
             )
 
         return_value = self.msg.exec()
@@ -3188,7 +3335,7 @@ class PopUpPreferences(QDialog):
         try:
             result = dialog.exec()
         except Exception as e:
-            print(e)
+            logger.warning(e)
             return
 
         if result:
@@ -3201,7 +3348,7 @@ class PopUpPreferences(QDialog):
                 config.set_capsul_config(capsul_config)
 
             except Exception as e:
-                print(e)
+                logger.warning(f"{e}")
                 return
 
             # update Mia preferences GUI which might have changed
@@ -3423,7 +3570,9 @@ class PopUpPreferences(QDialog):
 
             if self.admin_mode_checkbox.isChecked():
                 config.set_user_mode(False)
-                main_window.windowName += " (Admin mode)"
+                main_window.windowName = (
+                    f"{main_window.windowName} (Admin mode)"
+                )
 
             else:
                 config.set_user_mode(True)
@@ -3438,9 +3587,9 @@ class PopUpPreferences(QDialog):
                 self.not_use_clinical_mode_signal.emit()
 
             # Window name
-            main_window.windowName += " - "
+            main_window.windowName = f"{main_window.windowName} - "
             main_window.setWindowTitle(
-                main_window.windowName + main_window.projectName
+                f"{main_window.windowName}{main_window.projectName}"
             )
 
             # Configuration test
@@ -3684,10 +3833,10 @@ class PopUpPreferences(QDialog):
                 elif os.path.isdir(spm_input):
                     try:
                         matlab_cmd = (
-                            "restoredefaultpath; "
-                            "addpath('" + spm_input + "'); "
-                            "[name, ~]=spm('Ver'); "
-                            "exit"
+                            f"restoredefaultpath; "
+                            f"addpath('{spm_input}'); "
+                            f"[name, ~]=spm('Ver'); "
+                            f"exit"
                         )
                         p = subprocess.Popen(
                             [
@@ -3893,13 +4042,16 @@ class PopUpPreferences(QDialog):
                                 if isinstance(err, bytes):
                                     err = err.decode("utf-8")
 
-                                print(
-                                    "\nWarning: The configuration for Matlab"
-                                    " MCR and SPM standalone as defined in"
-                                    " Mia's preferences seems to be valid "
-                                    "but the following issue has been "
-                                    "detected:\n{}\nPlease fix this issue"
-                                    " to avoid a malfunction ...".format(err)
+                                logger.warning(
+                                    "The configuration for Matlab MCR and "
+                                    "SPM standalone as defined in Mia's "
+                                    "preferences seems to be valid, but the "
+                                    "following issue has been detected:"
+                                )
+                                logger.warning(f"{err}")
+                                logger.warning(
+                                    "Please fix this issue to avoid a "
+                                    "malfunction..."
                                 )
 
                             elif err != b"":
@@ -3943,9 +4095,9 @@ class PopUpPreferences(QDialog):
                 or self.use_matlab_standalone_checkbox.isChecked()
             ):
                 if "Windows" in archi[1]:
-                    print(
-                        "WARNING: Matlab Standalone Path enter, this "
-                        "is unnecessary to use SPM12."
+                    logger.warning(
+                        "Matlab Standalone Path enter, this is unnecessary "
+                        "to use SPM12."
                     )
                     config.set_use_matlab(True)
                     config.set_use_matlab_standalone(False)
@@ -3973,13 +4125,8 @@ class PopUpPreferences(QDialog):
             config.setBackgroundColor(background_color)
             config.setTextColor(text_color)
             main_window.setStyleSheet(
-                "background-color:"
-                + background_color
-                + ";color:"
-                + text_color
-                + ";"
+                f"background-color:{background_color};color:{text_color};"
             )
-
             # main window setup
             fullscreen = self.fullscreen_cbox.isChecked()
             config.set_mainwindow_maximized(fullscreen)
@@ -4004,9 +4151,8 @@ class PopUpPreferences(QDialog):
                 self.msg.setIcon(QMessageBox.Critical)
                 self.msg.setText("Invalid projects folder path")
                 self.msg.setInformativeText(
-                    "The projects folder path entered "
-                    "{0} is "
-                    "invalid.".format(projects_folder)
+                    f"The projects folder path entered `{projects_folder}` is "
+                    f"invalid."
                 )
                 self.msg.setWindowTitle("Error")
                 self.msg.setStandardButtons(QMessageBox.Ok)
@@ -4039,9 +4185,8 @@ class PopUpPreferences(QDialog):
                 self.msg.setIcon(QMessageBox.Critical)
                 self.msg.setText("Invalid MRIFileManager.jar path")
                 self.msg.setInformativeText(
-                    "The MRIFileManager.jar path "
-                    "entered {0} "
-                    "is invalid.".format(mri_conv_path)
+                    f"The MRIFileManager.jar path entered '{mri_conv_path}' "
+                    f"is invalid."
                 )
                 self.msg.setWindowTitle("Error")
                 self.msg.setStandardButtons(QMessageBox.Ok)
@@ -4061,9 +4206,8 @@ class PopUpPreferences(QDialog):
                 self.msg.setIcon(QMessageBox.Critical)
                 self.msg.setText("Invalid resources folder path")
                 self.msg.setInformativeText(
-                    "The resources folder path entered "
-                    "{0} is "
-                    "invalid.".format(resources_folder)
+                    f"The resources folder path entered '{resources_folder}' "
+                    f"is invalid."
                 )
                 self.msg.setWindowTitle("Error")
                 self.msg.setStandardButtons(QMessageBox.Ok)
@@ -4645,7 +4789,7 @@ class PopUpPreferences(QDialog):
             )
 
             if ok:
-                salt_psswd = self.salt + psswd
+                salt_psswd = f"{self.salt}{psswd}"
                 hash_psswd = hashlib.sha256(salt_psswd.encode()).hexdigest()
 
                 if hash_psswd != config.get_admin_hash():
@@ -4673,13 +4817,13 @@ class PopUpPreferences(QDialog):
         self.status_label.setText("")
         self.msg = QMessageBox()
         self.msg.setIcon(QMessageBox.Critical)
-        self.msg.setText("Invalid " + tool + " path")
+        self.msg.setText(f"Invalid {tool} path")
+
         if extra_mess:
-            extra_mess = " " + extra_mess
+            extra_mess = f" {extra_mess}"
+
         self.msg.setInformativeText(
-            "The {0}{1} path entered {2} is invalid.".format(
-                tool, extra_mess, path
-            )
+            f"The {tool}{extra_mess} path entered {path} is invalid."
         )
         self.msg.setWindowTitle("Error")
         self.msg.setStandardButtons(QMessageBox.Ok)
@@ -4728,9 +4872,11 @@ class PopUpProperties(QDialog):
         self.tab_widget.setEnabled(True)
 
         # The 'Visualized tags" tab
-        self.tab_tags = PopUpVisualizedTags(
-            self.project, self.project.session.get_shown_tags()
-        )
+        with self.project.database.data() as database_data:
+            self.tab_tags = PopUpVisualizedTags(
+                self.project, database_data.get_shown_tags()
+            )
+
         self.tab_tags.setObjectName("tab_tags")
         self.tab_widget.addTab(
             self.tab_tags, _translate("Dialog", "Visualized tags")
@@ -4777,7 +4923,10 @@ class PopUpProperties(QDialog):
             new_visibilities.append(visible_tag)
 
         new_visibilities.append(TAG_FILENAME)
-        self.project.session.set_shown_tags(new_visibilities)
+
+        with self.project.database.data() as database_data:
+            database_data.set_shown_tags(new_visibilities)
+
         history_maker.append(new_visibilities)
 
         self.project.undos.append(history_maker)
@@ -4785,9 +4934,11 @@ class PopUpProperties(QDialog):
         self.project.unsavedModifications = True
 
         # Columns updated
-        self.databrowser.table_data.update_visualized_columns(
-            self.old_tags, self.project.session.get_shown_tags()
-        )
+        with self.project.database.data() as database_data:
+            self.databrowser.table_data.update_visualized_columns(
+                self.old_tags, database_data.get_shown_tags()
+            )
+
         self.accept()
         self.close()
 
@@ -4808,44 +4959,33 @@ class PopUpQuit(QDialog):
     do_not_save_signal = pyqtSignal()
     cancel_signal = pyqtSignal()
 
-    def __init__(self, database):
+    def __init__(self, project):
         """Initialization.
 
-        :param database: current database in the project
+        :param project: current project
 
         """
-
         super().__init__()
-
-        self.database = database
-
+        self.project = project
         self.bool_exit = False
-
         self.setWindowTitle("Confirm exit")
-
         label = QLabel(self)
         label.setText(
-            "Do you want to exit without saving "
-            + self.database.getName()
-            + "?"
+            f"Do you want to exit without saving {self.project.getName()}?"
         )
-
         push_button_save_as = QPushButton("Save", self)
         push_button_do_not_save = QPushButton("Do not save", self)
         push_button_cancel = QPushButton("Cancel", self)
-
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         hbox.addWidget(push_button_save_as)
         hbox.addWidget(push_button_do_not_save)
         hbox.addWidget(push_button_cancel)
         hbox.addStretch(1)
-
         vbox = QVBoxLayout()
         vbox.addWidget(label)
         vbox.addLayout(hbox)
         self.setLayout(vbox)
-
         push_button_save_as.clicked.connect(self.save_as_clicked)
         push_button_do_not_save.clicked.connect(self.do_not_save_clicked)
         push_button_cancel.clicked.connect(self.cancel_clicked)
@@ -4856,24 +4996,20 @@ class PopUpQuit(QDialog):
         :return: bool_exit value
 
         """
-
         return self.bool_exit
 
     def cancel_clicked(self):
         """Makes the actions to cancel the action."""
-
         self.bool_exit = False
         self.close()
 
     def do_not_save_clicked(self):
         """Makes the actions not to save the project."""
-
         self.bool_exit = True
         self.close()
 
     def save_as_clicked(self):
         """Makes the actions to save the project."""
-
         self.save_as_signal.emit()
         self.bool_exit = True
         self.close()
@@ -4902,13 +5038,12 @@ class PopUpRemoveScan(QDialog):
         self.repeat = False
         label = QLabel(self)
         label.setText(
-            "The document " + scan + "\nwas previously sent to the "
-            "pipeline manager, do you "
-            "really want to delete it ?"
+            f"The document {scan} \nwas previously sent to the pipeline "
+            f"manager, do you really want to delete it?"
         )
-
         push_button_yes = QPushButton("Ok", self)
         push_button_cancel = QPushButton("No", self)
+
         if size > 1:
             push_button_yes_all = QPushButton("Ok to all", self)
             push_button_no_all = QPushButton("No to all", self)
@@ -5034,11 +5169,16 @@ class PopUpRemoveTag(QDialog):
 
         self.setLayout(vbox)
 
-        for tag in self.project.session.get_fields(COLLECTION_CURRENT):
-            if tag.origin == TAG_ORIGIN_USER:
-                item = QtWidgets.QListWidgetItem()
-                self.list_widget_tags.addItem(item)
-                item.setText(_translate("Dialog", tag.field_name))
+        with self.project.database.data() as database_data:
+
+            for tag in database_data.get_field_attributes(COLLECTION_CURRENT):
+
+                if tag["origin"] == TAG_ORIGIN_USER:
+                    item = QtWidgets.QListWidgetItem()
+                    self.list_widget_tags.addItem(item)
+                    item.setText(
+                        _translate("Dialog", tag["index"].split("|")[1])
+                    )
 
         self.setLayout(vbox)
 
@@ -5066,19 +5206,34 @@ class PopUpRemoveTag(QDialog):
         """
 
         _translate = QtCore.QCoreApplication.translate
+        return_list = []
 
-        if str_search != "":
-            return_list = []
-            for tag in self.project.session.get_fields(COLLECTION_CURRENT):
-                if tag.origin == TAG_ORIGIN_USER:
-                    if str_search.upper() in tag.name.upper():
+        with self.project.database.data() as database_data:
+            field_attributes = database_data.get_field_attributes(
+                COLLECTION_CURRENT
+            )
+
+        if str_search:
+
+            for tag in field_attributes:
+
+                if tag["origin"] == TAG_ORIGIN_USER:
+
+                    if (
+                        str_search.upper()
+                        in tag["index"].split("|")[1].upper()
+                    ):
                         return_list.append(tag.name)
+
         else:
-            return_list = []
-            for tag in self.project.session.get_fields(COLLECTION_CURRENT):
-                if tag.origin == TAG_ORIGIN_USER:
+
+            for tag in field_attributes:
+
+                if tag["origin"] == TAG_ORIGIN_USER:
                     return_list.append(tag.name)
+
         self.list_widget_tags.clear()
+
         for tag_name in return_list:
             item = QtWidgets.QListWidgetItem()
             self.list_widget_tags.addItem(item)
@@ -5205,10 +5360,9 @@ class PopUpSaveProjectAs(QDialog):
                         return
                     else:
                         msgtext = (
-                            "Do you really want to overwrite the "
-                            + file_name
-                            + " project ?\nThis action "
-                            "delete all contents inside this folder!"
+                            f"Do you really want to overwrite the {file_name} "
+                            f"project ?\nThis action delete all contents "
+                            f"inside this folder!"
                         )
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
@@ -5375,7 +5529,7 @@ class PopUpSelectFilter(PopUpFilterSelection):
 
         """
 
-        super(PopUpSelectFilter, self).__init__(project)
+        super().__init__(project)
         self.project = project
         self.databrowser = databrowser
         self.config = Config()
@@ -5425,7 +5579,7 @@ class PopUpSelectIteration(QDialog):
         self.tag_values = tag_values
         self.final_values = []
         self.setWindowTitle(
-            "Iterate pipeline run over tag {0}".format(self.iterated_tag)
+            f"Iterate pipeline run over tag {self.iterated_tag}"
         )
 
         self.v_box = QVBoxLayout()
@@ -5591,26 +5745,33 @@ class PopUpTagSelection(QDialog):
         :param str_search: string pattern to search
 
         """
-
         return_list = []
-        if str_search != "":
-            for tag in self.project.session.get_fields_names(
-                COLLECTION_CURRENT
-            ):
+
+        with self.project.database.data() as database_data:
+            field_names = database_data.get_field_names(COLLECTION_CURRENT)
+
+        if str_search:
+
+            for tag in field_names:
+
                 if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
+
                     if str_search.upper() in tag.upper():
                         return_list.append(tag)
+
         else:
-            for tag in self.project.session.get_fields_names(
-                COLLECTION_CURRENT
-            ):
+
+            for tag in field_names:
+
                 if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                     return_list.append(tag)
 
         for idx in range(self.list_widget_tags.count()):
             item = self.list_widget_tags.item(idx)
+
             if item.text() in return_list:
                 item.setHidden(False)
+
             else:
                 item.setHidden(True)
 
@@ -5630,22 +5791,29 @@ class PopUpSelectTag(PopUpTagSelection):
         :param project: current project in the software
 
         """
-
-        super(PopUpSelectTag, self).__init__(project)
+        super().__init__(project)
         self.project = project
         self.config = Config()
 
+        with self.project.database.data() as database_data:
+            field_names = database_data.get_field_names(COLLECTION_CURRENT)
+
         # Filling the list and checking the thumbnail tag
-        for tag in self.project.session.get_fields_names(COLLECTION_CURRENT):
+        for tag in field_names:
+
             if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
                 item = QtWidgets.QListWidgetItem()
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+
                 if tag == self.config.getThumbnailTag():
                     item.setCheckState(QtCore.Qt.Checked)
+
                 else:
                     item.setCheckState(QtCore.Qt.Unchecked)
+
                 self.list_widget_tags.addItem(item)
                 item.setText(tag)
+
         self.list_widget_tags.sortItems()
 
     def ok_clicked(self):
@@ -5680,7 +5848,7 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
 
         """
 
-        super(PopUpSelectTagCountTable, self).__init__(project)
+        super().__init__(project)
 
         self.selected_tag = None
         for tag in tags_to_display:
@@ -5745,57 +5913,77 @@ class PopUpShowHistory(QDialog):
         self.databrowser = databrowser
         self.main_window = main_window
         self.project = project
-        self.setWindowTitle("History of " + scan)
+        self.setWindowTitle(f"History of {scan}")
 
-        brick_row = project.session.get_document(COLLECTION_BRICK, brick_uuid)
-        full_brick_name = project.session.get_value(
-            COLLECTION_BRICK, brick_uuid, BRICK_NAME
-        ).split(".")
-
-        layout = QVBoxLayout()
-        self.splitter = QSplitter(Qt.Qt.Vertical)
-
-        self.table = QTableWidget()
-        # self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.table.setVerticalScrollMode(
-            QtWidgets.QAbstractItemView.ScrollPerPixel
-        )
-        self.table.setHorizontalScrollMode(
-            QtWidgets.QAbstractItemView.ScrollPerPixel
-        )
-        history_uuid = self.project.session.get_value(
-            COLLECTION_CURRENT, scan, TAG_HISTORY
-        )
-
-        self.unitary_pipeline = False
-        self.uuid_idx = 0
-        if history_uuid is not None:
-            self.pipeline_xml = self.project.session.get_value(
-                COLLECTION_HISTORY, history_uuid, HISTORY_PIPELINE
+        with self.project.database.data() as database_data:
+            brick_row = database_data.get_document(
+                ollection_name=COLLECTION_BRICK, primary_keys=brick_uuid
             )
-            if self.pipeline_xml is not None:
-                self.brick_list = self.project.session.get_value(
-                    COLLECTION_HISTORY, history_uuid, HISTORY_BRICKS
+            full_brick_name = database_data.get_value(
+                collection_name=COLLECTION_BRICK,
+                primary_key=brick_uuid,
+                field=BRICK_NAME,
+            ).split(".")
+            layout = QVBoxLayout()
+            self.splitter = QSplitter(Qt.Qt.Vertical)
+            self.table = QTableWidget()
+            self.table.setVerticalScrollMode(
+                QtWidgets.QAbstractItemView.ScrollPerPixel
+            )
+            self.table.setHorizontalScrollMode(
+                QtWidgets.QAbstractItemView.ScrollPerPixel
+            )
+            history_uuid = database_data.get_value(
+                collection_name=COLLECTION_CURRENT,
+                primary_key=scan,
+                field=TAG_HISTORY,
+            )
+            self.unitary_pipeline = False
+            self.uuid_idx = 0
+
+        if history_uuid is not None:
+
+            with self.project.database.data() as database_data:
+                self.pipeline_xml = database_data.get_value(
+                    collection_name=COLLECTION_HISTORY,
+                    primary_key=history_uuid,
+                    field=HISTORY_PIPELINE,
                 )
 
+            if self.pipeline_xml is not None:
+
+                with self.project.database.data() as database_data:
+                    self.brick_list = database_data.get_value(
+                        collection_name=COLLECTION_HISTORY,
+                        primary_key=history_uuid,
+                        field=HISTORY_BRICKS,
+                    )
+
                 engine = Config.get_capsul_engine()
+
                 try:
                     pipeline = engine.get_process_instance(self.pipeline_xml)
+
                 except Exception:
                     pipeline = None
 
                 if pipeline is not None:
+
                     # handle case of pipeline node alone --> exploded view
                     # (e.g. a pipeline alone and plug exported)
                     if len(pipeline.nodes) == 2:
+
                         for key in pipeline.nodes.keys():
+
                             if key != "":
+
                                 if isinstance(
                                     pipeline.nodes[key], PipelineNode
                                 ):
                                     pipeline = pipeline.nodes[key].process
                                     full_brick_name.pop(0)
                                     self.unitary_pipeline = True
+
                     # handle cases of named pipeline/brick without being a
                     # single Pipeline node (e.g. a pipeline alone without
                     # exporting plugs)
@@ -5819,49 +6007,53 @@ class PopUpShowHistory(QDialog):
                     (self.pipeline_view.process_clicked.connect)(
                         self.node_selected
                     )
-
                     bricks = self.find_associated_bricks(full_brick_name[0])
+
                     for bricks_uuids in bricks.values():
+
                         for i in range(0, len(bricks_uuids)):
+
                             if bricks_uuids[i] == brick_uuid:
                                 self.uuid_idx = i
                                 break
+
                         else:
                             continue
+
                         break
 
                     selected_name = full_brick_name[0]
+
                     try:
                         self.node_selected(
                             selected_name, pipeline.nodes[selected_name]
                         )
+
                     except Exception:
-                        print(
-                            "\nerror in naming association brick\\pipeline, "
+                        logger.warning(
+                            "Error in naming association brick\\pipeline, "
                             "cannot select node ..."
                         )
                         pass
 
-        inputs = getattr(brick_row, BRICK_INPUTS)
-        outputs = getattr(brick_row, BRICK_OUTPUTS)
+        inputs = brick_row[0][BRICK_INPUTS]
+        outputs = brick_row[0][BRICK_OUTPUTS]
 
         for k in self.banished_param:
             outputs.pop(k, None)
             inputs.pop(k, None)
 
-        brick_name = getattr(brick_row, BRICK_NAME)
-        init = getattr(brick_row, BRICK_INIT)
-        init_time = getattr(brick_row, BRICK_INIT_TIME)
-        exec = getattr(brick_row, BRICK_INIT)
-        exec_time = getattr(brick_row, BRICK_INIT_TIME)
+        brick_name = brick_row[0][BRICK_NAME]
+        init = brick_row[0][BRICK_INIT]
+        init_time = brick_row[0][BRICK_INIT_TIME]
+        exec = brick_row[0][BRICK_INIT]
+        exec_time = brick_row[0][BRICK_INIT_TIME]
         self.update_table(
             inputs, outputs, brick_name, init, init_time, exec, exec_time
         )
         self.splitter.addWidget(self.table)
-
         layout.addWidget(self.splitter)
         self.setLayout(layout)
-
         screen_resolution = QApplication.instance().desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
         self.setGeometry(300, 200, round(0.6 * width), round(0.4 * height))
@@ -5885,22 +6077,30 @@ class PopUpShowHistory(QDialog):
         :param node_name: blabla
         :return: blabla
         """
-
         bricks = {}
+
         for uuid in self.brick_list:
-            full_brick_name = self.project.session.get_value(
-                COLLECTION_BRICK, uuid, BRICK_NAME
-            )
+
+            with self.project.database.data() as database_data:
+                full_brick_name = database_data.get_value(
+                    collection_name=COLLECTION_BRICK,
+                    primary_key=uuid,
+                    field=BRICK_NAME,
+                )
+
             list_full_brick_name = full_brick_name.split(".")
 
             if self.unitary_pipeline:
                 list_full_brick_name.pop(0)
 
             if list_full_brick_name[0] == node_name:
+
                 if full_brick_name not in bricks:
                     bricks[full_brick_name] = [uuid]
+
                 else:
                     bricks[full_brick_name].append(uuid)
+
         return bricks
 
     def find_process_from_plug(self, plug):
@@ -5917,27 +6117,27 @@ class PopUpShowHistory(QDialog):
             for link in plug.links_from:
                 if not link_done:
                     link_done = True
-                    process_name += "." + link[2].name
+                    process_name = f"{process_name}.{link[2].name}"
                     plug_name = link[1]
                     if isinstance(link[2], PipelineNode):
                         (
                             sub_process_name,
                             plug_name,
                         ) = self.find_process_from_plug(link[2].plugs[link[1]])
-                        process_name += sub_process_name
+                        process_name = f"{process_name}{sub_process_name}"
         else:
             link_done = False
             for link in plug.links_to:
                 if not link_done:
                     link_done = True
-                    process_name += "." + link[2].name
+                    process_name = f"{process_name}.{link[2].name}"
                     plug_name = link[1]
                     if isinstance(link[2], PipelineNode):
                         (
                             sub_process_name,
                             plug_name,
                         ) = self.find_process_from_plug(link[2].plugs[link[1]])
-                        process_name += sub_process_name
+                        process_name = f"{process_name}{sub_process_name}"
         return process_name, plug_name
 
     def io_value_is_scan(self, value):
@@ -5951,11 +6151,12 @@ class PopUpShowHistory(QDialog):
 
         value_scan = None
 
-        for scan in self.project.session.get_documents_names(
-            COLLECTION_CURRENT
-        ):
-            if scan in str(value):
-                value_scan = scan
+        with self.project.database.data() as database_data:
+
+            for scan in database_data.get_document_names(COLLECTION_CURRENT):
+
+                if scan in str(value):
+                    value_scan = scan
 
         return value_scan
 
@@ -5975,23 +6176,24 @@ class PopUpShowHistory(QDialog):
             full_node_name = process.full_name
 
         if bricks:
+
             if len(bricks) == 1:
-                brick_row = self.project.session.get_document(
-                    COLLECTION_BRICK,
-                    next(iter(bricks.values()))[self.uuid_idx],
+                brick_row = self.project.database.get_document(
+                    collection_name=COLLECTION_BRICK,
+                    primary_keys=next(iter(bricks.values()))[self.uuid_idx],
                 )
-                inputs = getattr(brick_row, BRICK_INPUTS)
-                outputs = getattr(brick_row, BRICK_OUTPUTS)
+                inputs = brick_row[0][BRICK_INPUTS]
+                outputs = brick_row[0][BRICK_OUTPUTS]
 
                 for k in self.banished_param:
                     outputs.pop(k, None)
                     inputs.pop(k, None)
 
-                brick_name = getattr(brick_row, BRICK_NAME)
-                init = getattr(brick_row, BRICK_INIT)
-                init_time = getattr(brick_row, BRICK_INIT_TIME)
-                exec = getattr(brick_row, BRICK_INIT)
-                exec_time = getattr(brick_row, BRICK_INIT_TIME)
+                brick_name = brick_row[0][BRICK_NAME]
+                init = brick_row[0][BRICK_INIT]
+                init_time = brick_row[0][BRICK_INIT_TIME]
+                exec = brick_row[0][BRICK_INIT]
+                exec_time = brick_row[0][BRICK_INIT_TIME]
                 self.update_table(
                     inputs,
                     outputs,
@@ -6005,37 +6207,58 @@ class PopUpShowHistory(QDialog):
                 # subpipeline case
                 inputs_dict = {}
                 outputs_dict = {}
+
                 if isinstance(process, PipelineNode):
+
                     for plug_name, plug in process.plugs.items():
+
                         if plug.activated:
                             (
                                 process_name,
                                 inner_plug_name,
                             ) = self.find_process_from_plug(plug)
+
                             for uuid in bricks.values():
                                 full_brick_name = (
-                                    self.project.session.get_value(
-                                        COLLECTION_BRICK, uuid[0], BRICK_NAME
+                                    self.project.database.get_value(
+                                        collection_name=COLLECTION_BRICK,
+                                        primary_key=uuid[0],
+                                        field=BRICK_NAME,
                                     )
                                 )
+
                                 if (
                                     full_brick_name
-                                    == full_node_name + process_name
+                                    == f"{full_node_name}{process_name}"
                                 ):
+
                                     if plug.output:
-                                        plugs = self.project.session.get_value(
-                                            COLLECTION_BRICK,
-                                            uuid[self.uuid_idx],
-                                            BRICK_OUTPUTS,
+                                        plugs = (
+                                            self.project.database.get_value(
+                                                collection_name=(
+                                                    COLLECTION_BRICK
+                                                ),
+                                                primary_key=uuid[
+                                                    self.uuid_idx
+                                                ],
+                                                field=BRICK_OUTPUTS,
+                                            )
                                         )
                                         outputs_dict[plug_name] = plugs[
                                             inner_plug_name
                                         ]
+
                                     else:
-                                        plugs = self.project.session.get_value(
-                                            COLLECTION_BRICK,
-                                            uuid[self.uuid_idx],
-                                            BRICK_INPUTS,
+                                        plugs = (
+                                            self.project.database.get_value(
+                                                collection_name=(
+                                                    COLLECTION_BRICK
+                                                ),
+                                                primary_key=uuid[
+                                                    self.uuid_idx
+                                                ],
+                                                field=BRICK_INPUTS,
+                                            )
                                         )
                                         inputs_dict[plug_name] = plugs[
                                             inner_plug_name
@@ -6048,8 +6271,10 @@ class PopUpShowHistory(QDialog):
                 self.update_table(inputs_dict, outputs_dict, full_node_name)
 
             for name, gnode in self.pipeline_view.scene.gnodes.items():
+
                 if name == node_name:
                     gnode.fonced_viewer(False)
+
                 else:
                     gnode.fonced_viewer(True)
 
@@ -6400,21 +6625,28 @@ class PopUpVisualizedTags(QWidget):
         self.left_tags = []  # List that will keep track on
         # the tags on the left (invisible tags)
 
-        for tag in project.session.get_fields_names(COLLECTION_CURRENT):
-            if (
-                tag != TAG_CHECKSUM
-                and tag != TAG_FILENAME
-                and tag != TAG_HISTORY
-            ):
-                item = QtWidgets.QListWidgetItem()
-                if tag not in self.visualized_tags:
-                    # Tag not visible: left side
-                    self.list_widget_tags.addItem(item)
-                    self.left_tags.append(tag)
-                else:
-                    # Tag visible: right side
-                    self.list_widget_selected_tags.addItem(item)
-                item.setText(tag)
+        with self.project.database.data() as database_data:
+
+            for tag in database_data.get_field_names(COLLECTION_CURRENT):
+
+                if (
+                    tag != TAG_CHECKSUM
+                    and tag != TAG_FILENAME
+                    and tag != TAG_HISTORY
+                ):
+                    item = QtWidgets.QListWidgetItem()
+
+                    if tag not in self.visualized_tags:
+                        # Tag not visible: left side
+                        self.list_widget_tags.addItem(item)
+                        self.left_tags.append(tag)
+
+                    else:
+                        # Tag visible: right side
+                        self.list_widget_selected_tags.addItem(item)
+
+                    item.setText(tag)
+
         self.list_widget_tags.sortItems()
 
     def search_str(self, str_search):

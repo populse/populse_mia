@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module that handles pipeline iteration.
 
 :Contains:
@@ -427,7 +426,7 @@ class IterationTable(QWidget):
                 if header_name not in self.project.session.get_fields_names(
                     COLLECTION_CURRENT
                 ):
-                    print("{0} not in the project's tags".format(header_name))
+                    print(f"{header_name} not in the project's tags")
                     return
 
                 item = QTableWidgetItem()

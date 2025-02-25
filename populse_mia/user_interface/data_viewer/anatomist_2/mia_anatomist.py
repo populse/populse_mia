@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 MIA data viewer implementation based on
 `Anatomist <http://brainvisa.info/anatomist/user_doc/index.html>`_
@@ -17,7 +15,6 @@ Contains:
 # for details.
 ##########################################################################
 
-from __future__ import absolute_import, print_function
 
 import os
 
@@ -65,7 +62,7 @@ class MiaViewer(Qt.QWidget, DataViewer):
     """
 
     def __init__(self, init_global_handlers=None):
-        super(MiaViewer, self).__init__()
+        super().__init__()
 
         self.anaviewer = AnaSimpleViewer2(init_global_handlers)
 
@@ -101,7 +98,7 @@ class MiaViewer(Qt.QWidget, DataViewer):
 
     def close(self):
         """Exit"""
-        super(MiaViewer, self).close()
+        super().close()
         close_ana = False
         DataViewer.mia_viewers -= 1  # dec count
         if DataViewer.mia_viewers == 0:

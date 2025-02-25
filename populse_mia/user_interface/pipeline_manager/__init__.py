@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Handle the pipeline manager tab. Allow to create and run pipelines.
 
 Contains:
