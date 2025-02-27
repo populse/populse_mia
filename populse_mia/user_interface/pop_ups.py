@@ -69,8 +69,8 @@ from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 # PyQt5 imports
 from PyQt5 import Qt, QtCore, QtGui
 from PyQt5.QtWidgets import (
-    QApplication,
     QAbstractItemView,
+    QApplication,
     QCheckBox,
     QComboBox,
     QDialog,
@@ -92,9 +92,9 @@ from PyQt5.QtWidgets import (
     QScrollArea,
     QSpinBox,
     QSplitter,
-    QTabWidget,
     QTableWidget,
     QTableWidgetItem,
+    QTabWidget,
     QTreeWidget,
     QTreeWidgetItem,
     QVBoxLayout,
@@ -229,9 +229,7 @@ class DefaultValueListCreation(QDialog):
                     self.table.setColumnCount(len(list_value))
 
                     for i, val in enumerate(list_value):
-                        self.table.setItem(
-                            0, i, QTableWidgetItem(str(val))
-                        )
+                        self.table.setItem(0, i, QTableWidgetItem(str(val)))
 
                 else:
                     self.default_init_table()
@@ -289,9 +287,7 @@ class DefaultValueListCreation(QDialog):
         an empty `QTableWidgetItem` for user input.
         """
         self.table.setColumnCount(self.table.columnCount() + 1)
-        self.table.setItem(
-            0, self.table.columnCount() - 1, QTableWidgetItem()
-        )
+        self.table.setItem(0, self.table.columnCount() - 1, QTableWidgetItem())
         self.resize_table()
 
     def default_init_table(self):
@@ -761,9 +757,7 @@ class PopUpAddTag(QDialog):
             "textEdit_description_value"
         )
         # Unit components
-        self.label_unit_value = QLabel(
-            _translate("Add a tag", "Unit:"), self
-        )
+        self.label_unit_value = QLabel(_translate("Add a tag", "Unit:"), self)
         self.label_unit_value.setTextFormat(QtCore.Qt.AutoText)
         self.label_unit_value.setObjectName("unit_value")
         self.combo_box_unit = QComboBox(self)
@@ -779,9 +773,7 @@ class PopUpAddTag(QDialog):
             ]
         )
         # Type components
-        self.label_type = QLabel(
-            _translate("Add a tag", "Tag type:"), self
-        )
+        self.label_type = QLabel(_translate("Add a tag", "Tag type:"), self)
         self.label_type.setTextFormat(QtCore.Qt.AutoText)
         self.label_type.setObjectName("type")
         self.combo_box_type = QComboBox(self)
@@ -1655,10 +1647,13 @@ class PopUpFilterSelection(QDialog):
 
         """
         search_text = search_text.strip().upper()
-        
+
         if search_text:
-            matching_filters = [f.name for f in self.project.filters
-                                if search_text in f.name.upper()]
+            matching_filters = [
+                f.name
+                for f in self.project.filters
+                if search_text in f.name.upper()
+            ]
 
         else:
             matching_filters = [f.name for f in self.project.filters]
@@ -1672,7 +1667,8 @@ class PopUpInformation(QWidget):
     """
     Popup window displaying the current project's information.
     """
-   # Signal emitted when project preferences change
+
+    # Signal emitted when project preferences change
     signal_preferences_change = QtCore.pyqtSignal()
 
     def __init__(self, project):
@@ -1702,7 +1698,7 @@ class PopUpInformation(QWidget):
 class PopUpInheritanceDict(QDialog):
     """
     Dialog for selecting tag inheritance between input and output plugs.
-    
+
     This dialog allows users to select which input plug should pass its tags
     to a specific output plug, or to choose to ignore tag inheritance
     altogether.
@@ -1755,9 +1751,7 @@ class PopUpInheritanceDict(QDialog):
         self.push_button_ignore_node = QPushButton(
             "Ignore for all nodes in the pipeline", self
         )
-        self.push_button_ignore_node.clicked.connect(
-            self.ignore_node_clicked
-        )
+        self.push_button_ignore_node.clicked.connect(self.ignore_node_clicked)
         self.push_button_ignore_node.setToolTip(
             "No tags will be inherited for the whole pipeline."
         )
@@ -1772,7 +1766,7 @@ class PopUpInheritanceDict(QDialog):
 
     def _setup_buttons(self, node_name, plug_name, layout):
         """Set up action buttons for the dialog.
-        
+
         :param  node_name: Name of the current node
         :param  plug_name: Name of the current output plug
         :param  layout: Layout to add the buttons to
@@ -1792,9 +1786,7 @@ class PopUpInheritanceDict(QDialog):
         )
         layout.addWidget(self.push_button_ignore)
         # OK all button
-        self.push_button_okall = QPushButton(
-            "OK for all output plugs", self
-        )
+        self.push_button_okall = QPushButton("OK for all output plugs", self)
         self.push_button_okall.clicked.connect(self.okall_clicked)
         self.push_button_okall.setToolTip(
             f"All the output plugs from <i>{node_name}</i> "
@@ -1814,23 +1806,23 @@ class PopUpInheritanceDict(QDialog):
 
     def _setup_radio_buttons(self, values, layout):
         """Set up radio buttons for each input option.
-        
+
         :param values: Dict mapping input names to their paths
         :param layout: Layout to add the radio buttons to
         """
         first_button = True
-        
+
         for key, value in values.items():
             radiobutton = QRadioButton(key, self)
             radiobutton.value = value
             radiobutton.key = key
             radiobutton.setChecked(first_button)
-            
+
             if first_button:
                 self.value = value
                 self.key = key
                 first_button = False
-                
+
             radiobutton.toggled.connect(self.on_clicked)
             layout.addWidget(radiobutton)
             layout.addStretch(1)
@@ -1838,7 +1830,7 @@ class PopUpInheritanceDict(QDialog):
     def ok_clicked(self):
         """
         Handle OK button click.
-        
+
         Accepts the dialog with current selection applied to current plug.
         """
         self.accept()
@@ -1847,7 +1839,7 @@ class PopUpInheritanceDict(QDialog):
     def okall_clicked(self):
         """
         Handle 'OK for all output plugs' button click.
-        
+
         Accepts the dialog with current selection applied to all output
         plugs.
         """
@@ -1858,7 +1850,7 @@ class PopUpInheritanceDict(QDialog):
     def on_clicked(self):
         """
         Handle radio button selection event.
-        
+
         Updates the currently selected input value and key.
         """
         radiobutton = self.sender()
@@ -1876,7 +1868,7 @@ class PopUpInheritanceDict(QDialog):
     def ignoreall_clicked(self):
         """
         Handle 'Ignore for all output plugs' button click.
-        
+
         Accepts the dialog with tag inheritance ignored for all output plugs.
         """
         self.ignore = True
@@ -1887,7 +1879,7 @@ class PopUpInheritanceDict(QDialog):
     def ignore_clicked(self):
         """
         Handle Ignore button click.
-        
+
         Accepts the dialog with tag inheritance ignored for current plug.
         """
         self.ignore = True
@@ -1897,7 +1889,7 @@ class PopUpInheritanceDict(QDialog):
     def ignore_node_clicked(self):
         """
         Handle 'Ignore for all nodes in the pipeline' button click.
-        
+
         Accepts the dialog with tag inheritance ignored for the entire
         pipeline.
         """
@@ -1911,7 +1903,7 @@ class PopUpInheritanceDict(QDialog):
 class PopUpMultipleSort(QDialog):
     """
     Dialog for sorting the data browser's table based on multiple tags.
-    
+
     This dialog allows users to select multiple tags (columns) for sorting
     table data in either ascending or descending order. Users can dynamically
     add or remove sort criteria.
@@ -1994,10 +1986,8 @@ class PopUpMultipleSort(QDialog):
         """Add a new tag button to the sort criteria."""
         button_index = len(self.push_buttons)
         push_button = QPushButton(f"Tag n°{button_index + 1}")
-        push_button.clicked.connect(
-            lambda: self.select_tag(button_index - 1)
-        )
-        self.push_buttons.insert(button_index , push_button)
+        push_button.clicked.connect(lambda: self.select_tag(button_index - 1))
+        self.push_buttons.insert(button_index, push_button)
         self.refresh_layout()
 
     def fill_values(self, idx):
@@ -2071,11 +2061,11 @@ class PopUpMultipleSort(QDialog):
         push_button = self.push_buttons.pop()
         push_button.deleteLater()
         push_button = None
-        
-         # Remove corresponding values
+
+        # Remove corresponding values
         if self.values_list:
             self.values_list.pop()
-            
+
         self.refresh_layout()
 
     def select_tag(self, idx):
@@ -2120,10 +2110,10 @@ class PopUpMultipleSort(QDialog):
 class PopUpNewProject(QFileDialog):
     """
     Dialog for creating a new project.
-    
+
     This dialog is displayed when the user wants to create a new project.
     It manages file selection and handles the creation process.
-    
+
     .. Method:
         - get_filename: Sets the widget's attributes depending on the
           selected file name
@@ -2133,6 +2123,7 @@ class PopUpNewProject(QFileDialog):
                                  successfully created
 
     """
+
     # Signal emitted when project creation is successful
     signal_create_project = QtCore.pyqtSignal()
 
@@ -2160,15 +2151,15 @@ class PopUpNewProject(QFileDialog):
             If the file already exists, displays an error message.
             Otherwise, closes the dialog and emits signal_create_project.
         """
-          # Import here to prevent circular import issues
+        # Import here to prevent circular import issues
         from populse_mia.utils import message_already_exists
 
         # Handle the case where file_name_tuple might be empty
         if not file_name_tuple:
             return ""
-            
+
         file_name = file_name_tuple[0]
-        
+
         if not file_name:
             return ""
 
@@ -2192,7 +2183,7 @@ class PopUpNewProject(QFileDialog):
 class PopUpOpenProject(QFileDialog):
     """
     Dialog for opening an existing MIA project.
-    
+
     This dialog allows users to select an existing project directory from
     the filesystem. It uses the default projects directory as the starting
     location and emits a signal when a valid project is selected.
@@ -2201,10 +2192,11 @@ class PopUpOpenProject(QFileDialog):
         - get_filename: Sets the widget's attributes depending on the
                         selected file name
 
-    .. Signals: 
+    .. Signals:
         - signal_create_project: Signal emitted when a valid project is
                                  selected
     """
+
     # Signal emitted when a valid project is selected
     signal_create_project = QtCore.pyqtSignal()
 
@@ -2222,7 +2214,7 @@ class PopUpOpenProject(QFileDialog):
     def get_filename(self, file_name_tuple):
         """
         Process the selected directory and emit signal if valid.
-        
+
         Sets the path, name, and relative_path attributes based on the
         selected directory. If the directory exists, emits
         signal_create_project.
@@ -2236,7 +2228,7 @@ class PopUpOpenProject(QFileDialog):
 
         if not file_name_tuple:
             return
-            
+
         file_name = file_name_tuple[0]
 
         if not file_name:
@@ -2253,8 +2245,6 @@ class PopUpOpenProject(QFileDialog):
 
         else:
             message_already_exists()
-
-
 
 
 class PopUpPreferences(QDialog):
@@ -2310,6 +2300,7 @@ class PopUpPreferences(QDialog):
         - not_use_clinical_mode_signal: Signal emitted when the clinical mode
                                         is disabled
     """
+
     signal_preferences_change = QtCore.pyqtSignal()
     use_clinical_mode_signal = QtCore.pyqtSignal()
     not_use_clinical_mode_signal = QtCore.pyqtSignal()
@@ -2325,7 +2316,7 @@ class PopUpPreferences(QDialog):
         self.main_window = main_window
         self.clicked = 0
         self.salt = "P0pulseM1@"
-        self.setup_ui() #->
+        self.setup_ui()  # ->
         self.load_config()
 
     def setup_ui(self):
@@ -2338,9 +2329,9 @@ class PopUpPreferences(QDialog):
         self.tab_widget.setEnabled(True)
 
         # Create tabs
-        self.create_tools_tab(_translate) #->
-        self.create_pipeline_tab(_translate) #->
-        self.create_appearance_tab(_translate) #->
+        self.create_tools_tab(_translate)  # ->
+        self.create_pipeline_tab(_translate)  # ->
+        self.create_appearance_tab(_translate)  # ->
 
         # Buttons layout
         self.push_button_ok = QPushButton("OK")
@@ -2378,19 +2369,21 @@ class PopUpPreferences(QDialog):
         self.tab_widget.addTab(self.tab_tools, _translate("Dialog", "Tools"))
 
         self.groupbox_global = QGroupBox("Global preferences")
-        self.create_global_preferences() #->
+        self.create_global_preferences()  # ->
 
         self.groupbox_projects = QGroupBox("Projects preferences")
-        self.create_projects_preferences() #->
+        self.create_projects_preferences()  # ->
 
         self.groupbox_populse = QGroupBox("POPULSE third party preference")
-        self.create_populse_preferences() #->
+        self.create_populse_preferences()  # ->
 
         self.groupbox_resources = QGroupBox("External resources preferences")
-        self.create_resources_preferences() #->
+        self.create_resources_preferences()  # ->
 
         self.tab_tools_layout = QVBoxLayout()
-        self.tab_tools_layout.addLayout(self.create_horizontal_box(self.groupbox_global))
+        self.tab_tools_layout.addLayout(
+            self.create_horizontal_box(self.groupbox_global)
+        )
         self.tab_tools_layout.addWidget(self.groupbox_projects)
         self.tab_tools_layout.addWidget(self.groupbox_populse)
         self.tab_tools_layout.addWidget(self.groupbox_resources)
@@ -2406,25 +2399,53 @@ class PopUpPreferences(QDialog):
         self.admin_mode_checkbox = QCheckBox("", self)
         self.admin_mode_checkbox.clicked.connect(self.admin_mode_switch)
         self.admin_mode_label = QLabel("Admin mode")
-        self.change_psswd = QPushButton("Change password", default=False, autoDefault=False)
-        self.edit_config = QPushButton("Edit config", default=False, autoDefault=False)
+        self.change_psswd = QPushButton(
+            "Change password", default=False, autoDefault=False
+        )
+        self.edit_config = QPushButton(
+            "Edit config", default=False, autoDefault=False
+        )
         self.control_checkbox = QCheckBox("", self)
         self.control_label = QLabel("Version 1 controller")
-        self.max_thumbnails_label = QLabel("Number of thumbnails in Data Browser:")
+        self.max_thumbnails_label = QLabel(
+            "Number of thumbnails in Data Browser:"
+        )
         self.max_thumbnails_box = QSpinBox()
         self.radioView_checkbox = QCheckBox("", self)
-        self.radioView_label = QLabel("Radiological orientation in miniviewer (data browser)")
+        self.radioView_label = QLabel(
+            "Radiological orientation in miniviewer (data browser)"
+        )
 
         v_box_global = QVBoxLayout()
-        v_box_global.addLayout(self.create_horizontal_box(self.save_checkbox, self.save_label))
-        v_box_global.addLayout(self.create_horizontal_box(self.clinical_mode_checkbox, self.clinical_mode_label))
-        v_box_global.addLayout(self.create_horizontal_box(self.admin_mode_checkbox, self.admin_mode_label))
+        v_box_global.addLayout(
+            self.create_horizontal_box(self.save_checkbox, self.save_label)
+        )
+        v_box_global.addLayout(
+            self.create_horizontal_box(
+                self.clinical_mode_checkbox, self.clinical_mode_label
+            )
+        )
+        v_box_global.addLayout(
+            self.create_horizontal_box(
+                self.admin_mode_checkbox, self.admin_mode_label
+            )
+        )
         v_box_global.addLayout(self.create_horizontal_box(self.change_psswd))
         v_box_global.addLayout(self.create_horizontal_box(self.edit_config))
-        v_box_global.addLayout(self.create_horizontal_box(self.control_checkbox, self.control_label))
+        v_box_global.addLayout(
+            self.create_horizontal_box(
+                self.control_checkbox, self.control_label
+            )
+        )
         v_box_global.addWidget(self.max_thumbnails_label)
-        v_box_global.addLayout(self.create_horizontal_box(self.max_thumbnails_box))
-        v_box_global.addLayout(self.create_horizontal_box(self.radioView_checkbox, self.radioView_label))
+        v_box_global.addLayout(
+            self.create_horizontal_box(self.max_thumbnails_box)
+        )
+        v_box_global.addLayout(
+            self.create_horizontal_box(
+                self.radioView_checkbox, self.radioView_label
+            )
+        )
 
         self.groupbox_global.setLayout(v_box_global)
 
@@ -2433,17 +2454,29 @@ class PopUpPreferences(QDialog):
         self.projects_save_path_label = QLabel("Projects folder:")
         self.projects_save_path_line_edit = QLineEdit()
         self.projects_save_path_browse = QPushButton("Browse")
-        self.projects_save_path_browse.clicked.connect(self.browse_projects_save_path)
-        self.max_projects_label = QLabel('Number of projects in "Saved projects":')
+        self.projects_save_path_browse.clicked.connect(
+            self.browse_projects_save_path
+        )
+        self.max_projects_label = QLabel(
+            'Number of projects in "Saved projects":'
+        )
         self.max_projects_box = QSpinBox()
 
         v_box_projects_save = QVBoxLayout()
         v_box_projects_save.addWidget(self.projects_save_path_label)
-        v_box_projects_save.addLayout(self.create_horizontal_box(self.projects_save_path_line_edit, self.projects_save_path_browse, add_stretch = False))
+        v_box_projects_save.addLayout(
+            self.create_horizontal_box(
+                self.projects_save_path_line_edit,
+                self.projects_save_path_browse,
+                add_stretch=False,
+            )
+        )
 
         v_box_max_projects = QVBoxLayout()
         v_box_max_projects.addWidget(self.max_projects_label)
-        v_box_max_projects.addLayout(self.create_horizontal_box(self.max_projects_box))
+        v_box_max_projects.addLayout(
+            self.create_horizontal_box(self.max_projects_box)
+        )
 
         projects_layout = QVBoxLayout()
         projects_layout.addLayout(v_box_projects_save)
@@ -2463,7 +2496,13 @@ class PopUpPreferences(QDialog):
 
         v_box_mri_conv = QVBoxLayout()
         v_box_mri_conv.addWidget(self.mri_conv_path_label)
-        v_box_mri_conv.addLayout(self.create_horizontal_box(self.mri_conv_path_line_edit, self.mri_conv_path_browse, add_stretch = False))
+        v_box_mri_conv.addLayout(
+            self.create_horizontal_box(
+                self.mri_conv_path_line_edit,
+                self.mri_conv_path_browse,
+                add_stretch=False,
+            )
+        )
 
         populse_layout = QVBoxLayout()
         populse_layout.addLayout(v_box_mri_conv)
@@ -2482,7 +2521,13 @@ class PopUpPreferences(QDialog):
 
         v_box_resources = QVBoxLayout()
         v_box_resources.addWidget(self.resources_path_label)
-        v_box_resources.addLayout(self.create_horizontal_box(self.resources_path_line_edit, self.resources_path_browse, add_stretch = False))
+        v_box_resources.addLayout(
+            self.create_horizontal_box(
+                self.resources_path_line_edit,
+                self.resources_path_browse,
+                add_stretch=False,
+            )
+        )
 
         resources_layout = QVBoxLayout()
         resources_layout.addLayout(v_box_resources)
@@ -2493,33 +2538,35 @@ class PopUpPreferences(QDialog):
         """Create the 'Pipeline' tab."""
         self.tab_pipeline = QWidget()
         self.tab_pipeline.setObjectName("tab_pipeline")
-        self.tab_widget.addTab(self.tab_pipeline, _translate("Dialog", "Pipeline"))
+        self.tab_widget.addTab(
+            self.tab_pipeline, _translate("Dialog", "Pipeline")
+        )
 
         self.groupbox_matlab = QGroupBox("Matlab")
-        self.create_matlab_group() #->
+        self.create_matlab_group()  # ->
 
         self.groupbox_spm = QGroupBox("SPM")
-        self.create_spm_group() # ->
+        self.create_spm_group()  # ->
 
         self.groupbox_fsl = QGroupBox("FSL")
-        self.create_fsl_group() # ->
+        self.create_fsl_group()  # ->
 
         self.groupbox_afni = QGroupBox("AFNI")
-        self.create_afni_group() # ->
+        self.create_afni_group()  # ->
 
         self.groupbox_ants = QGroupBox("ANTS")
-        self.create_ants_group() # ->
+        self.create_ants_group()  # ->
 
         self.groupbox_freesurfer = QGroupBox("FreeSurfer")
-        self.create_freesurfer_group() # ->
+        self.create_freesurfer_group()  # ->
 
         self.groupbox_mrtrix = QGroupBox("mrtrix")
-        self.create_mrtrix_group() # ->
+        self.create_mrtrix_group()  # ->
 
         groupbox_capsul = QGroupBox("CAPSUL")
-        self.create_capsul_group(groupbox_capsul) # ->
+        self.create_capsul_group(groupbox_capsul)  # ->
 
-         # general layout
+        # general layout
         self.tab_pipeline_layout = QVBoxLayout()
         self.tab_pipeline_layout.addWidget(self.groupbox_matlab)
         self.tab_pipeline_layout.addWidget(self.groupbox_spm)
@@ -2549,20 +2596,40 @@ class PopUpPreferences(QDialog):
         )
         self.matlab_standalone_choice = QLineEdit()
         self.matlab_standalone_browse = QPushButton("Browse")
-        self.matlab_standalone_browse.clicked.connect(self.browse_matlab_standalone)
-
+        self.matlab_standalone_browse.clicked.connect(
+            self.browse_matlab_standalone
+        )
 
         v_box_matlab_path = QVBoxLayout()
         v_box_matlab_path.addWidget(self.matlab_label)
-        v_box_matlab_path.addLayout(self.create_horizontal_box(self.matlab_choice, self.matlab_browse, add_stretch = False))
+        v_box_matlab_path.addLayout(
+            self.create_horizontal_box(
+                self.matlab_choice, self.matlab_browse, add_stretch=False
+            )
+        )
 
         v_box_matlab_standalone_path = QVBoxLayout()
-        v_box_matlab_standalone_path.addLayout(self.create_horizontal_box(self.use_matlab_standalone_checkbox, self.use_matlab_standalone_label))
+        v_box_matlab_standalone_path.addLayout(
+            self.create_horizontal_box(
+                self.use_matlab_standalone_checkbox,
+                self.use_matlab_standalone_label,
+            )
+        )
         v_box_matlab_standalone_path.addWidget(self.matlab_standalone_label)
-        v_box_matlab_standalone_path.addLayout(self.create_horizontal_box(self.matlab_standalone_choice, self.matlab_standalone_browse, add_stretch = False))
+        v_box_matlab_standalone_path.addLayout(
+            self.create_horizontal_box(
+                self.matlab_standalone_choice,
+                self.matlab_standalone_browse,
+                add_stretch=False,
+            )
+        )
 
         v_box_matlab = QVBoxLayout()
-        v_box_matlab.addLayout(self.create_horizontal_box(self.use_matlab_checkbox, self.use_matlab_label))
+        v_box_matlab.addLayout(
+            self.create_horizontal_box(
+                self.use_matlab_checkbox, self.use_matlab_label
+            )
+        )
         v_box_matlab.addLayout(v_box_matlab_path)
         v_box_matlab.addLayout(v_box_matlab_standalone_path)
 
@@ -2580,23 +2647,42 @@ class PopUpPreferences(QDialog):
         self.use_spm_standalone_checkbox = QCheckBox("", self)
         self.spm_standalone_label = QLabel(
             "SPM standalone path (e.g., the directory hosting the "
-            "run_spm12.sh file):")
+            "run_spm12.sh file):"
+        )
         self.spm_standalone_choice = QLineEdit()
         self.spm_standalone_browse = QPushButton("Browse")
         self.spm_standalone_browse.clicked.connect(self.browse_spm_standalone)
 
         v_box_spm_path = QVBoxLayout()
         v_box_spm_path.addWidget(self.spm_label)
-        v_box_spm_path.addLayout(self.create_horizontal_box(self.spm_choice, self.spm_browse, add_stretch = False))
+        v_box_spm_path.addLayout(
+            self.create_horizontal_box(
+                self.spm_choice, self.spm_browse, add_stretch=False
+            )
+        )
 
         v_box_spm_standalone_path = QVBoxLayout()
         v_box_spm_standalone_path.addWidget(self.spm_standalone_label)
-        v_box_spm_standalone_path.addLayout(self.create_horizontal_box(self.spm_standalone_choice, self.spm_standalone_browse, add_stretch = False))
+        v_box_spm_standalone_path.addLayout(
+            self.create_horizontal_box(
+                self.spm_standalone_choice,
+                self.spm_standalone_browse,
+                add_stretch=False,
+            )
+        )
 
         v_box_spm = QVBoxLayout()
-        v_box_spm.addLayout(self.create_horizontal_box(self.use_spm_checkbox, self.use_spm_label))
+        v_box_spm.addLayout(
+            self.create_horizontal_box(
+                self.use_spm_checkbox, self.use_spm_label
+            )
+        )
         v_box_spm.addLayout(v_box_spm_path)
-        v_box_spm.addLayout(self.create_horizontal_box(self.use_spm_standalone_checkbox, self.use_spm_standalone_label))
+        v_box_spm.addLayout(
+            self.create_horizontal_box(
+                self.use_spm_standalone_checkbox, self.use_spm_standalone_label
+            )
+        )
         v_box_spm.addLayout(v_box_spm_standalone_path)
 
         self.groupbox_spm.setLayout(v_box_spm)
@@ -2614,10 +2700,18 @@ class PopUpPreferences(QDialog):
 
         v_box_fsl_path = QVBoxLayout()
         v_box_fsl_path.addWidget(self.fsl_label)
-        v_box_fsl_path.addLayout(self.create_horizontal_box(self.fsl_choice, self.fsl_browse, add_stretch = False))
+        v_box_fsl_path.addLayout(
+            self.create_horizontal_box(
+                self.fsl_choice, self.fsl_browse, add_stretch=False
+            )
+        )
 
         v_box_fsl = QVBoxLayout()
-        v_box_fsl.addLayout(self.create_horizontal_box(self.use_fsl_checkbox, self.use_fsl_label))
+        v_box_fsl.addLayout(
+            self.create_horizontal_box(
+                self.use_fsl_checkbox, self.use_fsl_label
+            )
+        )
         v_box_fsl.addLayout(v_box_fsl_path)
 
         self.groupbox_fsl.setLayout(v_box_fsl)
@@ -2633,10 +2727,18 @@ class PopUpPreferences(QDialog):
 
         v_box_afni_path = QVBoxLayout()
         v_box_afni_path.addWidget(self.afni_label)
-        v_box_afni_path.addLayout(self.create_horizontal_box(self.afni_choice, self.afni_browse, add_stretch = False))
+        v_box_afni_path.addLayout(
+            self.create_horizontal_box(
+                self.afni_choice, self.afni_browse, add_stretch=False
+            )
+        )
 
         v_box_afni = QVBoxLayout()
-        v_box_afni.addLayout(self.create_horizontal_box(self.use_afni_checkbox, self.use_afni_label))
+        v_box_afni.addLayout(
+            self.create_horizontal_box(
+                self.use_afni_checkbox, self.use_afni_label
+            )
+        )
         v_box_afni.addLayout(v_box_afni_path)
 
         self.groupbox_afni.setLayout(v_box_afni)
@@ -2650,12 +2752,20 @@ class PopUpPreferences(QDialog):
         self.ants_browse = QPushButton("Browse")
         self.ants_browse.clicked.connect(self.browse_ants)
 
-        v_box_ants_path = QVBoxLayout()  
+        v_box_ants_path = QVBoxLayout()
         v_box_ants_path.addWidget(self.ants_label)
-        v_box_ants_path.addLayout(self.create_horizontal_box(self.ants_choice, self.ants_browse, add_stretch = False))
+        v_box_ants_path.addLayout(
+            self.create_horizontal_box(
+                self.ants_choice, self.ants_browse, add_stretch=False
+            )
+        )
 
         v_box_ants = QVBoxLayout()
-        v_box_ants.addLayout(self.create_horizontal_box(self.use_ants_checkbox, self.use_ants_label))
+        v_box_ants.addLayout(
+            self.create_horizontal_box(
+                self.use_ants_checkbox, self.use_ants_label
+            )
+        )
         v_box_ants.addLayout(v_box_ants_path)
 
         self.groupbox_ants.setLayout(v_box_ants)
@@ -2673,10 +2783,20 @@ class PopUpPreferences(QDialog):
 
         v_box_freesurfer_path = QVBoxLayout()
         v_box_freesurfer_path.addWidget(self.freesurfer_label)
-        v_box_freesurfer_path.addLayout(self.create_horizontal_box(self.freesurfer_choice, self.freesurfer_browse, add_stretch = False))
+        v_box_freesurfer_path.addLayout(
+            self.create_horizontal_box(
+                self.freesurfer_choice,
+                self.freesurfer_browse,
+                add_stretch=False,
+            )
+        )
 
         v_box_freesurfer = QVBoxLayout()
-        v_box_freesurfer.addLayout(self.create_horizontal_box(self.use_freesurfer_checkbox, self.use_freesurfer_label))
+        v_box_freesurfer.addLayout(
+            self.create_horizontal_box(
+                self.use_freesurfer_checkbox, self.use_freesurfer_label
+            )
+        )
         v_box_freesurfer.addLayout(v_box_freesurfer_path)
 
         self.groupbox_freesurfer.setLayout(v_box_freesurfer)
@@ -2692,17 +2812,27 @@ class PopUpPreferences(QDialog):
 
         v_box_mrtrix_path = QVBoxLayout()
         v_box_mrtrix_path.addWidget(self.mrtrix_label)
-        v_box_mrtrix_path.addLayout(self.create_horizontal_box(self.mrtrix_choice, self.mrtrix_browse, add_stretch = False))
+        v_box_mrtrix_path.addLayout(
+            self.create_horizontal_box(
+                self.mrtrix_choice, self.mrtrix_browse, add_stretch=False
+            )
+        )
 
         v_box_mrtrix = QVBoxLayout()
-        v_box_mrtrix.addLayout(self.create_horizontal_box(self.use_mrtrix_checkbox, self.use_mrtrix_label))
+        v_box_mrtrix.addLayout(
+            self.create_horizontal_box(
+                self.use_mrtrix_checkbox, self.use_mrtrix_label
+            )
+        )
         v_box_mrtrix.addLayout(v_box_mrtrix_path)
 
         self.groupbox_mrtrix.setLayout(v_box_mrtrix)
 
     def create_capsul_group(self, groupbox_capsul):
         """Create the CAPSUL group box."""
-        capsul_config_button = QPushButton("Edit CAPSUL config", default=False, autoDefault=False)
+        capsul_config_button = QPushButton(
+            "Edit CAPSUL config", default=False, autoDefault=False
+        )
         capsul_config_button.clicked.connect(self.edit_capsul_config)
 
         h_box_capsul = QHBoxLayout()
@@ -2723,8 +2853,14 @@ class PopUpPreferences(QDialog):
         )
 
         colors = [
-            "Black", "Blue", "Green", "Grey",
-            "Orange", "Red", "Yellow", "White"
+            "Black",
+            "Blue",
+            "Green",
+            "Grey",
+            "Orange",
+            "Red",
+            "Yellow",
+            "White",
         ]
         self.appearance_layout = QVBoxLayout()
         self.label_background_color = QLabel("Background color")
@@ -2763,10 +2899,10 @@ class PopUpPreferences(QDialog):
         self.appearance_layout.addStretch(1)
         self.tab_appearance.setLayout(self.appearance_layout)
 
-    def create_horizontal_box(self, *widgets, add_stretch = True):
+    def create_horizontal_box(self, *widgets, add_stretch=True):
         """
         Create a horizontal box layout with the given widgets.
-        
+
         :param widgets (tuple[QtWidgets.QWidget, ...]): The widgets to add
                                                         to the layout.
         :param add_stretch (bool): Whether to add stretch at the end.
@@ -2794,7 +2930,9 @@ class PopUpPreferences(QDialog):
         self.control_checkbox.setChecked(config.isControlV1())
         self.max_thumbnails_box.setValue(config.get_max_thumbnails())
         self.radioView_checkbox.setChecked(config.isRadioView())
-        self.projects_save_path_line_edit.setText(config.get_projects_save_path())
+        self.projects_save_path_line_edit.setText(
+            config.get_projects_save_path()
+        )
         self.max_projects_box.setValue(config.get_max_projects())
         self.mri_conv_path_line_edit.setText(config.get_mri_conv_path())
         self.resources_path_line_edit.setText(config.get_resources_path())
@@ -2808,15 +2946,23 @@ class PopUpPreferences(QDialog):
         self.fsl_choice.setText(config.get_fsl_config())
         self.use_matlab_checkbox.setChecked(config.get_use_matlab())
         self.matlab_choice.setText(config.get_matlab_path())
-        self.use_matlab_standalone_checkbox.setChecked(config.get_use_matlab_standalone())
-        self.matlab_standalone_choice.setText(config.get_matlab_standalone_path())
+        self.use_matlab_standalone_checkbox.setChecked(
+            config.get_use_matlab_standalone()
+        )
+        self.matlab_standalone_choice.setText(
+            config.get_matlab_standalone_path()
+        )
         self.use_mrtrix_checkbox.setChecked(config.get_use_mrtrix())
         self.mrtrix_choice.setText(config.get_mrtrix_path())
         self.use_spm_checkbox.setChecked(config.get_use_spm())
         self.spm_choice.setText(config.get_spm_path())
-        self.use_spm_standalone_checkbox.setChecked(config.get_use_spm_standalone())
+        self.use_spm_standalone_checkbox.setChecked(
+            config.get_use_spm_standalone()
+        )
         self.spm_standalone_choice.setText(config.get_spm_standalone_path())
-        self.background_color_combo.setCurrentText(config.getBackgroundColor() or "White")
+        self.background_color_combo.setCurrentText(
+            config.getBackgroundColor() or "White"
+        )
         self.text_color_combo.setCurrentText(config.getTextColor() or "Black")
         self.fullscreen_cbox.setChecked(config.get_mainwindow_maximized())
         wsize = config.get_mainwindow_size()
@@ -2826,55 +2972,77 @@ class PopUpPreferences(QDialog):
 
     def browse_fsl(self):
         """Browse for the FSL config file."""
-        fname = QFileDialog.getOpenFileName(self, "Choose FSL config file", os.path.expanduser("~"))[0]
+        fname = QFileDialog.getOpenFileName(
+            self, "Choose FSL config file", os.path.expanduser("~")
+        )[0]
         if fname:
             self.fsl_choice.setText(fname)
 
     def browse_afni(self):
         """Browse for the AFNI directory."""
-        fname = QFileDialog.getExistingDirectory(self, "Choose AFNI directory", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose AFNI directory", os.path.expanduser("~")
+        )
         if fname:
             self.afni_choice.setText(fname)
 
     def browse_ants(self):
         """Browse for the ANTS directory."""
-        fname = QFileDialog.getExistingDirectory(self, "Choose ANTS directory", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose ANTS directory", os.path.expanduser("~")
+        )
         if fname:
             self.ants_choice.setText(fname)
 
     def browse_mrtrix(self):
         """Browse for the mrtrix directory."""
-        fname = QFileDialog.getExistingDirectory(self, "Choose mrtrix directory", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose mrtrix directory", os.path.expanduser("~")
+        )
         if fname:
             self.mrtrix_choice.setText(fname)
 
     def browse_freesurfer(self):
         """Browse for the FreeSurfer env file."""
-        fname = QFileDialog.getOpenFileName(self, "Choose freesurfer env file", os.path.expanduser("~"))[0]
+        fname = QFileDialog.getOpenFileName(
+            self, "Choose freesurfer env file", os.path.expanduser("~")
+        )[0]
         if fname:
             self.freesurfer_choice.setText(fname)
 
     def browse_matlab(self):
         """Browse for the Matlab file."""
-        fname = QFileDialog.getOpenFileName(self, "Choose Matlab file", os.path.expanduser("~"))[0]
+        fname = QFileDialog.getOpenFileName(
+            self, "Choose Matlab file", os.path.expanduser("~")
+        )[0]
         if fname:
             self.matlab_choice.setText(fname)
 
     def browse_matlab_standalone(self):
         """Browse for the Matlab standalone directory."""
-        fname = QFileDialog.getExistingDirectory(self, "Choose MCR directory", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose MCR directory", os.path.expanduser("~")
+        )
         if fname:
             self.matlab_standalone_choice.setText(fname)
 
     def browse_mri_conv_path(self):
         """Browse for the MRIFileManager.jar file."""
-        fname = QFileDialog.getOpenFileName(self, "Select the location of the MRIManager.jar file", os.path.expanduser("~"))[0]
+        fname = QFileDialog.getOpenFileName(
+            self,
+            "Select the location of the MRIManager.jar file",
+            os.path.expanduser("~"),
+        )[0]
         if fname:
             self.mri_conv_path_line_edit.setText(fname)
 
     def browse_projects_save_path(self):
         """Browse for the projects folder."""
-        fname = QFileDialog.getExistingDirectory(self, "Select a folder where to save the projects", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self,
+            "Select a folder where to save the projects",
+            os.path.expanduser("~"),
+        )
         if fname:
             self.projects_save_path_line_edit.setText(fname)
             with open(os.path.join(fname, ".gitignore"), "w") as myFile:
@@ -2882,19 +3050,27 @@ class PopUpPreferences(QDialog):
 
     def browse_resources_path(self):
         """Browse for the resources folder."""
-        fname = QFileDialog.getExistingDirectory(self, "Select the location of the External resources folder", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self,
+            "Select the location of the External resources folder",
+            os.path.expanduser("~"),
+        )
         if fname:
             self.resources_path_line_edit.setText(fname)
 
     def browse_spm(self):
         """Browse for the SPM directory."""
-        fname = QFileDialog.getExistingDirectory(self, "Choose SPM directory", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose SPM directory", os.path.expanduser("~")
+        )
         if fname:
             self.spm_choice.setText(fname)
 
     def browse_spm_standalone(self):
         """Browse for the SPM standalone directory."""
-        fname = QFileDialog.getExistingDirectory(self, "Choose SPM standalone directory", os.path.expanduser("~"))
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose SPM standalone directory", os.path.expanduser("~")
+        )
         if fname:
             self.spm_standalone_choice.setText(fname)
 
@@ -2912,7 +3088,9 @@ class PopUpPreferences(QDialog):
         change.new_psswd.setEchoMode(QLineEdit.Password)
         change.new_psswd_conf.setEchoMode(QLineEdit.Password)
 
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self)
+        buttonBox = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self
+        )
 
         layout = QFormLayout()
         layout.addRow("Old password", change.old_psswd)
@@ -3136,7 +3314,9 @@ class PopUpPreferences(QDialog):
 
         use_freesurfer = capsul_config.get_use_freesurfer()
         if use_freesurfer:
-            self.freesurfer_choice.setText(capsul_config.get_freesurfer_setup())
+            self.freesurfer_choice.setText(
+                capsul_config.get_freesurfer_setup()
+            )
         self.use_freesurfer_checkbox.setChecked(use_freesurfer)
 
         use_fsl = capsul_config.get_use_fsl()
@@ -3150,7 +3330,9 @@ class PopUpPreferences(QDialog):
 
         use_matlab_sa = capsul_config.get_use_matlab_standalone()
         self.use_matlab_standalone_checkbox.setChecked(use_matlab_sa)
-        self.matlab_standalone_choice.setText(capsul_config.get_matlab_standalone_path())
+        self.matlab_standalone_choice.setText(
+            capsul_config.get_matlab_standalone_path()
+        )
 
         use_mrtrix = capsul_config.get_use_mrtrix()
         if use_mrtrix:
@@ -3163,7 +3345,9 @@ class PopUpPreferences(QDialog):
 
         use_spm_sa = capsul_config.get_use_spm_standalone()
         self.use_spm_standalone_checkbox.setChecked(use_spm_sa)
-        self.spm_standalone_choice.setText(capsul_config.get_spm_standalone_path())
+        self.spm_standalone_choice.setText(
+            capsul_config.get_spm_standalone_path()
+        )
 
     def validate_and_save(self, OK_clicked=False):
         """Validate and save the preferences."""
@@ -3190,25 +3374,36 @@ class PopUpPreferences(QDialog):
         config.set_matlab_path(self.matlab_choice.text())
         config.set_use_matlab(self.use_matlab_checkbox.isChecked())
         config.set_matlab_standalone_path(self.matlab_standalone_choice.text())
-        config.set_use_matlab_standalone(self.use_matlab_standalone_checkbox.isChecked())
+        config.set_use_matlab_standalone(
+            self.use_matlab_standalone_checkbox.isChecked()
+        )
         config.set_mrtrix_path(self.mrtrix_choice.text())
         config.set_use_mrtrix(self.use_mrtrix_checkbox.isChecked())
         config.set_spm_path(self.spm_choice.text())
         config.set_use_spm(self.use_spm_checkbox.isChecked())
         config.set_spm_standalone_path(self.spm_standalone_choice.text())
-        config.set_use_spm_standalone(self.use_spm_standalone_checkbox.isChecked())
+        config.set_use_spm_standalone(
+            self.use_spm_standalone_checkbox.isChecked()
+        )
 
     def save_full_config(self, config):
         """Save the full configuration and validate settings."""
         config.setAutoSave(self.save_checkbox.isChecked())
         config.set_radioView(self.radioView_checkbox.isChecked())
         config.setControlV1(self.control_checkbox.isChecked())
-        config.set_max_thumbnails(min(max(self.max_thumbnails_box.value(), 1), 15))
+        config.set_max_thumbnails(
+            min(max(self.max_thumbnails_box.value(), 1), 15)
+        )
         config.set_max_projects(min(max(self.max_projects_box.value(), 1), 20))
         config.set_user_mode(not self.admin_mode_checkbox.isChecked())
         config.set_clinical_mode(self.clinical_mode_checkbox.isChecked())
         config.set_mainwindow_maximized(self.fullscreen_cbox.isChecked())
-        config.set_mainwindow_size([self.mainwindow_size_x_spinbox.value(), self.mainwindow_size_y_spinbox.value()])
+        config.set_mainwindow_size(
+            [
+                self.mainwindow_size_x_spinbox.value(),
+                self.mainwindow_size_y_spinbox.value(),
+            ]
+        )
         config.setBackgroundColor(self.background_color_combo.currentText())
         config.setTextColor(self.text_color_combo.currentText())
 
@@ -3245,72 +3440,69 @@ class PopUpPreferences(QDialog):
                 self.afni_choice.text(),
                 self.use_afni_checkbox.isChecked(),
                 "afni",
-                "afni"
+                "afni",
             ),
             (
                 "ANTS",
                 self.ants_choice.text(),
                 self.use_ants_checkbox.isChecked(),
                 "SmoothImage",
-                "ANTS"
+                "ANTS",
             ),
             (
                 "FreeSurfer",
                 self.freesurfer_choice.text(),
                 self.use_freesurfer_checkbox.isChecked(),
                 "recon-all",
-                "freesurfer"
+                "freesurfer",
             ),
             (
                 "FSL",
                 self.fsl_choice.text(),
                 self.use_fsl_checkbox.isChecked(),
                 "flirt",
-                "FSL"
+                "FSL",
             ),
             (
                 "Matlab",
                 self.matlab_choice.text(),
                 self.use_matlab_checkbox.isChecked(),
                 None,
-                "Matlab"
+                "Matlab",
             ),
             (
                 "Matlab Standalone",
                 self.matlab_standalone_choice.text(),
                 self.use_matlab_standalone_checkbox.isChecked(),
                 None,
-                "Matlab standalone"
+                "Matlab standalone",
             ),
             (
                 "mrtrix",
                 self.mrtrix_choice.text(),
                 self.use_mrtrix_checkbox.isChecked(),
                 "mrinfo",
-                "mrtrix"
+                "mrtrix",
             ),
             (
                 "SPM",
                 self.spm_choice.text(),
                 self.use_spm_checkbox.isChecked(),
                 None,
-                "SPM"
+                "SPM",
             ),
             (
                 "SPM Standalone",
                 self.spm_standalone_choice.text(),
                 self.use_spm_standalone_checkbox.isChecked(),
                 None,
-                "SPM standalone"
-            )
+                "SPM standalone",
+            ),
         ]
 
         for tool_name, path, is_checked, cmd, config_name in tools:
-            if (
-                is_checked and not
-                self.validate_tool_path(
-                    tool_name, path, cmd, config, config_name
-                )
+            if is_checked and not self.validate_tool_path(
+                tool_name, path, cmd, config, config_name
             ):
                 QApplication.restoreOverrideCursor()
                 return False
@@ -3322,7 +3514,7 @@ class PopUpPreferences(QDialog):
             self.show_error_message(
                 "Invalid projects folder path",
                 f"The projects folder path entered `{projects_folder}` is "
-                f"invalid."
+                f"invalid.",
             )
             QApplication.restoreOverrideCursor()
             return False
@@ -3331,7 +3523,8 @@ class PopUpPreferences(QDialog):
         if mri_conv_path == "":
             self.show_warning_message(
                 "Empty MRIFileManager.jar path",
-                "No path has been entered for MRIFileManager.jar.")
+                "No path has been entered for MRIFileManager.jar.",
+            )
             config.set_mri_conv_path(mri_conv_path)
         elif os.path.isfile(mri_conv_path):
             config.set_mri_conv_path(mri_conv_path)
@@ -3339,7 +3532,7 @@ class PopUpPreferences(QDialog):
             self.show_error_message(
                 "Invalid MRIFileManager.jar path",
                 f"The MRIFileManager.jar path entered '{mri_conv_path}' is "
-                f"invalid."
+                f"invalid.",
             )
             QApplication.restoreOverrideCursor()
             return False
@@ -3351,7 +3544,7 @@ class PopUpPreferences(QDialog):
             self.show_error_message(
                 "Invalid resources folder path",
                 f"The resources folder path entered '{resources_folder}' is "
-                f"invalid."
+                f"invalid.",
             )
             QApplication.restoreOverrideCursor()
             return False
@@ -3389,7 +3582,8 @@ class PopUpPreferences(QDialog):
                     [cmd, "--version"],
                     stdin=subprocess.PIPE,
                     stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE)
+                    stderr=subprocess.PIPE,
+                )
                 output, err = p.communicate()
 
                 if err == b"":
@@ -3458,11 +3652,11 @@ class PopUpPreferences(QDialog):
                     "-nosplash",
                     "-singleCompThread",
                     "-r",
-                    matlab_cmd
+                    matlab_cmd,
                 ],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
+                stderr=subprocess.PIPE,
             )
             output, err = p.communicate()
 
@@ -3526,11 +3720,11 @@ class PopUpPreferences(QDialog):
                     "-nosplash",
                     "-singleCompThread",
                     "-r",
-                    matlab_cmd
+                    matlab_cmd,
                 ],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
+                stderr=subprocess.PIPE,
             )
             output, err = p.communicate()
 
@@ -3564,9 +3758,8 @@ class PopUpPreferences(QDialog):
             self.wrong_path(matlab_path, "Matlab standalone")
             return False
 
-        if (
-            (matlab_path == config.get_matlab_standalone_path())
-            and (path == config.get_spm_standalone_path())
+        if (matlab_path == config.get_matlab_standalone_path()) and (
+            path == config.get_spm_standalone_path()
         ):
             config.set_use_spm_standalone(True)
 
@@ -3608,7 +3801,7 @@ class PopUpPreferences(QDialog):
                             [mcr[pos], "--version"],
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE
+                            stderr=subprocess.PIPE,
                         )
 
                     else:
@@ -3616,14 +3809,13 @@ class PopUpPreferences(QDialog):
                             [mcr[0], matlab_path, "--version"],
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE
+                            stderr=subprocess.PIPE,
                         )
 
                     output, err = p.communicate()
 
-                    if (
-                        (err == b"" and output != b"")
-                        or output.startswith(b"SPM8 ")
+                    if (err == b"" and output != b"") or output.startswith(
+                        b"SPM8 "
                     ):
                         config.set_use_spm_standalone(True)
                         config.set_spm_standalone_path(path)
@@ -3806,9 +3998,7 @@ class PopUpPreferences(QDialog):
         self.mrtrix_choice.setDisabled(
             not self.use_mrtrix_checkbox.isChecked()
         )
-        self.mrtrix_label.setDisabled(
-            not self.use_mrtrix_checkbox.isChecked()
-        )
+        self.mrtrix_label.setDisabled(not self.use_mrtrix_checkbox.isChecked())
 
     def use_spm_changed(self):
         """Handle the use_spm checkbox change event."""
@@ -3885,14 +4075,6 @@ class PopUpPreferences(QDialog):
         else:
             self.change_psswd.setVisible(False)
             self.edit_config.setVisible(False)
-
-
-
-
-
-
-
-
 
 
 class PopUpProperties(QDialog):
@@ -4528,7 +4710,9 @@ class PopUpSeeAllProjects(QDialog):
         if os.path.exists(os.path.join(path)):
             icon = QtGui.QIcon(os.path.join(sources_images_dir, "green_v.png"))
         else:
-            icon = QtGui.QIcon(os.path.join(sources_images_dir, "red_cross.png"))
+            icon = QtGui.QIcon(
+                os.path.join(sources_images_dir, "red_cross.png")
+            )
         return icon
 
     def item_to_path(self):
@@ -4985,9 +5169,7 @@ class PopUpShowHistory(QDialog):
             layout = QVBoxLayout()
             self.splitter = QSplitter(Qt.Qt.Vertical)
             self.table = QTableWidget()
-            self.table.setVerticalScrollMode(
-                QAbstractItemView.ScrollPerPixel
-            )
+            self.table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
             self.table.setHorizontalScrollMode(
                 QAbstractItemView.ScrollPerPixel
             )
