@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module used by mia_processes bricks to run processes.
 
@@ -123,7 +122,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         """
 
-        super(MIAProcessCompletionEngine, self).__init__(process, name)
+        super().__init__(process, name)
 
         self.fallback_engine = fallback_engine
         self.completion_progress = 0.0
@@ -402,7 +401,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 if isinstance(in_process, NipypeProcess):
                     # fmt: off
                     print(
-                        "\n. {0} ({1}) nipype node ...".format(
+                        "\n. {} ({}) nipype node ...".format(
                             node_name,
                             ".".join(
                                 (
@@ -417,7 +416,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     # fmt: on
                 else:
                     print(
-                        "\n. {0} ({1}) regular node ...".format(
+                        "\n. {} ({}) regular node ...".format(
                             node_name,
                             ".".join(
                                 (
@@ -495,7 +494,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 node_name = name
 
             print(
-                "\n. {0} ({1}) MIA node ...".format(
+                "\n. {} ({}) MIA node ...".format(
                     node_name,
                     ".".join(
                         [in_process.__module__, in_process.__class__.__name__]
@@ -626,7 +625,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         except Exception as e:
             print("\nError during initialisation ...!\nTraceback:")
             print("".join(traceback.format_tb(e.__traceback__)), end="")
-            print("{0}: {1}\n".format(e.__class__.__name__, e))
+            print(f"{e.__class__.__name__}: {e}\n")
             initResult_dict = {}
 
         if not initResult_dict:
@@ -840,7 +839,7 @@ class ProcessMIA(Process):
     key = {}
 
     def __init__(self, *args, **kwargs):
-        super(ProcessMIA, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.requirement = None
         self.outputs = {}
         self.inheritance_dict = {}
@@ -1003,7 +1002,7 @@ class ProcessMIA(Process):
             or (not self.outputs)
         ):
             print(
-                "\nDuring the {0} process initialisation, some possible "
+                "\nDuring the {} process initialisation, some possible "
                 "problems were detected:".format(
                     getattr(self, "context_name", self.name).rsplit(".", 1)[-1]
                 )
@@ -1124,15 +1123,13 @@ class ProcessMIA(Process):
             except Exception:
                 pass
 
-        banished_tags = set(
-            [
-                TAG_TYPE,
-                TAG_BRICKS,
-                TAG_CHECKSUM,
-                TAG_FILENAME,
-                TAG_HISTORY,
-            ]
-        )
+        banished_tags = {
+            TAG_TYPE,
+            TAG_BRICKS,
+            TAG_CHECKSUM,
+            TAG_FILENAME,
+            TAG_HISTORY,
+        }
 
         if isinstance(in_file, str):
             in_files = {None: in_file}
@@ -1208,9 +1205,9 @@ class ProcessMIA(Process):
 
             else:
                 print(
-                    "{0} brick initialization warning:\n"
-                    "    {1} has no tags registered yet.\n"
-                    "    So, {2} cannot inherit its tags...\n"
+                    "{} brick initialization warning:\n"
+                    "    {} has no tags registered yet.\n"
+                    "    So, {} cannot inherit its tags...\n"
                     "    This can lead to a subsequent issue during "
                     "initialization!!\n".format(
                         self.context_name, in_file, out_file

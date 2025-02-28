@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This module provides an abstract base class for data viewer implemenataions in
 populse-mia.
@@ -25,7 +24,7 @@ class named ``MiaViewer`` which:
 """
 
 
-class DataViewer(object):
+class DataViewer:
     """
     Populse-MIA data viewers abstract base class: it just gives an API to be
     overloaded by subclasses.
