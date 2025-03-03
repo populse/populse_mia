@@ -3274,10 +3274,21 @@ class PopUpPreferences(QDialog):
             index = regex.indexIn(self.editConf.txt.toPlainText(), pos)
 
     def edit_capsul_config(self):
-        """Capsul engine edition."""
+        """
+        Capsul engine edition.
+
+        This method is used when user hit the Edit CAPSUL config button
+        (File > MIA preferences > Pipeline tab).
+        """
+
+        # Validate the current Mia config first
+        if not self.validate_and_save():
+            return
+
         config = Config()
         capsul_config = config.get_capsul_config(sync_from_engine=False)
         modules = capsul_config.get("engine_modules", [])
+        # Build a temporary new engine (because it may not be validated)
         engine = capsul_engine()
 
         for module in modules + [
@@ -3327,64 +3338,70 @@ class PopUpPreferences(QDialog):
                 config.set_capsul_config(capsul_config)
 
             except Exception as e:
-                logger.warning(f"{e}")
+                logger.warning(e)
                 return
 
+            # Update Mia preferences GUI which might have changed
             self.update_gui_from_capsul_config(capsul_config)
 
         del dialog
         del engine
 
-    def update_gui_from_capsul_config(self, capsul_config):
+    def update_gui_from_capsul_config(self, conf):
         """Update the GUI based on the CAPSUL configuration."""
-        use_afni = capsul_config.get_use_afni()
+        # afni
+        use_afni = conf.get_use_afni()
 
         if use_afni:
-            self.afni_choice.setText(capsul_config.get_afni_path())
+            self.afni_choice.setText(conf.get_afni_path())
 
         self.use_afni_checkbox.setChecked(use_afni)
-        use_ants = capsul_config.get_use_ants()
+        # ants
+        use_ants = conf.get_use_ants()
 
         if use_ants:
-            self.ants_choice.setText(capsul_config.get_ants_path())
+            self.ants_choice.setText(conf.get_ants_path())
 
         self.use_ants_checkbox.setChecked(use_ants)
-        use_freesurfer = capsul_config.get_use_freesurfer()
+        # freesurfer
+        use_freesurfer = conf.get_use_freesurfer()
 
         if use_freesurfer:
-            self.freesurfer_choice.setText(
-                capsul_config.get_freesurfer_setup()
-            )
+            self.freesurfer_choice.setText(conf.get_freesurfer_setup())
 
         self.use_freesurfer_checkbox.setChecked(use_freesurfer)
-        use_fsl = capsul_config.get_use_fsl()
+        # fsl
+        use_fsl = conf.get_use_fsl()
 
         if use_fsl:
-            self.fsl_choice.setText(capsul_config.get_fsl_config())
+            self.fsl_choice.setText(conf.get_fsl_config())
 
         self.use_fsl_checkbox.setChecked(use_fsl)
-        use_matlab = capsul_config.get_use_matlab()
+        # matlab
+        use_matlab = conf.get_use_matlab()
         self.use_matlab_checkbox.setChecked(use_matlab)
-        self.matlab_choice.setText(capsul_config.get_matlab_path())
-        use_matlab_sa = capsul_config.get_use_matlab_standalone()
+        self.matlab_choice.setText(conf.get_matlab_path())
+        # matlab - MCR
+        use_matlab_sa = conf.get_use_matlab_standalone()
         self.use_matlab_standalone_checkbox.setChecked(use_matlab_sa)
         self.matlab_standalone_choice.setText(
-            capsul_config.get_matlab_standalone_path()
+            conf.get_matlab_standalone_path()
         )
-        use_mrtrix = capsul_config.get_use_mrtrix()
+        # mrtrix
+        use_mrtrix = conf.get_use_mrtrix()
 
         if use_mrtrix:
-            self.mrtrix_choice.setText(capsul_config.get_mrtrix_path())
+            self.mrtrix_choice.setText(conf.get_mrtrix_path())
 
         self.use_mrtrix_checkbox.setChecked(use_mrtrix)
-        use_spm = capsul_config.get_use_spm()
+        # spm
+        use_spm = conf.get_use_spm()
         self.use_spm_checkbox.setChecked(use_spm)
-        self.spm_choice.setText(capsul_config.get_spm_path())
-        use_spm_sa = capsul_config.get_use_spm_standalone()
+        self.spm_choice.setText(conf.get_spm_path())
+        # spm - Standalone
+        use_spm_sa = conf.get_use_spm_standalone()
         self.use_spm_standalone_checkbox.setChecked(use_spm_sa)
-        self.spm_standalone_choice.setText(
-            capsul_config.get_spm_standalone_path()
-        )
+        self.spm_standalone_choice.setText(conf.get_spm_standalone_path())
 
     def validate_and_save(self, OK_clicked=False):  ####
         """Validate and save the preferences."""
@@ -3395,9 +3412,276 @@ class PopUpPreferences(QDialog):
             self.save_minimal_config(config)
 
         else:
-            # Complete backup and testing
-            self.save_full_config(config)
 
+            # Complete backup and testing
+            if not self.save_full_config(config):
+                return False
+
+        c_c = config.config.setdefault("capsul_config", {})
+        c_e = config.get_capsul_engine()
+
+        if c_c and c_e:
+            # sync capsul config from mia config, if module is not used:
+
+            # AFNI CapsulConfig
+            if not config.get_use_afni():
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configafni = settings.config("afni", "global")
+
+                    if configafni:
+                        settings.remove_config(
+                            "afni", "global", getattr(configafni, cif)
+                        )
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c["engine"]["global"]["capsul.engine.module.afni"][
+                        "afni"
+                    ]["directory"]
+
+                except KeyError:
+                    pass
+
+            # ANTS CapsulConfig
+            if not config.get_use_ants():
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configants = settings.config("ants", "global")
+
+                    if configants:
+                        settings.remove_config(
+                            "ants", "global", getattr(configants, cif)
+                        )
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c["engine"]["global"]["capsul.engine.module.ants"][
+                        "ants"
+                    ]["directory"]
+
+                except KeyError:
+                    pass
+
+            # freesurfer CapsulConfig
+            if not config.get_use_freesurfer():
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configants = settings.config("freesurfer", "global")
+
+                    if configants:
+                        settings.remove_config(
+                            "freesurfer", "global", getattr(configants, cif)
+                        )
+
+                # TODO: We could use a generic method to deal with c_c?
+                # try:
+                #     del c_c["engine"]["global"][
+                #         "capsul.engine.module.freesurfer"
+                #         ]["freesurfer"
+                #          ]["directory"]
+                #
+                # except KeyError:
+                #     pass
+
+            # FSL CapsulConfig
+            if not config.get_use_fsl():
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configfsl = settings.config("fsl", "global")
+
+                    if configfsl:
+                        settings.remove_config(
+                            "fsl", "global", getattr(configfsl, cif)
+                        )
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c["engine"]["global"]["capsul.engine.module.fsl"][
+                        "fsl"
+                    ]["directory"]
+
+                except KeyError:
+                    pass
+
+                try:
+                    del c_c["engine"]["global"]["capsul.engine.module.fsl"][
+                        "fsl"
+                    ]["config"]
+
+                except KeyError:
+                    pass
+
+            # mrtrix CapsulConfig
+            if not config.get_use_mrtrix():
+                # TODO: We only deal here with the global environment
+                cif = c_e.settings.config_id_field
+
+                with c_e.settings as settings:
+                    configants = settings.config("mrtrix", "global")
+
+                    if configants:
+                        settings.remove_config(
+                            "mrtrix", "global", getattr(configants, cif)
+                        )
+
+                # TODO: We could use a generic method to deal with c_c?
+                try:
+                    del c_c["engine"]["global"]["capsul.engine.module.mrtrix"][
+                        "mrtrix"
+                    ]["directory"]
+
+                except KeyError:
+                    pass
+
+            # SPM standalone CapsulConfig
+            if not config.get_use_spm_standalone():
+                try:
+                    keys = c_c["engine"]["global"][
+                        "capsul.engine.module.spm"
+                    ].keys()
+
+                except KeyError:
+                    pass
+
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
+
+                    for i in keys:
+                        if (
+                            "standalone"
+                            in c_c["engine"]["global"][
+                                "capsul.engine.module.spm"
+                            ][i]
+                        ):
+                            if (
+                                c_c["engine"]["global"][
+                                    "capsul.engine.module.spm"
+                                ][i]["standalone"]
+                                is True
+                            ):
+                                dict4clean[i] = True
+
+                        else:
+                            # TODO: What we do if standalone is not a key ?
+                            pass
+
+                    for i in dict4clean:
+                        if dict4clean[i]:
+                            del c_c["engine"]["global"][
+                                "capsul.engine.module.spm"
+                            ][i]
+
+            if not config.get_use_spm():
+                try:
+                    keys = c_c["engine"]["global"][
+                        "capsul.engine.module.spm"
+                    ].keys()
+
+                except KeyError:
+                    pass
+
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
+
+                    for i in keys:
+                        if (
+                            "standalone"
+                            in c_c["engine"]["global"][
+                                "capsul.engine.module.spm"
+                            ][i]
+                        ):
+                            if (
+                                c_c["engine"]["global"][
+                                    "capsul.engine.module.spm"
+                                ][i]["standalone"]
+                                is False
+                            ):
+                                dict4clean[i] = True
+
+                    for i in dict4clean:
+                        if dict4clean[i]:
+                            del c_c["engine"]["global"][
+                                "capsul.engine.module.spm"
+                            ][i]
+
+            try:
+                if not c_c["engine"]["global"]["capsul.engine.module.spm"]:
+                    del c_c["engine"]["global"]["capsul.engine.module.spm"]
+
+            except KeyError:
+                pass
+
+            if not config.get_use_matlab():
+                try:
+                    keys = c_c["engine"]["global"][
+                        "capsul.engine.module.matlab"
+                    ].keys()
+
+                except KeyError:
+                    pass
+
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
+
+                    for i in keys:
+                        if (
+                            "executable"
+                            in c_c["engine"]["global"][
+                                "capsul.engine.module.matlab"
+                            ][i]
+                        ):
+                            dict4clean[i] = True
+
+                    for i in dict4clean:
+                        if dict4clean[i]:
+                            del c_c["engine"]["global"][
+                                "capsul.engine.module.matlab"
+                            ][i]["executable"]
+
+            if not config.get_use_matlab_standalone():
+                try:
+                    keys = c_c["engine"]["global"][
+                        "capsul.engine.module.matlab"
+                    ].keys()
+
+                except KeyError:
+                    pass
+
+                else:
+                    dict4clean = dict.fromkeys(keys, False)
+
+                    for i in keys:
+                        if (
+                            "mcr_directory"
+                            in c_c["engine"]["global"][
+                                "capsul.engine.module.matlab"
+                            ][i]
+                        ):
+                            dict4clean[i] = True
+
+                    for i in dict4clean:
+                        if dict4clean[i]:
+                            del c_c["engine"]["global"][
+                                "capsul.engine.module.matlab"
+                            ][i]["mcr_directory"]
+
+            try:
+                if not c_c["engine"]["global"]["capsul.engine.module.matlab"]:
+                    del c_c["engine"]["global"]["capsul.engine.module.matlab"]
+
+            except KeyError:
+                pass
+
+        config.get_capsul_config(sync_from_engine=False)
         config.saveConfig()
         return True
 
@@ -3498,6 +3782,8 @@ class PopUpPreferences(QDialog):
                 "AFNI",
                 self.afni_choice.text(),
                 self.use_afni_checkbox.isChecked(),
+                config.set_use_afni,
+                config.set_afni_path,
                 "afni",
                 "afni",
             ),
@@ -3505,6 +3791,8 @@ class PopUpPreferences(QDialog):
                 "ANTS",
                 self.ants_choice.text(),
                 self.use_ants_checkbox.isChecked(),
+                config.set_use_ants,
+                config.set_ants_path,
                 "SmoothImage",
                 "ANTS",
             ),
@@ -3512,6 +3800,8 @@ class PopUpPreferences(QDialog):
                 "FreeSurfer",
                 self.freesurfer_choice.text(),
                 self.use_freesurfer_checkbox.isChecked(),
+                config.set_use_freesurfer,
+                config.set_freesurfer_setup,
                 "recon-all",
                 "freesurfer",
             ),
@@ -3519,59 +3809,78 @@ class PopUpPreferences(QDialog):
                 "FSL",
                 self.fsl_choice.text(),
                 self.use_fsl_checkbox.isChecked(),
+                config.set_use_fsl,
+                config.set_fsl_config,
                 "flirt",
                 "FSL",
+            ),
+            (
+                "mrtrix",
+                self.mrtrix_choice.text(),
+                self.use_mrtrix_checkbox.isChecked(),
+                config.set_use_mrtrix,
+                config.set_use_mrtrix,
+                "mrinfo",
+                "mrtrix",
             ),
             (
                 "Matlab",
                 self.matlab_choice.text(),
                 self.use_matlab_checkbox.isChecked(),
                 None,
-                "Matlab",
-            ),
-            (
-                "Matlab Standalone",
-                self.matlab_standalone_choice.text(),
-                self.use_matlab_standalone_checkbox.isChecked(),
                 None,
-                "Matlab standalone",
-            ),
-            (
-                "mrtrix",
-                self.mrtrix_choice.text(),
-                self.use_mrtrix_checkbox.isChecked(),
-                "mrinfo",
-                "mrtrix",
+                None,
+                "Matlab",
             ),
             (
                 "SPM",
                 self.spm_choice.text(),
                 self.use_spm_checkbox.isChecked(),
                 None,
+                None,
+                None,
                 "SPM",
+            ),
+            (
+                "Matlab Standalone",
+                self.matlab_standalone_choice.text(),
+                self.use_matlab_standalone_checkbox.isChecked(),
+                None,
+                None,
+                None,
+                "Matlab standalone",
             ),
             (
                 "SPM Standalone",
                 self.spm_standalone_choice.text(),
                 self.use_spm_standalone_checkbox.isChecked(),
                 None,
+                None,
+                None,
                 "SPM standalone",
             ),
         ]
 
-        for tool_name, path, is_checked, cmd, config_name in tools:
+        for (
+            tool_name,
+            path,
+            is_checked,
+            set_in_use,
+            set_path,
+            cmd,
+            config_name,
+        ) in tools:
 
             if not is_checked:
+                set_in_use(is_checked)
 
-                if tool_name == "AFNI":
-                    config.set_use_afni(False)
-
-            elif is_checked and not self.validate_tool_path(
-                tool_name, path, cmd, config, config_name
+            elif not self.validate_tool_path(
+                tool_name, path, cmd, config, config_name, set_in_use, set_path
             ):
                 QApplication.restoreOverrideCursor()
                 return False
 
+        # Projects folder
         projects_folder = self.projects_save_path_line_edit.text()
 
         if os.path.isdir(projects_folder):
@@ -3586,6 +3895,7 @@ class PopUpPreferences(QDialog):
             QApplication.restoreOverrideCursor()
             return False
 
+        # MRIFileManager.jar path
         mri_conv_path = self.mri_conv_path_line_edit.text()
 
         if mri_conv_path == "":
@@ -3607,6 +3917,7 @@ class PopUpPreferences(QDialog):
             QApplication.restoreOverrideCursor()
             return False
 
+        # Resources folder
         resources_folder = self.resources_path_line_edit.text()
 
         if os.path.isdir(resources_folder):
@@ -3624,32 +3935,40 @@ class PopUpPreferences(QDialog):
         QApplication.restoreOverrideCursor()
         return True
 
-    def validate_tool_path(self, tool_name, path, cmd, config, config_name):
+    def validate_tool_path(
+        self, tool_name, path, cmd, config, config_name, set_in_use, set_path
+    ):
         """Validate the tool path."""
+        extra = ""
 
-        if not os.path.isdir(path):
+        if tool_name in ["FreeSurfer", "FSL"]:
+            path_setup = path
+            path = os.path.dirname(path)
+            extra = "bin"
+
+            if "FREESURFER_HOME" not in os.environ:
+                os.environ["FREESURFER_HOME"] = path
+
+            if tool_name == "FSL":
+
+                if path.endswith(os.path.join("etc", "fslconf")):
+                    path = os.path.dirname(os.path.dirname(path))
+
+                elif path.endswith("etc"):
+                    path = os.path.dirname(path)
+
+        if tool_name not in [
+            "Matlab",
+            "Matlab Standalone",
+            "SPM",
+            "SPM Standalone",
+        ] and not os.path.isdir(path):
             self.wrong_path(path, tool_name)
             return False
 
+        cmd = os.path.join(path, extra, cmd) if cmd else None
+
         if cmd:
-
-            if tool_name == "AFNI":
-                cmd = os.path.join(path, cmd)
-
-            elif tool_name == "FreeSurfer":
-                os.environ["FREESURFER_HOME"] = os.path.dirname(path)
-                cmd = os.path.join(os.path.dirname(path), "bin", cmd)
-
-            elif tool_name == "FSL" and not path.endswith("flirt"):
-                fsl_dir = os.path.dirname(path)
-
-                if fsl_dir.endswith(os.path.join("etc", "fslconf")):
-                    fsl_dir = os.path.dirname(os.path.dirname(fsl_dir))
-
-                elif fsl_dir.endswith("etc"):
-                    fsl_dir = os.path.dirname(fsl_dir)
-
-                cmd = os.path.join(fsl_dir, "bin", "flirt")
 
             try:
                 result = subprocess.run(
@@ -3661,7 +3980,7 @@ class PopUpPreferences(QDialog):
                 err = result.stderr
 
             except subprocess.CalledProcessError:
-                self.wrong_path(path, tool_name)
+                self.wrong_path(path, tool_name, "config file")
                 return False
 
             except Exception as e:  # Catch any other unexpected errors
@@ -3680,23 +3999,13 @@ class PopUpPreferences(QDialog):
 
             if err == "":
 
-                if tool_name == "AFNI":
-                    config.set_afni_path(path)
-                    config.set_use_afni(True)
+                if tool_name in ["FreeSurfer", "FSL"]:
+                    set_path(path_setup)
 
-                elif tool_name == "ANTS":
-                    config.set_ants_path(path)
+                else:
+                    set_path(path)
 
-                elif tool_name == "FreeSurfer":
-                    config.set_freesurfer_setup(path)
-
-                elif tool_name == "FSL":
-                    config.set_fsl_config(path)
-
-                elif tool_name == "mrtrix":
-                    config.set_mrtrix_path(path)
-
-                return True
+                set_in_use(True)
 
             else:
                 self.wrong_path(path, tool_name)
@@ -3707,14 +4016,14 @@ class PopUpPreferences(QDialog):
             if not self.validate_matlab_path(path, config):
                 return False
 
-        elif tool_name == "Matlab Standalone":
-
-            if not self.validate_matlab_standalone_path(path, config):
-                return False
-
         elif tool_name == "SPM":
 
             if not self.validate_spm_path(path, config):
+                return False
+
+        elif tool_name == "Matlab Standalone":
+
+            if not self.validate_matlab_standalone_path(path, config):
                 return False
 
         elif tool_name == "SPM Standalone":
@@ -3731,112 +4040,175 @@ class PopUpPreferences(QDialog):
             self.wrong_path(path, "Matlab")
             return False
 
-        try:
-            matlab_cmd = "ver; exit"
-            p = subprocess.Popen(
-                [
-                    path,
-                    "-nodisplay",
-                    "-nodesktop",
-                    "-nosplash",
-                    "-singleCompThread",
-                    "-r",
-                    matlab_cmd,
-                ],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            output, err = p.communicate()
+        if path == config.get_matlab_path():
+            config.set_use_matlab(True)
+            config.set_use_matlab_standalone(False)
 
-            if err == b"":
+            if not self.use_spm_checkbox.isChecked():
+                config.set_use_spm(False)
+                config.set_use_spm_standalone(False)
+                # We don't test matlab because it has already been
+                # tested before
+
+        elif not self.use_spm_checkbox.isChecked():
+
+            try:
+                matlab_cmd = "ver; exit"
+                result = subprocess.run(
+                    [
+                        path,
+                        "-nodisplay",
+                        "-nodesktop",
+                        "-nosplash",
+                        "-singleCompThread",
+                        "-r",
+                        matlab_cmd,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                err = result.stderr
+
+            except subprocess.CalledProcessError:
+                self.wrong_path(path, "Matlab")
+                return False
+
+            except Exception as e:  # Catch any other unexpected errors
+                logger.warning(f"❌ Unexpected error: {e}")
+                self.wrong_path(path, "Matlab")
+                return False
+
+            if err == "":
                 config.set_matlab_path(path)
+                config.set_use_matlab(True)
+                config.set_use_matlab_standalone(False)
+                config.set_use_spm(False)
+                config.set_use_spm_standalone(False)
                 return True
 
             else:
                 self.wrong_path(path, "Matlab")
                 return False
 
-        except Exception:
-            self.wrong_path(path, "Matlab")
-            return False
+        else:
+            # If self.use_spm_checkbox.isChecked() is True, the test will
+            # take place when SPM is validated.
+            pass
 
     def validate_matlab_standalone_path(self, path, config):
-        """Validate the Matlab standalone path."""
-        archi = platform.architecture()
+        """
+        Validate the Matlab standalone path.
 
-        if "Windows" in archi[1]:
-            logger.warning(
-                "Matlab Standalone Path enter, this is "
-                "unnecessary to use SPM12."
-            )
-            config.set_use_matlab(True)
-            config.set_use_matlab_standalone(False)
-            config.set_matlab_standalone_path(path)
-            return True
+        We're not really testing the configuration for matlab MCR alone
 
-        elif os.path.isdir(path):
-            config.set_matlab_standalone_path(path)
-            config.set_use_matlab(False)
-            config.set_use_spm_standalone(False)
-            config.set_use_spm(False)
-            return True
+        (without SPM standalone) as we don't yet have a concrete example.
+        """
 
-        else:
+        if not os.path.isdir(path):
             self.wrong_path(path, "Matlab standalone")
             return False
+
+        if not self.use_spm_standalone_checkbox.isChecked():
+            archi = platform.architecture()
+            config.set_matlab_standalone_path(path)
+
+            if "Windows" in archi[1]:
+                logger.info(
+                    "Matlab Standalone Path enter, this is "
+                    "unnecessary to use SPM12 with Windows OS."
+                )
+                config.set_use_matlab(True)
+                config.set_use_matlab_standalone(False)
+                config.set_use_spm_standalone(False)
+                config.set_use_spm(False)
+                return True
+
+            else:
+                config.set_use_matlab(False)
+                config.set_use_matlab_standalone(True)
+                config.set_use_spm_standalone(False)
+                config.set_use_spm(False)
+                return True
+
+        else:
+            # If self.use_spm_standalone_checkbox.isChecked() is True,
+            # the test will take place when SPM Stadalone is validated.
+            pass
 
     def validate_spm_path(self, path, config):
         """Validate the SPM path."""
         matlab_path = self.matlab_choice.text()
 
-        if not os.path.isdir(path) or not os.path.isfile(matlab_path):
+        if not os.path.isdir(path):
             self.wrong_path(path, "SPM")
             return False
 
-        try:
-            matlab_cmd = (
-                f"restoredefaultpath; "
-                f"addpath('{path}'); "
-                f"[name, ~]=spm('Ver'); "
-                f"exit"
-            )
-            p = subprocess.Popen(
-                [
-                    matlab_path,
-                    "-nodisplay",
-                    "-nodesktop",
-                    "-nosplash",
-                    "-singleCompThread",
-                    "-r",
-                    matlab_cmd,
-                ],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            output, err = p.communicate()
+        if not os.path.isfile(matlab_path):
+            self.wrong_path(matlab_path, "Matlab")
+            return False
 
-            if err == b"":
+        if (
+            path == config.get_spm_path()
+            and matlab_path == config.get_matlab_path()
+        ):
+            config.set_use_spm(True)
+            config.set_use_matlab(True)
+            config.set_use_matlab_standalone(False)
+            config.set_use_spm_standalone(False)
+            # We don't test Matlab and SPM because it has already been
+            # tested before
+
+        else:
+
+            try:
+                matlab_cmd = (
+                    f"restoredefaultpath; "
+                    f"addpath('{path}'); "
+                    f"[name, ~]=spm('Ver'); "
+                    f"exit"
+                )
+                result = subprocess.run(
+                    [
+                        matlab_path,
+                        "-nodisplay",
+                        "-nodesktop",
+                        "-nosplash",
+                        "-singleCompThread",
+                        "-r",
+                        matlab_cmd,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                err = result.stderr
+
+            except subprocess.CalledProcessError:
+                self.wrong_path(matlab_path, "Matlab")
+                return False
+
+            except Exception as e:  # Catch any other unexpected errors
+                logger.warning(f"❌ Unexpected error: {e}")
+                self.wrong_path(matlab_path, "Matlab")
+                return False
+
+            if err == "":
                 config.set_matlab_path(matlab_path)
-                config.set_use_matlab(True)
-                config.set_use_matlab_standalone(False)
-                config.set_use_spm(True)
-                config.set_use_spm_standalone(False)
                 config.set_spm_path(path)
+                config.set_use_matlab(True)
+                config.set_use_spm(True)
+                config.set_use_matlab_standalone(False)
+                config.set_use_spm_standalone(False)
                 return True
 
-            elif "spm" in str(err):
+            elif "spm" in err:
                 self.wrong_path(path, "SPM")
                 return False
 
             else:
                 self.wrong_path(matlab_path, "Matlab")
                 return False
-
-        except Exception:
-            self.wrong_path(matlab_path, "Matlab")
-            return False
 
     def validate_spm_standalone_path(self, path, config):
         """Validate the SPM standalone path."""
@@ -3865,16 +4237,16 @@ class PopUpPreferences(QDialog):
 
             if "Windows" in archi[1]:
                 mcr = glob.glob(os.path.join(path, "spm*_win*.exe"))
-                pos = -1
+                pos = False
                 nb_bit_sys = archi[0]
 
-                for i in range(len(mcr)):
-                    spm_path, spm_file_name = os.path.split(mcr[i])
+                for i, mcr_path in enumerate(mcr):
+                    spm_path, spm_file_name = os.path.split(mcr_path)
 
                     if nb_bit_sys[:2] in spm_file_name:
                         pos = i
 
-                if pos == -1:
+                if pos is False:
                     self.wrong_path(path, "SPM standalone")
                     return False
 
@@ -3886,76 +4258,79 @@ class PopUpPreferences(QDialog):
                 try:
 
                     if "Windows" in archi[1]:
-                        p = subprocess.Popen(
+                        result = subprocess.run(
                             [mcr[pos], "--version"],
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
+                            capture_output=True,
+                            text=True,
+                            check=True,
                         )
 
                     else:
-                        p = subprocess.Popen(
+                        result = subprocess.run(
                             [mcr[0], matlab_path, "--version"],
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
+                            capture_output=True,
+                            text=True,
+                            check=True,
                         )
 
-                    output, err = p.communicate()
+                    err = result.stderr
+                    output = result.stdout
 
-                    if (err == b"" and output != b"") or output.startswith(
-                        b"SPM8 "
-                    ):
-                        config.set_use_spm_standalone(True)
-                        config.set_spm_standalone_path(path)
-                        config.set_matlab_standalone_path(matlab_path)
+                except subprocess.CalledProcessError:
+                    self.wrong_path(path, "SPM standalone")
+                    return False
 
-                        if "Windows" not in archi[1]:
-                            config.set_use_matlab_standalone(True)
+                except Exception as e:  # Catch any other unexpected errors
+                    logger.warning(f"❌ Unexpected error: {e}")
+                    self.wrong_path(path, "SPM standalone")
+                    return False
 
-                        return True
+                if (err == "" and output != "") or output.startswith("SPM8 "):
+                    # spm8 standalone doesn't accept --version but prints a
+                    # message that we can interpret as saying that SPM8 is
+                    # working anyway.
+                    config.set_use_spm_standalone(True)
+                    config.set_spm_standalone_path(path)
+                    config.set_matlab_standalone_path(matlab_path)
 
-                    elif (
-                        (err != b"")
-                        and (b"version" in output.split()[2:])
-                        and (b"(standalone)" in output.split()[2:])
-                    ):
-                        config.set_use_spm_standalone(True)
-                        config.set_spm_standalone_path(path)
-                        config.set_matlab_standalone_path(matlab_path)
+                    if "Windows" not in archi[1]:
+                        config.set_use_matlab_standalone(True)
 
-                        if "Windows" not in archi[1]:
-                            config.set_use_matlab_standalone(True)
+                    return True
 
-                        logger.warning(
-                            "The configuration for Matlab MCR and SPM "
-                            "standalone as defined in Mia's preferences "
-                            "seems to be valid, but the following issue has "
-                            "been detected:"
-                        )
-                        logger.warning(f"{err}")
-                        logger.warning(
-                            "Please fix this issue to avoid a malfunction..."
-                        )
-                        return True
+                elif (
+                    (err != "")
+                    and ("version" in output.split()[2:])
+                    and ("(standalone)" in output.split()[2:])
+                ):
+                    config.set_use_spm_standalone(True)
+                    config.set_spm_standalone_path(path)
+                    config.set_matlab_standalone_path(matlab_path)
 
-                    elif err != b"":
+                    if "Windows" not in archi[1]:
+                        config.set_use_matlab_standalone(True)
 
-                        if "shared libraries" in str(err):
-                            self.wrong_path(matlab_path, "Matlab standalone")
-                            return False
+                    logger.warning(
+                        "The configuration for Matlab MCR and SPM "
+                        "standalone as defined in Mia's preferences "
+                        "seems to be valid, but the following issue has "
+                        "been detected:"
+                    )
+                    logger.warning(f"{err}")
+                    logger.warning(
+                        "Please fix this issue to avoid a malfunction..."
+                    )
+                    return True
 
-                        else:
-                            self.wrong_path(path, "SPM standalone")
-                            return False
+                elif err != "":
+
+                    if "shared libraries" in err:
+                        self.wrong_path(matlab_path, "Matlab standalone")
+                        return False
 
                     else:
                         self.wrong_path(path, "SPM standalone")
                         return False
-
-                except Exception:
-                    self.wrong_path(path, "SPM standalone")
-                    return False
 
             else:
                 self.wrong_path(path, "SPM standalone")
