@@ -2254,8 +2254,11 @@ class PopUpPreferences(QDialog):
     to configure various settings related to tools, projects, and appearance.
 
     .. Methods:
+        - admin_mode_switch: Called when the admin mode checkbox
+                             is clicked
         - browse_afni: Called when afni browse button is clicked
         - browse_ants: Called when ants browse button is clicked
+        - browse_freesurfer: Browse for the FreeSurfer env file
         - browse_fsl: Called when fsl browse button is clicked
         - browse_matlab: Called when matlab browse button is clicked
         - browse_matlab_standalone: Called when matlab browse button is clicked
@@ -2271,15 +2274,48 @@ class PopUpPreferences(QDialog):
                                  is clicked
         - change_admin_psswd: Method to change the admin password
         - control_checkbox_toggled: Check before changing controller version
+        - create_afni_group: Create the AFNI group box
+
+        - create_ants_group: Create the ANTS group box
+        - create_appearance_tab: Create the 'Appearance' tab
+        - create_capsul_group: Create the CAPSUL group box
+        - create_freesurfer_group: Create the FreeSurfer group box
+        - create_fsl_group: Create the FSL group box
+        - create_global_preferences: Create the global preferences group box
+        - create_horizontal_box: Create a horizontal box layout with the
+                                 given widgets
+        - create_matlab_group: Create the Matlab group box
+        - create_mrtrix_group: Create the mrtrix group box
+        - create_pipeline_tab: Create the 'Pipeline' tab
+        - create_projects_preferences: Create the projects preferences group
+                                       box
+        - create_populse_preferences: Create the Populse third party
+                                      preferences group box
+        - create_resources_preferences: Create the external resources
+                                        preferences group box
+        - create_spm_group: Create the SPM group box
+        - create_tools_tab: Create the 'Tools' tab
         - edit_capsul_config: Capsul engine edition
         - edit_config_file: Create a window to view, edit the mia
                             configuration file
         - findChar: Highlights characters in red when using the Find button
                     when editing configuration
+        - load_config: Load the configuration settings
         - ok_clicked: Saves the modifications to the config file and apply
                       them
+        - save_minimal_config: Save minimal configuration for CAPSUL config
+                               sync purposes
+        - save_full_config: Save the full configuration and validate settings
+        - setup_ui: Set up the user interface components
+        - show_error_message: Show an error message dialog
+        - show_warning_message: Show a warning message dialog
+        - update_gui_from_capsul_config: Update the GUI based on the CAPSUL
+                                         configuration
         - use_afni_changed: Called when the use_afni checkbox is changed
         - use_ants_changed: Called when the use_ants checkbox is changed
+        - use_current_mainwindow_size: Use the current main window size
+        - use_freesurfer_changed: Handle the use_freesurfer checkbox change
+                                  event
         - use_fsl_changed: Called when the use_fsl checkbox is changed
         - use_matlab_changed: Called when the use_matlab checkbox is changed
         - use_matlab_standalone_changed: Called when the use_matlab_standalone
@@ -2288,8 +2324,15 @@ class PopUpPreferences(QDialog):
         - use_spm_changed: Called when the use_spm checkbox is changed
         - use_spm_standalone_changed: Called when the use_spm_standalone
                                       checkbox is changed
-        - admin_mode_switch: Called when the admin mode checkbox
-                             is clicked
+        - validate_and_save: Validate and save the preferences
+        - validate_matlab_path: Validate the Matlab path
+        - validate_matlab_standalone_path: Validate the Matlab standalone path
+        - validate_paths: Validate the paths and settings
+        - validate_spm_path: Validate the SPM path
+        - validate_spm_standalone_path: Validate the SPM standalone path
+        - validate_tool_path: Validate the tool path
+        - wrong_path: Show a wrong path message
+
 
     .. Signals:
         - signal_preferences_change: Signal emitted when the preferences are
@@ -2344,67 +2387,438 @@ class PopUpPreferences(QDialog):
             self.use_freesurfer_changed
         )
 
-    def setup_ui(self):  ###########
-        """Set up the user interface components."""
-        self.setObjectName("Dialog")
-        self.setWindowTitle("MIA preferences")
-        _translate = QtCore.QCoreApplication.translate
-        self.tab_widget = QTabWidget(self)
-        self.tab_widget.setEnabled(True)
-        # Create tabs
-        self.create_tools_tab(_translate)
-        self.create_pipeline_tab(_translate)
-        self.create_appearance_tab(_translate)
-        # Buttons layout
-        self.push_button_ok = QPushButton("OK")
-        self.push_button_ok.setObjectName("pushButton_ok")
-        self.push_button_ok.clicked.connect(self.ok_clicked)
-        self.push_button_cancel = QPushButton("Cancel")
-        self.push_button_cancel.setObjectName("pushButton_cancel")
-        self.push_button_cancel.clicked.connect(self.close)
-        self.status_label = QLabel("")
-        hbox_buttons = QHBoxLayout()
-        hbox_buttons.addWidget(self.status_label)
-        hbox_buttons.addStretch(1)
-        hbox_buttons.addWidget(self.push_button_ok)
-        hbox_buttons.addWidget(self.push_button_cancel)
-        vbox = QVBoxLayout()
-        vbox.addWidget(self.tab_widget)
-        vbox.addLayout(hbox_buttons)
-        # Global layout - scrollable global window
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.widget = QWidget()
-        self.widget.setLayout(vbox)
-        self.scroll.setWidget(self.widget)
-        self.final_layout = QVBoxLayout()
-        self.final_layout.addWidget(self.scroll)
-        self.setLayout(self.final_layout)
+    def admin_mode_switch(self):
+        """Handle the admin mode checkbox click event."""
+        config = Config()
 
-    def create_tools_tab(self, _translate):  #####
-        """Create the 'Tools' tab."""
-        self.tab_tools = QWidget()
-        self.tab_tools.setObjectName("tab_tools")
-        self.tab_widget.addTab(self.tab_tools, _translate("Dialog", "Tools"))
-        self.groupbox_global = QGroupBox("Global preferences")
-        self.create_global_preferences()
-        self.groupbox_projects = QGroupBox("Projects preferences")
-        self.create_projects_preferences()
-        self.groupbox_populse = QGroupBox("POPULSE third party preference")
-        self.create_populse_preferences()
-        self.groupbox_resources = QGroupBox("External resources preferences")
-        self.create_resources_preferences()
-        self.tab_tools_layout = QVBoxLayout()
-        self.tab_tools_layout.addLayout(
-            self.create_horizontal_box(self.groupbox_global)
+        if self.admin_mode_checkbox.isChecked():
+            psswd, ok = QInputDialog.getText(
+                self,
+                "Password Input Dialog",
+                "Enter the admin password:",
+                QLineEdit.Password,
+            )
+
+            if ok:
+                salt_psswd = f"{self.salt}{psswd}"
+                hash_psswd = hashlib.sha256(salt_psswd.encode()).hexdigest()
+
+                if hash_psswd != config.get_admin_hash():
+                    self.admin_mode_checkbox.setChecked(False)
+                    self.status_label.setText(
+                        "<i style='color:red'>Wrong password.</i>"
+                    )
+
+                else:
+                    self.change_psswd.setVisible(True)
+                    self.edit_config.setVisible(True)
+                    self.status_label.clear()
+
+            else:
+                self.admin_mode_checkbox.setChecked(False)
+
+        else:
+            self.change_psswd.setVisible(False)
+            self.edit_config.setVisible(False)
+
+    def browse_afni(self):
+        """Browse for the AFNI directory."""
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose AFNI directory", os.path.expanduser("~")
         )
-        self.tab_tools_layout.addWidget(self.groupbox_projects)
-        self.tab_tools_layout.addWidget(self.groupbox_populse)
-        self.tab_tools_layout.addWidget(self.groupbox_resources)
-        self.tab_tools_layout.addStretch(1)
-        self.tab_tools.setLayout(self.tab_tools_layout)
 
-    def create_global_preferences(self):  #########
+        if fname:
+            self.afni_choice.setText(fname)
+
+    def browse_ants(self):
+        """Browse for the ANTS directory."""
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose ANTS directory", os.path.expanduser("~")
+        )
+
+        if fname:
+            self.ants_choice.setText(fname)
+
+    def browse_freesurfer(self):
+        """Browse for the FreeSurfer env file."""
+        fname = QFileDialog.getOpenFileName(
+            self, "Choose freesurfer env file", os.path.expanduser("~")
+        )[0]
+
+        if fname:
+            self.freesurfer_choice.setText(fname)
+
+    def browse_fsl(self):
+        """Browse for the FSL config file."""
+        fname = QFileDialog.getOpenFileName(
+            self, "Choose FSL config file", os.path.expanduser("~")
+        )[0]
+
+        if fname:
+            self.fsl_choice.setText(fname)
+
+    def browse_matlab(self):
+        """Browse for the Matlab file."""
+        fname = QFileDialog.getOpenFileName(
+            self, "Choose Matlab file", os.path.expanduser("~")
+        )[0]
+
+        if fname:
+            self.matlab_choice.setText(fname)
+
+    def browse_matlab_standalone(self):
+        """Browse for the Matlab standalone directory."""
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose MCR directory", os.path.expanduser("~")
+        )
+
+        if fname:
+            self.matlab_standalone_choice.setText(fname)
+
+    def browse_mri_conv_path(self):
+        """Browse for the MRIFileManager.jar file."""
+        fname = QFileDialog.getOpenFileName(
+            self,
+            "Select the location of the MRIManager.jar file",
+            os.path.expanduser("~"),
+        )[0]
+
+        if fname:
+            self.mri_conv_path_line_edit.setText(fname)
+
+    def browse_mrtrix(self):
+        """Browse for the mrtrix directory."""
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose mrtrix directory", os.path.expanduser("~")
+        )
+
+        if fname:
+            self.mrtrix_choice.setText(fname)
+
+    def browse_projects_save_path(self):
+        """Browse for the projects folder."""
+        fname = QFileDialog.getExistingDirectory(
+            self,
+            "Select a folder where to save the projects",
+            os.path.expanduser("~"),
+        )
+
+        if fname:
+            self.projects_save_path_line_edit.setText(fname)
+
+            with open(os.path.join(fname, ".gitignore"), "w") as myFile:
+                myFile.write("/*")
+
+    def browse_resources_path(self):
+        """Browse for the resources folder."""
+        fname = QFileDialog.getExistingDirectory(
+            self,
+            "Select the location of the external resources folder",
+            os.path.expanduser("~"),
+        )
+
+        if fname:
+            self.resources_path_line_edit.setText(fname)
+
+    def browse_spm(self):
+        """Browse for the SPM directory."""
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose SPM directory", os.path.expanduser("~")
+        )
+
+        if fname:
+            self.spm_choice.setText(fname)
+
+    def browse_spm_standalone(self):
+        """Browse for the SPM standalone directory."""
+        fname = QFileDialog.getExistingDirectory(
+            self, "Choose SPM standalone directory", os.path.expanduser("~")
+        )
+
+        if fname:
+            self.spm_standalone_choice.setText(fname)
+
+    def change_admin_psswd(self, status):
+        """
+        Open a dialog to change the admin password with validation checks.
+
+        :param status (str): Initial status message to display in the dialog.
+        """
+        change = QDialog()
+        change.old_psswd = QLineEdit()
+        change.new_psswd = QLineEdit()
+        change.new_psswd_conf = QLineEdit()
+        status = f"<i>{status}</i>"
+        change.status = QLabel(status)
+        change.status.setStyleSheet("color:red")
+        change.old_psswd.setEchoMode(QLineEdit.Password)
+        change.new_psswd.setEchoMode(QLineEdit.Password)
+        change.new_psswd_conf.setEchoMode(QLineEdit.Password)
+        buttonBox = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self
+        )
+        layout = QFormLayout()
+        layout.addRow("Old password", change.old_psswd)
+        layout.addRow("New password", change.new_psswd)
+        layout.addRow("Confirm new password", change.new_psswd_conf)
+        layout.addRow(change.status)
+        layout.addWidget(buttonBox)
+        buttonBox.accepted.connect(change.accept)
+        buttonBox.rejected.connect(change.reject)
+        change.setLayout(layout)
+        event = change.exec()
+
+        if not event:
+            change.close()
+
+        else:
+            config = Config()
+            old_psswd = f"{self.salt}{change.old_psswd.text()}"
+            hash_psswd = hashlib.sha256(old_psswd.encode()).hexdigest()
+
+            if (
+                hash_psswd == config.get_admin_hash()
+                and change.new_psswd.text() == change.new_psswd_conf.text()
+                and len(change.new_psswd.text()) > 6
+            ):
+                new_psswd = f"{self.salt}{change.new_psswd.text()}"
+                config.set_admin_hash(
+                    hashlib.sha256(new_psswd.encode()).hexdigest()
+                )
+
+            elif hash_psswd != config.get_admin_hash():
+                self.change_admin_psswd("The old password is incorrect.")
+
+            elif len(change.new_psswd.text()) <= 6:
+                self.change_admin_psswd(
+                    "Your password must have more than 6 characters"
+                )
+
+            elif change.new_psswd.text() != change.new_psswd_conf.text():
+                self.change_admin_psswd("The new passwords are not the same.")
+
+    def control_checkbox_toggled(self):
+        """Check if the user really wants to change the controller version."""
+        self.control_checkbox.toggle()
+        self.msg = QMessageBox()
+        self.msg.setIcon(QMessageBox.Warning)
+        self.msg.setText("Controller version change")
+        self.msg.setWindowTitle("Warning")
+        self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        config = Config()
+
+        if not self.control_checkbox_changed:
+            self.msg.setInformativeText(
+                f"To change the controller from "
+                f"{'V1' if config.isControlV1() else 'V2'} to "
+                f"{'V2' if config.isControlV1() else 'V1'}, MIA must be "
+                f"restarted. Would you like to plan this change for next "
+                f"start-up?"
+            )
+
+        else:
+            self.msg.setInformativeText(
+                f"Change of controller from "
+                f"{'V1' if config.isControlV1() else 'V2'} to "
+                f"{'V2' if config.isControlV1() else 'V1'} is already "
+                f"planned for next start-up. Would you like to cancel "
+                f"this change?"
+            )
+
+        return_value = self.msg.exec()
+
+        if return_value == QMessageBox.Yes:
+            self.control_checkbox_changed = not self.control_checkbox_changed
+            self.main_window.set_controller_version()
+
+        QApplication.restoreOverrideCursor()
+
+    def create_afni_group(self):
+        """Create the AFNI group box."""
+        self.use_afni_label = QLabel("Use AFNI")
+        self.use_afni_checkbox = QCheckBox("", self)
+        self.afni_label = QLabel("AFNI path (e.g. dir_containing_abin/abin):")
+        self.afni_choice = QLineEdit()
+        self.afni_browse = QPushButton("Browse")
+        self.afni_browse.clicked.connect(self.browse_afni)
+        v_box_afni_path = QVBoxLayout()
+        v_box_afni_path.addWidget(self.afni_label)
+        v_box_afni_path.addLayout(
+            self.create_horizontal_box(
+                self.afni_choice, self.afni_browse, add_stretch=False
+            )
+        )
+        v_box_afni = QVBoxLayout()
+        v_box_afni.addLayout(
+            self.create_horizontal_box(
+                self.use_afni_checkbox, self.use_afni_label
+            )
+        )
+        v_box_afni.addLayout(v_box_afni_path)
+        self.groupbox_afni.setLayout(v_box_afni)
+
+    def create_ants_group(self):
+        """Create the ANTS group box."""
+        self.use_ants_label = QLabel("Use ANTS")
+        self.use_ants_checkbox = QCheckBox("", self)
+        self.ants_label = QLabel("ANTS path (e.g. ANTs_dir/bin):")
+        self.ants_choice = QLineEdit()
+        self.ants_browse = QPushButton("Browse")
+        self.ants_browse.clicked.connect(self.browse_ants)
+        v_box_ants_path = QVBoxLayout()
+        v_box_ants_path.addWidget(self.ants_label)
+        v_box_ants_path.addLayout(
+            self.create_horizontal_box(
+                self.ants_choice, self.ants_browse, add_stretch=False
+            )
+        )
+        v_box_ants = QVBoxLayout()
+        v_box_ants.addLayout(
+            self.create_horizontal_box(
+                self.use_ants_checkbox, self.use_ants_label
+            )
+        )
+        v_box_ants.addLayout(v_box_ants_path)
+        self.groupbox_ants.setLayout(v_box_ants)
+
+    def create_appearance_tab(self, _translate):
+        """
+        Create and configure the 'Appearance' tab with color and display
+        settings.
+
+        :param _translate (callable): Function used to translate UI text
+                                      (translate method of QCoreApplication
+                                      in the Qt framework.)
+        """
+        self.tab_appearance = QWidget()
+        self.tab_appearance.setObjectName("tab_appearance")
+        self.tab_widget.addTab(
+            self.tab_appearance, _translate("Dialog", "Appearance")
+        )
+        colors = [
+            "Black",
+            "Blue",
+            "Green",
+            "Grey",
+            "Orange",
+            "Red",
+            "Yellow",
+            "White",
+        ]
+        self.appearance_layout = QVBoxLayout()
+        self.label_background_color = QLabel("Background color")
+        self.background_color_combo = QComboBox(self)
+        self.label_text_color = QLabel("Text color")
+        self.text_color_combo = QComboBox(self)
+        self.background_color_combo.addItem("")
+        self.text_color_combo.addItem("")
+
+        for color in colors:
+            self.background_color_combo.addItem(color)
+            self.text_color_combo.addItem(color)
+
+        self.fullscreen_cbox = QCheckBox("Use full screen")
+        self.mainwindow_size_x_spinbox = QSpinBox()
+        self.mainwindow_size_x_spinbox.setMaximum(
+            QApplication.instance().desktop().width()
+        )
+        self.mainwindow_size_y_spinbox = QSpinBox()
+        self.mainwindow_size_y_spinbox.setMaximum(
+            QApplication.instance().desktop().height()
+        )
+        self.mainwindow_size_button = QPushButton("use current size")
+        self.mainwindow_size_button.clicked.connect(
+            self.use_current_mainwindow_size
+        )
+        mainwindow_size_lay = QHBoxLayout()
+        mainwindow_size_lay.addWidget(QLabel("Main window size"))
+        mainwindow_size_lay.addWidget(self.mainwindow_size_x_spinbox)
+        mainwindow_size_lay.addWidget(QLabel(" x "))
+        mainwindow_size_lay.addWidget(self.mainwindow_size_y_spinbox)
+        mainwindow_size_lay.addWidget(self.mainwindow_size_button)
+        self.appearance_layout.addWidget(self.label_background_color)
+        self.appearance_layout.addWidget(self.background_color_combo)
+        self.appearance_layout.addWidget(self.label_text_color)
+        self.appearance_layout.addWidget(self.text_color_combo)
+        self.appearance_layout.addWidget(self.fullscreen_cbox)
+        self.appearance_layout.addLayout(mainwindow_size_lay)
+        self.appearance_layout.addStretch(1)
+        self.tab_appearance.setLayout(self.appearance_layout)
+
+    def create_capsul_group(self, groupbox_capsul):
+        """
+        Create and configure the CAPSUL group box with a configuration
+        button.
+
+        :param groupbox_capsul (QGroupBox): The group box to be configured
+                                            for CAPSUL settings.
+        """
+        capsul_config_button = QPushButton(
+            "Edit CAPSUL config", default=False, autoDefault=False
+        )
+        capsul_config_button.clicked.connect(self.edit_capsul_config)
+        h_box_capsul = QHBoxLayout()
+        h_box_capsul.addWidget(capsul_config_button)
+        h_box_capsul.addStretch(1)
+        v_box_capsul = QVBoxLayout()
+        v_box_capsul.addLayout(h_box_capsul)
+        groupbox_capsul.setLayout(v_box_capsul)
+
+    def create_freesurfer_group(self):
+        """Create the FreeSurfer group box."""
+        self.use_freesurfer_label = QLabel("Use FreeSurfer")
+        self.use_freesurfer_checkbox = QCheckBox("", self)
+        self.freesurfer_label = QLabel(
+            "FreeSurfer path (e.g. FreeSurfer_dir/FreeSurferEnv.sh):"
+        )
+        self.freesurfer_choice = QLineEdit()
+        self.freesurfer_browse = QPushButton("Browse")
+        self.freesurfer_browse.clicked.connect(self.browse_freesurfer)
+        v_box_freesurfer_path = QVBoxLayout()
+        v_box_freesurfer_path.addWidget(self.freesurfer_label)
+        v_box_freesurfer_path.addLayout(
+            self.create_horizontal_box(
+                self.freesurfer_choice,
+                self.freesurfer_browse,
+                add_stretch=False,
+            )
+        )
+        v_box_freesurfer = QVBoxLayout()
+        v_box_freesurfer.addLayout(
+            self.create_horizontal_box(
+                self.use_freesurfer_checkbox, self.use_freesurfer_label
+            )
+        )
+        v_box_freesurfer.addLayout(v_box_freesurfer_path)
+        self.groupbox_freesurfer.setLayout(v_box_freesurfer)
+
+    def create_fsl_group(self):
+        """Create the FSL group box."""
+        self.use_fsl_label = QLabel("Use FSL")
+        self.use_fsl_checkbox = QCheckBox("", self)
+        self.fsl_label = QLabel(
+            "FSL config file (e.g., fsl_dir/etc/fslconf/fsl.sh):"
+        )
+        self.fsl_choice = QLineEdit()
+        self.fsl_browse = QPushButton("Browse")
+        self.fsl_browse.clicked.connect(self.browse_fsl)
+        v_box_fsl_path = QVBoxLayout()
+        v_box_fsl_path.addWidget(self.fsl_label)
+        v_box_fsl_path.addLayout(
+            self.create_horizontal_box(
+                self.fsl_choice, self.fsl_browse, add_stretch=False
+            )
+        )
+        v_box_fsl = QVBoxLayout()
+        v_box_fsl.addLayout(
+            self.create_horizontal_box(
+                self.use_fsl_checkbox, self.use_fsl_label
+            )
+        )
+        v_box_fsl.addLayout(v_box_fsl_path)
+        self.groupbox_fsl.setLayout(v_box_fsl)
+
+    def create_global_preferences(self):
         """Create the global preferences group box."""
         self.save_checkbox = QCheckBox("", self)
         self.save_label = QLabel("Auto save")
@@ -2471,121 +2885,28 @@ class PopUpPreferences(QDialog):
         )
         self.groupbox_global.setLayout(v_box_global)
 
-    def create_projects_preferences(self):  ############
-        """Create the projects preferences group box."""
-        self.projects_save_path_label = QLabel("Projects folder:")
-        self.projects_save_path_line_edit = QLineEdit()
-        self.projects_save_path_browse = QPushButton("Browse")
-        self.projects_save_path_browse.clicked.connect(
-            self.browse_projects_save_path
-        )
-        self.max_projects_label = QLabel(
-            'Number of projects in "Saved projects":'
-        )
-        self.max_projects_box = QSpinBox()
-        self.max_projects_box.setMinimum(1)
-        self.max_projects_box.setMaximum(20)
-        self.max_projects_box.setSingleStep(1)
-        v_box_projects_save = QVBoxLayout()
-        v_box_projects_save.addWidget(self.projects_save_path_label)
-        v_box_projects_save.addLayout(
-            self.create_horizontal_box(
-                self.projects_save_path_line_edit,
-                self.projects_save_path_browse,
-                add_stretch=False,
-            )
-        )
-        v_box_max_projects = QVBoxLayout()
-        v_box_max_projects.addWidget(self.max_projects_label)
-        v_box_max_projects.addLayout(
-            self.create_horizontal_box(self.max_projects_box)
-        )
-        projects_layout = QVBoxLayout()
-        projects_layout.addLayout(v_box_projects_save)
-        projects_layout.addLayout(v_box_max_projects)
-        self.groupbox_projects.setLayout(projects_layout)
+    def create_horizontal_box(self, *widgets, add_stretch=True):
+        """
+        Create a horizontal box layout containing the specified widgets.
 
-    def create_populse_preferences(self):  #####
-        """Create the POPULSE third party preferences group box."""
-        self.mri_conv_path_label = QLabel(
-            "Absolute path to MRIManager.jar file: (e.g., mri_conv_dir/"
-            "MRIFileManager/MRIManager.jar)"
-        )
-        self.mri_conv_path_line_edit = QLineEdit()
-        self.mri_conv_path_browse = QPushButton("Browse")
-        self.mri_conv_path_browse.clicked.connect(self.browse_mri_conv_path)
-        v_box_mri_conv = QVBoxLayout()
-        v_box_mri_conv.addWidget(self.mri_conv_path_label)
-        v_box_mri_conv.addLayout(
-            self.create_horizontal_box(
-                self.mri_conv_path_line_edit,
-                self.mri_conv_path_browse,
-                add_stretch=False,
-            )
-        )
-        populse_layout = QVBoxLayout()
-        populse_layout.addLayout(v_box_mri_conv)
-        self.groupbox_populse.setLayout(populse_layout)
+        :param widgets (tuple[QtWidgets.QWidget, ...]): The widgets to add
+                                                        to the layout.
+        :param add_stretch (bool): Whether to add stretch at the end to push
+                                   the widgets to the left. Defaults to True.
 
-    def create_resources_preferences(self):  ######
-        """Create the external resources preferences group box."""
-        self.resources_path_label = QLabel(
-            "Absolute path to the external resource data (required by "
-            "certain processes for proper functionality):"
-        )
-        self.resources_path_line_edit = QLineEdit()
-        self.resources_path_browse = QPushButton("Browse")
-        self.resources_path_browse.clicked.connect(self.browse_resources_path)
-        v_box_resources = QVBoxLayout()
-        v_box_resources.addWidget(self.resources_path_label)
-        v_box_resources.addLayout(
-            self.create_horizontal_box(
-                self.resources_path_line_edit,
-                self.resources_path_browse,
-                add_stretch=False,
-            )
-        )
-        resources_layout = QVBoxLayout()
-        resources_layout.addLayout(v_box_resources)
-        self.groupbox_resources.setLayout(resources_layout)
+        :returns (QHBoxLayout): The created horizontal box layout.
+        """
+        h_box = QHBoxLayout()
 
-    def create_pipeline_tab(self, _translate):  #####
-        """Create the 'Pipeline' tab."""
-        self.tab_pipeline = QWidget()
-        self.tab_pipeline.setObjectName("tab_pipeline")
-        self.tab_widget.addTab(
-            self.tab_pipeline, _translate("Dialog", "Pipeline")
-        )
-        self.groupbox_matlab = QGroupBox("Matlab")
-        self.create_matlab_group()
-        self.groupbox_spm = QGroupBox("SPM")
-        self.create_spm_group()
-        self.groupbox_fsl = QGroupBox("FSL")
-        self.create_fsl_group()
-        self.groupbox_afni = QGroupBox("AFNI")
-        self.create_afni_group()
-        self.groupbox_ants = QGroupBox("ANTS")
-        self.create_ants_group()
-        self.groupbox_freesurfer = QGroupBox("FreeSurfer")
-        self.create_freesurfer_group()
-        self.groupbox_mrtrix = QGroupBox("mrtrix")
-        self.create_mrtrix_group()
-        groupbox_capsul = QGroupBox("CAPSUL")
-        self.create_capsul_group(groupbox_capsul)
-        # general layout
-        self.tab_pipeline_layout = QVBoxLayout()
-        self.tab_pipeline_layout.addWidget(self.groupbox_matlab)
-        self.tab_pipeline_layout.addWidget(self.groupbox_spm)
-        self.tab_pipeline_layout.addWidget(self.groupbox_fsl)
-        self.tab_pipeline_layout.addWidget(self.groupbox_afni)
-        self.tab_pipeline_layout.addWidget(self.groupbox_ants)
-        self.tab_pipeline_layout.addWidget(self.groupbox_freesurfer)
-        self.tab_pipeline_layout.addWidget(self.groupbox_mrtrix)
-        self.tab_pipeline_layout.addWidget(groupbox_capsul)
-        self.tab_pipeline_layout.addStretch(1)
-        self.tab_pipeline.setLayout(self.tab_pipeline_layout)
+        for widget in widgets:
+            h_box.addWidget(widget)
 
-    def create_matlab_group(self):  #####
+        if add_stretch:
+            h_box.addStretch(1)
+
+        return h_box
+
+    def create_matlab_group(self):
         """Create the Matlab group box."""
         self.use_matlab_label = QLabel("Use Matlab")
         self.use_matlab_checkbox = QCheckBox("", self)
@@ -2637,7 +2958,155 @@ class PopUpPreferences(QDialog):
         v_box_matlab.addLayout(v_box_matlab_standalone_path)
         self.groupbox_matlab.setLayout(v_box_matlab)
 
-    def create_spm_group(self):  ######
+    def create_mrtrix_group(self):
+        """Create the mrtrix group box."""
+        self.use_mrtrix_label = QLabel("Use mrtrix")
+        self.use_mrtrix_checkbox = QCheckBox("", self)
+        self.mrtrix_label = QLabel("mrtrix path (e.g. mrtrix_dir/bin):")
+        self.mrtrix_choice = QLineEdit()
+        self.mrtrix_browse = QPushButton("Browse")
+        self.mrtrix_browse.clicked.connect(self.browse_mrtrix)
+        v_box_mrtrix_path = QVBoxLayout()
+        v_box_mrtrix_path.addWidget(self.mrtrix_label)
+        v_box_mrtrix_path.addLayout(
+            self.create_horizontal_box(
+                self.mrtrix_choice, self.mrtrix_browse, add_stretch=False
+            )
+        )
+        v_box_mrtrix = QVBoxLayout()
+        v_box_mrtrix.addLayout(
+            self.create_horizontal_box(
+                self.use_mrtrix_checkbox, self.use_mrtrix_label
+            )
+        )
+        v_box_mrtrix.addLayout(v_box_mrtrix_path)
+        self.groupbox_mrtrix.setLayout(v_box_mrtrix)
+
+    def create_pipeline_tab(self, _translate):
+        """
+        Create the 'Pipeline' tab in the settings interface.
+
+        This tab allows configuring various neuroimaging tool settings,
+        including Matlab, SPM, FSL, AFNI, ANTS, FreeSurfer, MRtrix, and
+        CAPSUL.
+
+        :param _translate (Callable): Function used to translate UI text
+                                      (translate method of QCoreApplication
+                                      in the Qt framework.)
+        """
+        self.tab_pipeline = QWidget()
+        self.tab_pipeline.setObjectName("tab_pipeline")
+        self.tab_widget.addTab(
+            self.tab_pipeline, _translate("Dialog", "Pipeline")
+        )
+        self.groupbox_matlab = QGroupBox("Matlab")
+        self.create_matlab_group()
+        self.groupbox_spm = QGroupBox("SPM")
+        self.create_spm_group()
+        self.groupbox_fsl = QGroupBox("FSL")
+        self.create_fsl_group()
+        self.groupbox_afni = QGroupBox("AFNI")
+        self.create_afni_group()
+        self.groupbox_ants = QGroupBox("ANTS")
+        self.create_ants_group()
+        self.groupbox_freesurfer = QGroupBox("FreeSurfer")
+        self.create_freesurfer_group()
+        self.groupbox_mrtrix = QGroupBox("mrtrix")
+        self.create_mrtrix_group()
+        groupbox_capsul = QGroupBox("CAPSUL")
+        self.create_capsul_group(groupbox_capsul)
+        # general layout
+        self.tab_pipeline_layout = QVBoxLayout()
+        self.tab_pipeline_layout.addWidget(self.groupbox_matlab)
+        self.tab_pipeline_layout.addWidget(self.groupbox_spm)
+        self.tab_pipeline_layout.addWidget(self.groupbox_fsl)
+        self.tab_pipeline_layout.addWidget(self.groupbox_afni)
+        self.tab_pipeline_layout.addWidget(self.groupbox_ants)
+        self.tab_pipeline_layout.addWidget(self.groupbox_freesurfer)
+        self.tab_pipeline_layout.addWidget(self.groupbox_mrtrix)
+        self.tab_pipeline_layout.addWidget(groupbox_capsul)
+        self.tab_pipeline_layout.addStretch(1)
+        self.tab_pipeline.setLayout(self.tab_pipeline_layout)
+
+    def create_projects_preferences(self):
+        """Create the projects preferences group box."""
+        self.projects_save_path_label = QLabel("Projects folder:")
+        self.projects_save_path_line_edit = QLineEdit()
+        self.projects_save_path_browse = QPushButton("Browse")
+        self.projects_save_path_browse.clicked.connect(
+            self.browse_projects_save_path
+        )
+        self.max_projects_label = QLabel(
+            'Number of projects in "Saved projects":'
+        )
+        self.max_projects_box = QSpinBox()
+        self.max_projects_box.setMinimum(1)
+        self.max_projects_box.setMaximum(20)
+        self.max_projects_box.setSingleStep(1)
+        v_box_projects_save = QVBoxLayout()
+        v_box_projects_save.addWidget(self.projects_save_path_label)
+        v_box_projects_save.addLayout(
+            self.create_horizontal_box(
+                self.projects_save_path_line_edit,
+                self.projects_save_path_browse,
+                add_stretch=False,
+            )
+        )
+        v_box_max_projects = QVBoxLayout()
+        v_box_max_projects.addWidget(self.max_projects_label)
+        v_box_max_projects.addLayout(
+            self.create_horizontal_box(self.max_projects_box)
+        )
+        projects_layout = QVBoxLayout()
+        projects_layout.addLayout(v_box_projects_save)
+        projects_layout.addLayout(v_box_max_projects)
+        self.groupbox_projects.setLayout(projects_layout)
+
+    def create_populse_preferences(self):
+        """Create the POPULSE third party preferences group box."""
+        self.mri_conv_path_label = QLabel(
+            "Absolute path to MRIManager.jar file: (e.g., mri_conv_dir/"
+            "MRIFileManager/MRIManager.jar)"
+        )
+        self.mri_conv_path_line_edit = QLineEdit()
+        self.mri_conv_path_browse = QPushButton("Browse")
+        self.mri_conv_path_browse.clicked.connect(self.browse_mri_conv_path)
+        v_box_mri_conv = QVBoxLayout()
+        v_box_mri_conv.addWidget(self.mri_conv_path_label)
+        v_box_mri_conv.addLayout(
+            self.create_horizontal_box(
+                self.mri_conv_path_line_edit,
+                self.mri_conv_path_browse,
+                add_stretch=False,
+            )
+        )
+        populse_layout = QVBoxLayout()
+        populse_layout.addLayout(v_box_mri_conv)
+        self.groupbox_populse.setLayout(populse_layout)
+
+    def create_resources_preferences(self):
+        """Create the external resources preferences group box."""
+        self.resources_path_label = QLabel(
+            "Absolute path to the external resource data (required by "
+            "certain processes for proper functionality):"
+        )
+        self.resources_path_line_edit = QLineEdit()
+        self.resources_path_browse = QPushButton("Browse")
+        self.resources_path_browse.clicked.connect(self.browse_resources_path)
+        v_box_resources = QVBoxLayout()
+        v_box_resources.addWidget(self.resources_path_label)
+        v_box_resources.addLayout(
+            self.create_horizontal_box(
+                self.resources_path_line_edit,
+                self.resources_path_browse,
+                add_stretch=False,
+            )
+        )
+        resources_layout = QVBoxLayout()
+        resources_layout.addLayout(v_box_resources)
+        self.groupbox_resources.setLayout(resources_layout)
+
+    def create_spm_group(self):
         """Create the SPM group box."""
         self.use_spm_label = QLabel("Use SPM")
         self.use_spm_checkbox = QCheckBox("", self)
@@ -2685,593 +3154,38 @@ class PopUpPreferences(QDialog):
         v_box_spm.addLayout(v_box_spm_standalone_path)
         self.groupbox_spm.setLayout(v_box_spm)
 
-    def create_fsl_group(self):  #######
-        """Create the FSL group box."""
-        self.use_fsl_label = QLabel("Use FSL")
-        self.use_fsl_checkbox = QCheckBox("", self)
-        self.fsl_label = QLabel(
-            "FSL config file (e.g., fsl_dir/etc/fslconf/fsl.sh):"
-        )
-        self.fsl_choice = QLineEdit()
-        self.fsl_browse = QPushButton("Browse")
-        self.fsl_browse.clicked.connect(self.browse_fsl)
-        v_box_fsl_path = QVBoxLayout()
-        v_box_fsl_path.addWidget(self.fsl_label)
-        v_box_fsl_path.addLayout(
-            self.create_horizontal_box(
-                self.fsl_choice, self.fsl_browse, add_stretch=False
-            )
-        )
-        v_box_fsl = QVBoxLayout()
-        v_box_fsl.addLayout(
-            self.create_horizontal_box(
-                self.use_fsl_checkbox, self.use_fsl_label
-            )
-        )
-        v_box_fsl.addLayout(v_box_fsl_path)
-        self.groupbox_fsl.setLayout(v_box_fsl)
-
-    def create_afni_group(self):  #########
-        """Create the AFNI group box."""
-        self.use_afni_label = QLabel("Use AFNI")
-        self.use_afni_checkbox = QCheckBox("", self)
-        self.afni_label = QLabel("AFNI path (e.g. dir_containing_abin/abin):")
-        self.afni_choice = QLineEdit()
-        self.afni_browse = QPushButton("Browse")
-        self.afni_browse.clicked.connect(self.browse_afni)
-        v_box_afni_path = QVBoxLayout()
-        v_box_afni_path.addWidget(self.afni_label)
-        v_box_afni_path.addLayout(
-            self.create_horizontal_box(
-                self.afni_choice, self.afni_browse, add_stretch=False
-            )
-        )
-        v_box_afni = QVBoxLayout()
-        v_box_afni.addLayout(
-            self.create_horizontal_box(
-                self.use_afni_checkbox, self.use_afni_label
-            )
-        )
-        v_box_afni.addLayout(v_box_afni_path)
-        self.groupbox_afni.setLayout(v_box_afni)
-
-    def create_ants_group(self):  #####
-        """Create the ANTS group box."""
-        self.use_ants_label = QLabel("Use ANTS")
-        self.use_ants_checkbox = QCheckBox("", self)
-        self.ants_label = QLabel("ANTS path (e.g. ANTs_dir/bin):")
-        self.ants_choice = QLineEdit()
-        self.ants_browse = QPushButton("Browse")
-        self.ants_browse.clicked.connect(self.browse_ants)
-        v_box_ants_path = QVBoxLayout()
-        v_box_ants_path.addWidget(self.ants_label)
-        v_box_ants_path.addLayout(
-            self.create_horizontal_box(
-                self.ants_choice, self.ants_browse, add_stretch=False
-            )
-        )
-        v_box_ants = QVBoxLayout()
-        v_box_ants.addLayout(
-            self.create_horizontal_box(
-                self.use_ants_checkbox, self.use_ants_label
-            )
-        )
-        v_box_ants.addLayout(v_box_ants_path)
-        self.groupbox_ants.setLayout(v_box_ants)
-
-    def create_freesurfer_group(self):  #####
-        """Create the FreeSurfer group box."""
-        self.use_freesurfer_label = QLabel("Use FreeSurfer")
-        self.use_freesurfer_checkbox = QCheckBox("", self)
-        self.freesurfer_label = QLabel(
-            "FreeSurfer path (e.g. FreeSurfer_dir/FreeSurferEnv.sh):"
-        )
-        self.freesurfer_choice = QLineEdit()
-        self.freesurfer_browse = QPushButton("Browse")
-        self.freesurfer_browse.clicked.connect(self.browse_freesurfer)
-        v_box_freesurfer_path = QVBoxLayout()
-        v_box_freesurfer_path.addWidget(self.freesurfer_label)
-        v_box_freesurfer_path.addLayout(
-            self.create_horizontal_box(
-                self.freesurfer_choice,
-                self.freesurfer_browse,
-                add_stretch=False,
-            )
-        )
-        v_box_freesurfer = QVBoxLayout()
-        v_box_freesurfer.addLayout(
-            self.create_horizontal_box(
-                self.use_freesurfer_checkbox, self.use_freesurfer_label
-            )
-        )
-        v_box_freesurfer.addLayout(v_box_freesurfer_path)
-        self.groupbox_freesurfer.setLayout(v_box_freesurfer)
-
-    def create_mrtrix_group(self):  #####
-        """Create the mrtrix group box."""
-        self.use_mrtrix_label = QLabel("Use mrtrix")
-        self.use_mrtrix_checkbox = QCheckBox("", self)
-        self.mrtrix_label = QLabel("mrtrix path (e.g. mrtrix_dir/bin):")
-        self.mrtrix_choice = QLineEdit()
-        self.mrtrix_browse = QPushButton("Browse")
-        self.mrtrix_browse.clicked.connect(self.browse_mrtrix)
-        v_box_mrtrix_path = QVBoxLayout()
-        v_box_mrtrix_path.addWidget(self.mrtrix_label)
-        v_box_mrtrix_path.addLayout(
-            self.create_horizontal_box(
-                self.mrtrix_choice, self.mrtrix_browse, add_stretch=False
-            )
-        )
-        v_box_mrtrix = QVBoxLayout()
-        v_box_mrtrix.addLayout(
-            self.create_horizontal_box(
-                self.use_mrtrix_checkbox, self.use_mrtrix_label
-            )
-        )
-        v_box_mrtrix.addLayout(v_box_mrtrix_path)
-        self.groupbox_mrtrix.setLayout(v_box_mrtrix)
-
-    def create_capsul_group(self, groupbox_capsul):  #####
-        """Create the CAPSUL group box."""
-        capsul_config_button = QPushButton(
-            "Edit CAPSUL config", default=False, autoDefault=False
-        )
-        capsul_config_button.clicked.connect(self.edit_capsul_config)
-        h_box_capsul = QHBoxLayout()
-        h_box_capsul.addWidget(capsul_config_button)
-        h_box_capsul.addStretch(1)
-        v_box_capsul = QVBoxLayout()
-        v_box_capsul.addLayout(h_box_capsul)
-        groupbox_capsul.setLayout(v_box_capsul)
-
-    def create_appearance_tab(self, _translate):  #####
-        """Create the 'Appearance' tab."""
-        self.tab_appearance = QWidget()
-        self.tab_appearance.setObjectName("tab_appearance")
-        self.tab_widget.addTab(
-            self.tab_appearance, _translate("Dialog", "Appearance")
-        )
-        colors = [
-            "Black",
-            "Blue",
-            "Green",
-            "Grey",
-            "Orange",
-            "Red",
-            "Yellow",
-            "White",
-        ]
-        self.appearance_layout = QVBoxLayout()
-        self.label_background_color = QLabel("Background color")
-        self.background_color_combo = QComboBox(self)
-        self.label_text_color = QLabel("Text color")
-        self.text_color_combo = QComboBox(self)
-        self.background_color_combo.addItem("")
-        self.text_color_combo.addItem("")
-
-        for color in colors:
-            self.background_color_combo.addItem(color)
-            self.text_color_combo.addItem(color)
-
-        self.fullscreen_cbox = QCheckBox("Use full screen")
-        self.mainwindow_size_x_spinbox = QSpinBox()
-        self.mainwindow_size_x_spinbox.setMaximum(
-            QApplication.instance().desktop().width()
-        )
-        self.mainwindow_size_y_spinbox = QSpinBox()
-        self.mainwindow_size_y_spinbox.setMaximum(
-            QApplication.instance().desktop().height()
-        )
-        self.mainwindow_size_button = QPushButton("use current size")
-        self.mainwindow_size_button.clicked.connect(
-            self.use_current_mainwindow_size
-        )
-        mainwindow_size_lay = QHBoxLayout()
-        mainwindow_size_lay.addWidget(QLabel("Main window size"))
-        mainwindow_size_lay.addWidget(self.mainwindow_size_x_spinbox)
-        mainwindow_size_lay.addWidget(QLabel(" x "))
-        mainwindow_size_lay.addWidget(self.mainwindow_size_y_spinbox)
-        mainwindow_size_lay.addWidget(self.mainwindow_size_button)
-        self.appearance_layout.addWidget(self.label_background_color)
-        self.appearance_layout.addWidget(self.background_color_combo)
-        self.appearance_layout.addWidget(self.label_text_color)
-        self.appearance_layout.addWidget(self.text_color_combo)
-        self.appearance_layout.addWidget(self.fullscreen_cbox)
-        self.appearance_layout.addLayout(mainwindow_size_lay)
-        self.appearance_layout.addStretch(1)
-        self.tab_appearance.setLayout(self.appearance_layout)
-
-    def create_horizontal_box(self, *widgets, add_stretch=True):  ####
+    def create_tools_tab(self, _translate):
         """
-        Create a horizontal box layout with the given widgets.
+        Create the 'Tools' tab in the settings interface.
 
-        :param widgets (tuple[QtWidgets.QWidget, ...]): The widgets to add
-                                                        to the layout.
-        :param add_stretch (bool): Whether to add stretch at the end.
-                                   Defaults to True.
+        This tab contains various sections for configuring global preferences,
+        project-specific settings, third-party tool integration, and external
+        resources.
+
+        :param _translate (Callable): Function used to translate UI text
+                                      (translate method of QCoreApplication
+                                      in the Qt framework.)
         """
-        h_box = QHBoxLayout()
-
-        for widget in widgets:
-            h_box.addWidget(widget)
-
-        if add_stretch:
-            h_box.addStretch(1)
-
-        return h_box
-
-    def load_config(self):  #####
-        """Load the configuration settings."""
-        config = Config()
-        self.save_checkbox.setChecked(config.isAutoSave())
-        self.clinical_mode_checkbox.setChecked(config.get_use_clinical())
-        self.admin_mode_checkbox.setChecked(not config.get_user_mode())
-        self.change_psswd.setVisible(not config.get_user_mode())
-        self.edit_config.setVisible(not config.get_user_mode())
-        self.control_checkbox.setChecked(config.isControlV1())
-        self.max_thumbnails_box.setValue(config.get_max_thumbnails())
-        self.radioView_checkbox.setChecked(config.isRadioView())
-        self.projects_save_path_line_edit.setText(
-            config.get_projects_save_path()
+        self.tab_tools = QWidget()
+        self.tab_tools.setObjectName("tab_tools")
+        self.tab_widget.addTab(self.tab_tools, _translate("Dialog", "Tools"))
+        self.groupbox_global = QGroupBox("Global preferences")
+        self.create_global_preferences()
+        self.groupbox_projects = QGroupBox("Projects preferences")
+        self.create_projects_preferences()
+        self.groupbox_populse = QGroupBox("POPULSE third party preference")
+        self.create_populse_preferences()
+        self.groupbox_resources = QGroupBox("External resources preferences")
+        self.create_resources_preferences()
+        self.tab_tools_layout = QVBoxLayout()
+        self.tab_tools_layout.addLayout(
+            self.create_horizontal_box(self.groupbox_global)
         )
-        self.max_projects_box.setValue(config.get_max_projects())
-        self.mri_conv_path_line_edit.setText(config.get_mri_conv_path())
-        self.resources_path_line_edit.setText(config.get_resources_path())
-        self.use_afni_checkbox.setChecked(config.get_use_afni())
-        self.afni_choice.setText(config.get_afni_path())
-        self.use_ants_checkbox.setChecked(config.get_use_ants())
-        self.ants_choice.setText(config.get_ants_path())
-        self.use_freesurfer_checkbox.setChecked(config.get_use_freesurfer())
-        self.freesurfer_choice.setText(config.get_freesurfer_setup())
-        self.use_fsl_checkbox.setChecked(config.get_use_fsl())
-        self.fsl_choice.setText(config.get_fsl_config())
-        self.matlab_choice.setText(config.get_matlab_path())
-        self.matlab_standalone_choice.setText(
-            config.get_matlab_standalone_path()
-        )
-        self.use_mrtrix_checkbox.setChecked(config.get_use_mrtrix())
-        self.mrtrix_choice.setText(config.get_mrtrix_path())
-        self.spm_choice.setText(config.get_spm_path())
-
-        if config.get_use_spm_standalone():
-            archi = platform.architecture()
-
-            if "Windows" in archi[1]:
-                self.use_matlab_standalone_checkbox.setChecked(False)
-
-            else:
-                self.use_matlab_standalone_checkbox.setChecked(True)
-
-            self.use_spm_standalone_checkbox.setChecked(True)
-            self.use_matlab_checkbox.setChecked(False)
-            self.use_spm_checkbox.setChecked(False)
-
-        elif config.get_use_spm():
-            self.use_spm_standalone_checkbox.setChecked(False)
-            self.use_matlab_checkbox.setChecked(True)
-            self.use_spm_checkbox.setChecked(True)
-            self.use_matlab_standalone_checkbox.setChecked(False)
-
-        elif config.get_use_matlab():
-            self.use_spm_standalone_checkbox.setChecked(False)
-            self.use_matlab_checkbox.setChecked(True)
-            self.use_spm_checkbox.setChecked(False)
-            self.use_matlab_standalone_checkbox.setChecked(False)
-
-        elif config.get_use_matlab_standalone():
-            self.use_spm_standalone_checkbox.setChecked(False)
-            self.use_matlab_checkbox.setChecked(False)
-            self.use_spm_checkbox.setChecked(False)
-            self.use_matlab_standalone_checkbox.setChecked(True)
-
-        self.spm_standalone_choice.setText(config.get_spm_standalone_path())
-        self.background_color_combo.setCurrentText(
-            config.getBackgroundColor() or "White"
-        )
-        self.text_color_combo.setCurrentText(config.getTextColor() or "Black")
-        self.fullscreen_cbox.setChecked(config.get_mainwindow_maximized())
-        wsize = config.get_mainwindow_size()
-
-        if isinstance(wsize, list) and len(wsize) >= 2:
-            self.mainwindow_size_x_spinbox.setValue(wsize[0])
-            self.mainwindow_size_y_spinbox.setValue(wsize[1])
-
-    def browse_fsl(self):  ###
-        """Browse for the FSL config file."""
-        fname = QFileDialog.getOpenFileName(
-            self, "Choose FSL config file", os.path.expanduser("~")
-        )[0]
-
-        if fname:
-            self.fsl_choice.setText(fname)
-
-    def browse_afni(self):  ####
-        """Browse for the AFNI directory."""
-        fname = QFileDialog.getExistingDirectory(
-            self, "Choose AFNI directory", os.path.expanduser("~")
-        )
-
-        if fname:
-            self.afni_choice.setText(fname)
-
-    def browse_ants(self):  ####
-        """Browse for the ANTS directory."""
-        fname = QFileDialog.getExistingDirectory(
-            self, "Choose ANTS directory", os.path.expanduser("~")
-        )
-
-        if fname:
-            self.ants_choice.setText(fname)
-
-    def browse_mrtrix(self):  #####
-        """Browse for the mrtrix directory."""
-        fname = QFileDialog.getExistingDirectory(
-            self, "Choose mrtrix directory", os.path.expanduser("~")
-        )
-
-        if fname:
-            self.mrtrix_choice.setText(fname)
-
-    def browse_freesurfer(self):  ####
-        """Browse for the FreeSurfer env file."""
-        fname = QFileDialog.getOpenFileName(
-            self, "Choose freesurfer env file", os.path.expanduser("~")
-        )[0]
-
-        if fname:
-            self.freesurfer_choice.setText(fname)
-
-    def browse_matlab(self):  ####
-        """Browse for the Matlab file."""
-        fname = QFileDialog.getOpenFileName(
-            self, "Choose Matlab file", os.path.expanduser("~")
-        )[0]
-
-        if fname:
-            self.matlab_choice.setText(fname)
-
-    def browse_matlab_standalone(self):  ####
-        """Browse for the Matlab standalone directory."""
-        fname = QFileDialog.getExistingDirectory(
-            self, "Choose MCR directory", os.path.expanduser("~")
-        )
-
-        if fname:
-            self.matlab_standalone_choice.setText(fname)
-
-    def browse_mri_conv_path(self):  ####
-        """Browse for the MRIFileManager.jar file."""
-        fname = QFileDialog.getOpenFileName(
-            self,
-            "Select the location of the MRIManager.jar file",
-            os.path.expanduser("~"),
-        )[0]
-
-        if fname:
-            self.mri_conv_path_line_edit.setText(fname)
-
-    def browse_projects_save_path(self):  ####
-        """Browse for the projects folder."""
-        fname = QFileDialog.getExistingDirectory(
-            self,
-            "Select a folder where to save the projects",
-            os.path.expanduser("~"),
-        )
-
-        if fname:
-            self.projects_save_path_line_edit.setText(fname)
-
-            with open(os.path.join(fname, ".gitignore"), "w") as myFile:
-                myFile.write("/*")
-
-    def browse_resources_path(self):  ###
-        """Browse for the resources folder."""
-        fname = QFileDialog.getExistingDirectory(
-            self,
-            "Select the location of the external resources folder",
-            os.path.expanduser("~"),
-        )
-
-        if fname:
-            self.resources_path_line_edit.setText(fname)
-
-    def browse_spm(self):  ###
-        """Browse for the SPM directory."""
-        fname = QFileDialog.getExistingDirectory(
-            self, "Choose SPM directory", os.path.expanduser("~")
-        )
-
-        if fname:
-            self.spm_choice.setText(fname)
-
-    def browse_spm_standalone(self):  ###
-        """Browse for the SPM standalone directory."""
-        fname = QFileDialog.getExistingDirectory(
-            self, "Choose SPM standalone directory", os.path.expanduser("~")
-        )
-
-        if fname:
-            self.spm_standalone_choice.setText(fname)
-
-    def change_admin_psswd(self, status):  ##########
-        """Change the admin password."""
-        change = QDialog()
-        change.old_psswd = QLineEdit()
-        change.new_psswd = QLineEdit()
-        change.new_psswd_conf = QLineEdit()
-        status = f"<i>{status}</i>"
-        change.status = QLabel(status)
-        change.status.setStyleSheet("color:red")
-        change.old_psswd.setEchoMode(QLineEdit.Password)
-        change.new_psswd.setEchoMode(QLineEdit.Password)
-        change.new_psswd_conf.setEchoMode(QLineEdit.Password)
-        buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self
-        )
-        layout = QFormLayout()
-        layout.addRow("Old password", change.old_psswd)
-        layout.addRow("New password", change.new_psswd)
-        layout.addRow("Confirm new password", change.new_psswd_conf)
-        layout.addRow(change.status)
-        layout.addWidget(buttonBox)
-        buttonBox.accepted.connect(change.accept)
-        buttonBox.rejected.connect(change.reject)
-        change.setLayout(layout)
-        event = change.exec()
-
-        if not event:
-            change.close()
-
-        else:
-            config = Config()
-            old_psswd = f"{self.salt}{change.old_psswd.text()}"
-            hash_psswd = hashlib.sha256(old_psswd.encode()).hexdigest()
-
-            if (
-                hash_psswd == config.get_admin_hash()
-                and change.new_psswd.text() == change.new_psswd_conf.text()
-                and len(change.new_psswd.text()) > 6
-            ):
-                new_psswd = f"{self.salt}{change.new_psswd.text()}"
-                config.set_admin_hash(
-                    hashlib.sha256(new_psswd.encode()).hexdigest()
-                )
-
-            elif hash_psswd != config.get_admin_hash():
-                self.change_admin_psswd("The old password is incorrect.")
-
-            elif len(change.new_psswd.text()) <= 6:
-                self.change_admin_psswd(
-                    "Your password must have more than 6 characters"
-                )
-
-            elif change.new_psswd.text() != change.new_psswd_conf.text():
-                self.change_admin_psswd("The new passwords are not the same.")
-
-    def control_checkbox_toggled(self):  ########
-        """Check if the user really wants to change the controller version."""
-        self.control_checkbox.toggle()
-        self.msg = QMessageBox()
-        self.msg.setIcon(QMessageBox.Warning)
-        self.msg.setText("Controller version change")
-        self.msg.setWindowTitle("Warning")
-        self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        config = Config()
-
-        if not self.control_checkbox_changed:
-            self.msg.setInformativeText(
-                f"To change the controller from "
-                f"{'V1' if config.isControlV1() else 'V2'} to "
-                f"{'V2' if config.isControlV1() else 'V1'}, MIA must be "
-                f"restarted. Would you like to plan this change for next "
-                f"start-up?"
-            )
-
-        else:
-            self.msg.setInformativeText(
-                f"Change of controller from "
-                f"{'V1' if config.isControlV1() else 'V2'} to "
-                f"{'V2' if config.isControlV1() else 'V1'} is already "
-                f"planned for next start-up. Would you like to cancel "
-                f"this change?"
-            )
-
-        return_value = self.msg.exec()
-
-        if return_value == QMessageBox.Yes:
-            self.control_checkbox_changed = not self.control_checkbox_changed
-            self.main_window.set_controller_version()
-
-        QApplication.restoreOverrideCursor()
-
-    def edit_config_file(self):  #########
-        """Create a window to view, edit the mia configuration file."""
-
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
-
-        config = Config()
-        self.editConf = QDialog()
-        self.editConf.setWindowTitle(
-            os.path.join(
-                config.get_properties_path(), "properties", "config.yml"
-            )
-        )
-        self.editConf.txt = QPlainTextEdit()
-        stream = yaml.dump(
-            config.config, default_flow_style=False, allow_unicode=True
-        )
-        self.editConf.txt.insertPlainText(str(stream))
-        textWidth = self.editConf.txt.width() + 100
-        textHeight = self.editConf.txt.height() + 200
-        self.editConf.txt.setMinimumSize(textWidth, textHeight)
-        self.editConf.txt.resize(textWidth, textHeight)
-        buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self
-        )
-        buttonBox.button(QDialogButtonBox.Ok).setDefault(False)
-        buttonBox.button(QDialogButtonBox.Cancel).setDefault(False)
-        self.findChar_line_edit = QLineEdit()
-        findChar_button = QPushButton("Find")
-        findChar_button.setDefault(True)
-        h_box_find = QHBoxLayout()
-        h_box_find.addWidget(self.findChar_line_edit)
-        h_box_find.addWidget(findChar_button)
-        findChar_button.clicked.connect(self.findChar)
-        layout = QFormLayout()
-        layout.addWidget(self.editConf.txt)
-        layout.addRow(h_box_find)
-        layout.addWidget(buttonBox)
-        buttonBox.accepted.connect(self.editConf.accept)
-        buttonBox.rejected.connect(self.editConf.reject)
-        self.editConf.setLayout(layout)
-        event = self.editConf.exec()
-
-        if not event:
-            self.editConf.close()
-
-        else:
-            stream = self.editConf.txt.toPlainText()
-
-            if verCmp(yaml.__version__, "5.1", "sup"):
-                config.config = yaml.load(stream, Loader=yaml.FullLoader)
-
-            else:
-                config.config = yaml.load(stream)
-
-            config.saveConfig()
-            self.editConf.close()
-
-    def findChar(self):  ####
-        """Highlights characters in red when using the Find button
-        when editing configuration.
-        """
-        cursor = self.editConf.txt.textCursor()
-        cursor.select(QtGui.QTextCursor.Document)
-        cursor.setCharFormat(QtGui.QTextCharFormat())
-        cursor.clearSelection()
-        self.editConf.txt.setTextCursor(cursor)
-        pattern = self.findChar_line_edit.text()
-
-        if pattern == "":
-            return
-
-        cursor = self.editConf.txt.textCursor()
-        format = QtGui.QTextCharFormat()
-        format.setBackground(QtGui.QBrush(QtGui.QColor(255, 0, 0, 50)))
-        regex = QtCore.QRegExp(pattern)
-        pos = 0
-        index = regex.indexIn(self.editConf.txt.toPlainText(), pos)
-
-        while index != -1:
-            cursor.setPosition(index)
-
-            for _ in pattern:
-                cursor.movePosition(QtGui.QTextCursor.Right, 1)
-
-            cursor.mergeCharFormat(format)
-            pos = index + regex.matchedLength()
-            index = regex.indexIn(self.editConf.txt.toPlainText(), pos)
+        self.tab_tools_layout.addWidget(self.groupbox_projects)
+        self.tab_tools_layout.addWidget(self.groupbox_populse)
+        self.tab_tools_layout.addWidget(self.groupbox_resources)
+        self.tab_tools_layout.addStretch(1)
+        self.tab_tools.setLayout(self.tab_tools_layout)
 
     def edit_capsul_config(self):
         """
@@ -3347,346 +3261,188 @@ class PopUpPreferences(QDialog):
         del dialog
         del engine
 
-    def update_gui_from_capsul_config(self, conf):
-        """Update the GUI based on the CAPSUL configuration."""
-        # afni
-        use_afni = conf.get_use_afni()
+    def edit_config_file(self):
+        """Create a window to view, edit the mia configuration file."""
 
-        if use_afni:
-            self.afni_choice.setText(conf.get_afni_path())
+        # import verCmp only here to prevent circular import issue
+        from populse_mia.utils import verCmp
 
-        self.use_afni_checkbox.setChecked(use_afni)
-        # ants
-        use_ants = conf.get_use_ants()
-
-        if use_ants:
-            self.ants_choice.setText(conf.get_ants_path())
-
-        self.use_ants_checkbox.setChecked(use_ants)
-        # freesurfer
-        use_freesurfer = conf.get_use_freesurfer()
-
-        if use_freesurfer:
-            self.freesurfer_choice.setText(conf.get_freesurfer_setup())
-
-        self.use_freesurfer_checkbox.setChecked(use_freesurfer)
-        # fsl
-        use_fsl = conf.get_use_fsl()
-
-        if use_fsl:
-            self.fsl_choice.setText(conf.get_fsl_config())
-
-        self.use_fsl_checkbox.setChecked(use_fsl)
-        # matlab
-        use_matlab = conf.get_use_matlab()
-        self.use_matlab_checkbox.setChecked(use_matlab)
-        self.matlab_choice.setText(conf.get_matlab_path())
-        # matlab - MCR
-        use_matlab_sa = conf.get_use_matlab_standalone()
-        self.use_matlab_standalone_checkbox.setChecked(use_matlab_sa)
-        self.matlab_standalone_choice.setText(
-            conf.get_matlab_standalone_path()
-        )
-        # mrtrix
-        use_mrtrix = conf.get_use_mrtrix()
-
-        if use_mrtrix:
-            self.mrtrix_choice.setText(conf.get_mrtrix_path())
-
-        self.use_mrtrix_checkbox.setChecked(use_mrtrix)
-        # spm
-        use_spm = conf.get_use_spm()
-        self.use_spm_checkbox.setChecked(use_spm)
-        self.spm_choice.setText(conf.get_spm_path())
-        # spm - Standalone
-        use_spm_sa = conf.get_use_spm_standalone()
-        self.use_spm_standalone_checkbox.setChecked(use_spm_sa)
-        self.spm_standalone_choice.setText(conf.get_spm_standalone_path())
-
-    def validate_and_save(self, OK_clicked=False):  ####
-        """Validate and save the preferences."""
         config = Config()
+        self.editConf = QDialog()
+        self.editConf.setWindowTitle(
+            os.path.join(
+                config.get_properties_path(), "properties", "config.yml"
+            )
+        )
+        self.editConf.txt = QPlainTextEdit()
+        stream = yaml.dump(
+            config.config, default_flow_style=False, allow_unicode=True
+        )
+        self.editConf.txt.insertPlainText(str(stream))
+        textWidth = self.editConf.txt.width() + 100
+        textHeight = self.editConf.txt.height() + 200
+        self.editConf.txt.setMinimumSize(textWidth, textHeight)
+        self.editConf.txt.resize(textWidth, textHeight)
+        buttonBox = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self
+        )
+        buttonBox.button(QDialogButtonBox.Ok).setDefault(False)
+        buttonBox.button(QDialogButtonBox.Cancel).setDefault(False)
+        self.findChar_line_edit = QLineEdit()
+        findChar_button = QPushButton("Find")
+        findChar_button.setDefault(True)
+        h_box_find = QHBoxLayout()
+        h_box_find.addWidget(self.findChar_line_edit)
+        h_box_find.addWidget(findChar_button)
+        findChar_button.clicked.connect(self.findChar)
+        layout = QFormLayout()
+        layout.addWidget(self.editConf.txt)
+        layout.addRow(h_box_find)
+        layout.addWidget(buttonBox)
+        buttonBox.accepted.connect(self.editConf.accept)
+        buttonBox.rejected.connect(self.editConf.reject)
+        self.editConf.setLayout(layout)
+        event = self.editConf.exec()
 
-        if not OK_clicked:
-            # Minimum config backup (for Edit CAPSUL config synchronisation)
-            self.save_minimal_config(config)
+        if not event:
+            self.editConf.close()
 
         else:
+            stream = self.editConf.txt.toPlainText()
 
-            # Complete backup and testing
-            if not self.save_full_config(config):
-                return False
+            if verCmp(yaml.__version__, "5.1", "sup"):
+                config.config = yaml.load(stream, Loader=yaml.FullLoader)
 
-        c_c = config.config.setdefault("capsul_config", {})
-        c_e = config.get_capsul_engine()
+            else:
+                config.config = yaml.load(stream)
 
-        if c_c and c_e:
-            # sync capsul config from mia config, if module is not used:
+            config.saveConfig()
+            self.editConf.close()
 
-            # AFNI CapsulConfig
-            if not config.get_use_afni():
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
+    def findChar(self):
+        """
+        Highlights characters in red when using the Find button in the
+        configuration editor.
 
-                with c_e.settings as settings:
-                    configafni = settings.config("afni", "global")
+        This method searches for a pattern entered in the find field and
+        highlights all matching occurrences in the text editor.
+        """
+        cursor = self.editConf.txt.textCursor()
+        cursor.select(QtGui.QTextCursor.Document)
+        cursor.setCharFormat(QtGui.QTextCharFormat())
+        cursor.clearSelection()
+        self.editConf.txt.setTextCursor(cursor)
+        pattern = self.findChar_line_edit.text()
 
-                    if configafni:
-                        settings.remove_config(
-                            "afni", "global", getattr(configafni, cif)
-                        )
+        if pattern == "":
+            return
 
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c["engine"]["global"]["capsul.engine.module.afni"][
-                        "afni"
-                    ]["directory"]
+        cursor = self.editConf.txt.textCursor()
+        format = QtGui.QTextCharFormat()
+        format.setBackground(QtGui.QBrush(QtGui.QColor(255, 0, 0, 50)))
+        regex = QtCore.QRegExp(pattern)
+        pos = 0
+        index = regex.indexIn(self.editConf.txt.toPlainText(), pos)
 
-                except KeyError:
-                    pass
+        while index != -1:
+            cursor.setPosition(index)
 
-            # ANTS CapsulConfig
-            if not config.get_use_ants():
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
+            for _ in pattern:
+                cursor.movePosition(QtGui.QTextCursor.Right, 1)
 
-                with c_e.settings as settings:
-                    configants = settings.config("ants", "global")
+            cursor.mergeCharFormat(format)
+            pos = index + regex.matchedLength()
+            index = regex.indexIn(self.editConf.txt.toPlainText(), pos)
 
-                    if configants:
-                        settings.remove_config(
-                            "ants", "global", getattr(configants, cif)
-                        )
+    def load_config(self):
+        """Load the configuration settings."""
+        config = Config()
+        self.save_checkbox.setChecked(config.isAutoSave())
+        self.clinical_mode_checkbox.setChecked(config.get_use_clinical())
+        self.admin_mode_checkbox.setChecked(not config.get_user_mode())
+        self.change_psswd.setVisible(not config.get_user_mode())
+        self.edit_config.setVisible(not config.get_user_mode())
+        self.control_checkbox.setChecked(config.isControlV1())
+        self.max_thumbnails_box.setValue(config.get_max_thumbnails())
+        self.radioView_checkbox.setChecked(config.isRadioView())
+        self.projects_save_path_line_edit.setText(
+            config.get_projects_save_path()
+        )
+        self.max_projects_box.setValue(config.get_max_projects())
+        self.mri_conv_path_line_edit.setText(config.get_mri_conv_path())
+        self.resources_path_line_edit.setText(config.get_resources_path())
+        self.use_afni_checkbox.setChecked(config.get_use_afni())
+        self.afni_choice.setText(config.get_afni_path())
+        self.use_ants_checkbox.setChecked(config.get_use_ants())
+        self.ants_choice.setText(config.get_ants_path())
+        self.use_freesurfer_checkbox.setChecked(config.get_use_freesurfer())
+        self.freesurfer_choice.setText(config.get_freesurfer_setup())
+        self.use_fsl_checkbox.setChecked(config.get_use_fsl())
+        self.fsl_choice.setText(config.get_fsl_config())
+        self.matlab_choice.setText(config.get_matlab_path())
+        self.matlab_standalone_choice.setText(
+            config.get_matlab_standalone_path()
+        )
+        self.use_mrtrix_checkbox.setChecked(config.get_use_mrtrix())
+        self.mrtrix_choice.setText(config.get_mrtrix_path())
+        self.spm_choice.setText(config.get_spm_path())
 
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c["engine"]["global"]["capsul.engine.module.ants"][
-                        "ants"
-                    ]["directory"]
+        if config.get_use_spm_standalone():
+            archi = platform.architecture()
 
-                except KeyError:
-                    pass
+            if "Windows" in archi[1]:
+                self.use_matlab_standalone_checkbox.setChecked(False)
 
-            # freesurfer CapsulConfig
-            if not config.get_use_freesurfer():
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
+            else:
+                self.use_matlab_standalone_checkbox.setChecked(True)
 
-                with c_e.settings as settings:
-                    configants = settings.config("freesurfer", "global")
+            self.use_spm_standalone_checkbox.setChecked(True)
+            self.use_matlab_checkbox.setChecked(False)
+            self.use_spm_checkbox.setChecked(False)
 
-                    if configants:
-                        settings.remove_config(
-                            "freesurfer", "global", getattr(configants, cif)
-                        )
+        elif config.get_use_spm():
+            self.use_spm_standalone_checkbox.setChecked(False)
+            self.use_matlab_checkbox.setChecked(True)
+            self.use_spm_checkbox.setChecked(True)
+            self.use_matlab_standalone_checkbox.setChecked(False)
 
-                # TODO: We could use a generic method to deal with c_c?
-                # try:
-                #     del c_c["engine"]["global"][
-                #         "capsul.engine.module.freesurfer"
-                #         ]["freesurfer"
-                #          ]["directory"]
-                #
-                # except KeyError:
-                #     pass
+        elif config.get_use_matlab():
+            self.use_spm_standalone_checkbox.setChecked(False)
+            self.use_matlab_checkbox.setChecked(True)
+            self.use_spm_checkbox.setChecked(False)
+            self.use_matlab_standalone_checkbox.setChecked(False)
 
-            # FSL CapsulConfig
-            if not config.get_use_fsl():
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
+        elif config.get_use_matlab_standalone():
+            self.use_spm_standalone_checkbox.setChecked(False)
+            self.use_matlab_checkbox.setChecked(False)
+            self.use_spm_checkbox.setChecked(False)
+            self.use_matlab_standalone_checkbox.setChecked(True)
 
-                with c_e.settings as settings:
-                    configfsl = settings.config("fsl", "global")
+        self.spm_standalone_choice.setText(config.get_spm_standalone_path())
+        self.background_color_combo.setCurrentText(
+            config.getBackgroundColor() or "White"
+        )
+        self.text_color_combo.setCurrentText(config.getTextColor() or "Black")
+        self.fullscreen_cbox.setChecked(config.get_mainwindow_maximized())
+        wsize = config.get_mainwindow_size()
 
-                    if configfsl:
-                        settings.remove_config(
-                            "fsl", "global", getattr(configfsl, cif)
-                        )
+        if isinstance(wsize, list) and len(wsize) >= 2:
+            self.mainwindow_size_x_spinbox.setValue(wsize[0])
+            self.mainwindow_size_y_spinbox.setValue(wsize[1])
 
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c["engine"]["global"]["capsul.engine.module.fsl"][
-                        "fsl"
-                    ]["directory"]
+    def ok_clicked(self):
+        """Handle the OK button click event."""
 
-                except KeyError:
-                    pass
+        if self.validate_and_save(OK_clicked=True):
+            self.accept()
+            self.close()
 
-                try:
-                    del c_c["engine"]["global"]["capsul.engine.module.fsl"][
-                        "fsl"
-                    ]["config"]
+    def save_minimal_config(self, config):
+        """
+        Saves a minimal configuration for CAPSUL config synchronization.
 
-                except KeyError:
-                    pass
-
-            # mrtrix CapsulConfig
-            if not config.get_use_mrtrix():
-                # TODO: We only deal here with the global environment
-                cif = c_e.settings.config_id_field
-
-                with c_e.settings as settings:
-                    configants = settings.config("mrtrix", "global")
-
-                    if configants:
-                        settings.remove_config(
-                            "mrtrix", "global", getattr(configants, cif)
-                        )
-
-                # TODO: We could use a generic method to deal with c_c?
-                try:
-                    del c_c["engine"]["global"]["capsul.engine.module.mrtrix"][
-                        "mrtrix"
-                    ]["directory"]
-
-                except KeyError:
-                    pass
-
-            # SPM standalone CapsulConfig
-            if not config.get_use_spm_standalone():
-                try:
-                    keys = c_c["engine"]["global"][
-                        "capsul.engine.module.spm"
-                    ].keys()
-
-                except KeyError:
-                    pass
-
-                else:
-                    dict4clean = dict.fromkeys(keys, False)
-
-                    for i in keys:
-                        if (
-                            "standalone"
-                            in c_c["engine"]["global"][
-                                "capsul.engine.module.spm"
-                            ][i]
-                        ):
-                            if (
-                                c_c["engine"]["global"][
-                                    "capsul.engine.module.spm"
-                                ][i]["standalone"]
-                                is True
-                            ):
-                                dict4clean[i] = True
-
-                        else:
-                            # TODO: What we do if standalone is not a key ?
-                            pass
-
-                    for i in dict4clean:
-                        if dict4clean[i]:
-                            del c_c["engine"]["global"][
-                                "capsul.engine.module.spm"
-                            ][i]
-
-            if not config.get_use_spm():
-                try:
-                    keys = c_c["engine"]["global"][
-                        "capsul.engine.module.spm"
-                    ].keys()
-
-                except KeyError:
-                    pass
-
-                else:
-                    dict4clean = dict.fromkeys(keys, False)
-
-                    for i in keys:
-                        if (
-                            "standalone"
-                            in c_c["engine"]["global"][
-                                "capsul.engine.module.spm"
-                            ][i]
-                        ):
-                            if (
-                                c_c["engine"]["global"][
-                                    "capsul.engine.module.spm"
-                                ][i]["standalone"]
-                                is False
-                            ):
-                                dict4clean[i] = True
-
-                    for i in dict4clean:
-                        if dict4clean[i]:
-                            del c_c["engine"]["global"][
-                                "capsul.engine.module.spm"
-                            ][i]
-
-            try:
-                if not c_c["engine"]["global"]["capsul.engine.module.spm"]:
-                    del c_c["engine"]["global"]["capsul.engine.module.spm"]
-
-            except KeyError:
-                pass
-
-            if not config.get_use_matlab():
-                try:
-                    keys = c_c["engine"]["global"][
-                        "capsul.engine.module.matlab"
-                    ].keys()
-
-                except KeyError:
-                    pass
-
-                else:
-                    dict4clean = dict.fromkeys(keys, False)
-
-                    for i in keys:
-                        if (
-                            "executable"
-                            in c_c["engine"]["global"][
-                                "capsul.engine.module.matlab"
-                            ][i]
-                        ):
-                            dict4clean[i] = True
-
-                    for i in dict4clean:
-                        if dict4clean[i]:
-                            del c_c["engine"]["global"][
-                                "capsul.engine.module.matlab"
-                            ][i]["executable"]
-
-            if not config.get_use_matlab_standalone():
-                try:
-                    keys = c_c["engine"]["global"][
-                        "capsul.engine.module.matlab"
-                    ].keys()
-
-                except KeyError:
-                    pass
-
-                else:
-                    dict4clean = dict.fromkeys(keys, False)
-
-                    for i in keys:
-                        if (
-                            "mcr_directory"
-                            in c_c["engine"]["global"][
-                                "capsul.engine.module.matlab"
-                            ][i]
-                        ):
-                            dict4clean[i] = True
-
-                    for i in dict4clean:
-                        if dict4clean[i]:
-                            del c_c["engine"]["global"][
-                                "capsul.engine.module.matlab"
-                            ][i]["mcr_directory"]
-
-            try:
-                if not c_c["engine"]["global"]["capsul.engine.module.matlab"]:
-                    del c_c["engine"]["global"]["capsul.engine.module.matlab"]
-
-            except KeyError:
-                pass
-
-        config.get_capsul_config(sync_from_engine=False)
-        config.saveConfig()
-        return True
-
-    def save_minimal_config(self, config):  ####
-        """Save minimal configuration for CAPSUL config sync purposes."""
+        :param config (Config): The configuration object to update and save.
+        """
         config.set_afni_path(self.afni_choice.text())
         config.set_use_afni(self.use_afni_checkbox.isChecked())
         config.set_ants_path(self.ants_choice.text())
@@ -3711,7 +3467,14 @@ class PopUpPreferences(QDialog):
         )
 
     def save_full_config(self, config):
-        """Save the full configuration and validate settings."""
+        """
+        Saves the full configuration and validates settings.
+
+        :param config (Config): The configuration object to update and save.
+
+        :returns (bool): True if the configuration is valid and successfully
+                         saved, False otherwise.
+        """
         config.setAutoSave(self.save_checkbox.isChecked())
         config.set_radioView(self.radioView_checkbox.isChecked())
         config.setControlV1(self.control_checkbox.isChecked())
@@ -3772,8 +3535,541 @@ class PopUpPreferences(QDialog):
         self.signal_preferences_change.emit()
         return True
 
+    def setup_ui(self):
+        """Set up the user interface components."""
+        self.setObjectName("Dialog")
+        self.setWindowTitle("MIA preferences")
+        _translate = QtCore.QCoreApplication.translate
+        self.tab_widget = QTabWidget(self)
+        self.tab_widget.setEnabled(True)
+        # Create tabs
+        self.create_tools_tab(_translate)
+        self.create_pipeline_tab(_translate)
+        self.create_appearance_tab(_translate)
+        # Buttons layout
+        self.push_button_ok = QPushButton("OK")
+        self.push_button_ok.setObjectName("pushButton_ok")
+        self.push_button_ok.clicked.connect(self.ok_clicked)
+        self.push_button_cancel = QPushButton("Cancel")
+        self.push_button_cancel.setObjectName("pushButton_cancel")
+        self.push_button_cancel.clicked.connect(self.close)
+        self.status_label = QLabel("")
+        hbox_buttons = QHBoxLayout()
+        hbox_buttons.addWidget(self.status_label)
+        hbox_buttons.addStretch(1)
+        hbox_buttons.addWidget(self.push_button_ok)
+        hbox_buttons.addWidget(self.push_button_cancel)
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.tab_widget)
+        vbox.addLayout(hbox_buttons)
+        # Global layout - scrollable global window
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.widget = QWidget()
+        self.widget.setLayout(vbox)
+        self.scroll.setWidget(self.widget)
+        self.final_layout = QVBoxLayout()
+        self.final_layout.addWidget(self.scroll)
+        self.setLayout(self.final_layout)
+
+    def show_error_message(self, title, message):
+        """
+        Displays an error message dialog.
+
+        :param title (str): The title of the error message dialog.
+        :param message (str): The detailed error message to display.
+        """
+        self.msg = QMessageBox()
+        self.msg.setIcon(QMessageBox.Critical)
+        self.msg.setText(title)
+        self.msg.setInformativeText(message)
+        self.msg.setWindowTitle("Error")
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.buttonClicked.connect(self.msg.close)
+        self.msg.show()
+
+    def show_warning_message(self, title, message):
+        """
+        Displays a warning message dialog.
+
+        :param title (str): The title of the warning message dialog.
+        :param message (str): The detailed warning message to display.
+        """
+        self.msg = QMessageBox()
+        self.msg.setIcon(QMessageBox.Warning)
+        self.msg.setText(title)
+        self.msg.setInformativeText(message)
+        self.msg.setWindowTitle("Warning")
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.buttonClicked.connect(self.msg.close)
+        self.msg.show()
+
+    def update_gui_from_capsul_config(self, conf):
+        """
+        Updates the GUI elements based on the CAPSUL configuration.
+
+        This method retrieves the configuration settings for various
+        neuroimaging tools (e.g., AFNI, ANTs, FreeSurfer, FSL, Matlab,
+        SPM, etc.) and updates the corresponding GUI fields, including
+        checkboxes and text fields.
+
+        :param conf (CapsulConfig): The CAPSUL configuration object containing
+                                    the paths and usage states of different
+                                    tools.
+        """
+        # afni
+        use_afni = conf.get_use_afni()
+
+        if use_afni:
+            self.afni_choice.setText(conf.get_afni_path())
+
+        self.use_afni_checkbox.setChecked(use_afni)
+        # ants
+        use_ants = conf.get_use_ants()
+
+        if use_ants:
+            self.ants_choice.setText(conf.get_ants_path())
+
+        self.use_ants_checkbox.setChecked(use_ants)
+        # freesurfer
+        use_freesurfer = conf.get_use_freesurfer()
+
+        if use_freesurfer:
+            self.freesurfer_choice.setText(conf.get_freesurfer_setup())
+
+        self.use_freesurfer_checkbox.setChecked(use_freesurfer)
+        # fsl
+        use_fsl = conf.get_use_fsl()
+
+        if use_fsl:
+            self.fsl_choice.setText(conf.get_fsl_config())
+
+        self.use_fsl_checkbox.setChecked(use_fsl)
+        # matlab
+        use_matlab = conf.get_use_matlab()
+        self.use_matlab_checkbox.setChecked(use_matlab)
+        self.matlab_choice.setText(conf.get_matlab_path())
+        # matlab - MCR
+        use_matlab_sa = conf.get_use_matlab_standalone()
+        self.use_matlab_standalone_checkbox.setChecked(use_matlab_sa)
+        self.matlab_standalone_choice.setText(
+            conf.get_matlab_standalone_path()
+        )
+        # mrtrix
+        use_mrtrix = conf.get_use_mrtrix()
+
+        if use_mrtrix:
+            self.mrtrix_choice.setText(conf.get_mrtrix_path())
+
+        self.use_mrtrix_checkbox.setChecked(use_mrtrix)
+        # spm
+        use_spm = conf.get_use_spm()
+        self.use_spm_checkbox.setChecked(use_spm)
+        self.spm_choice.setText(conf.get_spm_path())
+        # spm - Standalone
+        use_spm_sa = conf.get_use_spm_standalone()
+        self.use_spm_standalone_checkbox.setChecked(use_spm_sa)
+        self.spm_standalone_choice.setText(conf.get_spm_standalone_path())
+
+    def use_afni_changed(self):
+        """Handle the use_afni checkbox change event."""
+        self.afni_choice.setDisabled(not self.use_afni_checkbox.isChecked())
+        self.afni_label.setDisabled(not self.use_afni_checkbox.isChecked())
+
+    def use_ants_changed(self):
+        """Handle the use_ants checkbox change event."""
+        self.ants_choice.setDisabled(not self.use_ants_checkbox.isChecked())
+        self.ants_label.setDisabled(not self.use_ants_checkbox.isChecked())
+
+    def use_current_mainwindow_size(self):
+        """Use the current main window size."""
+        self.mainwindow_size_x_spinbox.setValue(self.main_window.width())
+        self.mainwindow_size_y_spinbox.setValue(self.main_window.height())
+
+    def use_freesurfer_changed(self):
+        """Handle the use_freesurfer checkbox change event."""
+        self.freesurfer_choice.setDisabled(
+            not self.use_freesurfer_checkbox.isChecked()
+        )
+        self.freesurfer_label.setDisabled(
+            not self.use_freesurfer_checkbox.isChecked()
+        )
+
+    def use_fsl_changed(self):
+        """Handle the use_fsl checkbox change event."""
+        self.fsl_choice.setDisabled(not self.use_fsl_checkbox.isChecked())
+        self.fsl_label.setDisabled(not self.use_fsl_checkbox.isChecked())
+
+    def use_matlab_changed(self):
+        """Handle the use_matlab checkbox change event."""
+
+        if not self.use_matlab_checkbox.isChecked():
+            self.matlab_choice.setDisabled(True)
+            self.spm_choice.setDisabled(True)
+            self.matlab_label.setDisabled(True)
+            self.spm_label.setDisabled(True)
+            self.spm_browse.setDisabled(True)
+            self.matlab_browse.setDisabled(True)
+            self.use_spm_checkbox.setChecked(False)
+
+        else:
+            self.matlab_choice.setDisabled(False)
+            self.matlab_label.setDisabled(False)
+            self.matlab_browse.setDisabled(False)
+            self.use_matlab_standalone_checkbox.setChecked(False)
+
+    def use_matlab_standalone_changed(self):
+        """Handle the use_matlab_standalone checkbox change event."""
+
+        if not self.use_matlab_standalone_checkbox.isChecked():
+            archi = platform.architecture()
+
+            if "Windows" not in archi[1]:
+                self.spm_standalone_choice.setDisabled(True)
+                self.use_spm_standalone_checkbox.setChecked(False)
+                self.spm_standalone_label.setDisabled(True)
+                self.spm_standalone_browse.setDisabled(True)
+
+            self.matlab_standalone_choice.setDisabled(True)
+            self.matlab_standalone_label.setDisabled(True)
+            self.matlab_standalone_browse.setDisabled(True)
+
+        else:
+            self.matlab_standalone_choice.setDisabled(False)
+            self.matlab_standalone_label.setDisabled(False)
+            self.matlab_standalone_browse.setDisabled(False)
+            self.use_matlab_checkbox.setChecked(False)
+
+    def use_mrtrix_changed(self):
+        """Handle the use_mrtrix checkbox change event."""
+        self.mrtrix_choice.setDisabled(
+            not self.use_mrtrix_checkbox.isChecked()
+        )
+        self.mrtrix_label.setDisabled(not self.use_mrtrix_checkbox.isChecked())
+
+    def use_spm_changed(self):
+        """Handle the use_spm checkbox change event."""
+
+        if not self.use_spm_checkbox.isChecked():
+            self.spm_choice.setDisabled(True)
+            self.spm_label.setDisabled(True)
+            self.spm_browse.setDisabled(True)
+
+        else:
+            self.use_matlab_checkbox.setChecked(True)
+            self.spm_choice.setDisabled(False)
+            self.spm_label.setDisabled(False)
+            self.spm_browse.setDisabled(False)
+            self.spm_standalone_choice.setDisabled(True)
+            self.spm_standalone_label.setDisabled(True)
+            self.spm_standalone_browse.setDisabled(True)
+            self.use_spm_standalone_checkbox.setChecked(False)
+            self.use_matlab_standalone_checkbox.setChecked(False)
+
+    def use_spm_standalone_changed(self):
+        """Handle the use_spm_standalone checkbox change event."""
+
+        if not self.use_spm_standalone_checkbox.isChecked():
+            self.spm_standalone_choice.setDisabled(True)
+            self.spm_standalone_label.setDisabled(True)
+            self.spm_standalone_browse.setDisabled(True)
+
+        else:
+            archi = platform.architecture()
+
+            if "Windows" not in archi[1]:
+                self.use_matlab_standalone_checkbox.setChecked(True)
+
+            self.spm_standalone_choice.setDisabled(False)
+            self.spm_standalone_label.setDisabled(False)
+            self.spm_standalone_browse.setDisabled(False)
+            self.spm_choice.setDisabled(True)
+            self.spm_label.setDisabled(True)
+            self.spm_browse.setDisabled(True)
+            self.use_spm_checkbox.setChecked(False)
+            self.use_matlab_checkbox.setChecked(False)
+
+    def validate_and_save(self, OK_clicked=False):
+        """
+        Validate and save the preferences.
+
+        :param ok_clicked (bool): Whether the OK button was clicked (True)
+                                  when this method was launched.
+
+        :Contains:
+            - remove_capsul_config: Helper function to remove a
+                                    module's configuration
+            - clean_spm_config: Cleans the SPM configuration based
+                                on standalone mode
+            - clean_matlab_config: Removes MATLAB-related configuration keys
+        """
+        config = Config()
+
+        if not OK_clicked:
+            self.save_minimal_config(config)
+
+        elif not self.save_full_config(config):
+            return False
+
+        c_c = config.config.setdefault("capsul_config", {})
+        c_e = config.get_capsul_engine()
+
+        if not (c_c and c_e):
+            config.get_capsul_config(sync_from_engine=False)
+            config.saveConfig()
+            return True
+
+        def remove_capsul_config(module, key):
+            """
+            Helper function to remove a module's configuration.
+
+            :param module (str): The name of the module to remove.
+            :param key (str): The specific configuration key to remove.
+
+            """
+            # TODO: We only deal here with the global environment
+            cif = c_e.settings.config_id_field
+
+            with c_e.settings as settings:
+                config_module = settings.config(module, "global")
+
+                if config_module:
+                    settings.remove_config(
+                        module, "global", getattr(config_module, cif)
+                    )
+
+            if not module == "freesurfer":
+                c_c.get("engine", {}).get("global", {}).get(
+                    f"capsul.engine.module.{module}", {}
+                ).get(module, {}).pop(key, None)
+
+        # Sync capsul config from mia config, if module is not used:
+        for module in ["afni", "ants", "freesurfer", "fsl", "mrtrix"]:
+
+            if not getattr(config, f"get_use_{module}")():
+                remove_capsul_config(module, "directory")
+
+                if module == "fsl":
+                    remove_capsul_config(module, "config")
+
+        def clean_spm_config(standalone_check):
+            """
+            Cleans the SPM configuration based on standalone mode.
+
+            :param standalone_check (bool): Indicates whether to clean based
+                                            on standalone mode.
+            """
+
+            try:
+                keys = list(
+                    c_c["engine"]["global"]["capsul.engine.module.spm"].keys()
+                )
+
+            except KeyError:
+                return
+
+            dict4clean = {
+                k: bool(
+                    "standalone"
+                    in c_c["engine"]["global"]["capsul.engine.module.spm"][k]
+                    and c_c["engine"]["global"]["capsul.engine.module.spm"][k][
+                        "standalone"
+                    ]
+                    == standalone_check
+                )
+                for k in keys
+            }
+            for k, should_remove in dict4clean.items():
+
+                if should_remove:
+                    del c_c["engine"]["global"]["capsul.engine.module.spm"][k]
+
+        if not config.get_use_spm_standalone():
+            clean_spm_config(True)
+
+        if not config.get_use_spm():
+            clean_spm_config(False)
+
+        if (
+            not c_c.get("engine", {})
+            .get("global", {})
+            .get("capsul.engine.module.spm", {})
+        ):
+            c_c["engine"]["global"].pop("capsul.engine.module.spm", None)
+
+        def clean_matlab_config(key):
+            """
+            Removes MATLAB-related configuration keys.
+
+            :param key (str): The configuration key to remove from the MATLAB
+                              module.
+            """
+
+            try:
+                keys = list(
+                    c_c["engine"]["global"][
+                        "capsul.engine.module.matlab"
+                    ].keys()
+                )
+
+            except KeyError:
+                return
+
+            for k in keys:
+                c_c["engine"]["global"]["capsul.engine.module.matlab"][k].pop(
+                    key, None
+                )
+
+        if not config.get_use_matlab():
+            clean_matlab_config("executable")
+
+        if not config.get_use_matlab_standalone():
+            clean_matlab_config("mcr_directory")
+
+        if (
+            not c_c.get("engine", {})
+            .get("global", {})
+            .get("capsul.engine.module.matlab", {})
+        ):
+            c_c["engine"]["global"].pop("capsul.engine.module.matlab", None)
+
+        config.get_capsul_config(sync_from_engine=False)
+        config.saveConfig()
+        return True
+
+    def validate_matlab_path(self, path, config):
+        """
+        Validates the given Matlab executable path.
+
+        :param path (str): The path to the Matlab executable.
+        :param config (Config): The configuration object to update.
+
+        :returns (bool): True if the path is valid and updated in the
+                         configuration, False otherwise.
+        """
+
+        if not os.path.isfile(path):
+            self.wrong_path(path, "Matlab")
+            return False
+
+        if path == config.get_matlab_path():
+            config.set_use_matlab(True)
+            config.set_use_matlab_standalone(False)
+
+            if not self.use_spm_checkbox.isChecked():
+                config.set_use_spm(False)
+                config.set_use_spm_standalone(False)
+                # We don't test matlab because it has already been
+                # tested before
+
+        elif not self.use_spm_checkbox.isChecked():
+
+            try:
+                matlab_cmd = "ver; exit"
+                result = subprocess.run(
+                    [
+                        path,
+                        "-nodisplay",
+                        "-nodesktop",
+                        "-nosplash",
+                        "-singleCompThread",
+                        "-r",
+                        matlab_cmd,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                err = result.stderr
+
+            except subprocess.CalledProcessError:
+                self.wrong_path(path, "Matlab")
+                return False
+
+            except Exception as e:  # Catch any other unexpected errors
+                logger.warning(f"❌ Unexpected error: {e}")
+                self.wrong_path(path, "Matlab")
+                return False
+
+            if err == "":
+                config.set_matlab_path(path)
+                config.set_use_matlab(True)
+                config.set_use_matlab_standalone(False)
+                config.set_use_spm(False)
+                config.set_use_spm_standalone(False)
+                return True
+
+            else:
+                self.wrong_path(path, "Matlab")
+                return False
+
+        else:
+            # If self.use_spm_checkbox.isChecked() is True, the test will
+            # take place when SPM is validated.
+            pass
+
+    def validate_matlab_standalone_path(self, path, config):
+        """
+        Validate the Matlab standalone path.
+
+        This method does not thoroughly test the configuration for Matlab
+        MCR alone (without SPM standalone) due to the lack of a concrete
+        example.
+
+        :param path (str): The path to the Matlab standalone directory.
+        :param config (Config): The configuration object to update.
+
+        :returns (bool): True if the path is valid and updated in the
+                         configuration, False otherwise.
+        """
+
+        if not os.path.isdir(path):
+            self.wrong_path(path, "Matlab standalone")
+            return False
+
+        if not self.use_spm_standalone_checkbox.isChecked():
+            archi = platform.architecture()
+            config.set_matlab_standalone_path(path)
+
+            if "Windows" in archi[1]:
+                logger.info(
+                    "Matlab Standalone Path enter, this is "
+                    "unnecessary to use SPM12 with Windows OS."
+                )
+                config.set_use_matlab(True)
+                config.set_use_matlab_standalone(False)
+                config.set_use_spm_standalone(False)
+                config.set_use_spm(False)
+                return True
+
+            else:
+                config.set_use_matlab(False)
+                config.set_use_matlab_standalone(True)
+                config.set_use_spm_standalone(False)
+                config.set_use_spm(False)
+                return True
+
+        else:
+            # If self.use_spm_standalone_checkbox.isChecked() is True,
+            # the test will take place when SPM Stadalone is validated.
+            pass
+
     def validate_paths(self, config):
-        """Validate the paths and settings."""
+        """
+        Validate the paths and settings.
+
+        This method checks the validity of paths for various neuroimaging
+        tools (AFNI, ANTS, FreeSurfer, FSL, MRtrix, Matlab, SPM, etc.) and
+        updates the configuration accordingly. It also validates additional
+        paths such as the projects folder, MRIFileManager.jar path, and
+        resources folder.
+
+        :param config (Config): The configuration object where validated
+                                paths and settings will be stored.
+
+        :returns (bool): True if all paths and settings are valid, False
+                         otherwise.
+        """
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
         self.status_label.setText("Testing configuration ...")
         QtCore.QCoreApplication.processEvents()
@@ -3935,209 +4231,22 @@ class PopUpPreferences(QDialog):
         QApplication.restoreOverrideCursor()
         return True
 
-    def validate_tool_path(
-        self, tool_name, path, cmd, config, config_name, set_in_use, set_path
-    ):
-        """Validate the tool path."""
-        extra = ""
-
-        if tool_name in ["FreeSurfer", "FSL"]:
-            path_setup = path
-            path = os.path.dirname(path)
-            extra = "bin"
-
-            if "FREESURFER_HOME" not in os.environ:
-                os.environ["FREESURFER_HOME"] = path
-
-            if tool_name == "FSL":
-
-                if path.endswith(os.path.join("etc", "fslconf")):
-                    path = os.path.dirname(os.path.dirname(path))
-
-                elif path.endswith("etc"):
-                    path = os.path.dirname(path)
-
-        if tool_name not in [
-            "Matlab",
-            "Matlab Standalone",
-            "SPM",
-            "SPM Standalone",
-        ] and not os.path.isdir(path):
-            self.wrong_path(path, tool_name)
-            return False
-
-        cmd = os.path.join(path, extra, cmd) if cmd else None
-
-        if cmd:
-
-            try:
-                result = subprocess.run(
-                    [cmd, "--version"],
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                )
-                err = result.stderr
-
-            except subprocess.CalledProcessError:
-                self.wrong_path(path, tool_name, "config file")
-                return False
-
-            except Exception as e:  # Catch any other unexpected errors
-                logger.warning(f"❌ Unexpected error: {e}")
-                self.wrong_path(path, tool_name)
-                return False
-
-            # Filter out lines containing 'warning' (case-insensitive)
-            filtered_lines = [
-                line
-                for line in err.split("\n")
-                if "warning" not in line.lower()
-            ]
-            # If no lines left after filtering, set err to an empty string
-            err = "\n".join(filtered_lines) if filtered_lines else ""
-
-            if err == "":
-
-                if tool_name in ["FreeSurfer", "FSL"]:
-                    set_path(path_setup)
-
-                else:
-                    set_path(path)
-
-                set_in_use(True)
-
-            else:
-                self.wrong_path(path, tool_name)
-                return False
-
-        if tool_name == "Matlab":
-
-            if not self.validate_matlab_path(path, config):
-                return False
-
-        elif tool_name == "SPM":
-
-            if not self.validate_spm_path(path, config):
-                return False
-
-        elif tool_name == "Matlab Standalone":
-
-            if not self.validate_matlab_standalone_path(path, config):
-                return False
-
-        elif tool_name == "SPM Standalone":
-
-            if not self.validate_spm_standalone_path(path, config):
-                return False
-
-        return True
-
-    def validate_matlab_path(self, path, config):
-        """Validate the Matlab path."""
-
-        if not os.path.isfile(path):
-            self.wrong_path(path, "Matlab")
-            return False
-
-        if path == config.get_matlab_path():
-            config.set_use_matlab(True)
-            config.set_use_matlab_standalone(False)
-
-            if not self.use_spm_checkbox.isChecked():
-                config.set_use_spm(False)
-                config.set_use_spm_standalone(False)
-                # We don't test matlab because it has already been
-                # tested before
-
-        elif not self.use_spm_checkbox.isChecked():
-
-            try:
-                matlab_cmd = "ver; exit"
-                result = subprocess.run(
-                    [
-                        path,
-                        "-nodisplay",
-                        "-nodesktop",
-                        "-nosplash",
-                        "-singleCompThread",
-                        "-r",
-                        matlab_cmd,
-                    ],
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                )
-                err = result.stderr
-
-            except subprocess.CalledProcessError:
-                self.wrong_path(path, "Matlab")
-                return False
-
-            except Exception as e:  # Catch any other unexpected errors
-                logger.warning(f"❌ Unexpected error: {e}")
-                self.wrong_path(path, "Matlab")
-                return False
-
-            if err == "":
-                config.set_matlab_path(path)
-                config.set_use_matlab(True)
-                config.set_use_matlab_standalone(False)
-                config.set_use_spm(False)
-                config.set_use_spm_standalone(False)
-                return True
-
-            else:
-                self.wrong_path(path, "Matlab")
-                return False
-
-        else:
-            # If self.use_spm_checkbox.isChecked() is True, the test will
-            # take place when SPM is validated.
-            pass
-
-    def validate_matlab_standalone_path(self, path, config):
-        """
-        Validate the Matlab standalone path.
-
-        We're not really testing the configuration for matlab MCR alone
-
-        (without SPM standalone) as we don't yet have a concrete example.
-        """
-
-        if not os.path.isdir(path):
-            self.wrong_path(path, "Matlab standalone")
-            return False
-
-        if not self.use_spm_standalone_checkbox.isChecked():
-            archi = platform.architecture()
-            config.set_matlab_standalone_path(path)
-
-            if "Windows" in archi[1]:
-                logger.info(
-                    "Matlab Standalone Path enter, this is "
-                    "unnecessary to use SPM12 with Windows OS."
-                )
-                config.set_use_matlab(True)
-                config.set_use_matlab_standalone(False)
-                config.set_use_spm_standalone(False)
-                config.set_use_spm(False)
-                return True
-
-            else:
-                config.set_use_matlab(False)
-                config.set_use_matlab_standalone(True)
-                config.set_use_spm_standalone(False)
-                config.set_use_spm(False)
-                return True
-
-        else:
-            # If self.use_spm_standalone_checkbox.isChecked() is True,
-            # the test will take place when SPM Stadalone is validated.
-            pass
-
     def validate_spm_path(self, path, config):
-        """Validate the SPM path."""
+        """
+        Validates the SPM path and its compatibility with Matlab.
+
+        This method checks whether the provided SPM and Matlab paths are
+        valid. If they are already configured correctly, it enables SPM and
+        Matlab usage without further checks. Otherwise, it attempts to run
+        an SPM command via Matlab to confirm the setup.
+
+        :param path (str): The file path to the SPM installation.
+        :param config (Config): The configuration object where validated
+                                paths and settings will be stored.
+
+        :returns (bool): True if the SPM path and Matlab path are valid,
+                         False otherwise.
+        """
         matlab_path = self.matlab_choice.text()
 
         if not os.path.isdir(path):
@@ -4211,7 +4320,22 @@ class PopUpPreferences(QDialog):
                 return False
 
     def validate_spm_standalone_path(self, path, config):
-        """Validate the SPM standalone path."""
+        """
+        Validates the SPM standalone path and its compatibility with
+        Matlab standalone.
+
+        This method checks whether the provided paths for SPM standalone
+        and Matlab standalone (if applicable) are valid. It also verifies
+        system architecture compatibility and attempts to execute SPM
+        standalone to confirm its functionality.
+
+        :param path (str): The file path to the SPM standalone installation.
+        :param config (Config): The configuration object where validated
+                                paths and settings will be stored.
+
+        :returns (bool): True if the SPM standalone and Matlab standalone
+                         paths are valid, False otherwise.
+        """
         matlab_path = self.matlab_standalone_choice.text()
         archi = platform.architecture()
 
@@ -4340,30 +4464,145 @@ class PopUpPreferences(QDialog):
             self.wrong_path(path, "SPM standalone")
             return False
 
-    def show_error_message(self, title, message):
-        """Show an error message dialog."""
-        self.msg = QMessageBox()
-        self.msg.setIcon(QMessageBox.Critical)
-        self.msg.setText(title)
-        self.msg.setInformativeText(message)
-        self.msg.setWindowTitle("Error")
-        self.msg.setStandardButtons(QMessageBox.Ok)
-        self.msg.buttonClicked.connect(self.msg.close)
-        self.msg.show()
+    def validate_tool_path(
+        self, tool_name, path, cmd, config, config_name, set_in_use, set_path
+    ):
+        """
+        Validates the specified tool's path and checks its functionality.
 
-    def show_warning_message(self, title, message):
-        """Show a warning message dialog."""
-        self.msg = QMessageBox()
-        self.msg.setIcon(QMessageBox.Warning)
-        self.msg.setText(title)
-        self.msg.setInformativeText(message)
-        self.msg.setWindowTitle("Warning")
-        self.msg.setStandardButtons(QMessageBox.Ok)
-        self.msg.buttonClicked.connect(self.msg.close)
-        self.msg.show()
+        This method checks if the given tool path exists and verifies that
+        the tool is functional by running a command to check its version.
+        It also handles tool-specific setup for FreeSurfer and FSL by setting
+        environment variables and adjusting paths as necessary.
 
-    def wrong_path(self, path, tool, extra_mess=""):  #####
-        """Show a wrong path message."""
+        :param tool_name (str): The name of the tool to validate
+                                (e.g., "FreeSurfer", "FSL", "Matlab", etc.).
+        :param path (str): The file path to the tool's installation directory.
+        :param cmd (str): The command to execute within the tool's directory
+                          to check its version.
+        :param config (Config): The configuration object where validated
+                                paths and settings will be stored.
+        :param config_name (str): The name of the configuration setting for
+                                  the tool.
+        :param set_in_use (Callable): A function to set the tool's "in use"
+                                     status in the configuration.
+        :param set_path (Callable): A function to set the tool's path in the
+                                   configuration.
+
+        :returns (bool): True if the tool's path is valid and functional,
+                         False otherwise.
+        """
+        extra = ""
+
+        if tool_name in ["FreeSurfer", "FSL"]:
+            path_setup = path
+            path = os.path.dirname(path)
+            extra = "bin"
+
+            if "FREESURFER_HOME" not in os.environ:
+                os.environ["FREESURFER_HOME"] = path
+
+            if tool_name == "FSL":
+
+                if path.endswith(os.path.join("etc", "fslconf")):
+                    path = os.path.dirname(os.path.dirname(path))
+
+                elif path.endswith("etc"):
+                    path = os.path.dirname(path)
+
+        if tool_name not in [
+            "Matlab",
+            "Matlab Standalone",
+            "SPM",
+            "SPM Standalone",
+        ] and not os.path.isdir(path):
+            self.wrong_path(path, tool_name)
+            return False
+
+        cmd = os.path.join(path, extra, cmd) if cmd else None
+
+        if cmd:
+
+            try:
+                result = subprocess.run(
+                    [cmd, "--version"],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                err = result.stderr
+
+            except subprocess.CalledProcessError:
+                self.wrong_path(path, tool_name, "config file")
+                return False
+
+            except Exception as e:  # Catch any other unexpected errors
+                logger.warning(f"❌ Unexpected error: {e}")
+                self.wrong_path(path, tool_name)
+                return False
+
+            # Filter out lines containing 'warning' (case-insensitive)
+            filtered_lines = [
+                line
+                for line in err.split("\n")
+                if "warning" not in line.lower()
+            ]
+            # If no lines left after filtering, set err to an empty string
+            err = "\n".join(filtered_lines) if filtered_lines else ""
+
+            if err == "":
+
+                if tool_name in ["FreeSurfer", "FSL"]:
+                    set_path(path_setup)
+
+                else:
+                    set_path(path)
+
+                set_in_use(True)
+
+            else:
+                self.wrong_path(path, tool_name)
+                return False
+
+        if tool_name == "Matlab":
+
+            if not self.validate_matlab_path(path, config):
+                return False
+
+        elif tool_name == "SPM":
+
+            if not self.validate_spm_path(path, config):
+                return False
+
+        elif tool_name == "Matlab Standalone":
+
+            if not self.validate_matlab_standalone_path(path, config):
+                return False
+
+        elif tool_name == "SPM Standalone":
+
+            if not self.validate_spm_standalone_path(path, config):
+                return False
+
+        return True
+
+    def wrong_path(self, path, tool, extra_mess=""):
+        """
+        Displays an error message for an invalid tool path.
+
+        This method restores the cursor, clears the status label,
+        and shows a QMessageBox with an error message indicating
+        that the provided path for a specified tool is invalid.
+
+        :param path (str): The invalid path entered by the user.
+        :param tool (str): The name of the tool for which the path is
+                           being validated.
+        :param extra_mess (str, optional): Additional context for the
+                                           error message, such as specifying
+                                           a configuration file.
+
+        :returns (None): This function does not return anything.
+        """
         QApplication.restoreOverrideCursor()
         self.status_label.setText("")
         self.msg = QMessageBox()
@@ -4381,172 +4620,22 @@ class PopUpPreferences(QDialog):
         self.msg.buttonClicked.connect(self.msg.close)
         self.msg.show()
 
-    def use_current_mainwindow_size(self):
-        """Use the current main window size."""
-        self.mainwindow_size_x_spinbox.setValue(self.main_window.width())
-        self.mainwindow_size_y_spinbox.setValue(self.main_window.height())
-
-    def ok_clicked(self):
-        """Handle the OK button click event."""
-
-        if self.validate_and_save(OK_clicked=True):
-            self.accept()
-            self.close()
-
-    def use_afni_changed(self):  #######
-        """Handle the use_afni checkbox change event."""
-        self.afni_choice.setDisabled(not self.use_afni_checkbox.isChecked())
-        self.afni_label.setDisabled(not self.use_afni_checkbox.isChecked())
-
-    def use_ants_changed(self):  ###
-        """Handle the use_ants checkbox change event."""
-        self.ants_choice.setDisabled(not self.use_ants_checkbox.isChecked())
-        self.ants_label.setDisabled(not self.use_ants_checkbox.isChecked())
-
-    def use_freesurfer_changed(self):  ####
-        """Handle the use_freesurfer checkbox change event."""
-        self.freesurfer_choice.setDisabled(
-            not self.use_freesurfer_checkbox.isChecked()
-        )
-        self.freesurfer_label.setDisabled(
-            not self.use_freesurfer_checkbox.isChecked()
-        )
-
-    def use_fsl_changed(self):  ####
-        """Handle the use_fsl checkbox change event."""
-        self.fsl_choice.setDisabled(not self.use_fsl_checkbox.isChecked())
-        self.fsl_label.setDisabled(not self.use_fsl_checkbox.isChecked())
-
-    def use_matlab_changed(self):  ######
-        """Handle the use_matlab checkbox change event."""
-
-        if not self.use_matlab_checkbox.isChecked():
-            self.matlab_choice.setDisabled(True)
-            self.spm_choice.setDisabled(True)
-            self.matlab_label.setDisabled(True)
-            self.spm_label.setDisabled(True)
-            self.spm_browse.setDisabled(True)
-            self.matlab_browse.setDisabled(True)
-            self.use_spm_checkbox.setChecked(False)
-
-        else:
-            self.matlab_choice.setDisabled(False)
-            self.matlab_label.setDisabled(False)
-            self.matlab_browse.setDisabled(False)
-            self.use_matlab_standalone_checkbox.setChecked(False)
-
-    def use_matlab_standalone_changed(self):  #####
-        """Handle the use_matlab_standalone checkbox change event."""
-
-        if not self.use_matlab_standalone_checkbox.isChecked():
-            archi = platform.architecture()
-
-            if "Windows" not in archi[1]:
-                self.spm_standalone_choice.setDisabled(True)
-                self.use_spm_standalone_checkbox.setChecked(False)
-                self.spm_standalone_label.setDisabled(True)
-                self.spm_standalone_browse.setDisabled(True)
-
-            self.matlab_standalone_choice.setDisabled(True)
-            self.matlab_standalone_label.setDisabled(True)
-            self.matlab_standalone_browse.setDisabled(True)
-
-        else:
-            self.matlab_standalone_choice.setDisabled(False)
-            self.matlab_standalone_label.setDisabled(False)
-            self.matlab_standalone_browse.setDisabled(False)
-            self.use_matlab_checkbox.setChecked(False)
-
-    def use_mrtrix_changed(self):  ####
-        """Handle the use_mrtrix checkbox change event."""
-        self.mrtrix_choice.setDisabled(
-            not self.use_mrtrix_checkbox.isChecked()
-        )
-        self.mrtrix_label.setDisabled(not self.use_mrtrix_checkbox.isChecked())
-
-    def use_spm_changed(self):  ####
-        """Handle the use_spm checkbox change event."""
-
-        if not self.use_spm_checkbox.isChecked():
-            self.spm_choice.setDisabled(True)
-            self.spm_label.setDisabled(True)
-            self.spm_browse.setDisabled(True)
-
-        else:
-            self.use_matlab_checkbox.setChecked(True)
-            self.spm_choice.setDisabled(False)
-            self.spm_label.setDisabled(False)
-            self.spm_browse.setDisabled(False)
-            self.spm_standalone_choice.setDisabled(True)
-            self.spm_standalone_label.setDisabled(True)
-            self.spm_standalone_browse.setDisabled(True)
-            self.use_spm_standalone_checkbox.setChecked(False)
-            self.use_matlab_standalone_checkbox.setChecked(False)
-
-    def use_spm_standalone_changed(self):  ####
-        """Handle the use_spm_standalone checkbox change event."""
-
-        if not self.use_spm_standalone_checkbox.isChecked():
-            self.spm_standalone_choice.setDisabled(True)
-            self.spm_standalone_label.setDisabled(True)
-            self.spm_standalone_browse.setDisabled(True)
-
-        else:
-            archi = platform.architecture()
-
-            if "Windows" not in archi[1]:
-                self.use_matlab_standalone_checkbox.setChecked(True)
-
-            self.spm_standalone_choice.setDisabled(False)
-            self.spm_standalone_label.setDisabled(False)
-            self.spm_standalone_browse.setDisabled(False)
-            self.spm_choice.setDisabled(True)
-            self.spm_label.setDisabled(True)
-            self.spm_browse.setDisabled(True)
-            self.use_spm_checkbox.setChecked(False)
-            self.use_matlab_checkbox.setChecked(False)
-
-    def admin_mode_switch(self):
-        """Handle the admin mode checkbox click event."""
-        config = Config()
-
-        if self.admin_mode_checkbox.isChecked():
-            psswd, ok = QInputDialog.getText(
-                self,
-                "Password Input Dialog",
-                "Enter the admin password:",
-                QLineEdit.Password,
-            )
-
-            if ok:
-                salt_psswd = f"{self.salt}{psswd}"
-                hash_psswd = hashlib.sha256(salt_psswd.encode()).hexdigest()
-
-                if hash_psswd != config.get_admin_hash():
-                    self.admin_mode_checkbox.setChecked(False)
-                    self.status_label.setText(
-                        "<i style='color:red'>Wrong password.</i>"
-                    )
-
-                else:
-                    self.change_psswd.setVisible(True)
-                    self.edit_config.setVisible(True)
-                    self.status_label.clear()
-
-            else:
-                self.admin_mode_checkbox.setChecked(False)
-
-        else:
-            self.change_psswd.setVisible(False)
-            self.edit_config.setVisible(False)
-
 
 class PopUpProperties(QDialog):
-    """Is called when the user wants to change the current project's
-       properties (File > properties).
+    """
+    Dialog for modifying project properties.
+
+    Allows users to change project settings, including visualized tags
+    and information.
+    Is called when the user wants to change the current project's
+    properties (File > properties).
 
     .. Methods:
         - ok_clicked: saves the modifications and updates the data browser
+
+    .. Signals:
+        - signal_settings_change: Qt signal emitted when project settings are
+                                  modified.
 
     """
 
@@ -4555,23 +4644,23 @@ class PopUpProperties(QDialog):
     signal_settings_change = QtCore.pyqtSignal()
 
     def __init__(self, project, databrowser, old_tags):
-        """Initialization
+        """
+        Initialize the project properties dialog.
 
         :param project: current project in the software
         :param databrowser: data browser instance of the software
         :param old_tags: visualized tags before opening this dialog
         """
         super().__init__()
+        # Dialog setup
         self.setModal(True)
         self.project = project
         self.databrowser = databrowser
         self.old_tags = old_tags
-
         _translate = QtCore.QCoreApplication.translate
-
         self.setObjectName("Dialog")
         self.setWindowTitle("project properties")
-
+        # Create tab widget
         self.tab_widget = QTabWidget(self)
         self.tab_widget.setEnabled(True)
 
@@ -4585,78 +4674,81 @@ class PopUpProperties(QDialog):
         self.tab_widget.addTab(
             self.tab_tags, _translate("Dialog", "Visualized tags")
         )
-
         # The 'Informations" tab
         self.tab_infos = PopUpInformation(self.project)
         self.tab_infos.setObjectName("tab_infos")
         self.tab_widget.addTab(
             self.tab_infos, _translate("Dialog", "Information")
         )
-
+        # Create buttons
         # The 'OK' push button
         self.push_button_ok = QPushButton("OK")
         self.push_button_ok.setObjectName("pushButton_ok")
         self.push_button_ok.clicked.connect(self.ok_clicked)
-
         # The 'Cancel' push button
         self.push_button_cancel = QPushButton("Cancel")
         self.push_button_cancel.setObjectName("pushButton_cancel")
         self.push_button_cancel.clicked.connect(self.close)
-
+        # Layout setup
         hbox_buttons = QHBoxLayout()
         hbox_buttons.addStretch(1)
         hbox_buttons.addWidget(self.push_button_ok)
         hbox_buttons.addWidget(self.push_button_cancel)
-
         vbox = QVBoxLayout()
         vbox.addWidget(self.tab_widget)
         vbox.addLayout(hbox_buttons)
-
         self.setLayout(vbox)
 
     def ok_clicked(self):
         """Saves the modifications and updates the data browser."""
-
+        # Prepare history tracking
         history_maker = ["modified_visibilities", self.old_tags]
-        new_visibilities = []
-
-        for x in range(self.tab_tags.list_widget_selected_tags.count()):
-            visible_tag = self.tab_tags.list_widget_selected_tags.item(
-                x
-            ).text()
-            new_visibilities.append(visible_tag)
-
+        # Collect newly selected tags
+        new_visibilities = [
+            self.tab_tags.list_widget_selected_tags.item(x).text()
+            for x in range(self.tab_tags.list_widget_selected_tags.count())
+        ]
         new_visibilities.append(TAG_FILENAME)
 
         with self.project.database.data() as database_data:
             database_data.set_shown_tags(new_visibilities)
 
         history_maker.append(new_visibilities)
-
         self.project.undos.append(history_maker)
         self.project.redos.clear()
         self.project.unsavedModifications = True
 
-        # Columns updated
+        # Update data browser columns
         with self.project.database.data() as database_data:
             self.databrowser.table_data.update_visualized_columns(
                 self.old_tags, database_data.get_shown_tags()
             )
 
+        # Close dialog
         self.accept()
         self.close()
 
 
 class PopUpQuit(QDialog):
-    """Is called when the user closes the software and the current project has
-      been modified.
+    """
+     Dialog to handle unsaved project modifications when closing the software.
+
+    Provides options to save, discard, or cancel the exit process.
+    Is called when the user closes the software and the current project has
+    been modified.
+
+    .. Signals:
+        - save_as_signal: Signal emitted when user chooses to save the
+                          project.
+        - do_not_save_signal: Signal emitted when user chooses to exit
+                              without saving.
+        - cancel_signal: Signal emitted when user cancels the exit process.
 
     .. Methods:
-        - can_exit: returns the value of bool_exit
+        - can_exit: returns the value of _bool_exit
         - cancel_clicked: makes the actions to cancel the action
         - do_not_save_clicked: makes the actions not to save the project
         - save_as_clicked: makes the actions to save the project
-
     """
 
     save_as_signal = QtCore.pyqtSignal()
@@ -4664,138 +4756,173 @@ class PopUpQuit(QDialog):
     cancel_signal = QtCore.pyqtSignal()
 
     def __init__(self, project):
-        """Initialization.
+        """
+         Initialize the quit confirmation dialog.
 
-        :param project: current project
-
+        :param project: Current project with unsaved modifications.
         """
         super().__init__()
         self.project = project
-        self.bool_exit = False
+        self._bool_exit = False
         self.setWindowTitle("Confirm exit")
-        label = QLabel(self)
-        label.setText(
+        # Create confirmation label
+        label = QLabel(
             f"Do you want to exit without saving {self.project.getName()}?"
         )
+        # Create action buttons
         push_button_save_as = QPushButton("Save", self)
         push_button_do_not_save = QPushButton("Do not save", self)
         push_button_cancel = QPushButton("Cancel", self)
+        # Button connections
+        push_button_save_as.clicked.connect(self.save_as_clicked)
+        push_button_do_not_save.clicked.connect(self.do_not_save_clicked)
+        push_button_cancel.clicked.connect(self.cancel_clicked)
+        # Create horizontal layout for buttons
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         hbox.addWidget(push_button_save_as)
         hbox.addWidget(push_button_do_not_save)
         hbox.addWidget(push_button_cancel)
         hbox.addStretch(1)
+        # Create vertical layout
         vbox = QVBoxLayout()
         vbox.addWidget(label)
         vbox.addLayout(hbox)
         self.setLayout(vbox)
-        push_button_save_as.clicked.connect(self.save_as_clicked)
-        push_button_do_not_save.clicked.connect(self.do_not_save_clicked)
-        push_button_cancel.clicked.connect(self.cancel_clicked)
 
     def can_exit(self):
-        """Return the value of bool_exit.
-
-        :return: bool_exit value
-
         """
-        return self.bool_exit
+        Check if the application can exit.
+
+        :returns: Boolean indicating whether exit is allowed..
+        """
+        return self._bool_exit
 
     def cancel_clicked(self):
-        """Makes the actions to cancel the action."""
-        self.bool_exit = False
+        """
+        Handle cancel action by preventing exit.
+        """
+        self._bool_exit = False
+        self.cancel_signal.emit()
         self.close()
 
     def do_not_save_clicked(self):
-        """Makes the actions not to save the project."""
-        self.bool_exit = True
+        """
+        Handle 'do not save' action by allowing exit without saving.
+        """
+        self._bool_exit = True
+        self.do_not_save_signal.emit()
         self.close()
 
     def save_as_clicked(self):
-        """Makes the actions to save the project."""
+        """
+        Handle save action by emitting save signal and allowing exit.
+        """
         self.save_as_signal.emit()
-        self.bool_exit = True
+        self._bool_exit = True
         self.close()
 
 
 class PopUpRemoveScan(QDialog):
-    """Is called when the user wants to remove a scan that was previously sent
-       to the pipeline manager.
+    """
+    Dialog to confirm removal of a scan previously sent to the pipeline
+    manager.
 
-    :param scan: The scan that may be removed
-    :param size: The number of scan the user wants to remove
+    Provides options to remove or keep a scan, with additional 'apply to all'
+    functionality when multiple scans are involved.
+    Is called when the user wants to remove a scan that was previously sent
+    to the pipeline manager.
 
      .. Methods:
          - cancel_clicked:
          - no_all_clicked:
          - yes_all_clicked:
          - yes_clicked:
-
     """
 
     def __init__(self, scan, size):
-        super().__init__()
+        """
+        Initialize the remove scan confirmation dialog.
 
-        self.setWindowTitle("The document exists in the pipeline manager")
+        :param scan: Identifier of the scan to be potentially removed.
+        :param size: Total number of scans in the removal process.
+        """
+        super().__init__()
+        self.setWindowTitle("Document exists in Pipeline Manager")
+        # Flags to control removal behavior
         self.stop = False
         self.repeat = False
-        label = QLabel(self)
-        label.setText(
+        # Create confirmation message
+        label = QLabel(
             f"The document {scan} \nwas previously sent to the pipeline "
             f"manager, do you really want to delete it?"
         )
+        # Create buttons
         push_button_yes = QPushButton("Ok", self)
         push_button_cancel = QPushButton("No", self)
-
-        if size > 1:
-            push_button_yes_all = QPushButton("Ok to all", self)
-            push_button_no_all = QPushButton("No to all", self)
-
+        # Setup layout
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         hbox.addWidget(push_button_yes)
         hbox.addWidget(push_button_cancel)
+
+        # Add 'apply to all' buttons if multiple scans
         if size > 1:
+            push_button_yes_all = QPushButton("Ok to all", self)
+            push_button_no_all = QPushButton("No to all", self)
             hbox.addWidget(push_button_yes_all)
             hbox.addWidget(push_button_no_all)
+            push_button_yes_all.clicked.connect(self.yes_all_clicked)
+            push_button_no_all.clicked.connect(self.no_all_clicked)
 
         hbox.addStretch(1)
-
+        # Create main layout
         vbox = QVBoxLayout()
         vbox.addWidget(label)
         vbox.addLayout(hbox)
         self.setLayout(vbox)
-
+        # Connect standard buttons
         push_button_yes.clicked.connect(self.yes_clicked)
         push_button_cancel.clicked.connect(self.cancel_clicked)
-        if size > 1:
-            push_button_yes_all.clicked.connect(self.yes_all_clicked)
-            push_button_no_all.clicked.connect(self.no_all_clicked)
 
     def cancel_clicked(self):
-        """Blabla"""
+        """
+        Handle 'Cancel' action.
 
+        Sets stop flag to True and indicates no global action.
+        """
         self.stop = True
         self.repeat = False
         self.close()
 
     def no_all_clicked(self):
-        """Blabla"""
+        """
+        Handle 'No to All' action.
+
+        Sets stop flag to True and indicates a global 'No' action.
+        """
 
         self.stop = True
         self.repeat = True
         self.close()
 
     def yes_all_clicked(self):
-        """Blabla"""
+        """
+        Handle 'Yes to All' action.
+
+        Clears stop flag and indicates a global 'Yes' action.
+        """
 
         self.stop = False
         self.repeat = True
         self.close()
 
     def yes_clicked(self):
-        """Blabla"""
+        """
+        Handle 'Yes' action.
+
+        Clears both stop and repeat flags for a single item removal.
+        """
 
         self.stop = False
         self.repeat = False
@@ -4803,13 +4930,19 @@ class PopUpRemoveScan(QDialog):
 
 
 class PopUpRemoveTag(QDialog):
-    """Is called when the user wants to remove a user tag from
-      populse_mia project.
+    """
+    Dialog for removing user-defined tags from a Populse MIA project.
+
+    Allows users to select and remove custom tags from the project's database.
 
     .. Methods:
-        - ok_action: verifies the selected tags and send the information to
-           the data browser
-        - search_str: matches the searched pattern with the tags of the project
+        - ok_action: Verifies the selected tags and send the information to
+                     the data browser.
+        - search_str: Matches the searched pattern with the tags of the
+                      project.
+
+    .. Signals:
+        - signal_remove_tag: Qt signal emitted when tags are removed.
 
     """
 
@@ -4818,139 +4951,140 @@ class PopUpRemoveTag(QDialog):
     signal_remove_tag = QtCore.pyqtSignal()
 
     def __init__(self, databrowser, project):
-        """Initialization
+        """
+        Initialize the remove tag dialog.
 
-        :param databrowser: current project in the software
-        :param project: data browser instance of the software
+        :param databrowser: Data browser instance managing project data.
+        :param project: Current project containing tags to be removed.
         """
         super().__init__()
         self.databrowser = databrowser
         self.project = project
         self.setWindowTitle("Remove a tag")
         self.setModal(True)
-
-        _translate = QtCore.QCoreApplication.translate
+        self._translate = QtCore.QCoreApplication.translate
         self.setObjectName("Remove a tag")
 
         # The 'OK' push button
         self.push_button_ok = QPushButton(self)
         self.push_button_ok.setObjectName("push_button_ok")
-        self.push_button_ok.setText(_translate("Remove a tag", "OK"))
-
-        hbox_buttons = QHBoxLayout()
-        hbox_buttons.addStretch(1)
-        hbox_buttons.addWidget(self.push_button_ok)
-
+        self.push_button_ok.setText(self._translate("Remove a tag", "OK"))
         # The "Tag list" label
         self.label_tag_list = QLabel(self)
         self.label_tag_list.setTextFormat(QtCore.Qt.AutoText)
         self.label_tag_list.setObjectName("label_tag_list")
         self.label_tag_list.setText(
-            _translate("Remove a tag", "Available tags:")
+            self._translate("Remove a tag", "Available tags:")
         )
-
+        # Search bar
         self.search_bar = QLineEdit(self)
         self.search_bar.setObjectName("lineEdit_search_bar")
         self.search_bar.setPlaceholderText("Search")
-        self.search_bar.textChanged.connect(self.search_str)
-
-        hbox_top = QHBoxLayout()
-        hbox_top.addWidget(self.label_tag_list)
-        hbox_top.addStretch(1)
-        hbox_top.addWidget(self.search_bar)
-
-        # The list of tags
+        # Tag list widget
         self.list_widget_tags = QListWidget(self)
         self.list_widget_tags.setObjectName("listWidget_tags")
         self.list_widget_tags.setSelectionMode(
             QAbstractItemView.MultiSelection
         )
-
+        # Layout setup
+        hbox_buttons = QHBoxLayout()
+        hbox_buttons.addStretch(1)
+        hbox_buttons.addWidget(self.push_button_ok)
+        hbox_top = QHBoxLayout()
+        hbox_top.addWidget(self.label_tag_list)
+        hbox_top.addStretch(1)
+        hbox_top.addWidget(self.search_bar)
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_top)
         vbox.addWidget(self.list_widget_tags)
         vbox.addLayout(hbox_buttons)
-
         self.setLayout(vbox)
 
         with self.project.database.data() as database_data:
+            user_tags = [
+                tag["index"].split("|")[1]
+                for tag in database_data.get_field_attributes(
+                    COLLECTION_CURRENT
+                )
+                if tag["origin"] == TAG_ORIGIN_USER
+            ]
 
-            for tag in database_data.get_field_attributes(COLLECTION_CURRENT):
+        for tag in user_tags:
+            QListWidgetItem(
+                self._translate("Dialog", tag), self.list_widget_tags
+            )
 
-                if tag["origin"] == TAG_ORIGIN_USER:
-                    item = QListWidgetItem()
-                    self.list_widget_tags.addItem(item)
-                    item.setText(
-                        _translate("Dialog", tag["index"].split("|")[1])
-                    )
-
-        self.setLayout(vbox)
-
-        # Connecting the OK push buttone
+        # Connect signals
         self.push_button_ok.clicked.connect(self.ok_action)
+        self.search_bar.textChanged.connect(self.search_str)
 
     def ok_action(self):
-        """Verifies the selected tags and send the information to the data
-        browser.
-
         """
+        Process selected tags for removal and update the data browser.
 
+        Retrieves selected tags and passes them to the data browser for
+        removal.
+        Closes the dialog after processing.
+        """
         self.accept()
-        self.tag_names_to_remove = []
-        for item in self.list_widget_tags.selectedItems():
-            self.tag_names_to_remove.append(item.text())
+        # Collect selected tag names
+        self.tag_names_to_remove = [
+            item.text() for item in self.list_widget_tags.selectedItems()
+        ]
+        # Remove selected tags
         self.databrowser.remove_tag_infos(self.tag_names_to_remove)
         self.close()
 
-    def search_str(self, str_search):
+    def search_str(self, search_pattern):
         """
-        Matches the searched pattern with the tags of the project
+        Filter tags based on search pattern.
 
-        :param str_search: string pattern to search
+        :param search_pattern: String to match against tag names.
         """
-
-        _translate = QtCore.QCoreApplication.translate
-        return_list = []
 
         with self.project.database.data() as database_data:
             field_attributes = database_data.get_field_attributes(
                 COLLECTION_CURRENT
             )
 
-        if str_search:
-
-            for tag in field_attributes:
-
-                if tag["origin"] == TAG_ORIGIN_USER:
-
-                    if (
-                        str_search.upper()
-                        in tag["index"].split("|")[1].upper()
-                    ):
-                        return_list.append(tag.name)
-
-        else:
-
-            for tag in field_attributes:
-
-                if tag["origin"] == TAG_ORIGIN_USER:
-                    return_list.append(tag.name)
-
+        # Filter tags based on search pattern
+        matching_tags = [
+            tag["index"].split("|")[1]
+            for tag in field_attributes
+            if (
+                tag["origin"] == TAG_ORIGIN_USER
+                and (
+                    not search_pattern
+                    or search_pattern.upper()
+                    in tag["index"].split("|")[1].upper()
+                )
+            )
+        ]
+        # Update list widget
         self.list_widget_tags.clear()
 
-        for tag_name in return_list:
-            item = QListWidgetItem()
-            self.list_widget_tags.addItem(item)
-            item.setText(_translate("Dialog", tag_name))
+        for tag in matching_tags:
+            QListWidgetItem(
+                self._translate("Dialog", tag), self.list_widget_tags
+            )
 
 
 class PopUpSaveProjectAs(QDialog):
-    """Is called when the user wants to save a project under another name.
+    """
+    Dialog for saving a project under a new name.
+
+    Provides a user interface to select and save a project with a new name,
+    with options to browse existing projects and validate the new project
+    name.
 
     .. Method:
-        - fill_input: fills the input field when a project is clicked on
-        - return_value: sets the widget's attributes depending on the
+        - fill_input: Fills the input field when a project is clicked on
+        - return_value: Sets the widget's attributes depending on the
           selected file name
+
+    .. Signals:
+        - signal_saved_project: Qt signal emitted when a new project name
+                                is selected.
 
     """
 
@@ -4959,235 +5093,223 @@ class PopUpSaveProjectAs(QDialog):
     signal_saved_project = QtCore.pyqtSignal()
 
     def __init__(self):
+        """
+        Initialize the save project as dialog.
+
+        Sets up the user interface with a scrollable list of existing
+        projects, input field for new project name, and save/cancel buttons.
+        """
         super().__init__()
         self.setWindowTitle("Save project as")
         self.validate = False
-        self.new_project = QLineEdit()
-        self.new_project_label = QLabel("New project name")
+        # Configuration and path setup
         self.config = Config()
         self.project_path = self.config.get_projects_save_path()
-
-        project_list = os.listdir(self.project_path)
-
+        # Project name input
+        self.new_project = QLineEdit()
+        self.new_project_label = QLabel("New project name")
+        # Projects list setup
         self.v_box = QVBoxLayout()
+        project_list = sorted(
+            [
+                proj
+                for proj in os.listdir(self.project_path)
+                if os.path.isdir(os.path.join(self.project_path, proj))
+            ]
+        )
 
-        # Label
-        self.label = QLabel("Projects list:")
+        for project_name in project_list:
+            label = QLabel_clickable(project_name)
+            label.clicked.connect(partial(self.fill_input, project_name))
+            self.v_box.addWidget(label)
 
-        project_list.sort()
-        for i in range(0, len(project_list)):
-            if os.path.isdir(os.path.join(self.project_path, project_list[i])):
-                label = QLabel_clickable(project_list[i])
-                label.clicked.connect(
-                    partial(self.fill_input, project_list[i])
-                )
-                self.v_box.addWidget(label)
-
-        # The text input
+        # Scroll area for projects list
+        self.scroll = QScrollArea()
+        self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scroll.setMaximumHeight(250)
+        self.final = QVBoxLayout()
+        self.final.addWidget(self.scroll)
+        # Wrap projects list in a widget
+        self.widget = QWidget()
+        self.widget.setLayout(self.v_box)
+        self.scroll.setWidget(self.widget)
+        # Create input layout
         self.h_box_text = QHBoxLayout()
         self.h_box_text.addWidget(self.new_project_label)
         self.h_box_text.addWidget(self.new_project)
-
         self.h_box_bottom = QHBoxLayout()
         self.h_box_bottom.addStretch(1)
-
-        # The 'OK' push button
+        # Save button
         self.push_button_ok = QPushButton("Save as")
         self.push_button_ok.setObjectName("pushButton_ok")
         self.push_button_ok.clicked.connect(self.return_value)
         self.h_box_bottom.addWidget(self.push_button_ok)
-
-        # The 'Cancel' push button
+        # Cancel button
         self.push_button_cancel = QPushButton("Cancel")
         self.push_button_cancel.setObjectName("pushButton_cancel")
         self.push_button_cancel.clicked.connect(self.close)
         self.h_box_bottom.addWidget(self.push_button_cancel)
-
-        self.scroll = QScrollArea()
-        self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.scroll.setMaximumHeight(250)
-        self.widget = QWidget()
-        self.widget.setLayout(self.v_box)
-        self.scroll.setWidget(self.widget)
-
-        self.final = QVBoxLayout()
-        self.final.addWidget(self.scroll)
-
+        # Final layout
         self.final_layout = QVBoxLayout()
-        self.final_layout.addWidget(self.label)
+        self.final_layout.addWidget(QLabel("Projects list:"))
         self.final_layout.addLayout(self.final)
         self.final_layout.addLayout(self.h_box_text)
         self.final_layout.addLayout(self.h_box_bottom)
-
         self.setLayout(self.final_layout)
 
     def fill_input(self, name):
-        """Fills the input field with the name of a project."""
+        """
+        Fill the project name input field with the selected project name.
+
+        :param name: Name of the project to fill in the input field.
+        """
         self.new_project.setText(name)
 
     def return_value(self):
-        """Sets the widget's attributes depending on the selected file name.
+        """
+        Validate and process the selected project name.
 
-        :return: new project's file name
+        Checks project name validity, handles potential naming conflicts,
+        and emits a signal when a valid project name is selected.
 
+        :returns: Full path of the new project if successful, None otherwise.
         """
         # import message_already_exists only here to prevent circular
         # import issue
         from populse_mia.utils import message_already_exists
 
-        file_name_tuple = self.new_project.text()
+        file_name = self.new_project.text().strip()
 
-        if len(file_name_tuple) > 0:
-            file_name = file_name_tuple
-            projects_folder = self.project_path
+        if not file_name:
+            return None
 
-            if file_name:
-                entire_path = os.path.abspath(
-                    os.path.join(projects_folder, file_name)
-                )
-                self.path, self.name = os.path.split(entire_path)
-                self.total_path = entire_path
-                self.relative_path = os.path.relpath(entire_path)
-                self.relative_subpath = os.path.relpath(self.path)
+        projects_folder = self.project_path
+        entire_path = os.path.abspath(os.path.join(projects_folder, file_name))
+        # Set path attributes
+        self.path, self.name = os.path.split(entire_path)
+        self.total_path = entire_path
+        self.relative_path = os.path.relpath(entire_path)
+        self.relative_subpath = os.path.relpath(self.path)
 
-                if not os.path.exists(self.relative_path) and self.name != "":
-                    self.signal_saved_project.emit()
-                    self.validate = True
-                    self.close()
-                    # A signal is emitted to tell that the project
-                    # has been created
-                elif file_name == "":
-                    return
-                else:
-                    if self.config.get_user_mode():
-                        message_already_exists()
-                        return
-                    else:
-                        msgtext = (
-                            f"Do you really want to overwrite the {file_name} "
-                            f"project ?\nThis action delete all contents "
-                            f"inside this folder!"
-                        )
-                        msg = QMessageBox()
-                        msg.setIcon(QMessageBox.Warning)
-                        title = "populse_mia - Warning: Overwriting project"
-                        reply = msg.question(
-                            self,
-                            title,
-                            msgtext,
-                            QMessageBox.Yes | QMessageBox.No,
-                        )
-                        if reply == QMessageBox.Yes:
-                            self.validate = True
-                            self.close()
-                        else:
-                            return
-
+        # Handle project name conflicts
+        if not os.path.exists(self.relative_path):
+            self.signal_saved_project.emit()
+            self.validate = True
+            self.close()
             return entire_path
+
+        # Project already exists - handle based on user mode
+        if self.config.get_user_mode():
+            message_already_exists()
+            return None
+
+        # Confirm project overwrite
+        msgtext = (
+            f"Do you really want to overwrite the {file_name} "
+            f"project?\nThis action will delete all contents "
+            f"inside this folder!"
+        )
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        reply = msg.question(
+            self,
+            "populse_mia - Warning: Overwriting project",
+            msgtext,
+            QMessageBox.Yes | QMessageBox.No,
+        )
+
+        if reply == QMessageBox.Yes:
+            self.validate = True
+            self.close()
+            return entire_path
+
+        return None
 
 
 class PopUpSeeAllProjects(QDialog):
-    """Is called when the user wants to create a see all the projects.
+    """
+    A dialog window for displaying and managing saved projects.
+
+    This dialog allows users to view a list of saved projects,
+    check their existence, and open a selected project.
 
     .. Methods:
-        - checkState: checks if the project still exists and returns the
+        - checkState: Checks if the project still exists and returns the
                       corresponding icon
-        - item_to_path: returns the path of the first selected item
-        - open_project: switches to the selected project
+        - item_to_path: Returns the path of the first selected item
+        - open_project: Switches to the selected project
 
     """
 
     def __init__(self, saved_projects, main_window):
-        """Initialization.
+        """
+        Initialize the PopUpSeeAllProjects dialog.
 
-        :param saved_projects: List of saved projects
-        :param main_window: Main window
+        :param saved_projects: Container with a list of project paths.
+        :param main_window: Main window.
 
         """
-
         super().__init__()
-
         self.mainWindow = main_window
-
         self.setWindowTitle("See all saved projects")
         self.setMinimumWidth(500)
-
-        # Tree widget
-
-        self.label = QLabel()
-        self.label.setText("List of saved projects")
-
+        # Create and configure widgets
+        self.label = QLabel("List of Saved Projects")
         self.treeWidget = QTreeWidget()
         self.treeWidget.setColumnCount(3)
         self.treeWidget.setHeaderLabels(["Name", "Path", "State"])
 
-        i = -1
         for path in saved_projects.pathsList:
-            i += 1
-            text = os.path.basename(path)
-            wdg = QTreeWidgetItem()
-            wdg.setText(0, text)
-            wdg.setText(1, os.path.abspath(path))
-            wdg.setIcon(2, self.checkState(path))
+            item = QTreeWidgetItem()
+            item.setText(0, os.path.basename(path))
+            item.setText(1, os.path.abspath(path))
+            item.setIcon(2, self.checkState(path))
+            self.treeWidget.addTopLevelItem(item)
 
-            self.treeWidget.addTopLevelItem(wdg)
-
-        hd = self.treeWidget.header()
-        hd.setSectionResizeMode(QHeaderView.ResizeToContents)
-
-        # Buttons
-
-        # The 'Open project' push button
+        header = self.treeWidget.header()
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        # Create buttons
         self.pushButtonOpenProject = QPushButton("Open project")
         self.pushButtonOpenProject.setObjectName("pushButton_ok")
         self.pushButtonOpenProject.clicked.connect(self.open_project)
-
-        # The 'Cancel' push button
         self.pushButtonCancel = QPushButton("Cancel")
         self.pushButtonCancel.setObjectName("pushButton_cancel")
         self.pushButtonCancel.clicked.connect(self.close)
-
-        # Layouts
+        # Button layout
         self.hBoxButtons = QHBoxLayout()
         self.hBoxButtons.addStretch(1)
         self.hBoxButtons.addWidget(self.pushButtonOpenProject)
         self.hBoxButtons.addWidget(self.pushButtonCancel)
-
+        # Main vertical layout
         self.vBox = QVBoxLayout()
         self.vBox.addWidget(self.label)
         self.vBox.addWidget(self.treeWidget)
         self.vBox.addLayout(self.hBoxButtons)
-
         self.setLayout(self.vBox)
 
     def checkState(self, path):
-        """Checks if the project still exists and returns the corresponding
-           icon.
-
-        :param path: path of the project
-        :return: either a green "v" or a red cross depending on
-          the existence of the project
-
         """
+        Determine the icon based on project existence.
 
+        :param path (str): Path to the project directory.
+
+        :return: QIcon: Green checkmark if project exists, red cross if not.
+        """
         sources_images_dir = Config().getSourceImageDir()
-        if os.path.exists(os.path.join(path)):
-            icon = QtGui.QIcon(os.path.join(sources_images_dir, "green_v.png"))
-        else:
-            icon = QtGui.QIcon(
-                os.path.join(sources_images_dir, "red_cross.png")
-            )
-        return icon
+        icon_name = "green_v.png" if os.path.exists(path) else "red_cross.png"
+        return QtGui.QIcon(os.path.join(sources_images_dir, icon_name))
 
     def item_to_path(self):
-        """Returns the path of the first selected item.
+        """
+        Returns the path of the first selected item.
 
-        :return: the path of the first selected item
+        :return (str): Absolute path of the selected project, or empty string
+                       if no selection.
 
         """
+        selected_items = self.treeWidget.selectedItems()
 
-        nb_items = len(self.treeWidget.selectedItems())
-        if nb_items == 0:
+        if not selected_items:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setText("Please select a project to open")
@@ -5196,105 +5318,97 @@ class PopUpSeeAllProjects(QDialog):
             msg.buttonClicked.connect(msg.close)
             msg.exec()
             return ""
-        else:
-            item = self.treeWidget.selectedItems()[0]
-            text = item.text(1)
-            return text
+
+        return selected_items[0].text(1)
 
     def open_project(self):
-        """Switches to the selected project."""
+        """
+        Attempt to switch to the selected project.
 
+        Opens the selected project in the main window if a valid project
+        is chosen. Closes the dialog upon successful project switch.
+        """
         file_name = self.item_to_path()
-        if file_name != "":
-            entire_path = os.path.abspath(file_name)
-            self.path, self.name = os.path.split(entire_path)
-            self.relative_path = os.path.relpath(file_name)
-            project_switched = self.mainWindow.switch_project(
-                self.relative_path, self.name
-            )
 
-            if project_switched:
+        if file_name:
+            self.path, self.name = os.path.split(os.path.abspath(file_name))
+            self.relative_path = os.path.relpath(file_name)
+
+            if self.mainWindow.switch_project(self.relative_path, self.name):
                 self.accept()
                 self.close()
 
 
 class PopUpSelectFilter(PopUpFilterSelection):
-    """Is called when the user wants to open a filter that has already been
-       saved.
+    """
+    Popup window for selecting and opening a previously saved filter.
 
     .. Methods:
-        - ok_clicked: saves the modifications and updates the data browser
-
+        - ok_clicked: Saves the modifications and updates the data browser.
     """
 
     def __init__(self, project, databrowser):
-        """Initialization.
-
-        :param project: current project in the software
-        :param databrowser: data browser instance of the software
-
         """
+        Initializes the PopUpSelectFilter dialog
 
+        :param project (Project): The current project instance.
+        :param databrowser (DataBrowser): The data browser instance.
+        """
         super().__init__(project)
         self.project = project
         self.databrowser = databrowser
         self.config = Config()
         self.setWindowTitle("Open a filter")
 
-        # Filling the filter list
-        for filter in self.project.filters:
-            item = QListWidgetItem()
+        # Populate the filter list
+        for filter_obj in self.project.filters:
+            item = QListWidgetItem(filter_obj.name)
             self.list_widget_filters.addItem(item)
-            item.setText(filter.name)
 
     def ok_clicked(self):
-        """Saves the modifications and updates the data browser."""
+        """
+        Saves the selected filter as the current filter and updates the
+        data browser.
+        """
+        selected_items = self.list_widget_filters.selectedItems()
 
-        for item in self.list_widget_filters.selectedItems():
-            # Current filter updated
-            filter_name = item.text()
-            filter_object = self.project.getFilter(filter_name)
-            self.project.setCurrentFilter(filter_object)
-            break
+        if selected_items:
+            filter_name = selected_items[0].text()
+            self.project.setCurrentFilter(self.project.getFilter(filter_name))
 
         self.databrowser.open_filter_infos()
-
         self.accept()
         self.close()
 
 
 class PopUpSelectIteration(QDialog):
-    """Is called when the user wants to run an iterated pipeline.
+    """
+    Dialog for selecting values to iterate over when running an
+    iterated pipeline.
 
     .. Methods:
-        - ok_clicked: sends the selected values to the pipeline manager
-
+        - ok_clicked: Stores selected values and closes the dialog.
     """
 
     def __init__(self, iterated_tag, tag_values):
-        """Initialization.
-
-        :param iterated_tag: name of the iterated tag
-        :param tag_values: values that can take the iterated tag
-
         """
+        Initializes the selection popup.
 
+        :param iterated_tag (str): The name of the tag being iterated.
+        :param tag_values (list[str]): The possible values for the
+                                       iterated tag.
+        """
         super().__init__()
-
         self.iterated_tag = iterated_tag
         self.tag_values = tag_values
         self.final_values = []
         self.setWindowTitle(
             f"Iterate pipeline run over tag {self.iterated_tag}"
         )
-
         self.v_box = QVBoxLayout()
-
-        # Label
-        self.label = QLabel("Select values to iterate over:")
-        self.v_box.addWidget(self.label)
-
+        self.v_box.addWidget(QLabel("Select values to iterate over:"))
         self.check_boxes = []
+
         for tag_value in self.tag_values:
             check_box = QCheckBox(tag_value)
             check_box.setCheckState(QtCore.Qt.Checked)
@@ -5303,43 +5417,32 @@ class PopUpSelectIteration(QDialog):
 
         self.h_box_bottom = QHBoxLayout()
         self.h_box_bottom.addStretch(1)
-
         # The 'OK' push button
         self.push_button_ok = QPushButton("OK")
         self.push_button_ok.setObjectName("pushButton_ok")
         self.push_button_ok.clicked.connect(self.ok_clicked)
-        self.h_box_bottom.addWidget(self.push_button_ok)
-
         # The 'Cancel' push button
         self.push_button_cancel = QPushButton("Cancel")
         self.push_button_cancel.setObjectName("pushButton_cancel")
         self.push_button_cancel.clicked.connect(self.close)
+        self.h_box_bottom.addWidget(self.push_button_ok)
         self.h_box_bottom.addWidget(self.push_button_cancel)
-
         self.scroll = QScrollArea()
         self.widget = QWidget()
         self.widget.setLayout(self.v_box)
         self.scroll.setWidget(self.widget)
-
         self.final = QVBoxLayout()
         self.final.addWidget(self.scroll)
-
         self.final_layout = QVBoxLayout()
         self.final_layout.addLayout(self.final)
         self.final_layout.addLayout(self.h_box_bottom)
-
         self.setLayout(self.final_layout)
 
     def ok_clicked(self):
-        """Sends the selected values to the pipeline manager."""
-
-        final_values = []
-        for check_box in self.check_boxes:
-            if check_box.isChecked():
-                final_values.append(check_box.text())
-
-        self.final_values = final_values
-
+        """Stores selected values and closes the dialog."""
+        self.final_values = [
+            cb.text() for cb in self.check_boxes if cb.isChecked()
+        ]
         self.accept()
         self.close()
 
@@ -5347,6 +5450,8 @@ class PopUpSelectIteration(QDialog):
 class PopUpTagSelection(QDialog):
     """Is called when the user wants to update the tags that are visualized in
        the data browser.
+
+       Restart HERE
 
     .. Methods:
         - cancel_clicked: closes the pop-up
