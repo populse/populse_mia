@@ -66,7 +66,7 @@ from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
 # PyQt5 imports
-from PyQt5 import Qt, QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QApplication,
@@ -5448,32 +5448,47 @@ class PopUpSelectIteration(QDialog):
 
 
 class PopUpTagSelection(QDialog):
-    """Is called when the user wants to update the tags that are visualized in
+    """
+    A dialog for selecting and filtering tags in a data browser.
+
+    This class provides a user interface for:
+    - Displaying available tags
+    - Searching through tags
+    - Selecting a single tag
+
+    Is called when the user wants to update the tags that are visualized in
        the data browser.
 
-       Restart HERE
-
     .. Methods:
+        - _create_button: Create a standard button with text and click handler
+        - _setup_ui: Set up the user interface components
         - cancel_clicked: closes the pop-up
         - item_clicked: checks the checkbox of an item when the latter
-          is clicked
+                        is clicked
         - ok_clicked: actions when the "OK" button is clicked
-        - search_str: matches the searched pattern with the tags of the project
-
+        - search_str: matches the searched pattern with the tags of the
+                      project
     """
 
     def __init__(self, project):
-        """Initialization.
-
-        :param project: current project in the software
-
         """
+        Initialize the tag selection dialog.
 
+        :param project: The current project containing the database
+                        with available tags
+        """
         super().__init__()
         self.project = project
-
         _translate = QtCore.QCoreApplication.translate
+        # Create UI components
+        self._setup_ui(_translate)
 
+    def _setup_ui(self, _translate):
+        """
+        Set up the user interface components.
+
+        :param_translate (callable): Localization translation function
+        """
         # The "Tag list" label
         self.label_tag_list = QLabel(self)
         self.label_tag_list.setTextFormat(QtCore.Qt.AutoText)
@@ -5481,13 +5496,11 @@ class PopUpTagSelection(QDialog):
         self.label_tag_list.setText(
             _translate("main_window", "Available tags:")
         )
-
         # The search bar to search in the list of tags
         self.search_bar = QLineEdit(self)
         self.search_bar.setObjectName("lineEdit_search_bar")
         self.search_bar.setPlaceholderText("Search")
         self.search_bar.textChanged.connect(self.search_str)
-
         # The list of tags
         self.list_widget_tags = QListWidget(self)
         self.list_widget_tags.setObjectName("listWidget_tags")
@@ -5495,608 +5508,335 @@ class PopUpTagSelection(QDialog):
             QAbstractItemView.SingleSelection
         )
         self.list_widget_tags.itemClicked.connect(self.item_clicked)
-
-        self.push_button_ok = QPushButton(self)
-        self.push_button_ok.setObjectName("pushButton_ok")
-        self.push_button_ok.setText("OK")
-        self.push_button_ok.clicked.connect(self.ok_clicked)
-
-        self.push_button_cancel = QPushButton(self)
-        self.push_button_cancel.setObjectName("pushButton_cancel")
-        self.push_button_cancel.setText("Cancel")
-        self.push_button_cancel.clicked.connect(self.cancel_clicked)
-
+        # OK and Cancel buttons
+        self.push_button_ok = self._create_button("OK", self.ok_clicked)
+        self.push_button_cancel = self._create_button(
+            "Cancel", self.cancel_clicked
+        )
+        # Top layout with label and search bar
         hbox_top_left = QHBoxLayout()
         hbox_top_left.addWidget(self.label_tag_list)
         hbox_top_left.addWidget(self.search_bar)
-
+        # Vertical layout for top section
         vbox_top_left = QVBoxLayout()
         vbox_top_left.addLayout(hbox_top_left)
         vbox_top_left.addWidget(self.list_widget_tags)
-
+        # Buttons layout
         hbox_buttons = QHBoxLayout()
         hbox_buttons.addStretch(1)
         hbox_buttons.addWidget(self.push_button_ok)
         hbox_buttons.addWidget(self.push_button_cancel)
-
+        # Final vertical layout
         vbox_final = QVBoxLayout()
         vbox_final.addLayout(vbox_top_left)
         vbox_final.addLayout(hbox_buttons)
-
         self.setLayout(vbox_final)
 
-    def cancel_clicked(self):
-        """Closes the pop-up."""
+    def _create_button(self, text, clicked_handler):
+        """
+        Create a standard button with text and click handler.
 
+        :param text (str): Button text
+        :param clicked_handler (callable): Function to call when button
+                                           is clicked
+
+        :return (QPushButton): Configured button
+        """
+        button = QPushButton(self)
+        button.setObjectName(f"pushButton_{text}")
+        button.setText(text)
+        button.clicked.connect(clicked_handler)
+        return button
+
+    def cancel_clicked(self):
+        """Close the dialog without selecting a tag."""
         self.close()
 
     def item_clicked(self, item):
-        """Checks the checkbox of an item when the latter is clicked.
+        """
+        Handle item selection by checking/unchecking tags.
 
-        :param item: clicked item
-
+        :param (QListWidgetItem): The clicked list item
         """
 
         for idx in range(self.list_widget_tags.count()):
             itm = self.list_widget_tags.item(idx)
-            if itm == item:
-                itm.setCheckState(QtCore.Qt.Checked)
-            else:
-                itm.setCheckState(QtCore.Qt.Unchecked)
+            itm.setCheckState(
+                QtCore.Qt.Checked if itm == item else QtCore.Qt.Unchecked
+            )
 
     def ok_clicked(self):
-        """Actions when the "OK" button is clicked."""
+        """
+        Placeholder method to be overridden by subclasses.
 
+        Defines actions to take when the OK button is clicked.
+        """
         # Has to be override in the PopUpSelectTag* classes
         pass
 
     def search_str(self, str_search):
-        """Matches the searched pattern with the tags of the project.
+        """
+        Filter tags based on search term.
 
-        :param str_search: string pattern to search
+
+        :param str_search (str): Text to search for in tag names
 
         """
-        return_list = []
 
         with self.project.database.data() as database_data:
             field_names = database_data.get_field_names(COLLECTION_CURRENT)
 
-        if str_search:
+        # Filter tags based on search term
+        filtered_tags = [
+            tag
+            for tag in field_names
+            if tag not in ["checksum", "history"]
+            and (not str_search or str_search.upper() in tag.upper())
+        ]
 
-            for tag in field_names:
-
-                if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
-
-                    if str_search.upper() in tag.upper():
-                        return_list.append(tag)
-
-        else:
-
-            for tag in field_names:
-
-                if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
-                    return_list.append(tag)
-
+        # Update visibility of list items
         for idx in range(self.list_widget_tags.count()):
             item = self.list_widget_tags.item(idx)
-
-            if item.text() in return_list:
-                item.setHidden(False)
-
-            else:
-                item.setHidden(True)
+            item.setHidden(item.text() not in filtered_tags)
 
 
 class PopUpSelectTag(PopUpTagSelection):
-    """Is called when the user wants to update the tag to display in the mini
-      viewer.
+    """
+    A dialog for selecting and updating the thumbnail tag in the mini viewer.
+
+    This class allows users to choose which tag will be displayed as the
+    thumbnail in the application's mini viewer. It presents a list of
+    available tags and allows selecting a single tag to be used as the
+    thumbnail.
 
     .. Methods:
+        - _populate_tag_list: Populate the list widget with tags from
+                              the database.
         - ok_clicked: saves the modifications and updates the mini viewer
 
     """
 
     def __init__(self, project):
-        """Initialization.
+        """
+        Initialize the tag selection dialog.
 
-        :param project: current project in the software
-
+        :param project: The current project in the software context.
         """
         super().__init__(project)
         self.project = project
         self.config = Config()
 
         with self.project.database.data() as database_data:
-            field_names = database_data.get_field_names(COLLECTION_CURRENT)
+            self._populate_tag_list(
+                database_data.get_field_names(COLLECTION_CURRENT)
+            )
 
-        # Filling the list and checking the thumbnail tag
-        for tag in field_names:
+    def _populate_tag_list(self, field_names):
+        """
+        Populate the list widget with tags from the database.
 
-            if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
-                item = QListWidgetItem()
-                item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+        :param field_names (list): List of available field names/tags.
+        """
+        # Filter out special tags and create checkable list items
+        filtered_tags = [
+            tag
+            for tag in field_names
+            if tag not in {TAG_CHECKSUM, TAG_HISTORY}
+        ]
+        current_thumbnail_tag = self.config.getThumbnailTag()
 
-                if tag == self.config.getThumbnailTag():
-                    item.setCheckState(QtCore.Qt.Checked)
+        for tag in sorted(filtered_tags):
+            item = QListWidgetItem(tag)
+            item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
 
-                else:
-                    item.setCheckState(QtCore.Qt.Unchecked)
-
-                self.list_widget_tags.addItem(item)
-                item.setText(tag)
+            # Set initial check state based on current thumbnail tag
+            check_state = (
+                QtCore.Qt.Checked
+                if tag == current_thumbnail_tag
+                else QtCore.Qt.Unchecked
+            )
+            item.setCheckState(check_state)
+            self.list_widget_tags.addItem(item)
 
         self.list_widget_tags.sortItems()
 
     def ok_clicked(self):
         """
-        Saves the modifications and updates the mini viewer
+        Save the selected tag and update the mini viewer.
+
+        Finds the checked tag and sets it as the new thumbnail tag.
+        Closes the dialog after selection.
         """
+
         for idx in range(self.list_widget_tags.count()):
             item = self.list_widget_tags.item(idx)
+
             if item.checkState() == QtCore.Qt.Checked:
                 self.config.setThumbnailTag(item.text())
                 break
 
+        # Close the dialog
         self.accept()
         self.close()
 
 
 class PopUpSelectTagCountTable(PopUpTagSelection):
-    """Is called when the user wants to update a visualized tag of the count
-       table.
+    """
+    A pop-up dialog for selecting a tag from a count table.
+
+    Allows users to choose a single tag from a list of available tags,
+    with an option to pre-select a specific tag.
 
     .. Methods:
         - ok_clicked: updates the selected tag and closes the pop-up
-
     """
 
     def __init__(self, project, tags_to_display, tag_name_checked=None):
-        """Initialization.
-
-        :param project: current project in the software
-        :param tags_to_display: the tags to display
-        :param tag_name_checked: the checked tags
-
         """
+        Initialize the tag selection pop-up.
 
+        :param project: The current project context.
+        :param tags_to_display (list): List of tags to be displayed for
+                                       selection.
+        :param tag_name_checked (str): Optional tag to be pre-checked on
+                                 initialization.
+        """
         super().__init__(project)
-
         self.selected_tag = None
-        for tag in tags_to_display:
-            if tag != TAG_CHECKSUM and tag != TAG_HISTORY:
-                item = QListWidgetItem()
-                item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
-                if tag == tag_name_checked:
-                    item.setCheckState(QtCore.Qt.Checked)
-                else:
-                    item.setCheckState(QtCore.Qt.Unchecked)
-                self.list_widget_tags.addItem(item)
-                item.setText(tag)
+        # Filtered tags, excluding specific system tags
+        filterable_tags = [
+            tag
+            for tag in tags_to_display
+            if tag not in {TAG_CHECKSUM, TAG_HISTORY}
+        ]
+
+        # Populate list widget with checkable items
+        for tag in sorted(filterable_tags):
+            item = QListWidgetItem(tag)
+            item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+            # Set initial check state
+            check_state = (
+                QtCore.Qt.Checked
+                if tag == tag_name_checked
+                else QtCore.Qt.Unchecked
+            )
+            item.setCheckState(check_state)
+            self.list_widget_tags.addItem(item)
+
         self.list_widget_tags.sortItems()
 
     def ok_clicked(self):
-        """Updates the selected tag and closes the pop-up."""
+        """
+        Determine the selected tag and close the dialog.
+
+        Finds the first checked item and sets it as the selected tag,
+        then closes the dialog.
+        """
 
         for idx in range(self.list_widget_tags.count()):
             item = self.list_widget_tags.item(idx)
+
             if item.checkState() == QtCore.Qt.Checked:
                 self.selected_tag = item.text()
                 break
 
+        # Close the dialog
         self.accept()
         self.close()
 
 
 class PopUpShowHistory(QDialog):
-    """Class to display the history of a document.
+    """
+    A dialog for displaying the history of a document in a software pipeline.
+
+    This class creates a popup window that provides comprehensive information
+    about a specific brick (processing node) in a pipeline, including:
+    - Pipeline visualization
+    - Input and output parameters
+    - Initialization and execution details
+
+    The dialog allows users to:
+    - View the pipeline structure
+    - Inspect node details
+    - Navigate between associated bricks
+    - Select and highlight specific files
 
     .. Methods:
-        - file_clicked: close the history window and select the file in the
-          data browser
-        - find_associated_bricks:
-        - find_process_from_plug:
-        - io_value_is_scan: checks if the I/O value is a scan
-        - node_selected: called when a pipeline node is clicked
         - _updateio_table: fill in the input and output sections of the table
-        - update_table: update the brick row at the bottom
+        - adjust_size: Adjust the size of the dialog based on screen
+                       resolution
+        - file_clicked: close the history window and select the file in the
+                        data browser
+        - find_associated_bricks: Find bricks associated with a given node
+                                  name.
+        - find_process_from_plug: Find the process and plug name from a
+                                  given plug.
+        - handle_pipeline_nodes: Handle pipeline nodes and initialize the
+                                 pipeline visualization
+        - highlight_selected_node: Highlight the selected node in the pipeline
+                                   view
+        - initialize_pipeline: Initialize the pipeline view using the given
+                               pipeline XML.
+        - io_value_is_scan: Checks if the I/O value is a scan
+        - load_data: Load data from the project database
+        - load_pipeline_data: Load pipeline data from the database
+        - node_selected: Handle node selection and update the table.
+        - select_node: Select the node in the pipeline view based on the
+                       provided brick UUID
+        - setup_ui: Set up the user interface components
+        - update_table: Update the brick row at the bottom of the table.
+        - update_table_for_single_brick: Update the table for a single brick
+        - update_table_for_subpipeline: Update the table for a subpipeline
+        - update_table_with_brick_data: Update the table with the brick's
+                                        input and output data after processing
     """
 
     def __init__(self, project, brick_uuid, scan, databrowser, main_window):
-        """Prepares the brick history popup.
-
-        :param project: current project in the software
-        :param scan: filename of the scan
-        :param databrowser: data browser instance of the software
-        :param main_window: main window of the software
-
         """
+        Initialize the document history popup.
 
+        :param project: Current project in the software
+        :param brick_uuid (str): Unique identifier of the brick
+        :param scan (str): Filename of the scan
+        :param databrowser: Data browser instance
+        :param main_window: Main window of the software
+        """
         super().__init__()
-
         # We do not want few parameters in the outputs parameters display
         self.banished_param = ["notInDb", "dict4runtime"]
-
         self.setModal(False)
         self.setWindowFlags(
             self.windowFlags() & QtCore.Qt.WindowStaysOnBottomHint
         )
-
         self.databrowser = databrowser
         self.main_window = main_window
         self.project = project
         self.setWindowTitle(f"History of {scan}")
-
-        with self.project.database.data() as database_data:
-            brick_row = database_data.get_document(
-                ollection_name=COLLECTION_BRICK, primary_keys=brick_uuid
-            )
-            full_brick_name = database_data.get_value(
-                collection_name=COLLECTION_BRICK,
-                primary_key=brick_uuid,
-                field=BRICK_NAME,
-            ).split(".")
-            layout = QVBoxLayout()
-            self.splitter = QSplitter(Qt.Qt.Vertical)
-            self.table = QTableWidget()
-            self.table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
-            self.table.setHorizontalScrollMode(
-                QAbstractItemView.ScrollPerPixel
-            )
-            history_uuid = database_data.get_value(
-                collection_name=COLLECTION_CURRENT,
-                primary_key=scan,
-                field=TAG_HISTORY,
-            )
-            self.unitary_pipeline = False
-            self.uuid_idx = 0
-
-        if history_uuid is not None:
-
-            with self.project.database.data() as database_data:
-                self.pipeline_xml = database_data.get_value(
-                    collection_name=COLLECTION_HISTORY,
-                    primary_key=history_uuid,
-                    field=HISTORY_PIPELINE,
-                )
-
-            if self.pipeline_xml is not None:
-
-                with self.project.database.data() as database_data:
-                    self.brick_list = database_data.get_value(
-                        collection_name=COLLECTION_HISTORY,
-                        primary_key=history_uuid,
-                        field=HISTORY_BRICKS,
-                    )
-
-                engine = Config.get_capsul_engine()
-
-                try:
-                    pipeline = engine.get_process_instance(self.pipeline_xml)
-
-                except Exception:
-                    pipeline = None
-
-                if pipeline is not None:
-
-                    # handle case of pipeline node alone --> exploded view
-                    # (e.g. a pipeline alone and plug exported)
-                    if len(pipeline.nodes) == 2:
-
-                        for key in pipeline.nodes.keys():
-
-                            if key != "":
-
-                                if isinstance(
-                                    pipeline.nodes[key], PipelineNode
-                                ):
-                                    pipeline = pipeline.nodes[key].process
-                                    full_brick_name.pop(0)
-                                    self.unitary_pipeline = True
-
-                    # handle cases of named pipeline/brick without being a
-                    # single Pipeline node (e.g. a pipeline alone without
-                    # exporting plugs)
-                    if (
-                        not self.unitary_pipeline
-                        and pipeline.name != "CustomPipeline"
-                    ) or (
-                        len(full_brick_name) == 2
-                        # FIXME: We have "main" when ?
-                        and full_brick_name[1] == "main"
-                    ):
-                        full_brick_name.pop(0)
-                        self.unitary_pipeline = True
-
-                    self.pipeline_view = PipelineDeveloperView(
-                        pipeline, allow_open_controller=False
-                    )
-                    self.pipeline_view.auto_dot_node_positions()
-                    self.splitter.addWidget(self.pipeline_view)
-                    self.pipeline_view.node_clicked.connect(self.node_selected)
-                    (self.pipeline_view.process_clicked.connect)(
-                        self.node_selected
-                    )
-                    bricks = self.find_associated_bricks(full_brick_name[0])
-
-                    for bricks_uuids in bricks.values():
-
-                        for i in range(0, len(bricks_uuids)):
-
-                            if bricks_uuids[i] == brick_uuid:
-                                self.uuid_idx = i
-                                break
-
-                        else:
-                            continue
-
-                        break
-
-                    selected_name = full_brick_name[0]
-
-                    try:
-                        self.node_selected(
-                            selected_name, pipeline.nodes[selected_name]
-                        )
-
-                    except Exception:
-                        logger.warning(
-                            "Error in naming association brick\\pipeline, "
-                            "cannot select node ..."
-                        )
-                        pass
-
-        inputs = brick_row[0][BRICK_INPUTS]
-        outputs = brick_row[0][BRICK_OUTPUTS]
-
-        for k in self.banished_param:
-            outputs.pop(k, None)
-            inputs.pop(k, None)
-
-        brick_name = brick_row[0][BRICK_NAME]
-        init = brick_row[0][BRICK_INIT]
-        init_time = brick_row[0][BRICK_INIT_TIME]
-        exec = brick_row[0][BRICK_INIT]
-        exec_time = brick_row[0][BRICK_INIT_TIME]
-        self.update_table(
-            inputs, outputs, brick_name, init, init_time, exec, exec_time
-        )
-        self.splitter.addWidget(self.table)
-        layout.addWidget(self.splitter)
-        self.setLayout(layout)
-        screen_resolution = QApplication.instance().desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
-        self.setGeometry(300, 200, round(0.6 * width), round(0.4 * height))
-
-    def file_clicked(self):
-        """
-        Close the history window and select the file in the data browser.
-        """
-
-        file = self.sender().text()
-        self.databrowser.table_data.clearSelection()
-        row_to_select = self.databrowser.table_data.get_scan_row(file)
-        self.databrowser.table_data.selectRow(row_to_select)
-        item_to_scroll_to = self.databrowser.table_data.item(row_to_select, 0)
-        self.databrowser.table_data.scrollToItem(item_to_scroll_to)
-        self.close()
-
-    def find_associated_bricks(self, node_name):
-        """Blabla
-
-        :param node_name: blabla
-        :return: blabla
-        """
-        bricks = {}
-
-        for uuid in self.brick_list:
-
-            with self.project.database.data() as database_data:
-                full_brick_name = database_data.get_value(
-                    collection_name=COLLECTION_BRICK,
-                    primary_key=uuid,
-                    field=BRICK_NAME,
-                )
-
-            list_full_brick_name = full_brick_name.split(".")
-
-            if self.unitary_pipeline:
-                list_full_brick_name.pop(0)
-
-            if list_full_brick_name[0] == node_name:
-
-                if full_brick_name not in bricks:
-                    bricks[full_brick_name] = [uuid]
-
-                else:
-                    bricks[full_brick_name].append(uuid)
-
-        return bricks
-
-    def find_process_from_plug(self, plug):
-        """Blabla
-
-        :param plug: blabla
-        :return: blabla
-        """
-
-        process_name = ""
-        plug_name = ""
-        if plug.output:
-            link_done = False
-            for link in plug.links_from:
-                if not link_done:
-                    link_done = True
-                    process_name = f"{process_name}.{link[2].name}"
-                    plug_name = link[1]
-                    if isinstance(link[2], PipelineNode):
-                        (
-                            sub_process_name,
-                            plug_name,
-                        ) = self.find_process_from_plug(link[2].plugs[link[1]])
-                        process_name = f"{process_name}{sub_process_name}"
-        else:
-            link_done = False
-            for link in plug.links_to:
-                if not link_done:
-                    link_done = True
-                    process_name = f"{process_name}.{link[2].name}"
-                    plug_name = link[1]
-                    if isinstance(link[2], PipelineNode):
-                        (
-                            sub_process_name,
-                            plug_name,
-                        ) = self.find_process_from_plug(link[2].plugs[link[1]])
-                        process_name = f"{process_name}{sub_process_name}"
-        return process_name, plug_name
-
-    def io_value_is_scan(self, value):
-        """Checks if the I/O value is a scan.
-
-        :param value: I/O value
-        :return: The scan corresponding to the value if it exists,
-         None otherwise
-
-        """
-
-        value_scan = None
-
-        with self.project.database.data() as database_data:
-
-            for scan in database_data.get_document_names(COLLECTION_CURRENT):
-
-                if scan in str(value):
-                    value_scan = scan
-
-        return value_scan
-
-    def node_selected(self, node_name, process):
-        """Emit a signal when a node is clicked.
-
-        :param node_name: node name
-        :param process: process of the corresponding node
-        """
-
-        if hasattr(process, "pipeline_node"):
-            process = process.pipeline_node
-
-        bricks = self.find_associated_bricks(node_name)
-
-        if hasattr(process, "full_name") and node_name in process.full_name:
-            full_node_name = process.full_name
-
-        if bricks:
-
-            if len(bricks) == 1:
-                brick_row = self.project.database.get_document(
-                    collection_name=COLLECTION_BRICK,
-                    primary_keys=next(iter(bricks.values()))[self.uuid_idx],
-                )
-                inputs = brick_row[0][BRICK_INPUTS]
-                outputs = brick_row[0][BRICK_OUTPUTS]
-
-                for k in self.banished_param:
-                    outputs.pop(k, None)
-                    inputs.pop(k, None)
-
-                brick_name = brick_row[0][BRICK_NAME]
-                init = brick_row[0][BRICK_INIT]
-                init_time = brick_row[0][BRICK_INIT_TIME]
-                exec = brick_row[0][BRICK_INIT]
-                exec_time = brick_row[0][BRICK_INIT_TIME]
-                self.update_table(
-                    inputs,
-                    outputs,
-                    brick_name,
-                    init,
-                    init_time,
-                    exec,
-                    exec_time,
-                )
-            else:
-                # subpipeline case
-                inputs_dict = {}
-                outputs_dict = {}
-
-                if isinstance(process, PipelineNode):
-
-                    for plug_name, plug in process.plugs.items():
-
-                        if plug.activated:
-                            (
-                                process_name,
-                                inner_plug_name,
-                            ) = self.find_process_from_plug(plug)
-
-                            for uuid in bricks.values():
-                                full_brick_name = (
-                                    self.project.database.get_value(
-                                        collection_name=COLLECTION_BRICK,
-                                        primary_key=uuid[0],
-                                        field=BRICK_NAME,
-                                    )
-                                )
-
-                                if (
-                                    full_brick_name
-                                    == f"{full_node_name}{process_name}"
-                                ):
-
-                                    if plug.output:
-                                        plugs = (
-                                            self.project.database.get_value(
-                                                collection_name=(
-                                                    COLLECTION_BRICK
-                                                ),
-                                                primary_key=uuid[
-                                                    self.uuid_idx
-                                                ],
-                                                field=BRICK_OUTPUTS,
-                                            )
-                                        )
-                                        outputs_dict[plug_name] = plugs[
-                                            inner_plug_name
-                                        ]
-
-                                    else:
-                                        plugs = (
-                                            self.project.database.get_value(
-                                                collection_name=(
-                                                    COLLECTION_BRICK
-                                                ),
-                                                primary_key=uuid[
-                                                    self.uuid_idx
-                                                ],
-                                                field=BRICK_INPUTS,
-                                            )
-                                        )
-                                        inputs_dict[plug_name] = plugs[
-                                            inner_plug_name
-                                        ]
-
-                for k in self.banished_param:
-                    outputs_dict.pop(k, None)
-                    inputs_dict.pop(k, None)
-
-                self.update_table(inputs_dict, outputs_dict, full_node_name)
-
-            for name, gnode in self.pipeline_view.scene.gnodes.items():
-
-                if name == node_name:
-                    gnode.fonced_viewer(False)
-
-                else:
-                    gnode.fonced_viewer(True)
+        self.setup_ui()
+        self.load_data(brick_uuid, scan)
 
     def _updateio_table(self, io_dict, item_idx):
-        """Fill in the input and output sections of the table.
-
-        :param io_dict: inputs / outputs dictionary
-        :param item_idx: current column element index
-        :return: new current column element index
         """
+        Populate the table's input and output sections with given
+        dictionary data.
+
+        This method dynamically creates table headers and cell widgets
+        based on the input dictionary, handling nested lists and detecting
+        scanned file paths.
+
+        :param io_dict (dict): Dictionary containing input or output data
+                               to be displayed. Keys represent column
+                               headers, and values can be strings, lists,
+                               or nested lists.
+        :param item_idx (int): The starting column index for populating
+                               the table
+
+        :return (int): The updated column index after processing the
+                       dictionary.
+        """
+
         for key, value in sorted(io_dict.items()):
-            item = QTableWidgetItem()
-            item.setText(key)
+            item = QTableWidgetItem(key)
             self.table.setHorizontalHeaderItem(item_idx, item)
 
             if isinstance(value, list) and value:
@@ -6107,6 +5847,7 @@ class PopUpShowHistory(QDialog):
                 v_layout.addWidget(label)
 
                 for sub_value in value:
+
                     if isinstance(sub_value, list) and sub_value:
                         label = QLabel("[")
                         v_layout.addWidget(label)
@@ -6119,7 +5860,6 @@ class PopUpShowHistory(QDialog):
                                 del v_layout
                                 del label
                                 v_layout = QVBoxLayout()
-                                # v_layout.setAlignment(QtCore.Qt.AlignTop)
                                 v_layout.setAlignment(
                                     QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
                                 )
@@ -6152,7 +5892,6 @@ class PopUpShowHistory(QDialog):
                             del v_layout
                             del label
                             v_layout = QVBoxLayout()
-                            # v_layout.setAlignment(QtCore.Qt.AlignTop)
                             v_layout.setAlignment(
                                 QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
                             )
@@ -6185,8 +5924,6 @@ class PopUpShowHistory(QDialog):
                     button = QPushButton(value_scan)
                     button.clicked.connect(self.file_clicked)
                     v_layout.addWidget(button)
-                    # v_layout.setAlignment(QtCore.Qt.AlignTop)
-                    # v_layout.setAlignment(QtCore.Qt.AlignCenter)
                     v_layout.setAlignment(
                         QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
                     )
@@ -6196,7 +5933,6 @@ class PopUpShowHistory(QDialog):
                 else:
                     widget = QWidget()
                     v_layout = QVBoxLayout()
-                    # v_layout.setAlignment(QtCore.Qt.AlignTop)
                     v_layout.setAlignment(
                         QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
                     )
@@ -6209,6 +5945,296 @@ class PopUpShowHistory(QDialog):
 
         return item_idx
 
+    def adjust_size(self):
+        """Adjust the size of the dialog based on screen resolution."""
+        screen_resolution = QApplication.instance().desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        self.setGeometry(300, 200, round(0.6 * width), round(0.4 * height))
+
+    def file_clicked(self):
+        """
+        Close the history window and select the file in the data browser.
+        """
+        file = self.sender().text()
+        self.databrowser.table_data.clearSelection()
+        row_to_select = self.databrowser.table_data.get_scan_row(file)
+        self.databrowser.table_data.selectRow(row_to_select)
+        item_to_scroll_to = self.databrowser.table_data.item(row_to_select, 0)
+        self.databrowser.table_data.scrollToItem(item_to_scroll_to)
+        self.close()
+
+    def find_associated_bricks(self, node_name):
+        """
+        Find bricks associated with a given node name.
+
+        :param node_name (str): The name of the node to find associated
+                                bricks for.
+
+        :returns (dict): A dictionary where the keys are the full brick
+                         names and the values are lists of associated UUIDs.
+        """
+        bricks = {}
+
+        for uuid in self.brick_list:
+
+            with self.project.database.data() as database_data:
+                full_brick_name = database_data.get_value(
+                    collection_name=COLLECTION_BRICK,
+                    primary_key=uuid,
+                    field=BRICK_NAME,
+                )
+
+            list_full_brick_name = full_brick_name.split(".")
+
+            if self.unitary_pipeline:
+                list_full_brick_name.pop(0)
+
+            if list_full_brick_name[0] == node_name:
+                bricks.setdefault(full_brick_name, []).append(uuid)
+
+        return bricks
+
+    def find_process_from_plug(self, plug):
+        """
+        Find the process and plug name from a given plug.
+
+        :param plug (Plug): The plug object to find the process and plug
+                            name from.
+
+        :return (tuple): A tuple containing the process name (str) and
+                         plug name (str).
+        """
+        process_name = ""
+        plug_name = ""
+
+        for link in plug.links_from if plug.output else plug.links_to:
+            process_name = f"{process_name}.{link[2].name}"
+            plug_name = link[1]
+
+            if isinstance(link[2], PipelineNode):
+                sub_process_name, plug_name = self.find_process_from_plug(
+                    link[2].plugs[link[1]]
+                )
+                process_name += sub_process_name
+
+            break
+
+        return process_name, plug_name
+
+    def handle_pipeline_nodes(self, pipeline, full_brick_name):
+        """
+        Handle pipeline nodes, set up the view, and initialize the
+        pipeline visualization.
+
+        :param pipeline (Pipeline): The pipeline object containing the
+                                    nodes to handle.
+        :param full_brick_name (list): The full name of the brick, split
+                                       into parts.
+        """
+
+        # handle case of pipeline node alone --> exploded view
+        # (e.g. a pipeline alone and plug exported)
+        if len(pipeline.nodes) == 2:
+
+            for key, node in pipeline.nodes.items():
+
+                if key and isinstance(node, PipelineNode):
+                    pipeline = node.process
+                    full_brick_name.pop(0)
+                    self.unitary_pipeline = True
+                    break
+
+        if (
+            not self.unitary_pipeline and pipeline.name != "CustomPipeline"
+        ) or (len(full_brick_name) == 2 and full_brick_name[1] == "main"):
+            full_brick_name.pop(0)
+            self.unitary_pipeline = True
+
+        self.pipeline_view = PipelineDeveloperView(
+            pipeline, allow_open_controller=False
+        )
+        self.pipeline_view.auto_dot_node_positions()
+        self.splitter.addWidget(self.pipeline_view)
+        self.pipeline_view.node_clicked.connect(self.node_selected)
+        self.pipeline_view.process_clicked.connect(self.node_selected)
+        bricks = self.find_associated_bricks(full_brick_name[0])
+        self.select_node(pipeline, bricks, full_brick_name)
+
+    def highlight_selected_node(self, node_name):
+        """
+        Highlight the selected node in the pipeline view.
+
+        :param node_name (str): The name of the node to highlight.
+        """
+
+        for name, gnode in self.pipeline_view.scene.gnodes.items():
+            gnode.fonced_viewer(name != node_name)
+
+    def initialize_pipeline(self, full_brick_name):
+        """
+        Initialize the pipeline view using the given pipeline XML.
+
+        :param full_brick_name (list): The full name of the brick,
+                                       split into parts.
+        """
+        engine = Config.get_capsul_engine()
+
+        try:
+            pipeline = engine.get_process_instance(self.pipeline_xml)
+
+        except Exception:
+            pipeline = None
+
+        if pipeline:
+            self.handle_pipeline_nodes(pipeline, full_brick_name)
+
+    def io_value_is_scan(self, value):
+        """
+        Check if the I/O value is a scan.
+
+        :param value: I/O value
+
+        :return: The scan corresponding to the value if it exists,
+         None otherwise
+
+        """
+
+        with self.project.database.data() as database_data:
+
+            for scan in database_data.get_document_names(COLLECTION_CURRENT):
+
+                if scan in str(value):
+                    return scan
+
+        return None
+
+    def load_data(self, brick_uuid, scan):
+        """
+        Load data from the project database and update the table with brick
+        data.
+
+        :param brick_uuid (str): The UUID of the brick to load.
+        :param scan (str): The identifier of the scan associated with the
+                           brick.
+        """
+        with self.project.database.data() as database_data:
+            brick_row = database_data.get_document(
+                collection_name=COLLECTION_BRICK, primary_keys=brick_uuid
+            )
+            full_brick_name = database_data.get_value(
+                collection_name=COLLECTION_BRICK,
+                primary_key=brick_uuid,
+                field=BRICK_NAME,
+            ).split(".")
+            history_uuid = database_data.get_value(
+                collection_name=COLLECTION_CURRENT,
+                primary_key=scan,
+                field=TAG_HISTORY,
+            )
+
+        self.unitary_pipeline = False
+        self.uuid_idx = 0
+
+        if history_uuid:
+            self.load_pipeline_data(history_uuid, full_brick_name)
+
+        self.update_table_with_brick_data(brick_row, full_brick_name)
+
+    def load_pipeline_data(self, history_uuid, full_brick_name):
+        """
+        Load pipeline data from the database based on the provided
+        history UUID.
+
+        :param history_uuid (str): The UUID of the history record to load
+                                   pipeline data from.
+        :param full_brick_name (list): The full name of the brick, split
+                                       into parts.
+        """
+
+        with self.project.database.data() as database_data:
+            self.pipeline_xml = database_data.get_value(
+                collection_name=COLLECTION_HISTORY,
+                primary_key=history_uuid,
+                field=HISTORY_PIPELINE,
+            )
+
+            if self.pipeline_xml:
+                self.brick_list = database_data.get_value(
+                    collection_name=COLLECTION_HISTORY,
+                    primary_key=history_uuid,
+                    field=HISTORY_BRICKS,
+                )
+                self.initialize_pipeline(full_brick_name)
+
+    def node_selected(self, node_name, process):
+        """
+        Handle node selection and update the table.
+
+        :param node_name: node name
+        :param process: process of the corresponding node
+        """
+
+        if hasattr(process, "pipeline_node"):
+            process = process.pipeline_node
+
+        bricks = self.find_associated_bricks(node_name)
+        full_node_name = getattr(process, "full_name", "")
+
+        if node_name not in full_node_name:
+            full_node_name = ""
+
+        if bricks:
+
+            if len(bricks) == 1:
+                self.update_table_for_single_brick(
+                    bricks, node_name, full_node_name
+                )
+
+            else:
+                self.update_table_for_subpipeline(
+                    bricks, process, full_node_name
+                )
+
+        self.highlight_selected_node(node_name)
+
+    def select_node(self, pipeline, bricks, full_brick_name):
+        """
+        Select the node in the pipeline view based on the provided brick UUID.
+
+        :param pipeline (Pipeline): The pipeline object containing the
+                                    nodes to handle.
+        :param bricks (dict): A dictionary of bricks with UUIDs as values.
+        :param full_brick_name (list): The full name of the brick, split into
+                                       parts.
+        """
+
+        for bricks_uuids in bricks.values():
+
+            if bricks_uuids[self.uuid_idx] == full_brick_name[0]:
+                break
+
+        selected_name = full_brick_name[0]
+
+        try:
+            self.node_selected(selected_name, pipeline.nodes[selected_name])
+
+        except Exception as e:
+            logger.warning(
+                f"Error in naming association brick/pipeline, "
+                f"cannot select node: {e}"
+            )
+
+    def setup_ui(self):
+        """Set up the user interface components."""
+        self.layout = QVBoxLayout()
+        self.splitter = QSplitter(QtCore.Qt.Vertical)
+        self.table = QTableWidget()
+        self.table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.table.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.layout.addWidget(self.splitter)
+        self.setLayout(self.layout)
+        self.adjust_size()
+
     def update_table(
         self,
         inputs,
@@ -6219,231 +6245,372 @@ class PopUpShowHistory(QDialog):
         exec="",
         exec_time=None,
     ):
-        """Filling the table.
-
-        :param inputs: inputs dictionary
-        :param outputs: outputs dictionary
-        :param brick_name: name of the brick
-        :param init: initialisation status
-        :param init_time: init date / time
-        :param exec: execution status
-        :param exec_time: execution date / time
-
         """
+        Updates the table with information about a brick's execution state.
 
-        self.table.removeRow(0)
+        :param inputs (dict): Dictionary containing input data.
+        :param outputs (dict): Dictionary containing output data.
+        :param brick_name (str): Name of the brick.
+        :param init (str, optional): Initialization status.
+        :param init_time (Any, optional): Initialization timestamp.
+        :param exec (str, optional): Execution status.
+        :param exec_time (Any, optional): Execution timestamp.
+
+        :Contains:
+            - create_cell_widget: Creates a QWidget containing a vertically
+                                  aligned QLabel
+        """
+        self.table.clear()
         self.table.setRowCount(1)
-        nbColumn = 1
+        column_count = (
+            1
+            + (2 if init else 0)
+            + (2 if exec else 0)
+            + len(inputs)
+            + len(outputs)
+        )
+        self.table.setColumnCount(column_count)
 
-        if init != "":
-            nbColumn += 2
+        def create_cell_widget(text):
+            """
+            Creates a QWidget containing a vertically aligned QLabel with
+            the given text.
 
-        if exec != "":
-            nbColumn += 2
+            :param text (str): The text to display in the QLabel.
 
-        self.table.setColumnCount(nbColumn + len(inputs) + len(outputs))
-        # Brick name
+            :returns (QWidget): A QWidget containing a QLabel with the
+                                specified text, aligned to the top within
+                                a vertical layout.
+            """
+            widget = QWidget()
+            layout = QVBoxLayout()
+            layout.setAlignment(QtCore.Qt.AlignTop)
+            layout.addWidget(QLabel(text))
+            widget.setLayout(layout)
+            return widget
+
+        # Brick name column
         item_idx = 0
-        item = QTableWidgetItem()
-        item.setText(BRICK_NAME)
-        self.table.setHorizontalHeaderItem(item_idx, item)
-        widget = QWidget()
-        v_layout = QVBoxLayout()
-        v_layout.setAlignment(QtCore.Qt.AlignTop)
-        label = QLabel(brick_name)
-        v_layout.addWidget(label)
-        widget.setLayout(v_layout)
-        self.table.setCellWidget(0, item_idx, widget)
+        self.table.setHorizontalHeaderItem(
+            item_idx, QTableWidgetItem(BRICK_NAME)
+        )
+        self.table.setCellWidget(0, item_idx, create_cell_widget(brick_name))
         item_idx += 1
 
-        # Brick init
-        if init != "":
-            item = QTableWidgetItem()
-            item.setText(BRICK_INIT)
-            self.table.setHorizontalHeaderItem(item_idx, item)
-            widget = QWidget()
-            v_layout = QVBoxLayout()
-            v_layout.setAlignment(QtCore.Qt.AlignTop)
-            label = QLabel(init)
-            v_layout.addWidget(label)
-            widget.setLayout(v_layout)
-            self.table.setCellWidget(0, item_idx, widget)
+        # Brick initialization columns
+        if init:
+            self.table.setHorizontalHeaderItem(
+                item_idx, QTableWidgetItem(BRICK_INIT)
+            )
+            self.table.setCellWidget(0, item_idx, create_cell_widget(init))
+            item_idx += 1
+            self.table.setHorizontalHeaderItem(
+                item_idx, QTableWidgetItem(BRICK_INIT_TIME)
+            )
+            self.table.setCellWidget(
+                0,
+                item_idx,
+                create_cell_widget(str(init_time) if init_time else ""),
+            )
             item_idx += 1
 
-            # Brick init time
-            item = QTableWidgetItem()
-            item.setText(BRICK_INIT_TIME)
-            self.table.setHorizontalHeaderItem(item_idx, item)
-            widget = QWidget()
-            v_layout = QVBoxLayout()
-            v_layout.setAlignment(QtCore.Qt.AlignTop)
-
-            if init_time is not None:
-                label = QLabel(str(init_time))
-
-            v_layout.addWidget(label)
-            widget.setLayout(v_layout)
-            self.table.setCellWidget(0, item_idx, widget)
+        # Brick execution columns
+        if exec:
+            self.table.setHorizontalHeaderItem(
+                item_idx, QTableWidgetItem(BRICK_EXEC)
+            )
+            self.table.setCellWidget(0, item_idx, create_cell_widget(exec))
+            item_idx += 1
+            self.table.setHorizontalHeaderItem(
+                item_idx, QTableWidgetItem(BRICK_EXEC_TIME)
+            )
+            self.table.setCellWidget(
+                0,
+                item_idx,
+                create_cell_widget(str(exec_time) if exec_time else ""),
+            )
             item_idx += 1
 
-        # Brick execution
-        if exec != "":
-            item = QTableWidgetItem()
-            item.setText(BRICK_EXEC)
-            self.table.setHorizontalHeaderItem(item_idx, item)
-            widget = QWidget()
-            v_layout = QVBoxLayout()
-            v_layout.setAlignment(QtCore.Qt.AlignTop)
-            label = QLabel(exec)
-            v_layout.addWidget(label)
-            widget.setLayout(v_layout)
-            self.table.setCellWidget(0, item_idx, widget)
-            item_idx += 1
-
-            # Brick execution time
-            item = QTableWidgetItem()
-            item.setText(BRICK_EXEC_TIME)
-            self.table.setHorizontalHeaderItem(item_idx, item)
-            widget = QWidget()
-            v_layout = QVBoxLayout()
-            v_layout.setAlignment(QtCore.Qt.AlignTop)
-
-            if exec_time is not None:
-                label = QLabel(str(exec_time))
-
-            v_layout.addWidget(label)
-            widget.setLayout(v_layout)
-            self.table.setCellWidget(0, item_idx, widget)
-            item_idx += 1
-
+        # Update inputs and outputs
         item_idx = self._updateio_table(inputs, item_idx)
         _ = self._updateio_table(outputs, item_idx)
+        # Final table adjustments
         self.table.verticalHeader().setMinimumSectionSize(30)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
 
+    def update_table_for_single_brick(self, bricks, node_name, full_node_name):
+        """
+        Update the table for a single brick, using the provided brick data.
+
+        :param bricks (dict): A dictionary of bricks with UUIDs as values.
+        :param node_name (str): The name of the node associated with the
+                                brick.
+        :param full_node_name (list): The full name of the node, split
+                                      into parts.
+        """
+
+        with self.project.database.data() as database_data:
+            brick_row = database_data.get_document(
+                collection_name=COLLECTION_BRICK,
+                primary_keys=next(iter(bricks.values()))[self.uuid_idx],
+            )
+
+        inputs = brick_row[0][BRICK_INPUTS]
+        outputs = brick_row[0][BRICK_OUTPUTS]
+
+        for param in self.banished_param:
+            outputs.pop(param, None)
+            inputs.pop(param, None)
+
+        brick_name = brick_row[0][BRICK_NAME]
+        init = brick_row[0][BRICK_INIT]
+        init_time = brick_row[0][BRICK_INIT_TIME]
+        exec = brick_row[0][BRICK_INIT]
+        exec_time = brick_row[0][BRICK_INIT_TIME]
+        self.update_table(
+            inputs, outputs, brick_name, init, init_time, exec, exec_time
+        )
+
+    def update_table_for_subpipeline(self, bricks, process, full_node_name):
+        """
+        Update the table for a subpipeline based on the given process and
+        brick data.
+
+        :param bricks (dict): A dictionary of bricks with UUIDs as values.
+        :param process (PipelineNode): The process node associated with the
+                                       subpipeline.
+        :param full_node_name (list): The full name of the node, split into
+                                      parts.
+        """
+        inputs_dict = {}
+        outputs_dict = {}
+
+        if isinstance(process, PipelineNode):
+
+            with self.project.database.data() as database_data:
+
+                for plug_name, plug in process.plugs.items():
+
+                    if plug.activated:
+                        process_result = self.find_process_from_plug(plug)
+                        process_name = process_result[0]
+                        inner_plug_name = process_result[1]
+
+                        for uuid in bricks.values():
+                            full_brick_name = database_data.get_value(
+                                collection_name=COLLECTION_BRICK,
+                                primary_key=uuid[0],
+                                field=BRICK_NAME,
+                            )
+
+                            if full_brick_name == (
+                                f"{full_node_name}{process_name}"
+                            ):
+                                plugs = database_data.get_value(
+                                    collection_name=COLLECTION_BRICK,
+                                    primary_key=uuid[self.uuid_idx],
+                                    field=(
+                                        BRICK_OUTPUTS
+                                        if plug.output
+                                        else BRICK_INPUTS
+                                    ),
+                                )
+                                (outputs_dict if plug.output else inputs_dict)[
+                                    plug_name
+                                ] = plugs[inner_plug_name]
+
+        for param in self.banished_param:
+            outputs_dict.pop(param, None)
+            inputs_dict.pop(param, None)
+
+        self.update_table(inputs_dict, outputs_dict, full_node_name)
+
+    def update_table_with_brick_data(self, brick_row, full_brick_name):
+        """
+        Update the table with the brick's input and output data after
+        processing.
+
+        :param brick_row (list): A list containing the brick data to update
+                                 the table with.
+        :param full_brick_name (list): The full name of the brick, split into
+                                       parts.
+        """
+        inputs = brick_row[0][BRICK_INPUTS]
+        outputs = brick_row[0][BRICK_OUTPUTS]
+
+        for param in self.banished_param:
+            outputs.pop(param, None)
+            inputs.pop(param, None)
+
+        brick_name = brick_row[0][BRICK_NAME]
+        init = brick_row[0][BRICK_INIT]
+        init_time = brick_row[0][BRICK_INIT_TIME]
+        exec = brick_row[0][BRICK_INIT]
+        exec_time = brick_row[0][BRICK_INIT_TIME]
+        self.update_table(
+            inputs, outputs, brick_name, init, init_time, exec, exec_time
+        )
+        self.splitter.addWidget(self.table)
+
 
 class PopUpVisualizedTags(QWidget):
     """
-    Is called when the user wants to update the tags that are visualized.
+    A widget for managing tag visualization preferences in a project.
+
+    This class provides an interface for users to select and unselect tags
+    to be displayed in the project. It allows searching through available tags
+    and moving them between available and visualized lists.
 
     .. Methods:
-        - search_str: matches the searched pattern with the tags of the project
-        - click_select_tag: puts the selected tags in the "selected tag" table
+        - _create_button: Create a customized QPushButton with specified
+                          properties
+        - _create_button_layout: Create the layout for selection buttons
+        - _create_label: Create a customized QLabel with specified properties
+        - _create_left_layout: Create the layout for available tags
+        - _create_right_layout: Create the layout for visualized tags
+        - _create_search_bar: Create the search bar with placeholder and
+                              connection
+        - _create_tag_list: Create a QListWidget configured for
+                            multi-selection of tags
+        - _populate_tags: Populate the tags list from the project database
+        - _setup_ui: Create and layout the user interface components
+        - search_str: Matches the searched pattern with the tags of the project
+        - click_select_tag: Puts the selected tags in the "selected tag" table
         - click_unselect_tag: removes the unselected tags from populse_mia
-           "selected tag" table
+                              "selected tag" table
 
+    .. Signals:
+        - signal_preferences_change (QtCore.pyqtSignal): Emitted when tag
+                                                         visualization
+                                                         preferences are
+                                                         modified.
     """
 
-    # Signal that will be emitted at the end to tell that the preferences
-    # have been changed
+    # Signal to indicate preference changes
     signal_preferences_change = QtCore.pyqtSignal()
 
     def __init__(self, project, visualized_tags):
-        """Initialization.
-
-        :param project: current project in the software
-        :param visualized_tags: project's visualized tags before opening
-          this widget
-
         """
+        Initialize the tag visualization management widget.
 
+        :param project: The current project in the software.
+        :param visualized_tags: Tags currently being visualized before
+                                opening this widget.
+        """
         super().__init__()
-
         self.project = project
         self.visualized_tags = visualized_tags
+        self._translate = QtCore.QCoreApplication.translate
+        # Track available (non-visualized) tags
+        self.left_tags = []
+        # Setup the user interface
+        self._setup_ui()
+        self._populate_tags()
 
-        _translate = QtCore.QCoreApplication.translate
+    def _create_button(self, object_name, text, click_handler):
+        """
+        Create a customized QPushButton with specified properties.
 
-        # Two buttons to select or unselect tags
-        self.push_button_select_tag = QPushButton(self)
-        self.push_button_select_tag.setObjectName("pushButton_select_tag")
-        self.push_button_select_tag.clicked.connect(self.click_select_tag)
+        This method instantiates a QPushButton, sets its object name,
+        translates and sets its text, and connects a click event handler.
 
-        self.push_button_unselect_tag = QPushButton(self)
-        self.push_button_unselect_tag.setObjectName("pushButton_unselect_tag")
-        self.push_button_unselect_tag.clicked.connect(self.click_unselect_tag)
+        :param object_name (str): The unique identifier name for the button.
+        :param text (str): The text to be displayed on the button, will
+                           be translated.
+        :param click_handler (callable): The function to be called when the
+                                         button is clicked.
 
-        self.push_button_select_tag.setText(_translate("main_window", "-->"))
-        self.push_button_unselect_tag.setText(_translate("main_window", "<--"))
+        :return (QPushButton): A configured button with the specified
+                               properties.
+        """
+        button = QPushButton(self)
+        button.setObjectName(object_name)
+        button.setText(self._translate("main_window", text))
+        button.clicked.connect(click_handler)
+        return button
 
-        vbox_tag_buttons = QVBoxLayout()
-        vbox_tag_buttons.addWidget(self.push_button_select_tag)
-        vbox_tag_buttons.addWidget(self.push_button_unselect_tag)
+    def _create_button_layout(self):
+        """Create the layout for selection buttons."""
+        layout = QVBoxLayout()
+        layout.addWidget(self.push_button_select_tag)
+        layout.addWidget(self.push_button_unselect_tag)
+        return layout
 
-        # The "Tag list" label
-        self.label_tag_list = QLabel(self)
-        self.label_tag_list.setTextFormat(QtCore.Qt.AutoText)
-        self.label_tag_list.setObjectName("label_tag_list")
-        self.label_tag_list.setText(
-            _translate("main_window", "Available tags:")
-        )
+    def _create_label(self, object_name, text):
+        """
+        Create a customized QLabel with specified properties.
 
-        # The search bar to search in the list of tags
-        self.search_bar = QLineEdit(self)
-        self.search_bar.setObjectName("lineEdit_search_bar")
-        self.search_bar.setPlaceholderText("Search")
-        self.search_bar.textChanged.connect(self.search_str)
+        This method instantiates a QLabel, sets its text format,
+        object name, and translates its text.
 
-        # The list of tags
-        self.list_widget_tags = QListWidget(self)
-        self.list_widget_tags.setObjectName("listWidget_tags")
-        (
-            self.list_widget_tags.setSelectionMode(
-                QAbstractItemView.MultiSelection
-            )
-        )
+        :param object_name (str): The unique identifier name for the label.
+        :param text (str): The text to be displayed on the label, will be
+                           translated.
 
-        hbox_top_left = QHBoxLayout()
-        hbox_top_left.addWidget(self.label_tag_list)
-        hbox_top_left.addWidget(self.search_bar)
+        :return (QLabel): A configured label with the specified properties.
+        """
+        label = QLabel(self)
+        label.setTextFormat(QtCore.Qt.AutoText)
+        label.setObjectName(object_name)
+        label.setText(self._translate("main_window", text))
+        return label
 
-        vbox_top_left = QVBoxLayout()
-        vbox_top_left.addLayout(hbox_top_left)
-        vbox_top_left.addWidget(self.list_widget_tags)
+    def _create_left_layout(self):
+        """Create the layout for available tags."""
+        layout = QVBoxLayout()
+        top_layout = QHBoxLayout()
+        top_layout.addWidget(self.label_tag_list)
+        top_layout.addWidget(self.search_bar)
+        layout.addLayout(top_layout)
+        layout.addWidget(self.list_widget_tags)
+        return layout
 
-        # List of the tags selected by the user
-        self.label_visualized_tags = QLabel(self)
-        self.label_visualized_tags.setTextFormat(QtCore.Qt.AutoText)
-        self.label_visualized_tags.setObjectName("label_visualized_tags")
-        self.label_visualized_tags.setText("Visualized tags:")
+    def _create_right_layout(self):
+        """Create the layout for visualized tags."""
+        layout = QVBoxLayout()
+        layout.addWidget(self.label_visualized_tags)
+        layout.addWidget(self.list_widget_selected_tags)
+        return layout
 
-        self.list_widget_selected_tags = QListWidget(self)
-        (
-            self.list_widget_selected_tags.setObjectName(
-                "listWidget_visualized_tags"
-            )
-        )
-        (
-            self.list_widget_selected_tags.setSelectionMode(
-                QAbstractItemView.MultiSelection
-            )
-        )
+    def _create_search_bar(self):
+        """Create the search bar with placeholder and connection."""
+        search_bar = QLineEdit(self)
+        search_bar.setObjectName("lineEdit_search_bar")
+        search_bar.setPlaceholderText("Search")
+        search_bar.textChanged.connect(self.search_str)
+        return search_bar
 
-        v_box_top_right = QVBoxLayout()
-        v_box_top_right.addWidget(self.label_visualized_tags)
-        v_box_top_right.addWidget(self.list_widget_selected_tags)
+    def _create_tag_list(self, text=""):
+        """
+        Create a QListWidget configured for multi-selection of tags.
 
-        hbox_tags = QHBoxLayout()
-        hbox_tags.addLayout(vbox_top_left)
-        hbox_tags.addLayout(vbox_tag_buttons)
-        hbox_tags.addLayout(v_box_top_right)
+        This method initializes a QListWidget with multi-selection mode
+        nabled, allowing users to select multiple items simultaneously.
+        The list widget is assigned a unique object name based on the
+        optional text parameter.
 
-        self.setLayout(hbox_tags)
+        :param text (str): A prefix used to create a unique object name
+                           for the QListWidget.
 
-        self.left_tags = []  # List that will keep track on
-        # the tags on the left (invisible tags)
+        :return (QListWidget): A configured QListWidget with multi-selection
+                               mode enabled.
+        """
+        tag_list = QListWidget(self)
+        tag_list.setObjectName(f"listWidget_{text}tags")
+        tag_list.setSelectionMode(QAbstractItemView.MultiSelection)
+        return tag_list
+
+    def _populate_tags(self):
+        """Populate the tags list from the project database."""
+        excluded_tags = {TAG_CHECKSUM, TAG_FILENAME, TAG_HISTORY}
 
         with self.project.database.data() as database_data:
 
             for tag in database_data.get_field_names(COLLECTION_CURRENT):
 
-                if (
-                    tag != TAG_CHECKSUM
-                    and tag != TAG_FILENAME
-                    and tag != TAG_HISTORY
-                ):
-                    item = QListWidgetItem()
+                if tag not in excluded_tags:
+                    item = QListWidgetItem(tag)
 
                     if tag not in self.visualized_tags:
                         # Tag not visible: left side
@@ -6454,36 +6621,63 @@ class PopUpVisualizedTags(QWidget):
                         # Tag visible: right side
                         self.list_widget_selected_tags.addItem(item)
 
-                    item.setText(tag)
+            self.list_widget_tags.sortItems()
 
-        self.list_widget_tags.sortItems()
+    def _setup_ui(self):
+        """Create and layout the user interface components."""
+        # Selection buttons
+        self.push_button_select_tag = self._create_button(
+            "pushButton_select_tag", "-->", self.click_select_tag
+        )
+        self.push_button_unselect_tag = self._create_button(
+            "pushButton_unselect_tag", "<--", self.click_unselect_tag
+        )
+        # Available tags section
+        self.label_tag_list = self._create_label(
+            "label_tag_list", "Available tags:"
+        )
+        self.search_bar = self._create_search_bar()
+        self.list_widget_tags = self._create_tag_list()
+        # Visualized tags section
+        self.label_visualized_tags = self._create_label(
+            "label_visualized_tags", "Visualized tags:"
+        )
+        self.list_widget_selected_tags = self._create_tag_list("visualized_")
+        main_layout = QHBoxLayout()
+        main_layout.addLayout(self._create_left_layout())
+        main_layout.addLayout(self._create_button_layout())
+        main_layout.addLayout(self._create_right_layout())
+        self.setLayout(main_layout)
 
     def search_str(self, str_search):
-        """Matches the searched pattern with the tags of the project.
+        """
+        Filter tags based on search string.
 
-        :param str_search: string pattern to search
-
+        :param str_search (str): Search pattern to match against tags
         """
 
-        return_list = []
-        if str_search != "":
-            for tag in self.left_tags:
-                if str_search.upper() in tag.upper():
-                    return_list.append(tag)
-        else:
-            for tag in self.left_tags:
-                return_list.append(tag)
-
+        # Find matching tags, case-insensitive
+        return_list = [
+            tag
+            for tag in self.left_tags
+            if not str_search or str_search.upper() in tag.upper()
+        ]
         # Selection updated
         self.list_widget_tags.clear()
+
         for tag_name in return_list:
-            item = QListWidgetItem()
+            item = QListWidgetItem(tag_name)
             self.list_widget_tags.addItem(item)
-            item.setText(tag_name)
+
         self.list_widget_tags.sortItems()
 
     def click_select_tag(self):
-        """Puts the selected tags in the "selected tag" table."""
+        """
+        Move selected tags from available to visualized list.
+
+        Removes selected tags from the left (available) list and
+        adds them to the right (visualized) list.
+        """
 
         rows = sorted(
             [index.row() for index in self.list_widget_tags.selectedIndexes()],
@@ -6491,16 +6685,23 @@ class PopUpVisualizedTags(QWidget):
         )
 
         for row in rows:
+            tag_item = self.list_widget_tags.takeItem(row)
+            tag_text = tag_item.text()
             # assuming the other listWidget is called listWidget_2
-            self.left_tags.remove(self.list_widget_tags.item(row).text())
-            (
-                self.list_widget_selected_tags.addItem(
-                    self.list_widget_tags.takeItem(row)
-                )
-            )
+            self.left_tags.remove(tag_text)
+            self.list_widget_selected_tags.addItem(tag_text)
+
+        # Emit signal to indicate preferences have changed
+        self.signal_preferences_change.emit()
 
     def click_unselect_tag(self):
-        """Removes the unselected tags from populse_mia table."""
+        """
+        Remove selected tags from the visualized list and
+        return them to the available tags list.
+
+        Moves selected tags from the right (visualized) list
+        to the left (available) list, maintaining sorted order.
+        """
 
         rows = sorted(
             [
@@ -6511,6 +6712,7 @@ class PopUpVisualizedTags(QWidget):
         )
 
         for row in rows:
+            # Add tag back to left tags and available list
             (
                 self.left_tags.append(
                     self.list_widget_selected_tags.item(row).text()
@@ -6526,14 +6728,32 @@ class PopUpVisualizedTags(QWidget):
 
 
 class QLabel_clickable(QLabel):
-    """Custom class to click on a QLabel"""
+    """
+    A custom QLabel that emits a clicked signal when mouse pressed.
+
+    This class extends the standard QLabel to provide a signal that can be
+    connected to other methods when the label is clicked, enabling more
+    interactive label behaviors.
+
+     .. Signals:
+        - clicked (pyqtSignal): Signal emitted when the label is clicked.
+    """
 
     clicked = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
-        QLabel.__init__(self, parent)
+        """
+        Initialize the clickable label.
 
-    def mousePressEvent(self, ev):
-        """Blabla"""
+        :param parent (QWidget): Parent widget.
+        """
+        super().__init__(parent)
 
+    def mousePressEvent(self, event):
+        """
+        Override the default mouse press event to emit the clicked signal.
+
+        :parm event (QMouseEvent): Mouse press event details.
+        """
         self.clicked.emit()
+        super().mousePressEvent(event)
