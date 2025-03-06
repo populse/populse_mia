@@ -23,6 +23,7 @@ from .utils import (  # noqa: F401
     set_item_data,
     set_projects_directory_as_default,
     table_to_database,
+    type_name,
     verCmp,
     verify_processes,
     verify_setup,
