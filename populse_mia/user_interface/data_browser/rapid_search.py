@@ -1,5 +1,13 @@
 """
-Module to define the rapid search.
+Rapid Search Widget Module
+
+This module provides the RapidSearch widget, a specialized QLineEdit
+component for performing quick searches across visualized tags in the
+data browser table.
+
+The RapidSearch widget enables users to filter DataBrowser using various
+search patterns and wildcards. It supports searching for specific text
+patterns as well as finding entries with undefined or missing values.
 
 Contains:
     Class:
@@ -18,105 +26,85 @@ Contains:
 from PyQt5.QtWidgets import QLineEdit
 
 # Populse_MIA imports
-from populse_mia.data_manager.project import TAG_BRICKS, TAG_FILENAME
+from populse_mia.data_manager import TAG_BRICKS, TAG_FILENAME
 
 
 class RapidSearch(QLineEdit):
-    """Widget used to search for a pattern in the table (for all the visualized
-       tags).
+    """
+    Widget for pattern searching in table data across visualized tags.
 
-    Enter % to replace any string, _ to replace any character , *Not Defined*
-    for the scans with missing value(s).
-    Dates are in the following format: yyyy-mm-dd hh:mm:ss.fff”
+    Supports special search syntax:
+    - '%': Wildcard for any string
+    - '_': Wildcard for any single character
+    - '*Not Defined*': Matches scans with missing values
 
-    :param databrowser: parent data browser widget
+    Dates should be formatted as: yyyy-mm-dd hh:mm:ss.fff
 
     .. Methods:
-        - prepare_filter: prepares the rapid search filter
-        - prepare_not_defined_filter: prepares the rapid search filter for not
-          defined values
+        - prepare_filter: Prepares the rapid search filter
+        - prepare_not_defined_filter: Prepares the rapid search filter for
+                                      not defined values
     """
 
     def __init__(self, databrowser):
-        """Initialization of RapidSearch class.
+        """
+        Initialize the RapidSearch widget.
 
-        :param databrowser: parent data browser widget
+        :param databrowser: Parent data browser widget
         """
         super().__init__()
-
         self.databrowser = databrowser
         self.setPlaceholderText(
-            "Rapid search, enter % to replace any string,"
-            " _ to replace any character, *Not Defined* "
-            "for the scans with missing value(s), "
-            "dates are in the following format: "
-            "yyyy-mm-dd hh:mm:ss.fff"
+            "Rapid search: % (any string), _ (any character), "
+            "*Not Defined* (missing values), "
+            "dates as yyyy-mm-dd hh:mm:ss.fff"
         )
 
     def prepare_not_defined_filter(self, tags):
-        """Prepare the rapid search filter for not defined values.
-
-        :param tags: list of tags to take into account
-        :return: str filter corresponding to the rapid search for not defined
-          values
         """
+        Create a filter for finding entries with undefined values.
 
-        query = ""
+        :param tags (list): List of tags to check for null values
 
-        or_to_write = False
+        :return (str): QL-like filter expression for finding null values
+        """
+        conditions = []
 
         for tag in tags:
+
             if tag != TAG_BRICKS:
-                if or_to_write:
-                    query += " OR "
+                conditions.append(f"({{{tag}}} == null)")
 
-                query += "({" + tag + "} == null)"
-
-                or_to_write = True
-
-        query += (
-            " AND ({"
-            + TAG_FILENAME
-            + "} IN "
-            + str(self.databrowser.table_data.scans_to_search).replace(
-                "'", '"'
-            )
-            + ")"
+        # Join all conditions with OR
+        query = " OR ".join(conditions)
+        # Add filename constraint
+        scans_str = str(self.databrowser.table_data.scans_to_search).replace(
+            "'", '"'
         )
-
-        query = "(" + query + ")"
-
-        return query
+        query = f"({query}) AND ({{{TAG_FILENAME}}} IN {scans_str})"
+        return f"({query})"
 
     @staticmethod
     def prepare_filter(search, tags, scans):
-        """Prepare the rapid search filter.
-
-        :param search: Search (str)
-        :param tags: List of tags to take into account
-        :param scans: List of scans to search into
-        :return: str filter corresponding to the rapid search
         """
+        Create a filter for searching text across specified tags.
 
-        query = "("
+        :param search (str): Search pattern to look for
+        :param tags (list): List of tags to search within
+        :param scans (list): List of scans to restrict the search to
 
-        or_to_write = False
+        :return (str): SQL-like filter expression for the search
+        """
+        conditions = []
 
         for tag in tags:
+
             if tag != TAG_BRICKS:
-                if or_to_write:
-                    query += " OR "
+                conditions.append(f'({{{tag}}} LIKE "%{search}%")')
 
-                query += "({" + tag + '} LIKE "%' + search + '%")'
-
-                or_to_write = True
-
-        query += (
-            ") AND ({"
-            + TAG_FILENAME
-            + "} IN "
-            + str(scans).replace("'", '"')
-            + ")"
-        )
-
+        # Join all conditions with OR
+        tag_query = " OR ".join(conditions)
+        # Add filename constraint
+        scans_str = str(scans).replace("'", '"')
+        query = f"({tag_query}) AND ({{{TAG_FILENAME}}} IN {scans_str})"
         return query
