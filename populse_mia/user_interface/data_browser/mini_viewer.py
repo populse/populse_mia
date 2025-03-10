@@ -1,5 +1,15 @@
 """
-Module to define the mini viewer.
+This module provides the `MiniViewer` class, which is a PyQt-based widget
+designed for rapid visualization of medical scans. The `MiniViewer` allows
+users to view and interact with 3D, 4D, and 5D NIfTI images, providing tools
+to navigate through slices and time points.
+
+Key Features:
+- Visualize single images per scan with cursors to move in multiple dimensions.
+- Display all images of the greater dimension of the scan.
+- Support for 3D, 4D, and 5D NIfTI images.
+- Configurable display settings, including orientation and slice navigation.
+- Integration with project-specific configurations and preferences.
 
 Contains:
     Class:
@@ -14,8 +24,8 @@ Contains:
 # for details.
 ##########################################################################
 
+import logging
 import os
-import traceback
 from functools import partial
 
 import nibabel as nib
@@ -45,25 +55,24 @@ from PyQt5.QtWidgets import (
 # from scipy.ndimage import rotate  # to work with NumPy arrays
 from skimage.transform import resize
 
-from populse_mia.data_manager.project import COLLECTION_CURRENT
+from populse_mia.data_manager import COLLECTION_CURRENT, NOT_DEFINED_VALUE
 from populse_mia.software_properties import Config
-from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.user_interface.pop_ups import ClickableLabel, PopUpSelectTag
+
+logger = logging.getLogger(__name__)
 
 
 class MiniViewer(QWidget):
-    """MiniViewer that allows to rapidly visualize scans either with a single
-    image per scan with cursors to move in five dimensions or with all images
-    of the greater dimension of the scan.
+    """
+    MiniViewer allows rapid visualization of scans with either a single image
+    per scan or all images of the greater dimension of the scan.
 
-    When the latter is selected, the displayed images depends on their
-    dimension:
-
-        - 3D: display all the slices.
-        - 4D: display the middle slice of the third dimension for each time
-           of the fourth dimension.
-        - 5D: display the middle slice of the third dimension for the first
-           time of the fourth dimension for each time of the fifth dimension.
+    Displayed images depend on their dimension:
+    - 3D: Display all slices.
+    - 4D: Display the middle slice of the third dimension for each time of the
+          fourth dimension.
+    - 5D: Display the middle slice of the third dimension for the first time
+          of the fourth dimension for each time of the fifth dimension.
 
     Note:
         - idx corresponds to the index of the displayed image
@@ -72,85 +81,118 @@ class MiniViewer(QWidget):
            elements
 
     .. Methods:
-        - __init__: initialise the MiniViewer object
+        - __init__: initialise the MiniViewer object.
+        - _create_layouts: Create the layouts for the MiniViewer
+        - _initialize_checkboxes: Initialize the checkboxes for the MiniViewer
+        - _initialize_components: Initialize the components of the MiniViewer
+
         - boxSlider: create sliders, their connections and thumbnail labels
-          for a selected index
+                     for a selected index
         - changePosValue: change the value of a cursor for the selected index
         - check_box_cursors_state_changed: updates the config file
         - clear: remove the Nibabel images to be able to remove it in the
-          unit tests
-        - clearLayouts: clear the final layout
-        - create_slider: create a slider
+                 unit tests
+        - clear_layouts: clear the final layout
         - createDimensionLabels: create the dimension labels for the
-          selected index
+                                 selected index
         - createFieldValue: create a field where will be displayed the
-          position of a cursor
-        - createLayouts: create the layouts
+                            position of a cursor
+        - create_slider: create a slider
         - displayPosValue: display the position of each cursor for the
-          selected index
+                           selected index
         - enableSliders: enable each slider of the selected index
-        - image_to_pixmap: create a 2D pixmap from a N-D Nifti image
         - image2DModifications: apply modifications to the image to
-          display it correctly
+                                display it correctly
+        - image_to_pixmap: create a 2D pixmap from a N-D Nifti image
         - indexImage: update the sliders values depending on the size of
-          the selected image
+                      the selected image
         - mem_release: reset all object lists to zero in order to
-          preserve memory
+                       preserve memory
         - navigImage: display the 2D image for the selected index
         - openTagsPopUp: opens a pop-up to select the legend of the thumbnails
         - setThumbnail: set the thumbnail tag value under the image frame
         - show_slices: create the thumbnails from the selected file paths
         - update_nb_slices: update the config file and the thumbnails
         - update_visualization_method: update the config file and the
-          thumbnails
+                                       thumbnails
         - verify_slices: verify the number of selected documents
 
     """
 
     def __init__(self, project):
-        """Initialise the MiniViewer object
+        """
+        Initialize the MiniViewer object.
 
-        :param project: current project in the software
-
+        :param project: Current project in the software.
         """
         super().__init__()
-
         self.project = project
         self.first_time = True
-
         # The MiniViewer is set hidden to give more space to the data_browser
         self.setHidden(True)
-
         # Config that allows to read the software preferences
         self.config = Config()
-
         # When multiple selection, limiting the number of thumbnails to
         # max_scans
         self.max_scans = self.config.get_max_thumbnails()
+        self.file_paths = ""
+        self._initialize_components()
+        self._create_layouts()
+        self._initialize_checkboxes()
 
-        # Initializing some components of the MiniViewer
+    def _create_layouts(self):
+        """Create the layouts for the MiniViewer."""
+        self.h_box_images = QHBoxLayout()
+        self.h_box_images.setSpacing(10)
+        self.v_box = QVBoxLayout()
+        self.v_box_final = QVBoxLayout()
+        self.h_box_slider_3D = QHBoxLayout()
+        self.h_box_slider_4D = QHBoxLayout()
+        self.h_box_slider_5D = QHBoxLayout()
+        self.v_box_sliders = QVBoxLayout()
+        self.h_box = QHBoxLayout()
+        self.h_box_check_box = QHBoxLayout()
+        self.v_box_thumb = QVBoxLayout()
+        self.h_box_thumb = QHBoxLayout()
+        self.setLayout(self.v_box_final)
+
+    def _initialize_checkboxes(self):
+        """Initialize the checkboxes for the MiniViewer."""
+        self.check_box_slices = QCheckBox("Show all slices (no cursors)")
+        self.check_box_slices.setCheckState(
+            Qt.Checked if self.config.getShowAllSlices() else Qt.Unchecked
+        )
+        self.check_box_slices.stateChanged.connect(
+            self.update_visualization_method
+        )
+        self.check_box_cursors = QCheckBox("Chain cursors")
+        self.check_box_cursors.setToolTip(
+            "Allows to connect all cursors when selecting multiple documents"
+        )
+        self.check_box_cursors.setCheckState(
+            Qt.Checked if self.config.getChainCursors() else Qt.Unchecked
+        )
+        self.check_box_cursors.stateChanged.connect(
+            self.check_box_cursors_state_changed
+        )
+
+    def _initialize_components(self):
+        """Initialize the components of the MiniViewer."""
         self.labels = QWidget()
         self.frame = QFrame()
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(self.frame)
         self.frame_final = QFrame()
-
-        self.label_nb_slices = QLabel()
-        self.label_nb_slices.setText("Maximum number of slices: ")
-
-        self.line_edit_nb_slices = QLineEdit()
-        self.line_edit_nb_slices.setText(str(self.config.getNbAllSlicesMax()))
+        self.label_nb_slices = QLabel("Maximum number of slices: ")
+        self.line_edit_nb_slices = QLineEdit(
+            f"{self.config.getNbAllSlicesMax()}"
+        )
         self.line_edit_nb_slices.returnPressed.connect(self.update_nb_slices)
-
-        self.label_orientation = QLabel()
-
-        if self.config.isRadioView() is True:
-            self.label_orientation.setText("Radiological orientation")
-
-        else:
-            self.label_orientation.setText("Neurological orientation")
-
-        # All these objects are depending on the number of scans to visualize
+        self.label_orientation = QLabel(
+            "Radiological orientation"
+            if self.config.isRadioView()
+            else "Neurological orientation"
+        )
         self.im_2D = []
         self.slider_3D = []
         self.slider_4D = []
@@ -165,39 +207,11 @@ class MiniViewer(QWidget):
         self.img = []
         self.label_description = []
 
-        # Layouts
-        self.createLayouts()
-        self.setLayout(self.v_box_final)
-
-        # Checkboxes
-        self.check_box_slices = QCheckBox("Show all slices (no cursors)")
-        if self.config.getShowAllSlices() is True:
-            self.check_box_slices.setCheckState(Qt.Checked)
-        else:
-            self.check_box_slices.setCheckState(Qt.Unchecked)
-        self.check_box_slices.stateChanged.connect(
-            self.update_visualization_method
-        )
-
-        self.check_box_cursors = QCheckBox("Chain cursors")
-        self.check_box_cursors.setToolTip(
-            "Allows to connect all cursors "
-            "when selecting multiple documents"
-        )
-        if self.config.getChainCursors() is True:
-            self.check_box_cursors.setCheckState(Qt.Checked)
-        else:
-            self.check_box_cursors.setCheckState(Qt.Unchecked)
-        self.check_box_cursors.stateChanged.connect(
-            self.check_box_cursors_state_changed
-        )
-
-        self.file_paths = ""
-
     def boxSlider(self, idx):
-        """Define horizontal sliders connections and thumbnail labels.
+        """
+        Define horizontal sliders connections and thumbnail labels.
 
-        :param idx: the selected index
+        :param idx (int): The selected index.
         """
         self.slider_3D.insert(idx, self.create_slider(0, 0, 0))
         self.slider_4D.insert(idx, self.create_slider(0, 0, 0))
@@ -216,32 +230,6 @@ class MiniViewer(QWidget):
         self.txt_slider_3D.insert(idx, self.createFieldValue())
         self.txt_slider_4D.insert(idx, self.createFieldValue())
         self.txt_slider_5D.insert(idx, self.createFieldValue())
-
-    def check_box_cursors_state_changed(self):
-        """Update the config file.
-
-        Called when the state of the checkbox to chain the cursors changes.
-        """
-        if self.check_box_cursors.checkState() == Qt.Checked:
-            self.config.setChainCursors(True)
-        elif self.check_box_cursors.checkState() == Qt.Unchecked:
-            self.config.setChainCursors(False)
-
-    def clear(self):
-        """
-        Remove the Nibabel images to be able to remove it in the unit tests
-        """
-        try:
-            delattr(self, "img")
-        except AttributeError:
-            pass
-
-    def clearLayouts(self):
-        """Clear the final layout"""
-
-        for i in reversed(range(self.v_box_final.count())):
-            if self.v_box_final.itemAt(i).widget() is not None:
-                self.v_box_final.itemAt(i).widget().setParent(None)
 
     def changePosValue(self, idx, cursor_to_change):
         """
@@ -295,6 +283,30 @@ class MiniViewer(QWidget):
                     partial(self.changePosValue, idx_loop, cursor_to_change)
                 )
 
+    def check_box_cursors_state_changed(self):
+        """
+        Update the config file when the state of the checkbox to chain the
+        cursors changes.
+        """
+        self.config.setChainCursors(
+            self.check_box_cursors.checkState() == Qt.Checked
+        )
+
+    def clear(self):
+        """
+        Remove the Nibabel images to be able to remove it in the unit tests.
+        """
+
+        if hasattr(self, "img"):
+            del self.img
+
+    def clear_layouts(self):
+        """Clear the final layout."""
+
+        for i in reversed(range(self.v_box_final.count())):
+            if self.v_box_final.itemAt(i).widget() is not None:
+                self.v_box_final.itemAt(i).widget().setParent(None)
+
     def createDimensionLabels(self, idx):
         """Create the dimension labels for the selected index.
 
@@ -330,22 +342,6 @@ class MiniViewer(QWidget):
         fieldValue.setFont(font)
         return fieldValue
 
-    def createLayouts(self):
-        """Create the layouts."""
-
-        self.h_box_images = QHBoxLayout()
-        self.h_box_images.setSpacing(10)
-        self.v_box = QVBoxLayout()
-        self.v_box_final = QVBoxLayout()
-        self.h_box_slider_3D = QHBoxLayout()
-        self.h_box_slider_4D = QHBoxLayout()
-        self.h_box_slider_5D = QHBoxLayout()
-        self.v_box_sliders = QVBoxLayout()
-        self.h_box = QHBoxLayout()
-        self.h_box_check_box = QHBoxLayout()
-        self.v_box_thumb = QVBoxLayout()
-        self.h_box_thumb = QHBoxLayout()
-
     def create_slider(self, maxm=0, minm=0, pos=0):
         """Generate an horizontal slider.
 
@@ -369,19 +365,16 @@ class MiniViewer(QWidget):
         :param idx: the selected index
         """
         self.txt_slider_3D[idx].setText(
-            str(self.slider_3D[idx].value() + 1)
-            + " / "
-            + str(self.slider_3D[idx].maximum() + 1)
+            f"{self.slider_3D[idx].value() + 1} "
+            f"/ {self.slider_3D[idx].maximum() + 1}"
         )
         self.txt_slider_4D[idx].setText(
-            str(self.slider_4D[idx].value() + 1)
-            + " / "
-            + str(self.slider_4D[idx].maximum() + 1)
+            f"{self.slider_4D[idx].value() + 1} "
+            f"/ {self.slider_4D[idx].maximum() + 1}"
         )
         self.txt_slider_5D[idx].setText(
-            str(self.slider_5D[idx].value() + 1)
-            + " / "
-            + str(self.slider_5D[idx].maximum() + 1)
+            f"{self.slider_5D[idx].value() + 1} "
+            f"/ {self.slider_5D[idx].maximum() + 1}"
         )
 
     def enableSliders(self, idx):
@@ -392,50 +385,6 @@ class MiniViewer(QWidget):
         self.slider_3D[idx].setEnabled(True)
         self.slider_4D[idx].setEnabled(True)
         self.slider_5D[idx].setEnabled(True)
-
-    def image_to_pixmap(self, im, i):
-        """Create a 2D pixmap from a N-D Nifti image.
-
-        :param im: Nifti image
-        :param i: index of the slide
-        :return: the corresponding pixmap
-        """
-
-        # The image to display depends on the dimension of the image
-        # In the 3D case, each slice is displayed
-        if len(im.shape) == 3:
-            # im_2D = im.get_fdata()[:, :, i].copy()
-            im_2D = np.asarray(im.dataobj)[:, :, i].copy()
-
-        # In the 4D case, each middle slice of the 3D dimension is displayed
-        # for each time in the 4D dimension
-        elif len(im.shape) == 4:
-            # im_3D = im.get_fdata()[:, :, :, i].copy()
-            im_3D = np.asarray(im.dataobj)[:, :, :, i].copy()
-            middle_slice = int(im_3D.shape[2] / 2)
-            im_2D = im_3D[:, :, middle_slice]
-
-        # In the 5D case, each first time of the 4D dimension and
-        # its middle slice of the 3D dimension is displayed
-        elif len(im.shape) == 5:
-            # im_4D = im.get_fdata()[:, :, :, :, i].copy()
-            im_4D = np.asarray(im.dataobj)[:, :, :, :, i].copy()
-            im_3D = im_4D[:, :, :, 1]
-            middle_slice = int(im_3D.shape[2] / 2)
-            im_2D = im_3D[:, :, middle_slice]
-
-        else:
-            im_2D = [0]
-
-        # Making some pixel modification to display the image correctly
-        im_2D = self.image2DModifications(0, im_2D)
-
-        w, h = im_2D.shape
-
-        im_Qt = QImage(im_2D.data, w, h, QImage.Format_Indexed8)
-        pixm = QPixmap.fromImage(im_Qt)
-
-        return pixm
 
     def image2DModifications(self, idx, im2D=None):
         """Apply modifications to display the image correctly.
@@ -517,6 +466,50 @@ class MiniViewer(QWidget):
             return im2D
         else:
             self.im_2D[idx] = im2D
+
+    def image_to_pixmap(self, im, i):
+        """Create a 2D pixmap from a N-D Nifti image.
+
+        :param im: Nifti image
+        :param i: index of the slide
+        :return: the corresponding pixmap
+        """
+
+        # The image to display depends on the dimension of the image
+        # In the 3D case, each slice is displayed
+        if len(im.shape) == 3:
+            # im_2D = im.get_fdata()[:, :, i].copy()
+            im_2D = np.asarray(im.dataobj)[:, :, i].copy()
+
+        # In the 4D case, each middle slice of the 3D dimension is displayed
+        # for each time in the 4D dimension
+        elif len(im.shape) == 4:
+            # im_3D = im.get_fdata()[:, :, :, i].copy()
+            im_3D = np.asarray(im.dataobj)[:, :, :, i].copy()
+            middle_slice = int(im_3D.shape[2] / 2)
+            im_2D = im_3D[:, :, middle_slice]
+
+        # In the 5D case, each first time of the 4D dimension and
+        # its middle slice of the 3D dimension is displayed
+        elif len(im.shape) == 5:
+            # im_4D = im.get_fdata()[:, :, :, :, i].copy()
+            im_4D = np.asarray(im.dataobj)[:, :, :, :, i].copy()
+            im_3D = im_4D[:, :, :, 1]
+            middle_slice = int(im_3D.shape[2] / 2)
+            im_2D = im_3D[:, :, middle_slice]
+
+        else:
+            im_2D = [0]
+
+        # Making some pixel modification to display the image correctly
+        im_2D = self.image2DModifications(0, im_2D)
+
+        w, h = im_2D.shape
+
+        im_Qt = QImage(im_2D.data, w, h, QImage.Format_Indexed8)
+        pixm = QPixmap.fromImage(im_Qt)
+
+        return pixm
 
     def indexImage(self, idx):
         """Update all slider values according to the size of the current image.
@@ -605,25 +598,29 @@ class MiniViewer(QWidget):
         :param file_path_base_name: basename of the selected path
         :param idx: index of the image
         """
-        # Looking for the tag value to display as a legend of the thumbnail
-        for scan in self.project.session.get_documents_names(
-            COLLECTION_CURRENT
-        ):
-            if scan == file_path_base_name:
-                value = self.project.session.get_value(
-                    COLLECTION_CURRENT, scan, self.config.getThumbnailTag()
-                )
-                if value is not None:
-                    self.label_description[idx].setText(
-                        str(value)[: self.nb_char_max]
+
+        with self.project.database.data() as database_data:
+
+            # Looking for the tag value to display as a legend of the
+            # thumbnail
+            for scan in database_data.get_document_names(COLLECTION_CURRENT):
+                if scan == file_path_base_name:
+                    value = database_data.get_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan,
+                        field=self.config.getThumbnailTag(),
                     )
-                else:
-                    self.label_description[idx].setText(
-                        data_browser.not_defined_value[: self.nb_char_max]
+                    if value is not None:
+                        self.label_description[idx].setText(
+                            str(value)[: self.nb_char_max]
+                        )
+                    else:
+                        self.label_description[idx].setText(
+                            NOT_DEFINED_VALUE[: self.nb_char_max]
+                        )
+                    self.label_description[idx].setToolTip(
+                        os.path.basename(self.config.getThumbnailTag())
                     )
-                self.label_description[idx].setToolTip(
-                    os.path.basename(self.config.getThumbnailTag())
-                )
 
     def show_slices(self, file_paths):
         """Creates the thumbnails from the selected file paths.
@@ -647,7 +644,7 @@ class MiniViewer(QWidget):
             self.file_paths = file_paths
             self.max_scans = self.config.get_max_thumbnails()
             self.setMinimumHeight(220)
-            self.clearLayouts()
+            self.clear_layouts()
             self.frame = QFrame(self)
             self.frame_final = QFrame(self)
 
@@ -666,23 +663,19 @@ class MiniViewer(QWidget):
                     # chk = nib.as_closest_canonical(nib.load(file_path))
                     # chk = nib.load(file_path)
 
-                except nib.filebasedimages.ImageFileError as e:
-                    print(
-                        "Error while trying to display the {} image ...!\n"
-                        "Traceback:".format(os.path.abspath(file_path))
+                except nib.filebasedimages.ImageFileError:
+                    logger.warning(
+                        f"Error while trying to display "
+                        f"the {os.path.abspath(file_path)} image ...!\n",
+                        exc_info=True,
                     )
-                    print(
-                        "".join(traceback.format_tb(e.__traceback__)), end=""
-                    )
-                    print(f"{e.__class__.__name__}: {e}\n")
                     self.file_paths.remove(file_path)
                     chk = False
 
                 except FileNotFoundError:
-                    print(
-                        "File "
-                        + os.path.abspath(file_path)
-                        + " is not existing ..."
+                    logger.warning(
+                        f"File {os.path.abspath(file_path)} is "
+                        f"not existing..."
                     )
                     self.file_paths.remove(file_path)
                     chk = False
@@ -691,17 +684,12 @@ class MiniViewer(QWidget):
                     try:
                         np.asarray(chk.dataobj)
 
-                    except Exception as e:
-                        print(
-                            "\nError while trying to display the {} "
-                            "image ...!\n"
-                            "Traceback:".format(os.path.abspath(file_path))
+                    except Exception:
+                        logger.warning(
+                            f"Error while trying to display "
+                            f"the {os.path.abspath(file_path)} image ...!\n",
+                            exc_info=True,
                         )
-                        print(
-                            "".join(traceback.format_tb(e.__traceback__)),
-                            end="",
-                        )
-                        print(f"{e.__class__.__name__}: {e}\n")
                         self.file_paths.remove(file_path)
 
                     else:
@@ -860,7 +848,7 @@ class MiniViewer(QWidget):
                             # of dimensions)
                             label_info = QLabel()
                             label_info.setFont(font)
-                            label_info.setText(txt + str(i + 1))
+                            label_info.setText(f"{txt}{i + 1}")
                             label_info.setAlignment(QtCore.Qt.AlignCenter)
 
                             self.v_box.addWidget(label)
@@ -945,40 +933,3 @@ class MiniViewer(QWidget):
 
         else:
             self.label_orientation.setText("Neurological orientation")
-
-    # def check_differences(self, file_paths):
-    #     old_to_new = []
-    #     self.do_nothing = [False, False, False]
-    #     for idx_old, file_path in enumerate(self.file_paths):
-    #         if file_path in file_paths:
-    #             idx_new = file_paths.index(file_path)
-    #             old_to_new.append((idx_old, idx_new))
-    #             #if idx_new == idx_old:
-    #             self.do_nothing[idx_new] = True
-    #
-    #     for tp in old_to_new:
-    #         idx_old = tp[0]
-    #         idx_new = tp[1]
-    #         self.shift_thumbnail(idx_old, idx_new)
-    #
-    # def shift_thumbnail(self, idx_old, idx_new):
-    #
-    #     self.im_2D[idx_new] = self.im_2D[idx_old]
-    #
-    #     self.slider_3D[idx_new].setMaximum(self.slider_3D[idx_old].maximum())
-    #     self.slider_4D[idx_new].setMaximum(self.slider_4D[idx_old].maximum())
-    #     self.slider_5D[idx_new].setMaximum(self.slider_5D[idx_old].maximum())
-    #
-    #     self.slider_3D[idx_new].setValue(self.slider_3D[idx_old].value())
-    #     self.slider_4D[idx_new].setValue(self.slider_4D[idx_old].value())
-    #     self.slider_5D[idx_new].setValue(self.slider_5D[idx_old].value())"""
-    #
-    # def clear_layout(self, layout):
-    #     while layout.count() > 0:
-    #         item = layout.takeAt(0)
-    #         if not item:
-    #             continue
-    #
-    #         w = item.widget()
-    #         if w:
-    #             w.deleteLater()"""
