@@ -202,15 +202,17 @@ class PipelineManagerTab(QWidget):
         self.inheritance_dict = None
         self.init_clicked = False
         self.test_init = False
+
         if len(scan_list) < 1:
-            self.scan_list = self.project.session.get_documents_names(
+            self.scan_list = self.project.database.get_document_names(
                 COLLECTION_CURRENT
             )
+
         else:
             self.scan_list = scan_list
+
         self.main_window = main_window
         self.enable_progress_bar = False
-
         # This list is the list of scans contained in the iteration table
         # If it is empty, the scan list in the Pipeline Manager is the scan
         # list from the data_browser
@@ -218,21 +220,17 @@ class PipelineManagerTab(QWidget):
         self.brick_list = []
         self.node_list = []
         self.workflow = None
-
         # Used for the inheritance dictionary
         self.key = {}
         self.ignore = {}
         self.ignore_node = False
-
         QWidget.__init__(self)
-
         self.verticalLayout = QVBoxLayout(self)
         self.processLibrary = ProcessLibraryWidget(self.main_window)
         self.processLibrary.process_library.item_library_clicked.connect(
             self.item_library_clicked
         )
         # self.item_library_clicked.connect(self._show_preview)
-
         # self.diagramScene = DiagramScene(self)
         self.pipelineEditorTabs = PipelineEditorTabs(
             self.project, self.scan_list, self.main_window
@@ -253,7 +251,7 @@ class PipelineManagerTab(QWidget):
             self.project, self.scan_list, self, self.main_window
         )
         self.nodeController.visibles_tags = (
-            self.project.session.get_shown_tags()
+            self.project.database.get_shown_tags()
         )
 
         self.iterationTable = IterationTable(
@@ -262,37 +260,29 @@ class PipelineManagerTab(QWidget):
         self.iterationTable.iteration_table_updated.connect(
             self.update_scans_list
         )
-
         # self.previewBlock = PipelineDeveloperView(
         #    pipeline=None, allow_open_controller=False,
         #    show_sub_pipelines=True, enable_edition=False)
-
         self.startedConnection = None
-
         # Actions
         self.load_pipeline_action = QAction("Load pipeline", self)
         self.load_pipeline_action.triggered.connect(self.loadPipeline)
-
         self.save_pipeline_action = QAction("Save pipeline", self)
         self.save_pipeline_action.triggered.connect(self.savePipeline)
-
         self.save_pipeline_as_action = QAction("Save pipeline as", self)
         self.save_pipeline_as_action.triggered.connect(self.savePipelineAs)
-
         self.load_pipeline_parameters_action = QAction(
             "Load pipeline parameters", self
         )
         self.load_pipeline_parameters_action.triggered.connect(
             self.loadParameters
         )
-
         self.save_pipeline_parameters_action = QAction(
             "Save pipeline parameters", self
         )
         self.save_pipeline_parameters_action.triggered.connect(
             self.saveParameters
         )
-
         sources_images_dir = config.getSourceImageDir()
         # Commented on January, 4th 2020
         # Initialization button was deleted to avoid issues of indexation
@@ -303,7 +293,6 @@ class PipelineManagerTab(QWidget):
         #     "Initialize pipeline", self)
         # self.init_pipeline_action.triggered.connect(self.initialize)
         # End - commented on January, 4th 2020
-
         self.run_pipeline_action = QAction(
             QIcon(os.path.join(sources_images_dir, "run32.png")),
             "Run pipeline",
@@ -312,20 +301,17 @@ class PipelineManagerTab(QWidget):
         self.run_pipeline_action.triggered.connect(self.runPipeline)
         # commented on January, 4th 2020
         # self.run_pipeline_action.setDisabled(True)
-
         self.stop_pipeline_action = QAction(
             QIcon(os.path.join(sources_images_dir, "stop32.png")), "Stop", self
         )
         self.stop_pipeline_action.triggered.connect(self.stop_execution)
         self.stop_pipeline_action.setDisabled(True)
-
         self.show_pipeline_status_action = QAction(
             QIcon(os.path.join(sources_images_dir, "gray_cross.png")),
             "Status",
             self,
         )
         self.show_pipeline_status_action.triggered.connect(self.show_status)
-
         self.garbage_collect_action = QAction(
             QIcon(os.path.join(sources_images_dir, "garbage_collect.png")),
             "Cleanup",
@@ -349,15 +335,12 @@ class PipelineManagerTab(QWidget):
         self.tags_menu = QMenu()
         self.tags_tool_button = QtWidgets.QToolButton()
         self.scrollArea = QScrollArea()
-
         # Initialize Qt layout
         self.hLayout = QHBoxLayout()
         self.splitterRight = QSplitter(Qt.Qt.Vertical)
         self.splitter0 = QSplitter(Qt.Qt.Vertical)
         self.splitter1 = QSplitter(Qt.Qt.Horizontal)
-
         self.layout_view()
-
         # To undo/redo
         self.nodeController.value_changed.connect(
             self.controller_value_changed
@@ -366,10 +349,47 @@ class PipelineManagerTab(QWidget):
     def _register_node_io_in_database(
         self, job, node, pipeline_name="", history_id=""
     ):
-        """bla bla bla"""
+        """
+        Register the input and output values of a node into the database.
+
+        This method processes the inputs and outputs of a given node,
+        associates them with a job, and updates the database with the
+        appropriate values. It handles leaf processes, user-defined traits,
+        and completion attributes, ensuring that initialization data is
+        recorded correctly.
+
+        Args:
+            job: The job object containing parameter values and a unique
+                 identifier (UUID).
+            node: The node (e.g., process, pipeline, or custom node) whose
+                  I/O values need to be registered in the database.
+            pipeline_name (str, optional): The name of the pipeline containing
+                                           the node. Defaults to an empty
+                                           string.
+            history_id (str, optional): An identifier for the history entry in
+                                        the database. Defaults to an empty
+                                        string.
+
+        """
 
         def _serialize_tmp(item):
-            """blabla"""
+            """
+            Serialize temporary or special values for JSON compatibility.
+
+            This function serializes specific object types, such as Undefined
+            values, temporary paths, datetime objects, and sets, to ensure
+            they can be safely stored in JSON format. For unsupported types,
+            a TypeError is raised.
+
+            Args:
+                item: The object to be serialized.
+
+            Returns:
+                str, list, or the serialized representation of the item.
+
+            Raises:
+                TypeError: If the item type is not supported for serialization.
+            """
 
             import soma_workflow.client as swc
 
@@ -392,11 +412,14 @@ class PipelineManagerTab(QWidget):
             return
 
         process = node
+
         if isinstance(node, ProcessNode):
             process = node.process
+
         if isinstance(process, Process):
             inputs = process.get_inputs()
             outputs = process.get_outputs()
+
             # ProcessMIA / Process_Mia specific
             if hasattr(process, "list_outputs") and hasattr(
                 process, "outputs"
@@ -419,26 +442,35 @@ class PipelineManagerTab(QWidget):
 
         # Fill inputs and outputs values with job
         for key in inputs.keys():
+
             if key in job.param_dict:
                 value = job.param_dict[key]
+
                 if isinstance(value, list):
+
                     for i in range(len(inputs[key])):
                         inputs[key][i] = value[i]
+
                 else:
                     inputs[key] = value
 
         for key in outputs.keys():
+
             if key in job.param_dict:
                 value = job.param_dict[key]
+
                 if isinstance(value, list):
+
                     for i in range(len(outputs[key])):
                         outputs[key][i] = value[i]
+
                 else:
                     outputs[key] = value
 
         # also get completion attributes
         attributes = {}
         completion = ProcessCompletionEngine.get_completion_engine(node)
+
         if completion:
             attributes = completion.get_attribute_values().export_to_dict()
 
@@ -459,7 +491,6 @@ class PipelineManagerTab(QWidget):
             outputs[key] = json.loads(code)
 
         node_name = node.name
-
         # Updating the database with output values obtained from
         # initialisation. If a plug name is in
         # outputs['notInDb'], then the corresponding
@@ -467,6 +498,7 @@ class PipelineManagerTab(QWidget):
         notInDb = set(outputs.get("notInDb", []))
 
         for plug_name, plug_value in outputs.items():
+
             if (plug_name not in process.traits()) or (
                 process.trait(plug_name).userlevel is not None
                 and process.trait(plug_name).userlevel > 0
@@ -474,7 +506,9 @@ class PipelineManagerTab(QWidget):
                 continue
 
             if plug_value != "<undefined>":
+
                 if plug_name not in notInDb:
+
                     if pipeline_name != "":
                         full_name = pipeline_name + "." + node_name
 
@@ -497,10 +531,15 @@ class PipelineManagerTab(QWidget):
 
         # Adding I/O to database history
         # Setting brick init state if init finished correctly
-        self.project.session.set_values(
-            COLLECTION_BRICK,
-            job.uuid,
-            {BRICK_INPUTS: inputs, BRICK_OUTPUTS: outputs, BRICK_INIT: "Done"},
+        # self.project.session.set_values(
+        self.project.database.set_value(
+            collection_name=COLLECTION_BRICK,
+            primary_key=job.uuid,
+            values_dict={
+                BRICK_INPUTS: inputs,
+                BRICK_OUTPUTS: outputs,
+                BRICK_INIT: "Done",
+            },
         )
 
     def _set_anim_frame(self):
