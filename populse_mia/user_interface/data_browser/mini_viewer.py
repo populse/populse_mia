@@ -666,7 +666,7 @@ class MiniViewer(QWidget):
                 except nib.filebasedimages.ImageFileError:
                     logger.warning(
                         f"Error while trying to display "
-                        f"the {os.path.abspath(file_path)} image ...!\n",
+                        f"the {os.path.abspath(file_path)} image ...!",
                         exc_info=True,
                     )
                     self.file_paths.remove(file_path)
