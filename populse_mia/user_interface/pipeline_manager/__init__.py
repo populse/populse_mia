@@ -8,6 +8,7 @@ Contains:
         - pipeline_manager_tab
         - process_library
         - process_mia
+        - type_editors
 
 """
 
