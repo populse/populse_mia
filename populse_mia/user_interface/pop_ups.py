@@ -3962,6 +3962,8 @@ class PopUpPreferences(QDialog):
                 # We don't test matlab because it has already been
                 # tested before
 
+            return True
+
         elif not self.use_spm_checkbox.isChecked():
 
             try:
@@ -4089,7 +4091,7 @@ class PopUpPreferences(QDialog):
                 self.use_ants_checkbox.isChecked(),
                 config.set_use_ants,
                 config.set_ants_path,
-                "SmoothImage",
+                "antsRegistration",
                 "ANTS",
             ),
             (
@@ -4267,6 +4269,7 @@ class PopUpPreferences(QDialog):
             config.set_use_spm_standalone(False)
             # We don't test Matlab and SPM because it has already been
             # tested before
+            return True
 
         else:
 
@@ -4493,6 +4496,7 @@ class PopUpPreferences(QDialog):
                          False otherwise.
         """
         extra = ""
+        option = "--version"
 
         if tool_name in ["FreeSurfer", "FSL"]:
             path_setup = path
@@ -4503,6 +4507,7 @@ class PopUpPreferences(QDialog):
                 os.environ["FREESURFER_HOME"] = path
 
             if tool_name == "FSL":
+                option = "-version"
 
                 if path.endswith(os.path.join("etc", "fslconf")):
                     path = os.path.dirname(os.path.dirname(path))
@@ -4525,7 +4530,7 @@ class PopUpPreferences(QDialog):
 
             try:
                 result = subprocess.run(
-                    [cmd, "--version"],
+                    [cmd, option],
                     capture_output=True,
                     text=True,
                     check=True,
