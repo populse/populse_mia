@@ -411,6 +411,8 @@ class MainWindow(QMainWindow):
             config.saveConfig()
             self.remove_raw_files_useless()
             event.accept()
+
+        else:
             event.ignore()
 
         if self.data_browser.viewer:
