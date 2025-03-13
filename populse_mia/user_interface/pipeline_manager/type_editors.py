@@ -211,15 +211,15 @@ class PopulseFileControlWidget(FileControlWidget):
 
 
 class PopulseDirectoryControlWidget(DirectoryControlWidget):
-    """Control to enter a Directory.
+    """
+    Widget for selecting a directory.
 
     :Contains:
         :Method:
-            - create_widget: method to create the file widget
-            - filter_clicked: display a filter widget
-            - update_plug_value_from_filter: update the plug value from
-              a filter result
-
+            - create_widget: Creates the directory selection widget.
+            - filter_clicked: Displays a filtering widget.
+            - update_plug_value_from_filter: Updates the plug value based on
+                                             the filter result.
     """
 
     @staticmethod
@@ -231,7 +231,19 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         label_class=None,
         user_data=None,
     ):
-        """Method to create the directory widget."""
+        """
+        Creates and returns a directory selection widget.
+
+        :param parent (QWidget): The parent widget.
+        :param control_name (str): The name of the control.
+        :param control_value (Any): The initial value of the control.
+        :param trait (Any): The trait associated with the control.
+        :param label_class (Optional[Any]): The label class (optional).
+        :param user_data (Optional[dict]): User data associated with
+                                           the widget.
+
+        :returns (QWidget): The directory selection widget.
+        """
 
         return PopulseFileControlWidget.create_widget(
             parent,
@@ -244,19 +256,16 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
 
     @staticmethod
     def filter_clicked(widget, node_name, plug_name):
-        """Display a filter widget.
+        """
+        Displays a filter widget for selecting a directory.
 
-        :param node_name: name of the node
-        :param plug_name: name of the plug
+        :param widget (QWidget): The calling widget.
+        :param node_name (str): The name of the node.
+        :param plug_name (str): The name of the associated plug.
         """
         # this import is not at the beginning of the file to avoid a cyclic
         # import issue.
-        # fmt: off
-        # isort: off
-        from populse_mia.user_interface.pipeline_manager.\
-            node_controller import PlugFilter
-        # fmt: on
-        # isort: on
+        from .node_controller import PlugFilter
 
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
@@ -265,7 +274,7 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         widget.pop_up = PlugFilter(
             project,
             scan_list,
-            None,  # (process)
+            None,
             node_name,
             plug_name,
             node_controller,
@@ -282,19 +291,22 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
 
     @staticmethod
     def update_plug_value_from_filter(widget, plug_name, filter_res_list):
-        """Update the plug value from a filter result.
-
-        :param plug_name: name of the plug
-        :param filter_res_list: list of the filtered files
         """
-        # If the list contains only one element, setting
-        # this element as the plug value
-        len_list = len(filter_res_list)
+        Updates the plug value based on the filter result.
 
-        if len_list >= 1:
+        If multiple elements are returned, the first one is selected.
+        If the selected element is not a directory, its parent directory
+        is used.
+
+        :param widget (QWidget): The widget being updated.
+        :param plug_name (str): The name of the associated plug.
+        :param filter_res_list (list[str]): The list of filtered files.
+        """
+
+        if filter_res_list:
             res = str(filter_res_list[0])
-            if not os.path.isdir(res):
-                res = os.path.dirname(res)
+            res = res if os.path.isdir(res) else os.path.dirname(res)
+
         else:
             res = traits.Undefined
 
@@ -303,15 +315,15 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
 
 
 class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
-    """Control to enter a list of files.
+    """
+    A control widget for entering a list of files.
 
     :Contains:
         :Method:
-            - create_widget: method to create the list of files widget
-            - filter_clicked: display a filter widget
-            - update_plug_value_from_filter: update the plug value from
-              a filter result
-
+            - create_widget: Creates the list of files widget.
+            - filter_clicked: Displays a filter widget.
+            - update_plug_value_from_filter: Updates the plug value based on
+                                             the filter result.
     """
 
     @staticmethod
@@ -323,28 +335,20 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         label_class=None,
         user_data=None,
     ):
-        """Method to create the list of files widget.
+        """
+        Creates and returns a file list control widget with an optional
+        filter button.
 
-        Parameters
-        ----------
-        parent: QWidget (mandatory)
-            the parent widget
-        control_name: str (mandatory)
-            the name of the control we want to create
-        control_value: list of items (mandatory)
-            the default control value
-        trait: Tait (mandatory)
-            the trait associated to the control
-        label_class: Qt widget class (optional, default: None)
-            the label widget will be an instance of this class. Its constructor
-            will be called using 2 arguments: the label string and the parent
-            widget.
 
-        Returns
-        -------
-        out: 2-uplet
-            a two element tuple of the form (control widget: ,
-            associated labels: (a label QLabel, the tools QWidget))
+        :param parent (QWidget): The parent widget.
+        :param control_name (str): The name of the control.
+        :param control_value (list): The default control value.
+        :param trait (Trait): The trait associated with the control.
+        :param label_class (type): A Qt widget class for the label.
+        :param user_data (dict): Additional data, including project,
+                                 scan list, and connected inputs.
+
+        :returns (tuple): A tuple (control widget, (QLabel, QWidget)).
         """
         widget, label = OffscreenListFileControlWidget.create_widget(
             parent,
@@ -377,10 +381,9 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
 
             # Set a callback on the browse button
             control_class = parent.get_control_class(trait)
-            node_name = getattr(parent.controller, "name", None)
-
-            if node_name is None:
-                node_name = parent.controller.__class__.__name__
+            node_name = getattr(
+                parent.controller, "name", parent.controller.__class__.__name__
+            )
 
             browse_hook = partial(
                 control_class.filter_clicked,
@@ -395,19 +398,16 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
 
     @staticmethod
     def filter_clicked(widget, node_name, plug_name):
-        """Display a filter widget.
+        """
+        Displays a filter widget for selecting files.
 
-        :param node_name: name of the node
-        :param plug_name: name of the plug
+        :param widget (QWidget): The file control widget.
+        :param node_name (str): The name of the node.
+        :param plug_name (str): The name of the plug.
         """
         # this import is not at the beginning of the file to avoid a cyclic
         # import issue.
-        # fmt: off
-        # isort: off
-        from populse_mia.user_interface.pipeline_manager.\
-            node_controller import PlugFilter
-        # isort: on
-        # fmt: on
+        from .node_controller import PlugFilter
 
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
@@ -416,7 +416,7 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         widget.pop_up = PlugFilter(
             project,
             scan_list,
-            None,  # (process)
+            None,
             node_name,
             plug_name,
             node_controller,
@@ -438,10 +438,13 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
 
     @staticmethod
     def update_plug_value_from_filter(widget, plug_name, filter_res_list):
-        """Update the plug value from a filter result.
+        """
+        Updates the plug value based on the filter results.
 
-        :param plug_name: name of the plug
-        :param filter_res_list: list of the filtered files
+        :param widget (QWidget): The file control widget.
+        :param plug_name (str): The name of the plug.
+        :param filter_res_list (list): The filtered file list.
+
         """
         controller = widget.parent().controller
 
@@ -449,13 +452,7 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
             setattr(controller, plug_name, filter_res_list)
 
         except Exception as e:
-            print(e)
-
-
-# controller_widget.ControllerWidget._defined_controls['File'] \
-# = PopulseFileControlWidget
-# controller_widget.ControllerWidget._defined_controls['Directory'] \
-# = PopulseDirectoryControlWidget
+            logger.warning(e)
 
 
 class PopulseUndefinedControlWidget:
