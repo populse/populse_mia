@@ -37,7 +37,11 @@ logger = logging.getLogger(__name__)
 
 
 class PopulseFileControlWidget(FileControlWidget):
-    """Control to enter a file.
+    """
+    Widget control for selecting a file.
+
+    Provides methods to create a file selection widget, display a filter
+    dialog, and update plug values based on filter results.
 
     :Contains:
         :Method:
@@ -56,29 +60,21 @@ class PopulseFileControlWidget(FileControlWidget):
         label_class=None,
         user_data=None,
     ):
-        """Method to create the file widget.
+        """
+        Creates a file selection widget.
 
-        Parameters
-        ----------
-        parent: QWidget (mandatory)
-            the parent widget
-        control_name: str (mandatory)
-            the name of the control we want to create
-        control_value: str (mandatory)
-            the default control value
-        trait: Tait (mandatory)
-            the trait associated to the control
-        label_class: Qt widget class (optional, default: None)
-            the label widget will be an instance of this class. Its constructor
-            will be called using 2 arguments: the label string and the parent
-            widget.
+        :param parent (QWidget): The parent widget.
+        :param control_name (str): The name of the control to create.
+        :param control_value (str): The default control value.
+        :param trait (Trait): The trait associated with the control.
+        :param label_class (Optional[Type[QWidget]]): Custom label widget
+                                                      class.
+        :param user_data (Optional[dict]): Additional user data.
 
-        Returns
-        -------
-        out: 2-uplet
-            a two element tuple of the form (control widget: QWidget with two
-            elements, a QLineEdit in the 'path' parameter and a browse button
-            in the 'browse' parameter, associated label: QLabel)
+        :returns (Tuple[QWidget, QLabel]):
+            A tuple containing the created widget and its associated label.
+            The widget includes a QLineEdit ('path') and a browse
+            button ('browse').
         """
         # Create the widget that will be used to select a file
         widget, label = FileControlWidget.create_widget(
@@ -89,32 +85,25 @@ class PopulseFileControlWidget(FileControlWidget):
             label_class=label_class,
             user_data=user_data,
         )
-        if user_data is None:
-            user_data = {}
-        widget.user_data = user_data  # regular File does not store data
-
+        user_data = user_data or {}
+        # regular File does not store data
+        widget.user_data = user_data
         layout = widget.layout()
-
         project = user_data.get("project")
         scan_list = user_data.get("scan_list")
         connected_inputs = user_data.get("connected_inputs", set())
 
-        def is_number(x):
-            """Check if x is a number.
+        def _is_number(value):
+            """
+            Checks if a value is a number.
 
-            Parameters
-            ----------
-            x: the name of the control we want to create (str)
+            :param value (str): The value to check.
 
-            Returns
-            -------
-            out: bool
-            True if the control name is a number,
-            False otherwise
+            :returns (bool): True if the value is a number, False otherwise.
             """
 
             try:
-                int(x)
+                int(value)
                 return True
 
             except ValueError:
@@ -126,7 +115,7 @@ class PopulseFileControlWidget(FileControlWidget):
             and scan_list
             and not trait.output
             and control_name not in connected_inputs
-            and not is_number(control_name)
+            and not _is_number(control_name)
         ):
             # Create a browse button
             button = Qt.QPushButton("Filter", widget)
@@ -137,12 +126,11 @@ class PopulseFileControlWidget(FileControlWidget):
             )
             layout.addWidget(button)
             widget.filter_b = button
-
             # Set a callback on the browse button
             control_class = parent.get_control_class(trait)
-            node_name = getattr(parent.controller, "name", None)
-            if node_name is None:
-                node_name = parent.controller.__class__.__name__
+            node_name = getattr(
+                parent.controller, "name", parent.controller.__class__.__name__
+            )
             browse_hook = partial(
                 control_class.filter_clicked,
                 weak_proxy(widget),
@@ -155,19 +143,16 @@ class PopulseFileControlWidget(FileControlWidget):
 
     @staticmethod
     def filter_clicked(widget, node_name, plug_name):
-        """Display a filter widget.
-
-        :param node_name: name of the node
-        :param plug_name: name of the plug
         """
-        # this import is not at the beginning of the file to avoid a cyclic
+        Display a filter widget.
+
+        :param widget (QWidget): The parent widget.
+        :param node_name (str): The name of the node.
+        :param plug_name (str): The name of the plug.
+        """
+        # This import is not at the beginning of the file to avoid a cyclic
         # import issue.
-        # fmt: off
-        # isort: off
-        from populse_mia.user_interface.pipeline_manager.\
-            node_controller import PlugFilter
-        # isort: on
-        # fmt: on
+        from .node_controller import PlugFilter
 
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
@@ -176,7 +161,7 @@ class PopulseFileControlWidget(FileControlWidget):
         widget.pop_up = PlugFilter(
             project,
             scan_list,
-            None,  # (process)
+            None,
             node_name,
             plug_name,
             node_controller,
@@ -184,7 +169,6 @@ class PopulseFileControlWidget(FileControlWidget):
         )
         widget.pop_up.setWindowModality(Qt.Qt.WindowModal)
         widget.pop_up.show()
-
         widget.pop_up.plug_value_changed.connect(
             partial(
                 PopulseFileControlWidget.update_plug_value_from_filter,
@@ -195,10 +179,12 @@ class PopulseFileControlWidget(FileControlWidget):
 
     @staticmethod
     def update_plug_value_from_filter(widget, plug_name, filter_res_list):
-        """Update the plug value from a filter result.
+        """
+        Updates the plug value based on a filter result.
 
-        :param plug_name: name of the plug
-        :param filter_res_list: list of the filtered files
+        :param widget (QWidget): The parent widget.
+        :param plug_name (str): The name of the plug.
+        :param filter_res_list (List[str]): List of filtered file paths.
         """
         # If the list contains only one element, setting
         # this element as the plug value
@@ -213,14 +199,12 @@ class PopulseFileControlWidget(FileControlWidget):
             if len_list > 1:
                 msg = QtWidgets.QMessageBox()
                 msg.setText(
-                    "The '{}' parameter must by a filename, "
-                    "but a value of {} <class 'list'> was "
-                    "specified.".format(plug_name, filter_res_list)
+                    f"The '{plug_name}' parameter must by a filename, "
+                    f"but received {filter_res_list}."
                 )
                 msg.setIcon(QtWidgets.QMessageBox.Warning)
                 msg.setWindowTitle("TraitError")
                 msg.exec_()
-                res = traits.Undefined
 
         # Set the selected file path to the path sub control
         widget.path.set_value(str(res))
@@ -306,6 +290,7 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         # If the list contains only one element, setting
         # this element as the plug value
         len_list = len(filter_res_list)
+
         if len_list >= 1:
             res = str(filter_res_list[0])
             if not os.path.isdir(res):
@@ -369,12 +354,11 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
             label_class=label_class,
             user_data=user_data,
         )
-
         layout = widget.layout()
-
         project = user_data.get("project")
         scan_list = user_data.get("scan_list")
         connected_inputs = user_data.get("connected_inputs", set())
+
         if (
             project
             and scan_list
@@ -394,8 +378,10 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
             # Set a callback on the browse button
             control_class = parent.get_control_class(trait)
             node_name = getattr(parent.controller, "name", None)
+
             if node_name is None:
                 node_name = parent.controller.__class__.__name__
+
             browse_hook = partial(
                 control_class.filter_clicked,
                 weak_proxy(widget),
@@ -561,10 +547,13 @@ class PopulseUndefinedControlWidget:
 
         # Create the label associated with the string widget
         control_label = control_name
+
         if label_class is None:
             label_class = QtGui.QLabel
+
         if control_label is not None:
             label = label_class(control_label, parent)
+
         else:
             label = None
 
@@ -610,6 +599,7 @@ class PopulseUndefinedControlWidget:
                     control_name, new_trait_value
                 )
             )
+
         elif reset_invalid_value:
             # invalid, reset GUI to older value
             old_trait_value = getattr(
