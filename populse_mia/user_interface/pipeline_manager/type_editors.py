@@ -45,10 +45,10 @@ class PopulseFileControlWidget(FileControlWidget):
 
     :Contains:
         :Method:
-            - create_widget: method to create the file widget
-            - filter_clicked: display a filter widget
-            - update_plug_value_from_filter: update the plug value from
-              a filter result
+            - create_widget: Method to create the file widget.
+            - filter_clicked: Display a filter widget.
+            - update_plug_value_from_filter: Update the plug value from
+                                             a filter result.
     """
 
     @staticmethod
@@ -456,105 +456,136 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
 
 
 class PopulseUndefinedControlWidget:
-    """Control for Undefined value."""
+    """
+    Widget control for handling Undefined trait values in a Qt interface.
 
-    @staticmethod
-    def is_valid(control_instance, *args, **kwargs):
-        """Method to check if the new control value is correct.
+    This class provides methods to create, validate, and update Qt widgets
+    that represent undefined values in a controller-based UI framework.
 
-        Parameters
-        ----------
-        control_instance: QWidget (mandatory)
-            the control widget we want to validate
 
-        Returns
-        -------
-        out: bool
-            True if the control value is Undefined,
-            False otherwise
-        """
+    :Contains:
+        :Method:
 
-        # Get the control current value
-        control_text = control_instance.text()
+            - check: Check if a controller widget control is filled correctly.
+            - connect: Connect a 'Str' or 'String' controller trait and a
+                       'StrControlWidget' controller widget control.
+            - create_widget: Method to create the Undefined widget.
+            - disconnect: Disconnect a 'Str' or 'String' controller trait and
+                          a 'StrControlWidget' controller widget control.
+            - is_valid: Method to check if the new control value is correct.
+            - update_controller: Update one element of the controller.
+            - update_controller_widget: Update one element of the controller
+                                        widget.
 
-        is_valid = False
 
-        if control_text in [
-            "<undefined>",
-            "<style>background-color: gray; "
-            "text-color: red;</style><undefined>",
-        ]:
-            is_valid = True
+    """
 
-        return is_valid
+    # Class constants
+    UNDEFINED_TEXT = "<undefined>"
+    STYLED_UNDEFINED_TEXT = (
+        "<style>background-color: gray; text-color: red;</style>" "<undefined>"
+    )
+    VALID_REPRESENTATIONS = [UNDEFINED_TEXT, STYLED_UNDEFINED_TEXT]
 
     @classmethod
     def check(cls, control_instance):
-        """Check if a controller widget control is filled correctly.
-
-        Parameters
-        ----------
-        cls: StrControlWidget (mandatory)
-            a StrControlWidget control
-        control_instance: QLineEdit (mandatory)
-            the control widget we want to validate
         """
+        Check if a controller widget control is filled correctly.
 
+        This method is a placeholder in this implementation.
+
+        :param cls (StrControlWidget): A StrControlWidget control.
+        :param control_instance (QLineEdit): The control widget to check.
+        """
+        # Implementation can be added here if needed
+        pass
+
+    @classmethod
+    def connect(cls, controller_widget, control_name, control_instance):
+        """
+        Connect a 'Str' or 'String' controller trait and a 'StrControlWidget'
+        controller widget control.
+
+        This method is a placeholder in this implementation.
+
+        :param cls (StrControlWidget): A StrControlWidget control.
+        :param controller_widget (ControllerWidget): The controller widget
+                                                     containing the controller.
+        :param control_name (str): The name of the control to connect.
+        :param control_instance (QWidget): The widget instance to connect
+        """
+        # Signal connections can be added here if needed
         pass
 
     @staticmethod
     def create_widget(
         parent,
         control_name,
-        control_value,
-        trait,
         label_class=None,
-        user_data=None,
     ):
-        """Method to create the Undefined widget.
-
-        Parameters
-        ----------
-        parent: QWidget (mandatory)
-            the parent widget
-        control_name: str (mandatory)
-            the name of the control we want to create
-        control_value: str (mandatory)
-            the default control value
-        trait: Tait (mandatory)
-            the trait associated to the control
-        label_class: Qt widget class (optional, default: None)
-            the label widget will be an instance of this class. Its constructor
-            will be called using 2 arguments: the label string and the parent
-            widget.
-
-        Returns
-        -------
-        out: 2-uplet
-            a two element tuple of the form (control widget: QLineEdit,
-            associated label: QLabel)
         """
+        Create a widget for displaying Undefined values.
 
-        # Create the widget
+        :param parent (QWidget): The parent widget.
+        :param control_name (str): The name of the control to create.
+        :param label_class: The class to use for the label widget. Default is
+                            QLabel if None.
+
+        :returns (tuple): (control_widget, label_widget) where control_widget
+                          is a QLabel displaying the Undefined value and
+                          label_widget is the associated label.
+        """
+        # Create widget with styled representation of Undefined
         widget = Qt.QLabel(
-            "<style>background-color: gray; text-color: red;</style>"
-            + str(traits.Undefined),
-            parent,
+            PopulseUndefinedControlWidget.STYLED_UNDEFINED_TEXT, parent
         )
-
-        # Create the label associated with the string widget
-        control_label = control_name
-
+        # Create and return the label
         if label_class is None:
             label_class = QtGui.QLabel
 
-        if control_label is not None:
-            label = label_class(control_label, parent)
+        if control_name is not None:
+            label = label_class(control_name, parent)
 
         else:
             label = None
 
         return (widget, label)
+
+    @staticmethod
+    def disconnect(controller_widget, control_name, control_instance):
+        """
+        Disconnect a 'Str' or 'String' controller trait and a
+        'StrControlWidget' controller widget control.
+
+        This method is a placeholder in this implementation.
+
+        :param controller_widget (ControllerWidget): The controller widget
+                                                     containing the controller.
+        :param control_name (str): The name of the control to disconnect
+        :param control_instance (QWidget): The widget instance to disconnect
+        """
+        # Signal disconnections can be added here if needed
+        pass
+
+    @staticmethod
+    def is_valid(control_instance, *args, **kwargs):
+        """
+        Validate if the control contains an Undefined value representation.
+
+        *args, **kwargs : Additional arguments. Not used, kept for
+                          interface compatibility.
+
+        :param control_instance (QWidget): The control widget to validate.
+
+        :returns (bool): True if the control value is Undefined, False
+                         otherwise
+        """
+
+        # Get the control current value
+        control_text = control_instance.text()
+        return control_text in (
+            PopulseUndefinedControlWidget.VALID_REPRESENTATIONS
+        )
 
     @staticmethod
     def update_controller(
@@ -565,40 +596,43 @@ class PopulseUndefinedControlWidget:
         *args,
         **kwargs,
     ):
-        """Update one element of the controller.
+        """
+        Update the controller with the widget's value if valid.
 
         At the end the controller trait value with the name 'control_name'
         will match the controller widget user parameters defined in
         'control_instance'.
 
-        Parameters
-        ----------
-        controller_widget: ControllerWidget (mandatory)
-            a controller widget that contains the controller we want to update
-        control_name: str(mandatory)
-            the name of the controller widget control we want to synchronize
-            with the controller
-        control_instance: QLineEdit (mandatory)
-            the instance of the controller widget control we want to
-            synchronize with the controller
+        *args, **kwargs : Additional arguments. Not used, kept for
+                          interface compatibility.
+
+        :param controller_widget (ControllerWidget): The controller widget
+                                                     containing the controller
+                                                     to update
+        :param control_name (str): The name of the control to synchronize
+                                    with the controller
+        :param  control_instance (QWidget): The widget instance to synchronize
+                                            with the controller
+        :param reset_invalid_value (bool): If True and the value is invalid,
+                                           reset the widget to the
+                                           controller's value
         """
 
         # Update the controller only if the control is valid
         if PopulseUndefinedControlWidget.is_valid(control_instance):
-            # Define the control value
+            # Set controller's trait to Undefined
             new_trait_value = traits.Undefined
             setattr(
                 controller_widget.controller, control_name, new_trait_value
             )
-            logger.debug(
-                "'PopulseUndefinedControlWidget' associated controller trait "
-                "'{}' has been updated with value '{}'.".format(
-                    control_name, new_trait_value
-                )
+            logger.info(
+                f"'PopulseUndefinedControlWidget' associated controller "
+                f"trait '{control_name}' has been updated with "
+                f"value '{new_trait_value}'."
             )
 
         elif reset_invalid_value:
-            # invalid, reset GUI to older value
+            # Invalid value, reset GUI to the previous value
             old_trait_value = getattr(
                 controller_widget.controller, control_name
             )
@@ -608,75 +642,26 @@ class PopulseUndefinedControlWidget:
     def update_controller_widget(
         controller_widget, control_name, control_instance
     ):
-        """Update one element of the controller widget.
+        """
+        Update the widget to reflect the controller's value.
 
         At the end the controller widget user editable parameter with the
-        name 'control_name' will match the controller trait value with the same
-        name.
+        name 'control_name' will match the controller trait value with the
+        same name.
 
-        Parameters
-        ----------
-        controller_widget: ControllerWidget (mandatory)
-            a controller widget that contains the controller we want to update
-        control_name: str(mandatory)
-            the name of the controller widget control we want to synchronize
-            with the controller
-        control_instance: QLineEdit (mandatory)
-            the instance of the controller widget control we want to
-            synchronize with the controller
+        :param controller_widget (ControllerWidget): The controller widget
+                                                     containing the controller.
+        :param control_name (str): The name of the control to synchronize.
+        :param control_instance (QWidget): The widget instance to update.
         """
-
-        # Define the trait value
+        # Set the widget text to represent Undefined
         new_controller_value = str(traits.Undefined)
-
-        # Set the trait
         control_instance.setText(new_controller_value)
-        logger.debug(
-            "'PopulseUndefinedControlWidget' has been updated "
-            "with value '{}'.".format(new_controller_value)
+        logger.info(
+            f"'PopulseUndefinedControlWidget' has been updated "
+            f"with value '{new_controller_value}'."
         )
-        # Set the controller trait value
+        # Update the controller to ensure consistency
         PopulseUndefinedControlWidget.update_controller(
             controller_widget, control_name, control_instance, True
         )
-
-    @classmethod
-    def connect(cls, controller_widget, control_name, control_instance):
-        """Connect a 'Str' or 'String' controller trait and a
-        'StrControlWidget' controller widget control.
-
-        Parameters
-        ----------
-        cls: StrControlWidget (mandatory)
-            a StrControlWidget control
-        controller_widget: ControllerWidget (mandatory)
-            a controller widget that contains the controller we want to update
-        control_name: str (mandatory)
-            the name of the controller widget control we want to synchronize
-            with the controller
-        control_instance: QLineEdit (mandatory)
-            the instance of the controller widget control we want to
-            synchronize with the controller
-
-        """
-
-        pass
-
-    @staticmethod
-    def disconnect(controller_widget, control_name, control_instance):
-        """Disconnect a 'Str' or 'String' controller trait and a
-        'StrControlWidget' controller widget control.
-
-        Parameters
-        ----------
-        controller_widget: ControllerWidget (mandatory)
-            a controller widget that contains the controller we want to update
-        control_name: str(mandatory)
-            the name of the controller widget control we want to synchronize
-            with the controller
-        control_instance: QLineEdit (mandatory)
-            the instance of the controller widget control we want to
-            synchronize with the controller
-        """
-
-        pass
