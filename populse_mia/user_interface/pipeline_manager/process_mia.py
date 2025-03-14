@@ -19,6 +19,7 @@ Module used by mia_processes bricks to run processes.
 ##########################################################################
 
 # Other imports
+import logging
 import os
 import traceback
 import uuid
@@ -51,7 +52,7 @@ from soma.controller.trait_utils import relax_exists_constraint
 from soma.utils.weak_proxy import get_ref
 
 # Populse_MIA imports
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     COLLECTION_INITIAL,
     TAG_BRICKS,
@@ -61,6 +62,8 @@ from populse_mia.data_manager.project import (
     TAG_TYPE,
 )
 from populse_mia.software_properties import Config
+
+logger = logging.getLogger(__name__)
 
 
 class MIAProcessCompletionEngine(ProcessCompletionEngine):
@@ -144,21 +147,25 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         # re-route to underlying fallback engine
         attributes = self.fallback_engine.get_attribute_values()
         process = self.process
+
         if isinstance(process, ProcessNode):
             process = process.process
+
         if not isinstance(process, Process):
             return attributes
 
         if not hasattr(process, "get_study_config"):
             return attributes
-        study_config = process.get_study_config()
 
+        study_config = process.get_study_config()
         project = getattr(study_config, "project", None)
+
         if not project:
             return attributes
 
-        fields = project.session.get_fields_names(COLLECTION_CURRENT)
+        fields = project.database.get_field_names(COLLECTION_CURRENT)
         pfields = [field for field in fields if attributes.trait(field)]
+
         if not pfields:
             return attributes
 
@@ -170,28 +177,39 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         for param, par_value in process.get_inputs().items():
             # update value from given forced input
             par_value = process_inputs.get(param, par_value)
+
             if isinstance(par_value, list):
                 par_values = par_value
+
             else:
                 par_values = [par_value]
 
             fvalues = [[] for field in pfields]
+
             for value in par_values:
+
                 if not isinstance(value, str):
                     continue
 
                 ap = os.path.abspath(os.path.realpath(value))
+
                 if not ap.startswith(proj_dir):
                     continue
 
                 rel_value = ap[pl:]
-                document = project.session.get_document(
-                    COLLECTION_CURRENT, rel_value, fields=pfields, as_list=True
+                document = project.database.get_document(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_keys=rel_value,
+                    fields=pfields,
                 )
+
                 if document:
+
                     for fvalue, dvalue in zip(fvalues, document):
                         fvalue.append(dvalue if dvalue is not None else "")
+
                 else:
+
                     # ignore this input not in the database
                     for fvalue in fvalues:
                         fvalue.append(None)
@@ -208,9 +226,12 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 [all([x is None for x in y]) for y in fvalues]
             ):
                 if isinstance(par_value, list):
+
                     for field, value in zip(pfields, fvalues):
                         setattr(attributes, field, value)
+
                 else:
+
                     for field, value in zip(pfields, fvalues):
                         setattr(attributes, field, value[0])
 
@@ -254,28 +275,25 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         project = getattr(study_config, "project", None)
 
         if project:
-            # I think we don't need to check if use_project attribute is True (
-            # we need to define process.project in all case)
-            # if hasattr(process, "use_project") and process.use_project:
-            #    process.project = project
             process.project = project
-
             # set output_directory
             out_dir = None
+
             if process.trait("output_directory"):
                 out_dir = os.path.abspath(
                     os.path.join(project.folder, "data", "derived_data")
                 )
 
             else:
-                print(
-                    "\npopulse_mia.user_interface.pipeline_manager."
-                    "MiaProcessCompletionEngine.complete_nipype_common:"
-                    "\n - The output_directory trait does not exist for the "
-                    "{} process!)".format(process.context_name)
+                logger.warning(
+                    f"\npopulse_mia.user_interface.pipeline_manager."
+                    f"MiaProcessCompletionEngine.complete_nipype_common:"
+                    f"\n - The output_directory trait does not exist for the "
+                    f"{process.context_name} process!)"
                 )
 
             if output_dir is True and out_dir is not None:
+
                 # ensure this output_directory exists since it is not
                 # actually an output but an input, and thus it is supposed
                 # to exist in Capsul.
@@ -311,6 +329,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     tname = "spm_script_file"
 
                 if tname:
+
                     if hasattr(process, "_nipype_interface"):
                         iscript = (
                             process._nipype_interface.mlab.inputs.script_file
@@ -380,7 +399,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             self.complete_nipype_common(in_process)
 
         if not isinstance(in_process, ProcessMIA):
+
             if not isinstance(in_process, Pipeline):
+
                 if (
                     getattr(in_process, "context_name", in_process.name).split(
                         "."
@@ -414,6 +435,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                         )
                     )
                     # fmt: on
+
                 else:
                     print(
                         "\n. {} ({}) regular node ...".format(
@@ -462,7 +484,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 pass
 
             else:
+
                 if not hasattr(in_process, "project"):
+
                     if hasattr(in_process, "get_study_config"):
                         study_config = in_process.get_study_config()
                         project = getattr(study_config, "project", None)
@@ -471,6 +495,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                             in_process.project = project
 
                 if hasattr(in_process, "project"):
+
                     for out in auto_inheritance_dict:
                         ProcessMIA.tags_inheritance(
                             in_process,
@@ -485,8 +510,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
             # self.completion_progress = 0.
             # self.completion_progress_total = 1.
-
             name = getattr(self.process, "context_name", self.process.name)
+
             if name.split(".")[0] == "Pipeline":
                 node_name = ".".join(name.split(".")[1:])
 
@@ -544,7 +569,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     pass
 
                 else:
+
                     if not hasattr(in_process, "project"):
+
                         if hasattr(in_process, "get_study_config"):
                             study_config = in_process.get_study_config()
                             project = getattr(study_config, "project", None)
@@ -553,6 +580,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                                 in_process.project = project
 
                     if hasattr(in_process, "project"):
+
                         for out in auto_inheritance_dict:
                             ProcessMIA.tags_inheritance(
                                 in_process,
@@ -567,7 +595,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             #       node the inheritance between plugs and not between
             #       filenames (that changes over iteration)
             project = self.get_project(in_process)
+
             if project is not None:
+
                 # record completion order to perform 2nd pass tags recording
                 # and indexation
                 if not hasattr(project, "node_inheritance_history"):
@@ -581,6 +611,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 # Create a copy of current inheritance dict
                 if node_name not in project.node_inheritance_history:
                     project.node_inheritance_history[node_name] = []
+
                 if hasattr(node, "inheritance_dict"):
                     project.node_inheritance_history[node_name].append(
                         node.inheritance_dict
@@ -611,6 +642,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                 key: (bool(plug.links_to) or bool(plug.links_from))
                 for key, plug in node.plugs.items()
             }
+
         else:
             is_plugged = None  # we cannot get this info
 
@@ -639,23 +671,23 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             return  # the process is not really configured
 
         for parameter, value in outputs.items():
+
             if parameter == "notInDb" or process.is_parameter_protected(
                 parameter
             ):
                 # special non-param or set manually:
                 continue
+
             try:
                 setattr(process, parameter, value)
+
             except Exception as e:
+
                 if verbose:
                     print("Exception:", e)
                     print("param:", parameter)
                     print("value:", repr(value))
                     traceback.print_exc()
-
-    #        MIAProcessCompletionEngine.complete_nipype_common(
-    #            process, output_dir=False
-    #        )
 
     def get_attribute_values(self):
         """Re-route to underlying fallback engine."""
@@ -772,9 +804,10 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
         engine_factory = None
         if hasattr(process, "get_study_config"):
             study_config = process.get_study_config()
-
             engine = study_config.engine
+
             if "capsul.engine.module.attributes" in engine._loaded_modules:
+
                 try:
                     former_factory = "builtin"  # TODO how to store this ?
                     engine_factory = engine._modules_data["attributes"][
@@ -788,7 +821,6 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
             engine_factory = BuiltinProcessCompletionEngineFactory()
 
         fallback = engine_factory.get_completion_engine(process, name=name)
-
         # iteration
         in_process = process
 
@@ -851,6 +883,7 @@ class ProcessMIA(Process):
         if hasattr(self, "process") and isinstance(
             self.process, NipypeProcess
         ):
+
             for mia_output in self.user_traits():
                 wrapped_output = self.trait(mia_output).nipype_process_name
 
@@ -877,6 +910,7 @@ class ProcessMIA(Process):
             )
 
         if self.requirement is not None and "spm" in self.requirement:
+
             if "use_mcr" not in self.user_traits():
                 self.add_trait(
                     "use_mcr", traits.Bool(optional=True, userlevel=1)
@@ -989,7 +1023,6 @@ class ProcessMIA(Process):
                 data = np.transpose(data, (1, 0, 2, 3))
 
             # TODO: Should transpose for ndim>4 cases be implemented?
-
             data = np.flip(data, axis=0)
 
         return header, data
@@ -1034,8 +1067,10 @@ class ProcessMIA(Process):
 
     def relax_nipype_exists_constraints(self):
         """Relax the exists constraint of the process.inputs traits"""
+
         if hasattr(self, "process") and hasattr(self.process, "inputs"):
             ni_inputs = self.process.inputs
+
             for name, trait in ni_inputs.traits().items():
                 relax_exists_constraint(trait)
 
@@ -1045,6 +1080,7 @@ class ProcessMIA(Process):
         """
         if self.requirement:
             return {req: "any" for req in self.requirement}
+
         return {}
 
     def run_process_mia(self):
@@ -1055,6 +1091,7 @@ class ProcessMIA(Process):
             self.process.output_directory = self.output_directory
 
         if self.requirement is not None and "spm" in self.requirement:
+
             if self.spm_script_file:
                 self.process._spm_script_file = self.spm_script_file
 
@@ -1116,7 +1153,9 @@ class ProcessMIA(Process):
         plug_name = None
 
         for i in self.user_traits():
+
             try:
+
                 if out_file in getattr(self, i, "___nothing___"):
                     plug_name = i
 
@@ -1145,7 +1184,7 @@ class ProcessMIA(Process):
         db_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.project.folder)), ""
         )
-        field_names = self.project.session.get_fields_names(COLLECTION_CURRENT)
+        field_names = self.project.database.get_field_names(COLLECTION_CURRENT)
         rel_out_file = out_file.replace(
             os.path.abspath(self.project.folder), ""
         )
@@ -1171,28 +1210,29 @@ class ProcessMIA(Process):
                 cvalues = {}
                 break
 
-            cur_in_scan = self.project.session.get_document(
-                COLLECTION_CURRENT, rel_in_file
+            cur_in_scan = self.project.database.get_document(
+                collection_name=COLLECTION_CURRENT, primary_keys=rel_in_file
             )
 
-            if cur_in_scan is not None:
+            if cur_in_scan:
                 # tags in COLLECTION_CURRENT for in_file
                 cvalues = {
-                    field: getattr(cur_in_scan, field)
+                    field: cur_in_scan[0][field]
                     for field in field_names
                     if field not in banished_tags
                 }
 
-                init_in_scan = self.project.session.get_document(
-                    COLLECTION_INITIAL, rel_in_file
+                init_in_scan = self.project.database.get_document(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_keys=rel_in_file,
                 )
 
-                if init_in_scan is not None:
+                if init_in_scan:
                     # tags in COLLECTION_CURRENT for in_file
                     ivalues = {
-                        field: getattr(init_in_scan, field)
-                        for field in cvalues
+                        field: init_in_scan[0][field] for field in cvalues
                     }
+
                 else:
                     ivalues = {}
                     # FIXME: In this case, do we want a message in stdout like
@@ -1205,16 +1245,15 @@ class ProcessMIA(Process):
 
             else:
                 print(
-                    "{} brick initialization warning:\n"
-                    "    {} has no tags registered yet.\n"
-                    "    So, {} cannot inherit its tags...\n"
-                    "    This can lead to a subsequent issue during "
-                    "initialization!!\n".format(
-                        self.context_name, in_file, out_file
-                    )
+                    f"{self.context_name} brick initialization warning:\n"
+                    f"{in_file} has no tags registered yet.\n"
+                    f"So, {out_file} cannot inherit its tags...\n"
+                    f"This can lead to a subsequent issue during "
+                    f"initialization!!\n"
                 )
                 ivalues = {}
                 cvalues = {}
+
         # If there are several possible inputs: there is more work
         if (
             not ProcessMIA.ignore_node
@@ -1226,22 +1265,32 @@ class ProcessMIA(Process):
             # they are all the same, there is no ambiguity
             eq = True
             first = None
+
             for param, cvalues in all_cvalues.items():
+
                 if first is None:
                     first = cvalues
+
                 else:
                     eq = cvalues == first
+
                     if not eq:
                         break
+
             if eq:
                 first = None
+
                 for param, ivalues in all_ivalues.items():
+
                     if first is None:
                         first = ivalues
+
                     else:
                         eq = ivalues == first
+
                         if not eq:
                             break
+
             if eq:
                 # all values equal, no ambiguity
                 k, v = next(iter(all_cvalues.items()))
@@ -1287,8 +1336,9 @@ class ProcessMIA(Process):
                     # circular import issue
                     # isort: off
                     # fmt: off
-                    from populse_mia.user_interface.pop_ups import \
+                    from populse_mia.user_interface.pop_ups import (
                         PopUpInheritanceDict
+                    )
                     # isort: on
                     # fmt: on
                     # FIXME: As we don't have access here to the
@@ -1305,18 +1355,25 @@ class ProcessMIA(Process):
                     )
                     pop_up.exec()
                     ProcessMIA.ignore_node = pop_up.everything
+
                     if pop_up.ignore:
                         self.inheritance_dict = {}
+
                         if pop_up.all is True:
                             ProcessMIA.ignore[node_name] = True
+
                         else:
                             ProcessMIA.ignore[node_name + plug_name] = True
+
                     else:
                         value = pop_up.value
+
                         if pop_up.all is True:
                             ProcessMIA.key[node_name] = pop_up.key
+
                         else:
                             ProcessMIA.key[node_name + plug_name] = pop_up.key
+
                         self.inheritance_dict[out_file]["parent"] = value
                         all_cvalues = {pop_up.key: all_cvalues[pop_up.key]}
                         all_ivalues = {pop_up.key: all_ivalues[pop_up.key]}
@@ -1333,30 +1390,35 @@ class ProcessMIA(Process):
             # We want to add a tag or modify the value of a tag.
 
             for tag_to_add in own_tags:
+
                 if tag_to_add["name"] not in field_names:
-                    (self.project.session.add_field)(
-                        COLLECTION_CURRENT,
-                        tag_to_add["name"],
-                        tag_to_add["field_type"],
-                        tag_to_add["description"],
-                        tag_to_add["visibility"],
-                        tag_to_add["origin"],
-                        tag_to_add["unit"],
-                        tag_to_add["default_value"],
+                    self.project.database.add_field(
+                        {
+                            "collection_name": COLLECTION_CURRENT,
+                            "field_name": tag_to_add["name"],
+                            "field_type": tag_to_add["field_type"],
+                            "description": tag_to_add["description"],
+                            "visibility": tag_to_add["visibility"],
+                            "origin": tag_to_add["origin"],
+                            "unit": tag_to_add["unit"],
+                            "default_value": tag_to_add["default_value"],
+                        }
                     )
 
                 if tag_to_add["name"] not in (
-                    self.project.session.get_fields_names
+                    self.project.database.get_field_names
                 )(COLLECTION_INITIAL):
-                    (self.project.session.add_field)(
-                        COLLECTION_INITIAL,
-                        tag_to_add["name"],
-                        tag_to_add["field_type"],
-                        tag_to_add["description"],
-                        tag_to_add["visibility"],
-                        tag_to_add["origin"],
-                        tag_to_add["unit"],
-                        tag_to_add["default_value"],
+                    self.project.database.add_field(
+                        {
+                            "collection_name": COLLECTION_INITIAL,
+                            "field_name": tag_to_add["name"],
+                            "field_type": tag_to_add["field_type"],
+                            "description": tag_to_add["description"],
+                            "visibility": tag_to_add["visibility"],
+                            "origin": tag_to_add["origin"],
+                            "unit": tag_to_add["unit"],
+                            "default_value": tag_to_add["default_value"],
+                        }
                     )
 
                 cvalues[tag_to_add["name"]] = tag_to_add["value"]
@@ -1373,25 +1435,31 @@ class ProcessMIA(Process):
             del_dbFieldValue(self.project, out_file, tags2del)
 
         if cvalues:
-            if not self.project.session.get_document(
-                COLLECTION_CURRENT, rel_out_file
+
+            if not self.project.database.has_document(
+                collection_name=COLLECTION_CURRENT, primary_key=rel_out_file
             ):
-                self.project.session.add_document(
+                self.project.database.add_document(
                     COLLECTION_CURRENT, rel_out_file
                 )
 
-            self.project.session.set_values(
-                COLLECTION_CURRENT, rel_out_file, cvalues
+            self.project.database.set_value(
+                collection_name=COLLECTION_CURRENT,
+                primary_key=rel_out_file,
+                values_dict=cvalues,
             )
 
         if ivalues:
-            if not self.project.session.get_document(
-                COLLECTION_INITIAL, rel_out_file
+
+            if not self.project.database.has_document(
+                collection_name=COLLECTION_INITIAL, primary_key=rel_out_file
             ):
-                self.project.session.add_document(
+                self.project.database.add_document(
                     COLLECTION_INITIAL, rel_out_file
                 )
 
-            self.project.session.set_values(
-                COLLECTION_INITIAL, rel_out_file, ivalues
+            self.project.database.set_value(
+                collection_name=COLLECTION_INITIAL,
+                primary_key=rel_out_file,
+                values_dict=ivalues,
             )
