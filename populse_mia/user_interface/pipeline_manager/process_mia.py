@@ -835,10 +835,11 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
 
 
 class ProcessMIA(Process):
-    """Class overriding the default capsul Process class, in order to
-     customise the run for MIA bricks.
+    """
+    Extends the Capsul Process class to customize execution for Mia bricks.
 
-    This class is mainly used by MIA bricks.
+    This class provides specialized methods for Mia bricks, including process
+    initialization, output handling, and trait management.
 
      .. Methods:
          - _after_run_process: try to recover the output values, when the
@@ -871,14 +872,22 @@ class ProcessMIA(Process):
     key = {}
 
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the process instance with default attributes.
+
+        :param args (tuple): Positional arguments passed to the parent class.
+        :param kwargs (dict): Keyword arguments passed to the parent class
+        """
         super().__init__(*args, **kwargs)
         self.requirement = None
         self.outputs = {}
         self.inheritance_dict = {}
         self.init_result = None
 
-    def _after_run_process(self, run_process_result):
-        """Try to recover the output values."""
+    def _after_run_process(self):
+        """
+        Retrieve output values when the process is a NipypeProcess.
+        """
 
         if hasattr(self, "process") and isinstance(
             self.process, NipypeProcess
@@ -888,20 +897,22 @@ class ProcessMIA(Process):
                 wrapped_output = self.trait(mia_output).nipype_process_name
 
                 if wrapped_output:
-                    new = getattr(self.process, wrapped_output, None)
-                    old = getattr(self, mia_output, None)
+                    new_value = getattr(self.process, wrapped_output, None)
 
-                    if new and old != new:
-                        setattr(self, mia_output, new)
+                    if (
+                        new_value
+                        and getattr(self, mia_output, None) != new_value
+                    ):
+                        setattr(self, mia_output, new_value)
 
     def _run_process(self):
-        """Call the run_process_mia method in the Process_Mia subclass"""
-
+        """Execute the specific run method for ProcessMIA subclasses."""
         self.run_process_mia()
 
     def init_default_traits(self):
-        """Automatically initialise necessary parameters for
-        nipype or capsul"""
+        """
+        Initialize required traits for Nipype or Capsul processes.
+        """
 
         if "output_directory" not in self.user_traits():
             self.add_trait(
@@ -909,76 +920,52 @@ class ProcessMIA(Process):
                 traits.Directory(output=False, optional=True, userlevel=1),
             )
 
-        if self.requirement is not None and "spm" in self.requirement:
+        if self.requirement and "spm" in self.requirement:
+            required_traits = {
+                "use_mcr": traits.Bool(optional=True, userlevel=1),
+                "paths": InputMultiObject(
+                    traits.Directory(), optional=True, userlevel=1
+                ),
+                "matlab_cmd": traits_extension.Str(optional=True, userlevel=1),
+                "mfile": traits.Bool(optional=True, userlevel=1),
+                "spm_script_file": File(
+                    output=True,
+                    optional=True,
+                    input_filename=True,
+                    userlevel=1,
+                    desc="Path to the generated SPM Matlab script.",
+                ),
+            }
 
-            if "use_mcr" not in self.user_traits():
-                self.add_trait(
-                    "use_mcr", traits.Bool(optional=True, userlevel=1)
-                )
+            for name, trait in required_traits.items():
 
-            if "paths" not in self.user_traits():
-                self.add_trait(
-                    "paths",
-                    InputMultiObject(
-                        traits.Directory(), optional=True, userlevel=1
-                    ),
-                )
-
-            if "matlab_cmd" not in self.user_traits():
-                self.add_trait(
-                    "matlab_cmd",
-                    traits_extension.Str(optional=True, userlevel=1),
-                )
-
-            if "mfile" not in self.user_traits():
-                self.add_trait(
-                    "mfile", traits.Bool(optional=True, userlevel=1)
-                )
-
-            if "spm_script_file" not in self.user_traits():
-                spm_script_file_desc = (
-                    "The location of the output SPM matlab "
-                    "script automatically generated at the "
-                    "run step time (a string representing "
-                    "a file)."
-                )
-                self.add_trait(
-                    "spm_script_file",
-                    File(
-                        output=True,
-                        optional=True,
-                        input_filename=True,
-                        userlevel=1,
-                        desc=spm_script_file_desc,
-                    ),
-                )
+                if name not in self.user_traits():
+                    self.add_trait(name, trait)
 
     def init_process(self, int_name):
         """
-        Instantiation of the process attribute given an process identifier.
+        Instantiate the process attribute given a process identifier.
 
-        :param int_name: a process identifier
+        :param int_name (str): A process identifier used to fetch the
+                               process instance.
         """
-        if getattr(self, "study_config"):
-            ce = self.study_config.engine
-
-        else:
-            ce = capsul_engine()
-
+        ce = (
+            self.study_config.engine
+            if getattr(self, "study_config", None)
+            else capsul_engine()
+        )
         self.process = ce.get_process_instance(int_name)
 
     def list_outputs(self):
-        """Override the outputs of the process."""
+        """Reset and override process outputs."""
         self.relax_nipype_exists_constraints()
-
-        if self.outputs:
-            self.outputs = {}
-
-        if self.inheritance_dict:
-            self.inheritance_dict = {}
+        self.outputs.clear()
+        self.inheritance_dict.clear()
 
     def load_nii(self, file_path, scaled=True, matlab_like=False):
-        """Return the header and the data of a nibabel image object
+        """
+        Load a NIfTI image and return its header and data, optionally
+        adjusting for MATLAB conventions.
 
         MATLAB and Python (in particular NumPy) treat the order of dimensions
         and the origin of the coordinate system differently. MATLAB uses main
@@ -996,67 +983,47 @@ class ProcessMIA(Process):
         Using scaled=False generates a raw unscaled data matrix (as in MATLAB
         with `header = loadnifti(fnii)` and `header.reco.data`).
 
-        :param file_path: the path to a NIfTI file
-        :param scaled: A boolean, if True the data is scaled
-        :param matlab_like: A Boolean, if True the data is rearranged to match
-                            the order of the dimensions and the origin of the
-                            coordinate system in Matlab
+        :param file_path (str): The path to a NIfTI file.
+        :param scaled (bool): If True the data is scaled.
+        :param matlab_like (bool): If True the data is rearranged to match the
+                                   order of the dimensions and the origin of
+                                   the coordinate system in Matlab.
         """
         img = nib.load(file_path)
         header = img.header
+        data = img.get_fdata() if scaled else img.dataobj.get_unscaled()
 
-        if scaled is True:
-            data = img.get_fdata()
-
-        elif scaled is False:
-            data = img.dataobj.get_unscaled()
-
-        else:
-            print("Make_AIF brick: scaled argument must be True or False")
-
-        if matlab_like is True:
-
-            if data.ndim == 3:
-                data = np.transpose(data, (1, 0, 2))
-
-            if data.ndim == 4:
-                data = np.transpose(data, (1, 0, 2, 3))
-
+        if matlab_like:
             # TODO: Should transpose for ndim>4 cases be implemented?
+            # fmt: off
+            axes = (1, 0, 2, 3)[:data.ndim]
+            # fmt: on
+            data = np.transpose(data, axes)
             data = np.flip(data, axis=0)
 
         return header, data
 
     def make_initResult(self):
-        """Make the initResult_dict from initialisation."""
-        if (
-            (self.requirement is None)
-            or (not self.inheritance_dict)
-            or (not self.outputs)
-        ):
-            print(
-                "\nDuring the {} process initialisation, some possible "
-                "problems were detected:".format(
-                    getattr(self, "context_name", self.name).rsplit(".", 1)[-1]
-                )
+        """Generate the initialization result dictionary."""
+        data = {
+            "requirement": self.requirement,
+            "inheritance_dict": self.inheritance_dict,
+            "outputs": self.outputs,
+        }
+
+        if not all(data.values()):
+            missing = [k for k, v in data.items() if not v]
+            context_name = getattr(self, "context_name", self.name)
+            logger.warning(
+                f"Issues detected during "
+                f"{context_name.rsplit('.', 1)[-1]}"
+                f" initialization:"
             )
 
-            if self.requirement is None:
-                print("- requirement attribute was not found ...")
+            for issue in missing:
+                logger.warning(f"- {issue} attribute is missing...")
 
-            if not self.inheritance_dict:
-                print("- inheritance_dict attribute was not found ...")
-
-            if not self.outputs:
-                print("- outputs attribute was not found ...")
-
-            print()
-
-        if (
-            self.outputs
-            and self.requirement is not None
-            and "spm" in self.requirement
-        ):
+        if self.outputs and "spm" in (self.requirement or []):
             self.outputs["notInDb"] = ["spm_script_file"]
 
         return {
@@ -1066,18 +1033,18 @@ class ProcessMIA(Process):
         }
 
     def relax_nipype_exists_constraints(self):
-        """Relax the exists constraint of the process.inputs traits"""
+        """Relax the 'exists' constraint of the process.inputs traits."""
 
         if hasattr(self, "process") and hasattr(self.process, "inputs"):
-            ni_inputs = self.process.inputs
 
-            for name, trait in ni_inputs.traits().items():
+            for trait in self.process.inputs.traits().values():
                 relax_exists_constraint(trait)
 
     def requirements(self):
-        """Capsul Process.requirements() implementation using MIA's
-        ProcessMIA.requirement attribute
         """
+        Return the process requirements using MIA's requirement attribute.
+        """
+
         if self.requirement:
             return {req: "any" for req in self.requirement}
 
@@ -1085,27 +1052,21 @@ class ProcessMIA(Process):
 
     def run_process_mia(self):
         """
-        Implements specific runs for Process_Mia subclasses
+        Execute a customized run for ProcessMIA subclasses.
         """
         if self.output_directory and hasattr(self, "process"):
             self.process.output_directory = self.output_directory
 
-        if self.requirement is not None and "spm" in self.requirement:
+        if self.requirement and "spm" in self.requirement:
+            attributes = ["use_mcr", "paths", "matlab_cmd", "mfile"]
 
-            if self.spm_script_file:
+            for attr in attributes:
+
+                if getattr(self, attr, None):
+                    setattr(self.process, attr, getattr(self, attr))
+
+            if getattr(self, "spm_script_file", None):
                 self.process._spm_script_file = self.spm_script_file
-
-            if self.use_mcr:
-                self.process.use_mcr = self.use_mcr
-
-            if self.paths:
-                self.process.paths = self.paths
-
-            if self.matlab_cmd:
-                self.process.matlab_cmd = self.matlab_cmd
-
-            if self.mfile:
-                self.process.mfile = self.mfile
 
     def tags_inheritance(
         self,
@@ -1115,22 +1076,48 @@ class ProcessMIA(Process):
         own_tags=None,
         tags2del=None,
     ):
-        """Create tags for data
+        """
+        Inherit and manage data tags from input file(s) to an output file.
 
-        :param in_file: a process input file name (the document identifier for
-                        a database collection, a str, unambiguous case) from
-                        which the tags are inherited or a dictionary whose
-                        keys are a plug name and whose value is the
-                        corresponding process input file name (ambiguous case).
-        :param out_file: a process output file name (the document_id for a
-                         database collection) which will inherit tags.
-        :param node_name: the name of the node.
-        :param own_tags: a list of dictionaries. Each dictionary corresponds to
-                         a tag to be added or modified. Mandatory keys (and
-                         associated values):
-                         "name", "field_type", "description", "visibility",
-                         "origin", "unit","default_value", "value".
-        :param tags2del: a list of tags (str) to delete (value)
+        This method handles the inheritance of metadata tags from one or
+        more input files to an output file. It also allows adding new tags,
+        modifying existing ones, or deleting unwanted tags in the process.
+
+        Notes:
+        This method performs inheritance in two ways:
+        1. Immediate inheritance during process execution
+        2. Deferred inheritance by storing inheritance information for later
+           use during workflow generation (addresses issue #290, #310)
+
+        In ambiguous cases (multiple input files), the method will either:
+        - Use previously stored inheritance rules
+        - Prompt the user for a decision if no rule exists
+        - Auto-resolve if all inputs have identical tag values
+
+        :param in_file (str or dict): Source of tag inheritance. Either:
+                                      - A string representing a single input
+                                        file path (unambiguous case)
+                                      - A dictionary mapping plug names to
+                                        corresponding input file paths
+                                        (ambiguous case)
+        :param out_file (str): Path of the output file that will inherit the
+                               tags.
+        :param node_name (str): Name of the processing node in the workflow.
+        :param own_tags (list of dict): Tags to be added or modified. Each
+                                        dictionary must contain:
+                                        - "name": Tag identifier
+                                        - "field_type": Data type of the tag
+                                        - "description": Human-readable
+                                                         description
+                                        - "visibility": Boolean or visibility
+                                                        level
+                                        - "origin": Source of the tag
+                                        - "unit": Unit of measurement
+                                                  (if applicable)
+                                        - "default_value": Default value
+                                        - "value": Current value to set
+        :param tags2del (list of str): Tags to be deleted from the output
+                                       file.
         """
 
         # 1- We want out_file to inherit all the tags from in_file.
@@ -1143,26 +1130,35 @@ class ProcessMIA(Process):
         #        populse/mia_processes#39). This is sub-optimal, but until the
         #        #290 fix, it's the best solution we're using.
 
+        # Initialize inheritance dictionary if it doesn't exist
         if not hasattr(self, "inheritance_dict"):
             self.inheritance_dict = {}
 
-        self.inheritance_dict[out_file] = dict()
-        self.inheritance_dict[out_file]["own_tags"] = own_tags
-        self.inheritance_dict[out_file]["tags2del"] = tags2del
+        # Store inheritance information for post-workflow processing
+        self.inheritance_dict[out_file] = {
+            "own_tags": own_tags,
+            "tags2del": tags2del,
+        }
 
-        plug_name = None
+        def _find_plug_for_output(self, out_file):
+            """Find the plug name associated with the given output file."""
 
-        for i in self.user_traits():
+            for trait_name in self.user_traits():
 
-            try:
+                try:
 
-                if out_file in getattr(self, i, "___nothing___"):
-                    plug_name = i
+                    if out_file in getattr(self, trait_name, "___nothing___"):
+                        return trait_name
 
-            except Exception:
-                pass
+                except Exception:
+                    pass
 
-        banished_tags = {
+            return None
+
+        # Find the plug name associated with this output file
+        plug_name = self._find_plug_for_output(out_file)
+        # Tags that should never be inherited
+        excluded_tags = {
             TAG_TYPE,
             TAG_BRICKS,
             TAG_CHECKSUM,
@@ -1170,15 +1166,19 @@ class ProcessMIA(Process):
             TAG_HISTORY,
         }
 
+        # Normalize input file format
         if isinstance(in_file, str):
             in_files = {None: in_file}
-            # For inheritance operation at the end of the workflow generation:
+            # Store parent for inheritance at workflow completion
             self.inheritance_dict[out_file]["parent"] = in_file
 
         elif isinstance(in_file, dict):
-            # self.inheritance_dict will be defined later, as there is
-            # currently some ambiguity.
+            # Ambiguous case - multiple potential parents
+            # self.inheritance_dict will be defined later
             in_files = in_file
+
+        else:
+            raise TypeError("in_file must be either a string or dictionary")
 
         # For inheritance now:
         db_dir = os.path.join(
@@ -1219,7 +1219,7 @@ class ProcessMIA(Process):
                 cvalues = {
                     field: cur_in_scan[0][field]
                     for field in field_names
-                    if field not in banished_tags
+                    if field not in excluded_tags
                 }
 
                 init_in_scan = self.project.database.get_document(
