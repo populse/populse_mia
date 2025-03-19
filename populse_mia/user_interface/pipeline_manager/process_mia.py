@@ -1,5 +1,12 @@
 """
-Module used by mia_processes bricks to run processes.
+Module for managing and running processes within the Populse_mia framework.
+
+This module provides specialized classes and methods to handle the execution
+and completion of processes within the Populse_mia framework. It includes
+functionalities for managing process attributes, handling database
+interactions, and ensuring proper inheritance of metadata tags.
+The module supports various process types, including those from
+mia_processes, Nipype, and Capsul.
 
 :Contains:
     :Class:
@@ -21,7 +28,6 @@ Module used by mia_processes bricks to run processes.
 # Other imports
 import logging
 import os
-import traceback
 import uuid
 
 import nibabel as nib
@@ -93,21 +99,26 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
     :Contains:
         :Method:
-            - __init__: constructor
-            - complete_attributes_with_database:  augments the Capsul
-              completion system attributes associated with a process
-            - complete_nipype_common: set Nipype parameters for SPM
-            - complete_parameters: completes file parameters from
-              given inputs parameters
+            - _complete_mia_process: Complete parameters for Mia-specific
+                                     processes.
+            - _complete_standard_process: Complete parameters for standard
+                                          (non-Mia) processes.
+            - complete_attributes_with_database: Augments the Capsul
+                                                 completion system attributes
+                                                 associated with a process.
+            - complete_nipype_common: Set Nipype parameters for SPM.
+            - complete_parameters: Completes file parameters from
+                                   given inputs parameters.
             - complete_parameters_mia: Completion for :class:`ProcessMIA`
-              instances
-            - get_attribute_values: re-route to underlying fallback engine
-            - get_path_completion_engine: re-route to underlying fallback
-              engine
-            - get_project: get the project associated with the process
-            - path_attributes: re-route to underlying fallback engine
-            - remove_switch_observe: reimplemented since it is expects
-              in switches completion engine
+                                       instances.
+            - get_attribute_values: Get attribute values from the fallback
+                                    engine.
+            - get_path_completion_engine: Get the path completion engine from
+                                          the fallback engine.
+            - get_project: Get the project associated with the process
+            - path_attributes: Get path attributes from the fallback engine.
+            - remove_switch_observe: Reimplemented since it is expects
+                                     in switches completion engine.
 
     """
 
@@ -125,7 +136,225 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         self.completion_progress = 0.0
         self.completion_progress_total = 0.0
 
-    def complete_attributes_with_database(self, process_inputs={}):
+    def _complete_standard_process(
+        self, process, process_inputs, complete_iterations
+    ):
+        """
+        Complete parameters for standard (non-Mia) processes.
+
+        :param process: The process to complete.
+        :param process_inputs (dict): Parameters to set on the process.
+        :param complete_iterations (bool): Whether to complete iteration
+                                           nodes.
+        """
+
+        # Determine node name for logging
+        if not isinstance(process, Pipeline):
+            context_name = getattr(process, "context_name", process.name)
+
+            if context_name.split(".")[0] == "Pipeline":
+                node_name = ".".join(context_name.split(".")[1:])
+
+            else:
+                node_name = context_name
+
+            # Log the node type
+            if isinstance(process, NipypeProcess):
+                interface_path = ".".join(
+                    [
+                        process._nipype_interface.__module__,
+                        process._nipype_interface.__class__.__name__,
+                    ]
+                )
+                logger.info(
+                    f"\n. {node_name} ({interface_path}) nipype brick ..."
+                )
+
+            else:
+                process_path = ".".join(
+                    [process.__module__, process.__class__.__name__]
+                )
+                logger.info(
+                    f"\n. {node_name} ({process_path}) regular brick ..."
+                )
+
+        # Use fallback engine to complete parameters
+        self.fallback_engine.complete_parameters(
+            process_inputs, complete_iterations=complete_iterations
+        )
+        # Update progress tracking
+        self.completion_progress = self.fallback_engine.completion_progress
+        self.completion_progress_total = (
+            self.fallback_engine.completion_progress_total
+        )
+        # Handle tag inheritance
+        # Import here to avoid circular imports
+        # isort: off
+        from populse_mia.user_interface.pipeline_manager import (
+            pipeline_manager_tab,
+        )
+
+        # isort: on
+
+        PipelineManagerTab = pipeline_manager_tab.PipelineManagerTab
+        auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
+            process
+        )
+        # auto_inheritance_dict (dict) object format:
+        # - if there is no ambiguity :
+        #    key: value of the output file (str)
+        #    value: value of the input file (str)
+        # - if ambiguous :
+        #    key: output plug value (string)
+        #    value: a dictionary: with key / value corresponding to each
+        #           possible input file
+        #           => key: name of the input plug
+        #              value: value of the input plug
+
+        if auto_inheritance_dict is not None:
+
+            # Ensure project is set
+            if not hasattr(process, "project"):
+
+                if hasattr(process, "get_study_config"):
+                    study_config = process.get_study_config()
+                    project = getattr(study_config, "project", None)
+
+                    if project is not None:
+                        process.project = project
+
+            # Apply tag inheritance if project is available
+            if hasattr(process, "project"):
+
+                for out_file in auto_inheritance_dict:
+                    ProcessMIA.tags_inheritance(
+                        process,
+                        auto_inheritance_dict[out_file],
+                        out_file,
+                        node_name,
+                    )
+
+    def _complete_mia_process(
+        self, process, process_inputs, complete_iterations
+    ):
+        """
+        Complete parameters for Mia-specific processes.
+
+        :param process: The Mia process to complete.
+        :param process_inputs (dict): Parameters to set on the process.
+        :param complete_iterations (bool): Whether to complete iteration
+                                           nodes.
+        """
+        # Here the process is a ProcessMIA instance. Use the specific
+        # method.
+        # Determine node name for logging
+        name = getattr(self.process, "context_name", self.process.name)
+
+        if name.split(".")[0] == "Pipeline":
+            node_name = ".".join(name.split(".")[1:])
+
+        else:
+            node_name = name
+
+        # Log the node type
+        process_path = ".".join(
+            [process.__module__, process.__class__.__name__]
+        )
+        logger.info(f"\n. {node_name} ({process_path}) Mia brick ...")
+        # Complete parameters using MIA-specific method
+        self.complete_parameters_mia(
+            process_inputs, iteration=complete_iterations
+        )
+        self.completion_progress = self.completion_progress_total
+
+        # Check if initialization succeeded
+        if getattr(process, "init_result", None) is False:
+            return
+
+        # Handle tag inheritance
+        if (
+            not hasattr(process, "inheritance_dict")
+            or not process.inheritance_dict
+        ):
+            # The tags_inheritance() function has not been implemented in
+            # the brick, so we are using auto-inheritance.
+            # We're only importing PipelineManagerTab now, to avoid a
+            # circular import issue
+            # isort: off
+            from populse_mia.user_interface.pipeline_manager import (
+                pipeline_manager_tab,
+            )
+
+            # isort: on
+
+            PipelineManagerTab = pipeline_manager_tab.PipelineManagerTab
+            auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
+                process
+            )
+            # auto_inheritance_dict (dict) object format:
+            # - if there is no ambiguity :
+            #    key: value of the output file (str)
+            #    value: value of the input file (str)
+            # - if ambiguous :
+            #    key: output plug value (string)
+            #    value: a dictionary: with key / value corresponding to
+            #           each possible input file
+            #           => key: name of the input plug
+            #              value: value of the input plug
+
+            if auto_inheritance_dict is not None:
+
+                # Ensure project is set
+                if not hasattr(process, "project"):
+
+                    if hasattr(process, "get_study_config"):
+                        study_config = process.get_study_config()
+                        project = getattr(study_config, "project", None)
+
+                        if project is not None:
+                            process.project = project
+
+                # Apply tag inheritance if project is available
+                if hasattr(process, "project"):
+
+                    for out_file in auto_inheritance_dict:
+                        ProcessMIA.tags_inheritance(
+                            process,
+                            auto_inheritance_dict[out_file],
+                            out_file,
+                            node_name,
+                        )
+
+        # We must keep a copy of inheritance dict, since it changes
+        # at each iteration and is not included in workflow.
+        # TODO: A better solution would be to save for each
+        #       node the inheritance between plugs and not between
+        #       filenames (that changes over iteration).
+        # Record completion for later indexation
+        project = self.get_project(process)
+
+        if project is not None:
+
+            # Record completion order to perform 2nd pass tags recording
+            # and indexation
+            if not hasattr(project, "node_inheritance_history"):
+                project.node_inheritance_history = {}
+
+            node = self.process
+
+            if isinstance(node, Pipeline):
+                node = node.pipeline_node
+
+            # Store inheritance dict for this node
+            if node_name not in project.node_inheritance_history:
+                project.node_inheritance_history[node_name] = []
+
+            if hasattr(node, "inheritance_dict"):
+                project.node_inheritance_history[node_name].append(
+                    node.inheritance_dict
+                )
+
+    def complete_attributes_with_database(self, process_inputs=None):
         """
         Augment the completion attributes with values from the Mia database.
 
@@ -135,6 +364,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         :param process_inputs (dict): Parameters to be set on the process.
         :return: The augmented attributes collection.
         """
+        process_inputs = process_inputs or {}
         # Get attributes from the fallback engine
         attributes = self.fallback_engine.get_attribute_values()
         process = self.process
@@ -153,85 +383,90 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         if not project:
             return attributes
 
-        # Get fields that match attributes traits
-        fields = project.database.get_field_names(COLLECTION_CURRENT)
-        pfields = [field for field in fields if attributes.trait(field)]
+        with project.database.data() as database_data:
+            # Get fields that match attributes traits
+            fields = database_data.get_field_names(COLLECTION_CURRENT)
+            pfields = [field for field in fields if attributes.trait(field)]
 
-        if not pfields:
-            return attributes
+            if not pfields:
+                return attributes
 
-        # Get project directory path
-        proj_dir = os.path.join(
-            os.path.abspath(os.path.realpath(project.folder)), ""
-        )
-        proj_dir_len = len(proj_dir)
-
-        for param, par_value in process.get_inputs().items():
-            # update value from given forced input
-            par_value = process_inputs.get(param, par_value)
-            par_values = (
-                par_value if isinstance(par_value, list) else [par_value]
+            # Get project directory path
+            proj_dir = os.path.join(
+                os.path.abspath(os.path.realpath(project.folder)), ""
             )
-            # Initialize field values lists
-            field_values = [[] for _ in pfields]
+            proj_dir_len = len(proj_dir)
 
-            for value in par_values:
-
-                if not isinstance(value, str):
-                    continue
-
-                abs_path = os.path.abspath(os.path.realpath(value))
-
-                if not abs_path.startswith(proj_dir):
-                    continue
-
-                # Get relative path from project root
-                rel_value = abs_path[proj_dir_len:]
-                # Query document from database
-                document = project.database.get_document(
-                    collection_name=COLLECTION_CURRENT,
-                    primary_keys=rel_value,
-                    fields=pfields,
+            for param, par_value in process.get_inputs().items():
+                # update value from given forced input
+                par_value = process_inputs.get(param, par_value)
+                par_values = (
+                    par_value if isinstance(par_value, list) else [par_value]
                 )
+                # Initialize field values lists
+                field_values = [[] for _ in pfields]
 
-                if document:
+                for value in par_values:
 
-                    for field_val_list, doc_value in zip(
-                        field_values, document
-                    ):
-                        field_val_list.append(
-                            doc_value if doc_value is not None else ""
-                        )
+                    if not isinstance(value, str):
+                        continue
 
-                else:
+                    abs_path = os.path.abspath(os.path.realpath(value))
 
-                    # Mark as None if not found in database
-                    for field_val_list in field_values:
-                        field_val_list.append(None)
+                    if not abs_path.startswith(proj_dir):
+                        continue
 
-            # Temporarily block attributes change notification in order to
-            # avoid triggering another completion while we are already in this
-            # process.
-            was_fallback_ongoing = self.fallback_engine.completion_ongoing
-            was_self_ongoing = self.completion_ongoing
-            self.fallback_engine.completion_ongoing = True
-            self.completion_ongoing = True
-
-            # Update attributes if valid values found
-            if field_values[0] and not all(
-                all(x is None for x in y) for y in field_values
-            ):
-
-                for field, values in zip(pfields, field_values):
-                    setattr(
-                        attributes,
-                        field,
-                        values if isinstance(par_value, list) else values[0],
+                    # Get relative path from project root
+                    rel_value = abs_path[proj_dir_len:]
+                    # Query document from database
+                    document = database_data.get_document(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_keys=rel_value,
+                        fields=pfields,
                     )
 
-            # Restore notification state
-            self.fallback_engine.completion_ongoing = was_fallback_ongoing
-            self.completion_ongoing = was_self_ongoing
+                    if document:
+
+                        for field_val_list, doc_value in zip(
+                            field_values, document
+                        ):
+                            field_val_list.append(
+                                doc_value if doc_value is not None else ""
+                            )
+
+                    else:
+
+                        # Mark as None if not found in database
+                        for field_val_list in field_values:
+                            field_val_list.append(None)
+
+                # Temporarily block attributes change notification in order to
+                # avoid triggering another completion while we are already in
+                # this process.
+                was_fallback_ongoing = self.fallback_engine.completion_ongoing
+                was_self_ongoing = self.completion_ongoing
+                self.fallback_engine.completion_ongoing = True
+                self.completion_ongoing = True
+
+                # Update attributes if valid values found
+                if field_values[0] and not all(
+                    all(x is None for x in y) for y in field_values
+                ):
+
+                    for field, values in zip(pfields, field_values):
+                        setattr(
+                            attributes,
+                            field,
+                            (
+                                values
+                                if isinstance(par_value, list)
+                                else values[0]
+                            ),
+                        )
+
+                # Restore notification state
+                self.fallback_engine.completion_ongoing = was_fallback_ongoing
+                self.completion_ongoing = was_self_ongoing
 
         return attributes
 
@@ -354,303 +589,101 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
             process.mfile = True
 
-    def complete_parameters(self, process_inputs={}, complete_iterations=True):
-        """Completes file parameters from given inputs parameters.
-
-        Parameters
-        ----------
-        process_inputs: dict (optional)
-            parameters to be set on the process. It may include "regular"
-            process parameters, and attributes used for completion. Attributes
-            should be in a sub-dictionary under the key "capsul_attributes".
-        complete_iterations: bool (optional)
-            if False, iteration nodes inside the pipeline will not run their
-            own completion. Thus parameters for the iterations will not be
-            correctly completed. However this has 2 advantages: 1. it prevents
-            modification of the input pipeline, 2. it will not do iterations
-            completion which will anyway be done (again) when building a
-            workflow in
-            `~capsul.pipeline.pipeline_workflow.workflow_from_pipeline`.
+    def complete_parameters(
+        self, process_inputs=None, complete_iterations=True
+    ):
         """
+        Complete process parameters based on input values.
 
+        This method handles both standard Capsul processes and Mia-specific
+        processes, applying the appropriate completion strategy for each.
+
+        :param process_inputs (dict): Parameters to be set on the process.
+                                      May include regular parameters and
+                                      completion attributes (under
+                                      'capsul_attributes' key).
+        :param complete_iterations (bool): If False, iteration nodes in
+                                           pipelines will not complete their
+                                           parameters. This prevents
+                                           modification of the input pipeline
+                                           and avoids redundant iterations
+                                           completion that will be done again
+                                           during workflow building.
+        """
+        process_inputs = process_inputs or {}
+        # Update progress tracking
         self.completion_progress = self.fallback_engine.completion_progress
         self.completion_progress_total = (
             self.fallback_engine.completion_progress_total
         )
-
-        # handle database attributes and indexation
+        # Handle database attributes
         self.complete_attributes_with_database(process_inputs)
-        in_process = get_ref(self.process)
+        process = get_ref(self.process)
 
-        if isinstance(in_process, ProcessNode):
-            in_process = in_process.process
+        if isinstance(process, ProcessNode):
+            process = process.process
 
-        # nipype special case -- output_directory is set from MIA project
-        if isinstance(in_process, (NipypeProcess, ProcessMIA)):
-            self.complete_nipype_common(in_process)
+        # Handle Nipype/ProcessMIA special cases
+        if isinstance(process, (NipypeProcess, ProcessMIA)):
+            self.complete_nipype_common(process)
 
-        if not isinstance(in_process, ProcessMIA):
-
-            if not isinstance(in_process, Pipeline):
-
-                if (
-                    getattr(in_process, "context_name", in_process.name).split(
-                        "."
-                    )[0]
-                    == "Pipeline"
-                ):
-                    node_name = ".".join(
-                        getattr(
-                            in_process, "context_name", in_process.name
-                        ).split(".")[1:]
-                    )
-
-                else:
-                    node_name = getattr(
-                        in_process, "context_name", in_process.name
-                    )
-
-                if isinstance(in_process, NipypeProcess):
-                    # fmt: off
-                    print(
-                        "\n. {} ({}) nipype node ...".format(
-                            node_name,
-                            ".".join(
-                                (
-                                    in_process._nipype_interface.
-                                    __module__,
-                                    in_process._nipype_interface.
-                                    __class__.__name__,
-                                )
-                            ),
-                        )
-                    )
-                    # fmt: on
-
-                else:
-                    print(
-                        "\n. {} ({}) regular node ...".format(
-                            node_name,
-                            ".".join(
-                                (
-                                    in_process.__module__,
-                                    in_process.__class__.__name__,
-                                )
-                            ),
-                        )
-                    )
-
-            self.fallback_engine.complete_parameters(
-                process_inputs, complete_iterations=complete_iterations
+        # Process completion based on type
+        if not isinstance(process, ProcessMIA):
+            # Standard process completion
+            self._complete_standard_process(
+                process, process_inputs, complete_iterations
             )
-
-            self.completion_progress = self.fallback_engine.completion_progress
-            self.completion_progress_total = (
-                self.fallback_engine.completion_progress_total
-            )
-            # We're only importing PipelineManagerTab now, to avoid a
-            # circular import issue
-            # isort: off
-            # fmt: off
-            from populse_mia.user_interface.pipeline_manager.\
-                pipeline_manager_tab import PipelineManagerTab
-            # isort: on
-            # fmt: on
-            auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
-                in_process
-            )
-            # auto_inheritance_dict (dict) object format:
-            # - if there is no ambiguity :
-            #    key: value of the output file (str)
-            #    value: value of the input file (str)
-            # - if ambiguous :
-            #    key: output plug value (string)
-            #    value: a dictionary: with key / value corresponding to each
-            #           possible input file
-            #           => key: name of the input plug
-            #              value: value of the input plug
-
-            if auto_inheritance_dict is None:
-                # nothing to be done
-                pass
-
-            else:
-
-                if not hasattr(in_process, "project"):
-
-                    if hasattr(in_process, "get_study_config"):
-                        study_config = in_process.get_study_config()
-                        project = getattr(study_config, "project", None)
-
-                        if project is not None:
-                            in_process.project = project
-
-                if hasattr(in_process, "project"):
-
-                    for out in auto_inheritance_dict:
-                        ProcessMIA.tags_inheritance(
-                            in_process,
-                            auto_inheritance_dict[out],
-                            out,
-                            node_name,
-                        )
 
         else:
-            # here the process is a ProcessMIA instance. Use the specific
-            # method
-
-            # self.completion_progress = 0.
-            # self.completion_progress_total = 1.
-            name = getattr(self.process, "context_name", self.process.name)
-
-            if name.split(".")[0] == "Pipeline":
-                node_name = ".".join(name.split(".")[1:])
-
-            else:
-                node_name = name
-
-            print(
-                "\n. {} ({}) MIA node ...".format(
-                    node_name,
-                    ".".join(
-                        [in_process.__module__, in_process.__class__.__name__]
-                    ),
-                )
+            # Mia-specific process completion
+            self._complete_mia_process(
+                process, process_inputs, complete_iterations
             )
 
-            self.complete_parameters_mia(
-                process_inputs, iteration=complete_iterations
-            )
-            self.completion_progress = self.completion_progress_total
-
-            if getattr(in_process, "init_result", None) is False:
-                return
-
-            if (
-                not hasattr(in_process, "inheritance_dict")
-                or in_process.inheritance_dict == {}
-            ):
-                # The tags_inheritance() function has not been implemented in
-                # the brick, so we are using auto-inheritance.
-
-                # We're only importing PipelineManagerTab now, to avoid a
-                # circular import issue
-                # isort: off
-                # fmt: off
-                from populse_mia.user_interface.pipeline_manager. \
-                    pipeline_manager_tab import PipelineManagerTab
-                # isort: on
-                # fmt: on
-                auto_inheritance_dict = (
-                    PipelineManagerTab.update_auto_inheritance(in_process)
-                )
-                # auto_inheritance_dict (dict) object format:
-                # - if there is no ambiguity :
-                #    key: value of the output file (str)
-                #    value: value of the input file (str)
-                # - if ambiguous :
-                #    key: output plug value (string)
-                #    value: a dictionary: with key / value corresponding to
-                #           each possible input file
-                #           => key: name of the input plug
-                #              value: value of the input plug
-
-                if auto_inheritance_dict is None:
-                    # nothing to be done
-                    pass
-
-                else:
-
-                    if not hasattr(in_process, "project"):
-
-                        if hasattr(in_process, "get_study_config"):
-                            study_config = in_process.get_study_config()
-                            project = getattr(study_config, "project", None)
-
-                            if project is not None:
-                                in_process.project = project
-
-                    if hasattr(in_process, "project"):
-
-                        for out in auto_inheritance_dict:
-                            ProcessMIA.tags_inheritance(
-                                in_process,
-                                auto_inheritance_dict[out],
-                                out,
-                                node_name,
-                            )
-
-            # we must keep a copy of inheritance dict, since it changes
-            # at each iteration and is not included in workflow
-            # TODO: a better solution would be to save for each
-            #       node the inheritance between plugs and not between
-            #       filenames (that changes over iteration)
-            project = self.get_project(in_process)
-
-            if project is not None:
-
-                # record completion order to perform 2nd pass tags recording
-                # and indexation
-                if not hasattr(project, "node_inheritance_history"):
-                    project.node_inheritance_history = {}
-
-                node = self.process
-
-                if isinstance(node, Pipeline):
-                    node = node.pipeline_node
-
-                # Create a copy of current inheritance dict
-                if node_name not in project.node_inheritance_history:
-                    project.node_inheritance_history[node_name] = []
-
-                if hasattr(node, "inheritance_dict"):
-                    project.node_inheritance_history[node_name].append(
-                        node.inheritance_dict
-                    )
-
-    def complete_parameters_mia(self, process_inputs={}, iteration=False):
+    def complete_parameters_mia(
+        self, process_inputs=None, iteration=False, verbose=False
+    ):
         """
-        Completion for :class:`ProcessMIA` instances. This is done using their
-        :meth: `ProcessMIA.list_outputs` method, which fills in output
-        parameters from input values, and sets the internal `inheritance_dict`
-        used after completion for data indexation in MIA.
+        Complete parameters for ProcessMIA instances.
 
-        Parameters
-        ----------
-        process_inputs: dict (optional)
-            parameters to be set on the process.
+        Uses the ProcessMIA.list_outputs method to generate output parameters
+        based on input values and sets the inheritance_dict for data
+        indexation.
 
+        :param process_inputs (dict): Parameters to set on the process.
+        :param iteration (bool): Whether this completion is for an iteration
+                                 node.
+        :param verbose (bool): If true, makes the method verbose
         """
+        process_inputs = process_inputs or {}
+        # Set input parameters
         self.set_parameters(process_inputs)
-        verbose = False
+        # Get process and plugs information
         node = get_ref(self.process)
         process = node
+        is_plugged = None
 
         if isinstance(node, ProcessNode):
             process = node.process
-
+            # Identify which parameters are connected to other nodes
             is_plugged = {
                 key: (bool(plug.links_to) or bool(plug.links_from))
                 for key, plug in node.plugs.items()
             }
 
-        else:
-            is_plugged = None  # we cannot get this info
-
         process.init_result = None
 
         try:
-            # set inheritance dict to the node
+            # Get outputs from the process
             initResult_dict = process.list_outputs(
                 is_plugged=is_plugged, iteration=iteration
             )
 
-        except Exception as e:
-            print("\nError during initialisation ...!\nTraceback:")
-            print("".join(traceback.format_tb(e.__traceback__)), end="")
-            print(f"{e.__class__.__name__}: {e}\n")
+        except Exception:
+            logger.warning("Error during initialisation ...!", exc_info=True)
             initResult_dict = {}
 
+        # Check if initialization was successful
         if not initResult_dict:
             process.init_result = False
             return  # the process is not really configured
@@ -661,89 +694,84 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             process.init_result = False
             return  # the process is not really configured
 
+        # Set output parameters
         for parameter, value in outputs.items():
 
+            # Skip special parameters
             if parameter == "notInDb" or process.is_parameter_protected(
                 parameter
             ):
-                # special non-param or set manually:
+                # Special non-param or set manually:
                 continue
 
             try:
                 setattr(process, parameter, value)
 
-            except Exception as e:
+            except Exception:
 
                 if verbose:
-                    print("Exception:", e)
-                    print("param:", parameter)
-                    print("value:", repr(value))
-                    traceback.print_exc()
+                    logger.warning(
+                        f"Issue with {parameter} and {repr(value)}",
+                        exc_info=True,
+                    )
 
     def get_attribute_values(self):
-        """Re-route to underlying fallback engine."""
+        """
+        Get attribute values from the fallback engine.
 
+        :returns: The attribute values collection.
+        """
         return self.fallback_engine.get_attribute_values()
 
     def get_path_completion_engine(self):
-        """Re-route to underlying fallback engine."""
+        """
+        Get the path completion engine from the fallback engine.
 
+        :returns: The path completion engine.
+        """
         return self.fallback_engine.get_path_completion_engine()
 
     @staticmethod
     def get_project(process):
-        """Get the project associated with the process.
+        """
+        Get the project associated with a process.
 
-        Parameters
-        ----------
-        process: a process
+        :param process: The process to get the project for.
 
-        Returns
-        -------
-        project: the project associated with the process
+        :returns: The associated project or None if not found.
 
         """
-
-        project = None
 
         if isinstance(process, ProcessNode):
             process = process.process
 
         if hasattr(process, "get_study_config"):
             study_config = process.get_study_config()
-            project = getattr(study_config, "project", None)
+            return getattr(study_config, "project", None)
 
-        return project
+        return None
 
     def path_attributes(self, filename, parameter=None):
-        """Re-route to underlying fallback engine.
-
-        Parameters
-        ----------
-        filename:
-        parameter:
-
-        Returns
-        -------
-        out: the path attributes
-
         """
+        Get path attributes from the fallback engine.
 
+        :param filename (str): The filename to get attributes for.
+        :param parameter (str): The parameter name associated with the
+                                filename.
+
+        :returns: The path attributes.
+        """
         return self.fallback_engine.path_attributes(filename, parameter)
 
     def remove_switch_observer(self, observer=None):
-        """Reimplemented since it is expects in switches completion engine.
+        """
+        Remove a switch observer from the fallback engine.
 
-        Parameters
-        ----------
-        observer:
+        :param observer: The observer to remove.
 
-        Returns
-        -------
-        out:
+        :returns: The result from the fallback engine.
 
         """
-
         return self.fallback_engine.remove_switch_observer(observer)
 
 
@@ -892,10 +920,12 @@ class ProcessMIA(Process):
         self.inheritance_dict = {}
         self.init_result = None
 
-    def _add_field_to_collections(self, collection, tag_def):
+    def _add_field_to_collections(self, database_schema, collection, tag_def):
         """
         Add a new field to the specified collection in the database.
 
+        :param database_schema: The database schema context used for modifying
+                                collections.
         :param collection (str): The name of the collection to which the field
                                  should be added.
         :param tag_def (dict): Dictionary containing the field definition with
@@ -922,7 +952,7 @@ class ProcessMIA(Process):
             "default_value": tag_def["default_value"],
         }
         # Add to the collection
-        self.project.database.add_field(
+        database_schema.add_field(
             {"collection_name": collection, **field_config}
         )
 
@@ -945,20 +975,28 @@ class ProcessMIA(Process):
                                        database schema.
         """
 
-        for tag_to_add in own_tags:
+        with self.project.database.schema() as database_schema:
 
-            # Ensure tag exists in the database schema
-            if tag_to_add["name"] not in field_names:
-                self._add_field_to_collections(COLLECTION_CURRENT, tag_to_add)
+            with database_schema.data() as database_data:
 
-            if tag_to_add["name"] not in (
-                self.project.database.get_field_names
-            )(COLLECTION_INITIAL):
-                self._add_field_to_collections(COLLECTION_INITIAL, tag_to_add)
+                for tag_to_add in own_tags:
 
-            # Set tag values
-            current_values[tag_to_add["name"]] = tag_to_add["value"]
-            initial_values[tag_to_add["name"]] = tag_to_add["value"]
+                    # Ensure tag exists in the database schema
+                    if tag_to_add["name"] not in field_names:
+                        self._add_field_to_collections(
+                            database_schema, COLLECTION_CURRENT, tag_to_add
+                        )
+
+                    if tag_to_add["name"] not in (
+                        database_data.get_field_names
+                    )(COLLECTION_INITIAL):
+                        self._add_field_to_collections(
+                            database_schema, COLLECTION_INITIAL, tag_to_add
+                        )
+
+                    # Set tag values
+                    current_values[tag_to_add["name"]] = tag_to_add["value"]
+                    initial_values[tag_to_add["name"]] = tag_to_add["value"]
 
     def _all_values_identical(self, values_dict):
         """
@@ -1222,39 +1260,43 @@ class ProcessMIA(Process):
                                       values to be saved.
         """
 
-        if current_values:
+        with self.project.database.data() as database_data:
 
-            # Ensure document exists in CURRENT collection
-            if not self.project.database.has_document(
-                collection_name=COLLECTION_CURRENT, primary_key=rel_out_file
-            ):
-                self.project.database.add_document(
-                    COLLECTION_CURRENT, rel_out_file
+            if current_values:
+
+                # Ensure document exists in CURRENT collection
+                if not database_data.has_document(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=rel_out_file,
+                ):
+                    database_data.add_document(
+                        COLLECTION_CURRENT, rel_out_file
+                    )
+
+                # Update values
+                database_data.set_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=rel_out_file,
+                    values_dict=current_values,
                 )
 
-            # Update values
-            self.project.database.set_value(
-                collection_name=COLLECTION_CURRENT,
-                primary_key=rel_out_file,
-                values_dict=current_values,
-            )
+            if initial_values:
 
-        if initial_values:
+                # Ensure document exists in INITIAL collection
+                if not database_data.has_document(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=rel_out_file,
+                ):
+                    database_data.add_document(
+                        COLLECTION_INITIAL, rel_out_file
+                    )
 
-            # Ensure document exists in INITIAL collection
-            if not self.project.database.has_document(
-                collection_name=COLLECTION_INITIAL, primary_key=rel_out_file
-            ):
-                self.project.database.add_document(
-                    COLLECTION_INITIAL, rel_out_file
+                # Update values
+                database_data.set_value(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=rel_out_file,
+                    values_dict=initial_values,
                 )
-
-            # Update values
-            self.project.database.set_value(
-                collection_name=COLLECTION_INITIAL,
-                primary_key=rel_out_file,
-                values_dict=initial_values,
-            )
 
     def init_default_traits(self):
         """
@@ -1513,65 +1555,71 @@ class ProcessMIA(Process):
 
         # Prepare paths for database operations
         db_dir = os.path.abspath(os.path.normpath(self.project.folder))
-        field_names = self.project.database.get_field_names(COLLECTION_CURRENT)
-        rel_out_file = self._get_relative_path(out_file, db_dir)
-        # Collect tag values from all input files
-        all_current_values = {}
-        all_initial_values = {}
 
-        # Get all tags values for inputs
-        for param, parent_file in in_files.items():
-            rel_in_file = self._get_relative_path(
-                os.path.abspath(os.path.normpath(parent_file)), db_dir
-            )
+        with self.project.database.data() as database_data:
+            field_names = database_data.get_field_names(COLLECTION_CURRENT)
+            rel_out_file = self._get_relative_path(out_file, db_dir)
+            # Collect tag values from all input files
+            all_current_values = {}
+            all_initial_values = {}
 
-            # Skip self-reference case (output is one of the inputs)
-            if rel_in_file == rel_out_file:
-                all_current_values = {}
-                all_initial_values = {}
-                current_values = {}
-                initial_values = {}
-                break
+            # Get all tags values for inputs
+            for param, parent_file in in_files.items():
+                rel_in_file = self._get_relative_path(
+                    os.path.abspath(os.path.normpath(parent_file)), db_dir
+                )
 
-            # Get current tag values for this input
-            current_doc = self.project.database.get_document(
-                collection_name=COLLECTION_CURRENT, primary_keys=rel_in_file
-            )
+                # Skip self-reference case (output is one of the inputs)
+                if rel_in_file == rel_out_file:
+                    all_current_values = {}
+                    all_initial_values = {}
+                    current_values = {}
+                    initial_values = {}
+                    break
 
-            if current_doc:
-                # Extract relevant fields from CURRENT collection
-                current_values = {
-                    field: current_doc[0][field]
-                    for field in field_names
-                    if field not in excluded_tags
-                }
-                # Get matching INITIAL values if available
-                initial_doc = self.project.database.get_document(
-                    collection_name=COLLECTION_INITIAL,
+                # Get current tag values for this input
+                current_doc = database_data.get_document(
+                    collection_name=COLLECTION_CURRENT,
                     primary_keys=rel_in_file,
                 )
-                # Tags in COLLECTION_CURRENT for in_file
-                # FIXME: If initial_doc is None, do we want a message in
-                #        stdout like the one below (currently a message is
-                #        only visible in stdout if the document is not in the
-                #        CURRENT collection)?
-                initial_values = (
-                    {field: initial_doc[0][field] for field in current_values}
-                    if initial_doc
-                    else {}
-                )
-                all_current_values[param] = current_values
-                all_initial_values[param] = initial_values
 
-            else:
-                logger.warning(
-                    f"{self.context_name} brick initialization warning: "
-                    f"{parent_file} has no tags registered yet. "
-                    f"Therefore, {out_file} cannot inherit its tags. "
-                    f"This may cause subsequent initialization issues..."
-                )
-                initial_values = {}
-                current_values = {}
+                if current_doc:
+                    # Extract relevant fields from CURRENT collection
+                    current_values = {
+                        field: current_doc[0][field]
+                        for field in field_names
+                        if field not in excluded_tags
+                    }
+                    # Get matching INITIAL values if available
+                    initial_doc = database_data.get_document(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_keys=rel_in_file,
+                    )
+                    # Tags in COLLECTION_CURRENT for in_file
+                    # FIXME: If initial_doc is None, do we want a message in
+                    #        stdout like the one below (currently a message is
+                    #        only visible in stdout if the document is not in
+                    #        the CURRENT collection)?
+                    initial_values = (
+                        {
+                            field: initial_doc[0][field]
+                            for field in current_values
+                        }
+                        if initial_doc
+                        else {}
+                    )
+                    all_current_values[param] = current_values
+                    all_initial_values[param] = initial_values
+
+                else:
+                    logger.warning(
+                        f"{self.context_name} brick initialization warning: "
+                        f"{parent_file} has no tags registered yet. "
+                        f"Therefore, {out_file} cannot inherit its tags. "
+                        f"This may cause subsequent initialization issues..."
+                    )
+                    initial_values = {}
+                    current_values = {}
 
         # Resolve ambiguous parent selection if needed
         if (
