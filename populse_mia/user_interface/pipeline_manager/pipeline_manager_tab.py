@@ -3298,20 +3298,20 @@ class PipelineManagerTab(QWidget):
 
         if not isinstance(process, Process) or isinstance(process, Pipeline):
             # keep only leaf processes that actually produce outputs
-            return
+            return None
 
         if hasattr(process, "auto_inheritance_dict"):
             del process.auto_inheritance_dict
 
         if not hasattr(process, "get_study_config"):
-            return
+            return None
 
         study_config = process.get_study_config()
         project = getattr(study_config, "project", None)
 
         if not project:
             # no databasing, nothing to be done.
-            return
+            return None
 
         proj_dir = os.path.join(
             os.path.abspath(os.path.normpath(project.folder)), ""
@@ -3432,7 +3432,7 @@ class PipelineManagerTab(QWidget):
         if len(values) == 0:
             # zero inputs are registered in the database: we cannot
             # infer outputs tags automatically. OK we leave.
-            return
+            return None
 
         elif len(values) == 1:
             main_param = next(iter(values.keys()))
