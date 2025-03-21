@@ -281,7 +281,7 @@ class ImportWorker(QThread):
 
         :param tag_info (dict): Tag information dictionary
 
-        :returns (dict): Updated tag information dictionary
+        :return (dict): Updated tag information dictionary
         """
         value = tag_info["value"]
 
@@ -336,7 +336,7 @@ class ImportWorker(QThread):
         :param tag_name (str): Name of the tag
         :param properties (any): Properties of the tag
 
-        :returns (dict): Dictionary containing tag information
+        :return (dict): Dictionary containing tag information
         """
         tag_info = {
             "name": tag_name,
@@ -395,7 +395,7 @@ class ImportWorker(QThread):
 
         :param raw_data_folder (str): Path to the raw data folder
 
-        Returns (list): Log entries
+        Return (list): Log entries
         """
         # Find all export logs
         list_logs = glob.glob(os.path.join(raw_data_folder, "logExport*.json"))
@@ -531,7 +531,7 @@ class ImportWorker(QThread):
 
         :param tag_info (dict): Tag information dictionary
 
-        :returns (dict): Updated tag information dictionary
+        :return (dict): Updated tag information dictionary
         """
         format_str = tag_info["format"]
         # Convert from display format to Python datetime format
@@ -687,7 +687,7 @@ class ImportWorker(QThread):
 
         :param tag_info (dict): Tag information dictionary
 
-        returns (dict): Updated tag information dictionary
+        return (dict): Updated tag information dictionary
         """
         value = tag_info["value"]
 
@@ -959,7 +959,7 @@ def read_log(project, main_window):
     :param project (Project): The current project instance in the software
     :param main_window (MainWindow): The software's main window instance used
                                      to display the progress bar.
-    :returns (list):  A list of paths to the data files (scans) that were
+    :return (list):  A list of paths to the data files (scans) that were
                       successfully added.
     """
 
@@ -979,7 +979,7 @@ def tags_from_file(file_path, path):
 
     :param file_path (str): File path of the Json file (without the extension)
     :param path (str): Project path
-    :returns (List[List[Union[str, dict]]]: A list of the Json tags of the file
+    :return (List[List[Union[str, dict]]]: A list of the Json tags of the file
     """
     json_tags = []
     file = f"{os.path.join(path, file_path)}.json"
@@ -1008,7 +1008,7 @@ def verify_scans(project):
     Check if the project's scans have been modified.
 
     :param project (Project): Current project in the software
-    :returns (List[str]): The list of scans that have been modified
+    :return (List[str]): The list of scans that have been modified
                           or are missing.
     """
     # Returning the files that are problematic

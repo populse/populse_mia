@@ -170,8 +170,8 @@ class CountTable(QDialog):
         :param idx (int): The index associated with the button for tag
                           selection.
 
-        :returns (QPushButton): A configured QPushButton that triggers the
-                                tag selection when clicked.
+        :return (QPushButton): A configured QPushButton that triggers the
+                               tag selection when clicked.
         """
         button = QPushButton(text)
         button.clicked.connect(lambda: self.select_tag(idx))
@@ -195,9 +195,9 @@ class CountTable(QDialog):
         :param click_handler (Callable): The function to be called when the
                                          label is clicked.
 
-        :returns (ClickableLabel): A label displaying the specified image,
-                                   which triggers the click handler when
-                                   clicked.
+        :return (ClickableLabel): A label displaying the specified image,
+                                  which triggers the click handler when
+                                  clicked.
         """
         sources_images_dir = Config().getSourceImageDir()
         label = ClickableLabel()

@@ -46,8 +46,8 @@ def add_to_sys_path(path, name, index=0):
     :param name (str): The name of the package being added.
     :param index (int, optional): The index at which to insert the path
                                   into sys.path. Defaults to 0.
-    :returns (bool): True if the path is a valid directory and was added
-                     to sys.path, False otherwise.
+    :return (bool): True if the path is a valid directory and was added
+                    to sys.path, False otherwise.
     """
 
     if path.is_dir():
@@ -67,8 +67,8 @@ def check_package(name):
 
     :param name (str): The name of the package to be imported.
 
-    :returns (bool): True if the package is imported successfully;
-                     False if the package is missing.
+    :return (bool): True if the package is imported successfully;
+                    False if the package is missing.
     """
 
     try:

@@ -719,7 +719,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         """
         Get attribute values from the fallback engine.
 
-        :returns: The attribute values collection.
+        :return: The attribute values collection.
         """
         return self.fallback_engine.get_attribute_values()
 
@@ -727,7 +727,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         """
         Get the path completion engine from the fallback engine.
 
-        :returns: The path completion engine.
+        :return: The path completion engine.
         """
         return self.fallback_engine.get_path_completion_engine()
 
@@ -738,7 +738,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         :param process: The process to get the project for.
 
-        :returns: The associated project or None if not found.
+        :return: The associated project or None if not found.
 
         """
 
@@ -759,7 +759,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         :param parameter (str): The parameter name associated with the
                                 filename.
 
-        :returns: The path attributes.
+        :return: The path attributes.
         """
         return self.fallback_engine.path_attributes(filename, parameter)
 
@@ -769,7 +769,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         :param observer: The observer to remove.
 
-        :returns: The result from the fallback engine.
+        :return: The result from the fallback engine.
 
         """
         return self.fallback_engine.remove_switch_observer(observer)
@@ -814,8 +814,8 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
         :param name (str, optional): An optional name for the completion
                                      engine.
 
-        :returns (ProcessCompletionEngine): A completion engine instance
-                                            associated with the process.
+        :return (ProcessCompletionEngine): A completion engine instance
+                                           associated with the process.
         """
 
         if hasattr(process, "completion_engine"):
@@ -1005,7 +1005,7 @@ class ProcessMIA(Process):
         :param values_dict (dict): A dictionary where each value is expected
                                    to be comparable to the others.
 
-        :returns (bool): True if all values in `values_dict` are identical or
+        :return (bool): True if all values in `values_dict` are identical or
                          if the dictionary is empty, otherwise False.
         """
 
@@ -1051,7 +1051,7 @@ class ProcessMIA(Process):
 
         :param out_file (str): The output file to search for in user traits.
 
-        :returns (str | None): The name of the plug (trait) if found,
+        :return (str | None): The name of the plug (trait) if found,
                                otherwise None.
         """
 
@@ -1075,7 +1075,7 @@ class ProcessMIA(Process):
         :param file_path (str): The absolute path of the file.
         :param base_dir (str): The base directory to make the path relative to.
 
-        :returns (str): The relative file path.
+        :return (str): The relative file path.
 
         """
         rel_path = file_path.replace(base_dir, "")

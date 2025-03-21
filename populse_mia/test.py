@@ -420,7 +420,7 @@ class TestMIACase(unittest.TestCase):
 
         :param path: the full path of the executable, ending by '.jar'
 
-        :returns: 0 if success or 1 if failure
+        :return: 0 if success or 1 if failure
         """
 
         (folder, name) = os.path.split(path)
@@ -572,13 +572,13 @@ class TestMIACase(unittest.TestCase):
 
         :param proc_lib_view: the process library view object
 
-        :returns: the state of nipype proc_lib_view:
-                  - None: proc_lib_view is empty or nipype is not loaded.
-                  - 'nipype': 'nipype' is loaded but 'interfaces' not.
-                  - 'nipype.interface': 'nipype.interface' is loaded but
-                                        'DataGrabber' not.
-                  - 'process_enabled': 'nipype.interface.DataGrabber' is
-                                       loaded.
+        :return: the state of nipype proc_lib_view:
+                 - None: proc_lib_view is empty or nipype is not loaded.
+                 - 'nipype': 'nipype' is loaded but 'interfaces' not.
+                 - 'nipype.interface': 'nipype.interface' is loaded but
+                                       'DataGrabber' not.
+                 - 'process_enabled': 'nipype.interface.DataGrabber' is
+                                      loaded.
         """
 
         if proc_lib_view.to_dict():

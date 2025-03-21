@@ -597,7 +597,8 @@ class DatabaseMiaData:
         :param collection_name (str): The name of the collection to filter
                                       (must exist).
         :param filter_query (str): The filter query to apply.
-        :returns (list): A list of rows matching the filter criteria.
+
+        :return (list): A list of rows matching the filter criteria.
         """
 
         if not self.has_collection(collection_name):
@@ -640,8 +641,8 @@ class DatabaseMiaData:
                                                    fields to include in the
                                                    result. If None, all fields
                                                    are included.
-        :returns (list): A list of documents matching the specified criteria,
-                         or an empty list if the collection does not exist.
+        :return (list): A list of documents matching the specified criteria,
+                        or an empty list if the collection does not exist.
         """
 
         if not self.has_collection(collection_name):
@@ -680,8 +681,8 @@ class DatabaseMiaData:
         :param collection_name (str): The name of the collection to retrieve
                                       document names from. The collection must
                                       already exist.
-        :returns (list[str]): A list of document names if the collection
-                              exists, otherwise an empty list.
+        :return (list[str]): A list of document names if the collection
+                             exists, otherwise an empty list.
         """
         if self.has_collection(collection_name):
             primary_key = self.get_primary_key_name(collection_name)
@@ -703,10 +704,10 @@ class DatabaseMiaData:
                                            the collection. If not provided,
                                            attributes for all fields in the
                                            collection will be retrieved.
-        :returns (dict | list[dict]): Attributes of the specified field as a
-                                      dictionary, or a list of dictionaries
-                                      with attributes for all fields if
-                                      `field_name` is not provided.
+        :return (dict | list[dict]): Attributes of the specified field as a
+                                     dictionary, or a list of dictionaries
+                                     with attributes for all fields if
+                                     `field_name` is not provided.
         """
         if field_name:
             attributes = self.storage_data[FIELD_ATTRIBUTES_COLLECTION][
@@ -746,9 +747,9 @@ class DatabaseMiaData:
         :param collection_name (str): The name of the collection to retrieve
                                       field names from. The collection must
                                       exist in the database.
-        :returns (list | None): A list of all field names in the collection
-                                if it exists, or `None` if the collection has
-                                no fields or does not exist.
+        :return (list | None): A list of all field names in the collection
+                               if it exists, or `None` if the collection has
+                               no fields or does not exist.
         """
         field_names = list(self.storage_data[collection_name].keys())
         return field_names if field_names else None
@@ -762,8 +763,8 @@ class DatabaseMiaData:
 
         :param collection_name (str): The name of the collection to retrieve
                                       the primary key from.
-        :returns (str): The first key in the collection, representing the
-                        primary key.
+        :return (str): The first key in the collection, representing the
+                       primary key.
         """
         # TODO: Are we sure that the primary key is ALWAYS the first
         #       element in the dbs[collection].keys() dict_keys list?
@@ -774,7 +775,7 @@ class DatabaseMiaData:
         """
         Give the list of visible tags.
 
-        :returns (list): The list of visible tags.
+        :return (list): The list of visible tags.
         """
         visible_names = []
         names_set = set()
@@ -812,7 +813,7 @@ class DatabaseMiaData:
                                   document.
         :param field (str): The name of the field within the document to
                             retrieve.
-        :returns (Any): The current value of the specified field.
+        :return (Any): The current value of the specified field.
         """
         return self.storage_data[collection_name][primary_key][field].get()
 
@@ -821,7 +822,7 @@ class DatabaseMiaData:
          Checks if a collection with the specified name exists in the database.
 
         :param collection_name (str): The name of the collection to check.
-        :returns (bool): `True` if the collection exists, otherwise `False`.
+        :return (bool): `True` if the collection exists, otherwise `False`.
         """
         return self.storage_data.has_collection(collection_name)
 
@@ -832,7 +833,7 @@ class DatabaseMiaData:
 
         :param collection_name (str): The name of the collection.
         :param primary_key (str): The primary key of the document to check.
-        :returns (bool): `True` if the document exists, `False` otherwise.
+        :return (bool): `True` if the document exists, `False` otherwise.
         """
 
         if not self.has_collection(collection_name):

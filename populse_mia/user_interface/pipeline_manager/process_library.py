@@ -1189,7 +1189,7 @@ class Node:
         """
         Creates a property for the object's value.
 
-        :returns (dict): A dictionary with getter and setter functions for
+        :return (dict): A dictionary with getter and setter functions for
                          the value attribute.
         """
 

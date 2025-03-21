@@ -521,7 +521,7 @@ class Project:
     def add_clinical_tags(self):
         """Add new clinical tags to the project.
 
-        :returns: list of clinical tags that were added.
+        :return: list of clinical tags that were added.
         """
         return_tags = []
 
@@ -730,7 +730,7 @@ class Project:
         Iterates through predefined clinical tags and removes them from both
         collections if they exist in the current collection's field names.
 
-        :returns: List of clinical tags that were successfully removed.
+        :return (list): Clinical tags that were successfully removed.
         """
         removed_tags = []
 
@@ -765,9 +765,9 @@ class Project:
                         nested structures
                       - dict: Only values are processed, keys are ignored
 
-        :returns: Set of relative file paths that exist within the project
-                  folder, with paths normalized and made relative to the
-                  project directory
+        :return (set): Relative file paths that exist within the project
+                       folder, with paths normalized and made relative to the
+                       project directory
         """
         project_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.folder)),
@@ -819,7 +819,7 @@ class Project:
                              execution status. If False, only includes
                              "Not Done" bricks.
 
-        :returns: Dict containing:
+        :return (dict): Dictionary containing:
                   - 'bricks': Dict mapping brick IDs to their metadata
                   - 'outputs': Set of output file paths relative to project
                                directory
@@ -841,7 +841,8 @@ class Project:
             :param d2 (dict): The dictionary containing new key-value pairs
                               to merge into `d1`.
 
-            :returns: The updated dictionary (`d1`) after merging with `d2`.
+            :return (dict): The updated dictionary (`d1`) after merging
+                            with `d2`.
 
             """
             d1.update(d2)
@@ -858,8 +859,8 @@ class Project:
             :param base_len (int): Length of base path string for relative
                                    path calculation
 
-            :returns (set[str]): A set of collected file paths, relative to
-                                 the project directory.
+            :return (set[str]): A set of collected file paths, relative to
+                                the project directory.
             """
             outputs = set()
             to_process = [value]
@@ -951,8 +952,8 @@ class Project:
     def getDate(self):
         """Return the date of creation of the project.
 
-        :returns: string of the date of creation of the project if it's not
-                  Unnamed project, otherwise empty string
+        :return (str): The date of creation of the project if it's not
+                       Unnamed project, otherwise empty string
         """
 
         return self.properties["date"]
@@ -968,7 +969,7 @@ class Project:
                                                be treated as a minimal
                                                pipeline.
 
-        Returns (dict): A dictionary where keys are process UUIDs (brick IDs)
+        :return (dict): A dictionary where keys are process UUIDs (brick IDs)
                         and values are dictionaries containing the associated
                         process instances.
 
@@ -1030,7 +1031,7 @@ class Project:
         :param engine (object): The engine instance used to interact with the
                                 study configuration and Soma-Workflow module.
 
-        Returns (dict): A dictionary where keys are brick IDs (UUIDs) and
+        :return (dict): A dictionary where keys are brick IDs (UUIDs) and
                         values are dictionaries containing metadata about
                         each finished job, including:
                         - `workflow`: The workflow ID in which the job is
@@ -1092,8 +1093,9 @@ class Project:
         """Return a Filter object from its name.
 
         :param filter (str): Filter name
-        :returns (Filter): Filter object corresponding to the given name or
-                           None if not found
+
+        :return (Filter): Filter object corresponding to the given name or
+                          None if not found
         """
         next((obj for obj in self.filters if obj.name == filter), None)
 
@@ -1101,8 +1103,8 @@ class Project:
         """
         Input box to type the name of the filter to save.
 
-        :returns (str): Return the name typed by the user or None if
-                        cancelled
+        :return (str): Return the name typed by the user or None if
+                       cancelled
         """
 
         from PyQt5.QtWidgets import QInputDialog, QLineEdit
@@ -1120,8 +1122,8 @@ class Project:
     def getName(self):
         """Return the name of the project.
 
-        :returns: string of the name of the project if it's not Unnamed
-                  project, otherwise empty string
+        :return (str): The name of the project if it's not Unnamed
+                       project, otherwise empty string
         """
 
         return self.properties["name"]
@@ -1134,7 +1136,7 @@ class Project:
                                      search. If None, all bricks in the
                                      database are considered. Defaults to None.
 
-        :returns (tuple): A tuple containing two sets:
+        :return (tuple): A tuple containing two sets:
                     - `orphan` (set): Brick IDs considered orphaned, meaning
                                       they have no valid or existing outputs
                                       linked to the current database.
@@ -1232,15 +1234,15 @@ class Project:
         Identifies orphaned history entries, their associated orphan bricks,
         and weak files.
 
-        :returns (tuple): A tuple containing three sets:
-        - `orphan_hist` (set): IDs of history entries that are no longer
-                               linked to any current document in the
-                               database.
-        - `orphan_bricks` (set): IDs of bricks associated with orphaned
-                                 history entries.
-        - `orphan_weak_files` (set): Paths to weak files (e.g., script files
-                                     or non-existent files) linked to
-                                     orphaned history entries.
+        :return (tuple): A tuple containing three sets:
+            - `orphan_hist` (set): IDs of history entries that are no longer
+                                   linked to any current document in the
+                                   database.
+            - `orphan_bricks` (set): IDs of bricks associated with orphaned
+                                     history entries.
+            - `orphan_weak_files` (set): Paths to weak files (e.g., script
+                                         files or non-existent files) linked
+                                         to orphaned history entries.
         """
         orphan_hist = set()
         orphan_bricks = set()
@@ -1329,9 +1331,9 @@ class Project:
         Retrieves orphaned files listed in the database that no longer exist
         on the filesystem.
 
-        :returns (set): A set of filenames from the database that are not
-                        found on the filesystem and are not associated with
-                        existing bricks.
+        :return (set): A set of filenames from the database that are not
+                       found on the filesystem and are not associated with
+                       existing bricks.
         """
 
         with self.database.data() as database_data:
@@ -1363,8 +1365,8 @@ class Project:
     def getSortedTag(self):
         """Return the sorted tag of the project.
 
-        :returns (str): Sorted tag of the project if it's not Unnamed
-                  project, otherwise empty string
+        :return (str): Sorted tag of the project if it's not Unnamed
+                       project, otherwise empty string
         """
 
         return self.properties["sorted_tag"]
@@ -1372,8 +1374,8 @@ class Project:
     def getSortOrder(self):
         """Return the sort order of the project.
 
-        :returns (str): Sort order of the project if it's not Unnamed
-                        project, otherwise empty string
+        :return (str): Sort order of the project if it's not Unnamed
+                       project, otherwise empty string
         """
 
         return self.properties["sort_order"]
@@ -1381,8 +1383,8 @@ class Project:
     def hasUnsavedModifications(self):
         """Return if the project has unsaved modifications or not.
 
-        :returns (bool): True if the project has pending modifications,
-                         False otherwise
+        :return (bool): True if the project has pending modifications,
+                        False otherwise
         """
 
         return self.unsavedModifications
@@ -1428,8 +1430,8 @@ class Project:
         This method reads the project's YAML properties file and returns
         its contents as a Python dictionary.
 
-        :returns (dict): A dictionary containing the project properties if
-                         successfully loaded, or None if an error occurs.
+        :return (dict): A dictionary containing the project properties if
+                        successfully loaded, or None if an error occurs.
         """
 
         # import verCmp only here to prevent circular import issue
