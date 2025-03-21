@@ -263,7 +263,7 @@ def _is_valid_date(date_str, date_format):
     :param date_str (str): The date string to validate.
     :param date_format (str): The expected date format.
 
-    :returns (bool): True if the string matches the format, False otherwise.
+    :return (bool): True if the string matches the format, False otherwise.
     """
     try:
         datetime.strptime(date_str, date_format)
@@ -281,8 +281,8 @@ def check_value_type(value, value_type, is_subvalue=False):
                         representation of a list)
     :param value_type (type): Expected type (can be list[str], list[int], etc.)
     :param is_subvalue (bool): Whether the value is a subvalue of a list.
-    :returns: True if the value is valid to replace the old one,
-              False otherwise
+    :return: True if the value is valid to replace the old one,
+             False otherwise
     """
 
     # Convert string to a list if it appears to be list-like

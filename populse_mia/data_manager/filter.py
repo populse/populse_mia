@@ -75,10 +75,11 @@ class Filter:
     def generate_filter(self, current_project, scans, tags):
         """Apply the filter to the given list of scans.
 
-        :param current_project: Current project
-        :param scans: List of scans to apply the filter into
-        :param tags: List of tags to search in
-        :returns: The list of scans matching the filter
+        :param current_project: Current project.
+        :param scans: List of scans to apply the filter into.
+        :param tags: List of tags to search in.
+
+        :return (list): The list of scans matching the filter.
         """
 
         rapid_filter = data_browser.rapid_search.RapidSearch.prepare_filter(
@@ -110,7 +111,7 @@ class Filter:
     def json_format(self):
         """Return the filter as a dictionary.
 
-        :returns: the filter as a dictionary
+        :return (dict): The filter as a dictionary.
         """
         # Filter dictionary
         data = {

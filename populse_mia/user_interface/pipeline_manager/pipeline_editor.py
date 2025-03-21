@@ -2278,7 +2278,7 @@ def save_pipeline(pipeline, filename):
 def values(d):
     """Return a variable as a list.
 
-    :returns: list
+    :return (list): A variable as a list.
     """
 
     return list(d.values())

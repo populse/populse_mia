@@ -1242,7 +1242,7 @@ class PopUpClosePipeline(QDialog):
     def can_exit(self):
         """Check if the editor can be closed.
 
-        Returns (bool): True if the editor can be closed, False otherwise.
+        Return (bool): True if the editor can be closed, False otherwise.
         """
         return self.bool_exit
 
@@ -2894,7 +2894,7 @@ class PopUpPreferences(QDialog):
         :param add_stretch (bool): Whether to add stretch at the end to push
                                    the widgets to the left. Defaults to True.
 
-        :returns (QHBoxLayout): The created horizontal box layout.
+        :return (QHBoxLayout): The created horizontal box layout.
         """
         h_box = QHBoxLayout()
 
@@ -3472,8 +3472,8 @@ class PopUpPreferences(QDialog):
 
         :param config (Config): The configuration object to update and save.
 
-        :returns (bool): True if the configuration is valid and successfully
-                         saved, False otherwise.
+        :return (bool): True if the configuration is valid and successfully
+                        saved, False otherwise.
         """
         config.setAutoSave(self.save_checkbox.isChecked())
         config.set_radioView(self.radioView_checkbox.isChecked())
@@ -3944,8 +3944,8 @@ class PopUpPreferences(QDialog):
         :param path (str): The path to the Matlab executable.
         :param config (Config): The configuration object to update.
 
-        :returns (bool): True if the path is valid and updated in the
-                         configuration, False otherwise.
+        :return (bool): True if the path is valid and updated in the
+                        configuration, False otherwise.
         """
 
         if not os.path.isfile(path):
@@ -4021,8 +4021,8 @@ class PopUpPreferences(QDialog):
         :param path (str): The path to the Matlab standalone directory.
         :param config (Config): The configuration object to update.
 
-        :returns (bool): True if the path is valid and updated in the
-                         configuration, False otherwise.
+        :return (bool): True if the path is valid and updated in the
+                        configuration, False otherwise.
         """
 
         if not os.path.isdir(path):
@@ -4069,8 +4069,8 @@ class PopUpPreferences(QDialog):
         :param config (Config): The configuration object where validated
                                 paths and settings will be stored.
 
-        :returns (bool): True if all paths and settings are valid, False
-                         otherwise.
+        :return (bool): True if all paths and settings are valid, False
+                        otherwise.
         """
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
         self.status_label.setText("Testing configuration ...")
@@ -4246,8 +4246,8 @@ class PopUpPreferences(QDialog):
         :param config (Config): The configuration object where validated
                                 paths and settings will be stored.
 
-        :returns (bool): True if the SPM path and Matlab path are valid,
-                         False otherwise.
+        :return (bool): True if the SPM path and Matlab path are valid,
+                        False otherwise.
         """
         matlab_path = self.matlab_choice.text()
 
@@ -4336,8 +4336,8 @@ class PopUpPreferences(QDialog):
         :param config (Config): The configuration object where validated
                                 paths and settings will be stored.
 
-        :returns (bool): True if the SPM standalone and Matlab standalone
-                         paths are valid, False otherwise.
+        :return (bool): True if the SPM standalone and Matlab standalone
+                        paths are valid, False otherwise.
         """
         matlab_path = self.matlab_standalone_choice.text()
         archi = platform.architecture()
@@ -4492,8 +4492,8 @@ class PopUpPreferences(QDialog):
         :param set_path (Callable): A function to set the tool's path in the
                                    configuration.
 
-        :returns (bool): True if the tool's path is valid and functional,
-                         False otherwise.
+        :return (bool): True if the tool's path is valid and functional,
+                        False otherwise.
         """
         extra = ""
         option = "--version"
@@ -4606,7 +4606,7 @@ class PopUpPreferences(QDialog):
                                            error message, such as specifying
                                            a configuration file.
 
-        :returns (None): This function does not return anything.
+        :return (None): This function does not return anything.
         """
         QApplication.restoreOverrideCursor()
         self.status_label.setText("")
@@ -4799,7 +4799,7 @@ class PopUpQuit(QDialog):
         """
         Check if the application can exit.
 
-        :returns: Boolean indicating whether exit is allowed..
+        :return (bool): True if  exit is allowed.
         """
         return self._bool_exit
 
@@ -5177,7 +5177,8 @@ class PopUpSaveProjectAs(QDialog):
         Checks project name validity, handles potential naming conflicts,
         and emits a signal when a valid project name is selected.
 
-        :returns: Full path of the new project if successful, None otherwise.
+        :return (str): Full path of the new project if successful,
+                       None otherwise.
         """
         # import message_already_exists only here to prevent circular
         # import issue
@@ -5975,8 +5976,8 @@ class PopUpShowHistory(QDialog):
         :param node_name (str): The name of the node to find associated
                                 bricks for.
 
-        :returns (dict): A dictionary where the keys are the full brick
-                         names and the values are lists of associated UUIDs.
+        :return (dict): A dictionary where the keys are the full brick
+                        names and the values are lists of associated UUIDs.
         """
         bricks = {}
 
@@ -6283,9 +6284,9 @@ class PopUpShowHistory(QDialog):
 
             :param text (str): The text to display in the QLabel.
 
-            :returns (QWidget): A QWidget containing a QLabel with the
-                                specified text, aligned to the top within
-                                a vertical layout.
+            :return (QWidget): A QWidget containing a QLabel with the
+                               specified text, aligned to the top within
+                               a vertical layout.
             """
             widget = QWidget()
             layout = QVBoxLayout()

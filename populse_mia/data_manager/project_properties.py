@@ -61,9 +61,10 @@ class SavedProjects:
         Adds a project path or moves it to the front if it exists.
 
         :param newPath (str): Path of the new project.
-        :returns (list): Updated project paths list.
 
+        :return (list): Updated project paths list.
         """
+
         if newPath in self.pathsList:
             self.pathsList.remove(newPath)
 
@@ -77,8 +78,7 @@ class SavedProjects:
         Loads saved projects from 'saved_projects.yml', or creates a default
         file if missing.
 
-        :returns (dict): Loaded project paths.
-
+        :return (dict): Loaded project paths.
         """
         config = Config()
 

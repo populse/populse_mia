@@ -338,8 +338,8 @@ class MainWindow(QMainWindow):
         Check if there are differences between the current project and the
         database.
 
-        :returns (bool): True if there are unsaved modifications,
-                         False otherwise
+        :return (bool): True if there are unsaved modifications,
+                        False otherwise
         """
 
         if self.project.isTempProject:
@@ -1109,8 +1109,8 @@ class MainWindow(QMainWindow):
                            is "qtconsole". It determines the GUI integration
                            mode of the kernel.
 
-        :returns (IPKernelApp): The instance of the IPython kernel
-                                application.
+        :return (IPKernelApp): The instance of the IPython kernel
+                               application.
 
         Notes:
             - The method ensures that the kernel is properly initialized if

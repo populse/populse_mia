@@ -71,7 +71,7 @@ class PopulseFileControlWidget(FileControlWidget):
                                                       class.
         :param user_data (Optional[dict]): Additional user data.
 
-        :returns (Tuple[QWidget, QLabel]):
+        :return (Tuple[QWidget, QLabel]):
             A tuple containing the created widget and its associated label.
             The widget includes a QLineEdit ('path') and a browse
             button ('browse').
@@ -99,7 +99,7 @@ class PopulseFileControlWidget(FileControlWidget):
 
             :param value (str): The value to check.
 
-            :returns (bool): True if the value is a number, False otherwise.
+            :return (bool): True if the value is a number, False otherwise.
             """
 
             try:
@@ -242,7 +242,7 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         :param user_data (Optional[dict]): User data associated with
                                            the widget.
 
-        :returns (QWidget): The directory selection widget.
+        :return (QWidget): The directory selection widget.
         """
 
         return PopulseFileControlWidget.create_widget(
@@ -348,7 +348,7 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         :param user_data (dict): Additional data, including project,
                                  scan list, and connected inputs.
 
-        :returns (tuple): A tuple (control widget, (QLabel, QWidget)).
+        :return (tuple): A tuple (control widget, (QLabel, QWidget)).
         """
         widget, label = OffscreenListFileControlWidget.create_widget(
             parent,
@@ -531,7 +531,7 @@ class PopulseUndefinedControlWidget:
         :param label_class: The class to use for the label widget. Default is
                             QLabel if None.
 
-        :returns (tuple): (control_widget, label_widget) where control_widget
+        :return (tuple): (control_widget, label_widget) where control_widget
                           is a QLabel displaying the Undefined value and
                           label_widget is the associated label.
         """
@@ -577,7 +577,7 @@ class PopulseUndefinedControlWidget:
 
         :param control_instance (QWidget): The control widget to validate.
 
-        :returns (bool): True if the control value is Undefined, False
+        :return (bool): True if the control value is Undefined, False
                          otherwise
         """
 

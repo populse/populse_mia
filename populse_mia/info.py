@@ -41,7 +41,7 @@ def get_populse_mia_gitversion():
     """
     Mia version as reported by the last commit in git.
 
-    :returns: The short commit hash as the version or None if not found.
+    :return: The short commit hash as the version or None if not found.
     """
 
     try:
