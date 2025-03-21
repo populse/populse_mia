@@ -28,7 +28,6 @@ the project.
 ##########################################################################
 
 # Other import
-import distutils.dir_util
 import glob
 import inspect
 import logging
@@ -353,72 +352,396 @@ class DictionaryTreeModel(QAbstractItemModel):
 
 
 class InstallProcesses(QDialog):
-    """A widget that allows to browse a Python package or a zip file to install
-    the processes that it is containing.
+    """
+    Dialog for installing Python packages from a folder or zip file.
 
-    :param main_window: current main window
-    :param folder: boolean, True if folder, False if zip
+    This widget allows users to browse and select a Python package or zip file
+    containing packages, then install them into Populse_MIA.
 
     .. Methods:
-        - get_filename: opens a file dialog to get the folder or zip file to
-        install
-        - install: installs the selected file/folder on Populse_MIA
-            **Contains: Private function:**
-                - _add_package: Add a package and its modules to
-                  the package tree
-                - _change_pattern_in_folder: Changing all 'old_pattern' pattern
-                  to 'new_pattern' in the 'path' folder
+        - _add_package: Add a package and its modules to the process tree.
+        - _change_pattern_in_folder: Replace pattern in all Python files
+                                     within a folder.
+        - _install_new_package: Install a new package.
+        - _load_process_config: Load the process configuration from YAML.
+        - _rollback_changes: Roll back changes in case of installation failure.
+        - _show_qmessagebox: Display an error message box.
+        - _show_status_message: Update status message in the main window.
+        - _update_existing_package: Update an existing package.
+        - _validate_input: Validate the input file or directory.
+        - get_filename: Opens a file dialog to get the folder or zip file to
+                        install.
+        - install: Installs the selected file/folder on Populse_mia.
 
+    .. Signals:
+        - process_installed: Emitted when a process is successfully installed
     """
 
     process_installed = Signal()
 
     def __init__(self, main_window, folder):
-        """Initialize the InstallProcesses class.
+        """
+        Initialize the installation dialog.
 
-        :param main_window: current main window
-        :param folder: boolean, True if folder, False if zip
+        :param main_window: The main application window
+        :param folder (bool): If True, install from folder; if False, install
+                              from zip file
 
         """
         super().__init__(parent=main_window)
         self.main_window = main_window
         self.setWindowTitle("Install processes")
+        # Set up layout
         v_layout = QVBoxLayout()
         self.setLayout(v_layout)
-
-        if folder is False:
-            label_text = "Choose zip file containing Python packages"
-
-        elif folder is True:
-            label_text = "Choose folder containing Python packages"
-
+        # Choose appropriate label text based on installation type
+        label_text = (
+            "Choose folder containing Python packages"
+            if folder
+            else "Choose zip file containing Python packages"
+        )
         v_layout.addWidget(QLabel(label_text))
+        # File selection section
         edit_layout = QHBoxLayout()
         v_layout.addLayout(edit_layout)
         self.path_edit = QLineEdit()
         edit_layout.addWidget(self.path_edit)
         self.browser_button = QPushButton("Browse")
         edit_layout.addWidget(self.browser_button)
+        # Bottom buttons
         bottom_layout = QHBoxLayout()
         v_layout.addLayout(bottom_layout)
         install_button = QPushButton("Install package")
         bottom_layout.addWidget(install_button)
         quit_button = QPushButton("Quit")
         bottom_layout.addWidget(quit_button)
+        # Connect signals
         install_button.clicked.connect(self.install)
         quit_button.clicked.connect(self.close)
         self.browser_button.clicked.connect(
             lambda: self.get_filename(folder=folder)
         )
 
-    def get_filename(self, folder):
-        """Open a file dialog to get the folder or zip file to install.
+    def _add_package(self, proc_dic, module_name):
+        """
+        Add a package and its modules to the process tree.
 
-        :param folder: True if the dialog installs from folder, False if
-                       from zip file
+        :param proc_dic (dict): The process tree dictionary to update.
+        :param module_name (str): Name of the module to add.
+
+        :return (dict): The updated process tree dictionary.
         """
 
-        if folder is True:
+        if not module_name:
+            return proc_dic
+
+        # Reload the package if already loaded
+        if module_name in sys.modules:
+            del sys.modules[module_name]
+
+        try:
+            __import__(module_name)
+
+        except ImportError as err:
+            self._show_qmessagebox(
+                f"During the installation of {module_name}, "
+                f"the following exception was raised:"
+                f"\n{err.__class__}: {err}.\n"
+                f"This exception may have prevented the installation."
+            )
+
+            self.result_add_package = False
+            raise ImportError(
+                f"The {module_name} brick may not have been installed."
+            )
+
+        pkg = sys.modules[module_name]
+
+        # Check for subpackages
+        for _, modname, ispkg in pkgutil.iter_modules(pkg.__path__):
+
+            if ispkg:
+                self._add_package(proc_dic, f"{module_name}.{modname}")
+
+        # Process each class in the package
+        for k, v in sorted(list(pkg.__dict__.items())):
+
+            if not inspect.isclass(v):
+                continue
+
+            try:
+                logger.info(f"Installing {module_name}.{v.__name__}...")
+                get_process_instance(f"{module_name}.{v.__name__}")
+                # Update the tree dictionary
+                path_list = module_name.split(".")
+                path_list.append(k)
+                pkg_iter = proc_dic
+
+                for i, element in enumerate(path_list):
+
+                    if element in pkg_iter:
+                        pkg_iter = pkg_iter[element]
+
+                    else:
+
+                        if i == len(path_list) - 1:
+                            pkg_iter[element] = "process_enabled"
+
+                        else:
+                            pkg_iter[element] = {}
+                            pkg_iter = pkg_iter[element]
+
+            except Exception:
+                logger.warning(
+                    f"Error during installation of "
+                    f"the '{module_name}' module ...!",
+                    exc_info=True,
+                )
+                self.result_add_package = False
+
+        return proc_dic
+
+    def _change_pattern_in_folder(self, path, old_pattern, new_pattern):
+        """
+        Replace pattern in all Python files within a folder.
+
+        :param path (str): Directory path to process.
+        :param old_pattern (str): Pattern to search for.
+        :param new_pattern (str): Pattern to replace with.
+        """
+
+        for root, _, files in os.walk(path):
+
+            for fname in files:
+
+                if not fname.endswith(".py"):
+                    continue
+
+                # Modifying only .py files (pipelines are saved with
+                # this extension)
+                fpath = os.path.join(root, fname)
+
+                with open(fpath) as f:
+                    content = f.read()
+
+                # Replace the pattern
+                updated_content = content.replace(
+                    f"{old_pattern}.", f"{new_pattern}."
+                )
+
+                with open(fpath, "w") as f:
+                    f.write(updated_content)
+
+    def _install_new_package(self, filename, package_name, processes_path):
+        """
+        Install a new package.
+
+        :param filename (str): Path to zip file or directory.
+        :param package_name (str): Name of the package to install.
+        :param processes_path (str): Target directory for installation.
+        """
+
+        if is_zipfile(filename):
+
+            with ZipFile(filename, "r") as zip_ref:
+                members_to_extract = [
+                    member
+                    for member in zip_ref.namelist()
+                    if member.startswith(package_name)
+                ]
+                zip_ref.extractall(processes_path, members_to_extract)
+
+        elif os.path.isdir(filename):
+            shutil.copytree(
+                filename, os.path.join(processes_path, package_name)
+            )
+
+    def _load_process_config(self, config_path):
+        """
+        Load the process configuration from YAML.
+
+        :param config_path (str): Path to the configuration file.
+
+        :return (dict): The loaded configuration or empty dict if error.
+        """
+
+        try:
+
+            with open(config_path) as stream:
+                # Import here to prevent circular import
+                from populse_mia.utils import verCmp
+
+                if verCmp(yaml.__version__, "5.1", "sup"):
+                    process_dic = yaml.load(stream, Loader=yaml.FullLoader)
+
+                else:
+                    process_dic = yaml.load(stream)
+
+            return process_dic or {}
+
+        except yaml.YAMLError as exc:
+            logger.warning(f"Error loading process config: {exc}")
+            return {}
+
+    def _rollback_changes(
+        self,
+        config_path,
+        original_config,
+        processes_path,
+        package_names,
+        mia_processes_not_found,
+        tmp_folder4MIA,
+    ):
+        """
+        Roll back changes in case of installation failure.
+
+        Parameters
+        ----------
+        :param config_path (str): Path to configuration file.
+        :param original_config (dict): Original configuration to restore.
+        :param processes_path (str): Path to processes directory.
+        :param package_names (list): Names of packages that were being
+                                     installed.
+        :param mia_processes_not_found (bool): Flag indicating if
+                                               Mia processes backup was made.
+        :param tmp_folder4MIA (str): Path to Mia processes backup.
+        """
+        if original_config is None:
+            original_config = {}
+
+        # Restore original configuration
+        with open(config_path, "w", encoding="utf8") as stream:
+            yaml.dump(
+                original_config,
+                stream,
+                default_flow_style=False,
+                allow_unicode=True,
+            )
+
+        # Remove extracted packages
+        for package_name in package_names or []:
+            package_path = os.path.join(processes_path, package_name)
+
+            if os.path.exists(package_path):
+                shutil.rmtree(package_path)
+
+        # Restore Mia processes if needed
+        if not mia_processes_not_found and tmp_folder4MIA:
+            shutil.copytree(
+                os.path.join(tmp_folder4MIA, "mia_processes"),
+                os.path.join(processes_path, "mia_processes"),
+                dirs_exist_ok=True,
+            )
+
+    def _show_qmessagebox(self, message, critical=True):
+        """
+        Display an error message box.
+
+        :param message (str): Message to display
+        :param critical (bool): If True, display a critical message box.
+        """
+        msg = QMessageBox()
+
+        if critical:
+            msg.setIcon(QMessageBox.Critical)
+            msg.setWindowTitle("Warning")
+
+        else:
+            msg.setWindowTitle("Installation completed")
+
+        msg.setText(message)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.buttonClicked.connect(msg.close)
+        msg.exec()
+
+    def _show_status_message(self, message):
+        """
+        Update status message in the main window.
+
+        :param message (str): Status message to display
+        """
+
+        try:
+            self.main_window.statusBar().showMessage(message)
+            QApplication.processEvents()
+
+        except AttributeError:
+            self.main_window.status_label.setText(message)
+
+    def _update_existing_package(self, filename, package_name, processes_path):
+        """
+        Update an existing package.
+
+        :param filename (str): Path to zip file or directory.
+        :param package_name (str): Name of the package to update.
+        :param processes_path (str): Target directory for installation.
+
+        :return (str): The new package name (with timestamp).
+        """
+        # Create timestamped name for the new version
+        date = datetime.now().strftime("%Y%m%d%H%M%S")
+        new_package_name = f"{package_name}_{date}"
+
+        if is_zipfile(filename):
+
+            with tempfile.TemporaryDirectory() as tmp_dir:
+
+                with ZipFile(filename, "r") as zip_ref:
+                    members_to_extract = [
+                        member
+                        for member in zip_ref.namelist()
+                        if member.startswith(package_name)
+                    ]
+                    zip_ref.extractall(tmp_dir, members_to_extract)
+                    shutil.move(
+                        os.path.join(tmp_dir, package_name),
+                        os.path.join(processes_path, new_package_name),
+                    )
+
+        elif os.path.isdir(filename):
+            shutil.copytree(
+                filename, os.path.join(processes_path, new_package_name)
+            )
+
+        # Replace package name references in files
+        self._change_pattern_in_folder(
+            os.path.join(processes_path, new_package_name),
+            package_name,
+            new_package_name,
+        )
+
+        return new_package_name
+
+    def _validate_input(self, filename):
+        """
+        Validate the input file or directory.
+
+        :param filename (str): Path to the file or directory.
+
+        :return (bool): True if valid, False otherwise
+        """
+
+        if not os.path.exists(filename):
+            self._show_qmessagebox(
+                "The specified file or directory cannot be found"
+            )
+            return False
+
+        if not os.path.isdir(filename) and not filename.endswith(".zip"):
+            self._show_qmessagebox("The specified file has to be a .zip file")
+            return False
+
+        return True
+
+    def get_filename(self, folder):
+        """
+        Open a file dialog to select the package source.
+
+        :param folder (bool): If True, opens a directory selection dialog;
+                              If False, opens a zip file selection dialog
+        """
+
+        if folder:
             filename = QFileDialog.getExistingDirectory(
                 self,
                 caption="Select a directory",
@@ -426,261 +749,84 @@ class InstallProcesses(QDialog):
                 options=QFileDialog.ShowDirsOnly,
             )
 
-        elif folder is False:
+        else:
             filename = QFileDialog.getOpenFileName(
                 caption="Select a zip file",
                 directory=os.path.expanduser("~"),
                 filter="Compatible files (*.zip)",
             )
 
-        if filename and isinstance(filename, str):
+        if not filename:
+            return
+
+        if isinstance(filename, str):
             self.path_edit.setText(filename)
 
-        elif filename and isinstance(filename, tuple):
+        elif isinstance(filename, tuple):
             self.path_edit.setText(filename[0])
 
     def install(self):
-        """Install a package from a zip file or a folder.
-
-        **Contains: Private function:**
-            - _add_package: Add a package and its modules to the package tree
-            - _change_pattern_in_folder: Changing all 'old_pattern' pattern to
-              'new_pattern' in the 'path' folder
-
         """
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
+        Install a package from a zip file or a folder.
 
-        def _add_package(proc_dic, module_name):
-            """Add a package and its modules to the package tree.
+        This method handles the complete installation process:
+        1. Extracts or copies the package to the processes directory
+        2. Updates the process dictionary
+        3. Registers the new package in the configuration
 
-            :param proc_dic: the process tree-dictionary
-            :param module_name: name of the module
-            :return: proc_dic: the modified process tree-dictionary
-
-            """
-
-            if module_name:
-
-                # Reloading the package
-                if module_name in sys.modules.keys():
-                    del sys.modules[module_name]
-
-                try:
-                    __import__(module_name)
-
-                except ImportError as er:
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Critical)
-                    msg.setText(
-                        f"During the installation of {module_name}, "
-                        f"the following exception was raised:"
-                        f"\n{er.__class__}: {er}.\nThis exception maybe "
-                        f"prevented the installation..."
-                    )
-                    msg.setWindowTitle("Warning")
-                    msg.setStandardButtons(QMessageBox.Ok)
-                    msg.buttonClicked.connect(msg.close)
-                    msg.exec()
-                    self.result_add_package = False
-                    raise ImportError(
-                        f"The {module_name} brick may not been installed."
-                    )
-
-                pkg = sys.modules[module_name]
-
-                # Checking if there are subpackages
-                for importer, modname, ispkg in pkgutil.iter_modules(
-                    pkg.__path__
-                ):
-
-                    if ispkg:
-                        _add_package(proc_dic, f"{module_name}.{modname}")
-
-                for k, v in sorted(list(pkg.__dict__.items())):
-
-                    # Checking each class of in the package
-                    if inspect.isclass(v):
-
-                        try:
-                            logger.info(
-                                f"Installing {module_name}.{v.__name__} ..."
-                            )
-                            get_process_instance(f"{module_name}.{v.__name__}")
-                            # Updating the tree's dictionary
-                            path_list = module_name.split(".")
-                            path_list.append(k)
-                            pkg_iter = proc_dic
-
-                            for element in path_list:
-
-                                if element in pkg_iter.keys():
-                                    pkg_iter = pkg_iter[element]
-
-                                else:
-
-                                    if element is path_list[-1]:
-                                        pkg_iter[element] = "process_enabled"
-
-                                    else:
-                                        pkg_iter[element] = {}
-                                        pkg_iter = pkg_iter[element]
-
-                        except Exception:
-                            logger.warning(
-                                f"Error during installation of "
-                                f"the '{module_name}' module ...!",
-                                exc_info=True,
-                            )
-                            self.result_add_package = False
-
-                return proc_dic
-
-        def _change_pattern_in_folder(path, old_pattern, new_pattern):
-            """Changing all "old_pattern" pattern to "new_pattern" in the
-            'path' folder.
-
-            :param path: path of the extracted or copied processes
-            :param old_pattern: old pattern
-            :param new_pattern: new pattern
-            """
-
-            for dname, dirs, files in os.walk(path):
-
-                for fname in files:
-                    # Modifying only .py files (pipelines are saved with
-                    # this extension)
-
-                    if fname[-2:] == "py":
-                        fpath = os.path.join(dname, fname)
-
-                        with open(fpath) as f:
-                            s = f.read()
-
-                        s = s.replace(f"{old_pattern}.", f"{new_pattern}.")
-
-                        with open(fpath, "w") as f:
-                            f.write(s)
+        Any exceptions during installation are caught and reported to the
+        user, with automatic rollback of any changes made.
+        """
+        tmp_folder4MIA = None
 
         try:
-            self.main_window.statusBar().showMessage(
-                "Package installation, please wait ..."
-            )
-            QApplication.processEvents()
+            self._show_status_message("Package installation, please wait...")
+            self.result_add_package = True
+            filename = self.path_edit.text()
+            config = Config()
 
-        except AttributeError:
-            self.main_window.status_label.setText(
-                "Package installation, please wait ..."
-            )
-
-        self.result_add_package = True
-        filename = self.path_edit.text()
-        config = Config()
-
-        if not os.path.isdir(filename):
-            if not os.path.isfile(filename):
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Critical)
-                msg.setText("The specified file cannot be found")
-                msg.setWindowTitle("Warning")
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
+            # Validate input file/folder
+            if not self._validate_input(filename):
                 return
 
-            if os.path.splitext(filename)[1] != ".zip":
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Critical)
-                msg.setText("The specified file has to be a .zip file")
-                msg.setWindowTitle("Warning")
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
-                return
+            # Setup paths
+            processes_path = os.path.join(
+                config.get_properties_path(), "processes"
+            )
+            config_file_path = os.path.join(
+                config.get_properties_path(),
+                "properties",
+                "process_config.yml",
+            )
 
-        try:
+            # Ensure process path is in sys.path
+            if processes_path not in sys.path:
+                sys.path.append(processes_path)
 
-            if (
-                os.path.join(config.get_properties_path(), "processes")
-                not in sys.path
-            ):
-                sys.path.append(
-                    os.path.join(config.get_properties_path(), "processes")
-                )
+            # Create process config file if it doesn't exist
+            if not os.path.isfile(config_file_path):
+                open(config_file_path, "a").close()
 
-            # Process config update
-            if not os.path.isfile(
-                os.path.join(
-                    config.get_properties_path(),
-                    "properties",
-                    "process_config.yml",
-                )
-            ):
-                open(
-                    os.path.join(
-                        config.get_properties_path(),
-                        "properties",
-                        "process_config.yml",
-                    ),
-                    "a",
-                ).close()
-
-            with open(
-                os.path.join(
-                    config.get_properties_path(),
-                    "properties",
-                    "process_config.yml",
-                ),
-            ) as stream:
-
-                try:
-
-                    if verCmp(yaml.__version__, "5.1", "sup"):
-                        process_dic = yaml.load(stream, Loader=yaml.FullLoader)
-
-                    else:
-                        process_dic = yaml.load(stream)
-
-                except yaml.YAMLError as exc:
-                    process_dic = {}
-                    logger.warning(exc)
-
-            if process_dic is None:
-                process_dic = {}
-
-            # Copying the original process tree
+            # Load current process configuration
+            process_dic = self._load_process_config(config_file_path)
+            # Copy the original process tree for rollback if needed
             process_dic_orig = copy(process_dic)
-
-            try:
-                packages = process_dic["Packages"]
-
-            except (KeyError, TypeError):
-                packages = {}
-
-            try:
-                paths = process_dic["Paths"]
-
-            except (KeyError, TypeError):
-                paths = []
-
-            # Saving all the install packages names and checking if
-            # the MIA_processes are updated
-            package_names = []
-            mia_processes_not_found = True
+            # Extract package information
+            packages = process_dic.get("Packages", {}) or {}
+            paths = process_dic.get("Paths", []) or []
+            # Get existing packages
             # packages_already: packages already installed in populse_
             # mia (populse_mia/processes)
             packages_already = [
-                dire
-                for dire in os.listdir(
-                    os.path.join(config.get_properties_path(), "processes")
-                )
-                if not os.path.isfile(
-                    os.path.join(
-                        config.get_properties_path(), "processes", dire
-                    )
-                )
+                d
+                for d in os.listdir(processes_path)
+                if os.path.isdir(os.path.join(processes_path, d))
             ]
+            # Handle Mia processes special case
+            package_names = []
+            mia_processes_not_found = True
 
+            # Get packages names from zip or directory
             if is_zipfile(filename):
 
                 # Extraction of the zipped content
@@ -699,131 +845,51 @@ class InstallProcesses(QDialog):
                 # directory that contains only the package(s) to install !!!
                 packages_name = [os.path.basename(filename)]
 
+            # Process each package
             for package_name in packages_name:
-                # package_name: Package(s) in the zip file or in folder
 
-                if (package_name not in packages_already) or (
-                    package_name == "mia_processes"
-                ):
-                    # Copy MIA_processes in a temporary folder
-                    if mia_processes_not_found:
+                # Handle mia_processes backup
+                if mia_processes_not_found and package_name == "mia_processes":
+                    mia_path = os.path.join(processes_path, "mia_processes")
 
-                        if (package_name == "mia_processes") and (
-                            os.path.exists(
-                                os.path.join(
-                                    config.get_properties_path(),
-                                    "processes",
-                                    "mia_processes",
-                                )
-                            )
-                        ):
-                            mia_processes_not_found = False
-                            tmp_folder4MIA = tempfile.mkdtemp()
-                            shutil.copytree(
-                                os.path.join(
-                                    config.get_properties_path(),
-                                    "processes",
-                                    "mia_processes",
-                                ),
-                                os.path.join(tmp_folder4MIA, "MIA_processes"),
-                            )
-
-                    if is_zipfile(filename):
-
-                        with ZipFile(filename, "r") as zip_ref:
-                            members_to_extract = [
-                                member
-                                for member in zip_ref.namelist()
-                                if member.startswith(package_name)
-                            ]
-                            zip_ref.extractall(
-                                os.path.join(
-                                    config.get_properties_path(), "processes"
-                                ),
-                                members_to_extract,
-                            )
-
-                    elif os.path.isdir(filename):
+                    if os.path.exists(mia_path):
+                        mia_processes_not_found = False
+                        tmp_folder4MIA = tempfile.mkdtemp()
                         shutil.copytree(
-                            os.path.join(filename),
-                            os.path.join(
-                                config.get_properties_path(),
-                                "processes",
-                                package_name,
-                            ),
+                            mia_path,
+                            os.path.join(tmp_folder4MIA, "mia_processes"),
                         )
+
+                # Install or update package
+                if (
+                    package_name not in packages_already
+                    or package_name == "mia_processes"
+                ):
+                    # Fresh install
+                    self._install_new_package(
+                        filename, package_name, processes_path
+                    )
 
                 else:
-                    date = datetime.now().strftime("%Y%m%d%H%M%S")
-
-                    if is_zipfile(filename):
-
-                        with ZipFile(filename, "r") as zip_ref:
-                            temp_dir = tempfile.mkdtemp()
-                            members_to_extract = [
-                                member
-                                for member in zip_ref.namelist()
-                                if member.startswith(package_name)
-                            ]
-                            zip_ref.extractall(temp_dir, members_to_extract)
-                            shutil.move(
-                                os.path.join(temp_dir, package_name),
-                                os.path.join(
-                                    config.get_properties_path(),
-                                    "processes",
-                                    f"{package_name}_{date}",
-                                ),
-                            )
-
-                    elif os.path.isdir(filename):
-                        shutil.copytree(
-                            os.path.join(filename),
-                            os.path.join(
-                                config.get_properties_path(),
-                                "processes",
-                                f"{package_name}_{date}",
-                            ),
-                        )
-
-                    original_package_name = package_name
-                    package_name = f"{package_name}_{date}"
-                    # Replacing the original package name pattern in all the
-                    # extracted files by the package name with the date
-                    _change_pattern_in_folder(
-                        os.path.join(
-                            config.get_properties_path(),
-                            "processes",
-                            package_name,
-                        ),
-                        original_package_name,
-                        package_name,
+                    # Update existing package
+                    package_name = self._update_existing_package(
+                        filename, package_name, processes_path
                     )
 
                 package_names.append(package_name)
                 # package_names contains all the extracted packages
-                final_package_dic = _add_package(packages, package_name)
+                final_package_dic = self._add_package(packages, package_name)
 
-            if (
-                not os.path.join(config.get_properties_path(), "processes")
-                in paths
-            ):
-                paths.append(
-                    os.path.join(config.get_properties_path(), "processes")
-                )
+            # Ensure processes path is in config
+            if processes_path not in paths:
+                paths.append(processes_path)
 
+            # Update and save configuration
             process_dic["Packages"] = final_package_dic
             process_dic["Paths"] = paths
             # FIXME: Should we encrypt the path ?
 
-            with open(
-                os.path.join(
-                    config.get_properties_path(),
-                    "properties",
-                    "process_config.yml",
-                ),
-                "w",
-                encoding="utf8",
-            ) as stream:
+            with open(config_file_path, "w", encoding="utf8") as stream:
                 yaml.dump(
                     process_dic,
                     stream,
@@ -831,149 +897,60 @@ class InstallProcesses(QDialog):
                     allow_unicode=True,
                 )
 
+            # Signal successful installation
             self.process_installed.emit()
 
-            # Cleaning the temporary folder
-            if "tmp_folder4MIA" in locals():
-                shutil.rmtree(tmp_folder4MIA)
-
-            if "temp_dir" in locals():
-                shutil.rmtree(temp_dir)
-
         except Exception:
+            # Handle installation failure
             logger.warning(
                 f"Error during installation of "
                 f"the '{package_name}' library...!",
                 exc_info=True,
             )
             self.result_add_package = False
-            messg = f"Installation of the '{package_name}' library aborted!"
-
-            try:
-                self.main_window.statusBar().showMessage(messg)
-                QApplication.processEvents()
-
-            except AttributeError:
-                self.main_window.status_label.setText(messg)
-
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText(
-                f"Installation of the '{package_name}' library aborted ... !"
-                f"\nPlease see the standard output for more details."
+            self._show_status_message(
+                f"Installation of the '{package_name}' library aborted!"
             )
-            msg.setWindowTitle("Warning")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.buttonClicked.connect(msg.close)
-            msg.exec()
+            self._show_qmessagebox(
+                f"Installation of the '{package_name}' library aborted!\n"
+                "Please see the standard output for more details."
+            )
             self.close()
-
-            # Resetting process_config.yml
-            if process_dic_orig is None:
-                process_dic_orig = {}
-
-            with open(
-                os.path.join(
-                    config.get_properties_path(),
-                    "properties",
-                    "process_config.yml",
-                ),
-                "w",
-                encoding="utf8",
-            ) as stream:
-                yaml.dump(
-                    process_dic_orig,
-                    stream,
-                    default_flow_style=False,
-                    allow_unicode=True,
-                )
-
-            # Deleting the extracted files
-            if package_names is None:
-                package_names = []
-
-            for package_name in package_names:
-
-                if os.path.exists(
-                    os.path.join(
-                        config.get_properties_path(), "processes", package_name
-                    )
-                ):
-                    shutil.rmtree(
-                        os.path.join(
-                            config.get_properties_path(),
-                            "processes",
-                            package_name,
-                        )
-                    )
-
-            # If the error comes from a MIA_process update, the old version
-            # is restored
-            if not mia_processes_not_found:
-                distutils.dir_util.copy_tree(
-                    os.path.join(tmp_folder4MIA, "mia_processes"),
-                    os.path.join(
-                        config.get_properties_path(),
-                        "processes",
-                        "mia_processes",
-                    ),
-                )
-
-            if "tmp_folder4MIA" in locals():
-                shutil.rmtree(tmp_folder4MIA)
-
-            if "temp_dir" in locals():
-                shutil.rmtree(temp_dir)
+            # Restore original configuration
+            self._rollback_changes(
+                config_file_path,
+                process_dic_orig,
+                processes_path,
+                package_names,
+                mia_processes_not_found,
+                tmp_folder4MIA,
+            )
 
         else:
 
             if self.result_add_package:
-                messg = (
+                message = (
                     f"The '{package_name}' library has been correctly "
                     f"installed."
                 )
-
-                try:
-                    self.main_window.statusBar().showMessage(messg)
-                    QApplication.processEvents()
-
-                except AttributeError:
-                    self.main_window.status_label.setText(messg)
-
-                msg = QMessageBox()
-                msg.setWindowTitle("Installation completed")
-                msg.setText(
-                    f"The '{package_name}' package has been correctly "
-                    f"installed."
-                )
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
+                self._show_status_message(message)
+                self._show_qmessagebox(message, critical=False)
                 self.close()
 
             else:
-                messg = (
+                message = (
                     f"The '{package_name}' library has not been "
                     f"correctly installed."
                 )
-
-                try:
-                    self.main_window.statusBar().showMessage(messg)
-                    QApplication.processEvents()
-
-                except AttributeError:
-                    self.main_window.status_label.setText(messg)
-
-                msg = QMessageBox()
-                msg.setWindowTitle("Installation completed with error(s)")
-                msg.setText(
-                    f"The '{package_name}' package has not been correctly "
-                    f"installed."
-                )
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
+                self._show_status_message(message)
+                self._show_qmessagebox(message)
                 self.close()
+
+        finally:
+
+            # Cleanup temporary directories
+            if tmp_folder4MIA and os.path.isdir(tmp_folder4MIA):
+                shutil.rmtree(tmp_folder4MIA)
 
 
 class Node:
@@ -1925,19 +1902,21 @@ class PackageLibraryDialog(QDialog):
             self.msg.show()
             return deleted_packages
 
-        if to_delete.split(".")[0] in ["nipype", "mia_processes", "capsul"]:
+        module_split = to_delete.split(".")
+
+        if module_split[0] in ["nipype", "mia_processes", "capsul"]:
 
             if from_pipeline_manager:
 
                 inform_text = (
-                    f"This package belongs to {to_delete.split(".")[0]} which "
+                    f"This package belongs to {module_split[0]} which "
                     f"is required by populse mia.\n You can still hide it in "
                     f"the package library manager."
                 )
 
             else:
                 inform_text = (
-                    f"This package belongs to {to_delete.split(".")[0]} which "
+                    f"This package belongs to {module_split[0]} which "
                     f"is required by populse_mia.\nTherefore, it has only "
                     f"been hidden (removed)."
                 )
@@ -1965,7 +1944,7 @@ class PackageLibraryDialog(QDialog):
             reply = QMessageBox.Yes
 
         if reply == QMessageBox.Yes:
-            pkg_list = to_delete.split(".")
+            pkg_list = module_split
 
             if index <= len(pkg_list):
                 path = os.path.join(
@@ -2454,7 +2433,7 @@ class PackageLibraryDialog(QDialog):
 
                         if pckg:
                             logger.info(
-                                f"Removing {".".join(pckg)}.{element}..."
+                                f"Removing {'.'.join(pckg)}.{element}..."
                             )
 
                         else:
