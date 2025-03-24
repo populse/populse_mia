@@ -954,76 +954,86 @@ class InstallProcesses(QDialog):
 
 
 class Node:
-    """Class to handle a package children.
+    """
+    A tree-like structure to manage hierarchical data with parent-child
+    relationships.
+
+    This class provides functionality to create and manipulate tree nodes,
+    where each node can have a name, value, parent, and multiple children.
 
     .. Methods:
-        -  __repr__: Define what should be printed by the class
-        - _recurse_dict: add the name and value of the farthest child in the
-        dictionary
-        - addChild: add a child to the children list
-        - attrs:
-        - child: return a child from its index in the list
-        - childCount: return the number of children
-        - data: return the name or the value of the object
-        - insertChild: insert a child to a specific position
-        - log: return the logs
-        - name: return the name of the object
-        - parent: return the parent of the object
-        - removeChild: remove a specific child
-        - row: return the index of the object in its parent list of children
-        - to_dict: return a dictionary of the children
-        - to_list: return the list of children with their names and values
-        - value: return the value of the object
-            **Contains: Private function:**
-                 - fget: get the value
-                 - fset: set the value
-        - setData: update the name or the value of the object
-        - resource: return a None
-
+        -  __repr__: Define what should be printed by the class.
+        - _recurse_dict: Recursively build a dictionary representation of the
+                         node hierarchy.
+        - addChild: Add a child to the children list.
+        - attrs: Get attributes of this node as a dictionary.
+        - child: Return a child from its index in the list.
+        - childCount: return the number of children.
+        - data: Return the name or the value of the object.
+        - insertChild: Insert a child to a specific position.
+        - log: Generate a formatted string representation of the node
+               hierarchy.
+        - name: Gets or sets the name of the node.
+        - parent: Return the parent of the node.
+        - removeChild:  Remove a child node at the specified position.
+        - resource: Placeholder that always returns None.
+        - row: Return the index of the object in its parent list of children.
+        - setData: Update the name or the value of the object.
+        - to_dict: Convert the node hierarchy to a dictionary.
+        - to_list: Convert the node hierarchy to a list.
+        - value: Gets or sets the value of the node.
     """
 
     def __init__(self, name, parent=None):
-        """Initialization of the Node class."""
+        """
+        Initialize a new Node instance.
+
+        :param name (str): The name of the node.
+        :param parent: The parent node. If provided, this node is
+                       automatically added as a child to the parent.
+                       Defaults to None.
+        """
+
+        if parent is not None:
+            parent.addChild(self)
+
         self._name = name
         self._parent = parent
         self._children = []
         self._value = None
-        if parent is not None:
-            parent.addChild(self)
 
     def __repr__(self):
-        """Define what should be printed by the class.
+        """
+        Return a string representation of the node hierarchy.
 
-        :return: the logs
+        :return (str): A formatted string showing the node hierarchy.
         """
         return self.log()
 
     def _recurse_dict(self, d):
-        """Add the name and value of the farthest child in the dictionary.
-
-        :param d: dictionary
         """
+        Recursively build a dictionary representation of the node hierarchy.
 
-        if self._children:
-            d[self.name] = {}
+        :param d (dict): The dictionary to populate with the node hierarchy.
+        """
+        d[self.name] = {} if self._children else self.value
 
-            for child in self._children:
-                child._recurse_dict(d[self.name])
-
-        else:
-            d[self.name] = self.value
+        for child in self._children:
+            child._recurse_dict(d[self.name])
 
     def addChild(self, child):
-        """Add a child to the children list.
+        """
+        Add a child node to this node.
 
-        :param child: child to add
+        :param child: The child node to add.
         """
         self._children.append(child)
 
     def attrs(self):
         """
+        Get attributes of this node as a dictionary.
 
-        :return:
+        :return (dict): A dictionary of property names and their values.
         """
         classes = self.__class__.__mro__
         keyvalued = {}
@@ -1038,46 +1048,54 @@ class Node:
         return keyvalued
 
     def child(self, row):
-        """Return a child from its index in the list.
+        """
+        Get a child node by its index.
 
-        :param row: index in the list of children
-        :return: child
+        :param row (int): The index of the child node in the children list.
+
+        :return: The child node at the specified index.
         """
         return self._children[row]
 
     def childCount(self):
-        """Return the number of children.
+        """
+        Get the number of children of this node.
 
-        :return: the length of the children list
+        :return (int): The number of child nodes.
         """
         return len(self._children)
 
     def data(self, column):
-        """Return the name or the value of the object.
+        """
+        Get data about this node based on the column parameter.
 
-        :param column: 0 for name, 1 for value
-        :return: string
+        :param column (int): 0 for the fully qualified name (including parent
+                             names), 1 for the value of this node.
+        :return (str): The requested data (either string path or node value).
         """
 
         if column == 0:
             parent = self._parent
             text = self.name
 
-            while parent.name != "Root":
+            while parent and parent.name != "Root":
                 text = f"{parent.name}.{text}"
                 parent = parent._parent
 
-            return text  # self.name
+            # self.name
+            return text
 
         elif column == 1:
             return self.value
 
     def insertChild(self, position, child):
-        """Insert a child to a specific position.
+        """
+        Insert a child node at a specific position.
 
-        :param position: position
-        :param child: child
-        :return: boolean, True if the insertion was successful
+        :param position (int): The position at which to insert the child.
+        :param child: The child node to insert.
+
+        :return (bool): True if insertion was successful, False otherwise.
         """
 
         if position < 0 or position > len(self._children):
@@ -1089,11 +1107,11 @@ class Node:
 
     def log(self, tabLevel=-1):
         """
-        Generates a formatted log string representing the object hierarchy
+        Generate a formatted string representation of the node hierarchy.
 
         :param tabLevel (int): The current indentation level. Defaults to -1.
 
-        :retur (str): A formatted log string.
+        :retur (str): A formatted string showing the node hierarchy.
         """
         tabLevel += 1
         indent = "    " * tabLevel
@@ -1102,42 +1120,41 @@ class Node:
         for child in self._children:
             output += child.log(tabLevel)
 
-        return output + "\n"
+        return f"{output}\n"
 
-    def name():
+    @property
+    def name(self):
         """
-        Creates a property for the object's name.
+        Get the name of this node.
 
-        :return (dict): A dictionary with getter and setter functions for the
-                        name attribute.
+        :return (str): The name of the node.
         """
+        return self._name
 
-        def fget(self):
-            """Returns the name of the object."""
-            return self._name
+    @name.setter
+    def name(self, value):
+        """Set the name of this node.
 
-        def fset(self, value):
-            """Sets the name of the object."""
-            self._name = value
-
-        return {"fget": fget, "fset": fset}
-
-    name = property(**name())
+        :param value (str): The new name for the node.
+        """
+        self._name = value
 
     def parent(self):
-        """Return the parent of the object.
+        """Get the parent of this node.
 
-        :return: parent
+        :return: The parent node or None if this is a root node.
 
         """
         return self._parent
 
     def removeChild(self, position, child):
-        """Remove a specific child.
+        """
+        Remove a child node at the specified position.
 
-        :param position: position of the child
-        :param child: child to remove
-        :return: boolean, True if the child was removed
+        :param position (int): The position of the child to remove.
+        :param child: The child node to remove.
+
+        :return (bool): True if removal was successful, False otherwise.
         """
 
         if position < 0 or position > len(self._children):
@@ -1147,21 +1164,53 @@ class Node:
         child._parent = None
         return True
 
-    def row(self):
-        """Return the index of the object in its parent list of children.
+    def resource(self):
+        """
+        Get resource information for this node.
 
-        :return: index
+        This method is a placeholder that always returns None.
+
+        :return: None
+        """
+        return None
+
+    def row(self):
+        """Get the index of this node in its parent's children list.
+
+        :return (int): The index of this node in its parent's children list,
+                       or None if this node has no parent.
         """
 
         if self._parent is not None:
             return self._parent._children.index(self)
 
-    def to_dict(self, d={}):
-        """Return a dictionary of the children.
+        return None
 
-        :param d: dictionary
-        :return: dictionary of children
+    def setData(self, column, value):
         """
+        Set the name or value of this node based on the column parameter.
+
+        :param column (int): 0 to set the name, 1 to set the value.
+        :param value: The new name or value to set.
+        """
+
+        if column == 0:
+            self.name = value
+
+        if column == 1:
+            self.value = value
+
+    def to_dict(self, d=None):
+        """
+        Convert the node hierarchy to a dictionary.
+
+        :param d (dict): A dictionary to populate. Defaults to empty dict.
+
+        :return (dict): A dictionary representation of the node hierarchy.
+        """
+
+        if d is None:
+            d = {}
 
         for child in self._children:
             child._recurse_dict(d)
@@ -1169,9 +1218,10 @@ class Node:
         return d
 
     def to_list(self):
-        """Return the list of children with their names and values.
+        """
+        Convert the node hierarchy to a list.
 
-        :return: list
+        :return (list): A list representation of the node hierarchy.
         """
         output = []
 
@@ -1185,50 +1235,31 @@ class Node:
 
         return output
 
-    def value():
+    @property
+    def value(self):
         """
-        Creates a property for the object's value.
+        Get the value of this node.
 
-        :return (dict): A dictionary with getter and setter functions for
-                         the value attribute.
+        :return: The value of the node.
         """
+        return self._value
 
-        def fget(self):
-            """Returns the value of the object."""
-            return self._value
+    @value.setter
+    def value(self, value):
+        """Set the value of this node.
 
-        def fset(self, value):
-            """Sets the value of the object."""
-            self._value = value
-
-        return {"fget": fget, "fset": fset}
-
-    value = property(**value())
-
-    def setData(self, column, value):
-        """Update the name or the value of the object.
-
-        :param column: 0 for name, 1 for value
-        :param value: new value
+        :param value: The new value for the node.
         """
-
-        if column == 0:
-            self.name = value
-
-        if column == 1:
-            self.value = value
-
-    def resource(self):
-        """Return None
-
-        :return: None
-        """
-        return None
+        self._value = value
 
 
 class PackageLibrary(QTreeWidget):
-    """Tree that displays the user-added packages and their modules.
-    The user can check or not each module/package.
+    """
+    A tree widget that displays user-added packages and their modules.
+
+    This widget allows users to enable or disable packages and modules by
+    checking or unchecking them in the tree view. The tree structure
+    reflects the hierarchical organization of packages and their modules.
 
     .. Methods:
         - fill_item: fills the items of the tree recursively
@@ -1242,11 +1273,11 @@ class PackageLibrary(QTreeWidget):
     """
 
     def __init__(self, package_tree, paths):
-        """Initialization of the PackageLibrary widget.
+        """
+        Initialize the PackageLibrary widget.
 
-        :param package_tree: representation of the packages as
-                             a tree-dictionary
-        :param paths: list of paths to add to the system to import the packages
+        :param package_tree (dict): Hierarchical representation of packages.
+        :param paths (list): System paths for importing the packages.
         """
         super().__init__()
         self.itemChanged.connect(self.update_checks)
@@ -1257,22 +1288,26 @@ class PackageLibrary(QTreeWidget):
         self.setHeaderLabel("Packages")
 
     def fill_item(self, item, value):
-        """Fill the items of the tree recursively.
+        """
+        Recursively populate the tree items.
 
-        :param item: current item to fill
-        :param value: value of the item in the tree
+        Traverses the package tree and creates corresponding QTreeWidgetItems
+        with appropriate check states.
+
+        :param item (QTreeWidgetItem): Current tree item to populate.
+        :param value (dict, list, or str): Value to populate the item with.
 
         """
         item.setExpanded(True)
 
-        if type(value) is dict:
+        if isinstance(value, dict):
 
             for key, val in sorted(value.items()):
                 child = QTreeWidgetItem()
                 child.setText(0, str(key))
                 item.addChild(child)
 
-                if type(val) is dict:
+                if isinstance(val, dict):
                     self.fill_item(child, val)
 
                 else:
@@ -1284,17 +1319,17 @@ class PackageLibrary(QTreeWidget):
                     elif val == "process_disabled":
                         child.setCheckState(0, Qt.Unchecked)
 
-        elif type(value) is list:
+        elif isinstance(value, list):
 
             for val in value:
                 child = QTreeWidgetItem()
                 item.addChild(child)
 
-                if type(val) is dict:
+                if isinstance(val, dict):
                     child.setText(0, "[dict]")
                     self.fill_item(child, val)
 
-                elif type(val) is list:
+                elif isinstance(val, list):
                     child.setText(0, "[list]")
                     self.fill_item(child, val)
 
@@ -1309,16 +1344,27 @@ class PackageLibrary(QTreeWidget):
             item.addChild(child)
 
     def generate_tree(self):
-        """Generate the package tree"""
+        """
+        Generate the package tree structure.
+
+        Clears the current tree and populates it with items from package_tree.
+        Temporarily disconnects the itemChanged signal to prevent unwanted
+        updates.
+        """
         self.itemChanged.disconnect()
         self.clear()
         self.fill_item(self.invisibleRootItem(), self.package_tree)
         self.itemChanged.connect(self.update_checks)
 
     def recursive_checks(self, parent):
-        """Check/uncheck all child items.
+        """
+        Propagate check state down to all child items.
 
-        :param parent: parent item
+        When a parent item is checked/unchecked, all its children
+        inherit the same check state.
+
+        :param parent (QTreeWidgetItem): Parent item whose check state is
+                                         propagated.
         """
         check_state = parent.checkState(0)
 
@@ -1330,9 +1376,15 @@ class PackageLibrary(QTreeWidget):
             self.recursive_checks(parent.child(i))
 
     def recursive_checks_from_child(self, child):
-        """Check/uncheck all parent items.
+        """
+        Propagate check state up to parent items.
 
-        :param child: child item
+        When a child item is checked, its parents are also checked.
+        When a child item is unchecked, its parent is unchecked only if
+        all siblings are also unchecked.
+
+        :param child (QTreeWidgetItem): Child item whose check state affects
+                                        parents.
         """
         check_state = child.checkState(0)
 
@@ -1342,83 +1394,90 @@ class PackageLibrary(QTreeWidget):
         if child.parent():
             parent = child.parent()
 
-            if child.checkState(0) == Qt.Checked:
+            if check_state == Qt.Checked:
 
                 if parent.checkState(0) == Qt.Unchecked:
                     parent.setCheckState(0, Qt.Checked)
                     self.recursive_checks_from_child(parent)
             else:
-                checked_children = [
-                    child
-                    for child in range(parent.childCount())
-                    if parent.child(child).checkState(0) == Qt.Checked
-                ]
+                # Check if any siblings are still checked
+                has_checked_siblings = any(
+                    parent.child(i).checkState(0) == Qt.Checked
+                    for i in range(parent.childCount())
+                )
 
-                if not checked_children:
+                if not has_checked_siblings:
                     parent.setCheckState(0, Qt.Unchecked)
                     self.recursive_checks_from_child(parent)
 
     def set_module_view(self, item, state):
-        """Set if a module has to be enabled or disabled in the process
-        library.
-
-        :param item: item selected in the current tree
-        :param state: checked or not checked (Qt.Checked == 2. So if
-                      val == 2 -> checkbox is checked, and if
-                      val == 0 -> checkbox is not checked)
         """
+        Update the module's enabled/disabled status in the package tree.
 
-        if state == Qt.Checked:
-            val = "process_enabled"
+        Updates the underlying package_tree data structure when an item's
+        check state changes in the UI.
 
-        else:
-            val = "process_disabled"
+        :param item (QTreeWidgetItem): Tree item corresponding to a module.
+        :param state (Qt.CheckState): New check state, Qt.Checked or
+                                      Qt.Unchecked.
+                                      (Qt.Checked == 2. So if
+                                      val == 2 -> checkbox is checked, and if
+                                      val == 0 -> checkbox is not checked)
+        """
+        val = "process_enabled" if state == Qt.Checked else "process_disabled"
 
-        list_path = []
-        list_path.append(item.text(0))
-        self.top_level_items = [
-            self.topLevelItem(i) for i in range(self.topLevelItemCount())
-        ]
+        # Build path from item to root
+        path = []
+        current = item
 
-        while item not in self.top_level_items:
-            item = item.parent()
-            list_path.append(item.text(0))
-        # pkg_iter take only the modules concerning the top package where a
-        # change of status where done.
+        while current:
+            path.insert(0, current.text(0))
+            current = current.parent()
+
+        # Update package_tree according to the path
         pkg_iter = self.package_tree
-        list_path = list(reversed(list_path))
 
-        for element in list_path:
+        for element in path[:-1]:  # Navigate to parent of target node
 
-            if element in pkg_iter.keys():
-
-                if element is list_path[-1]:
-                    pkg_iter[element] = val
-
-                else:
-                    pkg_iter = pkg_iter[element]
+            if element in pkg_iter:
+                pkg_iter = pkg_iter[element]
 
             else:
-                logger.info("Package not found")
-                break
+                logger.info(f"Package '{element}' not found in tree")
+                return
+
+        # Update the value of the target node
+        if path[-1] in pkg_iter:
+            pkg_iter[path[-1]] = val
+
+        else:
+            logger.info(f"Module '{path[-1]}' not found in package")
 
     def update_checks(self, item, column):
-        """Update the checks of the tree from an item.
+        """
+        "Handle check state changes and propagate them.
 
-        :param item: item on which to begin
-        :param column: column from the check (should always be 0)
+        When an item's check state changes, this method ensures the change
+        is properly propagated to children and parent items.
+
+        :param item (QTreeWidgetItem): Item whose check state changed.
+        :param column (int): Column index of the change (should be 0).
         """
 
         # Checked state is stored on column 0
         if column == 0:
+            # Temporarily disconnect to prevent signal recursion
             self.itemChanged.disconnect()
 
+            # Propagate changes down to children
             if item.childCount():
                 self.recursive_checks(item)
 
+            # Propagate changes up to parents
             if item.parent():
                 self.recursive_checks_from_child(item)
 
+            # Reconnect signal
             self.itemChanged.connect(self.update_checks)
 
 
@@ -2628,49 +2687,63 @@ class PackageLibraryDialog(QDialog):
         self.package_library.generate_tree()
 
 
-class ProcessHelp(QWidget):
-    """A widget that displays information about the selected process.
+# TODO: It seems that this class is never used, so it may be an old piece of
+#       code. We are commenting on it until we delete it completely if there's
+#       no problem.
+# class ProcessHelp(QWidget):
+#     """A widget that displays information about the selected process."""
 
-    :param process: selected process
-    """
+#     def __init__(self, process):
+#         """
+#         Initialize the ProcessHelp widget with the selected process.
 
-    def __init__(self, process):
-        """Generate the help.
-
-        :param process: selected process
-        """
-        super().__init__()
-        label = QLabel()
-        label.setText(process.help())
+#         :param process: The selected process for which help information is
+#                         displayed.
+#         """
+#         super().__init__()
+#         label = QLabel(process.help(), self)
 
 
 class ProcessLibrary(QTreeView):
     """
-    Tree to display the available Capsul's processes
+    A tree view to display available Capsul's processes.
+
 
     :param d: dictionary corresponding to the tree (dict)
 
     .. Methods:
-        - keyPressEvent: event when the delete key is pressed
-        - load_dictionary: loads a dictionary to the tree
-        - mousePressEvent: event when the mouse is pressed
-        - to_dict: returns a dictionary from the current tree
+        - keyPressEvent: Event when the delete key is pressed.
+        - load_dictionary: Loads a dictionary to the tree.
+        - mousePressEvent: Event when the mouse is pressed.
+        - to_dict: Returns a dictionary from the current tree.
+
+    .. Signals:
+        - item_library_clicked: Signal emitted when an item in the library is
+                                clicked.
     """
 
     item_library_clicked = QtCore.pyqtSignal(str)
 
     def __init__(self, d, pkg_lib):
-        """Initialization of the ProcessLibrary class.
+        """
+        Initialize the ProcessLibrary class.
 
-        :param d: dictionary: dictionary corresponding to the tree
-        :param pkg_lib: an instance of the PackageLibraryDialog class
+        :param d (dict): Dictionary corresponding to the tree.
+        :param pkg_lib: An instance of the PackageLibraryDialog class.
         """
         super().__init__()
         self.load_dictionary(d)
         self.pkg_library = pkg_lib
 
     def keyPressEvent(self, event):
-        """Event when the delete key is pressed."""
+        """
+        Handles key press events, specifically the Delete key.
+
+        If the Delete key is pressed and the user is not in user mode, the
+        selected package(s) will be deleted from the package library.
+
+        :param event (QKeyEvent): The key event triggering this handler.
+        """
         config = Config()
 
         if event.key() == QtCore.Qt.Key_Delete and not config.get_user_mode():
@@ -2681,7 +2754,7 @@ class ProcessLibrary(QTreeView):
                     idx = idx.sibling(idx.row(), 0)
                     node = idx.internalPointer()
 
-                    if node is not None:
+                    if node:
                         txt = node.data(idx.column())
                         self.pkg_library.package_library.package_tree = (
                             self.pkg_library.load_config()["Packages"]
@@ -2691,10 +2764,11 @@ class ProcessLibrary(QTreeView):
                         )
 
     def load_dictionary(self, d):
-        """Load a dictionary to the tree.
+        """
+        Load a dictionary into the tree.
 
-        :param d: dictionary to load. See the packages attribute in the
-                  ProcessLibraryWidget class
+        :param d (dict): Dictionary to load. See the packages attribute in the
+                         ProcessLibraryWidget class.
         """
         self.dictionary = d
         self._nodes = node_structure_from_dict(d)
@@ -2702,7 +2776,16 @@ class ProcessLibrary(QTreeView):
         self.setModel(self._model)
 
     def mousePressEvent(self, event):
-        """Event when the mouse is pressed."""
+        """
+        Handles mouse press events on the tree view.
+
+        If a valid item is clicked, it sets the current index and emits a
+        signal with the selected item's text. If the right mouse button is
+        pressed, a context menu is displayed, allowing the user to remove or
+        delete a package.
+
+        :param event (QMouseEvent): The mouse event triggering this handler.
+        """
 
         idx = self.indexAt(event.pos())
         config = Config()
@@ -2711,7 +2794,7 @@ class ProcessLibrary(QTreeView):
             idx = idx.sibling(idx.row(), 0)
             node = idx.internalPointer()
 
-            if node is not None:
+            if node:
                 self.setCurrentIndex(idx)
                 txt = node.data(idx.column())
                 path = txt.encode()
@@ -2720,15 +2803,11 @@ class ProcessLibrary(QTreeView):
                 if event.button() == Qt.RightButton:
                     self.menu = QMenu(self)
                     self.remove = self.menu.addAction("Remove package")
-
-                    if config.get_user_mode() is False:
-                        self.action_delete = self.menu.addAction(
-                            "Delete package"
-                        )
-
-                    else:
-                        self.action_delete = False
-
+                    self.action_delete = (
+                        self.menu.addAction("Delete package")
+                        if not config.get_user_mode()
+                        else None
+                    )
                     action = self.menu.exec_(self.mapToGlobal(event.pos()))
 
                     if action == self.remove:
@@ -2738,7 +2817,7 @@ class ProcessLibrary(QTreeView):
                         self.pkg_library.remove_package(txt)
                         self.pkg_library.save()
 
-                    if action == self.action_delete:
+                    elif action == self.action_delete:
                         self.pkg_library.package_library.package_tree = (
                             self.pkg_library.load_config()["Packages"]
                         )
@@ -2746,51 +2825,63 @@ class ProcessLibrary(QTreeView):
                             to_delete=txt, from_pipeline_manager=True
                         )
 
-        return QTreeView.mousePressEvent(self, event)
+        return super().mousePressEvent(event)
 
     def to_dict(self):
-        """Return a dictionary from the current tree.
+        """
+        Return a dictionary representation of the current tree.
 
-        :return: the dictionary of the tree
+        :return: The dictionary of the tree.
         """
         return self._model.to_dict()
 
 
 class ProcessLibraryWidget(QWidget):
     """
-    Widget that handles the available Capsul's processes in the software.
-
-    :param main_window: current main window
+    Widget that manages the available Capsul's processes in the software.
 
     .. Methods:
-        - load_config: read the config in process_config.yml and return it as
-        a dictionary
-        - load_packages: sets packages and paths to the widget and to the
-        system paths
-        - open_pkg_lib: opens the package library
-        - save_config: saves the current config to process_config.yml
-        - update_config: updates the config and loads the corresponding
-        packages
-        - update_process_library: updates the tree of the process library
+        - _configure_process_library: Configure the process library settings.
+        - _setup_layout: Setup the layout for the widget.
+        - load_config: Read the config in process_config.yml and return it as
+                       a dictionary.
+        - load_packages: Set packages and paths to the widget and to the
+                         system paths.
+        - open_pkg_lib: Open the package library.
+        - save_config: Save the current config to process_config.yml.
+        - update_config: Update the config and loads the corresponding
+                         packages.
+        - update_process_library: Update the tree of the process library.
     """
 
     def __init__(self, main_window=None):
-        """Initialize the ProcessLibraryWidget.
+        """
+        Initialize the ProcessLibraryWidget.
 
-        :param main_window: current main window
+        :param main_window: The current main window.
         """
         super().__init__(parent=main_window)
         self.setWindowTitle("Process Library")
         self.main_window = main_window
-        # Process Config
+        # Load and update configuration
         self.update_config()
-        # Package Library
+        # Initialize package library
         self.pkg_library = PackageLibraryDialog(
             mia_main_window=self.main_window, parent=self.main_window
         )
         self.pkg_library.signal_save.connect(self.update_process_library)
-        # Process Library
+        # Initialize process library
         self.process_library = ProcessLibrary(self.packages, self.pkg_library)
+        self._configure_process_library()
+        # Test label to see the inputs/outputs of a process
+        self.label_test = QLabel()
+        # Setup layout
+        self._setup_layout()
+
+    def _configure_process_library(self):
+        """
+        Configure the process library settings.
+        """
         self.process_library.setDragDropMode(self.process_library.DragOnly)
         self.process_library.setAcceptDrops(False)
         self.process_library.setDragEnabled(True)
@@ -2799,81 +2890,56 @@ class ProcessLibraryWidget(QWidget):
         )
         self.process_library.collapseAll()
         self.process_library.expandToDepth(1)
-        # Test to see the inputs/outputs of a process
-        self.label_test = QLabel()
-        # Splitter
+
+    def _setup_layout(self):
+        """
+        Setup the layout for the widget.
+        """
         self.splitter = QSplitter(Qt.Horizontal)
         self.splitter.addWidget(self.label_test)
         self.splitter.addWidget(self.process_library)
         # Layout
-        h_box = QVBoxLayout()
-        # h_box.addWidget(push_button_pkg_lib)
-        h_box.addWidget(self.splitter)
-        self.setLayout(h_box)
+        layout = QVBoxLayout()
+        layout.addWidget(self.splitter)
+        self.setLayout(layout)
 
     @staticmethod
     def load_config():
-        """Read the config in process_config.yml and return it as a dictionary.
-
-        :return: the config as a dictionary
+        """
+        Read the configuration from process_config.yml and return it as a
+        dictionary.
+        .
+        :return: The configuration as a dictionary.
         """
         # import verCmp only here to prevent circular import issue
         from populse_mia.utils import verCmp
 
         config = Config()
+        config_path = os.path.join(
+            config.get_properties_path(), "properties", "process_config.yml"
+        )
 
-        if not os.path.exists(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            )
-        ):
-            open(
-                os.path.join(
-                    config.get_properties_path(),
-                    "properties",
-                    "process_config.yml",
-                ),
-                "a",
-            ).close()
+        if not os.path.exists(config_path):
+            open(config_path, "a").close()
 
-        with open(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            ),
-        ) as stream:
+        with open(config_path) as stream:
+
             try:
+
                 if verCmp(yaml.__version__, "5.1", "sup"):
                     return yaml.load(stream, Loader=yaml.FullLoader)
+
                 else:
                     return yaml.load(stream)
 
             except yaml.YAMLError as exc:
                 logger.warning(exc)
+                return {}
 
     def load_packages(self):
         """Set packages and paths to the widget and to the system paths."""
-
-        try:
-            self.packages = self.process_config["Packages"]
-
-        except KeyError:
-            self.packages = {}
-
-        except TypeError:
-            self.packages = {}
-
-        try:
-            self.paths = self.process_config["Paths"]
-
-        except KeyError:
-            self.paths = []
-
-        except TypeError:
-            self.paths = []
+        self.packages = self.process_config.get("Packages", {})
+        self.paths = self.process_config.get("Paths", [])
 
         for path in self.paths:
 
@@ -2885,20 +2951,15 @@ class ProcessLibraryWidget(QWidget):
         self.pkg_library.show()
 
     def save_config(self):
-        """Save the current config to process_config.yml."""
+        """Save the current configuration to process_config.yml."""
         config = Config()
+        config_path = os.path.join(
+            config.get_properties_path(), "properties", "process_config.yml"
+        )
         self.process_config["Packages"] = self.packages
         self.process_config["Paths"] = self.paths
 
-        with open(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            ),
-            "w",
-            encoding="utf8",
-        ) as stream:
+        with open(config_path, "w", encoding="utf8") as stream:
             yaml.dump(
                 self.process_config,
                 stream,
@@ -2907,7 +2968,7 @@ class ProcessLibraryWidget(QWidget):
             )
 
     def update_config(self):
-        """Update the config and loads the corresponding packages."""
+        """Update the configuration and load the corresponding packages."""
         self.process_config = self.load_config()
         self.load_packages()
 
@@ -2919,49 +2980,52 @@ class ProcessLibraryWidget(QWidget):
 
 
 def import_file(full_name, path):
-    """Import a python module from a path (3.4+ only).
+    """
+    Import a Python module from a specified file path.
 
-    Does not call sys.modules[full_name] = path
+    This function dynamically imports a module from a given file path and
+    returns the module object. It does not modify `sys.modules`.
 
-    :param full_name: name of the package
-    :param path: path of the package
-    :return: the corresponding module
+    :param full_name (str): The name of the module to import.
+    :param path (str): The file path of the module.
+    :return: The imported module.
     """
 
     from importlib import util
 
     spec = util.spec_from_file_location(full_name, path)
-    mod = util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def node_structure_from_dict(datadict, parent=None, root_node=None):
-    """Return a hierarchical node structure required by the TreeModel.
+    """
+    Construct a hierarchical node structure from a dictionary.
 
-    :param datadict: dictionary
-    :param parent: Parent of the node
-    :param root_node: Root of the node
+    This function converts a nested dictionary into a tree structure suitable
+    for a TreeModel. It processes nodes based on specific conditions and
+    recursively builds the tree.
+
+    :param datadict (dict): The dictionary to convert into a node structure.
+    :param parent: The parent node of the current node. Defaults to None.
+    :param root_node: The root node of the tree. Defaults to None.
+
+    :return: The root node of the constructed tree.
     """
 
-    if not parent:
+    if parent is None:
         root_node = Node("Root")
         parent = root_node
 
     for name, data in sorted(datadict.items()):
 
         if isinstance(data, dict):
+            list_name = [
+                value for value in data.values() if value == "process_enabled"
+            ]
 
-            if True in [
-                True for value in data.values() if value == "process_enabled"
-            ]:
-                list_name = [
-                    value
-                    for value in data.values()
-                    if value == "process_enabled"
-                ]
-
-            else:
+            if not list_name:
                 list_name = []
                 list_values = [
                     value for value in data.values() if isinstance(value, dict)
@@ -2969,20 +3033,18 @@ def node_structure_from_dict(datadict, parent=None, root_node=None):
 
                 while list_values:
                     value = list_values.pop()
-
-                    for i in value.values():
-                        if not isinstance(i, dict):
-                            list_name.append(i)
-
-                    list_values = list_values + [
+                    list_name.extend(
+                        i for i in value.values() if not isinstance(i, dict)
+                    )
+                    list_values.extend(
                         i for i in value.values() if isinstance(i, dict)
-                    ]
+                    )
 
             if all(item == "process_disabled" for item in list_name):
                 continue
 
             node = Node(name, parent)
-            node = node_structure_from_dict(data, node, root_node)
+            node_structure_from_dict(data, node, root_node)
 
         elif data == "process_enabled":
             node = Node(name, parent)
