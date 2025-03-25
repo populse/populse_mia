@@ -15,8 +15,6 @@ the project.
     :Functions:
         - import_file
         - node_structure_from_dict
-
-
 """
 
 ##########################################################################
@@ -1482,168 +1480,296 @@ class PackageLibrary(QTreeWidget):
 
 
 class PackageLibraryDialog(QDialog):
-    """Dialog that controls which processes to show in the process library.
+    """
+    Dialog for managing package library configurations.
+
+    This dialog allows users to add, remove, and delete packages from the
+    process library. It provides interfaces for installing packages, updating
+    the package tree, and saving configurations.
 
     .. Methods:
-        - add_package: add a package and its modules to the package tree
-        - add_package_with_text: add a package from the line edit's text
-        - browse_package: open a browser to select a package (commented)
-        - delete_package: delete a package, only available to administrators
-        - delete_package_with_text: delete a package from the line edit's text
-        - install_processes_pop_up: open the install processes pop-up
-        - load_config: update the config and loads the corresponding packages
-        - load_packages: update the tree of the process library
-        - ok_clicked: called when apply changes is clicked
-        - remove_package: remove a package from the package tree
-        - remove_package_with_text: remove the package in the line edit from
-          the package tree
-        - reset_action: called to reset a previous add or remove package action
-        - save: save the tree to the process_config.yml file
-        - save_config: save the current config to process_config.yml
-        - update_config: update the process_config and package_library
-          attributes
+        - _create_button: Create a standardized button.
+        - _create_install_buttons: Create buttons for installing processes.
+        - _create_line_edit: Create and configure the line edit.
+        - _create_list_group: Create a group box for a list with reset
+                              functionality.
+        - _create_list_widget: Create a list widget with extended selection
+                               mode.
+        - _create_main_layout: Create the main layout for the dialog.
+        - _create_package_management_buttons: Create buttons for package
+                                              management.
+        - _create_save_cancel_layout: Create layout for save and cancel
+                                      buttons.
+        - _create_status_label: Create and configure the status label.
+        - _load_initial_configuration: Load initial package configuration.
+        - _setup_ui: Set up the user interface components
+        - add_package: Add a package and its modules to the package tree.
+        - add_package_with_text: Add a package from the line edit text.
+        - browse_package: Open a browser to select a package (commented).
+        - delete_package: Delete a package (admin-only functionality).
+        - delete_package_with_text: Delete a package from the line edit text.
+        - install_processes_pop_up: Open popup for installing processes.
+        - load_config: Load package configuration from YAML file.
+        - load_packages: Update the process library tree.
+        - ok_clicked: Handle applying changes to packages.
+        - remove_package: Remove a package from the package tree.
+        - remove_package_with_text: Remove a package from the line edit text.
+        - reset_action: Reset previous package addition or removal actions.
+        - save: Save package configuration to process_config.yml.
+        - save_config: save the current config to process_config.yml <= USED?
+        - update_config: Update package configuration and library attributes.
+
+    .. Signals:
+        - signal_save: Signal emitted when configuration is saved.
 
     """
 
     signal_save = Signal()
 
     def __init__(self, mia_main_window=None, parent=None):
-        """Initialization of the PackageLibraryDialog widget"""
+        """
+        Initialize the PackageLibraryDialog.
+
+        :param mia_main_window: Reference to the main application window.
+        :param parent (QWidget): Parent widget for the dialog.
+        CHECKED
+        """
         super().__init__(parent)
         self.main_window = mia_main_window
-        config = Config()
+        self._load_initial_configuration()
+        self._setup_ui()
 
-        if config.get_user_mode():
-            self.setWindowTitle("Package library manager [user mode]")
+    def _create_button(self, text, callback):
+        """Create a standardized button.
 
-        else:
-            self.setWindowTitle("Package library manager [admin mode]")
+        :param text (str): Button text.
+        :param callback (callable): Function to call when button is clicked.
 
-        # True if the path specified in the line edit is a path with '/'
+        :returns (QPushButton): Configured button.
+        CHECKED
+        """
+        btn = QPushButton(text, default=False, autoDefault=False)
+        btn.clicked.connect(callback)
+        return btn
+
+    def _create_install_buttons(self):
+        """Create buttons for installing processes.
+
+        :return (QHBoxLayout): Layout with install process buttons.
+        CHECKED
+        """
+        layout = QHBoxLayout()
+        layout.addWidget(QLabel("Install processes from:"))
+        layout.addStretch(1)
+        zipfile_btn = self._create_button(
+            "Zipfile", partial(self.install_processes_pop_up, False)
+        )
+        folder_btn = self._create_button(
+            "Folder", partial(self.install_processes_pop_up, True)
+        )
+        layout.addWidget(zipfile_btn)
+        layout.addWidget(folder_btn)
+        return layout
+
+    def _create_line_edit(self):
+        """Create and configure the line edit.
+
+        :return QLineEdit: Configured line edit for package input.
+        CHECKED
+        """
+        line_edit = QLineEdit()
+        line_edit.setPlaceholderText(
+            "Type a Python package (ex. nipype.interfaces.spm)"
+        )
+        return line_edit
+
+    def _create_list_group(self, title, list_widget, reset_callback):
+        """Create a group box for a list with reset functionality.
+
+        :param title (str): Group box title.
+        :param list_widget (QListWidget): List widget to add to group.
+        :param reset_callback (callable): Callback for reset button.
+
+        :return (QGroupBox): Configured group box with list and reset button.
+        CHECKED
+        """
+        group = QGroupBox(title)
+        layout = QHBoxLayout()
+        layout.addWidget(list_widget)
+        reset_btn = QPushButton("Reset", default=False, autoDefault=False)
+        reset_btn.clicked.connect(reset_callback)
+        layout.addWidget(reset_btn)
+        group.setLayout(layout)
+        return group
+
+    def _create_list_widget(self):
+        """Create a list widget with extended selection mode.
+
+        :return (QListWidget): Configured list widget.
+        CHECKED
+        """
+        list_widget = QListWidget()
+        list_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        return list_widget
+
+    def _create_main_layout(
+        self, install_layout, management_layout, user_mode
+    ):
+        """Create the main layout for the dialog.
+
+        :param install_layout (QHBoxLayout): Layout for install buttons.
+        :param management_layout (QHBoxLayout): Layout for package management
+                                                buttons.
+        :param user_mode (bool): Whether the application is in user mode.
+
+        :return (QHBoxLayout): Main layout of the dialog.
+        CHECKED
+        """
+        # Create package library and vertical layout
+        self.package_library = PackageLibrary(self.packages, self.paths)
+        v_box = QVBoxLayout()
+        # Add various components to vertical layout
+        v_box.addStretch(1)
+        v_box.addLayout(install_layout)
+        v_box.addStretch(1)
+        v_box.addWidget(self.status_label)
+        v_box.addWidget(self.line_edit)
+        v_box.addStretch(1)
+        v_box.addLayout(management_layout)
+        v_box.addStretch(1)
+        # Add list groups
+        v_box.addWidget(
+            self._create_list_group(
+                "Added packages",
+                self.add_list,
+                partial(self.reset_action, self.add_list, True),
+            )
+        )
+        v_box.addStretch(1)
+        v_box.addWidget(
+            self._create_list_group(
+                "Removed packages",
+                self.remove_list,
+                partial(self.reset_action, self.remove_list, False),
+            )
+        )
+        v_box.addStretch(1)
+
+        if not user_mode:
+            v_box.addWidget(
+                self._create_list_group(
+                    "Deleted packages",
+                    self.del_list,
+                    partial(self.reset_action, self.del_list, False),
+                )
+            )
+            v_box.addStretch(1)
+
+        # Create save/cancel buttons
+        save_cancel_layout = self._create_save_cancel_layout()
+        v_box.addStretch(1)
+        v_box.addLayout(save_cancel_layout)
+        # Create main horizontal layout
+        h_box = QHBoxLayout()
+        h_box.addWidget(self.package_library)
+        h_box.addLayout(v_box)
+        return h_box
+
+    def _create_package_management_buttons(self, user_mode):
+        """Create buttons for package management.
+
+        :param user_mode (bool): Whether the application is in user mode.
+
+        :return (QHBoxLayout): Layout with package management buttons.
+        CHECKED
+        """
+        layout = QHBoxLayout()
+        add_btn = self._create_button(
+            "Add/Update package", self.add_package_with_text
+        )
+        remove_btn = self._create_button(
+            "Remove package", self.remove_package_with_text
+        )
+        layout.addWidget(add_btn)
+        layout.addWidget(remove_btn)
+
+        if not user_mode:
+            delete_btn = self._create_button(
+                "Delete package", self.delete_package_with_text
+            )
+            layout.addWidget(delete_btn)
+
+        return layout
+
+    def _create_save_cancel_layout(self):
+        """Create layout for save and cancel buttons.
+
+        :return (QHBoxLayout): Layout with save and cancel buttons.
+        CHECKED
+        """
+        layout = QHBoxLayout()
+        layout.addStretch(1)
+        save_btn = self._create_button("Apply changes", self.ok_clicked)
+        cancel_btn = self._create_button("Cancel", self.close)
+        layout.addWidget(save_btn)
+        layout.addWidget(cancel_btn)
+        return layout
+
+    def _create_status_label(self):
+        """Create and configure the status label.
+
+        :return (QLabel): Configured status label.
+        CHECKED
+        """
+        label = QLabel()
+        label.setText("")
+        label.setStyleSheet(
+            "QLabel{font-size:10pt;font:italic;text-align: center}"
+        )
+        return label
+
+    def _load_initial_configuration(self):
+        """Load initial package configuration.
+        CHECKED
+        """
         self.is_path = False
         self.process_config = self.load_config()
         self.load_packages()
         self.pkg_config = deepcopy(self.packages)
-        self.package_library = PackageLibrary(self.packages, self.paths)
-        self.status_label = QLabel()
-        self.status_label.setText("")
-        self.status_label.setStyleSheet(
-            "QLabel{font-size:10pt;font:italic;text-align: center}"
+
+    def _setup_ui(self):
+        """Set up the user interface components.
+        CHECKED
+        """
+        config = Config()
+        user_mode = config.get_user_mode()
+        # Set window title based on user mode
+        self.setWindowTitle(
+            f"Package library manager ["
+            f"{'user' if user_mode else 'admin'}"
+            f" mode]"
         )
-        self.line_edit = QLineEdit()
-        self.line_edit.setPlaceholderText(
-            "Type a Python package (ex. nipype.interfaces.spm)"
+        # Create UI components
+        self.status_label = self._create_status_label()
+        self.line_edit = self._create_line_edit()
+        # Create button layouts
+        install_layout = self._create_install_buttons()
+        package_management_layout = self._create_package_management_buttons(
+            user_mode
         )
-        push_button_add_pkg_file = QPushButton(
-            default=False, autoDefault=False
-        )
-        push_button_add_pkg_file.setText("Zipfile")
-        push_button_add_pkg_file.clicked.connect(
-            partial(self.install_processes_pop_up, False)
-        )
-        push_button_add_pkg_folder = QPushButton(
-            default=False, autoDefault=False
-        )
-        push_button_add_pkg_folder.setText("Folder")
-        push_button_add_pkg_folder.clicked.connect(
-            partial(self.install_processes_pop_up, True)
-        )
-        push_button_add_pkg = QPushButton(default=False, autoDefault=False)
-        push_button_add_pkg.setText("Add/Update package")
-        push_button_add_pkg.clicked.connect(self.add_package_with_text)
-        push_button_rm_pkg = QPushButton(default=False, autoDefault=False)
-        push_button_rm_pkg.setText("Remove package")
-        push_button_rm_pkg.clicked.connect(self.remove_package_with_text)
-        push_button_del_pkg = QPushButton(default=False, autoDefault=False)
-        push_button_del_pkg.setText("Delete package")
-        push_button_del_pkg.clicked.connect(self.delete_package_with_text)
+        # Create lists for tracking package changes
+        self.add_list = self._create_list_widget()
+        self.remove_list = self._create_list_widget()
+        self.del_list = self._create_list_widget()
+        # Tracking dictionaries for package changes
         self.add_dic = {}
         self.remove_dic = {}
         self.delete_dic = {}
-        self.add_list = QListWidget()
-        self.remove_list = QListWidget()
-        self.del_list = QListWidget()
-        self.add_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        self.remove_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        self.del_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        push_button_save = QPushButton(default=False, autoDefault=False)
-        push_button_save.setText("Apply changes")
-        push_button_save.clicked.connect(partial(self.ok_clicked))
-        push_button_cancel = QPushButton(
-            "Cancel", default=False, autoDefault=False
+        # Create main layout
+        main_layout = self._create_main_layout(
+            install_layout, package_management_layout, user_mode
         )
-        push_button_cancel.setObjectName("pushButton_cancel")
-        push_button_cancel.clicked.connect(self.close)
-        # Layout
-        h_box_line_edit = QHBoxLayout()
-        h_box_line_edit.addWidget(self.line_edit)
-        h_box_install = QHBoxLayout()
-        h_box_install.addWidget(QLabel("Install processes from:"))
-        h_box_install.addStretch(1)
-        h_box_install.addWidget(push_button_add_pkg_file)
-        h_box_install.addWidget(push_button_add_pkg_folder)
-        h_box_label = QHBoxLayout()
-        h_box_label.addStretch(1)
-        h_box_label.addWidget(self.status_label)
-        h_box_label.addStretch(1)
-        h_box_save = QHBoxLayout()
-        h_box_save.addStretch(1)
-        h_box_save.addWidget(push_button_save)
-        h_box_save.addWidget(push_button_cancel)
-        h_box_buttons = QHBoxLayout()
-        h_box_buttons.addWidget(push_button_add_pkg)
-        h_box_buttons.addWidget(push_button_rm_pkg)
-
-        if config.get_user_mode() is False:
-            h_box_buttons.addWidget(push_button_del_pkg)
-
-        group_import = QGroupBox("Added packages")
-        group_remove = QGroupBox("Removed packages")
-        group_delete = QGroupBox("Deleted packages")
-        h_box_import = QHBoxLayout()
-        h_box_remove = QHBoxLayout()
-        h_box_delete = QHBoxLayout()
-        h_box_import.addWidget(self.add_list)
-        h_box_remove.addWidget(self.remove_list)
-        h_box_delete.addWidget(self.del_list)
-        cancel_add = QPushButton("Reset", default=False, autoDefault=False)
-        cancel_rem = QPushButton("Reset", default=False, autoDefault=False)
-        cancel_del = QPushButton("Reset", default=False, autoDefault=False)
-        cancel_add.clicked.connect(
-            partial(self.reset_action, self.add_list, True)
-        )
-        cancel_rem.clicked.connect(
-            partial(self.reset_action, self.remove_list, False)
-        )
-        cancel_del.clicked.connect(
-            partial(self.reset_action, self.del_list, False)
-        )
-        h_box_import.addWidget(cancel_add)
-        h_box_remove.addWidget(cancel_rem)
-        h_box_delete.addWidget(cancel_del)
-        group_import.setLayout(h_box_import)
-        group_remove.setLayout(h_box_remove)
-        group_delete.setLayout(h_box_delete)
-        v_box = QVBoxLayout()
-        v_box.addStretch(1)
-        v_box.addLayout(h_box_install)
-        v_box.addStretch(1)
-        v_box.addLayout(h_box_label)
-        v_box.addLayout(h_box_line_edit)
-        v_box.addStretch(1)
-        v_box.addLayout(h_box_buttons)
-        v_box.addStretch(1)
-        v_box.addWidget(group_import)
-        v_box.addStretch(1)
-        v_box.addWidget(group_remove)
-        v_box.addStretch(1)
-        v_box.addWidget(group_delete)
-        v_box.addStretch(1)
-        v_box.addLayout(h_box_save)
-        h_box = QHBoxLayout()
-        h_box.addWidget(self.package_library)
-        h_box.addLayout(v_box)
-        self.setLayout(h_box)
+        self.setLayout(main_layout)
 
     def add_package(
         self,
@@ -1652,14 +1778,19 @@ class PackageLibraryDialog(QDialog):
         show_error=False,
         init_package_tree=False,
     ):
-        """Add a package and its modules to the package tree.
+        """
+        Add a package and its modules to the package tree.
 
-        :param module_name: name of the module
-        :param class_name: name of the class
-        :param show_error: display error in a message box in case of error. If
-          False, errors are silent and error messages returned at the end of
-          execution
-        :param init_package_tree: boolean to initialize the package tree
+        :param module_name (str): Name of the module to add.
+        :param class_name (str): Specific class name to add. Defaults to None.
+        :param show_error (bool): Whether to display error messages in a
+                                  message box. If False, errors are silent and
+                                  error messages returned at the end of
+                                  execution.
+        :param init_package_tree (bool): Whether to initialize the package
+                                         tree. Defaults to False.
+
+        :return (list): Error messages encountered during package addition.
         """
 
         if init_package_tree is True:
@@ -1778,10 +1909,13 @@ class PackageLibraryDialog(QDialog):
             return "No package selected!"
 
     def add_package_with_text(self, _2add=False, update_view=True):
-        """Add a package from the line edit's text.
+        """
+        Add a package from the line edit's text.
 
-        :param _2add: name of package
-        :param update_view: boolean to update the QListWidget
+        :param _2add (str or bool): Package name to add. If False, uses line
+                                    edit text. Defaults to False.
+        :param update_view (bool): Whether to update the QListWidget. Defaults
+                                   to True.
         """
 
         if _2add is False:
@@ -1925,20 +2059,26 @@ class PackageLibraryDialog(QDialog):
         loop=False,
         from_pipeline_manager=False,
     ):
-        """Delete a package, only available to administrators.
+        """
+        Delete a package from the library (admin-only functionality).
 
         Remove the package from the package library tree, update the
         __init__ file and delete the package directory and files if there
         are empty.
 
-        :param index: recursive index to move between modules
-        :param to_delete: the brick (class) do delete (ex. test.Test)
-        :param remove: (boolean) if True, remove the brick(s) from the
-                       package tree
-        :param loop: (boolean) to loop silently (if True no confirmation
-                     is requested before deletion)
+        :param index (int): Recursive index for navigating modules.
+                            Defaults to 1.
+        :param to_delete (str): The package/brick to delete
+                                (e.g., 'test.Test'). Defaults to None.
+        :param remove (bool): Whether to remove the brick from the package
+                              tree. Defaults to True.
+        :param loop (bool): Whether to delete silently without confirmation.
+                            Defaults to False.
+        :param from_pipeline_manager (bool): Whether deletion is initiated
+                                             from pipeline manager. Defaults
+                                             to False.
 
-        :return: the list of deleted brick (class)
+        :return (list): Deleted packages/bricks (class).
         """
         deleted_packages = []
         self.packages = self.package_library.package_tree
@@ -2290,64 +2430,67 @@ class PackageLibraryDialog(QDialog):
             self.save(False)
             return deleted_packages
 
-    def delete_package_with_text(self, _2del=False, update_view=True):
-        """Delete a package from the line edit's text.
-        :param _2del: name of package
-        :param update_view: boolean to update the QListWidget
+    def delete_package_with_text(self, package_name="", update_view=True):
+        """
+        Delete a package from the line edit's text.
 
+        :param package_name (str): The name of the package to delete. Defaults
+                                   to the text in the line edit.
+        :param update_view (bool): Whether to update the QListWidget after
+                                   deletion. Defaults to True.
+        CHECKED
         """
         old_status = self.status_label.text()
+        package_name = package_name or self.line_edit.text()
 
-        if _2del is False:
-            _2del = self.line_edit.text()
-            self.status_label.setText(f"Deleting {_2del}. Please wait...")
-            QApplication.processEvents()
+        if not package_name:
+            return
 
-        if _2del not in self.delete_dic:
-            package_removed = self.remove_package(_2del)
+        self.status_label.setText(f"Deleting {package_name}. Please wait...")
+        QApplication.processEvents()
+        package_removed = (
+            package_name in self.delete_dic
+            or self.remove_package(package_name)
+        )
 
-        else:
-            package_removed = True
+        if package_removed:
 
-        if package_removed is True:
+            if update_view and package_name not in self.delete_dic:
+                self.del_list.addItem(package_name)
+                self.delete_dic[package_name] = self.del_list.count() - 1
 
-            if update_view:
+            for package_dict, package_list in [
+                (self.add_dic, self.add_list),
+                (self.remove_dic, self.remove_list),
+            ]:
 
-                if _2del not in self.delete_dic:
-                    self.del_list.addItem(_2del)
-                    self.delete_dic[_2del] = self.del_list.count() - 1
+                if package_name in package_dict:
+                    index = package_dict.pop(package_name)
+                    package_list.takeItem(index)
 
-            if _2del in self.add_dic:
-                index = self.add_dic[_2del]
-                self.add_list.takeItem(self.add_dic[_2del])
-                self.add_dic.pop(_2del)
+                    for key, value in package_dict.items():
 
-                for key in self.add_dic:
+                        if value > index:
+                            package_dict[key] -= 1
 
-                    if self.add_dic[key] > index:
-                        self.add_dic[key] = self.add_dic[key] - 1
-
-            if _2del in self.remove_dic:
-                index = self.remove_dic[_2del]
-                self.remove_list.takeItem(self.remove_dic[_2del])
-                self.remove_dic.pop(_2del)
-
-                for key in self.remove_dic:
-
-                    if self.remove_dic[key] > index:
-                        self.remove_dic[key] = self.remove_dic[key] - 1
-
-            self.status_label.setText(f"{_2del} deleted from Package Library.")
+            self.status_label.setText(
+                f"{package_name} deleted from Package Library."
+            )
 
         else:
             self.status_label.setText(old_status)
 
-    def install_processes_pop_up(self, folder=False):
-        """Open the install processes pop-up.
-
-        :param folder: boolean, True if installing from a folder
+    def install_processes_pop_up(self, from_folder=False):
         """
-        self.pop_up_install_processes = InstallProcesses(self, folder=folder)
+        Display the install processes pop-up.
+
+        :param from_folder (bool): Whether the installation is from a folder.
+                                   Defaults to False.
+        CHECKED
+        """
+        self.pop_up_install_processes = InstallProcesses(
+            self, folder=from_folder
+        )
         self.pop_up_install_processes.show()
         self.pop_up_install_processes.process_installed.connect(
             self.update_config
@@ -2355,24 +2498,24 @@ class PackageLibraryDialog(QDialog):
 
     @staticmethod
     def load_config():
-        """Update the config and loads the corresponding packages.
+        """
+        Loads and returns the configuration from 'process_config.yml'.
 
-        :return: the config as a dictionary
-
+        :return (dict | None): The configuration dictionary if successfully
+                               loaded, otherwise None in case of an error.
+        CHECKED
         """
         # import verCmp only here to prevent circular import issue
         from populse_mia.utils import verCmp
 
         config = Config()
+        config_path = os.path.join(
+            config.get_properties_path(), "properties", "process_config.yml"
+        )
 
-        with open(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            ),
-        ) as stream:
-            try:
+        try:
+
+            with open(config_path) as stream:
 
                 if verCmp(yaml.__version__, "5.1", "sup"):
                     return yaml.load(stream, Loader=yaml.FullLoader)
@@ -2380,82 +2523,75 @@ class PackageLibraryDialog(QDialog):
                 else:
                     return yaml.load(stream)
 
-            except yaml.YAMLError as exc:
-                logger.warning(exc)
+        except (yaml.YAMLError, OSError) as exc:
+            logger.warning(f"Failed to load config: {exc}")
+            return None
 
     def load_packages(self):
-        """Update the tree of the process library."""
+        """Update the tree of the process library.
+        CHECKED
+        """
 
-        try:
-            self.packages = self.process_config["Packages"]
+        if isinstance(self.process_config, dict):
+            self.packages = self.process_config.get("Packages", {})
+            self.paths = self.process_config.get("Paths", [])
 
-        except KeyError:
+        else:
             self.packages = {}
-
-        except TypeError:
-            self.packages = {}
-
-        try:
-            self.paths = self.process_config["Paths"]
-
-        except KeyError:
-            self.paths = []
-
-        except TypeError:
             self.paths = []
 
     def ok_clicked(self):
-        """Called when apply changes is clicked."""
-
+        """
+        Handles the click event when the 'Apply Changes' button is clicked.
+        CHECKED
+        """
         pkg_to_delete = list(self.delete_dic.keys())
+        deleted_packages = set()
         reply = None
-        deleted_packages = []
 
-        for i in pkg_to_delete:
+        for pkg in pkg_to_delete:
 
-            if i not in deleted_packages:
+            if pkg in deleted_packages:
+                continue
 
-                if reply is None:
-                    msgtext = (
-                        f"Do you really want to delete " f"the '{i}' package?"
-                    )
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Warning)
-                    title = "populse_mia - Warning: Delete package"
-                    reply = msg.question(
-                        self,
-                        title,
-                        msgtext,
-                        QMessageBox.Yes
-                        | QMessageBox.No
-                        | QMessageBox.YesToAll
-                        | QMessageBox.NoToAll,
-                    )
-                if reply == QMessageBox.YesToAll or reply == QMessageBox.Yes:
+            if reply is None:
+                msgtext = f"Do you really want to delete the '{pkg}' package?"
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                title = "populse_mia - Warning: Delete package"
+                reply = msg.question(
+                    self,
+                    title,
+                    msgtext,
+                    QMessageBox.Yes
+                    | QMessageBox.No
+                    | QMessageBox.YesToAll
+                    | QMessageBox.NoToAll,
+                )
+
+                if reply in (QMessageBox.Yes, QMessageBox.YesToAll):
                     sub_deleted_packages = self.delete_package(
-                        to_delete=i, remove=False, loop=True
+                        to_delete=pkg, remove=False, loop=True
                     )
-
-                    for sub_pkg in sub_deleted_packages:
-
-                        if sub_pkg not in deleted_packages:
-                            deleted_packages.append(sub_pkg)
+                    deleted_packages.update(sub_deleted_packages)
 
                 # TODO Do we want to reinitialize the initial state ?
-                elif reply == QMessageBox.NoToAll or reply == QMessageBox.No:
-                    self.add_package_with_text(i)
+                elif reply in (QMessageBox.No, QMessageBox.NoToAll):
+                    self.add_package_with_text(pkg)
 
-                if reply == QMessageBox.No or reply == QMessageBox.Yes:
+                if reply in (QMessageBox.Yes, QMessageBox.No):
                     reply = None
 
         self.save()
 
     def remove_package(self, package):
-        """Remove a package from the package tree.
+        """
+        Remove a package from the package tree.
 
-        :param package: module's representation as a string
-           (e.g.: nipype.interfaces.spm)
-        :return: True if the package has been removed correctly
+        :param package (str): Module representation
+                              (e.g., 'nipype.interfaces.spm').
+        :return (bool): True if package was successfully removed,
+                        False otherwise.
         """
         self.packages = self.package_library.package_tree
         config = Config()
@@ -2528,65 +2664,70 @@ class PackageLibraryDialog(QDialog):
         return True
 
     def remove_package_with_text(
-        self, _2rem=None, update_view=True, tree_remove=True
+        self, package_name="", update_view=True, tree_remove=True
     ):
-        """Remove the package in the line edit from the package tree.
+        """
+        Removes the specified package from the package tree and updates the
+        view accordingly.
 
-        :param _2rem: name of package
-        :param update_view: boolean to update the QListWidget
-        :param tree_remove: boolean, remove from the tree
-
+        :param package_name (str): The name of the package to remove. If not
+                                   provided, the package name is taken from
+                                   the line edit.
+        :param update_view (bool): Whether to update the QListWidget view after
+                                   removal. Defaults to True.
+        :param tree_remove (bool): Whether to remove the package from the
+                                   tree. Defaults to True.
+        CHECKED
         """
         old_status = self.status_label.text()
+        package_name = package_name or self.line_edit.text()
 
-        if _2rem is False:
-            _2rem = self.line_edit.text()
-            self.status_label.setText(f"Removing {_2rem}. Please wait.")
-            QApplication.processEvents()
+        if not package_name:
+            return
 
-        if _2rem not in self.delete_dic and tree_remove:
-            package_removed = self.remove_package(_2rem)
+        self.status_label.setText(f"Removing {package_name}. Please wait.")
+        QApplication.processEvents()
+
+        if package_name not in self.delete_dic and tree_remove:
+            package_removed = self.remove_package(package_name)
 
         else:
             package_removed = True
 
-        if package_removed is True:
+        if package_removed:
 
-            if update_view and _2rem not in self.remove_dic:
-                self.remove_list.addItem(_2rem)
-                self.remove_dic[_2rem] = self.remove_list.count() - 1
+            if update_view and package_name not in self.remove_dic:
+                self.remove_list.addItem(package_name)
+                self.remove_dic[package_name] = self.remove_list.count() - 1
 
-            if _2rem in self.add_dic:
-                index = self.add_dic[_2rem]
-                self.add_list.takeItem(self.add_dic[_2rem])
-                self.add_dic.pop(_2rem)
+            for package_dict, package_list in [
+                (self.add_dic, self.add_list),
+                (self.delete_dic, self.del_list),
+            ]:
 
-                for key in self.add_dic:
+                if package_name in package_dict:
+                    index = package_dict.pop(package_name)
+                    package_list.takeItem(index)
 
-                    if self.add_dic[key] > index:
-                        self.add_dic[key] = self.add_dic[key] - 1
+                    for key, value in package_dict.items():
+                        if value > index:
+                            package_dict[key] -= 1
 
-            if _2rem in self.delete_dic:
-                index = self.delete_dic[_2rem]
-                self.del_list.takeItem(self.delete_dic[_2rem])
-                self.delete_dic.pop(_2rem)
-
-                for key in self.delete_dic:
-
-                    if self.delete_dic[key] > index:
-                        self.delete_dic[key] = self.delete_dic[key] - 1
-
-            self.status_label.setText(f"{_2rem} removed from Package Library.")
+            self.status_label.setText(
+                f"{package_name} removed from Package Library."
+            )
 
         else:
             self.status_label.setText(old_status)
 
     def reset_action(self, itemlist, add):
-        """Called to reset a previous add or remove package action.
+        """
+        Reset a previous package addition or removal action.
 
-        :param itemlist: the QListWidget from add or remove package
-        :param add: boolean to know which list to update
-
+        :param itemlist (QListWidget): The list widget containing items to
+                                       reset.
+        :param add (bool): Whether resetting an addition (True) or removal
+                           (False) action.
         """
 
         for i in itemlist.selectedItems():
@@ -2614,7 +2755,12 @@ class PackageLibraryDialog(QDialog):
                 self.add_package_with_text(i.text(), update_view=False)
 
     def save(self, close=True):
-        """Save the tree to the process_config.yml file."""
+        """
+        Save the package library configuration to process_config.yml.
+
+        :param close (bool): Whether to close the dialog after saving.
+                             Defaults to True.
+        """
 
         # Updating the packages and the paths according to the
         # package library tree
@@ -2657,20 +2803,23 @@ class PackageLibraryDialog(QDialog):
             self.close()
 
     def save_config(self):
-        """Save the current config to process_config.yml."""
-        config = Config()
-        self.process_config["Packages"] = self.packages
-        self.process_config["Paths"] = self.paths
+        """
+        Save the current configuration to 'process_config.yml'.
 
-        with open(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            ),
-            "w",
-            encoding="utf8",
-        ) as stream:
+        This method writes the current package and path settings to a YAML
+        file located at 'properties/process_config.yml' within the properties
+        directory of the project.
+        CHECKED
+        """
+        config = Config()
+        self.process_config.update(
+            {"Packages": self.packages, "Paths": self.paths}
+        )
+        config_path = os.path.join(
+            config.get_properties_path(), "properties", "process_config.yml"
+        )
+
+        with open(config_path, "w", encoding="utf8") as stream:
             yaml.dump(
                 self.process_config,
                 stream,
@@ -2679,7 +2828,14 @@ class PackageLibraryDialog(QDialog):
             )
 
     def update_config(self):
-        """Update the process_config and package_library attributes."""
+        """
+        Refreshes the process configuration and updates the package library.
+
+        This method reloads the configuration from 'process_config.yml',
+        updates the package library attributes, and regenerates the package
+        tree.
+        CHECKED
+        """
         self.process_config = self.load_config()
         self.load_packages()
         self.package_library.package_tree = self.packages
@@ -2848,7 +3004,7 @@ class ProcessLibraryWidget(QWidget):
         - load_packages: Set packages and paths to the widget and to the
                          system paths.
         - open_pkg_lib: Open the package library.
-        - save_config: Save the current config to process_config.yml.
+        - save_config: Save the current config to process_config.yml. <= USED?
         - update_config: Update the config and loads the corresponding
                          packages.
         - update_process_library: Update the tree of the process library.
