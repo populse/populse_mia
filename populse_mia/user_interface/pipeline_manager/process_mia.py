@@ -1024,9 +1024,12 @@ class ProcessMIA(Process):
 
         return True
 
-    def _after_run_process(self):
+    def _after_run_process(self, run_process_result):
         """
         Retrieve output values when the process is a NipypeProcess.
+
+        :param run_process_result: The result of the process execution.
+                                   (unused)
         """
 
         if hasattr(self, "process") and isinstance(
@@ -1260,7 +1263,7 @@ class ProcessMIA(Process):
                                       values to be saved.
         """
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             if current_values:
 

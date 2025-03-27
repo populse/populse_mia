@@ -259,7 +259,7 @@ class ModifyTable(QDialog):
         # Only update database if all values are valid
         # Update database for each cell with validated values
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for scan, tag in zip(self.scans, self.tags):
                 # Get field attributes
