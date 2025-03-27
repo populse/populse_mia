@@ -598,7 +598,7 @@ class PopUpAddPath(QDialog):
                 checksum = hashlib.md5(scan_file.read()).hexdigest()
 
             # Add document to database
-            with self.project.database.data() as database_data:
+            with self.project.database.data(write=True) as database_data:
 
                 for collection in (COLLECTION_INITIAL, COLLECTION_CURRENT):
                     database_data.add_document(collection, rel_path)

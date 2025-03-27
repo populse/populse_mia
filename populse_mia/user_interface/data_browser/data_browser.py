@@ -248,7 +248,7 @@ class DataBrowser(QWidget):
                 }
             )
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for scan in database_data.get_document(
                 collection_name=COLLECTION_CURRENT
@@ -384,7 +384,7 @@ class DataBrowser(QWidget):
 
         self.project.unsavedModifications = True
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for scan in database_data.get_document(
                 collection_name=COLLECTION_CURRENT
@@ -1309,7 +1309,7 @@ class TableDataBrowser(QTableWidget):
         # To reset the first cell already changed
         # self.fill_cells_update_table()
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             # For each item selected, we check the validity of the types
             for item in self.selectedItems():
@@ -1623,7 +1623,7 @@ class TableDataBrowser(QTableWidget):
         :param name: string of the brick id
         """
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
             doc = database_data.get_document(
                 collection_name=COLLECTION_BRICK, primary_keys=name
             )
@@ -2470,7 +2470,7 @@ class TableDataBrowser(QTableWidget):
         repeat_pop_up = False
         cancel = False
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for point in points:
                 row = point.row()
@@ -2568,7 +2568,7 @@ class TableDataBrowser(QTableWidget):
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for point in points:
                 row = point.row()
@@ -2638,7 +2638,7 @@ class TableDataBrowser(QTableWidget):
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for point in points:
                 col = point.column()
@@ -2707,7 +2707,7 @@ class TableDataBrowser(QTableWidget):
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             # For each selected cell
             for point in points:

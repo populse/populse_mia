@@ -2729,6 +2729,8 @@ class PackageLibraryDialog(QDialog):
             if add:
                 config = self.pkg_config
 
+                # Suppress Flake8 warning for unused 'config' variable
+                # in the comprehension
                 if all(
                     (config := config.get(pkg))  # noqa: F841
                     for pkg in package_name.split(".")

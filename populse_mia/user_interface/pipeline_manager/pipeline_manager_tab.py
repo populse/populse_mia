@@ -503,7 +503,7 @@ class PipelineManagerTab(QWidget):
                         attributes,
                     )
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
             # Adding I/O to database history
             # Setting brick init state if init finished correctly
             database_data.set_value(
@@ -2266,11 +2266,13 @@ class PipelineManagerTab(QWidget):
             )
             init_messages.append(mssg)
 
-        with self.project.database.data() as database_data:
+        # with self.project.database.data(write=True) as database_data:
 
-            if init_result:
-                # add pipeline to the history collection
-                history_id = str(uuid.uuid4())
+        if init_result:
+            # add pipeline to the history collection
+            history_id = str(uuid.uuid4())
+
+            with self.project.database.data(write=True) as database_data:
                 database_data.add_document(COLLECTION_HISTORY, history_id)
                 # serialize pipeline
                 buffer = io.StringIO()
@@ -2298,42 +2300,47 @@ class PipelineManagerTab(QWidget):
                     primary_key=history_id,
                     values_dict={HISTORY_PIPELINE: pipeline_xml},
                 )
-                # add process characteristics in the database
-                # if init is otherwise OK
-                for job in self.workflow.jobs:
 
-                    if hasattr(job, "process"):
-                        node = job.process()
-                        process = node
+            # add process characteristics in the database
+            # if init is otherwise OK
+            for job in self.workflow.jobs:
 
-                        if isinstance(node, ProcessNode):
-                            process = node.process
+                if hasattr(job, "process"):
+                    node = job.process()
+                    process = node
 
-                        # trick to eliminate "ReduceJob" in jobs would it be
-                        # better to test if process is a ReduceNode ?
-                        if hasattr(process, "context_name"):
-                            node_name = process.context_name
+                    if isinstance(node, ProcessNode):
+                        process = node.process
 
-                            if node_name.split(".")[0] == "Pipeline":
-                                node_name = ".".join(node_name.split(".")[1:])
+                    # trick to eliminate "ReduceJob" in jobs would it be
+                    # better to test if process is a ReduceNode ?
+                    if hasattr(process, "context_name"):
+                        node_name = process.context_name
 
-                            self.update_auto_inheritance(node, job)
-                            self.update_inheritance(job, node)
+                        if node_name.split(".")[0] == "Pipeline":
+                            node_name = ".".join(node_name.split(".")[1:])
 
-                            # Adding the brick to the bricks history
-                            if not isinstance(node, (PipelineNode, Pipeline)):
-                                # check if brick_id has already been assigned
-                                brick_id = getattr(job, "uuid", None)
+                        self.update_auto_inheritance(node, job)
+                        self.update_inheritance(job, node)
 
-                                if brick_id is None:
-                                    brick_id = getattr(node, "uuid", None)
+                        # Adding the brick to the bricks history
+                        if not isinstance(node, (PipelineNode, Pipeline)):
+                            # check if brick_id has already been assigned
+                            brick_id = getattr(job, "uuid", None)
 
-                                if brick_id is None:
-                                    brick_id = str(uuid.uuid4())
+                            if brick_id is None:
+                                brick_id = getattr(node, "uuid", None)
 
-                                # set brick_id in process
-                                job.uuid = brick_id
-                                self.brick_list.append(brick_id)
+                            if brick_id is None:
+                                brick_id = str(uuid.uuid4())
+
+                            # set brick_id in process
+                            job.uuid = brick_id
+                            self.brick_list.append(brick_id)
+
+                            with self.project.database.data(
+                                write=True
+                            ) as database_data:
 
                                 try:
                                     database_data.add_document(
@@ -2350,7 +2357,6 @@ class PipelineManagerTab(QWidget):
                                         f"'{node_name}' brick."
                                     )
 
-                                # self.project.session.set_values(
                                 database_data.set_value(
                                     collection_name=COLLECTION_BRICK,
                                     primary_key=brick_id,
@@ -2363,10 +2369,12 @@ class PipelineManagerTab(QWidget):
                                         BRICK_EXEC: "Not Done",
                                     },
                                 )
-                                self._register_node_io_in_database(
-                                    job, node, pipeline_name, history_id
-                                )
 
+                            self._register_node_io_in_database(
+                                job, node, pipeline_name, history_id
+                            )
+
+            with self.project.database.data(write=True) as database_data:
                 # add bricklist into history collection
                 database_data.set_value(
                     collection_name=COLLECTION_HISTORY,
@@ -2637,7 +2645,7 @@ class PipelineManagerTab(QWidget):
         )
         bricks = to_upate["bricks"]
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             # set state of bricks: done + exec date
             for brid, brick in bricks.items():
@@ -2826,7 +2834,7 @@ class PipelineManagerTab(QWidget):
         )
         pl = len(proj_dir)
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
             tag_list = set(database_data.get_field_names(COLLECTION_CURRENT))
             attributes = {k: v for k, v in attributes.items() if k in tag_list}
 

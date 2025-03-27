@@ -600,7 +600,7 @@ class Project:
         obsolete_bricks, orphan_files = self.get_orphan_bricks(bricks)
         logger.info(f"Identified obsolete bricks: {obsolete_bricks}")
 
-        with self.database.data() as database_data:
+        with self.database.data(write=True) as database_data:
 
             for brick in obsolete_bricks:
                 logger.info(f"Removing obsolete brick: {brick}")
@@ -648,7 +648,7 @@ class Project:
         logger.info(f"Orphan histories: {obsolete_histories}")
         logger.info(f"Orphan bricks: {obsolete_bricks}")
 
-        with self.database.data() as database_data:
+        with self.database.data(write=True) as database_data:
 
             for hist in obsolete_histories:
                 logger.info(f"Removing obsolete history: {hist}")
@@ -704,7 +704,7 @@ class Project:
         """
         orphan_files = self.get_orphan_nonexisting_files()
 
-        with self.database.data() as database_data:
+        with self.database.data(write=True) as database_data:
 
             for file_path in orphan_files:
                 logger.info(f"Removing orphan file: {file_path}")
@@ -894,7 +894,7 @@ class Project:
         with self.database.data() as database_data:
             docs = database_data.get_document(
                 collection_name=COLLECTION_BRICK,
-                rimary_keys=list(bricks),
+                primary_keys=list(bricks),
                 fields=[BRICK_ID, BRICK_EXEC, BRICK_OUTPUTS],
             )
 
@@ -1668,7 +1668,7 @@ class Project:
         :param values (list): List of Value objects
         """
 
-        with self.database.data() as database_data:
+        with self.database.data(write=True) as database_data:
 
             for valueToReput in values:
                 primary_key, tag, current_value, initial_value = valueToReput
@@ -2039,7 +2039,7 @@ class Project:
         """
 
         def _update_json_data(
-            self, collection, doc_id, field, data, old_path, new_path
+            collection, doc_id, field, data, old_path, new_path
         ):
             """
             Helper method to update paths in JSON data structures.
@@ -2069,7 +2069,7 @@ class Project:
             except (TypeError, json.JSONDecodeError) as e:
                 logger.warning(f"Failed to update {field} for {doc_id}: {e}")
 
-        with self.database.data() as database_data:
+        with self.database.data(write=True) as database_data:
             history_docs = database_data.get_document(
                 collection_name=COLLECTION_HISTORY
             )
@@ -2128,7 +2128,7 @@ class Project:
                     # If we've found the old_path, update this brick's data
                     if old_path:
                         # Update inputs
-                        self._update_json_data(
+                        _update_json_data(
                             collection=COLLECTION_BRICK,
                             doc_id=brick_id,
                             field=BRICK_INPUTS,
@@ -2144,7 +2144,7 @@ class Project:
                         )
 
                         if outputs:
-                            self._update_json_data(
+                            _update_json_data(
                                 collection=COLLECTION_BRICK,
                                 doc_id=brick_id,
                                 field=BRICK_OUTPUTS,
