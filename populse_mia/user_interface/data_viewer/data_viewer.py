@@ -1,6 +1,6 @@
 """
 This module provides an abstract base class for data viewer implemenataions in
-populse-mia.
+populse_mia.
 
 Data viewers are supposed to inherit :class:`DataViewer` and implement (at
 least) its methods. A data viewer is given a project and documents list, and is
@@ -23,65 +23,104 @@ class named ``MiaViewer`` which:
 
 """
 
+##########################################################################
+# Populse_mia - Copyright (C) IRMaGe/CEA, 2018
+# Distributed under the terms of the CeCILL license, as published by
+# the CEA-CNRS-INRIA. Refer to the LICENSE file or to
+# http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
+# for details.
+##########################################################################
 
-class DataViewer:
+from abc import ABC, abstractmethod
+
+
+class DataViewer(ABC):
     """
-    Populse-MIA data viewers abstract base class: it just gives an API to be
-    overloaded by subclasses.
+    An abstract base class for data viewers with a minimal, extensible API.
 
-    The API is made willingly very simple and limited. Viewers implementations
-    are free to use Populse database features to implement fancy views. The
-    base functions are to register a project and documents list, display or
-    remove given files.
+    This class defines a standard interface for data viewers, allowing
+    subclasses to implement custom visualization strategies. The base methods
+    provide a simple contract for managing and displaying documents across
+    different viewer implementations.
+
+    The API is intentionally kept simple to provide flexibility for specific
+    use cases while ensuring a consistent basic functionality.
     """
 
+    @abstractmethod
     def display_files(self, files):
         """
-        Display the selected document files
-        """
+        Display the specified document files.
 
+        This method must be implemented by subclasses to define how
+        files are visually presented or loaded.
+
+        :param files (List): A list of files to be displayed.
+
+        Raises:
+            NotImplementedError: If not overridden by a subclass.
+        """
         raise NotImplementedError(
-            "display_files is abstract and should be overloaded in data "
-            "viewer implementations"
+            "Subclasses must implement display_files method"
         )
 
     def clear(self):
         """
-        Hide / unload all displayed documents
-        """
+        Remove all currently displayed files.
 
+        This method provides a default implementation that removes
+        all files currently being displayed by calling remove_files().
+        """
         self.remove_files(self.displayed_files())
 
+    @abstractmethod
     def displayed_files(self):
         """
-        Get the list of displayed files
+        Retrieve the list of currently displayed files.
+
+        :return (list): A list of files currently being displayed.
+
+        Raises:
+            NotImplementedError: If not overridden by a subclass.
         """
         raise NotImplementedError(
-            "displayed_files is abstract and should be overloaded in data "
-            "viewer implementations"
+            "Subclasses must implement displayed_files method"
         )
 
+    @abstractmethod
     def remove_files(self, files):
         """
-        Remove documents from the displayed ones (hide, unload...)
-        """
+        Remove specified files from the display.
 
+        :param files (list): A list of files to be removed from display.
+
+        Raises:
+            NotImplementedError: If not overridden by a subclass.
+        """
         raise NotImplementedError(
-            "remove_files is abstract and should be overloaded in data "
-            "viewer implementations"
+            "Subclasses must implement remove_files method"
         )
 
+    @abstractmethod
     def set_documents(self, project, documents):
         """
-        Sets the project and list of possible documents
-        """
+        Set the project context and available documents.
 
+        :param project: The project associated with the documents.
+        :param documents (list): The list of available documents.
+
+        Raises:
+            NotImplementedError: If not overridden by a subclass.
+        """
         raise NotImplementedError(
-            "set_documents is abstract and should be overloaded in data "
-            "viewer implementations"
+            "Subclasses must implement set_documents method"
         )
 
     def close(self):
-        """Blabla"""
+        """
+        Close the viewer by clearing all displayed files.
 
+        This method provides a standard way to clean up and close the viewer,
+        ensuring all resources are released.
+        """
         self.clear()
