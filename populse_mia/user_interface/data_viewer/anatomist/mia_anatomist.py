@@ -1,6 +1,10 @@
 """
 Mia data viewer implementation based on `Anatomist
 <http://brainvisa.info/anatomist/user_doc/index.html>`_
+
+Contains:
+    Class:
+        - MiaViewer
 """
 
 #############################################################################
@@ -50,6 +54,14 @@ class MiaViewer(Qt.QWidget, DataViewer):
     .. Methods:
         - _find_child: Find a child widget by name.
         - _setup_ui: Set up the user interface components for the viewer.
+        - display_files: Display the given files in the Anatomist viewer.
+        - displayed_files: Get the list of currently displayed files.
+        - remove_files: Remove specified files from the viewer.
+        - set_documents: Set the current project and documents for the viewer.
+        - filter_documents: Open a dialog to filter and select documents for
+                            visualization.
+        - close: Close the viewer and manage Anatomist viewer resources.
+
     """
 
     def __init__(self, init_global_handlers=None):
