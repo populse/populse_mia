@@ -766,10 +766,7 @@ class DatabaseMiaData:
         :return (str): The first key in the collection, representing the
                        primary key.
         """
-        # TODO: Are we sure that the primary key is ALWAYS the first
-        #       element in the dbs[collection].keys() dict_keys list?
-        return next(iter(self.storage_data[collection_name].keys()))
-        # return self.storage_data[collection_name].primary_key()[0]
+        return self.storage_data[collection_name].primary_key()[0]
 
     def get_shown_tags(self):
         """
