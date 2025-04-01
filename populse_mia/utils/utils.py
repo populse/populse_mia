@@ -400,7 +400,6 @@ def launch_mia(app, args):
 
             Make a cleanup of the opened projects just before exiting mia.
             """
-            global main_window
             config = Config()
             opened_projects = config.get_opened_projects()
 
