@@ -156,8 +156,6 @@ class _ProcDeleter(threading.Thread):
         except Exception as e:
             logger.warning(f"Exception in subprocess communication: {e}")
 
-        global _ipsubprocs
-
         with _ipsubprocs_lock:
 
             try:
@@ -996,7 +994,6 @@ class MainWindow(QMainWindow):
             ipConsole = self.run_ipconsole_kernel(mode)
 
             if ipConsole:
-                global _ipsubprocs
                 qt_api = qt_backend.get_qt_backend()
                 qt_apis = {
                     "PyQt4": "pyqt",
