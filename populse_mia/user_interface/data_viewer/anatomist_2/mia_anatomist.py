@@ -46,7 +46,7 @@ class MiaViewer(Qt.QWidget, DataViewer):
     """
     A PyQt-based viewer using PyAnatomist.
 
-    This class implements the DataViewer interface and provides functionality
+    This class implements a DataViewer interface and provides functionality
     to visualize and interact with medical imaging data through the PyAnatomist
     visualization library.
 
@@ -56,16 +56,23 @@ class MiaViewer(Qt.QWidget, DataViewer):
            `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_
 
     .. Methods:
+        - _add_dialog_buttons: Add action buttons to the filter dialog.
+        - _apply_preferences: Apply the settings from the preferences dialog.
+        - _create_preferences_dialog: Create the preferences dialog.
+        - _process_selected_documents: Process user's document selection.
+        - _setup_search_interface: Set up the search bar and related UI
+                                   elements.
+        - _setup_ui: Set up the user interface components and connect signals.
         - close: Exit
-        - display_files: Load objects in files and display
-        - displayed_files: Get the list of displayed files
-        - filter_documents: Filter documents already loaded in the Databrowser
-        - preferences: Preferences for the dataviewer
-        - remove_files: Delete the given objects given by their file names
-        - reset_search_bar: Reset the rapid search bar
-        - screenshot: The screenshot of mia_anatomist_2
-        - search_str: Update the *Not Defined*" values in visualised documents
-        - set_documents: Initialise current documents in the viewer
+        - display_files: Load objects in files and display.
+        - displayed_files: Get the list of displayed files.
+        - filter_documents: Filter documents already loaded in the Databrowser.
+        - preferences: Preferences for the dataviewer.
+        - remove_files: Delete the given objects given by their file names.
+        - reset_search_bar: Reset the rapid search bar.
+        - screenshot: The screenshot of mia_anatomist_2.
+        - search_str: Update the *Not Defined*" values in visualised documents.
+        - set_documents: Initialise current documents in the viewer.
 
     """
 
@@ -91,6 +98,169 @@ class MiaViewer(Qt.QWidget, DataViewer):
         self.documents = []
         self.displayed = []
         self.table_data = []
+
+    def _add_dialog_buttons(self, dialog, layout):
+        """
+        Add action buttons to the filter dialog.
+
+        :param dialog: Parent dialog.
+        :param layout: Layout to add buttons to.
+        """
+        hlay = Qt.QHBoxLayout()
+        layout.addLayout(hlay)
+        # Import button
+        ok = Qt.QPushButton("Import")
+        ok.clicked.connect(dialog.accept)
+        ok.setDefault(True)
+        hlay.addWidget(ok)
+        # Cancel button
+        cancel = Qt.QPushButton("Cancel")
+        cancel.clicked.connect(dialog.reject)
+        hlay.addWidget(cancel)
+        hlay.addStretch(1)
+
+    def _apply_preferences(self, dialog):
+        """
+        Apply the settings from the preferences dialog.
+
+        :param dialog: Preferences dialog containing the user selections.
+        """
+        # Get new values
+        new_config = dialog.config_box.currentText().lower()
+        new_ref = dialog.ref_box.currentIndex()
+        new_framerate = dialog.slider.value()
+        # Get current values for comparison
+        current_config = Config().getViewerConfig()
+        current_ref = Config().get_referential()
+        # Save new values
+        Config().setViewerFramerate(new_framerate)
+        Config().setViewerConfig(new_config)
+        Config().set_referential(new_ref)
+
+        # Apply changes that require viewer update
+        if new_config != current_config:
+            self.anaviewer.changeConfig(new_config)
+
+        if new_ref != current_ref:
+            self.anaviewer.changeRef()
+
+    def _create_preferences_dialog(
+        self, current_framerate, current_config, current_ref
+    ):
+        """
+        Create the preferences dialog with all settings controls.
+
+        :param current_framerate: Current animation frame rate.
+        :param current_config: Current display configuration (neuro/radio).
+        :param current_ref: Current referential setting.
+
+        :return (QDialog): Configured preferences dialog.
+        """
+        dialog = Qt.QDialog()
+        dialog.setWindowTitle("Preferences")
+        dialog.resize(600, 400)
+        layout = Qt.QVBoxLayout()
+        layout.setContentsMargins(25, 25, 25, 25)
+        dialog.setLayout(layout)
+        # Configuration selection (Neuro/Radio)
+        config_layout = QHBoxLayout()
+        config_layout.addWidget(Qt.QLabel("Configuration: "))
+        dialog.config_box = Qt.QComboBox()
+        dialog.config_box.addItems(["Neuro", "Radio"])
+
+        if current_config == "radio":
+            dialog.config_box.setCurrentIndex(1)
+
+        config_layout.addWidget(dialog.config_box)
+        layout.addLayout(dialog.config_layout)
+        # Frame rate slider
+        frame_rate_layout = QHBoxLayout()
+        frame_rate_layout.addWidget(Qt.QLabel("Automatic time image display:"))
+        frame_rate_layout.addWidget(Qt.QLabel("slow"))
+        dialog.slider = Qt.QSlider(Qt.Qt.Horizontal)
+        dialog.slider.setRange(1, 100)
+        dialog.slider.setValue(int(current_framerate))
+        dialog.slider.setMinimumSize(QtCore.QSize(180, 15))
+        frame_rate_layout.addWidget(dialog.slider)
+        frame_rate_layout.addWidget(Qt.QLabel("fast"))
+        frame_rate_layout.insertSpacing(1, 200)
+        layout.addLayout(frame_rate_layout)
+        # Referential selection
+        ref_layout = QHBoxLayout()
+        ref_layout.addWidget(Qt.QLabel("Referential: "))
+        dialog.ref_box = Qt.QComboBox()
+        dialog.ref_box.addItems(["World Coordinates", "Image referential"])
+        dialog.ref_box.setCurrentIndex(int(current_ref))
+        ref_layout.addWidget(dialog.ref_box)
+        layout.addLayout(ref_layout)
+        layout.addStretch(1)
+        # Buttons
+        button_layout = QHBoxLayout()
+        button_layout.addStretch(1)
+        save_button = Qt.QPushButton("Save")
+        save_button.clicked.connect(dialog.accept)
+        save_button.setDefault(True)
+        button_layout.addWidget(save_button)
+
+        cancel_button = Qt.QPushButton("Cancel")
+        cancel_button.clicked.connect(dialog.reject)
+        button_layout.addWidget(cancel_button)
+        button_layout.addStretch(1)
+        layout.addLayout(button_layout)
+        return dialog
+
+    def _process_selected_documents(self):
+        """Process user's document selection and display the selected files."""
+        points = self.table_data.selectedIndexes()
+        selected_files = []
+
+        with self.project.database.data() as database_data:
+
+            for point in points:
+                row = point.row()
+                # Get the filename of the scan from the first column
+                scan_name = self.table_data.item(row, 0).text()
+                filepath = database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, TAG_FILENAME
+                )
+                # Convert to absolute path
+                filepath = os.path.abspath(
+                    os.path.join(self.project.folder, filepath)
+                )
+                selected_files.append(filepath)
+
+            if selected_files:
+                self.display_files(selected_files)
+
+    def _setup_search_interface(self, dialog, layout):
+        """
+        Set up the search bar and related UI elements.
+
+        :param dialog: Parent dialog for the search interface.
+        :param layout: Layout to add search components to.
+        """
+        # Title label
+        title = Qt.QLabel("Search by FileName: ")
+        layout.addWidget(title)
+        # Search bar with clear button
+        search_bar_layout = QHBoxLayout()
+        # Search text field
+        self.search_bar = RapidSearch(dialog)
+        self.search_bar.textChanged.connect(self.search_str)
+        search_bar_layout.addWidget(self.search_bar)
+        search_bar_layout.addSpacing(3)
+        # Clear button
+        sources_images_dir = Config().getSourceImageDir()
+        button_cross = QToolButton()
+        button_cross.setStyleSheet("background-color:rgb(255, 255, 255);")
+        button_cross.setIcon(
+            QIcon(os.path.join(sources_images_dir, "gray_cross.png"))
+        )
+        button_cross.clicked.connect(self.reset_search_bar)
+        search_bar_layout.addWidget(button_cross)
+        # Add to main layout
+        layout.addLayout(search_bar_layout)
+        layout.addSpacing(8)
 
     def _setup_ui(self):
         """Set up the user interface components and connect signals."""
@@ -183,79 +353,6 @@ class MiaViewer(Qt.QWidget, DataViewer):
         if dialog.exec_() == Qt.QDialog.Accepted:
             self._process_selected_documents()
 
-    def _setup_search_interface(self, dialog, layout):
-        """
-        Set up the search bar and related UI elements.
-
-        :param dialog: Parent dialog for the search interface.
-        :param layout: Layout to add search components to.
-        """
-        # Title label
-        title = Qt.QLabel("Search by FileName: ")
-        layout.addWidget(title)
-        # Search bar with clear button
-        search_bar_layout = QHBoxLayout()
-        # Search text field
-        self.search_bar = RapidSearch(dialog)
-        self.search_bar.textChanged.connect(self.search_str)
-        search_bar_layout.addWidget(self.search_bar)
-        search_bar_layout.addSpacing(3)
-        # Clear button
-        sources_images_dir = Config().getSourceImageDir()
-        button_cross = QToolButton()
-        button_cross.setStyleSheet("background-color:rgb(255, 255, 255);")
-        button_cross.setIcon(
-            QIcon(os.path.join(sources_images_dir, "gray_cross.png"))
-        )
-        button_cross.clicked.connect(self.reset_search_bar)
-        search_bar_layout.addWidget(button_cross)
-        # Add to main layout
-        layout.addLayout(search_bar_layout)
-        layout.addSpacing(8)
-
-    def _add_dialog_buttons(self, dialog, layout):
-        """
-        Add action buttons to the filter dialog.
-
-        :param dialog: Parent dialog.
-        :param layout: Layout to add buttons to.
-        """
-        hlay = Qt.QHBoxLayout()
-        layout.addLayout(hlay)
-        # Import button
-        ok = Qt.QPushButton("Import")
-        ok.clicked.connect(dialog.accept)
-        ok.setDefault(True)
-        hlay.addWidget(ok)
-        # Cancel button
-        cancel = Qt.QPushButton("Cancel")
-        cancel.clicked.connect(dialog.reject)
-        hlay.addWidget(cancel)
-        hlay.addStretch(1)
-
-    def _process_selected_documents(self):
-        """Process user's document selection and display the selected files."""
-        points = self.table_data.selectedIndexes()
-        selected_files = []
-
-        with self.project.database.data() as database_data:
-
-            for point in points:
-                row = point.row()
-                # Get the filename of the scan from the first column
-                scan_name = self.table_data.item(row, 0).text()
-                filepath = database_data.get_value(
-                    COLLECTION_CURRENT, scan_name, TAG_FILENAME
-                )
-                # Convert to absolute path
-                filepath = os.path.abspath(
-                    os.path.join(self.project.folder, filepath)
-                )
-                selected_files.append(filepath)
-
-            if selected_files:
-                self.display_files(selected_files)
-
     def preferences(self):
         """
         Open the preferences dialog to configure viewer settings.
@@ -279,96 +376,6 @@ class MiaViewer(Qt.QWidget, DataViewer):
         # Show dialog and process results
         if dialog.exec_() == Qt.QDialog.Accepted:
             self._apply_preferences(dialog)
-
-    def _apply_preferences(self, dialog):
-        """
-        Apply the settings from the preferences dialog.
-
-        :param dialog: Preferences dialog containing the user selections.
-        """
-        # Get new values
-        new_config = dialog.config_box.currentText().lower()
-        new_ref = dialog.ref_box.currentIndex()
-        new_framerate = dialog.slider.value()
-        # Get current values for comparison
-        current_config = Config().getViewerConfig()
-        current_ref = Config().get_referential()
-        # Save new values
-        Config().setViewerFramerate(new_framerate)
-        Config().setViewerConfig(new_config)
-        Config().set_referential(new_ref)
-
-        # Apply changes that require viewer update
-        if new_config != current_config:
-            self.anaviewer.changeConfig(new_config)
-
-        if new_ref != current_ref:
-            self.anaviewer.changeRef()
-
-    def _create_preferences_dialog(
-        self, current_framerate, current_config, current_ref
-    ):
-        """
-        Create the preferences dialog with all settings controls.
-
-        :param current_framerate: Current animation frame rate.
-        :param current_config: Current display configuration (neuro/radio).
-        :param current_ref: Current referential setting.
-
-        :return (QDialog): Configured preferences dialog.
-        """
-        dialog = Qt.QDialog()
-        dialog.setWindowTitle("Preferences")
-        dialog.resize(600, 400)
-        layout = Qt.QVBoxLayout()
-        layout.setContentsMargins(25, 25, 25, 25)
-        dialog.setLayout(layout)
-        # Configuration selection (Neuro/Radio)
-        config_layout = QHBoxLayout()
-        config_layout.addWidget(Qt.QLabel("Configuration: "))
-        dialog.config_box = Qt.QComboBox()
-        dialog.config_box.addItems(["Neuro", "Radio"])
-
-        if current_config == "radio":
-            dialog.config_box.setCurrentIndex(1)
-
-        config_layout.addWidget(dialog.config_box)
-        layout.addLayout(dialog.config_layout)
-        # Frame rate slider
-        frame_rate_layout = QHBoxLayout()
-        frame_rate_layout.addWidget(Qt.QLabel("Automatic time image display:"))
-        frame_rate_layout.addWidget(Qt.QLabel("slow"))
-        dialog.slider = Qt.QSlider(Qt.Qt.Horizontal)
-        dialog.slider.setRange(1, 100)
-        dialog.slider.setValue(int(current_framerate))
-        dialog.slider.setMinimumSize(QtCore.QSize(180, 15))
-        frame_rate_layout.addWidget(dialog.slider)
-        frame_rate_layout.addWidget(Qt.QLabel("fast"))
-        frame_rate_layout.insertSpacing(1, 200)
-        layout.addLayout(frame_rate_layout)
-        # Referential selection
-        ref_layout = QHBoxLayout()
-        ref_layout.addWidget(Qt.QLabel("Referential: "))
-        dialog.ref_box = Qt.QComboBox()
-        dialog.ref_box.addItems(["World Coordinates", "Image referential"])
-        dialog.ref_box.setCurrentIndex(int(current_ref))
-        ref_layout.addWidget(dialog.ref_box)
-        layout.addLayout(ref_layout)
-        layout.addStretch(1)
-        # Buttons
-        button_layout = QHBoxLayout()
-        button_layout.addStretch(1)
-        save_button = Qt.QPushButton("Save")
-        save_button.clicked.connect(dialog.accept)
-        save_button.setDefault(True)
-        button_layout.addWidget(save_button)
-
-        cancel_button = Qt.QPushButton("Cancel")
-        cancel_button.clicked.connect(dialog.reject)
-        button_layout.addWidget(cancel_button)
-        button_layout.addStretch(1)
-        layout.addLayout(button_layout)
-        return dialog
 
     def remove_files(self, files):
         """
