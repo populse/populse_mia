@@ -1,44 +1,25 @@
-#!/usr/bin/env python
-"""AnaSimpleViewer2"""
+"""
+This the anasimpleviewer2 module, a module derived from pyanatomist's
+anasimpleviewer module
+(brainvisa/anatomist-gpl/pyanatomist/python/anatomist/simpleviewer/
+anasimpleviewer.py)
 
-#  This software and supporting documentation are distributed by
-#      Institut Federatif de Recherche 49
-#      CEA/NeuroSpin, Batiment 145,
-#      91191 Gif-sur-Yvette cedex
-#      France
-#
-# This software is governed by the CeCILL license version 2 under
-# French law and abiding by the rules of distribution of free software.
-# You can  use, modify and/or redistribute the software under the
-# terms of the CeCILL license version 2 as circulated by CEA, CNRS
-# and INRIA at the following URL "http://www.cecill.info".
-#
-# As a counterpart to the access to the source code and  rights to copy,
-# modify and redistribute granted by the license, users are provided only
-# with a limited warranty  and the software's author,  the holder of the
-# economic rights,  and the successive licensors  have only  limited
-# liability.
-#
-# In this respect, the user's attention is drawn to the risks associated
-# with loading,  using,  modifying and/or developing or reproducing the
-# software by the user in light of its specific status of free software,
-# that may mean  that it is complicated to manipulate,  and  that  also
-# therefore means  that it is reserved for developers  and  experienced
-# professionals having in-depth computer knowledge. Users are therefore
-# encouraged to load and test the software's suitability as regards their
-# requirements in conditions enabling the security of their systems and/or
-# data to be ensured and,  more generally, to use and operate it in the
-# same conditions as regards security.
-#
-# The fact that you are presently reading this means that you have had
-# knowledge of the CeCILL license version 2 and that you accept its terms.
+This module is a viewer for 2D/3D images, and is used in Mia.
+"""
 
+###############################################################################
+# Populse_mia - Copyright (C) IRMaGe/CEA, 2018
+# Distributed under the terms of the CeCILL license, as published by
+# the CEA-CNRS-INRIA. Refer to the LICENSE file or to
+# http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
+# for details.
+###############################################################################
 
+import logging
 import os
 import sys
 import time
 
-import numpy as np
 import PyQt5
 from PyQt5.QtGui import QColor, QIcon, QLabel, QWidget
 from PyQt5.QtWidgets import QMessageBox
@@ -53,46 +34,74 @@ from populse_mia.user_interface.data_viewer.anatomist_2.snd_window import (
     NewWindowViewer,
 )
 
+logger = logging.getLogger(__name__)
+anatomist_available = True
+
 try:
     import anatomist.direct.api as ana
+
 except ImportError:
-    print(
-        "\nAnatomist seems not to be installed. The data_viewer anatomist "
-        "and anatomist_2 will not work...\n"
+    anatomist_available = False
+    logger.warning(
+        "Anatomist seems not to be installed. The data_viewer anatomist "
+        "and anatomist_2 will not work..."
     )
-# the following imports have to be made after the qApp.startingUp() test
-# since they do instantiate Anatomist for registry to work.
+
 try:
+    #  The following imports have to be made after the qApp.startingUp() test
+    #  since they do instantiate Anatomist for registry to work.
     from anatomist.cpp.simplecontrols import (
         Simple2DControl,
         registerSimpleControls,
     )
 except ImportError:
-    print(
-        "\nAnatomist seems not to be installed. The data_viewer anatomist "
-        "and anatomist_2 will not work...\n"
-    )
-# determine whether we are using Qt4 or Qt5, and hack a little bit accordingly
+
+    if anatomist_available:
+        logger.warning(
+            "Anatomist seems not to be installed. The data_viewer anatomist "
+            "and anatomist_2 will not work..."
+        )
+
+# Determine whether we are using Qt4 or Qt5, and hack a little bit accordingly
 # the boolean qt4 global variable will tell it for later usage
 qt_backend.set_qt_backend(compatible_qt5=True)
 
 
 class LeftSimple3DControl(Simple2DControl):
     """
-    define another control where rotation is with the left mouse button
-    (useful for touch devices)
+    Control for 3D navigation using the left mouse button.
+
+    This control is particularly useful for touch devices where
+    rotation can be achieved by pressing and holding the left mouse button.
     """
 
     def __init__(self, prio=25, name="LeftSimple3DControl"):
-        """blabla"""
+        """
+        Initializes the LeftSimple3DControl instance.
+
+        :param prio (int): The priority level for the control
+                           (default is 25).
+        :param name (str): The name of the control
+                           (default is "LeftSimple3DControl").
+        """
         super().__init__(prio, name)
 
     def eventAutoSubscription(self, pool):
-        """blabla"""
+        """
+        Auto-subscribes to mouse and keyboard events relevant for 3D
+        controls.
+
+        This method sets up event subscriptions for mouse button actions
+        and keyboard shortcuts to control the trackball actions.
+
+        :param pool: The event pool to which the subscriptions will be made.
+        """
         key = QtCore.Qt
         NoModifier = key.NoModifier
         ControlModifier = key.ControlModifier
         super().eventAutoSubscription(pool)
+        # Subscribes to left button mouse events for continuous trackball
+        # movement
         self.mouseLongEventUnsubscribe(key.LeftButton, NoModifier)
         self.mouseLongEventSubscribe(
             key.LeftButton,
@@ -102,11 +111,13 @@ class LeftSimple3DControl(Simple2DControl):
             pool.action("ContinuousTrackball").endTrackball,
             True,
         )
+        # Subscribes to space key press for starting or stopping the trackball
         self.keyPressEventSubscribe(
             key.Key_Space,
             ControlModifier,
             pool.action("ContinuousTrackball").startOrStop,
         )
+        # Subscribes to middle mouse button for executing link actions
         self.mousePressButtonEventSubscribe(
             key.MiddleButton, NoModifier, pool.action("LinkAction").execLink
         )
@@ -114,18 +125,37 @@ class LeftSimple3DControl(Simple2DControl):
 
 class VolRenderControl(LeftSimple3DControl):
     """
-    define another control where cut slice rotation is with the middle mouse
-    button
+    Control for volume rendering navigation using the middle mouse button.
+
+    This control allows users to rotate the cut slice of the volume
+    rendering by holding down the middle mouse button.
     """
 
     def __init__(self, prio=25, name="VolRenderControl"):
-        """blabla"""
+        """
+        Initializes the VolRenderControl instance.
+
+        :param prio (int): The priority level for the control
+                           (default is 25).
+        :param name (str): The name of the control
+                           (default is "VolRenderControl").
+        """
         super().__init__(prio, name)
 
     def eventAutoSubscription(self, pool):
-        """blabla"""
+        """
+        Auto-subscribes to mouse events for cut slice rotation.
+
+        This method overrides the base class behavior to subscribe to
+        events triggered by the middle mouse button for controlling the
+        track cut action.
+
+        :param pool: The event pool to which the subscriptions will be made.
+        """
         super().eventAutoSubscription(pool)
+        # Unsubscribe from any previous middle button long events
         self.mouseLongEventUnsubscribe(Qt.Qt.MiddleButton, Qt.Qt.NoModifier)
+        # Subscribe to middle button long events for track cut actions
         self.mouseLongEventSubscribe(
             Qt.Qt.MiddleButton,
             Qt.Qt.NoModifier,
@@ -138,130 +168,144 @@ class VolRenderControl(LeftSimple3DControl):
 
 class AnaSimpleViewer2(Qt.QObject):
     """
-    AnaSimpleViewer is a "simple viewer" application and widget, which can be
-    used using the "anasimpleviewer.py" command, or included in a custom widget
-    as a library module.
+    AnaSimpleViewer is a simple viewer application and widget.
 
-    It includes an objects list and 4 3D views (anatomist windows). Objects
-    loaded are added in all views, and can be hidden or shown using the "add"
+    It can be used via the "anasimpleviewer.py" command or included as a
+    library module in a custom widget.
+
+    The viewer contains an object list and four 3D views (anatomist windows).
+    Objects loaded are added to all views and can be toggled using the "add"
     and "remove" buttons.
 
-    The AnaSimpleViewer class holds methods for menu/actions callbacks, and
-    utility functions like load/view objects, remove/delete, etc.
+    This class handles methods for menu/actions callbacks and utility
+    functions for loading/viewing objects, as well as for removal and
+    deletion.
 
-    It is a QObject, but not a QWidget. The widget can be accessed as the
-    ``awidget`` attribute in the AnaSimpleViewer instance.
+    Note: The class inherits from QObject but is not a QWidget. The widget can
+    be accessed through the `awidget` attribute of the instance.
 
-    As it is more intended to be used as a complete application, and it is
-    simpler to handle in Anatomist, some global Anatomist config variables and
-    controls may be set within AnaSimpleViewer. This is done optionally using
-    the :meth:`init_global_handlers` method, which is called by the constructor
-    if the argument `init_global_handlers` is not set to False when calling it.
+    Additionally, some global Anatomist config variables may be set within
+    AnaSimpleViewer, initiated optionally via the `init_global_handlers`
+    method called by the constructor unless `init_global_handlers` is set
+    to False.
     """
 
     _global_handlers_initialized = False
 
     def __init__(self, init_global_handlers=None):
-        """blabla"""
-        Qt.QObject.__init__(self)
+        """
+         Initializes the AnaSimpleViewer2 instance.
 
+        :param init_global_handlers (bool): Determines if global handlers
+                                            should be initialized (default
+                                            is True).
+        """
+        super().__init__()
         a = ana.Anatomist("-b")
 
         if init_global_handlers:
             self.init_global_handlers()
 
-        # ui file for dataviewer anasimpleviewer_2
+        # Load UI file for dataviewer anasimpleviewer_2
         uifile = "mainwindow.ui"
-        cwd = os.getcwd()
+        current_dir = os.getcwd()
         mainwindowdir = os.path.dirname(__file__)
         os.chdir(mainwindowdir)
         awin = loadUi(os.path.join(mainwindowdir, uifile))
-        os.chdir(cwd)
+        os.chdir(current_dir)
         self.awidget = awin
-
-        # new window popup for objects
+        # Initialization for popup, GUI action callbacks, etc.
         self.newWindow = NewWindowViewer()
+        self.setup_gui_connections(awin)
+        self._vrenabled = False
+        self.meshes2d = {}
+        self.setup_anatomist(a)
+        # Other initialization
+        self.initialize_components(awin)
+        self.setup_color_palette_and_slider()
 
-        # connect GUI actions callbacks
-        def findChild(x, y):
-            """blabla"""
-            return Qt.QObject.findChild(x, QtCore.QObject, y)
+    def setup_gui_connections(self, awin):
+        """
+        Connects GUI actions to their respective callbacks.
 
-        # findChild(awin,
-        #           'actionprint_view').triggered.connect(self.addNewView)
-        findChild(awin, "actionTimeRunning").triggered.connect(
+        :param awin (Qt.QWidget): The main window widget to connect
+                                  actions to.
+        """
+        # Connect actions to their slots
+        awin.findChild(QtCore.QObject, "actionTimeRunning").triggered.connect(
             self.automaticRunning
         )
-        findChild(awin, "fileOpenAction").triggered.connect(self.fileOpen)
-        findChild(awin, "fileExitAction").triggered.connect(self.closeAll)
-        findChild(awin, "editAddAction").triggered.connect(self.editAdd)
-        findChild(awin, "editRemoveAction").triggered.connect(self.editRemove)
-        findChild(awin, "editDeleteAction").triggered.connect(self.editDelete)
-        findChild(awin, "viewEnable_Volume_RenderingAction").toggled.connect(
-            self.enableVolumeRendering
+        awin.findChild(QtCore.QObject, "fileOpenAction").triggered.connect(
+            self.fileOpen
         )
-        findChild(awin, "viewOpen_Anatomist_main_window").triggered.connect(
-            self.open_anatomist_main_window
+        awin.findChild(QtCore.QObject, "fileExitAction").triggered.connect(
+            self.closeAll
         )
-        # manually entered coords
-        le = findChild(awin, "coordXEdit")
-        le.setValidator(Qt.QDoubleValidator(le))
-        le = findChild(awin, "coordYEdit")
-        le.setValidator(Qt.QDoubleValidator(le))
-        le = findChild(awin, "coordZEdit")
-        le.setValidator(Qt.QDoubleValidator(le))
-        le = findChild(awin, "coordTEdit")
-        le.setValidator(Qt.QDoubleValidator(le))
-        del le
-        findChild(awin, "coordXEdit").editingFinished.connect(
-            self.coordsChanged
+        awin.findChild(QtCore.QObject, "editAddAction").triggered.connect(
+            self.editAdd
         )
-        findChild(awin, "coordYEdit").editingFinished.connect(
-            self.coordsChanged
+        awin.findChild(QtCore.QObject, "editRemoveAction").triggered.connect(
+            self.editRemove
         )
-        findChild(awin, "coordZEdit").editingFinished.connect(
-            self.coordsChanged
+        awin.findChild(QtCore.QObject, "editDeleteAction").triggered.connect(
+            self.editDelete
         )
-        findChild(awin, "coordTEdit").editingFinished.connect(
-            self.coordsChanged
-        )
+        awin.findChild(
+            QtCore.QObject, "viewEnable_Volume_RenderingAction"
+        ).toggled.connect(self.enableVolumeRendering)
+        awin.findChild(
+            QtCore.QObject, "viewOpen_Anatomist_main_window"
+        ).triggered.connect(self.open_anatomist_main_window)
 
-        objects_list = findChild(self.awidget, "objectslist")
+        # Set validators and connect coordinate edits to change event
+        for coord in ["X", "Y", "Z", "T"]:
+            le = awin.findChild(QtCore.QObject, f"coord{coord}Edit")
+            le.setValidator(Qt.QDoubleValidator(le))
+            le.editingFinished.connect(self.coordsChanged)
+
+        del le
+        # Set context menu for objects list
+        objects_list = awin.findChild(QtCore.QObject, "objectslist")
         objects_list.setContextMenuPolicy(Qt.Qt.CustomContextMenu)
         objects_list.customContextMenuRequested.connect(self.popup_objects)
-
+        # Set drag and drop events
         awin.dropEvent = lambda awin, event: self.dropEvent(awin, event)
         awin.dragEnterEvent = lambda awin, event: self.dragEnterEvent(
             awin, event
         )
         awin.setAcceptDrops(True)
 
-        self._vrenabled = False
-        self.meshes2d = {}
-        # register the function on the cursor notifier of anatomist. It will be
-        # called when the user clicks on a window
+    def setup_anatomist(self, a):
+        """
+        Registers the Anatomist controls and options.
+
+        :param a: The Anatomist instance.
+        """
+        # Register the function on the cursor notifier of anatomist.
+        # It will be called when the user clicks on a window.
         a.onCursorNotifier.add(self.clickHandler)
-
         # viewWindow: parent widget for anatomist windows
-        self.viewWindow = findChild(awin, "windows")
+        self.viewWindow = self.awidget.findChild(QtCore.QObject, "windows")
 
+    def initialize_components(self, awin):
+        """
+        Initializes the component attributes and user interface.
+
+        :param awin: The main window widget.
+        """
         self.viewgridlay = Qt.QHBoxLayout(self.viewWindow)
         self.combobox = Qt.QComboBox()
         self.slider = Qt.QSlider(Qt.Qt.Horizontal)
         self.fdialog = None
         self.awindows = []
         self.aobjects = []
+        self.files = []
+        self.displayedObjects = []
+        # Initializing additional attributes
         self.fusion2d = []
         self.volrender = None
         self.control_3d_type = "LeftSimple3DControl"
-        self.viewButtons = [
-            findChild(awin, "actionAxial"),
-            findChild(awin, "actionSagittal"),
-            findChild(awin, "actionCoronal"),
-            findChild(awin, "action3D"),
-        ]
-        self.displayedObjects = []
-        self.files = []
+        # Populate available palettes and connect buttons
         self.available_palettes = [
             "B-W_LINEAR",
             "Yellow-red",
@@ -269,13 +313,24 @@ class AnaSimpleViewer2(Qt.QObject):
             "Yellow-Red-White-Blue-Green",
             "blue-red-bright-dark",
         ]
+        self.viewButtons = [
+            awin.findChild(QtCore.QObject, "actionAxial"),
+            awin.findChild(QtCore.QObject, "actionSagittal"),
+            awin.findChild(QtCore.QObject, "actionCoronal"),
+            awin.findChild(QtCore.QObject, "action3D"),
+        ]
 
         for action in self.viewButtons:
             action.triggered.connect(self.newDisplay)
-        findChild(awin, "objectslist").itemSelectionChanged.connect(
-            self.disableButtons
-        )
 
+        awin.findChild(
+            QtCore.QObject, "objectslist"
+        ).itemSelectionChanged.connect(self.disableButtons)
+
+    def setup_color_palette_and_slider(self):
+        """
+        Sets up the color palette dropdown and opacity slider in the toolbar.
+        """
         self.setComboBox()
         self.setSlider()
         self.combobox.currentIndexChanged.connect(self.newPalette)
@@ -283,8 +338,9 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def init_global_handlers(self):
         """
-        Set some global controls / settings in Anatomist application object
+        Set some global controls/settings in Anatomist application object.
         """
+
         if not AnaSimpleViewer2._global_handlers_initialized:
             registerSimpleControls()
             a = ana.Anatomist("-b")
@@ -298,34 +354,26 @@ class AnaSimpleViewer2(Qt.QObject):
             cd = ana.cpp.ControlDictionary.instance()
             cd.addControl("LeftSimple3DControl", LeftSimple3DControl, 25)
             cd.addControl("VolRenderControl", VolRenderControl, 25)
-
-            # tweak: override some user config options
             a.config()["windowSizeFactor"] = 1.0
             a.config()["commonScannerBasedReferential"] = 1
-
-            # register controls
+            # Register controls
             cm = ana.cpp.ControlManager.instance()
             cm.addControl("QAGLWidget3D", "", "Simple2DControl")
             cm.addControl("QAGLWidget3D", "", "LeftSimple3DControl")
             cm.addControl("QAGLWidget3D", "", "VolRenderControl")
-            print("controls registered.")
-
+            logger.info("Controls registered.")
             del cm
-
             a.setGraphParams(label_attribute="label")
-
             AnaSimpleViewer2._global_handlers_initialized = True
 
     def setComboBox(self):
         """
-        Inserts a drop down menu in the toolbar. This menu contains defined
-        available color palettes. The default color palettes are in
-        self.available_palettes.
+        Inserts a drop-down menu in the toolbar containing available color
+        palettes. The default color palettes are in self.available_palettes.
         """
-
-        toolBar = Qt.QObject.findChild(self.awidget, QtCore.QObject, "toolBar")
-        actionAutoRunning = Qt.QObject.findChild(
-            self.awidget, QtCore.QObject, "actionTimeRunning"
+        toolBar = self.awidget.findChild(QtCore.QObject, "toolBar")
+        actionAutoRunning = self.awidget.findChild(
+            QtCore.QObject, "actionTimeRunning"
         )
         label = QLabel("Palette: ")
         label.setToolTip("Change color palette of selected object")
@@ -337,10 +385,8 @@ class AnaSimpleViewer2(Qt.QObject):
         toolBar.insertWidget(actionAutoRunning, self.combobox)
         sources_images_dir = Config().getSourceImageDir()
 
-        for i in range(len(self.available_palettes)):
-            icon = QIcon(
-                os.path.join(sources_images_dir, self.available_palettes[i])
-            )
+        for i, palette in enumerate(self.available_palettes):
+            icon = QIcon(os.path.join(sources_images_dir, palette))
             self.combobox.setItemIcon(i, icon)
 
         size = PyQt5.QtCore.QSize(200, 15)
@@ -348,13 +394,12 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def setSlider(self):
         """
-        Inserts opacity slider in the toolbar
-        Minimum returned value is 0 and maximum value is 100
+        Inserts an opacity slider in the toolbar.
+        Minimum value is 0 and maximum value is 100.
         """
-
-        toolBar = Qt.QObject.findChild(self.awidget, QtCore.QObject, "toolBar")
-        actionAutoRunning = Qt.QObject.findChild(
-            self.awidget, QtCore.QObject, "actionTimeRunning"
+        toolBar = self.awidget.findChild(QtCore.QObject, "toolBar")
+        actionAutoRunning = self.awidget.findChild(
+            QtCore.QObject, "actionTimeRunning"
         )
         space = QWidget().resize(5, 0)
         label = QLabel("Opacity: ")
@@ -368,8 +413,10 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def changeOpacity(self):
         """
-        Changes opacity of selected object (to be more precise it changes the
-        mixing rate between objects when multiple ones are displayed)
+        Changes the opacity of the selected object based on the slider value.
+
+        Changes the mixing rate between objects when multiple ones are
+        displayed.
         """
 
         if self.selectedObjects() and len(self.displayedObjects) == 1:
@@ -410,10 +457,11 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def newPalette(self):
         """
-        Sets chosen color palette in the toolbar drop down menu to
+        Sets the chosen color palette in the toolbar drop-down menu to the
         selected object.
         """
         color = self.combobox.currentText()
+
         if self.selectedObjects():
             self.selectedObjects()[0].setPalette(palette=color)
 
@@ -421,10 +469,11 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Checks color palette of a selected object, displays it in the toolbar
         drop-down menu and adds it if it isn't already stored in
-        self.available_palettes. If corresponding palette image exists it is
-        added, otherwise only the name of the palette appears.
-        """
+        self.available_palettes.
 
+        If corresponding palette image exists it is added, otherwise only
+        the name of the palette appears.
+        """
         color = self.combobox.currentText()
 
         if self.selectedObjects():
@@ -433,6 +482,7 @@ class AnaSimpleViewer2(Qt.QObject):
             ]
 
             if actual_pal != color:
+
                 if actual_pal in self.available_palettes:
                     self.combobox.setCurrentText(actual_pal)
 
@@ -451,8 +501,9 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def changeConfig(self, config):
         """
-        change config depending on user settings
-        config : string "neuro" or "radio"
+        Changes the configuration based on user settings.
+
+        :param config (str): "neuro" or "radio".
         """
         a = ana.Anatomist("-b")
         a.config()["axialConvention"] = config
@@ -460,7 +511,8 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def changeRef(self):
         """
-        change referential
+        Changes the referential and reloads objects.
+
         ref : Boolean
         0 : World coordinates
         1 : Image referential
@@ -468,143 +520,155 @@ class AnaSimpleViewer2(Qt.QObject):
         self.deleteObjects(self.aobjects)
         self.loadObject(self.files, config_changed=True)
 
-    def findChild(x, y):
-        """Blabla"""
-
-        return Qt.QObject.findChild(x, QtCore.QObject, y)
-
     def clickHandler(self, eventName, params):
         """
-        Callback for linked cursor. In volume rendering mode, it will sync
-        the VR slice to the linked cursor.
-        It also updates the volumes values view
+        Callback for linked cursor. In volume rendering mode, it syncs the
+        VR slice to the linked cursor and updates the volume values view.
+
+        :param eventName (str): The name of the event (unused)
+        :param params (dict): Parameters related to the event,
+                              including position and window.
         """
         a = ana.Anatomist("-b")
         pos = params["position"]
         win = params["window"]
         wref = win.getReferential()
-        # display coords in MNI referential (preferably)
+        # Display coords in MNI referential (preferably)
         tr = a.getTransformation(wref, a.mniTemplateRef)
-        if tr:
-            pos2 = tr.transform(pos[:3])
-        else:
-            pos2 = pos
+        pos2 = tr.transform(pos[:3]) if tr else pos
+        self.awidget.findChild(QtCore.QObject, "coordXEdit").setText(
+            f"{pos2[0]:8.3f}"
+        )
+        self.awidget.findChild(QtCore.QObject, "coordYEdit").setText(
+            f"{pos2[1]:8.3f}"
+        )
+        self.awidget.findChild(QtCore.QObject, "coordZEdit").setText(
+            f"{pos2[2]:8.3f}"
+        )
+        t = self.awidget.findChild(QtCore.QObject, "coordTEdit")
+        t.setText(f"{pos[3] if len(pos) >= 4 else 0:8.3f}")
+        # Display volumes values at the given position
+        self.updateVolumeValues(win, a, pos)
 
-        def findChild(x, y):
-            """Blabla"""
-            return Qt.QObject.findChild(x, QtCore.QObject, y)
+        # Update volume rendering when it is enabled
+        if self._vrenabled and self.volrender:
+            self.updateRendering(win, a, pos)
 
-        x = findChild(self.awidget, "coordXEdit")
-        x.setText("%8.3f" % pos2[0])
-        y = findChild(self.awidget, "coordYEdit")
-        y.setText("%8.3f" % pos2[1])
-        z = findChild(self.awidget, "coordZEdit")
-        z.setText("%8.3f" % pos2[2])
-        t = findChild(self.awidget, "coordTEdit")
-        if len(pos) < 4:
-            pos = pos[:3] + [0]
-        t.setText("%8.3f" % pos[3])
-        # display volumes values at the given position
+    def updateVolumeValues(self, win, a, pos):
+        """
+        Updates the volume values displayed based on the cursor position.
 
-        valbox = findChild(self.awidget, "volumesBox")
+        :param win: The current window instance for transformations.
+        :param a: The Anatomist instance for transformation.
+        :param pos: The current position of the cursor.
+        """
+        valbox = self.awidget.findChild(QtCore.QObject, "volumesBox")
         valbox.clear()
-        # (we don't use the same widget type in Qt3 and Qt4)
-
         valbox.setColumnCount(2)
         valbox.setHorizontalHeaderLabels(["Volume:", "Value:"])
+
         if len(self.fusion2d) > 1:
             valbox.setRowCount(len(self.fusion2d) - 1)
             valbox.setVerticalHeaderLabels([""] * (len(self.fusion2d) - 1))
-        i = 0
-        for obj in self.fusion2d[1:]:
-            # retrieve volume val'radio'ue in its own coords system
+
+        for i, obj in enumerate(self.fusion2d[1:], start=0):
             aimsv = ana.cpp.AObjectConverter.aims(obj)
             oref = obj.getReferential()
-            tr = a.getTransformation(wref, oref)
-            if tr:
-                pos2 = tr.transform(pos[:3])
-            else:
-                pos2 = pos[:3]
+            tr = a.getTransformation(win.getReferential(), oref)
+            pos2 = tr.transform(pos[:3]) if tr else pos[:3]
             vs = obj.voxelSize()
             pos2 = [int(round(x / y)) for x, y in zip(pos2, vs)]
-            # pos2 in in voxels, in obj coords system
             newItem = Qt.QTableWidgetItem(obj.name)
             valbox.setItem(i, 0, newItem)
-            # check bounds
-            if (
-                pos2[0] >= 0
-                and pos2[1] >= 0
-                and pos2[2] >= 0
-                and pos[3] >= 0
-                and pos2[0] < aimsv.getSizeX()
-                and pos2[1] < aimsv.getSizeY()
-                and pos2[2] < aimsv.getSizeZ()
-                and pos[3] < aimsv.getSizeT()
+
+            # Check bounds
+            if all(
+                0 <= p < size
+                for p, size in zip(
+                    pos2 + [pos[3]],
+                    [
+                        aimsv.getSizeX(),
+                        aimsv.getSizeY(),
+                        aimsv.getSizeZ(),
+                        aimsv.getSizeT(),
+                    ],
+                )
             ):
                 txt = str(aimsv.value(*pos2))
+
             else:
                 txt = ""
+
             newitem = Qt.QTableWidgetItem(txt)
             valbox.setItem(i, 1, newitem)
-            i += 1
+
         valbox.resizeColumnsToContents()
 
-        # update volume rendering when it is enabled
-        if self._vrenabled and len(self.volrender) >= 1:
-            clip = self.volrender[0]
-            t = a.getTransformation(
-                win.getReferential(), clip.getReferential()
-            )
-            if t is not None:
-                pos = t.transform(pos[:3])
-            clip.setOffset(pos[:3])
-            clip.notifyObservers()
+    def updateRendering(self, win, a, pos):
+        """
+        Updates volume rendering based on the current cursor position.
+
+        :param win: The current window instance.
+        :param a: The Anatomist instance.
+        :param pos: The current cursor position.
+        """
+        clip = self.volrender[0]
+        t = a.getTransformation(win.getReferential(), clip.getReferential())
+
+        if t:
+            pos = t.transform(pos[:3])
+
+        clip.setOffset(pos[:3])
+        clip.notifyObservers()
 
     def automaticRunning(self):
         """
-        Enable automatic running of functional images
-        frame rate can be changed in preferences by the user
+        Enables the automatic running of functional images.
+        The frame rate can be changed in preferences by the user.
         """
-
         a = ana.Anatomist("-b")
         objects = []
         im_sec = float(Config().getViewerFramerate())
         frame_rate = 1 / im_sec
-
-        def findChild(x, y):
-            """Blabla"""
-
-            return Qt.QObject.findChild(x, QtCore.QObject, y)
-
-        t = findChild(self.awidget, "coordTEdit")
+        t = self.awidget.findChild(QtCore.QObject, "coordTEdit")
         sources_images_dir = Config().getSourceImageDir()
         pauseIcon = QIcon(os.path.join(sources_images_dir, "pause.png"))
         playIcon = QIcon(os.path.join(sources_images_dir, "play.png"))
 
-        for i in range(len(self.displayedObjects)):
-            objects.append(
-                ana.cpp.AObjectConverter.aims(
-                    self.displayedObjects[i]
-                ).getSizeT()
-            )
+        for obj in self.displayedObjects:
+            objects.append(ana.cpp.AObjectConverter.aims(obj).getSizeT())
+
         if objects:
-            nb_images = np.max(objects)
+            nb_images = max(objects)
+
         else:
             return
-        list_im = list(range(0, nb_images))
+
+        list_im = list(range(nb_images))
+        coord_x_edit = self.awidget.findChild(QtCore.QObject, "coordXEdit")
+        coord_y_edit = self.awidget.findChild(QtCore.QObject, "coordYEdit")
+        coord_z_edit = self.awidget.findChild(QtCore.QObject, "coordZEdit")
         pos = [
-            float(findChild(self.awidget, "coordXEdit").text()),
-            float(findChild(self.awidget, "coordYEdit").text()),
-            float(findChild(self.awidget, "coordZEdit").text()),
+            float(coord_x_edit.text()),
+            float(coord_y_edit.text()),
+            float(coord_z_edit.text()),
         ]
-        i = int(float(findChild(self.awidget, "coordTEdit").text()))
+
+        i = int(
+            float(self.awidget.findChild(QtCore.QObject, "coordTEdit").text())
+        )
+
         if i == nb_images - 1:
             i = 0
-        playAction = findChild(self.awidget, "actionTimeRunning")
+
+        playAction = self.awidget.findChild(
+            QtCore.QObject, "actionTimeRunning"
+        )
+
         while playAction.isChecked() and i < len(list_im):
             start_time = time.time()
             playAction.setIcon(pauseIcon)
-            t.setText("%8.3f" % list_im[i])
+            t.setText(f"{list_im[i]:8.3f}")
             a.execute(
                 "LinkedCursor",
                 window=self.awindows[0],
@@ -612,68 +676,79 @@ class AnaSimpleViewer2(Qt.QObject):
             )
             PyQt5.QtWidgets.QApplication.processEvents()
             running_time = time.time() - start_time
-            if running_time > frame_rate:
-                # If iteration takes to much time we don't want to
-                # make it sleep any longer (happens when fusion of images)
-                pass
-            else:
+
+            # If iteration takes to much time we don't want to
+            # make it sleep any longer (happens when fusion of images).
+            if running_time < frame_rate:
                 time.sleep(frame_rate - running_time)
+
             i += 1
+
         playAction.setIcon(playIcon)
 
     def createWindow(self, wintype="Axial"):
         """
         Opens a new window in the windows grid layout.
-        The new window will be set in MNI referential (except 3D for now
-        because of a buf in volume rendering in direct referentials), will be
-        assigned the custom control, and have no menu/toolbars.
+
+        The new window will be set in MNI referential (except 3D for the
+        moment, due to a problem with rendering volumes in direct
+        reference) and assigned the custom control without menus/toolbars.
+
+        :param wintype (str): The type of window to create
+                              ("Axial", "Sagittal", "Coronal" or "3D").
         """
         a = ana.Anatomist("-b")
         w = a.createWindow(wintype, no_decoration=True, options={"hidden": 1})
         w.setAcceptDrops(False)
-        # insert in grid layout
-
-        x = 0
-        y = 0
+        x, y = 0, 0
         i = 0
+
         if not hasattr(self, "_winlayouts"):
             self._winlayouts = [[0, 0], [0, 0]]
-        else:
-            freeslot = False
-            for y in (0, 1):
-                for x in (0, 1):
-                    i = i + 1
-                    if not self._winlayouts[x][y]:
-                        freeslot = True
-                        break
-                if freeslot:
-                    break
 
-        # in Qt4, the widget must not have a parent before calling
-        # layout.addWidget
-        # self.viewgridlay.addWidget(w.getInternalRep(), x, y)
+        else:
+
+            for y in (0, 1):
+
+                for x in (0, 1):
+                    i += 1
+
+                    if not self._winlayouts[x][y]:
+                        break
+
+                else:
+                    continue
+
+                break
+
         self.viewgridlay.addWidget(w.getInternalRep())
-        # self.viewgridlay.addWidget(w.getInternalRep(), 0, i)
         self._winlayouts[x][y] = 1
-        # keep it in anasimpleviewer list of windows
+        # Keep it in anasimpleviewer list of windows
         self.awindows.append(w)
-        # set custom control
+
+        # Set custom control
         if wintype == "3D":
             a.execute("SetControl", windows=[w], control=self.control_3d_type)
+
         else:
             a.execute("SetControl", windows=[w], control="Simple2DControl")
             a.assignReferential(a.mniTemplateRef, w)
-            # force redrawing in MNI orientation
+
+            # Force redrawing in MNI orientation
             # (there should be a better way to do so...)
             if wintype == "Axial":
                 w.muteAxial()
-                print("MUTEAXIAL", w.muteAxial)
+                logger.info(f"MUTEAXIAL {w.muteAxial}")
+
             elif wintype == "Coronal":
                 w.muteCoronal()
+
             elif wintype == "Sagittal":
                 w.muteSagittal()
+
             elif wintype == "Oblique":
                 w.muteOblique()
+
         # set a black background
         a.execute(
             "WindowConfig",
@@ -1285,7 +1360,7 @@ class AnaSimpleViewer2(Qt.QObject):
             fnames = self.fdialog.selectedFiles()
             files = []
             for fname in fnames:
-                print(str(fname))
+                logger.info(f"{fname}")
                 files.append(str(fname))
             self.loadObject(files)
 
@@ -1349,7 +1424,7 @@ class AnaSimpleViewer2(Qt.QObject):
     def closeAll(self, close_ana=True):
         """Exit"""
 
-        print("Exiting Ana2")
+        logger.info("Exiting Ana2 viewer.")
         self.newWindow.close()
         a = ana.Anatomist("-b")
         # remove windows from their parent to prevent them to be brutally
