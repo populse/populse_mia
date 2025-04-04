@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-
 """
-MIA data viewer implementation based on
+Mia data viewer implementation based on
 `Anatomist <http://brainvisa.info/anatomist/user_doc/index.html>`_
 
 Contains:
@@ -17,7 +15,6 @@ Contains:
 # for details.
 ##########################################################################
 
-from __future__ import absolute_import, print_function
 
 import os
 
@@ -25,7 +22,11 @@ from PyQt5.QtGui import QIcon, QMessageBox
 from PyQt5.QtWidgets import QHBoxLayout, QToolButton
 from soma.qt_gui.qt_backend import Qt, QtCore
 
-from populse_mia.data_manager.project import COLLECTION_CURRENT, TAG_FILENAME
+from populse_mia.data_manager import (
+    COLLECTION_CURRENT,
+    NOT_DEFINED_VALUE,
+    TAG_FILENAME,
+)
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.data_browser import (
     TableDataBrowser,
@@ -40,96 +41,215 @@ from populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 import 
 
 from ..data_viewer import DataViewer
 
-not_defined_value = "*Not Defined*"
-
 
 class MiaViewer(Qt.QWidget, DataViewer):
     """
+    A PyQt-based viewer using PyAnatomist.
+
+    This class implements a DataViewer interface and provides functionality
+    to visualize and interact with medical imaging data through the PyAnatomist
+    visualization library.
+
     :class:`MIA data viewer
            <populse_mia.user_interface.data_viewer.data_viewer.DataViewer>`
            implementation based on
            `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_
 
     .. Methods:
+        - _add_dialog_buttons: Add action buttons to the filter dialog.
+        - _apply_preferences: Apply the settings from the preferences dialog.
+        - _create_preferences_dialog: Create the preferences dialog.
+        - _process_selected_documents: Process user's document selection.
+        - _setup_search_interface: Set up the search bar and related UI
+                                   elements.
+        - _setup_ui: Set up the user interface components and connect signals.
         - close: Exit
-        - display_files: Load objects in files and display
-        - displayed_files: Get the list of displayed files
-        - filter_documents: Filter documents already loaded in the Databrowser
-        - preferences: Preferences for the dataviewer
-        - remove_files: Delete the given objects given by their file names
-        - reset_search_bar: Reset the rapid search bar
-        - screenshot: The screenshot of mia_anatomist_2
-        - search_str: Update the *Not Defined*" values in visualised documents
-        - set_documents: Initialise current documents in the viewer
+        - display_files: Load objects in files and display.
+        - displayed_files: Get the list of displayed files.
+        - filter_documents: Filter documents already loaded in the Databrowser.
+        - preferences: Preferences for the dataviewer.
+        - remove_files: Delete the given objects given by their file names.
+        - reset_search_bar: Reset the rapid search bar.
+        - screenshot: The screenshot of mia_anatomist_2.
+        - search_str: Update the *Not Defined*" values in visualised documents.
+        - set_documents: Initialise current documents in the viewer.
 
     """
 
     def __init__(self, init_global_handlers=None):
-        super(MiaViewer, self).__init__()
+        """
+        Initialize the Mia viewer widget.
 
+        :param init_global_handlers: Handlers to initialize the PyAnatomist
+                                     viewer
+        """
+        super().__init__()
         self.anaviewer = AnaSimpleViewer2(init_global_handlers)
 
-        # count global number of viewers using anatomist, in order to close it
-        # nicely
+        # Track the total number of active viewers to manage PyAnatomist's
+        # lifecycle
         if not hasattr(DataViewer, "mia_viewers"):
             DataViewer.mia_viewers = 0
+
         DataViewer.mia_viewers += 1
-
-        def findChild(x, y):
-            return Qt.QObject.findChild(x, Qt.QObject, y)
-
-        awidget = self.anaviewer.awidget
-        filter_action = findChild(awidget, "filterAction")
-        preferences_action = findChild(awidget, "actionPreferences")
-        screenshot_action = findChild(awidget, "actionprint_view")
-
-        filter_action.triggered.connect(self.filter_documents)
-        preferences_action.triggered.connect(self.preferences)
-        screenshot_action.triggered.connect(self.screenshot)
-
-        layout = Qt.QVBoxLayout()
-        self.setLayout(layout)
-        self.anaviewer.awidget.setSizePolicy(
-            Qt.QSizePolicy.Expanding, Qt.QSizePolicy.Expanding
-        )
-        layout.addWidget(self.anaviewer.awidget)
-
+        # Set up UI and connect actions
+        self._setup_ui()
         self.project = None
         self.documents = []
         self.displayed = []
         self.table_data = []
 
-    def close(self):
-        """Exit"""
-        super(MiaViewer, self).close()
-        close_ana = False
-        DataViewer.mia_viewers -= 1  # dec count
-        if DataViewer.mia_viewers == 0:
-            close_ana = True
-        self.anaviewer.closeAll(close_ana)
+    def _add_dialog_buttons(self, dialog, layout):
+        """
+        Add action buttons to the filter dialog.
 
-    def display_files(self, files):
-        """Load objects in files and display"""
-        self.displayed += files
-        self.anaviewer.loadObject(files)
+        :param dialog: Parent dialog.
+        :param layout: Layout to add buttons to.
+        """
+        hlay = Qt.QHBoxLayout()
+        layout.addLayout(hlay)
+        # Import button
+        ok = Qt.QPushButton("Import")
+        ok.clicked.connect(dialog.accept)
+        ok.setDefault(True)
+        hlay.addWidget(ok)
+        # Cancel button
+        cancel = Qt.QPushButton("Cancel")
+        cancel.clicked.connect(dialog.reject)
+        hlay.addWidget(cancel)
+        hlay.addStretch(1)
 
-    def displayed_files(self):
-        """Get the list of displayed files"""
-        return self.displayed
+    def _apply_preferences(self, dialog):
+        """
+        Apply the settings from the preferences dialog.
 
-    def filter_documents(self):
-        """Filter documents already loaded in the Databrowser"""
+        :param dialog: Preferences dialog containing the user selections.
+        """
+        # Get new values
+        new_config = dialog.config_box.currentText().lower()
+        new_ref = dialog.ref_box.currentIndex()
+        new_framerate = dialog.slider.value()
+        # Get current values for comparison
+        current_config = Config().getViewerConfig()
+        current_ref = Config().get_referential()
+        # Save new values
+        Config().setViewerFramerate(new_framerate)
+        Config().setViewerConfig(new_config)
+        Config().set_referential(new_ref)
+
+        # Apply changes that require viewer update
+        if new_config != current_config:
+            self.anaviewer.changeConfig(new_config)
+
+        if new_ref != current_ref:
+            self.anaviewer.changeRef()
+
+    def _create_preferences_dialog(
+        self, current_framerate, current_config, current_ref
+    ):
+        """
+        Create the preferences dialog with all settings controls.
+
+        :param current_framerate: Current animation frame rate.
+        :param current_config: Current display configuration (neuro/radio).
+        :param current_ref: Current referential setting.
+
+        :return (QDialog): Configured preferences dialog.
+        """
         dialog = Qt.QDialog()
-        dialog.setWindowTitle("Filter documents")
-        dialog.resize(1150, 500)
+        dialog.setWindowTitle("Preferences")
+        dialog.resize(600, 400)
         layout = Qt.QVBoxLayout()
+        layout.setContentsMargins(25, 25, 25, 25)
         dialog.setLayout(layout)
+        # Configuration selection (Neuro/Radio)
+        config_layout = QHBoxLayout()
+        config_layout.addWidget(Qt.QLabel("Configuration: "))
+        dialog.config_box = Qt.QComboBox()
+        dialog.config_box.addItems(["Neuro", "Radio"])
 
-        # Some specific filtering
-        # QLineEdit for research
+        if current_config == "radio":
+            dialog.config_box.setCurrentIndex(1)
+
+        config_layout.addWidget(dialog.config_box)
+        layout.addLayout(dialog.config_layout)
+        # Frame rate slider
+        frame_rate_layout = QHBoxLayout()
+        frame_rate_layout.addWidget(Qt.QLabel("Automatic time image display:"))
+        frame_rate_layout.addWidget(Qt.QLabel("slow"))
+        dialog.slider = Qt.QSlider(Qt.Qt.Horizontal)
+        dialog.slider.setRange(1, 100)
+        dialog.slider.setValue(int(current_framerate))
+        dialog.slider.setMinimumSize(QtCore.QSize(180, 15))
+        frame_rate_layout.addWidget(dialog.slider)
+        frame_rate_layout.addWidget(Qt.QLabel("fast"))
+        frame_rate_layout.insertSpacing(1, 200)
+        layout.addLayout(frame_rate_layout)
+        # Referential selection
+        ref_layout = QHBoxLayout()
+        ref_layout.addWidget(Qt.QLabel("Referential: "))
+        dialog.ref_box = Qt.QComboBox()
+        dialog.ref_box.addItems(["World Coordinates", "Image referential"])
+        dialog.ref_box.setCurrentIndex(int(current_ref))
+        ref_layout.addWidget(dialog.ref_box)
+        layout.addLayout(ref_layout)
+        layout.addStretch(1)
+        # Buttons
+        button_layout = QHBoxLayout()
+        button_layout.addStretch(1)
+        save_button = Qt.QPushButton("Save")
+        save_button.clicked.connect(dialog.accept)
+        save_button.setDefault(True)
+        button_layout.addWidget(save_button)
+
+        cancel_button = Qt.QPushButton("Cancel")
+        cancel_button.clicked.connect(dialog.reject)
+        button_layout.addWidget(cancel_button)
+        button_layout.addStretch(1)
+        layout.addLayout(button_layout)
+        return dialog
+
+    def _process_selected_documents(self):
+        """Process user's document selection and display the selected files."""
+        points = self.table_data.selectedIndexes()
+        selected_files = []
+
+        with self.project.database.data() as database_data:
+
+            for point in points:
+                row = point.row()
+                # Get the filename of the scan from the first column
+                scan_name = self.table_data.item(row, 0).text()
+                filepath = database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, TAG_FILENAME
+                )
+                # Convert to absolute path
+                filepath = os.path.abspath(
+                    os.path.join(self.project.folder, filepath)
+                )
+                selected_files.append(filepath)
+
+            if selected_files:
+                self.display_files(selected_files)
+
+    def _setup_search_interface(self, dialog, layout):
+        """
+        Set up the search bar and related UI elements.
+
+        :param dialog: Parent dialog for the search interface.
+        :param layout: Layout to add search components to.
+        """
+        # Title label
+        title = Qt.QLabel("Search by FileName: ")
+        layout.addWidget(title)
+        # Search bar with clear button
+        search_bar_layout = QHBoxLayout()
+        # Search text field
         self.search_bar = RapidSearch(dialog)
         self.search_bar.textChanged.connect(self.search_str)
-        # Cancel search button
+        search_bar_layout.addWidget(self.search_bar)
+        search_bar_layout.addSpacing(3)
+        # Clear button
         sources_images_dir = Config().getSourceImageDir()
         button_cross = QToolButton()
         button_cross.setStyleSheet("background-color:rgb(255, 255, 255);")
@@ -137,165 +257,145 @@ class MiaViewer(Qt.QWidget, DataViewer):
             QIcon(os.path.join(sources_images_dir, "gray_cross.png"))
         )
         button_cross.clicked.connect(self.reset_search_bar)
-
-        title = Qt.QLabel()
-        title.setText("Search by FileName: ")
-
-        layout.addWidget(title)
-
-        search_bar_layout = QHBoxLayout()
-        search_bar_layout.addWidget(self.search_bar)
-        search_bar_layout.addSpacing(3)
         search_bar_layout.addWidget(button_cross)
-        # Add layout to dialogBox
+        # Add to main layout
         layout.addLayout(search_bar_layout)
         layout.addSpacing(8)
 
-        self.table_data = TableDataBrowser(
-            self.project,
-            self,
-            self.project.session.get_shown_tags(),
-            False,
-            True,
-            link_viewer=False,
+    def _setup_ui(self):
+        """Set up the user interface components and connect signals."""
+        # Get references to PyAnatomist widget actions
+        awidget = self.anaviewer.awidget
+        filter_action = awidget.findChild(QtCore.QObject, "filterAction")
+        preferences_action = awidget.findChild(
+            QtCore.QObject, "actionPreferences"
         )
-        layout.addWidget(self.table_data)
-        hlay = Qt.QHBoxLayout()
-        layout.addLayout(hlay)
-        ok = Qt.QPushButton("Import")
-        hlay.addWidget(ok)
-        ok.clicked.connect(dialog.accept)
-        ok.setDefault(True)
-        cancel = Qt.QPushButton("Cancel")
-        hlay.addWidget(cancel)
-        cancel.clicked.connect(dialog.reject)
-        hlay.addStretch(1)
+        screenshot_action = awidget.findChild(
+            QtCore.QObject, "actionprint_view"
+        )
+        # Connect actions to methods
+        filter_action.triggered.connect(self.filter_documents)
+        preferences_action.triggered.connect(self.preferences)
+        screenshot_action.triggered.connect(self.screenshot)
+        # Layout setup
+        layout = Qt.QVBoxLayout()
+        self.setLayout(layout)
+        # Make PyAnatomist widget expand to fill available space
+        self.anaviewer.awidget.setSizePolicy(
+            Qt.QSizePolicy.Expanding, Qt.QSizePolicy.Expanding
+        )
+        layout.addWidget(self.anaviewer.awidget)
 
+    def close(self):
+        """
+        Close the viewer and properly clean up PyAnatomist resources.
+
+        If this is the last MIA viewer instance, closes PyAnatomist entirely.
+        """
+        super().close()
+        DataViewer.mia_viewers -= 1  # decrement active viewer count
+        close_ana = DataViewer.mia_viewers == 0
+        self.anaviewer.closeAll(close_ana)
+
+    def display_files(self, files):
+        """
+        Load and display the specified files in the viewer.
+
+        :param files (list): List of file paths to display.
+        """
+        self.displayed.extend(files)
+        self.anaviewer.loadObject(files)
+
+    def displayed_files(self):
+        """
+        Get the list of currently displayed files.
+
+        :return (list): File paths currently displayed in the viewer.
+        """
+        return self.displayed
+
+    def filter_documents(self):
+        """
+        Open a dialog to filter and select documents to display.
+
+        Allows searching and filtering documents loaded in the Databrowser
+        and importing selected ones into the viewer.
+        """
+        dialog = Qt.QDialog()
+        dialog.setWindowTitle("Filter documents")
+        dialog.resize(1150, 500)
+        layout = Qt.QVBoxLayout()
+        dialog.setLayout(layout)
+        # Set up search interface
+        self._setup_search_interface(dialog, layout)
+
+        with self.project.database.data() as database_data:
+            # Create data browser table
+            self.table_data = TableDataBrowser(
+                self.project,
+                self,
+                database_data.get_shown_tags(),
+                False,
+                True,
+                link_viewer=False,
+            )
+
+        layout.addWidget(self.table_data)
+        # Add action buttons
+        self._add_dialog_buttons(dialog, layout)
         # Reducing the list of scans to selection
         all_scans = self.table_data.scans_to_visualize
         self.table_data.scans_to_visualize = self.documents
         self.table_data.scans_to_search = self.documents
         self.table_data.update_visualized_rows(all_scans)
 
-        res = dialog.exec_()
-        if res == Qt.QDialog.Accepted:
-            points = self.table_data.selectedIndexes()
-            result_names = []
-            for point in points:
-                row = point.row()
-                # We get the FileName of the scan from the first row
-                scan_name = self.table_data.item(row, 0).text()
-                value = self.project.session.get_value(
-                    COLLECTION_CURRENT, scan_name, TAG_FILENAME
-                )
-                value = os.path.abspath(
-                    os.path.join(self.project.folder, value)
-                )
-                result_names.append(value)
-            self.display_files(result_names)
+        # Show dialog and process results
+        if dialog.exec_() == Qt.QDialog.Accepted:
+            self._process_selected_documents()
 
     def preferences(self):
-        """Preferences for the dataviewer"""
+        """
+        Open the preferences dialog to configure viewer settings.
+
+        Allows configuring display mode (Neuro/Radio), animation speed,
+        and coordinate system referential.
+        """
         # Get initial config:
-        im_sec = Config().getViewerFramerate()
-        config = Config().getViewerConfig()
-        ref = Config().get_referential()
+        current_framerate = Config().getViewerFramerate()
+        current_config = Config().getViewerConfig()
+        current_ref = Config().get_referential()
+        # Create dialog
+        dialog = self._create_preferences_dialog(
+            current_framerate, current_config, current_ref
+        )
 
-        dialog = Qt.QDialog()
-        dialog.setWindowTitle("Preferences")
-        dialog.resize(600, 400)
-        layout = Qt.QVBoxLayout()
-        layout.setContentsMargins(25, 25, 25, 25)
-        dialog.setLayout(layout)
+        # Show dialog and process results
+        if dialog.exec_() == Qt.QDialog.Accepted:
+            self._apply_preferences(dialog)
 
-        # Change Neuro/Radio configuration
-        config_layout = QHBoxLayout()
-        title_config = Qt.QLabel()
-        title_config.setText("Configuration: ")
-        box = Qt.QComboBox()
-        box.addItem("Neuro")
-        box.addItem("Radio")
-        config_layout.addWidget(title_config)
-        config_layout.addWidget(box)
-        if config == "radio":
-            box.setCurrentIndex(1)
-
-        # set automatic time frame rate
-        frame_rate_layout = QHBoxLayout()
-        title = Qt.QLabel()
-        title.setText("Automatic time image display:")
-        slider = Qt.QSlider(Qt.Qt.Horizontal)
-        slider.setRange(1, 100)
-        slider.setValue(int(im_sec))
-        size = QtCore.QSize(180, 15)
-        slider.setMinimumSize(size)
-        slow_label = Qt.QLabel()
-        fast_label = Qt.QLabel()
-        slow_label.setText("slow")
-        fast_label.setText("fast")
-        frame_rate_layout.addWidget(title)
-        frame_rate_layout.addWidget(slow_label)
-        frame_rate_layout.addWidget(slider)
-        frame_rate_layout.addWidget(fast_label)
-        frame_rate_layout.insertSpacing(1, 200)
-
-        # Change referential
-        ref_layout = QHBoxLayout()
-        title_ref = Qt.QLabel()
-        title_ref.setText("Referential: ")
-        box2 = Qt.QComboBox()
-        box2.addItem("World Coordinates")
-        box2.addItem("Image referential")
-        ref_layout.addWidget(title_ref)
-        ref_layout.addWidget(box2)
-        box2.setCurrentIndex(int(ref))
-
-        # Set general vertical layout
-        layout.addLayout(config_layout)
-        layout.addLayout(frame_rate_layout)
-        layout.addLayout(ref_layout)
-        layout.addStretch(1)
-
-        # Save and cancel buttons
-        hlay = Qt.QHBoxLayout()
-        layout.addLayout(hlay)
-        ok = Qt.QPushButton("Save")
-        hlay.addStretch(1)
-        hlay.addWidget(ok)
-        ok.clicked.connect(dialog.accept)
-        ok.setDefault(True)
-        cancel = Qt.QPushButton("Cancel")
-        hlay.addWidget(cancel)
-        cancel.clicked.connect(dialog.reject)
-        hlay.addStretch(1)
-
-        res = dialog.exec_()
-
-        if res == Qt.QDialog.Accepted:
-            new_config = box.currentText().lower()
-            new_ref = box2.currentIndex()
-
-            # Save Config parameters and reload images
-            # when config and referential have changed
-            Config().setViewerFramerate(slider.value())
-            Config().setViewerConfig(new_config)
-            Config().set_referential(new_ref)
-            if new_config != config:
-                self.anaviewer.changeConfig(new_config)
-            if new_ref != ref:
-                self.anaviewer.changeRef()
+        # Show dialog and process results
+        if dialog.exec_() == Qt.QDialog.Accepted:
+            self._apply_preferences(dialog)
 
     def remove_files(self, files):
-        """Delete the given objects given by their file names"""
+        """
+         Remove specified files from the viewer.
+
+        :param files (list): List of file paths to remove from display.
+        """
         self.anaviewer.deleteObjectsFromFiles(files)
-        self.files = [doc for doc in self.displayed if doc not in files]
+        self.displayed = [doc for doc in self.displayed if doc not in files]
 
     def reset_search_bar(self):
-        """Reset the rapid search bar"""
+        """Clear the search bar text."""
         self.search_bar.setText("")
 
     def screenshot(self):
-        """The screenshot of mia_anatomist_2"""
+        """
+        Take a screenshot of the current viewer state.
+
+        Currently displays a "Not yet implemented" message.
+        """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setText("Not yet implemented!")
@@ -304,50 +404,67 @@ class MiaViewer(Qt.QWidget, DataViewer):
         msg.buttonClicked.connect(msg.close)
         msg.exec()
 
-    def search_str(self, str_search):
-        """Search a string in the table and updates the
-        not_defined_value = "*Not Defined*" in visualized documents.
+    def search_str(self, search_term):
+        """
+        Search for documents matching the given term and update the view.
 
-        :param str_search: string to search
+        Handles special case for NOT_DEFINED_VALUE as well as normal text
+        search. Updates the table to show only matching documents.
+
+        :param search_term (str): Text to search for in documents
         """
 
         old_scan_list = self.table_data.scans_to_visualize
-        return_list = []
+        matching_documents = []
 
-        # Every scan taken if empty search
-        if str_search == "":
-            return_list = self.table_data.scans_to_search
+        if not search_term:
+            # Show all documents when search is empty
+            matching_documents = self.table_data.scans_to_search
+
         else:
-            # Scans with at least a not defined value
-            if str_search == not_defined_value:
-                filter = self.search_bar.prepare_not_defined_filter(
-                    self.project.session.get_shown_tags()
-                )
-            # Scans matching the search
-            else:
-                filter = self.search_bar.prepare_filter(
-                    str_search,
-                    self.project.session.get_shown_tags(),
-                    self.table_data.scans_to_search,
-                )
 
-            generator = self.project.session.filter_documents(
-                COLLECTION_CURRENT, filter
-            )
+            with self.project.database.data() as database_data:
+
+                # Create appropriate filter based on search term
+                if search_term == NOT_DEFINED_VALUE:
+                    # Special case for undefined values
+                    filter_query = self.search_bar.prepare_not_defined_filter(
+                        database_data.get_shown_tags()
+                    )
+
+                # Scans matching the search
+                else:
+                    filter_query = self.search_bar.prepare_filter(
+                        search_term,
+                        database_data.get_shown_tags(),
+                        self.table_data.scans_to_search,
+                    )
+
+                # Get matching documents from database
+                matching_docs = database_data.filter_documents(
+                    COLLECTION_CURRENT, filter_query
+                )
 
             # Creating the list of scans
-            return_list = [getattr(scan, TAG_FILENAME) for scan in generator]
+            matching_documents = [doc[TAG_FILENAME] for doc in matching_docs]
 
-        self.table_data.scans_to_visualize = return_list
-
+        # Update table with matching documents
+        self.table_data.scans_to_visualize = matching_documents
         # Rows updated
         self.table_data.update_visualized_rows(old_scan_list)
-
-        self.project.currentFilter.search_bar = str_search
+        # Save current search in project
+        self.project.currentFilter.search_bar = search_term
 
     def set_documents(self, project, documents):
-        """Initialise current documents in the viewer"""
+        """
+        Initialize the viewer with a set of documents from a project.
+
+        :param project: Project containing the documents.
+        :param documents (list): List of document filenames to make available.
+        """
+
         if self.project is not project:
             self.clear()
+
         self.project = project
         self.documents = documents

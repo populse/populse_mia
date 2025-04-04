@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Handle the pipeline manager tab. Allow to create and run pipelines.
 
 Contains:
@@ -10,6 +8,7 @@ Contains:
         - pipeline_manager_tab
         - process_library
         - process_mia
+        - type_editors
 
 """
 
