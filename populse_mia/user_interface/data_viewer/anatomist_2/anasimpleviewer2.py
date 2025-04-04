@@ -1387,130 +1387,182 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def colorBackgroundList(self):
         """
-        Color the background of displayed objects in objectlist and call
-        changeIcon to add the right icon
-        """
-        displayedObNames = []
-        for i in range(len(self.displayedObjects)):
-            displayedObNames.append(self.displayedObjects[i].name)
-        for i in range(len(self.aobjects)):
-            item = Qt.QObject.findChild(
-                self.awidget, QtCore.QObject, "objectslist"
-            ).item(i)
-            if item.text() in displayedObNames:
-                self.changeIcon(item, i, "check")
-                item = Qt.QObject.findChild(
-                    self.awidget, QtCore.QObject, "objectslist"
-                ).item(i)
-                item.setBackground(QColor("#7fc97f"))
-            else:
-                self.changeIcon(item, i)
-                item = Qt.QObject.findChild(
-                    self.awidget, QtCore.QObject, "objectslist"
-                ).item(i)
-                item.setBackground(QColor("transparent"))
+        Colors the background of items in the 'objectslist' widget based on
+        whether their corresponding objects are currently displayed. Also
+        updates their icons using `changeIcon`.
 
-    def changeIcon(self, item, i, icon=None):
+        - If an object's name is in `displayedObjects`, the background is set
+          to green and the icon is updated to 'check'.
+        - Otherwise, the background is set to transparent and the default icon
+          is used.
         """
-        Adds empty icon if object is not displayed and check icon if displayed.
-        """
-
-        objectlist = Qt.QObject.findChild(
-            self.awidget, QtCore.QObject, "objectslist"
+        objects_list_widget = self.awidget.findChild(
+            QtCore.QObject, "objectslist"
         )
-        row = objectlist.row(item)
-        # remove item from objectlist
-        objectlist.takeItem(row)
-        object_name = self.aobjects[i].name
-        # Add blank icon as spaceItem
-        sources_images_dir = Config().getSourceImageDir()
-        if icon == "check":
-            icon = QIcon(os.path.join(sources_images_dir, "check.png"))
-        else:
-            icon = QIcon(os.path.join(sources_images_dir, "BLANK_ICON.png"))
+        displayed_names = {obj.name for obj in self.displayedObjects}
+
+        for i, obj in enumerate(self.aobjects):
+            item = objects_list_widget.item(i)
+            is_displayed = item.text() in displayed_names
+            self.changeIcon(item, i, "check" if is_displayed else None)
+            item.setBackground(
+                QColor("#7fc97f") if is_displayed else QColor("transparent")
+            )
+
+    def changeIcon(self, item, index, icon_type=None):
+        """
+        Updates the icon of a list item to indicate its display status.
+
+        Replaces the specified item in the 'objectslist' widget with a new
+        item at the same row, using either a check icon (if displayed) or a
+        blank icon.
+
+        :param item (QListWidgetItem): The item to update in the list widget.
+        :param index (int): Index of the object in self.aobjects to retrieve
+                            its name.
+        :param icon_type (str): Type of icon to use. Set to "check" for a
+                                checkmark; any other value results in a blank
+                                icon.
+        """
+        object_list = self.awidget.findChild(QtCore.QObject, "objectslist")
+        row = object_list.row(item)
+        object_list.takeItem(row)
+        object_name = self.aobjects[index].name
+        icon_path = "check.png" if icon_type == "check" else "BLANK_ICON.png"
+        icon = QIcon(os.path.join(Config().getSourceImageDir(), icon_path))
         new_item = Qt.QListWidgetItem(icon, object_name)
-        # reinsert new item with blank icon
-        objectlist.insertItem(row, new_item)
+        object_list.insertItem(row, new_item)
 
     def addObject(self, obj):
         """
-        Display an object in all windows
+        Displays an object in all Anatomist windows based on its type.
+
+        :param obj: The object to be displayed. Its `objectType` must be
+                    one of 'VOLUME', 'SURFACE', or 'GRAPH'.
         """
         a = ana.Anatomist("-b")
+
         if obj not in self.displayedObjects:
             self.displayedObjects.append(obj)
+
         self.disableButtons()
         opts = {}
+
         if obj.objectType == "VOLUME":
-            # volumes have a specific function since several volumes have to be
-            # fusionned, and a volume rendering may occur
+            # Volumes have specific handling for fusion and rendering.
             self.addVolume(obj, opts)
             return
+
         elif obj.objectType == "SURFACE":
             self.addMesh(obj, opts)
             return
+
         elif obj.objectType == "GRAPH":
             opts["add_graph_nodes"] = 1
 
+        # Call to add the object to Anatomist windows for GRAPH or
+        # other object types
         a.addObjects(obj, self.awindows, **opts)
 
     def removeObject(self, obj):
         """
-        Hides an object from views
+        Remove an object from all views.
+
+        This method hides the specified object from all associated views and
+        performs additional cleanup based on the object type.
+
+        :param obj: The object to be removed from display.
         """
         a = ana.Anatomist("-b")
+
         if obj in self.displayedObjects:
             self.displayedObjects.remove(obj)
+
         self.disableButtons()
+
         if obj.objectType == "VOLUME":
             self.removeVolume(obj)
+
         elif obj.objectType == "SURFACE":
             self.removeMesh(obj)
+
         else:
             a.removeObjects(obj, self.awindows, remove_children=True)
 
     def fileOpen(self):
         """
-        File browser + load object(s)
+        Open a file browser dialog and load selected objects.
+
+        Displays a QFileDialog allowing the user to select multiple existing
+        files. After selection, passes the files to the load_object method
+        for processing.
         """
+
+        # Create or reconfigure the file dialog
         if not self.fdialog:
             self.fdialog = Qt.QFileDialog()
             self.fdialog.setDirectory(os.path.expanduser("~"))
+
         else:
-            fd2 = self.fdialog
+            # Preserve previous directory and history
+            previous_dialog = self.fdialog
             self.fdialog = Qt.QFileDialog()
-            self.fdialog.setDirectory(fd2.directory())
-            self.fdialog.setHistory(fd2.history())
+            self.fdialog.setDirectory(previous_dialog.directory())
+            self.fdialog.setHistory(previous_dialog.history())
+
+        # Configure dialog for multiple file selection
         self.fdialog.setFileMode(self.fdialog.ExistingFiles)
         self.fdialog.show()
-        res = self.fdialog.exec_()
-        if res:
-            fnames = self.fdialog.selectedFiles()
-            files = []
-            for fname in fnames:
-                logger.info(f"{fname}")
-                files.append(str(fname))
-            self.loadObject(files)
+
+        # Process results if user didn't cancel
+        if self.fdialog.exec_():
+            selected_files = self.fdialog.selectedFiles()
+            file_paths = []
+
+            for file_path in selected_files:
+                file_path_str = str(file_path)
+                logger.info(f"Selected file: {file_path_str}")
+                file_paths.append(file_path_str)
+
+            self.load_object(file_paths)
 
     def selectedObjects(self):
         """
-        list of objects selected in the list box on the upper left panel
+        Retrieve objects currently selected in the list box.
+
+        Finds selected items in the UI list box on the upper left panel
+        and returns the corresponding anatomical objects.
+
+        :return (list): List of anatomical objects that are currently selected
+                        in the UI. Empty list if no objects are selected.
         """
-        olist = Qt.QObject.findChild(
-            self.awidget, QtCore.QObject, "objectslist"
+        # Find the object list widget in the UI
+        object_list_widget = self.awidget.findChild(
+            QtCore.QObject, "objectslist"
         )
-        sobjs = []
-        for o in olist.selectedItems():
-            sobjs.append(str(o.text()).strip("\0"))
-        return [o for o in self.aobjects if o.name in sobjs]
+        # Extract names of selected items
+        selected_names = [
+            str(item.text()).strip("\0")
+            for item in object_list_widget.selectedItems()
+        ]
+        # Return corresponding objects by filtering the full object list
+        return [obj for obj in self.aobjects if obj.name in selected_names]
 
     def editAdd(self):
         """
-        Display selected objects"""
-        objs = self.selectedObjects()
-        for o in objs:
-            self.addObject(o)
-        self.colorBackgroundList()
+        Display all objects currently selected in the list box.
+
+        Retrieves the objects selected in the UI and adds each one to the
+        display. Updates the background colors in the list to reflect the
+        new display state.
+        """
+
+        # Get currently selected objects and display each one
+        for obj in self.get_selected_objects():
+            self.add_object(obj)
+
+        # Update the list background colors to reflect display state
+        self.color_background_list()
 
     def editRemove(self):
         """
