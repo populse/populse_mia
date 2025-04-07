@@ -269,10 +269,8 @@ class AnaSimpleViewer2(Qt.QObject):
         objects_list.setContextMenuPolicy(Qt.Qt.CustomContextMenu)
         objects_list.customContextMenuRequested.connect(self.popup_objects)
         # Set drag and drop events
-        awin.dropEvent = lambda awin, event: self.dropEvent(awin, event)
-        awin.dragEnterEvent = lambda awin, event: self.dragEnterEvent(
-            awin, event
-        )
+        awin.dropEvent = lambda event: self.dropEvent(event)
+        awin.dragEnterEvent = lambda event: self.dragEnterEvent(event)
         awin.setAcceptDrops(True)
 
     def setup_anatomist(self, a):
@@ -1401,7 +1399,7 @@ class AnaSimpleViewer2(Qt.QObject):
         )
         displayed_names = {obj.name for obj in self.displayedObjects}
 
-        for i, obj in enumerate(self.aobjects):
+        for i in range(len(self.aobjects)):
             item = objects_list_widget.item(i)
             is_displayed = item.text() in displayed_names
             self.changeIcon(item, i, "check" if is_displayed else None)
@@ -1566,62 +1564,93 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def editRemove(self):
         """
-        Hide selected objects"""
-        objs = self.selectedObjects()
-        for o in objs:
-            self.removeObject(o)
+        Removes the currently selected objects from the scene and updates the
+        background color list.
+        """
+
+        for obj in self.selectedObjects():
+            self.removeObject(obj)
+
         self.colorBackgroundList()
 
     def editDelete(self):
         """
-        Delete selected objects"""
-        objs = self.selectedObjects()
-        self.deleteObjects(objs)
+        Deletes the currently selected objects from the scene and updates the
+        object list.
+        """
+        objects_to_delete = self.selectedObjects()
+        self.deleteObjects(objects_to_delete)
 
-    def deleteObjects(self, objs):
-        """Delete the given objects"""
+    def deleteObjects(self, objects_to_delete):
+        """
+        Deletes the specified objects from the scene, the object list widget,
+        and the internal object list.
+
+        :param objects_to_delete (list): A list of objects to be deleted.
+        """
+
+        if not objects_to_delete:
+            return  # Nothing to delete
+
         a = ana.Anatomist("-b")
-        for o in objs:
-            self.removeObject(o)
-        olist = Qt.QObject.findChild(
-            self.awidget, QtCore.QObject, "objectslist"
+
+        for obj in objects_to_delete:
+            self.removeObject(obj)
+
+        object_list_widget = self.awidget.findChild(
+            QtCore.QObject, "objectslist"
         )
-        for o in objs:
-            olist.takeItem(
-                olist.row(olist.findItems(o.name, QtCore.Qt.MatchExactly)[0])
-            )
-        self.aobjects = [o for o in self.aobjects if o not in objs]
-        a.deleteObjects(objs)
+
+        if object_list_widget:
+
+            for obj in objects_to_delete:
+                items = object_list_widget.findItems(
+                    obj.name, QtCore.Qt.MatchExactly
+                )
+
+                if items:
+                    object_list_widget.takeItem(
+                        object_list_widget.row(items[0])
+                    )
+
+        self.aobjects = [
+            obj for obj in self.aobjects if obj not in objects_to_delete
+        ]
+        a.deleteObjects(objects_to_delete)
 
     def deleteObjectsFromFiles(self, files):
         """
-        Delete the given objects given by their file names
+        Deletes objects from the scene based on their filenames.
+
+        :param files (list): Filenames corresponding to the objects to be
+                             deleted.
         """
         a = ana.Anatomist("-b")
-        objs = [o for o in a.getObjects() if o.filename in files]
-        self.deleteObjects(objs)
+        objects_to_delete = [
+            obj for obj in a.getObjects() if obj.filename in files
+        ]
+        self.deleteObjects(objects_to_delete)
 
     def closeAll(self, close_ana=True):
-        """Exit"""
+        """
+        Closes all open Anatomist windows and cleans up resources.
 
+        :param close_ana (bool): If True, closes the Anatomist instance.
+                                 Defaults to True.
+        """
         logger.info("Exiting Ana2 viewer.")
         self.newWindow.close()
-        a = ana.Anatomist("-b")
-        # remove windows from their parent to prevent them to be brutally
-        # deleted by Qt.
-        w = None
 
-        for w in self.awindows:
+        for window in self.awindows:
+
             try:
-                w.hide()
+                window.hide()
+                self.viewgridlay.removeWidget(window.internalRep._get())
+                window.setParent(None)
 
             except Exception:
-                continue  # window closed by Qt ?
+                logger.exception(f"Error closing window: {window}")
 
-            self.viewgridlay.removeWidget(w.internalRep._get())
-            w.setParent(None)
-
-        del w
         self.awindows = []
         self.displayedObjects = []
         self.viewgridlay = None
@@ -1629,182 +1658,279 @@ class AnaSimpleViewer2(Qt.QObject):
         self.fusion2d = []
         self.mesh3d = {}
         self.aobjects = []
-        self.awidget.close()
-        self.awidget = None
+
+        if self.awidget:
+            self.awidget.close()
+            self.awidget = None
+
         del self.fdialog
 
         if close_ana:
-            a = ana.Anatomist()
-            a.close()
+
+            try:
+                a = ana.Anatomist()
+                a.close()
+
+            except Exception:
+                logger.exception("Error closing Anatomist instance.")
 
     def stopVolumeRendering(self):
-        """Disable volume rendering: show a slice instead"""
+        """Disables volume rendering and displays a slice instead."""
 
         a = ana.Anatomist("-b")
 
         if not self.volrender:
+            logger.info("Volume rendering is already disabled.")
             return
 
-        a.deleteObjects(self.volrender)
-        self.volrender = None
+        try:
+            a.deleteObjects(self.volrender)
+            self.volrender = None
 
-        if len(self.fusion2d) != 0:
-            if self.fusion2d[0] is not None:
-                obj = self.fusion2d[0]
+            if self.fusion2d:
+                obj = (
+                    self.fusion2d[0] if self.fusion2d[0] else self.fusion2d[1]
+                )
+                windows = [
+                    window for window in self.awindows if window.subtype() == 0
+                ]
 
-            else:
-                obj = self.fusion2d[1]
+                if windows:
+                    a.addObjects(obj, windows)
+                    self.control_3d_type = "LeftSimple3DControl"
+                    a.execute(
+                        "SetControl",
+                        windows=windows,
+                        control=self.control_3d_type,
+                    )
 
-        wins = [w for w in self.awindows if w.subtype() == 0]
-        a.addObjects(obj, wins)
-        self.control_3d_type = "LeftSimple3DControl"
-        a.execute("SetControl", windows=wins, control=self.control_3d_type)
+        except Exception:
+            logger.info("Error stopping volume rendering.")
 
     def startVolumeRendering(self):
-        """Enable volume rendering in 3D views"""
+        """Enables volume rendering in 3D views."""
         a = ana.Anatomist("-b")
-        if len(self.fusion2d) == 0:
+
+        if not self.fusion2d:
+            logger.info("No fusion objects available for volume rendering.")
             return
-        if self.fusion2d[0] is not None:
-            obj = self.fusion2d[0]
-        else:
-            obj = self.fusion2d[1]
-        wins = [x for x in self.awindows if x.subtype() == 0]
-        if len(wins) == 0:
+
+        obj = self.fusion2d[0] if self.fusion2d[0] else self.fusion2d[1]
+        windows = [window for window in self.awindows if window.subtype() == 0]
+
+        if not windows:
+            logger.info("No 3D views available for volume rendering.")
             return
-        vr = a.fusionObjects([obj], method="VolumeRenderingFusionMethod")
-        vr.releaseAppRef()
-        clip = a.fusionObjects([vr], method="FusionClipMethod")
-        clip.releaseAppRef()
-        self.volrender = [clip, vr]
-        a.removeObjects(obj, wins)
-        a.addObjects(clip, wins)
-        self.control_3d_type = "VolRenderControl"
-        a.execute("SetControl", windows=wins, control=self.control_3d_type)
+
+        try:
+            volume_rendering = a.fusionObjects(
+                [obj], method="VolumeRenderingFusionMethod"
+            )
+            volume_rendering.releaseAppRef()
+            clip = a.fusionObjects(
+                [volume_rendering], method="FusionClipMethod"
+            )
+            clip.releaseAppRef()
+            self.volrender = [clip, volume_rendering]
+            a.removeObjects(obj, windows)
+            a.addObjects(clip, windows)
+            self.control_3d_type = "VolRenderControl"
+            a.execute(
+                "SetControl", windows=windows, control=self.control_3d_type
+            )
+
+        except Exception:
+            logger.exception("Error starting volume rendering.")
 
     def enableVolumeRendering(self, on):
-        """Enable/disable volume rendering in 3D views"""
+        """
+        Enables or disables volume rendering in 3D views.
+
+        :param on (bool): True to enable volume rendering, False to disable.
+        """
         self._vrenabled = on
+
         if self._vrenabled:
             self.startVolumeRendering()
+
         else:
             self.stopVolumeRendering()
 
     def open_anatomist_main_window(self):
-        """Blabla"""
-
+        """
+        Opens the main Anatomist control window and adds GUI menus
+        if available.
+        """
         a = ana.Anatomist()
-        cw = a.getControlWindow()
+        control_window = a.getControlWindow()
         a.execute("CreateControlWindow")
-        if not cw:
+
+        if not control_window:
             anacontrolmenu = sys.modules.get("anacontrolmenu")
+
             if anacontrolmenu:
                 anacontrolmenu.add_gui_menus()
 
     def coordsChanged(self):
-        """set the cursor on the position entered in the coords fields"""
+        """
+        Sets the cursor position in the 3D view based on the coordinates
+        entered in the GUI fields.
+        """
         a = ana.Anatomist("-b")
-        if len(self.awindows) == 0:
+
+        if not self.awindows:
             return
 
-        def findChild(x, y):
-            """Blabla"""
+        try:
+            position = [
+                float(
+                    self.awidget.findChild(QtCore.QObject, "coordXEdit").text()
+                ),
+                float(
+                    self.awidget.findChild(QtCore.QObject, "coordYEdit").text()
+                ),
+                float(
+                    self.awidget.findChild(QtCore.QObject, "coordZEdit").text()
+                ),
+            ]
+            time = float(
+                self.awidget.findChild(QtCore.QObject, "coordTEdit").text()
+            )
+            # Take into account the transformation of coordinates
+            transformation = a.getTransformation(
+                a.mniTemplateRef, self.awindows[0].getReferential()
+            )
 
-            return Qt.QObject.findChild(x, QtCore.QObject, y)
+            if transformation is not None:
+                position = transformation.transform(position)
 
-        pos = [
-            float(findChild(self.awidget, "coordXEdit").text()),
-            float(findChild(self.awidget, "coordYEdit").text()),
-            float(findChild(self.awidget, "coordZEdit").text()),
-        ]
-        # take coords transformation into account
-        tr = a.getTransformation(
-            a.mniTemplateRef, self.awindows[0].getReferential()
-        )
-        if tr is not None:
-            pos = tr.transform(pos)
-        t = float(findChild(self.awidget, "coordTEdit").text())
-        a.execute(
-            "LinkedCursor", window=self.awindows[0], position=pos[:3] + [t]
-        )
+            a.execute(
+                "LinkedCursor",
+                window=self.awindows[0],
+                position=position + [time],
+            )
 
-    def dragEnterEvent(self, win, event):
-        """Blabla"""
+        except (ValueError, AttributeError) as e:
+            logger.error(f"Error setting cursor position: {e}")
 
-        x = ana.cpp.QAObjectDrag.canDecode(
+    def dragEnterEvent(self, event):
+        """
+        Handles the drag enter event to determine if the dragged data can be
+        decoded.
+
+        Accepts the event if it contains a decodable object or URI;
+        otherwise, rejects it.
+
+        :param event (QDragEnterEvent): The drag enter event instance.
+        """
+
+        if ana.cpp.QAObjectDrag.canDecode(
             event
-        ) or ana.cpp.QAObjectDrag.canDecodeURI(event)
-        if x:
+        ) or ana.cpp.QAObjectDrag.canDecodeURI(event):
             event.accept()
+
         else:
             event.reject()
 
-    def dropEvent(self, win, event):
-        """Blabla"""
+    def dropEvent(self, event):
+        """
+        Handles the drop event to load or register Anatomist objects.
 
+        If the dropped content can be decoded as Anatomist objects or URIs,
+        the method registers or adds them to the current view. If the object
+        is already present, it is re-added. Otherwise, it is loaded or
+        registered accordingly.
+
+        :param event (QDropEvent): The drop event containing the data
+                                   to handle.
+        """
         a = ana.Anatomist("-b")
-        o = ana.cpp.set_AObjectPtr()
-        if ana.cpp.QAObjectDrag.decode(event, o):
-            for obj in o:
-                ob = a.AObject(o)
-                if ob not in self.aobjects:
-                    self.registerObject(ob)
+        objects = ana.cpp.set_AObjectPtr()
+
+        # Try decoding native Anatomist objects
+        if ana.cpp.QAObjectDrag.decode(event, objects):
+
+            for obj_ptr in objects:
+                obj = a.AObject(obj_ptr)
+
+                if obj not in self.aobjects:
+                    self.registerObject(obj)
+
                 else:
-                    self.addObject(ob)
+                    self.addObject(obj)
+
             event.accept()
             return
-        else:
-            things = ana.cpp.QAObjectDrag.decodeURI(event)
-            if things is not None:
-                for obj in things[0]:
-                    objnames = [x.fileName() for x in self.aobjects]
-                    if obj not in objnames:
-                        self.loadObject(obj)
-                    else:
-                        o = [x for x in self.aobjects if x.fileName() == obj][
-                            0
-                        ]
-                        self.addObject(o)
-                # TODO: things[1]: .ana scripts
-                event.accept()
-                return
+
+        # Try decoding from URI (e.g., dropped file paths)
+        uri_objects = ana.cpp.QAObjectDrag.decodeURI(event)
+
+        if uri_objects is not None:
+            # TODO: ignoring .ana script list (uri_objects[1]) for now
+            file_list, _ = uri_objects
+            existing_filenames = {x.fileName(): x for x in self.aobjects}
+
+            for file_path in file_list:
+
+                if file_path not in existing_filenames:
+                    self.loadObject(file_path)
+
+                else:
+                    self.addObject(existing_filenames[file_path])
+
+            event.accept()
+            return
+
+        # Neither format could be decoded
         event.reject()
 
     def popup_objects(self):
         """
-        Right-click popup on objects list
+        Displays a context menu for selected objects in the object list.
         """
-        sel = self.selectedObjects()
-        if len(sel) == 0:
+        selected_objects = self.selectedObjects()
+
+        if not selected_objects:
             return
-        t = aims.Tree()
-        osel = [o.getInternalRep() for o in sel]
-        menu = ana.cpp.OptionMatcher.popupMenu(osel, t)
-        prop = menu.addAction("Object properties")
-        prop.triggered.connect(self.object_properties)
-        new_view = menu.addAction("Open in new view")
-        new_view.triggered.connect(lambda: self.addNewView(sel[0]))
+
+        tree = aims.Tree()
+        internal_reps = [obj.getInternalRep() for obj in selected_objects]
+        menu = ana.cpp.OptionMatcher.popupMenu(internal_reps, tree)
+        properties_action = menu.addAction("Object properties")
+        properties_action.triggered.connect(self.object_properties)
+        new_view_action = menu.addAction("Open in new view")
+        new_view_action.triggered.connect(
+            lambda: self.addNewView(selected_objects[0])
+        )
         menu.exec_(Qt.QCursor.pos())
 
     def object_properties(self):
         """
-        Display selected objects properties in a browser window
+        Display the properties of selected objects in an Anatomist browser
+        window.
+
+        If the browser does not exist, is null, or is not visible, a new one
+        is created. Otherwise, the existing browser is cleared and updated
+        with the current selection.
         """
         a = ana.Anatomist("-b")
         if (
-            not hasattr(self, "browser")
-            or not self.browser
+            not getattr(self, "browser", None)
             or self.browser.isNull()
             or not self.browser.isVisible()
         ):
             self.browser = a.createWindow("Browser")
+
         else:
             self.browser.removeObjects(self.browser.Objects())
+
         self.browser.addObjects(self.selectedObjects())
 
-    def addNewView(self, object):
+    def addNewView(self, obj):
         """
-        Opens a popup with a view of the object
-        Default display is axial view but can be changed
+        Open a popup window displaying the given object.
+
+        :param obj: The object to display. The default view is axial but may
+                    be changed by the user.
         """
-        self.newWindow.showPopup(object)
+        self.newWindow.showPopup(obj)
