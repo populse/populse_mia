@@ -38,7 +38,7 @@ from soma.qt_gui.qt_backend import Qt
 
 class MetaDataViewer(type(Qt.QWidget), type(ABC)):
     """
-    Custom metaclass that combines ABC and QWidget's metaclasses
+    Custom metaclass that combines ABC and QWidget's metaclasses.
     """
 
     pass
